@@ -30,20 +30,9 @@ Todos hemos pasado por esto: una caja llena de cartas de sobres, mazos de inicio
 
 Le das tu colección y te devuelve **mazos completos de 60 cartas**, construidos como lo haría un jugador veterano. Así piensa por dentro:
 
-```mermaid
-flowchart LR
-    A["📦 Tu colección<br/><i>solo cartas que posees</i>"] --> B["🧠 Detección de temas<br/><i>payoffs + enablers</i>"]
-    B --> C["📊 Curva de maná<br/><i>matemática de Karsten</i>"]
-    C --> D["🛡️ Validador<br/><i>6 reglas de honor</i>"]
-    D --> E["🃏 3-5 propuestas<br/><i>con plan de juego</i>"]
-    D -. "no da para un mazo sano" .-> F["💬 Te lo explica<br/><i>y propone alternativa</i>"]
-    style A fill:#1E1C18,stroke:#E0CC8A,color:#F2EFE9
-    style B fill:#1E1C18,stroke:#9B6BD6,color:#F2EFE9
-    style C fill:#1E1C18,stroke:#5A9BD8,color:#F2EFE9
-    style D fill:#1E1C18,stroke:#E06A50,color:#F2EFE9
-    style E fill:#1E1C18,stroke:#4FB878,color:#F2EFE9
-    style F fill:#1E1C18,stroke:#D9B24A,color:#F2EFE9
-```
+<p align="center">
+  <img src="docs/assets/forge-flow.svg" alt="Colección → Sinergias → Curva de maná → Validador → Mazos con plan de juego" width="100%">
+</p>
 
 - 🏔️ **Curva de maná correcta** — tierras según arquetipo, fuentes repartidas por símbolos de color, curva validada. Nada de mazos con 15 tierras.
 - 🧬 **Sinergias detectadas** — Forge lee las reglas de cada carta y encuentra tus temas: drenaje de vida, sacrificio, artefactos, enjambre, hechizos, contadores…
@@ -72,7 +61,7 @@ flowchart LR
     </td>
     <td align="center" width="33%">
       <h3>📦</h3><b>Tu colección,<br/>visual y tuya</b><br/><br/>
-      <sub>Añade cartas con cantidades o <b>importa tu CSV de ManaBox</b> en segundos. Todo en local: sin cuentas, sin nube obligatoria.</sub>
+      <sub>Añade cartas con cantidades o <b>importa tu colección en CSV</b> desde cualquier otra app en segundos. Todo en local: sin cuentas, sin nube obligatoria.</sub>
     </td>
   </tr>
   <tr>
@@ -103,7 +92,7 @@ cd Manaforge/app
 flutter run          # elige tu móvil o tu escritorio
 ```
 
-Dentro de la app: **descarga la base de datos** de cartas (una vez) → **importa tu CSV** de ManaBox o busca cartas a mano → pulsa **⚒️ Forjar mis mazos**. Eso es todo.
+Dentro de la app: **descarga la base de datos** de cartas (una vez) → **importa tu colección** en CSV o busca cartas a mano → pulsa **⚒️ Forjar mis mazos**. Eso es todo.
 
 ## 🔧 Cómo está hecho
 
@@ -129,7 +118,7 @@ cd app && flutter test                            # tests de la app
 - [x] **Fase 1 — Cimientos**: motor de curva y validador (Python + Dart), sistema de diseño, CI
 - [x] **Fase 2 — Datos**: pipeline bulk Scryfall → SQLite con release automática mensual
 - [x] **Fase 3 — Generador**: clasificación funcional, temas, puntuación y construcción greedy
-- [x] **Fase 4 — App v0.2**: colección con búsqueda ES/EN, importador ManaBox, Forge con carrusel y plan de juego
+- [x] **Fase 4 — App v0.2**: colección con búsqueda ES/EN, importador CSV, Forge con carrusel y plan de juego
 - [ ] **Fase 5 — Escáner**: huellas perceptuales generadas en CI + cámara on-device ([diseño listo](docs/reconocimiento-cartas.md))
 - [ ] **Fase 6 — Redondear**: guardar mazos, precios, trades, legalidades por formato, inglés
 - [ ] **Fase 7 — Tiendas**: Google Play, App Store y builds de escritorio en releases
