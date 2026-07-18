@@ -17,12 +17,17 @@ jobs:
       - run: pip install ijson
       - name: Descargar bulk Default Cards de Scryfall
         run: |
-          curl -s -H "User-Agent: ManaForge-CI/1.0 (github.com/AAlexmc/Manaforge)" \
-            https://api.scryfall.com/bulk-data/default-cards -o bulkmeta.json
+          set -euo pipefail
+          curl -sf \
+            -H "User-Agent: ManaForge-CI/1.0 (github.com/AAlexmc/Manaforge)" \
+            -H "Accept: application/json" \
+            https://api.scryfall.com/bulk-data/default-cards -o bulkmeta.json \
+            || { echo "Fallo consultando bulk-data:"; cat bulkmeta.json || true; exit 1; }
+          head -c 400 bulkmeta.json; echo
           URI=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['download_uri'])")
           DATE=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['updated_at'][:10])")
           echo "BULK_DATE=$DATE" >> "$GITHUB_ENV"
-          curl -s -H "User-Agent: ManaForge-CI/1.0" "$URI" -o bulk.json
+          curl -sfL -H "User-Agent: ManaForge-CI/1.0" -H "Accept: */*" "$URI" -o bulk.json
           ls -lh bulk.json
       - name: Construir SQLite
         run: |
