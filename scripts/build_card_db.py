@@ -118,7 +118,7 @@ def build(bulk_path: Path, db_path: Path, bulk_date: str = "") -> dict:
                     oracle_id,
                     card["name"],
                     f["mana_cost"],
-                    card.get("cmc", 0),
+                    float(card.get("cmc") or 0),  # ijson da decimal.Decimal
                     "".join(card.get("colors") or []),
                     "".join(card.get("color_identity") or []),
                     card.get("type_line", ""),
