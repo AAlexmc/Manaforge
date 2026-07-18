@@ -11,8 +11,18 @@ turno a turno.
 ## Estado del proyecto
 
 🎨 Diseño: prototipo aprobado — handoff v2 integrado en `DesignSystem/`.
-⚙️ Motor: referencia Python testeada (curva + validador + generador fase 3) + puerto Dart completo.
-📱 App: **Flutter** (iOS, Android, Windows, macOS y Linux con un solo código) — esqueleto con tema y navegación.
+⚙️ Motor: referencia Python + puerto Dart completos (curva, validador, clasificador, generador) — todo con tests.
+📱 App: **Flutter** (iOS, Android, Windows, macOS y Linux) — v0.2 funcional: descarga de la base de datos
+de cartas, colección con búsqueda ES/EN e importador de ManaBox, y Forge generando mazos reales
+con plan de juego. Pendiente: escáner con cámara, guardar mazos, Trades.
+
+## Probarla ya
+
+1. Instala [Flutter](https://docs.flutter.dev/get-started/install) (canal stable).
+2. `git clone https://github.com/AAlexmc/Manaforge && cd Manaforge/app`
+3. `flutter run` (elige tu móvil conectado o el escritorio).
+4. En la app: descarga la base de datos de cartas (una vez), importa tu CSV de
+   ManaBox o busca cartas a mano, y pulsa **Forjar mis mazos**.
 
 ## Estructura
 
