@@ -11,14 +11,14 @@ turno a turno.
 ## Estado del proyecto
 
 🎨 Diseño: prototipo aprobado — handoff v2 integrado en `DesignSystem/`.
-⚙️ Motor: referencia Python testeada + puerto Swift iniciado.
-📱 App iOS: pendiente de arranque (SwiftUI, iOS 17+).
+⚙️ Motor: referencia Python testeada (curva + validador + generador fase 3) + puerto Dart.
+📱 App: **Flutter** (iOS, Android, Windows, macOS y Linux con un solo código) — pendiente de arranque.
 
 ## Estructura
 
 ```
-DesignSystem/         Handoff de diseño: tokens SwiftUI, iconos de maná SVG, specs
-ForgeEngine/          Paquete Swift: motor de mazos (curva, validador) + tests
+DesignSystem/         Handoff de diseño: tokens, iconos de maná SVG, specs
+forge_engine/         Paquete Dart: motor de mazos (curva, validador) + tests
 engine-reference/     Referencia canónica en Python + tests de aceptación
 docs/
   motor-forge.md            Especificación del algoritmo Forge
@@ -32,11 +32,11 @@ docs/
 # Referencia Python (canónica)
 cd engine-reference && python3 -m pytest tests/ -v
 
-# Motor Swift (requiere Xcode 15+ / Swift 5.9)
-cd ForgeEngine && swift test
+# Motor Dart (requiere Dart SDK 3+; es el que usa la app Flutter)
+cd forge_engine && dart test
 ```
 
-**Regla de oro del motor:** Python y Swift son espejos. Mismos números, mismos
+**Regla de oro del motor:** Python y Dart son espejos. Mismos números, mismos
 tests. Si divergen, manda Python.
 
 ## Datos y agradecimientos

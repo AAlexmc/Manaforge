@@ -1,7 +1,7 @@
 # Motor Forge: especificación del algoritmo
 
 La referencia canónica y testeada vive en `engine-reference/` (Python).
-El puerto Swift en `ForgeEngine/` debe mantenerse espejo 1:1 — mismos números,
+El puerto Dart en `forge_engine/` (el que usa la app Flutter en todas las plataformas) debe mantenerse espejo 1:1 — mismos números,
 mismos tests. Si divergen, manda la referencia Python.
 
 ## Reglas duras (nunca se violan)

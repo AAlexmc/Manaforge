@@ -9,8 +9,11 @@ jobs:
         with: { python-version: '3.11' }
       - run: pip install pytest
       - run: cd engine-reference && python -m pytest tests/ -v
-  forge-engine-swift:
-    runs-on: macos-14
+  forge-engine-dart:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cd ForgeEngine && swift test
+      - uses: dart-lang/setup-dart@v1
+      - run: cd forge_engine && dart pub get
+      - run: cd forge_engine && dart analyze --fatal-infos
+      - run: cd forge_engine && dart test
