@@ -49,24 +49,24 @@ class _HomeShellState extends State<HomeShell> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: [
-          const NavigationDestination(
+        destinations: const [
+          NavigationDestination(
               icon: Icon(Icons.style_outlined),
               selectedIcon: Icon(Icons.style),
               label: 'Colección'),
-          const NavigationDestination(
+          NavigationDestination(
               icon: Icon(Icons.layers_outlined),
               selectedIcon: Icon(Icons.layers),
               label: 'Mazos'),
           NavigationDestination(
-              icon: const ForgeTabIcon(selected: false),
-              selectedIcon: const ForgeTabIcon(selected: true),
+              icon: ForgeTabIcon(selected: false),
+              selectedIcon: ForgeTabIcon(selected: true),
               label: 'Forge'),
-          const NavigationDestination(
+          NavigationDestination(
               icon: Icon(Icons.swap_horiz_outlined),
               selectedIcon: Icon(Icons.swap_horiz),
               label: 'Trades'),
-          const NavigationDestination(
+          NavigationDestination(
               icon: Icon(Icons.settings_outlined),
               selectedIcon: Icon(Icons.settings),
               label: 'Ajustes'),
