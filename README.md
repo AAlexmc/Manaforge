@@ -10,13 +10,14 @@ turno a turno.
 
 ## Estado del proyecto
 
-🎨 Diseño: prototipo navegable completo (Claude Design) — tokens y specs en el handoff.
+🎨 Diseño: prototipo aprobado — handoff v2 integrado en `DesignSystem/`.
 ⚙️ Motor: referencia Python testeada + puerto Swift iniciado.
 📱 App iOS: pendiente de arranque (SwiftUI, iOS 17+).
 
 ## Estructura
 
 ```
+DesignSystem/         Handoff de diseño: tokens SwiftUI, iconos de maná SVG, specs
 ForgeEngine/          Paquete Swift: motor de mazos (curva, validador) + tests
 engine-reference/     Referencia canónica en Python + tests de aceptación
 docs/
