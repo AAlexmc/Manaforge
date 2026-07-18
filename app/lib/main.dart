@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'screens/screens.dart';
+import 'services/card_database.dart';
+import 'services/collection_store.dart';
 import 'theme/mf_theme.dart';
 
 void main() => runApp(const ManaForgeApp());
@@ -30,19 +32,20 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
-
-  static const _screens = [
-    ColeccionScreen(),
-    MazosScreen(),
-    ForgeScreen(),
-    TradesScreen(),
-    AjustesScreen(),
-  ];
+  final _db = CardDatabase();
+  final _collection = CollectionStore();
 
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      ColeccionScreen(db: _db, collection: _collection),
+      const MazosScreen(),
+      ForgeScreen(db: _db, collection: _collection),
+      const TradesScreen(),
+      const AjustesScreen(),
+    ];
     return Scaffold(
-      body: _screens[_index],
+      body: IndexedStack(index: _index, children: screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),

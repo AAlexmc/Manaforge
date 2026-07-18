@@ -2,23 +2,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/main.dart';
 
 void main() {
-  testWidgets('la app arranca con las 5 pestañas y el FAB de escanear',
-      (tester) async {
+  testWidgets('la app arranca con las 5 pestañas', (tester) async {
     await tester.pumpWidget(const ManaForgeApp());
+    await tester.pump(const Duration(milliseconds: 100));
 
-    // Las 5 pestañas del shell
     expect(find.text('Colección'), findsWidgets);
     expect(find.text('Mazos'), findsOneWidget);
     expect(find.text('Forge'), findsOneWidget);
     expect(find.text('Trades'), findsOneWidget);
     expect(find.text('Ajustes'), findsOneWidget);
 
-    // La acción principal de la app, con etiqueta (regla del DesignSystem)
-    expect(find.text('Escanear'), findsOneWidget);
-
-    // Navegar a Forge muestra su promesa de producto
+    // Forge muestra el teaser con contador (colección vacía, sin plugins)
     await tester.tap(find.text('Forge'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('con las cartas que ya tienes'), findsOneWidget);
+    expect(find.text('cartas para tu primer mazo'), findsOneWidget);
   });
 }

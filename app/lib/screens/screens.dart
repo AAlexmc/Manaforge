@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 
 import '../theme/mf_theme.dart';
 
-/// Pantallas placeholder del esqueleto: cada una se sustituirá por su
-/// implementación real siguiendo DesignSystem/COMPONENT-SPECS.md.
+export 'coleccion_screen.dart';
+export 'deck_detail_screen.dart';
+export 'forge_screen.dart';
+export 'import_csv_screen.dart';
+
+/// Pantallas aún en esqueleto (se implementan sobre COMPONENT-SPECS.md).
 class _Placeholder extends StatelessWidget {
   final String title;
   final String subtitle;
-  final Widget? fab;
 
-  const _Placeholder({required this.title, required this.subtitle, this.fab});
+  const _Placeholder({required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: fab,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -32,24 +34,6 @@ class _Placeholder extends StatelessWidget {
   }
 }
 
-class ColeccionScreen extends StatelessWidget {
-  const ColeccionScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _Placeholder(
-      title: 'Colección',
-      subtitle: 'Tu colección empieza aquí. Apunta la cámara a una carta o '
-          'importa tu CSV de ManaBox.',
-      fab: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(Icons.qr_code_scanner),
-        label: const Text('Escanear'),
-      ),
-    );
-  }
-}
-
 class MazosScreen extends StatelessWidget {
   const MazosScreen({super.key});
 
@@ -57,20 +41,8 @@ class MazosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _Placeholder(
       title: 'Mis mazos',
-      subtitle: 'Forge puede montarte mazos cuando quieras.',
-    );
-  }
-}
-
-class ForgeScreen extends StatelessWidget {
-  const ForgeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _Placeholder(
-      title: 'Forge',
-      subtitle: 'Mazos completos y jugables con las cartas que ya tienes. '
-          'Sin comprar nada.',
+      subtitle: 'Aquí vivirán los mazos que guardes desde Forge. '
+          'De momento, forja propuestas y cópialas con un toque.',
     );
   }
 }
@@ -82,7 +54,8 @@ class TradesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _Placeholder(
       title: 'Trades',
-      subtitle: 'El balance se actualiza en vivo mientras añadís cartas.',
+      subtitle: 'El balance se actualizará en vivo mientras añadís cartas. '
+          'En construcción.',
     );
   }
 }
