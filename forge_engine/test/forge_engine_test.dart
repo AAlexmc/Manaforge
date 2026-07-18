@@ -94,13 +94,17 @@ void main() {
             types: ['Land'],
             oracle: '{T}: Add {W}.'),
       };
+      // 20 rellenos a coste 2 y 8 a coste 3: coste medio del mazo 2.33,
+      // dentro del rango midrange (2.2-3.5). Con los 28 a coste 2 salía
+      // 2.11 y el validador lo rechazaba — correctamente.
       for (var i = 0; i < 28; i++) {
         final name = 'Relleno $i';
+        final threeDrop = i >= 20;
         p[name] = Card(
             name: name,
             qty: 1,
-            manaCost: '{1}{B}',
-            cmc: 2,
+            manaCost: threeDrop ? '{2}{B}' : '{1}{B}',
+            cmc: threeDrop ? 3 : 2,
             colors: 'B',
             types: const ['Creature'],
             oracle: '');
