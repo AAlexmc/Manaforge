@@ -1,34 +1,124 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#141310"/>
-      <stop offset="1" stop-color="#1E1C18"/>
+      <stop offset="0" stop-color="#0E0D0B"/>
+      <stop offset="0.55" stop-color="#171410"/>
+      <stop offset="1" stop-color="#1E1A22"/>
     </linearGradient>
-    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.65">
-      <stop offset="0" stop-color="#9B6BD6" stop-opacity="0.28"/>
+    <radialGradient id="forgeGlow" cx="0.78" cy="0.62" r="0.45">
+      <stop offset="0" stop-color="#E06A50" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#D9B24A" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#E06A50" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="violetGlow" cx="0.28" cy="0.3" r="0.55">
+      <stop offset="0" stop-color="#9B6BD6" stop-opacity="0.22"/>
       <stop offset="1" stop-color="#9B6BD6" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBF8F1"/>
+      <stop offset="0.6" stop-color="#EFE6CF"/>
+      <stop offset="1" stop-color="#D9B24A"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
   </defs>
-  <rect width="1200" height="280" fill="url(#bg)"/>
-  <rect width="1200" height="280" fill="url(#glow)"/>
-  <!-- curva de maná de fondo -->
-  <g opacity="0.16">
-    <rect x="880" y="180" width="34" height="60" rx="5" fill="#E0CC8A"/>
-    <rect x="922" y="130" width="34" height="110" rx="5" fill="#5A9BD8"/>
-    <rect x="964" y="100" width="34" height="140" rx="5" fill="#8A6E9E"/>
-    <rect x="1006" y="140" width="34" height="100" rx="5" fill="#E06A50"/>
-    <rect x="1048" y="170" width="34" height="70" rx="5" fill="#4FB878"/>
-    <rect x="1090" y="200" width="34" height="40" rx="5" fill="#9B6BD6"/>
+
+  <rect width="1280" height="400" fill="url(#bg)"/>
+  <rect width="1280" height="400" fill="url(#violetGlow)"/>
+  <rect width="1280" height="400" fill="url(#forgeGlow)">
+    <animate attributeName="opacity" values="0.75;1;0.75" dur="3.2s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- curva de maná latiendo -->
+  <g transform="translate(560,392)">
+    <rect x="0"   y="-70"  width="52" height="70"  rx="7" fill="#E0CC8A" opacity="0.30">
+      <animate attributeName="opacity" values="0.22;0.75;0.22" dur="3.6s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="64"  y="-130" width="52" height="130" rx="7" fill="#5A9BD8" opacity="0.30">
+      <animate attributeName="opacity" values="0.22;0.75;0.22" dur="3.6s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="128" y="-170" width="52" height="170" rx="7" fill="#8A6E9E" opacity="0.30">
+      <animate attributeName="opacity" values="0.22;0.75;0.22" dur="3.6s" begin="0.7s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="192" y="-140" width="52" height="140" rx="7" fill="#E06A50" opacity="0.30">
+      <animate attributeName="opacity" values="0.22;0.75;0.22" dur="3.6s" begin="1.05s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="256" y="-95"  width="52" height="95"  rx="7" fill="#4FB878" opacity="0.30">
+      <animate attributeName="opacity" values="0.22;0.75;0.22" dur="3.6s" begin="1.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="320" y="-55"  width="52" height="55"  rx="7" fill="#9B6BD6" opacity="0.30">
+      <animate attributeName="opacity" values="0.22;0.75;0.22" dur="3.6s" begin="1.75s" repeatCount="indefinite"/>
+    </rect>
   </g>
-  <!-- iconos de maná -->
-  <g transform="translate(88,140)">
-    <circle cx="0" cy="0" r="17" fill="#E0CC8A"/><circle cx="0" cy="0" r="6" fill="#6B5A2E"/>
-    <circle cx="46" cy="0" r="17" fill="#5A9BD8"/><path d="M46 -7 l6 10 a7 7 0 1 1 -12 0 z" fill="#1E3A5C"/>
-    <circle cx="92" cy="0" r="17" fill="#8A6E9E"/><path d="M92 -8 l3 5 h5 l-4 4 2 6 -6 -3 -6 3 2 -6 -4 -4 h5 z" fill="#3A2A4A"/>
-    <circle cx="138" cy="0" r="17" fill="#E06A50"/><path d="M138 -9 c5 4 7 8 7 12 a7 7 0 1 1 -14 0 c0 -4 2 -8 7 -12 z" fill="#6E2418"/>
-    <circle cx="184" cy="0" r="17" fill="#4FB878"/><path d="M184 -9 c7 3 9 10 3 16 c-1 -3 -2 -4 -4 -6 c0 3 0 6 2 9 a9 9 0 0 1 -7 -19 z" fill="#1F5A38"/>
+
+  <!-- yunque -->
+  <g transform="translate(985,240)" fill="#2A2622" stroke="#3A342E" stroke-width="3">
+    <path d="M-15 18 C-52 18 -78 4 -86 -14 L-30 -14 L-30 -34 L118 -34 C136 -34 136 -12 116 -12 L84 -12 C84 6 96 18 116 24 L116 44 L-4 44 L-4 24 C10 18 18 6 18 -12 L-2 -12 C-6 4 -8 18 -15 18 Z"/>
+    <rect x="-26" y="44" width="164" height="16" rx="5"/>
   </g>
-  <text x="88" y="102" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="bold" fill="#F2EFE9">ManaForge</text>
-  <text x="90" y="205" font-family="Verdana, Geneva, sans-serif" font-size="21" fill="#C9C4B8">Escanea tu colección. Forja mazos con las cartas que ya tienes.</text>
-  <text x="90" y="238" font-family="Verdana, Geneva, sans-serif" font-size="15" fill="#9B6BD6">Gratis · Open source · Sin anuncios · Tus cartas son tuyas</text>
+
+  <!-- martillo golpeando -->
+  <g transform="translate(1040,150)">
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="-26 78 -48; 14 78 -48; -26 78 -48" keyTimes="0;0.12;1" dur="2.4s" repeatCount="indefinite"/>
+      <rect x="10" y="-10" width="120" height="13" rx="6" fill="#6B5A48" transform="rotate(38 10 -10)"/>
+      <rect x="-32" y="-58" width="66" height="44" rx="9" fill="#4A443C" stroke="#5C554B" stroke-width="3"/>
+    </g>
+  </g>
+
+  <!-- chispas -->
+  <g fill="#F5C15C">
+    <circle cx="1000" cy="222" r="4">
+      <animate attributeName="cy" values="222;150" dur="2.4s" begin="0.28s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="1000;962" dur="2.4s" begin="0.28s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.15;1" dur="2.4s" begin="0.28s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1010" cy="222" r="3" fill="#E06A50">
+      <animate attributeName="cy" values="222;164" dur="2.4s" begin="0.36s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="1010;1052" dur="2.4s" begin="0.36s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.15;1" dur="2.4s" begin="0.36s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1005" cy="220" r="2.6" fill="#FBF8F1">
+      <animate attributeName="cy" values="220;128" dur="2.4s" begin="0.32s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="1005;1014" dur="2.4s" begin="0.32s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.2;1" dur="2.4s" begin="0.32s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="995" cy="224" r="2.2" fill="#D9B24A">
+      <animate attributeName="cy" values="224;176" dur="2.4s" begin="0.44s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="995;930" dur="2.4s" begin="0.44s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.2;1" dur="2.4s" begin="0.44s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- título -->
+  <text x="86" y="150" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="bold" fill="#D9B24A" opacity="0.35" filter="url(#soft)">ManaForge</text>
+  <text x="84" y="146" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="bold" fill="url(#titleGrad)">ManaForge</text>
+
+  <!-- orbes de maná flotando -->
+  <g transform="translate(96,206)">
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -6; 0 0" dur="4s" begin="0s" repeatCount="indefinite" additive="sum"/>
+      <circle cx="0" cy="0" r="21" fill="#E0CC8A"/><circle cx="0" cy="0" r="7.5" fill="#6B5A2E"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -6; 0 0" dur="4s" begin="0.4s" repeatCount="indefinite" additive="sum"/>
+      <circle cx="58" cy="0" r="21" fill="#5A9BD8"/><path d="M58 -9 l7.5 12 a8.6 8.6 0 1 1 -15 0 z" fill="#1E3A5C"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -6; 0 0" dur="4s" begin="0.8s" repeatCount="indefinite" additive="sum"/>
+      <circle cx="116" cy="0" r="21" fill="#8A6E9E"/><path d="M116 -10 l3.7 6.2 h6.2 l-5 5 2.5 7.4 -7.4 -3.7 -7.4 3.7 2.5 -7.4 -5 -5 h6.2 z" fill="#3A2A4A"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -6; 0 0" dur="4s" begin="1.2s" repeatCount="indefinite" additive="sum"/>
+      <circle cx="174" cy="0" r="21" fill="#E06A50"/><path d="M174 -11 c6.2 5 8.6 10 8.6 14.8 a8.6 8.6 0 1 1 -17.2 0 c0 -4.8 2.4 -9.8 8.6 -14.8 z" fill="#6E2418"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -6; 0 0" dur="4s" begin="1.6s" repeatCount="indefinite" additive="sum"/>
+      <circle cx="232" cy="0" r="21" fill="#4FB878"/><path d="M232 -11 c8.6 3.7 11 12.3 3.7 19.7 c-1.2 -3.7 -2.5 -5 -5 -7.4 c0 3.7 0 7.4 2.5 11 a11 11 0 0 1 -8.6 -23.3 z" fill="#1F5A38"/>
+    </g>
+  </g>
+
+  <text x="86" y="288" font-family="Verdana, Geneva, sans-serif" font-size="26" fill="#D8D2C4">Escanea tu colección. Forja mazos con las cartas que ya tienes.</text>
+  <text x="86" y="330" font-family="Verdana, Geneva, sans-serif" font-size="17" fill="#9B6BD6" font-weight="bold">GRATIS · OPEN SOURCE · SIN ANUNCIOS · TUS CARTAS SON TUYAS</text>
 </svg>
