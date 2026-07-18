@@ -7,6 +7,8 @@ class Card {
   final String colors; // "WB", "U", "" para incoloras
   final List<String> types; // ["Creature"], ["Land"], …
   final String oracle;
+  final int? power; // null para no-criaturas o poder variable (*)
+  final int? toughness;
 
   const Card({
     required this.name,
@@ -16,7 +18,12 @@ class Card {
     required this.colors,
     required this.types,
     required this.oracle,
+    this.power,
+    this.toughness,
   });
+
+  static int? _stat(dynamic v) =>
+      v is int ? v : (v is String ? int.tryParse(v) : null);
 
   factory Card.fromJson(String name, Map<String, dynamic> json) => Card(
         name: name,
@@ -26,6 +33,8 @@ class Card {
         colors: (json['colors'] ?? '') as String,
         types: List<String>.from(json['types'] ?? const []),
         oracle: (json['oracle'] ?? '') as String,
+        power: _stat(json['power']),
+        toughness: _stat(json['toughness']),
       );
 
   bool get isLand => types.contains('Land');

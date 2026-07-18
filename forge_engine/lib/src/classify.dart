@@ -1,0 +1,143 @@
+import 'models.dart';
+
+/// Clasificación funcional y detección de temas — espejo 1:1 de
+/// `engine-reference/forge/classify.py`.
+
+/// Cuotas funcionales por arquetipo (mínimos entre los ~36-37 hechizos).
+const Map<String, Map<String, int>> quotas = {
+  'aggro': {'creatures': 20, 'interaction': 4, 'draw': 0},
+  'tempo': {'creatures': 14, 'interaction': 8, 'draw': 2},
+  'midrange': {'creatures': 16, 'interaction': 6, 'draw': 2},
+  'control': {'creatures': 8, 'interaction': 12, 'draw': 4},
+};
+
+class _Theme {
+  final RegExp? payoff;
+  final RegExp? enabler;
+  const _Theme(this.payoff, this.enabler);
+}
+
+final Map<String, _Theme> _themes = {
+  'lifegain': _Theme(
+    RegExp(r'whenever you gain life'),
+    RegExp(r'you gain \d+ life|lifelink|gain that much life'),
+  ),
+  'sacrifice': _Theme(
+    RegExp(r'whenever .* (creature|permanent) (you control )?dies'),
+    RegExp(r'sacrifice (a|another) creature|sacrifice this creature'),
+  ),
+  'spells': _Theme(
+    RegExp(
+        r'whenever you cast (an instant|a noncreature|an instant or sorcery)|prowess'),
+    null, // el enabler son los propios instantáneos/conjuros baratos
+  ),
+  'artifacts': _Theme(
+    // Payoff = premia tener/lanzar artefactos. Improvisar NO es payoff
+    // (consume artefactos): tratarlo como tal hacía que los artefactos
+    // incoloros convirtieran cualquier identidad en mazo de artefactos.
+    RegExp(
+        r'whenever you cast an artifact|whenever (an|another) artifact|artifact you control enters|affinity for artifacts|enchanted artifact is a creature'),
+    RegExp(r'improvise'),
+  ),
+  'counters': _Theme(
+    RegExp(r'if one or more counters would be put|proliferate'),
+    RegExp(r'\+1/\+1 counter'),
+  ),
+  'tokens': _Theme(
+    RegExp(r'whenever (a|another) creature (you control )?enters'),
+    RegExp(r'create .* creature token'),
+  ),
+  'graveyard': _Theme(
+    RegExp(r'delirium|threshold|for each creature card in your graveyard'),
+    RegExp(r'mill|return .* from your graveyard'),
+  ),
+};
+
+final _removal = RegExp(r'destroy (target|up to)|exile (target|up to)');
+final _sweeper = RegExp(r'destroy all|each creature.*(-\d+/-\d+|destroy)');
+final _burn = RegExp(
+    r'deals? \d+ damage to (any target|target creature|target player|each opponent)');
+final _counterspell = RegExp(r'counter target .*spell');
+final _draw = RegExp(r'draws? (a|two|three|x) cards?');
+final _ramp = RegExp(r'\{t\}: add \{|search your library for a .*land');
+final _recursion =
+    RegExp(r'return .* from your graveyard to (your hand|the battlefield)');
+final _lifegain = RegExp(r'gains? \d+ life|lifelink');
+final _pump = RegExp(r'target creature gets \+\d+');
+final _keywords = RegExp(
+    r'flying|deathtouch|lifelink|first strike|menace|trample|haste');
+
+/// Etiquetas funcionales de una carta: creature, removal, sweeper, burn,
+/// counterspell, draw, ramp, recursion, lifegain, pump, land.
+Set<String> classify(Card card) {
+  final text = card.oracle.toLowerCase();
+  final tags = <String>{};
+
+  if (card.types.contains('Land')) return {'land'};
+  if (card.types.contains('Creature')) tags.add('creature');
+  if (_removal.hasMatch(text)) tags.add('removal');
+  if (_sweeper.hasMatch(text)) tags.add('sweeper');
+  if (_burn.hasMatch(text)) {
+    tags.add('burn');
+    if (!tags.contains('creature')) tags.add('removal');
+  }
+  if (_counterspell.hasMatch(text)) tags.add('counterspell');
+  if (_draw.hasMatch(text)) tags.add('draw');
+  if (_ramp.hasMatch(text)) tags.add('ramp');
+  if (_recursion.hasMatch(text)) tags.add('recursion');
+  if (_lifegain.hasMatch(text)) tags.add('lifegain');
+  if (_pump.hasMatch(text)) tags.add('pump');
+  return tags;
+}
+
+/// Para cada tema, si la carta es 'payoff' o 'enabler' de ese tema.
+Map<String, String> themeRoles(Card card) {
+  final text = card.oracle.toLowerCase();
+  final roles = <String, String>{};
+  _themes.forEach((theme, pats) {
+    if (pats.payoff != null && pats.payoff!.hasMatch(text)) {
+      roles[theme] = 'payoff';
+    } else if (pats.enabler != null && pats.enabler!.hasMatch(text)) {
+      roles[theme] = 'enabler';
+    }
+  });
+  // enablers estructurales (por tipo de carta, no por texto)
+  if (card.types.contains('Artifact') && !roles.containsKey('artifacts')) {
+    roles['artifacts'] = 'enabler';
+  }
+  final isCheapSpell =
+      (card.types.contains('Instant') || card.types.contains('Sorcery')) &&
+          card.cmc <= 3;
+  if (isCheapSpell && !roles.containsKey('spells')) {
+    roles['spells'] = 'enabler';
+  }
+  return roles;
+}
+
+/// Puntuación de eficiencia individual (0-10, heurística).
+double efficiency(Card card) {
+  final cmc = card.cmc < 1 ? 1 : card.cmc;
+  var score = 5.0;
+  if (card.types.contains('Creature')) {
+    final pt = (card.power != null && card.toughness != null)
+        ? card.power! + card.toughness!
+        : cmc * 2; // poder variable (*/*), neutral
+    score = 5.0 + (pt - 2 * cmc) * 0.8; // 2*cmc de stats totales = media
+    if (_keywords.hasMatch(card.oracle.toLowerCase())) score += 0.8;
+    if (card.oracle.isNotEmpty) score += 0.4; // tiene texto: algo hace
+  } else {
+    final tags = classify(card);
+    if (tags.contains('removal') ||
+        tags.contains('counterspell') ||
+        tags.contains('sweeper')) {
+      score = 7.0 - (cmc - 2) * 0.5;
+    } else if (tags.contains('draw')) {
+      score = 6.0 - (cmc - 2) * 0.4;
+    } else if (tags.contains('pump')) {
+      score = 4.0;
+    }
+  }
+  if (score < 0) return 0;
+  if (score > 10) return 10;
+  return score;
+}

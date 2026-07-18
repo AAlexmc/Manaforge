@@ -7,3 +7,5 @@ library forge_engine;
 export 'src/models.dart';
 export 'src/mana_curve.dart';
 export 'src/deck_validator.dart';
+export 'src/classify.dart';
+export 'src/generator.dart';
