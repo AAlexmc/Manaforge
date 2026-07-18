@@ -162,7 +162,11 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print(__doc__)
         sys.exit(1)
-    stats = build(Path(sys.argv[1]), Path(sys.argv[2]),
-                  bulk_date=sys.argv[3] if len(sys.argv) > 3 else "")
+    try:
+        stats = build(Path(sys.argv[1]), Path(sys.argv[2]),
+                      bulk_date=sys.argv[3] if len(sys.argv) > 3 else "")
+    except Exception as e:  # noqa: BLE001 — anotación visible en CI sin login
+        print(f"::error::build_card_db: {type(e).__name__}: {e}")
+        raise
     print(f"OK: {stats['cards']} cartas, {stats['printings']} impresiones, "
           f"{stats['skipped']} descartadas -> {sys.argv[2]}")
