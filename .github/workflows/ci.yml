@@ -9,6 +9,7 @@ jobs:
         with: { python-version: '3.11' }
       - run: pip install pytest
       - run: cd engine-reference && python -m pytest tests/ -v
+      - run: cd scripts && python -m pytest tests/ -v
   forge-engine-dart:
     runs-on: ubuntu-latest
     steps:

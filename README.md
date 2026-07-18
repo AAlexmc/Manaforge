@@ -18,6 +18,7 @@ turno a turno.
 
 ```
 app/                  App Flutter (tema de los tokens, 5 pestañas) + test de humo
+scripts/              Pipeline de datos: bulk de Scryfall → SQLite (corre en CI)
 DesignSystem/         Handoff de diseño: tokens, iconos de maná SVG, specs
 forge_engine/         Paquete Dart: motor completo (curva, validador, generador) + tests
 engine-reference/     Referencia canónica en Python + tests de aceptación

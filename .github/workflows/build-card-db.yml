@@ -1,0 +1,37 @@
+name: Build card database
+on:
+  workflow_dispatch:        # lanzable a mano desde la pestaña Actions
+  schedule:
+    - cron: '0 5 1 * *'     # y el día 1 de cada mes
+permissions:
+  contents: write           # para publicar la release
+jobs:
+  build-db:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install ijson
+      - name: Descargar bulk Default Cards de Scryfall
+        run: |
+          curl -s -H "User-Agent: ManaForge-CI/1.0 (github.com/AAlexmc/Manaforge)" \
+            https://api.scryfall.com/bulk-data/default-cards -o bulkmeta.json
+          URI=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['download_uri'])")
+          DATE=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['updated_at'][:10])")
+          echo "BULK_DATE=$DATE" >> "$GITHUB_ENV"
+          curl -s -H "User-Agent: ManaForge-CI/1.0" "$URI" -o bulk.json
+          ls -lh bulk.json
+      - name: Construir SQLite
+        run: |
+          python3 scripts/build_card_db.py bulk.json manaforge_cards.sqlite "$BULK_DATE"
+          gzip -9 manaforge_cards.sqlite
+          ls -lh manaforge_cards.sqlite.gz
+      - name: Publicar como release card-db-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete card-db-latest --yes || true
+          gh release create card-db-latest manaforge_cards.sqlite.gz \
+            --title "Base de datos de cartas ($BULK_DATE)" \
+            --notes "SQLite generada del bulk Default Cards de Scryfall ($BULK_DATE). La app la descarga en el primer arranque. Datos: Scryfall. Cartas: © Wizards of the Coast (Fan Content Policy)."
