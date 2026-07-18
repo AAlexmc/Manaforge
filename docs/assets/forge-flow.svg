@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="210" viewBox="0 0 1160 210">
+  <defs>
+    <linearGradient id="fbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#141310"/>
+      <stop offset="1" stop-color="#1C1820"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8A857A"/>
+    </marker>
+  </defs>
+  <rect width="1160" height="210" rx="16" fill="url(#fbg)"/>
+
+  <!-- paso 1 -->
+  <g transform="translate(30,45)">
+    <rect width="196" height="86" rx="12" fill="#1E1C18" stroke="#E0CC8A" stroke-width="2"/>
+    <text x="98" y="34" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="16" font-weight="bold" fill="#F2EFE9">📦 Tu colección</text>
+    <text x="98" y="60" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="12" fill="#B8B2A4">solo cartas que posees</text>
+  </g>
+  <line x1="226" y1="88" x2="256" y2="88" stroke="#8A857A" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- paso 2 -->
+  <g transform="translate(262,45)">
+    <rect width="196" height="86" rx="12" fill="#1E1C18" stroke="#9B6BD6" stroke-width="2"/>
+    <text x="98" y="34" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="16" font-weight="bold" fill="#F2EFE9">🧠 Sinergias</text>
+    <text x="98" y="60" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="12" fill="#B8B2A4">detecta tus temas</text>
+  </g>
+  <line x1="458" y1="88" x2="488" y2="88" stroke="#8A857A" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- paso 3 -->
+  <g transform="translate(494,45)">
+    <rect width="196" height="86" rx="12" fill="#1E1C18" stroke="#5A9BD8" stroke-width="2"/>
+    <text x="98" y="34" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="16" font-weight="bold" fill="#F2EFE9">📊 Curva de maná</text>
+    <text x="98" y="60" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="12" fill="#B8B2A4">matemática de Karsten</text>
+  </g>
+  <line x1="690" y1="88" x2="720" y2="88" stroke="#8A857A" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- paso 4 -->
+  <g transform="translate(726,45)">
+    <rect width="196" height="86" rx="12" fill="#1E1C18" stroke="#E06A50" stroke-width="2"/>
+    <text x="98" y="34" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="16" font-weight="bold" fill="#F2EFE9">🛡️ Validador</text>
+    <text x="98" y="60" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="12" fill="#B8B2A4">6 reglas de honor</text>
+  </g>
+  <line x1="922" y1="88" x2="952" y2="88" stroke="#8A857A" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- paso 5 -->
+  <g transform="translate(958,45)">
+    <rect width="172" height="86" rx="12" fill="#1E1C18" stroke="#4FB878" stroke-width="2.5"/>
+    <text x="86" y="34" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="16" font-weight="bold" fill="#F2EFE9">🃏 3-5 mazos</text>
+    <text x="86" y="60" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="12" fill="#B8B2A4">con plan de juego</text>
+  </g>
+
+  <text x="580" y="176" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="13" fill="#D9B24A">Y si tu colección no da para un mazo sano, Forge te explica el porqué y te propone alternativa — nunca genera un mazo defectuoso.</text>
+</svg>
