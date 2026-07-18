@@ -17,3 +17,13 @@ jobs:
       - run: cd forge_engine && dart pub get
       - run: cd forge_engine && dart analyze
       - run: cd forge_engine && dart test
+  app-flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: cd app && flutter pub get
+      - run: cd app && flutter analyze
+      - run: cd app && flutter test

@@ -11,14 +11,15 @@ turno a turno.
 ## Estado del proyecto
 
 🎨 Diseño: prototipo aprobado — handoff v2 integrado en `DesignSystem/`.
-⚙️ Motor: referencia Python testeada (curva + validador + generador fase 3) + puerto Dart.
-📱 App: **Flutter** (iOS, Android, Windows, macOS y Linux con un solo código) — pendiente de arranque.
+⚙️ Motor: referencia Python testeada (curva + validador + generador fase 3) + puerto Dart completo.
+📱 App: **Flutter** (iOS, Android, Windows, macOS y Linux con un solo código) — esqueleto con tema y navegación.
 
 ## Estructura
 
 ```
+app/                  App Flutter (tema de los tokens, 5 pestañas) + test de humo
 DesignSystem/         Handoff de diseño: tokens, iconos de maná SVG, specs
-forge_engine/         Paquete Dart: motor de mazos (curva, validador) + tests
+forge_engine/         Paquete Dart: motor completo (curva, validador, generador) + tests
 engine-reference/     Referencia canónica en Python + tests de aceptación
 docs/
   motor-forge.md            Especificación del algoritmo Forge
@@ -34,6 +35,10 @@ cd engine-reference && python3 -m pytest tests/ -v
 
 # Motor Dart (requiere Dart SDK 3+; es el que usa la app Flutter)
 cd forge_engine && dart test
+
+# App (requiere Flutter estable)
+cd app && flutter test        # tests de humo
+cd app && flutter run         # ejecutar en tu móvil/escritorio
 ```
 
 **Regla de oro del motor:** Python y Dart son espejos. Mismos números, mismos
