@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — Escanea tu colección. Forja mazos con las cartas que ya tienes." width="100%">
+  <img src="docs/assets/banner.png" alt="ManaForge — Escanea tu colección. Forja mazos con las cartas que ya tienes." width="100%">
 </p>
 
 <p align="center">
