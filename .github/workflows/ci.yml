@@ -1,0 +1,16 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  engine-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install pytest
+      - run: cd engine-reference && python -m pytest tests/ -v
+  forge-engine-swift:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: cd ForgeEngine && swift test

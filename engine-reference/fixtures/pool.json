@@ -1,0 +1,5256 @@
+{
+ "Act of Treason": {
+  "name": "Act of Treason",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Gain control of target creature until end of turn. Untap that creature. It gains haste until end of turn. (It can attack and {T} this turn.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Aegis Automaton": {
+  "name": "Aegis Automaton",
+  "qty": 1,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "W",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "{4}{W}: Return another target creature you control to its owner's hand.",
+  "power": 0,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Aegis Turtle": {
+  "name": "Aegis Turtle",
+  "qty": 1,
+  "mana_cost": "{U}",
+  "cmc": 1,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Turtle"
+  ],
+  "supertypes": [],
+  "oracle": "",
+  "power": 0,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Aerial Modification": {
+  "name": "Aerial Modification",
+  "qty": 1,
+  "mana_cost": "{4}{W}",
+  "cmc": 5,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant creature or Vehicle\nAs long as enchanted permanent is a Vehicle, it's a creature in addition to its other types.\nEnchanted creature gets +2/+2 and has flying.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Aether Chaser": {
+  "name": "Aether Chaser",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "First strike\nWhen this creature enters, you get {E}{E} (two energy counters).\nWhenever this creature attacks, you may pay {E}{E}. If you do, create a 1/1 colorless Servo artifact creature token.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Aether Herder": {
+  "name": "Aether Herder",
+  "qty": 1,
+  "mana_cost": "{3}{G}",
+  "cmc": 4,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elf",
+   "Artificer",
+   "Druid"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you get {E}{E} (two energy counters).\nWhenever this creature attacks, you may pay {E}{E}. If you do, create a 1/1 colorless Servo artifact creature token.",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Aether Inspector": {
+  "name": "Aether Inspector",
+  "qty": 1,
+  "mana_cost": "{3}{W}",
+  "cmc": 4,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Dwarf",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "Vigilance\nWhen this creature enters, you get {E}{E} (two energy counters).\nWhenever this creature attacks, you may pay {E}{E}. If you do, create a 1/1 colorless Servo artifact creature token.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Aether Swooper": {
+  "name": "Aether Swooper",
+  "qty": 2,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vedalken",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, you get {E}{E} (two energy counters).\nWhenever this creature attacks, you may pay {E}{E}. If you do, create a 1/1 colorless Servo artifact creature token.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Aetherstream Leopard": {
+  "name": "Aetherstream Leopard",
+  "qty": 1,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat"
+  ],
+  "supertypes": [],
+  "oracle": "Trample\nWhen this creature enters, you get {E} (an energy counter).\nWhenever this creature attacks, you may pay {E}. If you do, it gets +2/+0 until end of turn.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Affectionate Indrik": {
+  "name": "Affectionate Indrik",
+  "qty": 1,
+  "mana_cost": "{5}{G}",
+  "cmc": 6,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Beast"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you may have it fight target creature you don't control. (Each deals damage equal to its power to the other.)",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Air Elemental": {
+  "name": "Air Elemental",
+  "qty": 1,
+  "mana_cost": "{3}{U}{U}",
+  "cmc": 5,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elemental"
+  ],
+  "supertypes": [],
+  "oracle": "Flying",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Ajani's Pridemate": {
+  "name": "Ajani's Pridemate",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat",
+   "Soldier"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever you gain life, put a +1/+1 counter on this creature.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Alley Evasion": {
+  "name": "Alley Evasion",
+  "qty": 1,
+  "mana_cost": "{W}",
+  "cmc": 1,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Choose one \u2014\n\u2022 Target creature you control gets +1/+2 until end of turn.\n\u2022 Return target creature you control to its owner's hand.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Ambush Wolf": {
+  "name": "Ambush Wolf",
+  "qty": 3,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Wolf"
+  ],
+  "supertypes": [],
+  "oracle": "Flash (You may cast this spell any time you could cast an instant.)\nWhen this creature enters, exile up to one target card from a graveyard.",
+  "power": 4,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "An Offer You Can't Refuse": {
+  "name": "An Offer You Can't Refuse",
+  "qty": 1,
+  "mana_cost": "{U}",
+  "cmc": 1,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Counter target noncreature spell. Its controller creates two Treasure tokens. (They're artifacts with \"{T}, Sacrifice this token: Add one mana of any color.\")",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Ancient Crab": {
+  "name": "Ancient Crab",
+  "qty": 2,
+  "mana_cost": "{1}{U}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Crab"
+  ],
+  "supertypes": [],
+  "oracle": "",
+  "power": 1,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Angel of Finality": {
+  "name": "Angel of Finality",
+  "qty": 1,
+  "mana_cost": "{3}{W}",
+  "cmc": 4,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Angel"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, exile target player's graveyard.",
+  "power": 3,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Angler Drake": {
+  "name": "Angler Drake",
+  "qty": 1,
+  "mana_cost": "{4}{U}{U}",
+  "cmc": 6,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Drake"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, you may return target creature to its owner's hand.",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Anthem of Champions": {
+  "name": "Anthem of Champions",
+  "qty": 1,
+  "mana_cost": "{G}{W}",
+  "cmc": 2,
+  "colors": "GW",
+  "ci": "GW",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Creatures you control get +1/+1.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Arcane Epiphany": {
+  "name": "Arcane Epiphany",
+  "qty": 1,
+  "mana_cost": "{3}{U}{U}",
+  "cmc": 5,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This spell costs {1} less to cast if you control a Wizard.\nDraw three cards.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Attack-in-the-Box": {
+  "name": "Attack-in-the-Box",
+  "qty": 1,
+  "mana_cost": "{3}",
+  "cmc": 3,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Toy"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature attacks, you may have it get +4/+0 until end of turn. If you do, sacrifice it at the beginning of the next end step.",
+  "power": 2,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Augmenting Automaton": {
+  "name": "Augmenting Automaton",
+  "qty": 3,
+  "mana_cost": "{1}",
+  "cmc": 1,
+  "colors": "",
+  "ci": "B",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "{1}{B}: This creature gets +1/+1 until end of turn.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Balemurk Leech": {
+  "name": "Balemurk Leech",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Leech"
+  ],
+  "supertypes": [],
+  "oracle": "Eerie \u2014 Whenever an enchantment you control enters and whenever you fully unlock a Room, each opponent loses 1 life.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Balmor, Battlemage Captain": {
+  "name": "Balmor, Battlemage Captain",
+  "qty": 1,
+  "mana_cost": "{U}{R}",
+  "cmc": 2,
+  "colors": "RU",
+  "ci": "RU",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Bird",
+   "Wizard"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhenever you cast an instant or sorcery spell, creatures you control get +1/+0 and gain trample until end of turn.",
+  "power": 1,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Barricade Breaker": {
+  "name": "Barricade Breaker",
+  "qty": 1,
+  "mana_cost": "{7}",
+  "cmc": 7,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Juggernaut"
+  ],
+  "supertypes": [],
+  "oracle": "Improvise (Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.)\nThis creature attacks each combat if able.",
+  "power": 7,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Bastion Enforcer": {
+  "name": "Bastion Enforcer",
+  "qty": 3,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Dwarf",
+   "Soldier"
+  ],
+  "supertypes": [],
+  "oracle": "",
+  "power": 3,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Bastion Inventor": {
+  "name": "Bastion Inventor",
+  "qty": 2,
+  "mana_cost": "{5}{U}",
+  "cmc": 6,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vedalken",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "Improvise (Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.)\nHexproof (This creature can't be the target of spells or abilities your opponents control.)",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Bite Down": {
+  "name": "Bite Down",
+  "qty": 1,
+  "mana_cost": "{1}{G}",
+  "cmc": 2,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature you control deals damage equal to its power to target creature or planeswalker you don't control.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Blessed Reversal": {
+  "name": "Blessed Reversal",
+  "qty": 4,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "You gain 3 life for each creature attacking you.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Bloodshot Trainee": {
+  "name": "Bloodshot Trainee",
+  "qty": 1,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Goblin",
+   "Warrior"
+  ],
+  "supertypes": [],
+  "oracle": "{T}: This creature deals 4 damage to target creature. Activate only if this creature's power is 4 or greater.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Blossoming Sands": {
+  "name": "Blossoming Sands",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "GW",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This land enters tapped.\nWhen this land enters, you gain 1 life.\n{T}: Add {G} or {W}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Boilerbilges Ripper": {
+  "name": "Boilerbilges Ripper",
+  "qty": 1,
+  "mana_cost": "{4}{R}",
+  "cmc": 5,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Assassin"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you may sacrifice another creature or enchantment. When you do, this creature deals 2 damage to any target.",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Bold Impaler": {
+  "name": "Bold Impaler",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vampire",
+   "Knight"
+  ],
+  "supertypes": [],
+  "oracle": "{2}{R}: This creature gets +2/+0 until end of turn.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Boltwave": {
+  "name": "Boltwave",
+  "qty": 2,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Boltwave deals 3 damage to each opponent.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Bone Shredder": {
+  "name": "Bone Shredder",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Phyrexian",
+   "Minion"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nEcho {2}{B} (At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)\nWhen this creature enters, destroy target nonartifact, nonblack creature.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Borrowed Hostility": {
+  "name": "Borrowed Hostility",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Escalate {3} (Pay this cost for each mode chosen beyond the first.)\nChoose one or both \u2014\n\u2022 Target creature gets +3/+0 until end of turn.\n\u2022 Target creature gains first strike until end of turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Brazen Wolves": {
+  "name": "Brazen Wolves",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Wolf"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature attacks, it gets +2/+0 until end of turn.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Burst Lightning": {
+  "name": "Burst Lightning",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Kicker {4} (You may pay an additional {4} as you cast this spell.)\nBurst Lightning deals 2 damage to any target. If this spell was kicked, it deals 4 damage instead.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Bushwhack": {
+  "name": "Bushwhack",
+  "qty": 1,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Choose one \u2014\n\u2022 Search your library for a basic land card, reveal it, put it into your hand, then shuffle.\n\u2022 Target creature you control fights target creature you don't control. (Each deals damage equal to its power to the other.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Campus Guide": {
+  "name": "Campus Guide",
+  "qty": 1,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Golem"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you may search your library for a basic land card, reveal it, then shuffle and put that card on top.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Chandra's Revolution": {
+  "name": "Chandra's Revolution",
+  "qty": 2,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Chandra's Revolution deals 4 damage to target creature. Tap target land. That land doesn't untap during its controller's next untap step.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Clear the Mind": {
+  "name": "Clear the Mind",
+  "qty": 4,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target player shuffles their graveyard into their library.\nDraw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Clinquant Skymage": {
+  "name": "Clinquant Skymage",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Bird",
+   "Wizard"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhenever you draw a card, put a +1/+1 counter on this creature.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Codie, Vociferous Codex": {
+  "name": "Codie, Vociferous Codex",
+  "qty": 4,
+  "mana_cost": "{3}",
+  "cmc": 3,
+  "colors": "",
+  "ci": "BGRUW",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Book",
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "You can't cast permanent spells.\n{4}, {T}: Add {W}{U}{B}{R}{G}. When you next cast a spell this turn, exile cards from the top of your library until you exile an instant or sorcery card with lesser mana value. Until end of turn, you may cast that card without paying its mana cost. Put each other card exiled this way on the bottom of your library in a random order.",
+  "power": 1,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Commune with Evil": {
+  "name": "Commune with Evil",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Look at the top four cards of your library. Put one of them into your hand and the rest into your graveyard. You gain 3 life.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Conductive Machete": {
+  "name": "Conductive Machete",
+  "qty": 1,
+  "mana_cost": "{4}",
+  "cmc": 4,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [
+   "Equipment"
+  ],
+  "supertypes": [],
+  "oracle": "When this Equipment enters, manifest dread, then attach this Equipment to that creature. (Look at the top two cards of your library. Put one onto the battlefield face down as a 2/2 creature and the other into your graveyard. Turn it face up any time for its mana cost if it's a creature card.)\nEquipped creature gets +2/+1.\nEquip {4}",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Consulate Turret": {
+  "name": "Consulate Turret",
+  "qty": 1,
+  "mana_cost": "{3}",
+  "cmc": 3,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{T}: You get {E} (an energy counter).\n{T}, Pay {E}{E}{E}: This artifact deals 2 damage to target player or planeswalker.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Consuming Corruption": {
+  "name": "Consuming Corruption",
+  "qty": 4,
+  "mana_cost": "{B}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Consuming Corruption deals X damage to target creature or planeswalker and you gain X life, where X is the number of Swamps you control.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Conviction": {
+  "name": "Conviction",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant creature\nEnchanted creature gets +1/+3.\n{W}: Return this Aura to its owner's hand.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Coral Merfolk": {
+  "name": "Coral Merfolk",
+  "qty": 2,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Merfolk"
+  ],
+  "supertypes": [],
+  "oracle": "",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Counterspell": {
+  "name": "Counterspell",
+  "qty": 1,
+  "mana_cost": "{U}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Counter target spell.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Courageous Goblin": {
+  "name": "Courageous Goblin",
+  "qty": 3,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Goblin"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature attacks while you control a creature with power 4 or greater, this creature gets +1/+0 and gains menace until end of turn. (It can't be blocked except by two or more creatures.)",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Cracked Skull": {
+  "name": "Cracked Skull",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant creature\nWhen this Aura enters, look at target player's hand. You may choose a nonland card from it. That player discards that card.\nWhen enchanted creature is dealt damage, destroy it.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Creeping Peeper": {
+  "name": "Creeping Peeper",
+  "qty": 1,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Eye"
+  ],
+  "supertypes": [],
+  "oracle": "{T}: Add {U}. Spend this mana only to cast an enchantment spell, unlock a door, or turn a permanent face up.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Crop Rotation": {
+  "name": "Crop Rotation",
+  "qty": 1,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "As an additional cost to cast this spell, sacrifice a land.\nSearch your library for a land card, put that card onto the battlefield, then shuffle.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Cruel Feeding": {
+  "name": "Cruel Feeding",
+  "qty": 4,
+  "mana_cost": "{B}",
+  "cmc": 1,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Strive \u2014 This spell costs {2}{B} more to cast for each target beyond the first.\nAny number of target creatures each get +1/+0 and gain lifelink until end of turn. (Damage dealt by a creature with lifelink also causes its controller to gain that much life.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Cruel Finality": {
+  "name": "Cruel Finality",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature gets -2/-2 until end of turn. Scry 1. (Look at the top card of your library. You may put that card on the bottom.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Crypt Feaster": {
+  "name": "Crypt Feaster",
+  "qty": 1,
+  "mana_cost": "{3}{B}",
+  "cmc": 4,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Zombie"
+  ],
+  "supertypes": [],
+  "oracle": "Menace (This creature can't be blocked except by two or more creatures.)\nThreshold \u2014 Whenever this creature attacks, if there are seven or more cards in your graveyard, this creature gets +2/+0 until end of turn.",
+  "power": 3,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Cryptid Inspector": {
+  "name": "Cryptid Inspector",
+  "qty": 1,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elf",
+   "Warrior"
+  ],
+  "supertypes": [],
+  "oracle": "Vigilance\nWhenever a face-down permanent you control enters and whenever this creature or another permanent you control is turned face up, put a +1/+1 counter on this creature.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Daggermaw Megalodon": {
+  "name": "Daggermaw Megalodon",
+  "qty": 1,
+  "mana_cost": "{4}{U}{U}",
+  "cmc": 6,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Shark"
+  ],
+  "supertypes": [],
+  "oracle": "Vigilance\nIslandcycling {2} ({2}, Discard this card: Search your library for an Island card, reveal it, put it into your hand, then shuffle.)",
+  "power": 5,
+  "toughness": 7,
+  "layout": "normal"
+ },
+ "Dark Ritual": {
+  "name": "Dark Ritual",
+  "qty": 1,
+  "mana_cost": "{B}",
+  "cmc": 1,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Add {B}{B}{B}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Dawnfeather Eagle": {
+  "name": "Dawnfeather Eagle",
+  "qty": 1,
+  "mana_cost": "{4}{W}",
+  "cmc": 5,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Bird"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, creatures you control get +1/+1 and gain vigilance until end of turn.",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Dazzling Angel": {
+  "name": "Dazzling Angel",
+  "qty": 2,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Angel"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhenever another creature you control enters, you gain 1 life.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Decommission": {
+  "name": "Decommission",
+  "qty": 1,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy target artifact or enchantment.\nRevolt \u2014 If a permanent left the battlefield under your control this turn, you gain 3 life.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Demonfire": {
+  "name": "Demonfire",
+  "qty": 1,
+  "mana_cost": "{X}{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Demonfire deals X damage to any target. If a creature dealt damage this way would die this turn, exile it instead.\nHellbent \u2014 If you have no cards in hand, this spell can't be countered and the damage can't be prevented.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Dhund Operative": {
+  "name": "Dhund Operative",
+  "qty": 2,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Rogue"
+  ],
+  "supertypes": [],
+  "oracle": "As long as you control an artifact, this creature gets +1/+0 and has deathtouch.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Diabolic Edict": {
+  "name": "Diabolic Edict",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target player sacrifices a creature of their choice.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Disenchant": {
+  "name": "Disenchant",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy target artifact or enchantment.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Distemper of the Blood": {
+  "name": "Distemper of the Blood",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature gets +2/+2 and gains trample until end of turn.\nMadness {R} (If you discard this card, discard it into exile. When you do, cast it for its madness cost or put it into your graveyard.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Divine Verdict": {
+  "name": "Divine Verdict",
+  "qty": 1,
+  "mana_cost": "{3}{W}",
+  "cmc": 4,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy target attacking or blocking creature.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Don't Make a Sound": {
+  "name": "Don't Make a Sound",
+  "qty": 1,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Counter target spell unless its controller pays {2}. If they do, surveil 2. (Look at the top two cards of your library, then put any number of them into your graveyard and the rest on top of your library in any order.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Door to Nothingness": {
+  "name": "Door to Nothingness",
+  "qty": 4,
+  "mana_cost": "{5}",
+  "cmc": 5,
+  "colors": "",
+  "ci": "BGRUW",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This artifact enters tapped.\n{W}{W}{U}{U}{B}{B}{R}{R}{G}{G}, {T}, Sacrifice this artifact: Target player loses the game.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Drag Under": {
+  "name": "Drag Under",
+  "qty": 2,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Return target creature to its owner's hand.\nDraw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Drag to the Roots": {
+  "name": "Drag to the Roots",
+  "qty": 1,
+  "mana_cost": "{2}{B}{G}",
+  "cmc": 4,
+  "colors": "BG",
+  "ci": "BG",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Delirium \u2014 This spell costs {2} less to cast as long as there are four or more card types among cards in your graveyard.\nDestroy target nonland permanent.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Dukhara Peafowl": {
+  "name": "Dukhara Peafowl",
+  "qty": 1,
+  "mana_cost": "{4}",
+  "cmc": 4,
+  "colors": "",
+  "ci": "U",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Bird"
+  ],
+  "supertypes": [],
+  "oracle": "{U}: This creature gains flying until end of turn.",
+  "power": 2,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Duress": {
+  "name": "Duress",
+  "qty": 1,
+  "mana_cost": "{B}",
+  "cmc": 1,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target opponent reveals their hand. You choose a noncreature, nonland card from it. That player discards that card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Eaten Alive": {
+  "name": "Eaten Alive",
+  "qty": 1,
+  "mana_cost": "{B}",
+  "cmc": 1,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "As an additional cost to cast this spell, sacrifice a creature or pay {3}{B}.\nExile target creature or planeswalker.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Efficient Construction": {
+  "name": "Efficient Construction",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Whenever you cast an artifact spell, create a 1/1 colorless Thopter artifact creature token with flying.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Elementalist Adept": {
+  "name": "Elementalist Adept",
+  "qty": 1,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Wizard"
+  ],
+  "supertypes": [],
+  "oracle": "Flash (You may cast this spell any time you could cast an instant.)\nProwess (Whenever you cast a noncreature spell, this creature gets +1/+1 until end of turn.)",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Elfsworn Giant": {
+  "name": "Elfsworn Giant",
+  "qty": 1,
+  "mana_cost": "{3}{G}{G}",
+  "cmc": 5,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Giant"
+  ],
+  "supertypes": [],
+  "oracle": "Reach (This creature can block creatures with flying.)\nLandfall \u2014 Whenever a land you control enters, create a 1/1 green Elf Warrior creature token.",
+  "power": 5,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Elvish Regrower": {
+  "name": "Elvish Regrower",
+  "qty": 1,
+  "mana_cost": "{2}{G}{G}",
+  "cmc": 4,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elf",
+   "Druid"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, return target permanent card from your graveyard to your hand.",
+  "power": 4,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Embraal Gear-Smasher": {
+  "name": "Embraal Gear-Smasher",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Warrior"
+  ],
+  "supertypes": [],
+  "oracle": "{T}, Sacrifice an artifact: This creature deals 2 damage to each opponent.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Emerge from the Cocoon": {
+  "name": "Emerge from the Cocoon",
+  "qty": 1,
+  "mana_cost": "{4}{W}",
+  "cmc": 5,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Return target creature card from your graveyard to the battlefield. You gain 3 life.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Enduring Curiosity": {
+  "name": "Enduring Curiosity",
+  "qty": 2,
+  "mana_cost": "{2}{U}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment",
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat",
+   "Glimmer"
+  ],
+  "supertypes": [],
+  "oracle": "Flash\nWhenever a creature you control deals combat damage to a player, draw a card.\nWhen Enduring Curiosity dies, if it was a creature, return it to the battlefield under its owner's control. It's an enchantment. (It's not a creature.)",
+  "power": 4,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Erratic Apparition": {
+  "name": "Erratic Apparition",
+  "qty": 1,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spirit"
+  ],
+  "supertypes": [],
+  "oracle": "Flying, vigilance\nEerie \u2014 Whenever an enchantment you control enters and whenever you fully unlock a Room, this creature gets +1/+1 until end of turn.",
+  "power": 1,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Erudite Wizard": {
+  "name": "Erudite Wizard",
+  "qty": 2,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Wizard"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever you draw your second card each turn, put a +1/+1 counter on this creature.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Essence Extraction": {
+  "name": "Essence Extraction",
+  "qty": 1,
+  "mana_cost": "{1}{B}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Essence Extraction deals 3 damage to target creature and you gain 3 life.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Essence Scatter": {
+  "name": "Essence Scatter",
+  "qty": 1,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Counter target creature spell.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Ethereal Armor": {
+  "name": "Ethereal Armor",
+  "qty": 1,
+  "mana_cost": "{W}",
+  "cmc": 1,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant creature\nEnchanted creature gets +1/+1 for each enchantment you control and has first strike.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Faebloom Trick": {
+  "name": "Faebloom Trick",
+  "qty": 1,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Create two 1/1 blue Faerie creature tokens with flying. When you do, tap target creature an opponent controls.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Fake Your Own Death": {
+  "name": "Fake Your Own Death",
+  "qty": 2,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Until end of turn, target creature gets +2/+0 and gains \"When this creature dies, return it to the battlefield tapped under its owner's control and you create a Treasure token.\" (It's an artifact with \"{T}, Sacrifice this token: Add one mana of any color.\")",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Fates' Reversal": {
+  "name": "Fates' Reversal",
+  "qty": 4,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Return up to one target creature card from your graveyard to your hand. Venture into the dungeon. (Enter the first room or advance to the next room.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Fear of Immobility": {
+  "name": "Fear of Immobility",
+  "qty": 1,
+  "mana_cost": "{4}{W}",
+  "cmc": 5,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Enchantment",
+   "Creature"
+  ],
+  "subtypes": [
+   "Nightmare"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, tap up to one target creature. If an opponent controls that creature, put a stun counter on it. (If a permanent with a stun counter would become untapped, remove one from it instead.)",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Fear of Isolation": {
+  "name": "Fear of Isolation",
+  "qty": 1,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment",
+   "Creature"
+  ],
+  "subtypes": [
+   "Nightmare"
+  ],
+  "supertypes": [],
+  "oracle": "As an additional cost to cast this spell, return a permanent you control to its owner's hand.\nFlying",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Fear of Surveillance": {
+  "name": "Fear of Surveillance",
+  "qty": 2,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Enchantment",
+   "Creature"
+  ],
+  "subtypes": [
+   "Nightmare"
+  ],
+  "supertypes": [],
+  "oracle": "Vigilance\nWhenever this creature attacks, surveil 1. (Look at the top card of your library. You may put it into your graveyard.)",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Fear of the Dark": {
+  "name": "Fear of the Dark",
+  "qty": 1,
+  "mana_cost": "{4}{B}",
+  "cmc": 5,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Enchantment",
+   "Creature"
+  ],
+  "subtypes": [
+   "Nightmare"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature attacks, if defending player controls no Glimmer creatures, it gains menace and deathtouch until end of turn. (A creature with menace can't be blocked except by two or more creatures.)",
+  "power": 5,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Felling Blow": {
+  "name": "Felling Blow",
+  "qty": 1,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Put a +1/+1 counter on target creature you control. Then that creature deals damage equal to its power to target creature an opponent controls.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Fen Hauler": {
+  "name": "Fen Hauler",
+  "qty": 2,
+  "mana_cost": "{6}{B}",
+  "cmc": 7,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Insect"
+  ],
+  "supertypes": [],
+  "oracle": "Improvise (Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.)\nThis creature can't be blocked by artifact creatures.",
+  "power": 5,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Fiend Artisan": {
+  "name": "Fiend Artisan",
+  "qty": 1,
+  "mana_cost": "{B/G}{B/G}",
+  "cmc": 2,
+  "colors": "BG",
+  "ci": "BG",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Nightmare"
+  ],
+  "supertypes": [],
+  "oracle": "This creature gets +1/+1 for each creature card in your graveyard.\n{X}{B/G}, {T}, Sacrifice another creature: Search your library for a creature card with mana value X or less, put it onto the battlefield, then shuffle. Activate only as a sorcery.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Fiery Annihilation": {
+  "name": "Fiery Annihilation",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Fiery Annihilation deals 5 damage to target creature. Exile up to one target Equipment attached to that creature. If that creature would die this turn, exile it instead.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Firebrand Archer": {
+  "name": "Firebrand Archer",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Archer"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever you cast a noncreature spell, this creature deals 1 damage to each opponent.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Flashfires": {
+  "name": "Flashfires",
+  "qty": 1,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy all Plains.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Forest": {
+  "name": "Forest",
+  "qty": 4,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "G",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [
+   "Forest"
+  ],
+  "supertypes": [],
+  "oracle": "({T}: Add {G}.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Foundry Assembler": {
+  "name": "Foundry Assembler",
+  "qty": 1,
+  "mana_cost": "{5}",
+  "cmc": 5,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Assembly-Worker"
+  ],
+  "supertypes": [],
+  "oracle": "Improvise (Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.)",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Foundry Hornet": {
+  "name": "Foundry Hornet",
+  "qty": 1,
+  "mana_cost": "{3}{B}",
+  "cmc": 4,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Insect"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, if you control a creature with a +1/+1 counter on it, creatures your opponents control get -1/-1 until end of turn.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Fourth Bridge Prowler": {
+  "name": "Fourth Bridge Prowler",
+  "qty": 2,
+  "mana_cost": "{B}",
+  "cmc": 1,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Rogue"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you may have target creature get -1/-1 until end of turn.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Friendly Ghost": {
+  "name": "Friendly Ghost",
+  "qty": 1,
+  "mana_cost": "{3}{W}",
+  "cmc": 4,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spirit"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, target creature gets +2/+4 until end of turn.",
+  "power": 2,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Frostwielder": {
+  "name": "Frostwielder",
+  "qty": 1,
+  "mana_cost": "{2}{R}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Shaman"
+  ],
+  "supertypes": [],
+  "oracle": "If a creature dealt damage by this creature this turn would die, exile it instead.\n{T}: This creature deals 1 damage to any target.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Funeral Room // Awakening Hall": {
+  "name": "Funeral Room // Awakening Hall",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Room"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever a creature you control dies, each opponent loses 1 life and you gain 1 life.\n(You may cast either half. That door unlocks on the battlefield. As a sorcery, you may pay the mana cost of a locked door to unlock it.)",
+  "power": null,
+  "toughness": null,
+  "layout": "split"
+ },
+ "Furnace Whelp": {
+  "name": "Furnace Whelp",
+  "qty": 1,
+  "mana_cost": "{2}{R}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Dragon"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\n{R}: This creature gets +1/+0 until end of turn.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Garruk's Uprising": {
+  "name": "Garruk's Uprising",
+  "qty": 1,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "When this enchantment enters, if you control a creature with power 4 or greater, draw a card.\nCreatures you control have trample. (Each of those creatures can deal excess combat damage to the player or planeswalker it's attacking.)\nWhenever a creature you control with power 4 or greater enters, draw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Genesis Wave": {
+  "name": "Genesis Wave",
+  "qty": 1,
+  "mana_cost": "{X}{G}{G}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Reveal the top X cards of your library. You may put any number of permanent cards with mana value X or less from among them onto the battlefield. Then put all cards revealed this way that weren't put onto the battlefield into your graveyard.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Ghostly Keybearer": {
+  "name": "Ghostly Keybearer",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spirit"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhenever this creature deals combat damage to a player, unlock a locked door of up to one target Room you control.",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Glory Seeker": {
+  "name": "Glory Seeker",
+  "qty": 2,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Soldier"
+  ],
+  "supertypes": [],
+  "oracle": "",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Goblin Skycutter": {
+  "name": "Goblin Skycutter",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Goblin",
+   "Warrior"
+  ],
+  "supertypes": [],
+  "oracle": "Sacrifice this creature: It deals 2 damage to target creature with flying. That creature loses flying until end of turn.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Goblin Surprise": {
+  "name": "Goblin Surprise",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Choose one \u2014\n\u2022 Creatures you control get +2/+0 until end of turn.\n\u2022 Create two 1/1 red Goblin creature tokens.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Good-Fortune Unicorn": {
+  "name": "Good-Fortune Unicorn",
+  "qty": 1,
+  "mana_cost": "{1}{G}{W}",
+  "cmc": 3,
+  "colors": "GW",
+  "ci": "GW",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Unicorn"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever another creature you control enters, put a +1/+1 counter on that creature.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Grab the Prize": {
+  "name": "Grab the Prize",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "As an additional cost to cast this spell, discard a card.\nDraw two cards. If the discarded card wasn't a land card, Grab the Prize deals 2 damage to each opponent.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Graceful Cat": {
+  "name": "Graceful Cat",
+  "qty": 2,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature attacks, it gets +1/+1 until end of turn.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Gray Merchant of Asphodel": {
+  "name": "Gray Merchant of Asphodel",
+  "qty": 4,
+  "mana_cost": "{3}{B}{B}",
+  "cmc": 5,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Zombie"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, each opponent loses X life, where X is your devotion to black. You gain life equal to the life lost this way. (Each {B} in the mana costs of permanents you control counts toward your devotion to black.)",
+  "power": 2,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Greenbelt Rampager": {
+  "name": "Greenbelt Rampager",
+  "qty": 1,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elephant"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, pay {E}{E} (two energy counters). If you can't, return this creature to its owner's hand and you get {E}.",
+  "power": 3,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Grievous Wound": {
+  "name": "Grievous Wound",
+  "qty": 4,
+  "mana_cost": "{3}{B}{B}",
+  "cmc": 5,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant player\nEnchanted player can't gain life.\nWhenever enchanted player is dealt damage, they lose half their life, rounded up.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Gutless Plunderer": {
+  "name": "Gutless Plunderer",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Skeleton",
+   "Pirate"
+  ],
+  "supertypes": [],
+  "oracle": "Deathtouch (Any amount of damage this deals to a creature is enough to destroy it.)\nRaid \u2014 When this creature enters, if you attacked this turn, look at the top three cards of your library. You may put one of those cards back on top of your library. Put the rest into your graveyard.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Healer's Hawk": {
+  "name": "Healer's Hawk",
+  "qty": 1,
+  "mana_cost": "{W}",
+  "cmc": 1,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Bird"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nLifelink (Damage dealt by this creature also causes you to gain that much life.)",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Heartfire Immolator": {
+  "name": "Heartfire Immolator",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Wizard"
+  ],
+  "supertypes": [],
+  "oracle": "Prowess (Whenever you cast a noncreature spell, this creature gets +1/+1 until end of turn.)\n{R}, Sacrifice this creature: It deals damage equal to its power to target creature or planeswalker.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Helpful Hunter": {
+  "name": "Helpful Hunter",
+  "qty": 3,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, draw a card.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Hidden Herbalists": {
+  "name": "Hidden Herbalists",
+  "qty": 1,
+  "mana_cost": "{1}{G}",
+  "cmc": 2,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Druid"
+  ],
+  "supertypes": [],
+  "oracle": "Revolt \u2014 When this creature enters, if a permanent left the battlefield under your control this turn, add {G}{G}.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Horrid Vigor": {
+  "name": "Horrid Vigor",
+  "qty": 1,
+  "mana_cost": "{1}{G}",
+  "cmc": 2,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature gains deathtouch and indestructible until end of turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Hungry Flames": {
+  "name": "Hungry Flames",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Hungry Flames deals 3 damage to target creature and 2 damage to target player or planeswalker.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Hungry Ghoul": {
+  "name": "Hungry Ghoul",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Zombie"
+  ],
+  "supertypes": [],
+  "oracle": "{1}, Sacrifice another creature: Put a +1/+1 counter on this creature.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Ice Over": {
+  "name": "Ice Over",
+  "qty": 1,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant artifact or creature\nEnchanted permanent doesn't untap during its controller's untap step.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Icewind Elemental": {
+  "name": "Icewind Elemental",
+  "qty": 1,
+  "mana_cost": "{4}{U}",
+  "cmc": 5,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elemental"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, draw a card, then discard a card.",
+  "power": 3,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Impeccable Timing": {
+  "name": "Impeccable Timing",
+  "qty": 2,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Impeccable Timing deals 3 damage to target attacking or blocking creature.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Implement of Examination": {
+  "name": "Implement of Examination",
+  "qty": 3,
+  "mana_cost": "{3}",
+  "cmc": 3,
+  "colors": "",
+  "ci": "U",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{U}, Sacrifice this artifact: Draw a card.\nWhen this artifact is put into a graveyard from the battlefield, draw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Implement of Ferocity": {
+  "name": "Implement of Ferocity",
+  "qty": 1,
+  "mana_cost": "{1}",
+  "cmc": 1,
+  "colors": "",
+  "ci": "G",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{G}, Sacrifice this artifact: Put a +1/+1 counter on target creature. Activate only as a sorcery.\nWhen this artifact is put into a graveyard from the battlefield, draw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Implement of Improvement": {
+  "name": "Implement of Improvement",
+  "qty": 1,
+  "mana_cost": "{1}",
+  "cmc": 1,
+  "colors": "",
+  "ci": "W",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{W}, Sacrifice this artifact: You gain 2 life.\nWhen this artifact is put into a graveyard from the battlefield, draw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Impossible Inferno": {
+  "name": "Impossible Inferno",
+  "qty": 1,
+  "mana_cost": "{4}{R}",
+  "cmc": 5,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Impossible Inferno deals 6 damage to target creature.\nDelirium \u2014 If there are four or more card types among cards in your graveyard, exile the top card of your library. You may play it until the end of your next turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Incandescent Soulstoke": {
+  "name": "Incandescent Soulstoke",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elemental",
+   "Shaman"
+  ],
+  "supertypes": [],
+  "oracle": "Other Elemental creatures you control get +1/+1.\n{1}{R}, {T}: You may put an Elemental creature card from your hand onto the battlefield. That creature gains haste until end of turn. Sacrifice it at the beginning of the next end step.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Infernal Vessel": {
+  "name": "Infernal Vessel",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Cleric"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature dies, if it wasn't a Demon, return it to the battlefield under its owner's control with two +1/+1 counters on it. It's a Demon in addition to its other types.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Infestation Sage": {
+  "name": "Infestation Sage",
+  "qty": 1,
+  "mana_cost": "{B}",
+  "cmc": 1,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elf",
+   "Warlock"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature dies, create a 1/1 black and green Insect creature token with flying.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Innocuous Rat": {
+  "name": "Innocuous Rat",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Rat"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature dies, manifest dread. (Look at the top two cards of your library. Put one onto the battlefield face down as a 2/2 creature and the other into your graveyard. Turn it face up any time for its mana cost if it's a creature card.)",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Insidious Fungus": {
+  "name": "Insidious Fungus",
+  "qty": 1,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Fungus"
+  ],
+  "supertypes": [],
+  "oracle": "{2}, Sacrifice this creature: Choose one \u2014\n\u2022 Destroy target artifact.\n\u2022 Destroy target enchantment.\n\u2022 Draw a card. Then you may put a land card from your hand onto the battlefield tapped.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Inspiration": {
+  "name": "Inspiration",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target player draws two cards.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Inspired Charge": {
+  "name": "Inspired Charge",
+  "qty": 2,
+  "mana_cost": "{2}{W}{W}",
+  "cmc": 4,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Creatures you control get +2/+1 until end of turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Inspiring Paladin": {
+  "name": "Inspiring Paladin",
+  "qty": 2,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Knight"
+  ],
+  "supertypes": [],
+  "oracle": "During your turn, this creature has first strike. (It deals combat damage before creatures without first strike.)\nDuring your turn, creatures you control with +1/+1 counters on them have first strike.",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Involuntary Employment": {
+  "name": "Involuntary Employment",
+  "qty": 2,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Gain control of target creature until end of turn. Untap that creature. It gains haste until end of turn. Create a Treasure token. (It's an artifact with \"{T}, Sacrifice this token: Add one mana of any color.\")",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Ironclad Revolutionary": {
+  "name": "Ironclad Revolutionary",
+  "qty": 1,
+  "mana_cost": "{4}{B}{B}",
+  "cmc": 6,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Aetherborn",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you may sacrifice an artifact. If you do, put two +1/+1 counters on this creature and each opponent loses 2 life.",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Irontread Crusher": {
+  "name": "Irontread Crusher",
+  "qty": 2,
+  "mana_cost": "{4}",
+  "cmc": 4,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [
+   "Vehicle"
+  ],
+  "supertypes": [],
+  "oracle": "Crew 3 (Tap any number of creatures you control with total power 3 or more: This Vehicle becomes an artifact creature until end of turn.)",
+  "power": 6,
+  "toughness": 6,
+  "layout": "normal"
+ },
+ "Island": {
+  "name": "Island",
+  "qty": 26,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "U",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [
+   "Island"
+  ],
+  "supertypes": [],
+  "oracle": "({T}: Add {U}.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Jungle Hollow": {
+  "name": "Jungle Hollow",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "BG",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This land enters tapped.\nWhen this land enters, you gain 1 life.\n{T}: Add {B} or {G}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Kellan, Planar Trailblazer": {
+  "name": "Kellan, Planar Trailblazer",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Faerie",
+   "Scout"
+  ],
+  "supertypes": [],
+  "oracle": "{1}{R}: If Kellan is a Scout, it becomes a Human Faerie Detective and gains \"Whenever Kellan deals combat damage to a player, exile the top card of your library. You may play that card this turn.\"\n{2}{R}: If Kellan is a Detective, it becomes a 3/2 Human Faerie Rogue and gains double strike.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Lakeside Shack": {
+  "name": "Lakeside Shack",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "GU",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This land enters tapped unless a player has 13 or less life.\n{T}: Add {G} or {U}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Lathnu Sailback": {
+  "name": "Lathnu Sailback",
+  "qty": 1,
+  "mana_cost": "{4}{R}",
+  "cmc": 5,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Lizard"
+  ],
+  "supertypes": [],
+  "oracle": "",
+  "power": 5,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Lathril, Blade of the Elves": {
+  "name": "Lathril, Blade of the Elves",
+  "qty": 1,
+  "mana_cost": "{2}{B}{G}",
+  "cmc": 4,
+  "colors": "BG",
+  "ci": "BG",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elf",
+   "Noble"
+  ],
+  "supertypes": [],
+  "oracle": "Menace (This creature can't be blocked except by two or more creatures.)\nWhenever Lathril deals combat damage to a player, create that many 1/1 green Elf Warrior creature tokens.\n{T}, Tap ten untapped Elves you control: Each opponent loses 10 life and you gain 10 life.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Lightshell Duo": {
+  "name": "Lightshell Duo",
+  "qty": 2,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Rat",
+   "Otter"
+  ],
+  "supertypes": [],
+  "oracle": "Prowess (Whenever you cast a noncreature spell, this creature gets +1/+1 until end of turn.)\nWhen this creature enters, surveil 2. (Look at the top two cards of your library, then put any number of them into your graveyard and the rest on top of your library in any order.)",
+  "power": 3,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Living Phone": {
+  "name": "Living Phone",
+  "qty": 1,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Toy"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature dies, look at the top five cards of your library. You may reveal a creature card with power 2 or less from among them and put it into your hand. Put the rest on the bottom of your library in a random order.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Llanowar Elves": {
+  "name": "Llanowar Elves",
+  "qty": 2,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elf",
+   "Druid"
+  ],
+  "supertypes": [],
+  "oracle": "{T}: Add {G}.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Loot, Exuberant Explorer": {
+  "name": "Loot, Exuberant Explorer",
+  "qty": 1,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Beast",
+   "Noble"
+  ],
+  "supertypes": [],
+  "oracle": "You may play an additional land on each of your turns.\n{4}{G}{G}, {T}: Look at the top six cards of your library. You may reveal a creature card with mana value less than or equal to the number of lands you control from among them and put it onto the battlefield. Put the rest on the bottom in a random order.",
+  "power": 1,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Luminous Rebuke": {
+  "name": "Luminous Rebuke",
+  "qty": 2,
+  "mana_cost": "{4}{W}",
+  "cmc": 5,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This spell costs {3} less to cast if it targets a tapped creature.\nDestroy target creature.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Lunar Insight": {
+  "name": "Lunar Insight",
+  "qty": 1,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Draw a card for each different mana value among nonland permanents you control.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Malevolent Chandelier": {
+  "name": "Malevolent Chandelier",
+  "qty": 1,
+  "mana_cost": "{6}",
+  "cmc": 6,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\n{2}: Put target card from a graveyard on the bottom of its owner's library. Activate only as a sorcery.",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Manifest Dread": {
+  "name": "Manifest Dread",
+  "qty": 1,
+  "mana_cost": "{1}{G}",
+  "cmc": 2,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Manifest dread. (Look at the top two cards of your library. Put one onto the battlefield face down as a 2/2 creature and the other into your graveyard. Turn it face up any time for its mana cost if it's a creature card.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Marauding Blight-Priest": {
+  "name": "Marauding Blight-Priest",
+  "qty": 2,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vampire",
+   "Cleric"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever you gain life, each opponent loses 1 life.",
+  "power": 3,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Maverick Thopterist": {
+  "name": "Maverick Thopterist",
+  "qty": 1,
+  "mana_cost": "{3}{U}{R}",
+  "cmc": 5,
+  "colors": "RU",
+  "ci": "RU",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "Improvise (Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.)\nWhen this creature enters, create two 1/1 colorless Thopter artifact creature tokens with flying.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Meat Locker // Drowned Diner": {
+  "name": "Meat Locker // Drowned Diner",
+  "qty": 1,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Room"
+  ],
+  "supertypes": [],
+  "oracle": "When you unlock this door, tap up to one target creature and put two stun counters on it. (If a permanent with a stun counter would become untapped, remove one from it instead.)\n(You may cast either half. That door unlocks on the battlefield. As a sorcery, you may pay the mana cost of a locked door to unlock it.)",
+  "power": null,
+  "toughness": null,
+  "layout": "split"
+ },
+ "Merchant's Dockhand": {
+  "name": "Merchant's Dockhand",
+  "qty": 1,
+  "mana_cost": "{1}",
+  "cmc": 1,
+  "colors": "",
+  "ci": "U",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "{3}{U}, {T}, Tap X untapped artifacts you control: Look at the top X cards of your library. Put one of them into your hand and the rest on the bottom of your library in any order.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Metallic Mimic": {
+  "name": "Metallic Mimic",
+  "qty": 1,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Shapeshifter"
+  ],
+  "supertypes": [],
+  "oracle": "As this creature enters, choose a creature type.\nThis creature is the chosen type in addition to its other types.\nEach other creature you control of the chosen type enters with an additional +1/+1 counter on it.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Meteor Golem": {
+  "name": "Meteor Golem",
+  "qty": 1,
+  "mana_cost": "{7}",
+  "cmc": 7,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Golem"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, destroy target nonland permanent an opponent controls.",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Mighty Leap": {
+  "name": "Mighty Leap",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature gets +2/+2 and gains flying until end of turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Most Valuable Slayer": {
+  "name": "Most Valuable Slayer",
+  "qty": 1,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Warrior"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever you attack, target attacking creature gets +1/+0 and gains first strike until end of turn.",
+  "power": 2,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Mountain": {
+  "name": "Mountain",
+  "qty": 2,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "R",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [
+   "Mountain"
+  ],
+  "supertypes": [],
+  "oracle": "({T}: Add {R}.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Murder": {
+  "name": "Murder",
+  "qty": 1,
+  "mana_cost": "{1}{B}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy target creature.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Natural Obsolescence": {
+  "name": "Natural Obsolescence",
+  "qty": 1,
+  "mana_cost": "{1}{G}",
+  "cmc": 2,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Put target artifact on the bottom of its owner's library.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Night Market Aeronaut": {
+  "name": "Night Market Aeronaut",
+  "qty": 1,
+  "mana_cost": "{3}{B}",
+  "cmc": 4,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Aetherborn",
+   "Warrior"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nRevolt \u2014 This creature enters with a +1/+1 counter on it if a permanent left the battlefield under your control this turn.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Night Market Guard": {
+  "name": "Night Market Guard",
+  "qty": 1,
+  "mana_cost": "{3}",
+  "cmc": 3,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "This creature can block an additional creature each combat.",
+  "power": 3,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Nimble Innovator": {
+  "name": "Nimble Innovator",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vedalken",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, draw a card.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Ogre Savant": {
+  "name": "Ogre Savant",
+  "qty": 1,
+  "mana_cost": "{4}{R}",
+  "cmc": 5,
+  "colors": "R",
+  "ci": "RU",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Ogre",
+   "Wizard"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, if {U} was spent to cast it, return target creature to its owner's hand.",
+  "power": 3,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Ornithopter": {
+  "name": "Ornithopter",
+  "qty": 2,
+  "mana_cost": "{0}",
+  "cmc": 0,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Thopter"
+  ],
+  "supertypes": [],
+  "oracle": "Flying",
+  "power": 0,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Overrun": {
+  "name": "Overrun",
+  "qty": 1,
+  "mana_cost": "{2}{G}{G}{G}",
+  "cmc": 5,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Creatures you control get +3/+3 and gain trample until end of turn. (Each of those creatures can deal excess combat damage to the player or planeswalker it's attacking.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Patched Plaything": {
+  "name": "Patched Plaything",
+  "qty": 1,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Toy"
+  ],
+  "supertypes": [],
+  "oracle": "Double strike\nThis creature enters with two -1/-1 counters on it if you cast it from your hand.",
+  "power": 4,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Peculiar Lighthouse": {
+  "name": "Peculiar Lighthouse",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "RU",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This land enters tapped unless a player has 13 or less life.\n{T}: Add {U} or {R}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Pendulum of Patterns": {
+  "name": "Pendulum of Patterns",
+  "qty": 4,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "When this artifact enters, you gain 3 life.\n{5}, {T}, Sacrifice this artifact: Draw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Perforating Artist": {
+  "name": "Perforating Artist",
+  "qty": 2,
+  "mana_cost": "{1}{B}{R}",
+  "cmc": 3,
+  "colors": "BR",
+  "ci": "BR",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Devil"
+  ],
+  "supertypes": [],
+  "oracle": "Deathtouch (Any amount of damage this deals to a creature is enough to destroy it.)\nRaid \u2014 At the beginning of your end step, if you attacked this turn, each opponent loses 3 life unless that player sacrifices a nonland permanent of their choice or discards a card.",
+  "power": 3,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Pilfer": {
+  "name": "Pilfer",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target opponent reveals their hand. You choose a nonland card from it. That player discards that card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Plains": {
+  "name": "Plains",
+  "qty": 14,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "W",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [
+   "Plains"
+  ],
+  "supertypes": [],
+  "oracle": "({T}: Add {W}.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Preposterous Proportions": {
+  "name": "Preposterous Proportions",
+  "qty": 1,
+  "mana_cost": "{5}{G}{G}",
+  "cmc": 7,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Creatures you control get +10/+10 and gain vigilance until end of turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Prey Upon": {
+  "name": "Prey Upon",
+  "qty": 1,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature you control fights target creature you don't control. (Each deals damage equal to its power to the other.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Pyromatics": {
+  "name": "Pyromatics",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Replicate {1}{R} (When you cast this spell, copy it for each time you paid its replicate cost. You may choose new targets for the copies.)\nPyromatics deals 1 damage to any target.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Quick-Draw Katana": {
+  "name": "Quick-Draw Katana",
+  "qty": 2,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [
+   "Equipment"
+  ],
+  "supertypes": [],
+  "oracle": "During your turn, equipped creature gets +2/+0 and has first strike. (It deals combat damage before creatures without first strike.)\nEquip {2} ({2}: Attach to target creature you control. Equip only as a sorcery.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Quicksmith Spy": {
+  "name": "Quicksmith Spy",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, target artifact you control gains \"{T}: Draw a card\" for as long as you control this creature.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Ragged Playmate": {
+  "name": "Ragged Playmate",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Toy"
+  ],
+  "supertypes": [],
+  "oracle": "{1}, {T}: Target creature with power 2 or less can't be blocked this turn.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Ravenous Amulet": {
+  "name": "Ravenous Amulet",
+  "qty": 1,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{1}, {T}, Sacrifice a creature: Draw a card and put a soul counter on this artifact. Activate only as a sorcery.\n{4}, {T}, Sacrifice this artifact: Each opponent loses life equal to the number of soul counters on this artifact.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Reassembling Skeleton": {
+  "name": "Reassembling Skeleton",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Skeleton",
+   "Warrior"
+  ],
+  "supertypes": [],
+  "oracle": "{1}{B}: Return this card from your graveyard to the battlefield tapped.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Reckless Fireweaver": {
+  "name": "Reckless Fireweaver",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever an artifact you control enters, this creature deals 1 damage to each opponent.",
+  "power": 1,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Reckless Racer": {
+  "name": "Reckless Racer",
+  "qty": 1,
+  "mana_cost": "{2}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Pilot"
+  ],
+  "supertypes": [],
+  "oracle": "First strike\nWhenever this creature becomes tapped, you may discard a card. If you do, draw a card.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Refute": {
+  "name": "Refute",
+  "qty": 2,
+  "mana_cost": "{1}{U}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Counter target spell. Draw a card, then discard a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Resurrected Cultist": {
+  "name": "Resurrected Cultist",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Cleric"
+  ],
+  "supertypes": [],
+  "oracle": "Delirium \u2014 {2}{B}{B}: Return this card from your graveyard to the battlefield with a finality counter on it. Activate only if there are four or more card types among cards in your graveyard and only as a sorcery. (If a creature with a finality counter on it would die, exile it instead.)",
+  "power": 4,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Reverse Engineer": {
+  "name": "Reverse Engineer",
+  "qty": 1,
+  "mana_cost": "{3}{U}{U}",
+  "cmc": 5,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Improvise (Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.)\nDraw three cards.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Rip, Spawn Hunter": {
+  "name": "Rip, Spawn Hunter",
+  "qty": 1,
+  "mana_cost": "{2}{G}{W}",
+  "cmc": 4,
+  "colors": "GW",
+  "ci": "GW",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Survivor"
+  ],
+  "supertypes": [],
+  "oracle": "Survival \u2014 At the beginning of your second main phase, if Rip is tapped, reveal the top X cards of your library, where X is its power. Put any number of creature and/or Vehicle cards with different powers from among them into your hand. Put the rest on the bottom of your library in a random order.",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Ripchain Razorkin": {
+  "name": "Ripchain Razorkin",
+  "qty": 1,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Berserker"
+  ],
+  "supertypes": [],
+  "oracle": "Reach\n{2}{R}, Sacrifice a land: Draw a card.",
+  "power": 5,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Rite of the Moth": {
+  "name": "Rite of the Moth",
+  "qty": 1,
+  "mana_cost": "{1}{W}{B}{B}",
+  "cmc": 4,
+  "colors": "BW",
+  "ci": "BW",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Return target creature card from your graveyard to the battlefield with a finality counter on it. (If a creature with a finality counter on it would die, exile it instead.)\nFlashback {3}{W}{W}{B} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Rogue's Passage": {
+  "name": "Rogue's Passage",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{T}: Add {C}.\n{4}, {T}: Target creature can't be blocked this turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Ruby, Daring Tracker": {
+  "name": "Ruby, Daring Tracker",
+  "qty": 2,
+  "mana_cost": "{R}{G}",
+  "cmc": 2,
+  "colors": "GR",
+  "ci": "GR",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Scout"
+  ],
+  "supertypes": [],
+  "oracle": "Haste (This creature can attack and {T} as soon as it comes under your control.)\nWhenever Ruby attacks while you control a creature with power 4 or greater, Ruby gets +2/+2 until end of turn.\n{T}: Add {R} or {G}.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Run Away Together": {
+  "name": "Run Away Together",
+  "qty": 2,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Choose two target creatures controlled by different players. Return those creatures to their owners' hands.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Sabertooth Alley Cat": {
+  "name": "Sabertooth Alley Cat",
+  "qty": 1,
+  "mana_cost": "{1}{R}{R}",
+  "cmc": 3,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat"
+  ],
+  "supertypes": [],
+  "oracle": "This creature attacks each combat if able.\n{1}{R}: Creatures without defender can't block this creature this turn.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Sanguine Syphoner": {
+  "name": "Sanguine Syphoner",
+  "qty": 2,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vampire",
+   "Warlock"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature attacks, each opponent loses 1 life and you gain 1 life.",
+  "power": 1,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Sawblade Skinripper": {
+  "name": "Sawblade Skinripper",
+  "qty": 1,
+  "mana_cost": "{1}{B}{R}",
+  "cmc": 3,
+  "colors": "BR",
+  "ci": "BR",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Assassin"
+  ],
+  "supertypes": [],
+  "oracle": "Menace\n{2}, Sacrifice another creature or enchantment: Put a +1/+1 counter on this creature.\nAt the beginning of your end step, if you sacrificed one or more permanents this turn, this creature deals that much damage to any target.",
+  "power": 3,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Say Its Name": {
+  "name": "Say Its Name",
+  "qty": 1,
+  "mana_cost": "{1}{G}",
+  "cmc": 2,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Mill three cards. Then you may return a creature or land card from your graveyard to your hand.\nExile this card and two other cards named Say Its Name from your graveyard: Search your graveyard, hand, and/or library for a card named Altanak, the Thrice-Called and put it onto the battlefield. If you search your library this way, shuffle. Activate only as a sorcery.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Scrabbling Skullcrab": {
+  "name": "Scrabbling Skullcrab",
+  "qty": 1,
+  "mana_cost": "{U}",
+  "cmc": 1,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Crab",
+   "Skeleton"
+  ],
+  "supertypes": [],
+  "oracle": "Eerie \u2014 Whenever an enchantment you control enters and whenever you fully unlock a Room, target player mills two cards. (They put the top two cards of their library into their graveyard.)",
+  "power": 0,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Self-Reflection": {
+  "name": "Self-Reflection",
+  "qty": 2,
+  "mana_cost": "{4}{U}{U}",
+  "cmc": 6,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Create a token that's a copy of target creature you control.\nFlashback {3}{U} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Serra Angel": {
+  "name": "Serra Angel",
+  "qty": 1,
+  "mana_cost": "{3}{W}{W}",
+  "cmc": 5,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Angel"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nVigilance (Attacking doesn't cause this creature to tap.)",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Shepherding Spirits": {
+  "name": "Shepherding Spirits",
+  "qty": 1,
+  "mana_cost": "{4}{W}{W}",
+  "cmc": 6,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spirit"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nPlainscycling {2} ({2}, Discard this card: Search your library for a Plains card, reveal it, put it into your hand, then shuffle.)",
+  "power": 4,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Shipwreck Moray": {
+  "name": "Shipwreck Moray",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Fish"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you get {E}{E}{E}{E} (four energy counters).\nPay {E}: This creature gets +2/-2 until end of turn.",
+  "power": 0,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Shock": {
+  "name": "Shock",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Shock deals 2 damage to any target.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Siege of Towers": {
+  "name": "Siege of Towers",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Replicate {1}{R} (When you cast this spell, copy it for each time you paid its replicate cost. You may choose new targets for the copies.)\nTarget Mountain becomes a 3/1 creature. It's still a land.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Silkweaver Elite": {
+  "name": "Silkweaver Elite",
+  "qty": 2,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elf",
+   "Archer"
+  ],
+  "supertypes": [],
+  "oracle": "Reach (This creature can block creatures with flying.)\nRevolt \u2014 When this creature enters, if a permanent left the battlefield under your control this turn, draw a card.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Skitter of Lizards": {
+  "name": "Skitter of Lizards",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Lizard"
+  ],
+  "supertypes": [],
+  "oracle": "Multikicker {1}{R} (You may pay an additional {1}{R} any number of times as you cast this spell.)\nHaste\nThis creature enters with a +1/+1 counter on it for each time it was kicked.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Skyknight Squire": {
+  "name": "Skyknight Squire",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat",
+   "Scout"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever another creature you control enters, put a +1/+1 counter on this creature.\nAs long as this creature has three or more +1/+1 counters on it, it has flying and is a Knight in addition to its other types.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Sleep Paralysis": {
+  "name": "Sleep Paralysis",
+  "qty": 1,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant creature\nWhen this Aura enters, tap enchanted creature.\nEnchanted creature doesn't untap during its controller's untap step.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Snakeskin Veil": {
+  "name": "Snakeskin Veil",
+  "qty": 1,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Put a +1/+1 counter on target creature you control. It gains hexproof until end of turn. (It can't be the target of spells or abilities your opponents control.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Soul-Shackled Zombie": {
+  "name": "Soul-Shackled Zombie",
+  "qty": 1,
+  "mana_cost": "{3}{B}",
+  "cmc": 4,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Zombie"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, exile up to two target cards from a single graveyard. If at least one creature card was exiled this way, each opponent loses 2 life and you gain 2 life.",
+  "power": 4,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Soulstone Sanctuary": {
+  "name": "Soulstone Sanctuary",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{T}: Add {C}.\n{4}: This land becomes a 3/3 creature with vigilance and all creature types. It's still a land.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Spectral Sailor": {
+  "name": "Spectral Sailor",
+  "qty": 1,
+  "mana_cost": "{U}",
+  "cmc": 1,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spirit",
+   "Pirate"
+  ],
+  "supertypes": [],
+  "oracle": "Flash (You may cast this spell any time you could cast an instant.)\nFlying\n{3}{U}: Draw a card.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Spectral Snatcher": {
+  "name": "Spectral Snatcher",
+  "qty": 1,
+  "mana_cost": "{4}{B}{B}",
+  "cmc": 6,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spirit"
+  ],
+  "supertypes": [],
+  "oracle": "Ward\u2014Discard a card. (Whenever this creature becomes the target of a spell or ability an opponent controls, counter it unless that player discards a card.)\nSwampcycling {2} ({2}, Discard this card: Search your library for a Swamp card, reveal it, put it into your hand, then shuffle.)",
+  "power": 6,
+  "toughness": 5,
+  "layout": "normal"
+ },
+ "Sphinx of Magosi": {
+  "name": "Sphinx of Magosi",
+  "qty": 1,
+  "mana_cost": "{3}{U}{U}{U}",
+  "cmc": 6,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Sphinx"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\n{2}{U}: Draw a card, then put a +1/+1 counter on this creature.",
+  "power": 6,
+  "toughness": 6,
+  "layout": "normal"
+ },
+ "Spinner of Souls": {
+  "name": "Spinner of Souls",
+  "qty": 1,
+  "mana_cost": "{2}{G}",
+  "cmc": 3,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spider",
+   "Spirit"
+  ],
+  "supertypes": [],
+  "oracle": "Reach\nWhenever another nontoken creature you control dies, you may reveal cards from the top of your library until you reveal a creature card. Put that card into your hand and the rest on the bottom of your library in a random order.",
+  "power": 4,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Spire Patrol": {
+  "name": "Spire Patrol",
+  "qty": 1,
+  "mana_cost": "{2}{W}{U}",
+  "cmc": 4,
+  "colors": "UW",
+  "ci": "UW",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Soldier"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhen this creature enters, tap target creature an opponent controls. That creature doesn't untap during its controller's next untap step.",
+  "power": 3,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Spitfire Lagac": {
+  "name": "Spitfire Lagac",
+  "qty": 3,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Lizard"
+  ],
+  "supertypes": [],
+  "oracle": "Landfall \u2014 Whenever a land you control enters, this creature deals 1 damage to each opponent.",
+  "power": 3,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Sporogenic Infection": {
+  "name": "Sporogenic Infection",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant creature\nWhen this Aura enters, target player sacrifices a creature of their choice other than enchanted creature.\nWhen enchanted creature is dealt damage, destroy it.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Squad Rallier": {
+  "name": "Squad Rallier",
+  "qty": 4,
+  "mana_cost": "{3}{W}",
+  "cmc": 4,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Scout"
+  ],
+  "supertypes": [],
+  "oracle": "{2}{W}: Look at the top four cards of your library. You may reveal a creature card with power 2 or less from among them and put it into your hand. Put the rest on the bottom of your library in a random order.",
+  "power": 3,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Sram's Expertise": {
+  "name": "Sram's Expertise",
+  "qty": 1,
+  "mana_cost": "{2}{W}{W}",
+  "cmc": 4,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Create three 1/1 colorless Servo artifact creature tokens.\nYou may cast a spell with mana value 3 or less from your hand without paying its mana cost.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Sram, Senior Edificer": {
+  "name": "Sram, Senior Edificer",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Dwarf",
+   "Advisor"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever you cast an Aura, Equipment, or Vehicle spell, draw a card.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Standing Troops": {
+  "name": "Standing Troops",
+  "qty": 2,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Soldier"
+  ],
+  "supertypes": [],
+  "oracle": "Vigilance",
+  "power": 1,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Stealer of Secrets": {
+  "name": "Stealer of Secrets",
+  "qty": 1,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Rogue"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature deals combat damage to a player, draw a card.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Stormfront Pegasus": {
+  "name": "Stormfront Pegasus",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Pegasus"
+  ],
+  "supertypes": [],
+  "oracle": "Flying",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Strix Lookout": {
+  "name": "Strix Lookout",
+  "qty": 1,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Bird"
+  ],
+  "supertypes": [],
+  "oracle": "Flying, vigilance (Attacking doesn't cause this creature to tap.)\n{1}{U}, {T}: Draw a card, then discard a card.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Stroke of Midnight": {
+  "name": "Stroke of Midnight",
+  "qty": 1,
+  "mana_cost": "{2}{W}",
+  "cmc": 3,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy target nonland permanent. Its controller creates a 1/1 white Human creature token.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Stromkirk Bloodthief": {
+  "name": "Stromkirk Bloodthief",
+  "qty": 1,
+  "mana_cost": "{2}{B}",
+  "cmc": 3,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vampire",
+   "Rogue"
+  ],
+  "supertypes": [],
+  "oracle": "At the beginning of your end step, if an opponent lost life this turn, put a +1/+1 counter on target Vampire you control.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Strongbox Raider": {
+  "name": "Strongbox Raider",
+  "qty": 1,
+  "mana_cost": "{2}{R}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Orc",
+   "Pirate"
+  ],
+  "supertypes": [],
+  "oracle": "Raid \u2014 When this creature enters, if you attacked this turn, exile the top two cards of your library. Choose one of them. Until the end of your next turn, you may play that card.",
+  "power": 5,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Submerged Boneyard": {
+  "name": "Submerged Boneyard",
+  "qty": 4,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "BU",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This land enters tapped.\n{T}: Add {U} or {B}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Subterranean Shambler": {
+  "name": "Subterranean Shambler",
+  "qty": 1,
+  "mana_cost": "{3}{R}",
+  "cmc": 4,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Elemental"
+  ],
+  "supertypes": [],
+  "oracle": "Echo {3}{R} (At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)\nWhen this creature enters or leaves the battlefield, it deals 1 damage to each creature without flying.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Sun-Blessed Healer": {
+  "name": "Sun-Blessed Healer",
+  "qty": 1,
+  "mana_cost": "{1}{W}",
+  "cmc": 2,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Cleric"
+  ],
+  "supertypes": [],
+  "oracle": "Kicker {1}{W} (You may pay an additional {1}{W} as you cast this spell.)\nLifelink (Damage dealt by this creature also causes you to gain that much life.)\nWhen this creature enters, if it was kicked, return target nonland permanent card with mana value 2 or less from your graveyard to the battlefield.",
+  "power": 3,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Sure Strike": {
+  "name": "Sure Strike",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature gets +3/+0 and gains first strike until end of turn. (It deals combat damage before creatures without first strike.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Surge of Zeal": {
+  "name": "Surge of Zeal",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Radiance \u2014 Target creature and each other creature that shares a color with it gain haste until end of turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Swamp": {
+  "name": "Swamp",
+  "qty": 12,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "B",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [
+   "Swamp"
+  ],
+  "supertypes": [],
+  "oracle": "({T}: Add {B}.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Tezzeret's Betrayal": {
+  "name": "Tezzeret's Betrayal",
+  "qty": 2,
+  "mana_cost": "{3}{U}{B}",
+  "cmc": 5,
+  "colors": "BU",
+  "ci": "BU",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy target creature. You may search your library and/or graveyard for a card named Tezzeret, Master of Metal, reveal it, and put it into your hand. If you search your library this way, shuffle.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Tezzeret's Simulacrum": {
+  "name": "Tezzeret's Simulacrum",
+  "qty": 3,
+  "mana_cost": "{3}",
+  "cmc": 3,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Golem"
+  ],
+  "supertypes": [],
+  "oracle": "{T}: Target opponent loses 1 life. If you control a Tezzeret planeswalker, that player loses 3 life instead.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Tezzeret's Touch": {
+  "name": "Tezzeret's Touch",
+  "qty": 2,
+  "mana_cost": "{1}{U}{B}",
+  "cmc": 3,
+  "colors": "BU",
+  "ci": "BU",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant artifact\nEnchanted artifact is a creature with base power and toughness 5/5 in addition to its other types.\nWhen enchanted artifact is put into a graveyard, return that card to its owner's hand.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Tezzeret, Master of Metal": {
+  "name": "Tezzeret, Master of Metal",
+  "qty": 1,
+  "mana_cost": "{4}{U}{B}",
+  "cmc": 6,
+  "colors": "BU",
+  "ci": "BU",
+  "types": [
+   "Planeswalker"
+  ],
+  "subtypes": [
+   "Tezzeret"
+  ],
+  "supertypes": [],
+  "oracle": "[+1]: Reveal cards from the top of your library until you reveal an artifact card. Put that card into your hand and the rest on the bottom of your library in a random order.\n[\u22123]: Target opponent loses life equal to the number of artifacts you control.\n[\u22128]: Gain control of all artifacts and creatures target opponent controls.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "The Mindskinner": {
+  "name": "The Mindskinner",
+  "qty": 4,
+  "mana_cost": "{U}{U}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment",
+   "Creature"
+  ],
+  "subtypes": [
+   "Nightmare"
+  ],
+  "supertypes": [],
+  "oracle": "The Mindskinner can't be blocked.\nIf a source you control would deal damage to an opponent, prevent that damage and each opponent mills that many cards.",
+  "power": 10,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Think Twice": {
+  "name": "Think Twice",
+  "qty": 2,
+  "mana_cost": "{1}{U}",
+  "cmc": 2,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Draw a card.\nFlashback {2}{U} (You may cast this card from your graveyard for its flashback cost. Then exile it.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Thornwood Falls": {
+  "name": "Thornwood Falls",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "GU",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This land enters tapped.\nWhen this land enters, you gain 1 life.\n{T}: Add {G} or {U}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Threats Around Every Corner": {
+  "name": "Threats Around Every Corner",
+  "qty": 1,
+  "mana_cost": "{3}{G}",
+  "cmc": 4,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "When this enchantment enters, manifest dread.\nWhenever a face-down permanent you control enters, search your library for a basic land card, put it onto the battlefield tapped, then shuffle.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Thrill of Possibility": {
+  "name": "Thrill of Possibility",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "As an additional cost to cast this spell, discard a card.\nDraw two cards.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Thriving Grubs": {
+  "name": "Thriving Grubs",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Gremlin"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters, you get {E}{E} (two energy counters).\nWhenever this creature attacks, you may pay {E}{E}. If you do, put a +1/+1 counter on it.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Time Stop": {
+  "name": "Time Stop",
+  "qty": 1,
+  "mana_cost": "{4}{U}{U}",
+  "cmc": 6,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "End the turn. (Exile all spells and abilities, including this spell. The player whose turn it is discards down to their maximum hand size. Damage heals and \"this turn\" and \"until end of turn\" effects end.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Treasure Keeper": {
+  "name": "Treasure Keeper",
+  "qty": 1,
+  "mana_cost": "{4}",
+  "cmc": 4,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature dies, reveal cards from the top of your library until you reveal a nonland card with mana value 3 or less. You may cast that card without paying its mana cost. Put all revealed cards not cast this way on the bottom of your library in a random order.",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Treetop Snarespinner": {
+  "name": "Treetop Snarespinner",
+  "qty": 1,
+  "mana_cost": "{3}{G}",
+  "cmc": 4,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Spider"
+  ],
+  "supertypes": [],
+  "oracle": "Reach (This creature can block creatures with flying.)\nDeathtouch (Any amount of damage this deals to a creature is enough to destroy it.)\n{2}{G}: Put a +1/+1 counter on target creature you control. Activate only as a sorcery.",
+  "power": 1,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Tricks of the Trade": {
+  "name": "Tricks of the Trade",
+  "qty": 2,
+  "mana_cost": "{3}{U}",
+  "cmc": 4,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant creature\nEnchanted creature gets +2/+0 and can't be blocked.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Twist Reality": {
+  "name": "Twist Reality",
+  "qty": 1,
+  "mana_cost": "{1}{U}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Choose one \u2014\n\u2022 Counter target spell.\n\u2022 Manifest dread. (Look at the top two cards of your library. Put one onto the battlefield face down as a 2/2 creature and the other into your graveyard. Turn it face up any time for its mana cost if it's a creature card.)",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Two-Headed Sliver": {
+  "name": "Two-Headed Sliver",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Sliver"
+  ],
+  "supertypes": [],
+  "oracle": "All Sliver creatures have menace. (They can't be blocked except by two or more creatures.)",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Unbridled Growth": {
+  "name": "Unbridled Growth",
+  "qty": 1,
+  "mana_cost": "{G}",
+  "cmc": 1,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Enchantment"
+  ],
+  "subtypes": [
+   "Aura"
+  ],
+  "supertypes": [],
+  "oracle": "Enchant land\nEnchanted land has \"{T}: Add one mana of any color.\"\nSacrifice this Aura: Draw a card.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Universal Solvent": {
+  "name": "Universal Solvent",
+  "qty": 3,
+  "mana_cost": "{1}",
+  "cmc": 1,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{7}, {T}, Sacrifice this artifact: Destroy target permanent.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Untimely Malfunction": {
+  "name": "Untimely Malfunction",
+  "qty": 1,
+  "mana_cost": "{1}{R}",
+  "cmc": 2,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Choose one \u2014\n\u2022 Destroy target artifact.\n\u2022 Change the target of target spell or ability with a single target.\n\u2022 One or two target creatures can't block this turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Vampire Gourmand": {
+  "name": "Vampire Gourmand",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vampire"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature attacks, you may sacrifice another creature. If you do, draw a card and this creature can't be blocked this turn.",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Vampire Soulcaller": {
+  "name": "Vampire Soulcaller",
+  "qty": 1,
+  "mana_cost": "{4}{B}",
+  "cmc": 5,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vampire",
+   "Warlock"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nThis creature can't block.\nWhen this creature enters, return target creature card from your graveyard to your hand.",
+  "power": 3,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Vengeful Bloodwitch": {
+  "name": "Vengeful Bloodwitch",
+  "qty": 1,
+  "mana_cost": "{1}{B}",
+  "cmc": 2,
+  "colors": "B",
+  "ci": "B",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Vampire",
+   "Warlock"
+  ],
+  "supertypes": [],
+  "oracle": "Whenever this creature or another creature you control dies, target opponent loses 1 life and you gain 1 life.",
+  "power": 1,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Verdant Automaton": {
+  "name": "Verdant Automaton",
+  "qty": 1,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "G",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "{3}{G}: Put a +1/+1 counter on this creature.",
+  "power": 1,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Victory's Herald": {
+  "name": "Victory's Herald",
+  "qty": 1,
+  "mana_cost": "{3}{W}{W}{W}",
+  "cmc": 6,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Angel"
+  ],
+  "supertypes": [],
+  "oracle": "Flying\nWhenever this creature attacks, attacking creatures gain flying and lifelink until end of turn.",
+  "power": 4,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Violent Urge": {
+  "name": "Violent Urge",
+  "qty": 1,
+  "mana_cost": "{R}",
+  "cmc": 1,
+  "colors": "R",
+  "ci": "R",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Target creature gets +1/+0 and gains first strike until end of turn.\nDelirium \u2014 If there are four or more card types among cards in your graveyard, that creature gains double strike until end of turn.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Voltaic Key": {
+  "name": "Voltaic Key",
+  "qty": 1,
+  "mana_cost": "{1}",
+  "cmc": 1,
+  "colors": "",
+  "ci": "",
+  "types": [
+   "Artifact"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "{1}, {T}: Untap target artifact.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Wary Thespian": {
+  "name": "Wary Thespian",
+  "qty": 1,
+  "mana_cost": "{1}{G}",
+  "cmc": 2,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Cat",
+   "Druid"
+  ],
+  "supertypes": [],
+  "oracle": "When this creature enters or dies, surveil 1. (Look at the top card of your library. You may put it into your graveyard.)",
+  "power": 3,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Watchful Automaton": {
+  "name": "Watchful Automaton",
+  "qty": 1,
+  "mana_cost": "{3}",
+  "cmc": 3,
+  "colors": "",
+  "ci": "U",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "{2}{U}: Scry 1. (Look at the top card of your library. You may put that card on the bottom.)",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Welder Automaton": {
+  "name": "Welder Automaton",
+  "qty": 1,
+  "mana_cost": "{2}",
+  "cmc": 2,
+  "colors": "",
+  "ci": "R",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Construct"
+  ],
+  "supertypes": [],
+  "oracle": "{3}{R}: This creature deals 1 damage to each opponent.",
+  "power": 2,
+  "toughness": 1,
+  "layout": "normal"
+ },
+ "Weldfast Engineer": {
+  "name": "Weldfast Engineer",
+  "qty": 1,
+  "mana_cost": "{1}{B}{R}",
+  "cmc": 3,
+  "colors": "BR",
+  "ci": "BR",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "At the beginning of combat on your turn, target artifact creature you control gets +2/+0 until end of turn.",
+  "power": 3,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Wickerfolk Thresher": {
+  "name": "Wickerfolk Thresher",
+  "qty": 1,
+  "mana_cost": "{3}{G}",
+  "cmc": 4,
+  "colors": "G",
+  "ci": "G",
+  "types": [
+   "Artifact",
+   "Creature"
+  ],
+  "subtypes": [
+   "Scarecrow"
+  ],
+  "supertypes": [],
+  "oracle": "Delirium \u2014 Whenever this creature attacks, if there are four or more card types among cards in your graveyard, look at the top card of your library. If it's a land card, you may put it onto the battlefield. If you don't put the card onto the battlefield, put it into your hand.",
+  "power": 5,
+  "toughness": 4,
+  "layout": "normal"
+ },
+ "Wind Drake": {
+  "name": "Wind Drake",
+  "qty": 1,
+  "mana_cost": "{2}{U}",
+  "cmc": 3,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Drake"
+  ],
+  "supertypes": [],
+  "oracle": "Flying",
+  "power": 2,
+  "toughness": 2,
+  "layout": "normal"
+ },
+ "Wind-Kin Raiders": {
+  "name": "Wind-Kin Raiders",
+  "qty": 3,
+  "mana_cost": "{4}{U}{U}",
+  "cmc": 6,
+  "colors": "U",
+  "ci": "U",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Human",
+   "Artificer"
+  ],
+  "supertypes": [],
+  "oracle": "Improvise (Your artifacts can help cast this spell. Each artifact you tap after you're done activating mana abilities pays for {1}.)\nFlying",
+  "power": 4,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Wind-Scarred Crag": {
+  "name": "Wind-Scarred Crag",
+  "qty": 1,
+  "mana_cost": "",
+  "cmc": 0,
+  "colors": "",
+  "ci": "RW",
+  "types": [
+   "Land"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "This land enters tapped.\nWhen this land enters, you gain 1 life.\n{T}: Add {R} or {W}.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Winding Constrictor": {
+  "name": "Winding Constrictor",
+  "qty": 1,
+  "mana_cost": "{B}{G}",
+  "cmc": 2,
+  "colors": "BG",
+  "ci": "BG",
+  "types": [
+   "Creature"
+  ],
+  "subtypes": [
+   "Snake"
+  ],
+  "supertypes": [],
+  "oracle": "If one or more counters would be put on an artifact or creature you control, that many plus one of each of those kinds of counters are put on that permanent instead.\nIf you would get one or more counters, you get that many plus one of each of those kinds of counters instead.",
+  "power": 2,
+  "toughness": 3,
+  "layout": "normal"
+ },
+ "Winds of Rath": {
+  "name": "Winds of Rath",
+  "qty": 4,
+  "mana_cost": "{3}{W}{W}",
+  "cmc": 5,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Sorcery"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Destroy all creatures that aren't enchanted. They can't be regenerated.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ },
+ "Worthy Cause": {
+  "name": "Worthy Cause",
+  "qty": 4,
+  "mana_cost": "{W}",
+  "cmc": 1,
+  "colors": "W",
+  "ci": "W",
+  "types": [
+   "Instant"
+  ],
+  "subtypes": [],
+  "supertypes": [],
+  "oracle": "Buyback {2} (You may pay an additional {2} as you cast this spell. If you do, put this card into your hand as it resolves.)\nAs an additional cost to cast this spell, sacrifice a creature.\nYou gain life equal to the sacrificed creature's toughness.",
+  "power": null,
+  "toughness": null,
+  "layout": "normal"
+ }
+}
