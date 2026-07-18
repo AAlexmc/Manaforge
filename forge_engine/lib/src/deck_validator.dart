@@ -42,7 +42,7 @@ class DeckValidator {
     for (final name in deck.cards.keys) {
       final card = pool[name];
       if (card == null) continue;
-      if (!card.colors.split('').toSet().difference(allowed).isEmpty) {
+      if (card.colors.split('').toSet().difference(allowed).isNotEmpty) {
         errors.add(
             "'$name' (${card.colors}) fuera de la identidad ${deck.colors}");
       }

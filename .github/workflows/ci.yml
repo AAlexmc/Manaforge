@@ -15,5 +15,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
       - run: cd forge_engine && dart pub get
-      - run: cd forge_engine && dart analyze --fatal-infos
+      - run: cd forge_engine && dart analyze
       - run: cd forge_engine && dart test

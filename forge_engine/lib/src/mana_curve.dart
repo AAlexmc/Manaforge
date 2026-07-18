@@ -63,7 +63,10 @@ class ManaCurve {
       Map<String, int> cards, Map<String, Card> pool, Archetype archetype) {
     final avg = averageCmc(cards, pool);
     final raw = 24 + (avg - 3.0) * 2 - cheapSources(cards, pool) / 3.5;
-    return raw.round().clamp(archetype.landMin, archetype.landMax);
+    final rounded = raw.round();
+    if (rounded < archetype.landMin) return archetype.landMin;
+    if (rounded > archetype.landMax) return archetype.landMax;
+    return rounded;
   }
 
   /// Histograma de curva por CMC (agrupa 7+).
@@ -72,7 +75,9 @@ class ManaCurve {
       {int cap = 7}) {
     final hist = <int, int>{};
     cards.forEach((name, qty) {
-      final cmc = (pool[name]?.cmc ?? 0).clamp(0, cap);
+      var cmc = pool[name]?.cmc ?? 0;
+      if (cmc > cap) cmc = cap;
+      if (cmc < 0) cmc = 0;
       hist[cmc] = (hist[cmc] ?? 0) + qty;
     });
     return hist;
