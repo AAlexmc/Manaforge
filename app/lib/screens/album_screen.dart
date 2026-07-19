@@ -33,8 +33,20 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Future<void> _load() async {
     try {
       final sets = await widget.db.sets();
-      final owned = await widget.db
-          .ownedCountBySet(widget.collection.qtyByOracle.keys);
+      Map<String, int> owned;
+      if (widget.collection.hasPrintingData) {
+        // preciso: sabemos la edición exacta de cada carta (clave "set|nº")
+        owned = {};
+        widget.collection.printingQty.forEach((key, qty) {
+          if (qty <= 0) return;
+          final set = key.split('|').first;
+          owned[set] = (owned[set] ?? 0) + 1;
+        });
+      } else {
+        // aproximado (colecciones antiguas): por carta, no por edición
+        owned = await widget.db
+            .ownedCountBySet(widget.collection.qtyByOracle.keys);
+      }
       if (!mounted) return;
       setState(() {
         _sets = sets;
@@ -232,10 +244,17 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
           : ListenableBuilder(
               listenable: widget.collection,
               builder: (context, _) {
+                final byPrinting = widget.collection.hasPrintingData;
+                final printingQty = widget.collection.printingQty;
                 final qtyByOracle = widget.collection.qtyByOracle;
+                int qtyOf(AlbumCard c) => byPrinting
+                    ? (printingQty[
+                            '${widget.set.code.toLowerCase()}|${c.collectorNumber}'] ??
+                        0)
+                    : (qtyByOracle[c.oracleId] ?? 0);
                 var ownedHere = 0;
                 for (final c in cards) {
-                  if ((qtyByOracle[c.oracleId] ?? 0) > 0) ownedHere++;
+                  if (qtyOf(c) > 0) ownedHere++;
                 }
                 return Column(
                   children: [
@@ -279,7 +298,7 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                         itemCount: cards.length,
                         itemBuilder: (context, i) {
                           final card = cards[i];
-                          final qty = qtyByOracle[card.oracleId] ?? 0;
+                          final qty = qtyOf(card);
                           return _AlbumCell(
                               card: card,
                               qty: qty,

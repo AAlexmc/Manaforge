@@ -26,6 +26,41 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
   final _searchCtrl = TextEditingController();
   List<CardHit> _results = const [];
 
+  // Filtros de la colección
+  final Set<String> _fColors = {}; // W U B R G · 'C' = incolora
+  int? _fCmc; // null = cualquiera · 6 = 6+
+  String? _fType;
+  int? _fMinPower;
+  int? _fMinToughness;
+
+  bool get _anyFilter =>
+      _fColors.isNotEmpty ||
+      _fCmc != null ||
+      _fType != null ||
+      _fMinPower != null ||
+      _fMinToughness != null;
+
+  List<OwnedCard> _applyFilters(List<OwnedCard> cards) {
+    if (!_anyFilter) return cards;
+    return cards.where((c) {
+      if (_fColors.isNotEmpty) {
+        final colorless = c.colors.isEmpty;
+        final matches = _fColors.any((f) =>
+            f == 'C' ? colorless : c.colors.contains(f));
+        if (!matches) return false;
+      }
+      if (_fCmc != null) {
+        if (_fCmc == 6 ? c.cmc < 6 : c.cmc != _fCmc) return false;
+      }
+      if (_fType != null && !c.typeLine.contains(_fType!)) return false;
+      if (_fMinPower != null && (c.power ?? -99) < _fMinPower!) return false;
+      if (_fMinToughness != null && (c.toughness ?? -99) < _fMinToughness!) {
+        return false;
+      }
+      return true;
+    }).toList();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -83,6 +118,10 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
       imageSmall: hit.imageSmall,
       imageNormal: hit.imageNormal,
       colors: hit.colors,
+      typeLine: hit.typeLine,
+      cmc: hit.cmc,
+      power: hit.power,
+      toughness: hit.toughness,
       qty: 1,
     ));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -169,7 +208,10 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
     return ListenableBuilder(
       listenable: widget.collection,
       builder: (context, _) {
-        final owned = widget.collection.cards;
+        final allOwned = widget.collection.cards;
+        final owned = _applyFilters(allOwned);
+        final missingData =
+            _anyFilter && allOwned.any((c) => c.typeLine.isEmpty);
         return CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -222,6 +264,17 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                             borderRadius: BorderRadius.circular(14)),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    _buildFilterBar(),
+                    if (_anyFilter)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          '${owned.length} de ${allOwned.length} cartas'
+                          '${missingData ? ' · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con "Sustituir" activado' : ''}',
+                          style: const TextStyle(fontSize: 11.5),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -249,15 +302,17 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                 },
               )
             else if (owned.isEmpty)
-              const SliverFillRemaining(
+              SliverFillRemaining(
                 hasScrollBody: false,
                 child: Center(
                   child: Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(32),
                     child: Text(
-                      'Busca tu primera carta arriba, o abre el importador con el '
-                      'icono de subir (a la derecha del buscador) y arrastra '
-                      'ahí tu CSV de ManaBox.',
+                      _anyFilter
+                          ? 'Ninguna carta pasa estos filtros.'
+                          : 'Busca tu primera carta arriba, o abre el importador '
+                              'con el icono de subir (a la derecha del buscador) '
+                              'y arrastra ahí tu CSV de ManaBox.',
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -302,6 +357,107 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
           ],
         );
       },
+    );
+  }
+
+  static const _typeOptions = <String, String>{
+    'Creature': 'Criaturas',
+    'Instant': 'Instantáneos',
+    'Sorcery': 'Conjuros',
+    'Artifact': 'Artefactos',
+    'Enchantment': 'Encantamientos',
+    'Land': 'Tierras',
+  };
+
+  Widget _buildFilterBar() {
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        for (final c in const ['W', 'U', 'B', 'R', 'G', 'C'])
+          FilterChip(
+            visualDensity: VisualDensity.compact,
+            avatar: CircleAvatar(
+                radius: 6,
+                backgroundColor:
+                    c == 'C' ? Colors.blueGrey : manaColors[c]!),
+            label: Text(c),
+            selected: _fColors.contains(c),
+            onSelected: (v) => setState(
+                () => v ? _fColors.add(c) : _fColors.remove(c)),
+          ),
+        _dropdown<int?>(
+          hint: 'Coste',
+          value: _fCmc,
+          items: {
+            null: 'Coste: todos',
+            for (var i = 0; i <= 5; i++) i: 'Coste $i',
+            6: 'Coste 6+',
+          },
+          onChanged: (v) => setState(() => _fCmc = v),
+        ),
+        _dropdown<String?>(
+          hint: 'Tipo',
+          value: _fType,
+          items: {null: 'Tipo: todos', ..._typeOptions},
+          onChanged: (v) => setState(() => _fType = v),
+        ),
+        _dropdown<int?>(
+          hint: 'Ataque',
+          value: _fMinPower,
+          items: {
+            null: 'Ataque: todos',
+            for (var i = 1; i <= 6; i++) i: 'Ataque ≥ $i',
+          },
+          onChanged: (v) => setState(() => _fMinPower = v),
+        ),
+        _dropdown<int?>(
+          hint: 'Defensa',
+          value: _fMinToughness,
+          items: {
+            null: 'Defensa: todos',
+            for (var i = 1; i <= 6; i++) i: 'Defensa ≥ $i',
+          },
+          onChanged: (v) => setState(() => _fMinToughness = v),
+        ),
+        if (_anyFilter)
+          TextButton.icon(
+            onPressed: () => setState(() {
+              _fColors.clear();
+              _fCmc = null;
+              _fType = null;
+              _fMinPower = null;
+              _fMinToughness = null;
+            }),
+            icon: const Icon(Icons.filter_alt_off, size: 16),
+            label: const Text('Limpiar'),
+          ),
+      ],
+    );
+  }
+
+  Widget _dropdown<T>({
+    required String hint,
+    required T value,
+    required Map<T, String> items,
+    required ValueChanged<T> onChanged,
+  }) {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<T>(
+        value: value,
+        hint: Text(hint, style: const TextStyle(fontSize: 12.5)),
+        style: Theme.of(context)
+            .textTheme
+            .bodySmall
+            ?.copyWith(fontSize: 12.5),
+        borderRadius: BorderRadius.circular(10),
+        items: [
+          for (final e in items.entries)
+            DropdownMenuItem<T>(value: e.key, child: Text(e.value)),
+        ],
+        onChanged: (v) => onChanged(v as T),
+      ),
     );
   }
 }

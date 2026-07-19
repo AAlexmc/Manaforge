@@ -130,15 +130,17 @@ Archetype _archetypeByName(String name) =>
     Archetype.values.firstWhere((a) => a.name == name);
 
 /// Construye el mejor mazo de 60 para una identidad de color. Null si no da.
+/// [archetypeOverride] fuerza el arquetipo ('aggro'|'tempo'|'midrange'|
+/// 'control') en vez de detectarlo del pool.
 GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
-    {String? name}) {
+    {String? name, String? archetypeOverride}) {
   final cands = _candidatePool(pool, colors);
   var totalCopies = 0;
   cands.forEach((_, c) => totalCopies += c.qty);
   if (totalCopies < 30) return null;
 
   final (theme, rolesByCard) = detectTheme(cands);
-  final archetypeName = pickArchetype(cands);
+  final archetypeName = archetypeOverride ?? pickArchetype(cands);
   final archetype = _archetypeByName(archetypeName);
   final target = curveTarget[archetypeName]!;
 
@@ -411,9 +413,14 @@ ReforgeResult reforgeWithCurve(
 }
 
 /// Las mejores propuestas entre monocolor y pares de colores.
+/// [allowedColors] (p. ej. "WU") limita las identidades a ese subconjunto;
+/// [archetypeOverride] fuerza el arquetipo de todas las propuestas.
 List<GeneratedDeck> generateProposals(Map<String, Card> pool,
-    {int maxProposals = 5}) {
-  const singles = ['W', 'U', 'B', 'R', 'G'];
+    {int maxProposals = 5, String? allowedColors, String? archetypeOverride}) {
+  const wubrg = ['W', 'U', 'B', 'R', 'G'];
+  final singles = allowedColors == null || allowedColors.isEmpty
+      ? wubrg
+      : wubrg.where(allowedColors.contains).toList();
   final identities = <String>[...singles];
   for (var i = 0; i < singles.length; i++) {
     for (var j = i + 1; j < singles.length; j++) {
@@ -422,7 +429,8 @@ List<GeneratedDeck> generateProposals(Map<String, Card> pool,
   }
   final proposals = <GeneratedDeck>[];
   for (final colors in identities) {
-    final gen = generateDeck(pool, colors);
+    final gen =
+        generateDeck(pool, colors, archetypeOverride: archetypeOverride);
     if (gen != null) proposals.add(gen);
   }
   proposals.sort((a, b) => b.score.compareTo(a.score));

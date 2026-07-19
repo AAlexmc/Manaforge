@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
+import '../services/card_database.dart';
+import '../services/deck_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 
@@ -12,7 +14,13 @@ class DeckDetailScreen extends StatefulWidget {
   final fe.GeneratedDeck gen;
   final Map<String, fe.Card> pool;
 
-  const DeckDetailScreen({super.key, required this.gen, required this.pool});
+  /// Con [db], el detalle muestra el banner horizontal con las imágenes de
+  /// las cartas; con [decks], aparece el botón de guardar el mazo.
+  final CardDatabase? db;
+  final DeckStore? decks;
+
+  const DeckDetailScreen(
+      {super.key, required this.gen, required this.pool, this.db, this.decks});
 
   @override
   State<DeckDetailScreen> createState() => _DeckDetailScreenState();
@@ -22,11 +30,26 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   late fe.GeneratedDeck _gen;
   bool _editingCurve = false;
   Map<int, int> _edited = {};
+  Future<Map<String, (String?, String?)>>? _imagesF;
 
   @override
   void initState() {
     super.initState();
     _gen = widget.gen;
+    _loadImages();
+  }
+
+  void _loadImages() {
+    final db = widget.db;
+    if (db == null) return;
+    _imagesF = db.imagesForNames(
+        [..._gen.deck.cards.keys, ..._gen.deck.lands.keys]);
+  }
+
+  void _saveDeck() {
+    widget.decks!.add(SavedDeck.fromGenerated(_gen));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('✓ Mazo guardado — lo tienes en la pestaña Mazos')));
   }
 
   Map<String, fe.Card> get _pool => widget.pool;
@@ -81,6 +104,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
       setState(() {
         _gen = result.deck!;
         _editingCurve = false;
+        _loadImages(); // el banner refleja las cartas nuevas
       });
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('✓ Mazo reforjado a tu curva — lista actualizada')));
@@ -107,6 +131,12 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
       appBar: AppBar(
         title: Text(deck.name),
         actions: [
+          if (widget.decks != null)
+            IconButton(
+              tooltip: 'Guardar en Mis mazos',
+              icon: const Icon(Icons.bookmark_add_outlined),
+              onPressed: _saveDeck,
+            ),
           IconButton(
             tooltip: 'Copiar lista (Moxfield/Arena)',
             icon: const Icon(Icons.copy_all),
@@ -135,6 +165,10 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           const SizedBox(height: 6),
           const Text('✓ Tienes todas las cartas',
               style: TextStyle(color: MFColors.success)),
+          if (_imagesF != null) ...[
+            const SizedBox(height: 14),
+            _DeckImageStrip(gen: _gen, imagesF: _imagesF!),
+          ],
           const SizedBox(height: 16),
           Card(
             child: Padding(
@@ -290,6 +324,101 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+}
+
+
+/// Banner horizontal con las imágenes de todas las cartas del mazo
+/// (hechizos por coste y luego tierras): reconocerlas de un vistazo.
+class _DeckImageStrip extends StatelessWidget {
+  final fe.GeneratedDeck gen;
+  final Future<Map<String, (String?, String?)>> imagesF;
+
+  const _DeckImageStrip({required this.gen, required this.imagesF});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, (String?, String?)>>(
+      future: imagesF,
+      builder: (context, snap) {
+        final images = snap.data ?? const {};
+        final entries = [
+          ...gen.deck.cards.entries,
+          ...gen.deck.lands.entries,
+        ];
+        return SizedBox(
+          height: 176,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: entries.length,
+            itemBuilder: (context, i) {
+              final e = entries[i];
+              final urls = images[e.key];
+              final url = urls?.$1 ?? urls?.$2; // normal, si no small
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: 120,
+                      height: 168,
+                      child: url == null
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white10,
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(6),
+                              child: Text(e.key,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 10)),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(7),
+                              child: Image.network(
+                                url,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (context, child, progress) =>
+                                    progress == null
+                                        ? child
+                                        : Container(color: Colors.white10),
+                                errorBuilder: (context, error, stack) =>
+                                    Container(
+                                  color: Colors.white10,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(6),
+                                  child: Text(e.key,
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          const TextStyle(fontSize: 10)),
+                                ),
+                              ),
+                            ),
+                    ),
+                    Positioned(
+                      right: 4,
+                      top: 4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.78),
+                          borderRadius: BorderRadius.circular(9),
+                        ),
+                        child: Text('x${e.value}',
+                            style: const TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

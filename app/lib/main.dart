@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'screens/screens.dart';
 import 'services/card_database.dart';
 import 'services/collection_store.dart';
+import 'services/deck_store.dart';
 import 'theme/mf_theme.dart';
 
 void main() => runApp(const ManaForgeApp());
@@ -34,13 +35,14 @@ class _HomeShellState extends State<HomeShell> {
   int _index = 0;
   final _db = CardDatabase();
   final _collection = CollectionStore();
+  final _decks = DeckStore();
 
   @override
   Widget build(BuildContext context) {
     final screens = [
       ColeccionScreen(db: _db, collection: _collection),
-      const MazosScreen(),
-      ForgeScreen(db: _db, collection: _collection),
+      MazosScreen(db: _db, collection: _collection, decks: _decks),
+      ForgeScreen(db: _db, collection: _collection, decks: _decks),
       const TradesScreen(),
       const AjustesScreen(),
     ];

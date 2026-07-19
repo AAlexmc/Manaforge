@@ -5,6 +5,7 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/deck_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'deck_detail_screen.dart';
@@ -24,8 +25,13 @@ const _forgeMessages = [
 class ForgeScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
+  final DeckStore decks;
 
-  const ForgeScreen({super.key, required this.db, required this.collection});
+  const ForgeScreen(
+      {super.key,
+      required this.db,
+      required this.collection,
+      required this.decks});
 
   @override
   State<ForgeScreen> createState() => _ForgeScreenState();
@@ -33,6 +39,10 @@ class ForgeScreen extends StatefulWidget {
 
 class _ForgeScreenState extends State<ForgeScreen> {
   bool _assumeBasics = true;
+  // Opciones del jugador: colores, arquetipo y presupuesto por carta
+  final Set<String> _selColors = {};
+  String? _selArchetype;
+  double? _maxPriceEur;
   bool _forging = false;
   int _messageIndex = 0;
   Timer? _messageTimer;
@@ -61,10 +71,12 @@ class _ForgeScreenState extends State<ForgeScreen> {
     });
     try {
       final pool = await widget.db.buildPool(widget.collection.qtyByOracle,
-          assumeBasics: _assumeBasics);
+          assumeBasics: _assumeBasics, maxPriceEur: _maxPriceEur);
       // pequeña pausa para que la animación cuente su historia
       await Future.delayed(const Duration(milliseconds: 2200));
-      final proposals = fe.generateProposals(pool);
+      final proposals = fe.generateProposals(pool,
+          allowedColors: _selColors.isEmpty ? null : _selColors.join(),
+          archetypeOverride: _selArchetype);
       _messageTimer?.cancel();
       if (!mounted) return;
       setState(() {
@@ -180,6 +192,82 @@ class _ForgeScreenState extends State<ForgeScreen> {
                 'Casi todo el mundo tiene básicas de mazos de inicio; '
                 'desactívalo para usar SOLO las básicas de tu colección.'),
           ),
+          const SizedBox(height: 12),
+          Text('A tu gusto (opcional)',
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              for (final c in const ['W', 'U', 'B', 'R', 'G'])
+                FilterChip(
+                  visualDensity: VisualDensity.compact,
+                  avatar: CircleAvatar(
+                      radius: 6, backgroundColor: manaColors[c]!),
+                  label: Text(c),
+                  selected: _selColors.contains(c),
+                  onSelected: (v) => setState(
+                      () => v ? _selColors.add(c) : _selColors.remove(c)),
+                ),
+              const SizedBox(width: 6),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String?>(
+                  value: _selArchetype,
+                  hint: const Text('Arquetipo: auto',
+                      style: TextStyle(fontSize: 12.5)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontSize: 12.5),
+                  borderRadius: BorderRadius.circular(10),
+                  items: const [
+                    DropdownMenuItem(
+                        value: null, child: Text('Arquetipo: auto')),
+                    DropdownMenuItem(value: 'aggro', child: Text('Aggro')),
+                    DropdownMenuItem(value: 'tempo', child: Text('Tempo')),
+                    DropdownMenuItem(
+                        value: 'midrange', child: Text('Midrange')),
+                    DropdownMenuItem(
+                        value: 'control', child: Text('Control')),
+                  ],
+                  onChanged: (v) => setState(() => _selArchetype = v),
+                ),
+              ),
+              const SizedBox(width: 6),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<double?>(
+                  value: _maxPriceEur,
+                  hint: const Text('Precio: sin límite',
+                      style: TextStyle(fontSize: 12.5)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontSize: 12.5),
+                  borderRadius: BorderRadius.circular(10),
+                  items: const [
+                    DropdownMenuItem(
+                        value: null, child: Text('Precio: sin límite')),
+                    DropdownMenuItem(
+                        value: 1.0, child: Text('Cartas de ≤ 1 €')),
+                    DropdownMenuItem(
+                        value: 5.0, child: Text('Cartas de ≤ 5 €')),
+                    DropdownMenuItem(
+                        value: 10.0, child: Text('Cartas de ≤ 10 €')),
+                  ],
+                  onChanged: (v) => setState(() => _maxPriceEur = v),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _selColors.isEmpty
+                ? 'Sin elegir colores, Forge prueba todas las combinaciones.'
+                : 'Solo mazos ${_selColors.join("")} (y sus combinaciones).',
+            style: const TextStyle(fontSize: 11.5),
+          ),
           const SizedBox(height: 8),
           Card(
             child: Padding(
@@ -267,8 +355,11 @@ class _ForgeScreenState extends State<ForgeScreen> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: proposals.length,
-            itemBuilder: (context, i) =>
-                _ProposalCard(gen: proposals[i], pool: _pool!),
+            itemBuilder: (context, i) => _ProposalCard(
+                gen: proposals[i],
+                pool: _pool!,
+                db: widget.db,
+                decks: widget.decks),
           ),
         ),
         const SizedBox(height: 12),
@@ -280,8 +371,14 @@ class _ForgeScreenState extends State<ForgeScreen> {
 class _ProposalCard extends StatelessWidget {
   final fe.GeneratedDeck gen;
   final Map<String, fe.Card> pool;
+  final CardDatabase db;
+  final DeckStore decks;
 
-  const _ProposalCard({required this.gen, required this.pool});
+  const _ProposalCard(
+      {required this.gen,
+      required this.pool,
+      required this.db,
+      required this.decks});
 
   @override
   Widget build(BuildContext context) {
@@ -335,8 +432,8 @@ class _ProposalCard extends StatelessWidget {
                 child: FilledButton(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (_) =>
-                            DeckDetailScreen(gen: gen, pool: pool)),
+                        builder: (_) => DeckDetailScreen(
+                            gen: gen, pool: pool, db: db, decks: decks)),
                   ),
                   child: const Text('Ver mazo completo'),
                 ),

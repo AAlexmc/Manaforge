@@ -28,6 +28,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
   final _ctrl = TextEditingController();
   bool _working = false;
   bool _dragging = false;
+  bool _replace = false;
   String? _loadedFileName;
   ImportResult? _result;
 
@@ -86,15 +87,18 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
       _result = null;
     });
     final rows = parseManaBoxCsv(_ctrl.text);
+    if (_replace) widget.collection.clear();
     var imported = 0;
     var copies = 0;
     var tokensIgnored = 0;
     final unrecognized = <String>[];
     for (final (name, scryfallId, qty, setName) in rows) {
       CardHit? hit;
+      var exactPrinting = false;
       try {
         if (scryfallId != null) {
           hit = await widget.db.byScryfallId(scryfallId);
+          exactPrinting = hit != null;
         }
         if (hit == null) {
           final results = await widget.db.search(name, limit: 1);
@@ -122,9 +126,15 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
           imageSmall: hit.imageSmall,
           imageNormal: hit.imageNormal,
           colors: hit.colors,
+          typeLine: hit.typeLine,
+          cmc: hit.cmc,
+          power: hit.power,
+          toughness: hit.toughness,
           qty: qty,
         ),
         qty: qty,
+        // solo si el CSV traía el Scryfall ID sabemos la edición exacta
+        printingKey: exactPrinting ? hit.printingKey : null,
       );
       imported++;
       copies += qty;
@@ -211,6 +221,19 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                       ),
                       const SizedBox(height: 8),
                     ],
+                    SwitchListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      value: _replace,
+                      onChanged: _working
+                          ? null
+                          : (v) => setState(() => _replace = v),
+                      title: const Text('Sustituir mi colección actual'),
+                      subtitle: const Text(
+                          'Actívalo al reimportar tu CSV completo: evita '
+                          'duplicar cantidades y afina el álbum por ediciones.'),
+                    ),
+                    const SizedBox(height: 4),
                     FilledButton.icon(
                       onPressed: _working ? null : _import,
                       icon: _working

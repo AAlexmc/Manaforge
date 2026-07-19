@@ -4,6 +4,7 @@ import '../theme/mf_theme.dart';
 
 export 'album_screen.dart';
 export 'coleccion_screen.dart';
+export 'mazos_screen.dart';
 export 'deck_detail_screen.dart';
 export 'forge_screen.dart';
 export 'import_csv_screen.dart';
@@ -31,19 +32,6 @@ class _Placeholder extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class MazosScreen extends StatelessWidget {
-  const MazosScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _Placeholder(
-      title: 'Mis mazos',
-      subtitle: 'Aquí vivirán los mazos que guardes desde Forge. '
-          'De momento, forja propuestas y cópialas con un toque.',
     );
   }
 }

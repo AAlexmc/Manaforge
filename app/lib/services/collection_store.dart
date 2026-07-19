@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-/// Una carta poseída (nivel Oracle) con los datos mínimos para pintarla.
+/// Una carta poseída (nivel Oracle) con los datos mínimos para pintarla
+/// y filtrarla (coste, tipo, fuerza/resistencia).
 class OwnedCard {
   final String oracleId;
   final String name;
@@ -13,6 +14,10 @@ class OwnedCard {
   final String? imageSmall;
   final String? imageNormal;
   final String colors;
+  final String typeLine;
+  final int cmc;
+  final int? power;
+  final int? toughness;
   int qty;
 
   OwnedCard({
@@ -22,8 +27,14 @@ class OwnedCard {
     this.imageSmall,
     this.imageNormal,
     required this.colors,
+    this.typeLine = '',
+    this.cmc = 0,
+    this.power,
+    this.toughness,
     required this.qty,
   });
+
+  bool get isCreature => typeLine.contains('Creature');
 
   Map<String, dynamic> toJson() => {
         'oracleId': oracleId,
@@ -32,6 +43,10 @@ class OwnedCard {
         'imageSmall': imageSmall,
         'imageNormal': imageNormal,
         'colors': colors,
+        'typeLine': typeLine,
+        'cmc': cmc,
+        'power': power,
+        'toughness': toughness,
         'qty': qty,
       };
 
@@ -42,6 +57,10 @@ class OwnedCard {
         imageSmall: json['imageSmall'] as String?,
         imageNormal: json['imageNormal'] as String?,
         colors: (json['colors'] as String?) ?? '',
+        typeLine: (json['typeLine'] as String?) ?? '',
+        cmc: (json['cmc'] as int?) ?? 0,
+        power: json['power'] as int?,
+        toughness: json['toughness'] as int?,
         qty: json['qty'] as int,
       );
 }
@@ -50,7 +69,18 @@ class OwnedCard {
 /// tus cartas son tuyas). ChangeNotifier para que la UI reaccione.
 class CollectionStore extends ChangeNotifier {
   final Map<String, OwnedCard> _cards = {}; // por oracleId
+
+  /// Cantidades por impresión exacta, clave "set|nºcoleccionista".
+  /// Las rellena el importador (el CSV trae el Scryfall ID): permiten que el
+  /// álbum ilumine SOLO la ilustración que de verdad tienes.
+  final Map<String, int> _printings = {};
   bool _loaded = false;
+
+  /// ¿Sabemos qué impresiones exactas tiene el usuario? (Colecciones
+  /// importadas antes de esta versión no lo saben: reimportar lo arregla.)
+  bool get hasPrintingData => _printings.isNotEmpty;
+
+  Map<String, int> get printingQty => Map.unmodifiable(_printings);
 
   List<OwnedCard> get cards {
     final list = _cards.values.toList()
@@ -81,11 +111,20 @@ class CollectionStore extends ChangeNotifier {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
-      final list = jsonDecode(await file.readAsString()) as List<dynamic>;
+      final decoded = jsonDecode(await file.readAsString());
       _cards.clear();
+      _printings.clear();
+      // v1: lista de cartas · v2: {cards: [...], printings: {...}}
+      final list = decoded is List
+          ? decoded
+          : ((decoded as Map<String, dynamic>)['cards'] as List<dynamic>);
       for (final item in list) {
         final card = OwnedCard.fromJson(item as Map<String, dynamic>);
         _cards[card.oracleId] = card;
+      }
+      if (decoded is Map<String, dynamic>) {
+        final prints = decoded['printings'] as Map<String, dynamic>? ?? {};
+        prints.forEach((k, v) => _printings[k] = v as int);
       }
       notifyListeners();
     } catch (_) {
@@ -96,17 +135,30 @@ class CollectionStore extends ChangeNotifier {
   Future<void> _save() async {
     final file = await _file();
     if (file == null) return;
-    await file.writeAsString(
-        jsonEncode([for (final c in _cards.values) c.toJson()]));
+    await file.writeAsString(jsonEncode({
+      'cards': [for (final c in _cards.values) c.toJson()],
+      'printings': _printings,
+    }));
   }
 
-  void add(OwnedCard card, {int qty = 1}) {
+  void add(OwnedCard card, {int qty = 1, String? printingKey}) {
     final existing = _cards[card.oracleId];
     if (existing != null) {
       existing.qty += qty;
     } else {
       _cards[card.oracleId] = card..qty = qty;
     }
+    if (printingKey != null && printingKey.isNotEmpty) {
+      _printings[printingKey] = (_printings[printingKey] ?? 0) + qty;
+    }
+    notifyListeners();
+    _save();
+  }
+
+  /// Vacía la colección (modo "sustituir" del importador).
+  void clear() {
+    _cards.clear();
+    _printings.clear();
     notifyListeners();
     _save();
   }

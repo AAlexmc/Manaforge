@@ -12,23 +12,35 @@ class CardHit {
   final String name;
   final String? printedName; // nombre en el idioma de la impresión encontrada
   final String setCode;
+  final String collectorNumber;
   final String? imageSmall;
   final String? imageNormal;
   final String typeLine;
   final String colors;
   final String manaCost;
+  final int cmc;
+  final int? power;
+  final int? toughness;
 
   const CardHit({
     required this.oracleId,
     required this.name,
     this.printedName,
     required this.setCode,
+    this.collectorNumber = '',
     this.imageSmall,
     this.imageNormal,
     required this.typeLine,
     required this.colors,
     required this.manaCost,
+    this.cmc = 0,
+    this.power,
+    this.toughness,
   });
+
+  /// Clave de impresión exacta (para el álbum): SET|número de coleccionista.
+  String get printingKey =>
+      '${setCode.toLowerCase()}|$collectorNumber';
 }
 
 /// Acceso a la base de datos de cartas (generada por scripts/build_card_db.py
@@ -100,60 +112,81 @@ class CardDatabase {
     final like = '%${query.trim()}%';
     final rows = db.select('''
       SELECT c.oracle_id, c.name, p.printed_name, p.set_code,
-             p.image_small, p.image_normal, c.type_line, c.colors, c.mana_cost
+             p.collector_number, p.image_small, p.image_normal,
+             c.type_line, c.colors, c.mana_cost, c.cmc, c.power, c.toughness
       FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
       WHERE c.name LIKE ?1 OR p.printed_name LIKE ?1
       GROUP BY c.oracle_id
       ORDER BY length(c.name)
       LIMIT ?2
     ''', [like, limit]);
-    return [
-      for (final r in rows)
-        CardHit(
-          oracleId: r['oracle_id'] as String,
-          name: r['name'] as String,
-          printedName: r['printed_name'] as String?,
-          setCode: (r['set_code'] as String?) ?? '',
-          imageSmall: r['image_small'] as String?,
-          imageNormal: r['image_normal'] as String?,
-          typeLine: (r['type_line'] as String?) ?? '',
-          colors: (r['colors'] as String?) ?? '',
-          manaCost: (r['mana_cost'] as String?) ?? '',
-        )
-    ];
+    return [for (final r in rows) _hitFromRow(r)];
   }
+
+  CardHit _hitFromRow(Row r) => CardHit(
+        oracleId: r['oracle_id'] as String,
+        name: r['name'] as String,
+        printedName: r['printed_name'] as String?,
+        setCode: (r['set_code'] as String?) ?? '',
+        collectorNumber: (r['collector_number'] as String?) ?? '',
+        imageSmall: r['image_small'] as String?,
+        imageNormal: r['image_normal'] as String?,
+        typeLine: (r['type_line'] as String?) ?? '',
+        colors: (r['colors'] as String?) ?? '',
+        manaCost: (r['mana_cost'] as String?) ?? '',
+        cmc: ((r['cmc'] as num?) ?? 0).round(),
+        power: int.tryParse((r['power'] as String?) ?? ''),
+        toughness: int.tryParse((r['toughness'] as String?) ?? ''),
+      );
 
   /// Resuelve un Scryfall ID (importador de ManaBox) a su carta Oracle.
   Future<CardHit?> byScryfallId(String scryfallId) async {
     final db = await _open();
     final rows = db.select('''
       SELECT c.oracle_id, c.name, p.printed_name, p.set_code,
-             p.image_small, p.image_normal, c.type_line, c.colors, c.mana_cost
+             p.collector_number, p.image_small, p.image_normal,
+             c.type_line, c.colors, c.mana_cost, c.cmc, c.power, c.toughness
       FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
       WHERE p.scryfall_id = ?1
     ''', [scryfallId]);
     if (rows.isEmpty) return null;
-    final r = rows.first;
-    return CardHit(
-      oracleId: r['oracle_id'] as String,
-      name: r['name'] as String,
-      printedName: r['printed_name'] as String?,
-      setCode: (r['set_code'] as String?) ?? '',
-      imageSmall: r['image_small'] as String?,
-      imageNormal: r['image_normal'] as String?,
-      typeLine: (r['type_line'] as String?) ?? '',
-      colors: (r['colors'] as String?) ?? '',
-      manaCost: (r['mana_cost'] as String?) ?? '',
-    );
+    return _hitFromRow(rows.first);
   }
 
   /// Construye el pool del motor Forge para las cartas poseídas
   /// {oracleId: qty}; añade básicas "de cortesía" si se pide (jugador casual
   /// con básicas sueltas de mazos de inicio).
   Future<Map<String, fe.Card>> buildPool(Map<String, int> ownedByOracle,
-      {bool assumeBasics = true, int basicsQty = 25}) async {
+      {bool assumeBasics = true,
+      int basicsQty = 25,
+      double? maxPriceEur}) async {
     final db = await _open();
     final pool = <String, fe.Card>{};
+
+    // Presupuesto: precio mínimo conocido por carta (cualquier impresión).
+    // Sin dato de precio => se permite (mejor incluir que inventar precios).
+    final tooExpensive = <String>{};
+    if (maxPriceEur != null) {
+      final ids = ownedByOracle.keys.toList();
+      const chunkSize = 400;
+      for (var i = 0; i < ids.length; i += chunkSize) {
+        final chunk = ids.sublist(
+            i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
+        final marks = List.filled(chunk.length, '?').join(',');
+        final rows = db.select(
+          'SELECT oracle_id, MIN(CAST(price_eur AS REAL)) AS minp '
+          'FROM printings WHERE oracle_id IN ($marks) '
+          'AND price_eur IS NOT NULL GROUP BY oracle_id',
+          chunk,
+        );
+        for (final r in rows) {
+          final minp = r['minp'] as double?;
+          if (minp != null && minp > maxPriceEur) {
+            tooExpensive.add(r['oracle_id'] as String);
+          }
+        }
+      }
+    }
 
     fe.Card rowToCard(Row r, int qty) => fe.Card(
           name: r['name'] as String,
@@ -174,6 +207,7 @@ class CardDatabase {
         );
 
     for (final entry in ownedByOracle.entries) {
+      if (tooExpensive.contains(entry.key)) continue;
       final rows = db.select(
           'SELECT name, mana_cost, cmc, colors, type_line, oracle_text, power, toughness '
           'FROM cards WHERE oracle_id = ?1',
@@ -303,5 +337,68 @@ extension AlbumQueries on CardDatabase {
           colors: (r['colors'] as String?) ?? '',
         )
     ];
+  }
+}
+
+
+/// Consultas de apoyo para el detalle y los mazos guardados.
+extension DeckQueries on CardDatabase {
+  /// Imagen (normal y small) de cada carta por nombre inglés, preferencia EN.
+  Future<Map<String, (String?, String?)>> imagesForNames(
+      Iterable<String> names) async {
+    final db = await _open();
+    final out = <String, (String?, String?)>{};
+    final list = names.toList();
+    const chunkSize = 200;
+    for (var i = 0; i < list.length; i += chunkSize) {
+      final chunk = list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT c.name, p.image_normal, p.image_small, '
+        "MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref "
+        'FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id '
+        'WHERE c.name IN ($marks) GROUP BY c.oracle_id',
+        chunk,
+      );
+      for (final r in rows) {
+        out[r['name'] as String] =
+            (r['image_normal'] as String?, r['image_small'] as String?);
+      }
+    }
+    return out;
+  }
+
+  /// Pool del motor para un conjunto {nombre: cantidad} (mazos guardados:
+  /// el mazo debe poder abrirse aunque la colección haya cambiado).
+  Future<Map<String, fe.Card>> poolByNames(Map<String, int> qtyByName) async {
+    final db = await _open();
+    final pool = <String, fe.Card>{};
+    for (final entry in qtyByName.entries) {
+      final rows = db.select(
+          'SELECT name, mana_cost, cmc, colors, type_line, oracle_text, '
+          'power, toughness FROM cards WHERE name = ?1',
+          [entry.key]);
+      if (rows.isEmpty) continue;
+      final r = rows.first;
+      pool[entry.key] = fe.Card(
+        name: r['name'] as String,
+        qty: entry.value,
+        manaCost: (r['mana_cost'] as String?) ?? '',
+        cmc: ((r['cmc'] as num?) ?? 0).round(),
+        colors: (r['colors'] as String?) ?? '',
+        types: ((r['type_line'] as String?) ?? '')
+            .split('—')
+            .first
+            .trim()
+            .split(' ')
+            .where((t) => t.isNotEmpty)
+            .toList(),
+        oracle: (r['oracle_text'] as String?) ?? '',
+        power: int.tryParse((r['power'] as String?) ?? ''),
+        toughness: int.tryParse((r['toughness'] as String?) ?? ''),
+      );
+    }
+    return pool;
   }
 }
