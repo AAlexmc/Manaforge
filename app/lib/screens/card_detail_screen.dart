@@ -96,10 +96,26 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final detail = _detail;
+    return Scaffold(
+      appBar: AppBar(title: Text(detail?.name ?? 'Carta')),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : detail == null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(_error ?? 'Carta no encontrada',
+                        textAlign: TextAlign.center),
+                  ),
+                )
+              : _content(context, detail),
+    );
+  }
+
+  Widget _content(BuildContext context, CardFullDetail detail) {
     final printingQty = widget.collection?.printingQty ?? const {};
-    final ownedTotal = detail == null
-        ? 0
-        : (widget.collection?.qtyByOracle[detail.oracleId] ?? 0);
+    final ownedTotal =
+        widget.collection?.qtyByOracle[detail.oracleId] ?? 0;
     // imagen destacada: tu edición si la conocemos; si no, la más nueva
     CardVersion? hero;
     for (final v in _versions) {
@@ -110,24 +126,13 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     }
     hero ??= _versions.isEmpty ? null : _versions.first;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(detail?.name ?? 'Carta')),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text(_error!, textAlign: TextAlign.center),
-                  ),
-                )
-              : ListView(
+    return ListView(
                   padding: const EdgeInsets.all(20),
                   children: [
                     Center(
                       child: GestureDetector(
                         onTap: () => showCardZoom(context,
-                            name: detail!.name,
+                            name: detail.name,
                             imageUrl:
                                 hero?.imageNormal ?? hero?.imageSmall,
                             colors: detail.colors),
@@ -136,7 +141,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                           height: 335,
                           child: CardThumb(
                             url: hero?.imageNormal ?? hero?.imageSmall,
-                            colors: detail!.colors,
+                            colors: detail.colors,
                             name: detail.name,
                             width: 240,
                             height: 335,
@@ -286,9 +291,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                           ),
                         ),
                       ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
+        const SizedBox(height: 24),
+      ],
     );
   }
 }
