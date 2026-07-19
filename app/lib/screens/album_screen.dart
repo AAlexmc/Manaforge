@@ -89,7 +89,24 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   ? const CircularProgressIndicator()
                   : Padding(
                       padding: const EdgeInsets.all(24),
-                      child: Text('No pude abrir el álbum: $_error'),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                              'El álbum necesita la base de datos de cartas '
+                              '(descárgala en Colección).',
+                              textAlign: TextAlign.center),
+                          const SizedBox(height: 12),
+                          OutlinedButton.icon(
+                            onPressed: () {
+                              setState(() => _error = null);
+                              _load();
+                            },
+                            icon: const Icon(Icons.refresh, size: 18),
+                            label: const Text('Reintentar'),
+                          ),
+                        ],
+                      ),
                     ),
             )
           : Column(

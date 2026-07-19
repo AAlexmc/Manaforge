@@ -40,10 +40,14 @@ class ForgeScreen extends StatefulWidget {
 
 class _ForgeScreenState extends State<ForgeScreen> {
   bool _assumeBasics = true;
-  // Opciones del jugador: colores, arquetipo y presupuesto por carta
+  // Opciones del jugador: colores, arquetipo, rango de precio y de años
   final Set<String> _selColors = {};
   String? _selArchetype;
-  double? _maxPriceEur;
+  final _minPriceCtrl = TextEditingController();
+  final _maxPriceCtrl = TextEditingController();
+  final _yearFromCtrl = TextEditingController();
+  final _yearToCtrl = TextEditingController();
+  bool _yearSupported = true;
   bool _forging = false;
   int _messageIndex = 0;
   Timer? _messageTimer;
@@ -52,9 +56,29 @@ class _ForgeScreenState extends State<ForgeScreen> {
   String? _cantReason;
 
   @override
+  void initState() {
+    super.initState();
+    widget.db.supportsYearFilter().then((v) {
+      if (mounted) setState(() => _yearSupported = v);
+    });
+  }
+
+  @override
   void dispose() {
     _messageTimer?.cancel();
+    _minPriceCtrl.dispose();
+    _maxPriceCtrl.dispose();
+    _yearFromCtrl.dispose();
+    _yearToCtrl.dispose();
     super.dispose();
+  }
+
+  double? _parsePrice(TextEditingController c) =>
+      double.tryParse(c.text.trim().replaceAll(',', '.'));
+
+  int? _parseYear(TextEditingController c) {
+    final y = int.tryParse(c.text.trim());
+    return y != null && y >= 1993 && y <= 2100 ? y : null;
   }
 
   Future<void> _forge() async {
@@ -72,7 +96,11 @@ class _ForgeScreenState extends State<ForgeScreen> {
     });
     try {
       final pool = await widget.db.buildPool(widget.collection.qtyByOracle,
-          assumeBasics: _assumeBasics, maxPriceEur: _maxPriceEur);
+          assumeBasics: _assumeBasics,
+          minPriceEur: _parsePrice(_minPriceCtrl),
+          maxPriceEur: _parsePrice(_maxPriceCtrl),
+          yearMin: _parseYear(_yearFromCtrl),
+          yearMax: _parseYear(_yearToCtrl));
       // pequeña pausa para que la animación cuente su historia
       await Future.delayed(const Duration(milliseconds: 2200));
       final proposals = fe.generateProposals(pool,
@@ -235,32 +263,36 @@ class _ForgeScreenState extends State<ForgeScreen> {
                   onChanged: (v) => setState(() => _selArchetype = v),
                 ),
               ),
-              const SizedBox(width: 6),
-              DropdownButtonHideUnderline(
-                child: DropdownButton<double?>(
-                  value: _maxPriceEur,
-                  hint: const Text('Precio: sin límite',
-                      style: TextStyle(fontSize: 12.5)),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(fontSize: 12.5),
-                  borderRadius: BorderRadius.circular(10),
-                  items: const [
-                    DropdownMenuItem(
-                        value: null, child: Text('Precio: sin límite')),
-                    DropdownMenuItem(
-                        value: 1.0, child: Text('Cartas de ≤ 1 €')),
-                    DropdownMenuItem(
-                        value: 5.0, child: Text('Cartas de ≤ 5 €')),
-                    DropdownMenuItem(
-                        value: 10.0, child: Text('Cartas de ≤ 10 €')),
-                  ],
-                  onChanged: (v) => setState(() => _maxPriceEur = v),
-                ),
-              ),
             ],
           ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              const Text('Precio por carta:',
+                  style: TextStyle(fontSize: 12.5)),
+              _numField(_minPriceCtrl, 'mín €'),
+              const Text('—', style: TextStyle(fontSize: 12.5)),
+              _numField(_maxPriceCtrl, 'máx €'),
+              const SizedBox(width: 12),
+              const Text('Año de la carta:',
+                  style: TextStyle(fontSize: 12.5)),
+              _numField(_yearFromCtrl, 'desde', enabled: _yearSupported),
+              const Text('—', style: TextStyle(fontSize: 12.5)),
+              _numField(_yearToCtrl, 'hasta', enabled: _yearSupported),
+            ],
+          ),
+          if (!_yearSupported)
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                'El filtro por año necesita la base de datos actualizada: '
+                'Ajustes → Volver a descargar la base de datos.',
+                style: TextStyle(fontSize: 11.5, color: MFColors.warning),
+              ),
+            ),
           const SizedBox(height: 8),
           Text(
             _selColors.isEmpty
@@ -312,6 +344,27 @@ class _ForgeScreenState extends State<ForgeScreen> {
             label: const Text('Modo Test: vence a un mazo del meta'),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _numField(TextEditingController ctrl, String hint,
+      {bool enabled = true}) {
+    return SizedBox(
+      width: 74,
+      child: TextField(
+        controller: ctrl,
+        enabled: enabled,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(fontSize: 12.5),
+        decoration: InputDecoration(
+          hintText: hint,
+          isDense: true,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
     );
   }

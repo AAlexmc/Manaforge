@@ -66,6 +66,7 @@ class CardDatabase {
 
   /// Descarga y descomprime la DB, emitiendo progreso 0..1 (-1 = indeterminado).
   Stream<double> download() async* {
+    close(); // soltar el archivo si estaba abierto (Windows lo bloquea)
     final dbFile = await _dbFile();
     final gzFile = File('${dbFile.path}.gz');
     final client = http.Client();
@@ -95,6 +96,25 @@ class CardDatabase {
       yield 1.0;
     } finally {
       client.close();
+    }
+  }
+
+  /// Cierra la conexión (necesario antes de re-descargar la DB en Windows,
+  /// que bloquea archivos abiertos).
+  void close() {
+    _db?.dispose();
+    _db = null;
+  }
+
+  /// ¿La DB descargada tiene fecha de salida? (schema v2; si no, el filtro
+  /// por año no está disponible hasta actualizar la DB en Ajustes).
+  Future<bool> supportsYearFilter() async {
+    try {
+      final db = await _open();
+      final rows = db.select('PRAGMA table_info(printings)');
+      return rows.any((r) => r['name'] == 'released_at');
+    } catch (_) {
+      return false;
     }
   }
 
@@ -159,16 +179,20 @@ class CardDatabase {
   Future<Map<String, fe.Card>> buildPool(Map<String, int> ownedByOracle,
       {bool assumeBasics = true,
       int basicsQty = 25,
-      double? maxPriceEur}) async {
+      double? minPriceEur,
+      double? maxPriceEur,
+      int? yearMin,
+      int? yearMax}) async {
     final db = await _open();
     final pool = <String, fe.Card>{};
+    final ids = ownedByOracle.keys.toList();
+    const chunkSize = 400;
 
-    // Presupuesto: precio mínimo conocido por carta (cualquier impresión).
-    // Sin dato de precio => se permite (mejor incluir que inventar precios).
-    final tooExpensive = <String>{};
-    if (maxPriceEur != null) {
-      final ids = ownedByOracle.keys.toList();
-      const chunkSize = 400;
+    // Rango de precio: precio mínimo conocido por carta (cualquier
+    // impresión). Sin dato de precio: solo pasa si no hay mínimo exigido.
+    final excluded = <String>{};
+    if (minPriceEur != null || maxPriceEur != null) {
+      final priceByOracle = <String, double>{};
       for (var i = 0; i < ids.length; i += chunkSize) {
         final chunk = ids.sublist(
             i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
@@ -181,12 +205,51 @@ class CardDatabase {
         );
         for (final r in rows) {
           final minp = r['minp'] as double?;
-          if (minp != null && minp > maxPriceEur) {
-            tooExpensive.add(r['oracle_id'] as String);
-          }
+          if (minp != null) priceByOracle[r['oracle_id'] as String] = minp;
+        }
+      }
+      for (final id in ids) {
+        final price = priceByOracle[id];
+        if (maxPriceEur != null && price != null && price > maxPriceEur) {
+          excluded.add(id);
+        }
+        if (minPriceEur != null && minPriceEur > 0 &&
+            (price == null || price < minPriceEur)) {
+          excluded.add(id);
         }
       }
     }
+
+    // Rango de años: por la PRIMERA impresión de la carta (su año de
+    // salida). Requiere DB con released_at (schema v2).
+    if ((yearMin != null || yearMax != null) &&
+        await supportsYearFilter()) {
+      final yearByOracle = <String, int>{};
+      for (var i = 0; i < ids.length; i += chunkSize) {
+        final chunk = ids.sublist(
+            i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
+        final marks = List.filled(chunk.length, '?').join(',');
+        final rows = db.select(
+          "SELECT oracle_id, MIN(substr(released_at, 1, 4)) AS y "
+          'FROM printings WHERE oracle_id IN ($marks) '
+          'AND released_at IS NOT NULL GROUP BY oracle_id',
+          chunk,
+        );
+        for (final r in rows) {
+          final y = int.tryParse((r['y'] as String?) ?? '');
+          if (y != null) yearByOracle[r['oracle_id'] as String] = y;
+        }
+      }
+      for (final id in ids) {
+        final y = yearByOracle[id];
+        if (y == null ||
+            (yearMin != null && y < yearMin) ||
+            (yearMax != null && y > yearMax)) {
+          excluded.add(id);
+        }
+      }
+    }
+    final tooExpensive = excluded;
 
     fe.Card rowToCard(Row r, int qty) => fe.Card(
           name: r['name'] as String,

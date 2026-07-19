@@ -41,10 +41,11 @@ class _HomeShellState extends State<HomeShell> {
   Widget build(BuildContext context) {
     final screens = [
       ColeccionScreen(db: _db, collection: _collection),
+      AlbumScreen(db: _db, collection: _collection),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
       const TradesScreen(),
-      const AjustesScreen(),
+      AjustesScreen(db: _db),
     ];
     return Scaffold(
       body: IndexedStack(index: _index, children: screens),
@@ -56,6 +57,10 @@ class _HomeShellState extends State<HomeShell> {
               icon: Icon(Icons.style_outlined),
               selectedIcon: Icon(Icons.style),
               label: 'Colección'),
+          NavigationDestination(
+              icon: Icon(Icons.auto_stories_outlined),
+              selectedIcon: Icon(Icons.auto_stories),
+              label: 'Álbum'),
           NavigationDestination(
               icon: Icon(Icons.layers_outlined),
               selectedIcon: Icon(Icons.layers),
