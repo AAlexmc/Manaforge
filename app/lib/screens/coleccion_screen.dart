@@ -238,8 +238,9 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                   child: Padding(
                     padding: EdgeInsets.all(32),
                     child: Text(
-                      'Busca tu primera carta arriba, o importa tu colección '
-                      'de ManaBox con el botón de la lupa.',
+                      'Busca tu primera carta arriba, o abre el importador con el '
+                      'icono de subir (a la derecha del buscador) y arrastra '
+                      'ahí tu CSV de ManaBox.',
                       textAlign: TextAlign.center,
                     ),
                   ),
