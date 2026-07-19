@@ -54,4 +54,52 @@ void main() {
     final colors = proposals.map((g) => g.deck.colors).toSet();
     expect(colors.length, proposals.length);
   });
+
+  test('un pool de respuestas sin criaturas se lee como control', () {
+    final cands = {
+      for (var i = 0; i < 10; i++)
+        'Removal $i': Card(
+            name: 'Removal $i',
+            qty: 4,
+            manaCost: '{2}{B}',
+            cmc: 3,
+            colors: 'B',
+            types: const ['Instant'],
+            oracle: 'Destroy target creature.'),
+      for (var i = 0; i < 12; i++)
+        'Filler $i': Card(
+            name: 'Filler $i',
+            qty: 4,
+            manaCost: '{3}{B}',
+            cmc: 4,
+            colors: 'B',
+            types: const ['Sorcery'],
+            oracle: 'Each player discards a card.'),
+    };
+    expect(pickArchetype(cands), 'control');
+  });
+
+  test('archetypeFor encuentra perfil para combos sanos y rechaza locuras', () {
+    expect(archetypeFor(2.9, 24), isNotNull);
+    expect(archetypeFor(1.2, 27), isNull); // curva agresiva con 27 tierras
+  });
+
+  test('reforgeWithCurve respeta la curva pedida y las reglas duras', () {
+    final base = generateDeck(pool, 'WB');
+    expect(base, isNotNull);
+    final hist =
+        ManaCurve.curveHistogram(base!.deck.cards, pool, cap: 6);
+    final result = reforgeWithCurve(pool, 'WB', hist);
+    expect(result.deck, isNotNull, reason: result.reason ?? '');
+    final deck = result.deck!.deck;
+    expect(DeckValidator.validate(deck, pool), isEmpty);
+    expect(deck.totalCards, ManaCurve.deckSize);
+  });
+
+  test('reforgeWithCurve avisa cuando la curva no da mazo sano', () {
+    // 45 hechizos => solo 15 tierras: fuera de todo rango.
+    final result = reforgeWithCurve(pool, 'WB', {1: 20, 2: 15, 3: 10});
+    expect(result.deck, isNull);
+    expect(result.reason, isNotEmpty);
+  });
 }

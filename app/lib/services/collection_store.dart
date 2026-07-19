@@ -128,12 +128,30 @@ class ImportResult {
   final int imported;
   final int copies;
   final List<String> unrecognized;
-  const ImportResult(this.imported, this.copies, this.unrecognized);
+
+  /// Tokens y emblemas del CSV: no son cartas de mazo, se ignoran a
+  /// propósito (y se cuentan para poder decírselo al usuario).
+  final int tokensIgnored;
+
+  const ImportResult(this.imported, this.copies, this.unrecognized,
+      {this.tokensIgnored = 0});
+}
+
+/// ¿Es una ficha/emblema? ManaBox los exporta desde sets "... Tokens"
+/// (códigos TXXX) y los emblemas se llaman "... Emblem".
+bool looksLikeToken(String name, String? setName) {
+  final set = (setName ?? '').toLowerCase();
+  return set.contains('token') ||
+      set.contains('art series') ||
+      set.contains('substitute') ||
+      name.endsWith(' Emblem') ||
+      name.toLowerCase() == 'emblem';
 }
 
 /// Parsea un CSV de ManaBox: detecta separador y las columnas Name /
-/// Quantity / Scryfall ID. Devuelve filas (name, scryfallId, qty).
-List<(String, String?, int)> parseManaBoxCsv(String content) {
+/// Quantity / Scryfall ID / Set name. Devuelve filas
+/// (name, scryfallId, qty, setName).
+List<(String, String?, int, String?)> parseManaBoxCsv(String content) {
   final lines = const LineSplitter().convert(content);
   if (lines.isEmpty) return const [];
   final sep = lines.first.contains(';') ? ';' : ',';
@@ -141,6 +159,7 @@ List<(String, String?, int)> parseManaBoxCsv(String content) {
   int? nameIdx;
   int? qtyIdx;
   int? idIdx;
+  int? setIdx;
   for (var i = 0; i < header.length; i++) {
     final h = header[i].toLowerCase().trim();
     if (h == 'name' || h == 'nombre') nameIdx = i;
@@ -148,9 +167,10 @@ List<(String, String?, int)> parseManaBoxCsv(String content) {
       qtyIdx = i;
     }
     if (h == 'scryfall id') idIdx = i;
+    if (h == 'set name' || h == 'edition' || h == 'edición') setIdx = i;
   }
   if (nameIdx == null) return const [];
-  final rows = <(String, String?, int)>[];
+  final rows = <(String, String?, int, String?)>[];
   for (final line in lines.skip(1)) {
     if (line.trim().isEmpty) continue;
     final cols = _splitCsvLine(line, sep);
@@ -161,7 +181,9 @@ List<(String, String?, int)> parseManaBoxCsv(String content) {
         ? int.tryParse(cols[qtyIdx].trim()) ?? 1
         : 1;
     final id = idIdx != null && cols.length > idIdx ? cols[idIdx].trim() : null;
-    rows.add((name, id != null && id.isNotEmpty ? id : null, qty));
+    final setName =
+        setIdx != null && cols.length > setIdx ? cols[setIdx].trim() : null;
+    rows.add((name, id != null && id.isNotEmpty ? id : null, qty, setName));
   }
   return rows;
 }

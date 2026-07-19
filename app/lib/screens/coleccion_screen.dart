@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../widgets/common.dart';
+import 'album_screen.dart';
 import 'import_csv_screen.dart';
 
 /// Colección: primera pestaña. Estados: sin base de datos (descargar),
@@ -190,16 +191,32 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                       decoration: InputDecoration(
                         hintText: 'Busca una carta (español o inglés)…',
                         prefixIcon: const Icon(Icons.search),
-                        suffixIcon: IconButton(
-                          tooltip: 'Importar CSV de ManaBox',
-                          icon: const Icon(Icons.file_upload_outlined),
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ImportCsvScreen(
-                                  db: widget.db,
-                                  collection: widget.collection),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              tooltip: 'Álbum por expansiones',
+                              icon: const Icon(Icons.auto_stories_outlined),
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => AlbumScreen(
+                                      db: widget.db,
+                                      collection: widget.collection),
+                                ),
+                              ),
                             ),
-                          ),
+                            IconButton(
+                              tooltip: 'Importar CSV de ManaBox',
+                              icon: const Icon(Icons.file_upload_outlined),
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => ImportCsvScreen(
+                                      db: widget.db,
+                                      collection: widget.collection),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14)),

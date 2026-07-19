@@ -201,3 +201,107 @@ class CardDatabase {
     return pool;
   }
 }
+
+/// Una expansión (set) para el álbum.
+class SetInfo {
+  final String code;
+  final String name;
+  final int total; // casillas del álbum (nº de collector numbers)
+
+  const SetInfo({required this.code, required this.name, required this.total});
+}
+
+/// Una casilla del álbum: una carta concreta de un set.
+class AlbumCard {
+  final String oracleId;
+  final String collectorNumber;
+  final String name;
+  final String? printedName;
+  final String? imageSmall;
+  final String colors;
+
+  const AlbumCard({
+    required this.oracleId,
+    required this.collectorNumber,
+    required this.name,
+    this.printedName,
+    this.imageSmall,
+    required this.colors,
+  });
+}
+
+/// Consultas del álbum por expansiones (estilo TCG Pocket): todas las cartas
+/// de cada set; las no poseídas se pintan apagadas.
+extension AlbumQueries on CardDatabase {
+  /// Todas las expansiones de la base de datos con su nº de cartas.
+  Future<List<SetInfo>> sets() async {
+    final db = await _open();
+    final rows = db.select('''
+      SELECT set_code, MAX(set_name) AS set_name,
+             COUNT(DISTINCT collector_number) AS total
+      FROM printings
+      WHERE set_code IS NOT NULL AND set_name IS NOT NULL
+      GROUP BY set_code
+      ORDER BY set_name
+    ''');
+    return [
+      for (final r in rows)
+        SetInfo(
+          code: r['set_code'] as String,
+          name: r['set_name'] as String,
+          total: r['total'] as int,
+        )
+    ];
+  }
+
+  /// Casillas poseídas por set para un conjunto de oracle IDs (troceado para
+  /// no pasarse del límite de parámetros de SQLite).
+  Future<Map<String, int>> ownedCountBySet(Iterable<String> oracleIds) async {
+    final db = await _open();
+    final out = <String, int>{};
+    final ids = oracleIds.toList();
+    const chunkSize = 400;
+    for (var i = 0; i < ids.length; i += chunkSize) {
+      final chunk = ids.sublist(
+          i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT set_code, COUNT(DISTINCT collector_number) AS owned '
+        'FROM printings WHERE oracle_id IN ($marks) GROUP BY set_code',
+        chunk,
+      );
+      for (final r in rows) {
+        final code = r['set_code'] as String?;
+        if (code == null) continue;
+        out[code] = (out[code] ?? 0) + (r['owned'] as int);
+      }
+    }
+    return out;
+  }
+
+  /// Todas las cartas de un set, una por collector number (preferencia por
+  /// la impresión en inglés), en orden de coleccionista.
+  Future<List<AlbumCard>> setCards(String setCode) async {
+    final db = await _open();
+    final rows = db.select('''
+      SELECT p.oracle_id, p.collector_number, p.printed_name, p.image_small,
+             c.name, c.colors,
+             MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref
+      FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
+      WHERE p.set_code = ?1
+      GROUP BY p.collector_number
+      ORDER BY CAST(p.collector_number AS INTEGER), p.collector_number
+    ''', [setCode]);
+    return [
+      for (final r in rows)
+        AlbumCard(
+          oracleId: r['oracle_id'] as String,
+          collectorNumber: (r['collector_number'] as String?) ?? '',
+          name: r['name'] as String,
+          printedName: r['printed_name'] as String?,
+          imageSmall: r['image_small'] as String?,
+          colors: (r['colors'] as String?) ?? '',
+        )
+    ];
+  }
+}

@@ -88,8 +88,9 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
     final rows = parseManaBoxCsv(_ctrl.text);
     var imported = 0;
     var copies = 0;
+    var tokensIgnored = 0;
     final unrecognized = <String>[];
-    for (final (name, scryfallId, qty) in rows) {
+    for (final (name, scryfallId, qty, setName) in rows) {
       CardHit? hit;
       try {
         if (scryfallId != null) {
@@ -106,7 +107,11 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         hit = null;
       }
       if (hit == null) {
-        unrecognized.add(name);
+        if (looksLikeToken(name, setName)) {
+          tokensIgnored += qty;
+        } else {
+          unrecognized.add(name);
+        }
         continue;
       }
       widget.collection.add(
@@ -127,7 +132,8 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
     if (mounted) {
       setState(() {
         _working = false;
-        _result = ImportResult(imported, copies, unrecognized);
+        _result = ImportResult(imported, copies, unrecognized,
+            tokensIgnored: tokensIgnored);
       });
     }
   }
@@ -199,6 +205,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                       Text(
                         '✓ ${_result!.imported} cartas (${_result!.copies} copias) '
                         'añadidas a tu colección.'
+                        '${_result!.tokensIgnored == 0 ? '' : '\n• ${_result!.tokensIgnored} tokens/emblemas ignorados (no van en mazos, todo bien).'}'
                         '${_result!.unrecognized.isEmpty ? '' : '\n✗ Sin reconocer: ${_result!.unrecognized.take(8).join(", ")}'
                             '${_result!.unrecognized.length > 8 ? '…' : ''}'}',
                       ),

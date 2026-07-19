@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/mf_theme.dart';
 
+export 'album_screen.dart';
 export 'coleccion_screen.dart';
 export 'deck_detail_screen.dart';
 export 'forge_screen.dart';

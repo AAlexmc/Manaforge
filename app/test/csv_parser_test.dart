@@ -17,6 +17,16 @@ void main() {
     expect(rows[0].$3, 2);
     expect(rows[1].$1, 'Counterspell');
     expect(rows[1].$3, 1);
+    expect(rows[0].$4, 'Foundations'); // set name capturado
+  });
+
+  test('detecta tokens y emblemas por set o nombre', () {
+    expect(looksLikeToken('Cat', 'Foundations Tokens'), isTrue);
+    expect(looksLikeToken('Toy', 'Duskmourn: House of Horror Tokens'), isTrue);
+    expect(looksLikeToken('Tezzeret the Schemer Emblem', 'Aether Revolt'),
+        isTrue);
+    expect(looksLikeToken('Counterspell', 'Battle Royale'), isFalse);
+    expect(looksLikeToken('Llanowar Elves', null), isFalse);
   });
 
   test('acepta cabeceras en español y separador punto y coma', () {

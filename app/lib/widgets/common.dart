@@ -141,3 +141,166 @@ class CardThumb extends StatelessWidget {
     );
   }
 }
+
+/// Histograma de curva "de verdad" para el detalle del mazo: ancho acotado
+/// (en escritorio las barras no deben ocupar toda la ventana), número de
+/// cartas encima de cada barra y etiquetas de coste debajo.
+class CurveChart extends StatelessWidget {
+  final Map<int, int> histogram;
+  final Color color;
+  final double height;
+
+  const CurveChart(
+      {super.key,
+      required this.histogram,
+      required this.color,
+      this.height = 120});
+
+  @override
+  Widget build(BuildContext context) {
+    var max = 1;
+    for (var cmc = 0; cmc <= 6; cmc++) {
+      final v = histogram[cmc] ?? 0;
+      if (v > max) max = v;
+    }
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 560),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            for (var cmc = 0; cmc <= 6; cmc++)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        (histogram[cmc] ?? 0) > 0 ? '${histogram[cmc]}' : '',
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 2),
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        height: 6 + height * (histogram[cmc] ?? 0) / max,
+                        decoration: BoxDecoration(
+                          color: (histogram[cmc] ?? 0) > 0
+                              ? color
+                              : color.withValues(alpha: 0.15),
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(4)),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(cmc == 6 ? '6+' : '$cmc',
+                          style: const TextStyle(fontSize: 10)),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Editor de curva: las mismas barras, pero arrastrables ↑↓. Escala fija
+/// (no relativa al máximo) para que el gesto se sienta absoluto.
+class CurveEditor extends StatefulWidget {
+  final Map<int, int> values;
+  final Color color;
+  final double height;
+  final ValueChanged<Map<int, int>> onChanged;
+
+  const CurveEditor(
+      {super.key,
+      required this.values,
+      required this.color,
+      required this.onChanged,
+      this.height = 120});
+
+  @override
+  State<CurveEditor> createState() => _CurveEditorState();
+}
+
+class _CurveEditorState extends State<CurveEditor> {
+  static const _maxPerSlot = 16;
+  late Map<int, double> _floats;
+
+  @override
+  void initState() {
+    super.initState();
+    _floats = {
+      for (var cmc = 0; cmc <= 6; cmc++)
+        cmc: (widget.values[cmc] ?? 0).toDouble()
+    };
+  }
+
+  void _drag(int cmc, double dy) {
+    setState(() {
+      _floats[cmc] =
+          (_floats[cmc]! - dy / 7).clamp(0.0, _maxPerSlot.toDouble());
+    });
+    widget.onChanged(
+        {for (final e in _floats.entries) e.key: e.value.round()});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 560),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            for (var cmc = 0; cmc <= 6; cmc++)
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onVerticalDragUpdate: (d) => _drag(cmc, d.delta.dy),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('${_floats[cmc]!.round()}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: widget.color)),
+                        const SizedBox(height: 2),
+                        Container(
+                          height: 6 +
+                              widget.height *
+                                  _floats[cmc]!.round() /
+                                  _maxPerSlot,
+                          decoration: BoxDecoration(
+                            color: _floats[cmc]!.round() > 0
+                                ? widget.color
+                                : widget.color.withValues(alpha: 0.2),
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(4)),
+                            border: Border.all(
+                                color: widget.color.withValues(alpha: 0.6)),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(cmc == 6 ? '6+' : '$cmc',
+                            style: const TextStyle(fontSize: 10)),
+                        Icon(Icons.unfold_more,
+                            size: 12,
+                            color: widget.color.withValues(alpha: 0.6)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}

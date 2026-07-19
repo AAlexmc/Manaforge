@@ -3,7 +3,9 @@ import 'mana_curve.dart';
 import 'models.dart';
 import 'deck_validator.dart';
 
-/// Generador de mazos — fase 3. Espejo 1:1 de `engine-reference/forge/generator.py`.
+/// Generador de mazos — fase 3. Basado en `engine-reference/forge/generator.py`
+/// (la reforja con curva personalizada y la detección de control son
+/// extensiones propias de la app de escritorio, aún sin espejo Python).
 
 const Map<String, String> basicForColor = {
   'W': 'Plains',
@@ -74,21 +76,43 @@ String pickArchetype(Map<String, Card> cands) {
   var cheap = 0;
   var total = 0;
   var interaction = 0;
+  var creatures = 0;
   cands.forEach((_, c) {
     total += c.qty;
     if (c.cmc <= 2) cheap += c.qty;
+    if (c.isCreature) creatures += c.qty;
     final tags = classify(c);
     if (tags.contains('removal') ||
         tags.contains('counterspell') ||
-        tags.contains('burn')) {
+        tags.contains('burn') ||
+        tags.contains('sweeper')) {
       interaction += c.qty;
     }
   });
   if (total == 0) total = 1;
-  if (cheap / total > 0.55) {
-    return interaction / total < 0.25 ? 'aggro' : 'tempo';
+  final cheapShare = cheap / total;
+  final interactionShare = interaction / total;
+  final creatureShare = creatures / total;
+  if (cheapShare > 0.55) {
+    return interactionShare < 0.25 ? 'aggro' : 'tempo';
   }
+  // pool cargado de respuestas y corto de criaturas => control
+  if (interactionShare > 0.30 && creatureShare < 0.45) return 'control';
   return 'midrange';
+}
+
+/// Arquetipo cuyo perfil (tierras y coste medio) encaja con un mazo dado.
+/// Null si ninguno encaja: la curva pedida no da un mazo sano.
+Archetype? archetypeFor(double avgCmc, int nLands) {
+  for (final a in Archetype.values) {
+    if (nLands >= a.landMin &&
+        nLands <= a.landMax &&
+        avgCmc >= a.cmcMin &&
+        avgCmc <= a.cmcMax) {
+      return a;
+    }
+  }
+  return null;
 }
 
 double _score(Card card, String theme, Map<String, String> roles,
@@ -262,6 +286,128 @@ Map<String, int>? _manaBase(
   }
   if (remaining > 0) return null;
   return lands;
+}
+
+/// Resultado de una reforja con curva personalizada: mazo o motivo del "no".
+class ReforgeResult {
+  final GeneratedDeck? deck;
+  final String? reason;
+  const ReforgeResult.ok(GeneratedDeck this.deck) : reason = null;
+  const ReforgeResult.no(String this.reason) : deck = null;
+}
+
+/// Reforja un mazo para una curva objetivo ABSOLUTA {cmc: nº de hechizos}
+/// (0..6, el 6 agrupa 6+). Las tierras salen solas: 60 − hechizos.
+/// Respeta las reglas duras: si la curva pedida no da un mazo sano, explica
+/// el porqué en vez de fabricar un mazo defectuoso.
+ReforgeResult reforgeWithCurve(
+    Map<String, Card> pool, String colors, Map<int, int> desired,
+    {String? name}) {
+  final cands = _candidatePool(pool, colors);
+  final nSpells = desired.values.fold(0, (a, b) => a + b);
+  final nLands = ManaCurve.deckSize - nSpells;
+  if (nLands < Archetype.aggro.landMin || nLands > Archetype.control.landMax) {
+    return ReforgeResult.no(
+        'Con esa curva salen $nLands tierras: fuera del rango sano '
+        '(${Archetype.aggro.landMin}-${Archetype.control.landMax}). '
+        'Ajusta el total de hechizos.');
+  }
+
+  final (theme, rolesByCard) = detectTheme(cands);
+
+  // Relleno por huecos de coste: para cada CMC pedido, las mejores cartas de
+  // ese coste; si un hueco se queda corto, se cubre con costes vecinos.
+  final chosen = <String, int>{};
+  int effCmc(Card c) => c.cmc > 6 ? 6 : c.cmc;
+
+  String? bestAt(int cmc) {
+    String? bestName;
+    var bestScore = -1e9;
+    cands.forEach((n, card) {
+      if (effCmc(card) != cmc) return;
+      final limit = card.qty < 4 ? card.qty : 4;
+      if ((chosen[n] ?? 0) >= limit) return;
+      var s = efficiency(card);
+      final role = rolesByCard[n]![theme];
+      if (role == 'payoff') s += 3.0;
+      if (role == 'enabler') s += 1.5;
+      if (s > bestScore) {
+        bestName = n;
+        bestScore = s;
+      }
+    });
+    return bestName;
+  }
+
+  var shortfall = 0;
+  for (var cmc = 0; cmc <= 6; cmc++) {
+    for (var k = 0; k < (desired[cmc] ?? 0); k++) {
+      final pick = bestAt(cmc);
+      if (pick == null) {
+        shortfall++;
+        continue;
+      }
+      chosen[pick] = (chosen[pick] ?? 0) + 1;
+    }
+  }
+  // huecos sin cartas de ese coste: rellenar con los costes vecinos
+  if (shortfall > 0) {
+    final order = [1, 2, 3, 0, 4, 5, 6];
+    var guard = 0;
+    while (shortfall > 0 && guard < 200) {
+      guard++;
+      String? pick;
+      for (final cmc in order) {
+        pick = bestAt(cmc);
+        if (pick != null) break;
+      }
+      if (pick == null) break;
+      chosen[pick] = (chosen[pick] ?? 0) + 1;
+      shortfall--;
+    }
+    if (shortfall > 0) {
+      return ReforgeResult.no(
+          'Tu colección no tiene suficientes cartas de estos colores para '
+          'llenar esa curva. Prueba con menos hechizos o con otros costes.');
+    }
+  }
+
+  final avg = ManaCurve.averageCmc(chosen, pool);
+  final archetype = archetypeFor(avg, nLands);
+  if (archetype == null) {
+    return ReforgeResult.no(
+        'Esa curva (coste medio ${avg.toStringAsFixed(1)} con $nLands '
+        'tierras) no encaja en ningún perfil sano: un mazo barato quiere '
+        'menos tierras y uno caro quiere más. Acércalos.');
+  }
+
+  final lands = _manaBase(chosen, pool, colors, nLands);
+  if (lands == null) {
+    return const ReforgeResult.no(
+        'No hay tierras básicas suficientes en la colección para esa curva.');
+  }
+
+  final deck = Deck(
+    name: name ?? 'Forge $colors $theme',
+    colors: colors,
+    archetype: archetype,
+    cards: chosen,
+    lands: lands,
+  );
+  final errors = DeckValidator.validate(deck, pool);
+  if (errors.isNotEmpty) {
+    return ReforgeResult.no('La curva pedida rompe una regla dura: '
+        '${errors.first}');
+  }
+
+  var spellCount = 0;
+  var effSum = 0.0;
+  chosen.forEach((n, q) {
+    spellCount += q;
+    effSum += efficiency(pool[n]!) * q;
+  });
+  return ReforgeResult.ok(
+      GeneratedDeck(deck, theme, effSum / spellCount));
 }
 
 /// Las mejores propuestas entre monocolor y pares de colores.
