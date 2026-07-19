@@ -92,15 +92,8 @@ class MetaDeckService {
 
   Future<MetaDecksResult> load() async {
     final cache = await _cacheFile();
-    // caché fresca (<24 h): no molestar a la red
-    if (cache != null && await cache.exists()) {
-      final age = DateTime.now().difference(await cache.lastModified());
-      if (age.inHours < 24) {
-        try {
-          return _parse(await cache.readAsString(), online: true);
-        } catch (_) {/* caché corrupta: seguir */}
-      }
-    }
+    // red primero: el meta se actualiza editando el JSON del repo y debe
+    // verse al momento; la caché queda como salvavidas sin conexión
     try {
       final response = await http
           .get(Uri.parse(url))
@@ -111,11 +104,10 @@ class MetaDeckService {
         return result;
       }
     } catch (_) {/* sin red: fallback */}
-    // caché vieja mejor que nada
     if (cache != null && await cache.exists()) {
       try {
         return _parse(await cache.readAsString(), online: true);
-      } catch (_) {/* corrupta */}
+      } catch (_) {/* caché corrupta */}
     }
     return const MetaDecksResult(
         metaDecks, 'Presets locales (sin conexión)', online: false);
