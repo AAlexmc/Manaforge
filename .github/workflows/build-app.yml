@@ -1,0 +1,58 @@
+name: Build app (Windows · macOS · Linux)
+on:
+  workflow_dispatch:
+  push:
+    tags: ['app-v*']
+permissions:
+  contents: write
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable }
+      - run: cd app && flutter create . --platforms=windows --project-name manaforge_app
+      - run: cd app && flutter build windows --release
+      - run: Compress-Archive -Path app/build/windows/x64/runner/Release/* -DestinationPath ManaForge-Windows.zip
+        shell: pwsh
+      - uses: actions/upload-artifact@v4
+        with: { name: ManaForge-Windows, path: ManaForge-Windows.zip }
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable }
+      - run: cd app && flutter create . --platforms=macos --project-name manaforge_app
+      - run: cd app && flutter build macos --release
+      - run: cd app/build/macos/Build/Products/Release && zip -qry $GITHUB_WORKSPACE/ManaForge-macOS.zip *.app
+      - uses: actions/upload-artifact@v4
+        with: { name: ManaForge-macOS, path: ManaForge-macOS.zip }
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable }
+      - run: cd app && flutter create . --platforms=linux --project-name manaforge_app
+      - run: cd app && flutter build linux --release
+      - run: cd app/build/linux/x64/release && zip -qry $GITHUB_WORKSPACE/ManaForge-Linux.zip bundle
+      - uses: actions/upload-artifact@v4
+        with: { name: ManaForge-Linux, path: ManaForge-Linux.zip }
+  release:
+    needs: [windows, macos, linux]
+    if: startsWith(github.ref, 'refs/tags/app-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { merge-multiple: true }
+      - name: Publicar release con los tres binarios
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" ManaForge-*.zip \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "ManaForge ${GITHUB_REF_NAME#app-}" \
+            --notes "Descarga para tu sistema, descomprime y ejecuta. En macOS: clic derecho → Abrir la primera vez (app sin firmar). Gratis, sin cuentas, para siempre."

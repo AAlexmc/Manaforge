@@ -6,7 +6,7 @@
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="Base de datos"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/licencia-MIT-4FB878?style=flat-square" alt="Licencia MIT"></a>
-  <img src="https://img.shields.io/badge/Flutter-iOS%20·%20Android%20·%20Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="Multiplataforma">
+  <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="Escritorio multiplataforma">
   <img src="https://img.shields.io/badge/precio-0%20%E2%82%AC%20para%20siempre-E06A50?style=flat-square" alt="Gratis para siempre">
 </p>
 
@@ -87,10 +87,14 @@ Le das tu colección y te devuelve **mazos completos de 60 cartas**, construidos
 
 ```bash
 # 1. Instala Flutter (canal stable): https://docs.flutter.dev/get-started/install
+#    (en Windows necesitas además Visual Studio con "Desarrollo para el escritorio con C++")
 git clone https://github.com/AAlexmc/Manaforge.git
 cd Manaforge/app
-flutter run          # elige tu móvil o tu escritorio
+flutter create . --platforms=windows --project-name manaforge_app   # 1ª vez (en Mac: --platforms=macos)
+flutter run -d windows                                              # en Mac: -d macos
 ```
+
+¿Sin ganas de compilar? Pronto habrá **descargas directas** para Windows, macOS y Linux en [Releases](https://github.com/AAlexmc/Manaforge/releases) — sin instalar nada más.
 
 Dentro de la app: **descarga la base de datos** de cartas (una vez) → **importa tu colección** en CSV o busca cartas a mano → pulsa **⚒️ Forjar mis mazos**. Eso es todo.
 
@@ -98,7 +102,7 @@ Dentro de la app: **descarga la base de datos** de cartas (una vez) → **import
 
 | Carpeta | Qué vive ahí |
 |---|---|
-| [`app/`](app) | La app Flutter — un solo código para iOS, Android, Windows, macOS y Linux |
+| [`app/`](app) | La app Flutter — un solo código para Windows, macOS y Linux (y móviles el día de mañana) |
 | [`forge_engine/`](forge_engine) | El motor de mazos en Dart: curva, validador, clasificador y generador |
 | [`engine-reference/`](engine-reference) | El mismo motor en Python: **referencia canónica** y testeada del algoritmo |
 | [`scripts/`](scripts) | Pipeline de datos: bulk de Scryfall → SQLite, ejecutado solo en GitHub Actions |
@@ -119,9 +123,10 @@ cd app && flutter test                            # tests de la app
 - [x] **Fase 2 — Datos**: pipeline bulk Scryfall → SQLite con release automática mensual
 - [x] **Fase 3 — Generador**: clasificación funcional, temas, puntuación y construcción greedy
 - [x] **Fase 4 — App v0.2**: colección con búsqueda ES/EN, importador CSV, Forge con carrusel y plan de juego
-- [ ] **Fase 5 — Escáner**: huellas perceptuales generadas en CI + cámara on-device ([diseño listo](docs/reconocimiento-cartas.md))
-- [ ] **Fase 6 — Redondear**: guardar mazos, precios, trades, legalidades por formato, inglés
-- [ ] **Fase 7 — Tiendas**: Google Play, App Store y builds de escritorio en releases
+- [ ] **Fase 5 — Escritorio de primera**: builds automáticas de Windows/macOS/Linux en Releases (workflow listo), guardar mazos, atajos de teclado y ventanas a medida
+- [ ] **Fase 6 — Redondear**: precios y valor de colección, trades, legalidades por formato, inglés
+- [ ] **Fase 7 — Escáner**: huellas perceptuales generadas en CI + webcam/cámara ([diseño listo](docs/reconocimiento-cartas.md))
+- [ ] **Fase 8 — Móviles (si la comunidad los pide)**: Android y iOS/TestFlight — el código ya está listo; solo faltan las cuentas de las tiendas
 
 ## 🤝 Contribuir
 
