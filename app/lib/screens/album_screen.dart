@@ -24,6 +24,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Map<String, int> _owned = const {};
   bool _onlyMine = true;
   String _query = '';
+  String _sort = 'progreso'; // progreso · fecha · nombre
   String? _error;
 
   @override
@@ -102,13 +103,22 @@ class _AlbumScreenState extends State<AlbumScreen> {
           return false;
         }
         return true;
-      }).toList()
-        // primero los que más completos llevas: coleccionar pica
-        ..sort((a, b) {
-          final pa = (_owned[a.code] ?? 0) / (a.total == 0 ? 1 : a.total);
-          final pb = (_owned[b.code] ?? 0) / (b.total == 0 ? 1 : b.total);
-          return pb.compareTo(pa);
-        });
+      }).toList();
+      switch (_sort) {
+        case 'fecha':
+          visible.sort((a, b) =>
+              (b.releasedAt ?? '').compareTo(a.releasedAt ?? ''));
+        case 'nombre':
+          visible.sort((a, b) => a.name.compareTo(b.name));
+        default: // progreso: primero los que más completos llevas
+          visible.sort((a, b) {
+            final pa =
+                (_owned[a.code] ?? 0) / (a.total == 0 ? 1 : a.total);
+            final pb =
+                (_owned[b.code] ?? 0) / (b.total == 0 ? 1 : b.total);
+            return pb.compareTo(pa);
+          });
+      }
     }
     return Scaffold(
       appBar: AppBar(title: const Text('Álbum')),
@@ -180,6 +190,30 @@ class _AlbumScreenState extends State<AlbumScreen> {
                         label: const Text('Con cartas mías'),
                         onSelected: (v) => setState(() => _onlyMine = v),
                       ),
+                      const SizedBox(width: 8),
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: _sort,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontSize: 12.5),
+                          borderRadius: BorderRadius.circular(10),
+                          items: const [
+                            DropdownMenuItem(
+                                value: 'progreso',
+                                child: Text('Más completadas')),
+                            DropdownMenuItem(
+                                value: 'fecha',
+                                child: Text('Más nuevas')),
+                            DropdownMenuItem(
+                                value: 'nombre',
+                                child: Text('Por nombre')),
+                          ],
+                          onChanged: (v) => setState(
+                              () => _sort = v ?? 'progreso'),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -221,6 +255,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       const SizedBox(height: 4),
                                       Text(
                                         '$owned/${s.total} cartas'
+                                        '${s.year.isEmpty ? '' : ' · ${s.year}'}'
                                         '${complete ? ' · ✓ ¡completa!' : ''}',
                                         style: TextStyle(
                                             fontSize: 11.5,

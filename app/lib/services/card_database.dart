@@ -305,8 +305,15 @@ class SetInfo {
   final String code;
   final String name;
   final int total; // casillas del álbum (nº de collector numbers)
+  final String? releasedAt;
 
-  const SetInfo({required this.code, required this.name, required this.total});
+  const SetInfo(
+      {required this.code,
+      required this.name,
+      required this.total,
+      this.releasedAt});
+
+  String get year => (releasedAt ?? '').split('-').first;
 }
 
 /// Una casilla del álbum: una carta concreta de un set.
@@ -340,9 +347,11 @@ extension AlbumQueries on CardDatabase {
   /// Todas las expansiones de la base de datos con su nº de cartas.
   Future<List<SetInfo>> sets() async {
     final db = await _open();
+    final hasDate = await supportsYearFilter();
     final rows = db.select('''
       SELECT set_code, MAX(set_name) AS set_name,
              COUNT(DISTINCT collector_number) AS total
+             ${hasDate ? ', MAX(released_at) AS rel' : ''}
       FROM printings
       WHERE set_code IS NOT NULL AND set_name IS NOT NULL
       GROUP BY set_code
@@ -354,6 +363,7 @@ extension AlbumQueries on CardDatabase {
           code: r['set_code'] as String,
           name: r['set_name'] as String,
           total: r['total'] as int,
+          releasedAt: hasDate ? r['rel'] as String? : null,
         )
     ];
   }
