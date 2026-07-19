@@ -4,6 +4,7 @@ import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import 'card_detail_screen.dart';
 
 /// Álbum por expansiones, estilo TCG Pocket: cada set es una página con
 /// TODAS sus cartas en rejilla; las que no tienes se ven apagadas y las
@@ -372,7 +373,16 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                           return _AlbumCell(
                               card: card,
                               qty: qty,
-                              greyMatrix: _greyMatrix);
+                              greyMatrix: _greyMatrix,
+                              onDetails: () =>
+                                  Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => CardDetailScreen(
+                                      db: widget.db,
+                                      collection: widget.collection,
+                                      oracleId: card.oracleId),
+                                ),
+                              ));
                         },
                       ),
                     ),
@@ -388,9 +398,13 @@ class _AlbumCell extends StatelessWidget {
   final AlbumCard card;
   final int qty;
   final List<double> greyMatrix;
+  final VoidCallback onDetails;
 
   const _AlbumCell(
-      {required this.card, required this.qty, required this.greyMatrix});
+      {required this.card,
+      required this.qty,
+      required this.greyMatrix,
+      required this.onDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -457,7 +471,8 @@ class _AlbumCell extends StatelessWidget {
         onTap: () => showCardZoom(context,
             name: card.printedName ?? card.name,
             imageUrl: card.imageNormal ?? card.imageSmall,
-            colors: card.colors),
+            colors: card.colors,
+            onDetails: onDetails),
         child: Stack(
         fit: StackFit.expand,
         children: [

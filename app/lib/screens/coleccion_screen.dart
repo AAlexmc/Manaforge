@@ -4,6 +4,7 @@ import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../widgets/common.dart';
 import 'album_screen.dart';
+import 'card_detail_screen.dart';
 import 'import_csv_screen.dart';
 
 /// Colección: primera pestaña. Estados: sin base de datos (descargar),
@@ -108,6 +109,15 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
     } catch (_) {
       // DB no disponible: sin resultados
     }
+  }
+
+  void _openDetail({required String oracleId}) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => CardDetailScreen(
+          db: widget.db,
+          collection: widget.collection,
+          oracleId: oracleId),
+    ));
   }
 
   void _add(CardHit hit) {
@@ -288,7 +298,9 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                     onTap: () => showCardZoom(context,
                         name: hit.printedName ?? hit.name,
                         imageUrl: hit.imageNormal ?? hit.imageSmall,
-                        colors: hit.colors),
+                        colors: hit.colors,
+                        onDetails: () =>
+                            _openDetail(oracleId: hit.oracleId)),
                     leading: CardThumb(
                         url: hit.imageSmall,
                         colors: hit.colors,
@@ -331,7 +343,9 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                     onTap: () => showCardZoom(context,
                         name: card.printedName ?? card.name,
                         imageUrl: card.imageNormal ?? card.imageSmall,
-                        colors: card.colors),
+                        colors: card.colors,
+                        onDetails: () =>
+                            _openDetail(oracleId: card.oracleId)),
                     leading: CardThumb(
                         url: card.imageSmall,
                         colors: card.colors,

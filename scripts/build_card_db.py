@@ -50,7 +50,8 @@ CREATE TABLE printings (
     image_normal TEXT,
     image_png    TEXT,
     price_eur    TEXT,
-    released_at  TEXT           -- fecha de salida del set (filtros por año)
+    released_at  TEXT,          -- fecha de salida del set (filtros por año)
+    price_eur_foil TEXT         -- precio Cardmarket de la versión foil
 );
 CREATE INDEX idx_printings_oracle ON printings(oracle_id);
 CREATE INDEX idx_printings_printed_name ON printings(printed_name);
@@ -133,7 +134,7 @@ def build(bulk_path: Path, db_path: Path, bulk_date: str = "") -> dict:
             n_cards += 1
         small, normal, png = _images(card)
         con.execute(
-            "INSERT OR REPLACE INTO printings VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT OR REPLACE INTO printings VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 card["id"],
                 oracle_id,
@@ -148,11 +149,12 @@ def build(bulk_path: Path, db_path: Path, bulk_date: str = "") -> dict:
                 png,
                 (card.get("prices") or {}).get("eur"),
                 card.get("released_at"),
+                (card.get("prices") or {}).get("eur_foil"),
             ),
         )
         n_printings += 1
 
-    con.execute("INSERT INTO meta VALUES ('schema_version', '2')")
+    con.execute("INSERT INTO meta VALUES ('schema_version', '3')")
     con.execute("INSERT INTO meta VALUES ('bulk_date', ?)", (bulk_date,))
     con.commit()
     con.execute("VACUUM")

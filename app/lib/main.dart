@@ -44,7 +44,7 @@ class _HomeShellState extends State<HomeShell> {
       AlbumScreen(db: _db, collection: _collection),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
-      const TradesScreen(),
+      MercadoScreen(db: _db, collection: _collection),
       AjustesScreen(db: _db),
     ];
     return Scaffold(
@@ -70,9 +70,9 @@ class _HomeShellState extends State<HomeShell> {
               selectedIcon: ForgeTabIcon(selected: true),
               label: 'Forge'),
           NavigationDestination(
-              icon: Icon(Icons.swap_horiz_outlined),
-              selectedIcon: Icon(Icons.swap_horiz),
-              label: 'Trades'),
+              icon: Icon(Icons.storefront_outlined),
+              selectedIcon: Icon(Icons.storefront),
+              label: 'Mercado'),
           NavigationDestination(
               icon: Icon(Icons.settings_outlined),
               selectedIcon: Icon(Icons.settings),

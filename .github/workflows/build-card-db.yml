@@ -2,7 +2,7 @@ name: Build card database
 on:
   workflow_dispatch:        # lanzable a mano desde la pestaña Actions
   schedule:
-    - cron: '0 5 1 * *'     # y el día 1 de cada mes
+    - cron: '0 5 * * *'     # y cada día a las 05:00 UTC (precios frescos)
   push:
     tags: ['build-db-*']    # o empujando un tag build-db-N
 permissions:

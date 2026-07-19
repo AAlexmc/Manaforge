@@ -309,7 +309,10 @@ class _CurveEditorState extends State<CurveEditor> {
 /// Visor de carta a pantalla completa: toca una carta en cualquier parte de
 /// la app y se amplía (con zoom de pellizco/rueda). Toca fuera para cerrar.
 void showCardZoom(BuildContext context,
-    {required String name, String? imageUrl, String colors = ''}) {
+    {required String name,
+    String? imageUrl,
+    String colors = '',
+    VoidCallback? onDetails}) {
   showDialog(
     context: context,
     barrierColor: Colors.black.withValues(alpha: 0.88),
@@ -363,6 +366,15 @@ void showCardZoom(BuildContext context,
                 style: const TextStyle(
                     fontSize: 15, fontWeight: FontWeight.w600)),
           ),
+          if (onDetails != null)
+            TextButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onDetails();
+              },
+              icon: const Icon(Icons.info_outline, size: 18),
+              label: const Text('Ver ficha completa (precios y legalidad)'),
+            ),
           const Text('toca fuera para cerrar',
               style: TextStyle(fontSize: 11, color: Colors.white54)),
         ],

@@ -6,6 +6,7 @@ import '../services/card_database.dart';
 import '../services/deck_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import 'card_detail_screen.dart';
 
 /// Detalle de un mazo generado: plan de juego, curva (editable: arrastra las
 /// barras y reforja el mazo a tu curva), "¿por qué funciona?", lista agrupada
@@ -39,12 +40,41 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   bool _editingCurve = false;
   Map<int, int> _edited = {};
   Future<Map<String, (String?, String?)>>? _imagesF;
+  Map<String, double> _prices = const {};
 
   @override
   void initState() {
     super.initState();
     _gen = widget.gen;
     _loadImages();
+    _loadPrices();
+  }
+
+  Future<void> _loadPrices() async {
+    final db = widget.db;
+    if (db == null) return;
+    try {
+      final prices = await db.pricesForNames(
+          [..._gen.deck.cards.keys, ..._gen.deck.lands.keys]);
+      if (mounted) setState(() => _prices = prices);
+    } catch (_) {/* sin DB: sin precios */}
+  }
+
+  double get _deckValue {
+    var total = 0.0;
+    _gen.deck.cards
+        .forEach((n, q) => total += (_prices[n] ?? 0) * q);
+    _gen.deck.lands
+        .forEach((n, q) => total += (_prices[n] ?? 0) * q);
+    return total;
+  }
+
+  void _openCardDetail(String name) {
+    final db = widget.db;
+    if (db == null) return;
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => CardDetailScreen(db: db, byName: name),
+    ));
   }
 
   void _loadImages() {
@@ -115,6 +145,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
         _editingCurve = false;
         _loadImages(); // el banner refleja las cartas nuevas
       });
+      _loadPrices();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('✓ Mazo reforjado a tu curva — lista actualizada')));
     } else {
@@ -167,8 +198,16 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             children: [
               ColorIdentityDots(colors: deck.colors, size: 16),
               const SizedBox(width: 8),
-              Text('${fe.themeName(_gen.theme)} · ${deck.archetype.name} · '
-                  '$nSpells hechizos + $nLands tierras'),
+              Expanded(
+                child: Text(
+                    '${fe.themeName(_gen.theme)} · ${deck.archetype.name} · '
+                    '$nSpells hechizos + $nLands tierras'),
+              ),
+              if (_prices.isNotEmpty)
+                Text('~${_deckValue.toStringAsFixed(2)} €',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: MFColors.warning)),
             ],
           ),
           const SizedBox(height: 6),
@@ -176,7 +215,10 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               style: TextStyle(color: MFColors.success)),
           if (_imagesF != null) ...[
             const SizedBox(height: 14),
-            _DeckImageStrip(gen: _gen, imagesF: _imagesF!),
+            _DeckImageStrip(
+                gen: _gen,
+                imagesF: _imagesF!,
+                onDetails: widget.db == null ? null : _openCardDetail),
           ],
           const SizedBox(height: 16),
           Card(
@@ -304,6 +346,14 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold))),
                     Expanded(child: Text(e.key)),
+                    if (_prices[e.key] != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Text(
+                            '${_prices[e.key]!.toStringAsFixed(2)} €',
+                            style: const TextStyle(
+                                fontSize: 11, color: Colors.white54)),
+                      ),
                     Text(_pool[e.key]!.manaCost,
                         style: const TextStyle(fontSize: 11)),
                   ],
@@ -343,8 +393,10 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
 class _DeckImageStrip extends StatelessWidget {
   final fe.GeneratedDeck gen;
   final Future<Map<String, (String?, String?)>> imagesF;
+  final void Function(String name)? onDetails;
 
-  const _DeckImageStrip({required this.gen, required this.imagesF});
+  const _DeckImageStrip(
+      {required this.gen, required this.imagesF, this.onDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -369,7 +421,11 @@ class _DeckImageStrip extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8),
                 child: GestureDetector(
                   onTap: () => showCardZoom(context,
-                      name: e.key, imageUrl: url),
+                      name: e.key,
+                      imageUrl: url,
+                      onDetails: onDetails == null
+                          ? null
+                          : () => onDetails!(e.key)),
                   child: Stack(
                     children: [
                     SizedBox(

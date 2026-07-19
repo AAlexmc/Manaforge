@@ -5,51 +5,13 @@ import '../theme/mf_theme.dart';
 
 export 'album_screen.dart';
 export 'coleccion_screen.dart';
+export 'card_detail_screen.dart';
 export 'mazos_screen.dart';
+export 'mercado_screen.dart';
 export 'test_screen.dart';
 export 'deck_detail_screen.dart';
 export 'forge_screen.dart';
 export 'import_csv_screen.dart';
-
-/// Pantallas aún en esqueleto (se implementan sobre COMPONENT-SPECS.md).
-class _Placeholder extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  const _Placeholder({required this.title, required this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: Theme.of(context).textTheme.headlineMedium),
-              const SizedBox(height: 12),
-              Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TradesScreen extends StatelessWidget {
-  const TradesScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _Placeholder(
-      title: 'Trades',
-      subtitle: 'El balance se actualizará en vivo mientras añadís cartas. '
-          'En construcción.',
-    );
-  }
-}
 
 class AjustesScreen extends StatefulWidget {
   final CardDatabase db;

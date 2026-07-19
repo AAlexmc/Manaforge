@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:forge_engine/forge_engine.dart' as fe;
@@ -495,5 +496,274 @@ extension DeckQueries on CardDatabase {
       );
     }
     return pool;
+  }
+}
+
+/// Detalle completo de una carta (ficha estilo mercado).
+class CardFullDetail {
+  final String oracleId;
+  final String name;
+  final String manaCost;
+  final String typeLine;
+  final String oracleText;
+  final String colors;
+  final String? power;
+  final String? toughness;
+  final Map<String, String> legalities; // formato -> legal/not_legal/banned…
+
+  const CardFullDetail({
+    required this.oracleId,
+    required this.name,
+    required this.manaCost,
+    required this.typeLine,
+    required this.oracleText,
+    required this.colors,
+    this.power,
+    this.toughness,
+    required this.legalities,
+  });
+}
+
+/// Una versión impresa de la carta, con sus precios.
+class CardVersion {
+  final String setCode;
+  final String setName;
+  final String collectorNumber;
+  final String rarity;
+  final String? releasedAt;
+  final double? priceEur;
+  final double? priceEurFoil;
+  final String? imageSmall;
+  final String? imageNormal;
+
+  const CardVersion({
+    required this.setCode,
+    required this.setName,
+    required this.collectorNumber,
+    required this.rarity,
+    this.releasedAt,
+    this.priceEur,
+    this.priceEurFoil,
+    this.imageSmall,
+    this.imageNormal,
+  });
+
+  String get printingKey => '${setCode.toLowerCase()}|$collectorNumber';
+  String get year => (releasedAt ?? '????').split('-').first;
+}
+
+/// Una carta valorada de la colección (para el top del Mercado).
+class ValuedCard {
+  final String oracleId;
+  final String name;
+  final String? printedName;
+  final String? imageSmall;
+  final String? imageNormal;
+  final String colors;
+  final int qty;
+  final double unitPrice;
+
+  const ValuedCard({
+    required this.oracleId,
+    required this.name,
+    this.printedName,
+    this.imageSmall,
+    this.imageNormal,
+    required this.colors,
+    required this.qty,
+    required this.unitPrice,
+  });
+
+  double get total => unitPrice * qty;
+}
+
+/// Consultas de mercado: precios, versiones, legalidades y valor.
+extension MarketQueries on CardDatabase {
+  Future<bool> _hasColumn(String table, String column) async {
+    try {
+      final db = await _open();
+      final rows = db.select('PRAGMA table_info($table)');
+      return rows.any((r) => r['name'] == column);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Fecha del bulk de Scryfall con el que se generó la DB (YYYY-MM-DD).
+  Future<String?> bulkDate() async {
+    try {
+      final db = await _open();
+      final rows =
+          db.select("SELECT value FROM meta WHERE key = 'bulk_date'");
+      return rows.isEmpty ? null : rows.first['value'] as String?;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Ficha completa por oracle id, o por nombre si [byName] no es nulo.
+  Future<CardFullDetail?> cardDetail(
+      {String? oracleId, String? byName}) async {
+    final db = await _open();
+    final rows = oracleId != null
+        ? db.select(
+            'SELECT oracle_id, name, mana_cost, type_line, oracle_text, '
+            'colors, power, toughness, legalities FROM cards '
+            'WHERE oracle_id = ?1',
+            [oracleId])
+        : db.select(
+            'SELECT oracle_id, name, mana_cost, type_line, oracle_text, '
+            'colors, power, toughness, legalities FROM cards '
+            "WHERE name = ?1 OR name LIKE ?1 || ' //%'",
+            [byName]);
+    if (rows.isEmpty) return null;
+    final r = rows.first;
+    Map<String, String> legal = {};
+    try {
+      (jsonDecode((r['legalities'] as String?) ?? '{}')
+              as Map<String, dynamic>)
+          .forEach((k, v) => legal[k] = v as String);
+    } catch (_) {/* sin legalidades */}
+    return CardFullDetail(
+      oracleId: r['oracle_id'] as String,
+      name: r['name'] as String,
+      manaCost: (r['mana_cost'] as String?) ?? '',
+      typeLine: (r['type_line'] as String?) ?? '',
+      oracleText: (r['oracle_text'] as String?) ?? '',
+      colors: (r['colors'] as String?) ?? '',
+      power: r['power'] as String?,
+      toughness: r['toughness'] as String?,
+      legalities: legal,
+    );
+  }
+
+  /// Todas las versiones impresas (una por set+número, preferencia EN),
+  /// nuevas primero.
+  Future<List<CardVersion>> versionsOf(String oracleId) async {
+    final db = await _open();
+    final hasFoil = await _hasColumn('printings', 'price_eur_foil');
+    final hasDate = await _hasColumn('printings', 'released_at');
+    final cols = [
+      'set_code',
+      'set_name',
+      'collector_number',
+      'rarity',
+      'image_small',
+      'image_normal',
+      'price_eur',
+      if (hasFoil) 'price_eur_foil',
+      if (hasDate) 'released_at',
+    ].join(', ');
+    final rows = db.select(
+      'SELECT $cols, '
+      "MIN(CASE WHEN lang = 'en' THEN 0 ELSE 1 END) AS pref "
+      'FROM printings WHERE oracle_id = ?1 '
+      'GROUP BY set_code, collector_number',
+      [oracleId],
+    );
+    final versions = [
+      for (final r in rows)
+        CardVersion(
+          setCode: (r['set_code'] as String?) ?? '',
+          setName: (r['set_name'] as String?) ?? '',
+          collectorNumber: (r['collector_number'] as String?) ?? '',
+          rarity: (r['rarity'] as String?) ?? '',
+          releasedAt: hasDate ? r['released_at'] as String? : null,
+          priceEur: double.tryParse((r['price_eur'] as String?) ?? ''),
+          priceEurFoil: hasFoil
+              ? double.tryParse((r['price_eur_foil'] as String?) ?? '')
+              : null,
+          imageSmall: r['image_small'] as String?,
+          imageNormal: r['image_normal'] as String?,
+        )
+    ]..sort((a, b) =>
+        (b.releasedAt ?? '').compareTo(a.releasedAt ?? ''));
+    return versions;
+  }
+
+  /// Precio unitario por impresión exacta ("set|nº" -> €).
+  Future<Map<String, double>> pricesForPrintings(
+      Iterable<String> printingKeys) async {
+    final db = await _open();
+    final out = <String, double>{};
+    final keys = printingKeys.toList();
+    const chunkSize = 150; // 2 parámetros por clave
+    for (var i = 0; i < keys.length; i += chunkSize) {
+      final chunk = keys.sublist(
+          i, i + chunkSize > keys.length ? keys.length : i + chunkSize);
+      final where = List.filled(
+              chunk.length, '(set_code = ? AND collector_number = ?)')
+          .join(' OR ');
+      final params = <String>[];
+      for (final k in chunk) {
+        final parts = k.split('|');
+        params.add(parts.first);
+        params.add(parts.length > 1 ? parts[1] : '');
+      }
+      final rows = db.select(
+        'SELECT set_code, collector_number, '
+        'MIN(CAST(price_eur AS REAL)) AS p '
+        'FROM printings WHERE price_eur IS NOT NULL AND ($where) '
+        'GROUP BY set_code, collector_number',
+        params,
+      );
+      for (final r in rows) {
+        final key =
+            '${(r['set_code'] as String).toLowerCase()}|${r['collector_number']}';
+        final p = r['p'] as double?;
+        if (p != null) out[key] = p;
+      }
+    }
+    return out;
+  }
+
+  /// Precio mínimo conocido por oracle id (modo aproximado y mazos).
+  Future<Map<String, double>> pricesForOracles(
+      Iterable<String> oracleIds) async {
+    final db = await _open();
+    final out = <String, double>{};
+    final ids = oracleIds.toList();
+    const chunkSize = 400;
+    for (var i = 0; i < ids.length; i += chunkSize) {
+      final chunk = ids.sublist(
+          i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT oracle_id, MIN(CAST(price_eur AS REAL)) AS p '
+        'FROM printings WHERE oracle_id IN ($marks) '
+        'AND price_eur IS NOT NULL GROUP BY oracle_id',
+        chunk,
+      );
+      for (final r in rows) {
+        final p = r['p'] as double?;
+        if (p != null) out[r['oracle_id'] as String] = p;
+      }
+    }
+    return out;
+  }
+
+  /// Precio mínimo por NOMBRE inglés (valor de mazos).
+  Future<Map<String, double>> pricesForNames(Iterable<String> names) async {
+    final db = await _open();
+    final out = <String, double>{};
+    final list = names.toList();
+    const chunkSize = 300;
+    for (var i = 0; i < list.length; i += chunkSize) {
+      final chunk = list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT c.name, MIN(CAST(p.price_eur AS REAL)) AS pr '
+        'FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id '
+        'WHERE c.name IN ($marks) AND p.price_eur IS NOT NULL '
+        'GROUP BY c.oracle_id',
+        chunk,
+      );
+      for (final r in rows) {
+        final p = r['pr'] as double?;
+        if (p != null) out[r['name'] as String] = p;
+      }
+    }
+    return out;
   }
 }

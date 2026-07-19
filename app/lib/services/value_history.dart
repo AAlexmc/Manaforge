@@ -1,0 +1,71 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+/// Un punto de la evolución del valor de la colección.
+class ValuePoint {
+  final String date; // YYYY-MM-DD
+  final double value;
+  final int cards;
+
+  const ValuePoint(this.date, this.value, this.cards);
+
+  Map<String, dynamic> toJson() => {'d': date, 'v': value, 'c': cards};
+
+  factory ValuePoint.fromJson(Map<String, dynamic> json) => ValuePoint(
+        json['d'] as String,
+        (json['v'] as num).toDouble(),
+        (json['c'] as int?) ?? 0,
+      );
+}
+
+/// Historial local del valor de la colección: una foto por día, sin nube.
+/// Con esto el Mercado puede enseñar "+X € (+Y%)" de verdad.
+class ValueHistory {
+  static const _maxPoints = 365;
+
+  Future<File?> _file() async {
+    try {
+      final dir = await getApplicationSupportDirectory();
+      return File(p.join(dir.path, 'value_history.json'));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<List<ValuePoint>> load() async {
+    final file = await _file();
+    if (file == null || !await file.exists()) return const [];
+    try {
+      final list = jsonDecode(await file.readAsString()) as List<dynamic>;
+      return [
+        for (final item in list)
+          ValuePoint.fromJson(item as Map<String, dynamic>)
+      ];
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  /// Registra el valor de HOY (sustituye la foto del día si ya existía)
+  /// y devuelve el historial actualizado.
+  Future<List<ValuePoint>> record(double value, int cards) async {
+    final now = DateTime.now();
+    two(int n) => n < 10 ? '0$n' : '$n';
+    final today = '${now.year}-${two(now.month)}-${two(now.day)}';
+    final history = List<ValuePoint>.from(await load())
+      ..removeWhere((pt) => pt.date == today)
+      ..add(ValuePoint(today, value, cards));
+    while (history.length > _maxPoints) {
+      history.removeAt(0);
+    }
+    final file = await _file();
+    if (file != null) {
+      await file.writeAsString(
+          jsonEncode([for (final pt in history) pt.toJson()]));
+    }
+    return history;
+  }
+}
