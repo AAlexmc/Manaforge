@@ -1,0 +1,41 @@
+name: Build scanner hash database
+on:
+  workflow_dispatch:
+  push:
+    tags: ['scan-db-*']
+permissions:
+  contents: write
+jobs:
+  build-hashes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install ijson pillow requests
+      - name: Recuperar base previa (incremental)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download scanner-db-latest -p 'manaforge_hashes.sqlite.gz' || true
+          [ -f manaforge_hashes.sqlite.gz ] && gunzip manaforge_hashes.sqlite.gz || true
+      - name: Descargar bulk de Scryfall
+        run: |
+          set -euo pipefail
+          curl -sf -H "User-Agent: ManaForge-CI/1.0" -H "Accept: application/json" \
+            https://api.scryfall.com/bulk-data/default-cards -o bulkmeta.json
+          URI=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['download_uri'])")
+          curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" "$URI" -o bulk.json
+      - name: Calcular huellas del arte (incremental, educado con el CDN)
+        run: python3 scripts/build_hash_db.py bulk.json manaforge_hashes.sqlite
+      - name: Publicar release scanner-db-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gzip -9 -f manaforge_hashes.sqlite
+          gh release delete scanner-db-latest --yes || true
+          gh release create scanner-db-latest manaforge_hashes.sqlite.gz \
+            --title "Huellas del escáner ($(date +%F))" \
+            --notes "dHash 128-bit del arte de cada impresión (art_crop de Scryfall). La usa el escáner por webcam. Datos: Scryfall · Cartas: © Wizards of the Coast (Fan Content Policy)."

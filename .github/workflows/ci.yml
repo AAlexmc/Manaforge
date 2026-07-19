@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: pip install pytest
+      - run: pip install pytest pillow
       - run: cd engine-reference && python -m pytest tests/ -v
       - run: cd scripts && python -m pytest tests/ -v
   forge-engine-dart:
