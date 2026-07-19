@@ -2,10 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/main.dart';
 
 void main() {
-  testWidgets('la app arranca con las 6 pestañas', (tester) async {
+  testWidgets('la app arranca con las 7 pestañas', (tester) async {
     await tester.pumpWidget(const ManaForgeApp());
     await tester.pump(const Duration(milliseconds: 100));
 
+    expect(find.text('Inicio'), findsWidgets);
     expect(find.text('Colección'), findsWidgets);
     expect(find.text('Álbum'), findsWidgets);
     expect(find.text('Mazos'), findsOneWidget);

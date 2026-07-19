@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/recents_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 
@@ -71,6 +72,15 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
         _versions = versions;
         _loading = false;
       });
+      // apunta la visita para la tira de "vistas recientemente" de Inicio
+      recentsStore.record(RecentCard(
+        oracleId: detail.oracleId,
+        name: detail.name,
+        imageNormal: versions.isEmpty
+            ? null
+            : versions.first.imageNormal ?? versions.first.imageSmall,
+        colors: detail.colors,
+      ));
     } catch (e) {
       if (mounted) {
         setState(() {

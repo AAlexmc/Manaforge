@@ -319,7 +319,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
                     itemCount: _banners.length,
                     itemBuilder: (context, i) {
                       final set = _banners[i];
-                      return _SetBannerTile(
+                      return SetBannerTile(
                         set: set,
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
@@ -455,11 +455,11 @@ class _SparklinePainter extends CustomPainter {
 
 /// Banner de expansión estilo gacha: la carta más cara del set de fondo,
 /// nombre y año por encima.
-class _SetBannerTile extends StatelessWidget {
+class SetBannerTile extends StatelessWidget {
   final SetBanner set;
   final VoidCallback onTap;
 
-  const _SetBannerTile({required this.set, required this.onTap});
+  const SetBannerTile({required this.set, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

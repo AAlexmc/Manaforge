@@ -5,6 +5,7 @@ import '../theme/mf_theme.dart';
 
 export 'album_screen.dart';
 export 'coleccion_screen.dart';
+export 'home_screen.dart';
 export 'card_detail_screen.dart';
 export 'mazos_screen.dart';
 export 'mercado_screen.dart';

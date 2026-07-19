@@ -18,12 +18,14 @@ class TestScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
   final DeckStore decks;
+  final String? initialMetaId; // preseleccionar un mazo (desde Inicio)
 
   const TestScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.decks});
+      required this.decks,
+      this.initialMetaId});
 
   @override
   State<TestScreen> createState() => _TestScreenState();
@@ -48,7 +50,10 @@ class _TestScreenState extends State<TestScreen> {
       setState(() {
         _decks = result.decks;
         _decksSource = result.source;
-        if (!_decks.any((m) => m.id == _metaId)) {
+        final wanted = widget.initialMetaId;
+        if (wanted != null && _decks.any((m) => m.id == wanted)) {
+          _metaId = wanted;
+        } else if (!_decks.any((m) => m.id == _metaId)) {
           _metaId = _decks.first.id;
         }
       });
