@@ -29,11 +29,40 @@ class _AlbumScreenState extends State<AlbumScreen> {
   void initState() {
     super.initState();
     _load();
+    // el álbum vive como pestaña: debe reaccionar cuando la colección
+    // cambia (importaciones, añadir/quitar cartas), no solo al crearse
+    widget.collection.addListener(_onCollectionChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.collection.removeListener(_onCollectionChanged);
+    super.dispose();
+  }
+
+  void _onCollectionChanged() {
+    if (_sets == null) {
+      // aún sin sets (p. ej. la DB no estaba): reintentar todo
+      _error = null;
+      _load();
+    } else {
+      _computeOwned();
+    }
   }
 
   Future<void> _load() async {
     try {
       final sets = await widget.db.sets();
+      if (!mounted) return;
+      setState(() => _sets = sets);
+      await _computeOwned();
+    } catch (e) {
+      if (mounted) setState(() => _error = e.toString());
+    }
+  }
+
+  Future<void> _computeOwned() async {
+    try {
       Map<String, int> owned;
       if (widget.collection.hasPrintingData) {
         // preciso: sabemos la edición exacta de cada carta (clave "set|nº")
@@ -50,13 +79,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
       }
       if (!mounted) return;
       setState(() {
-        _sets = sets;
         _owned = owned;
         // si la colección está vacía, no tiene sentido filtrar por "míos"
         if (owned.isEmpty) _onlyMine = false;
       });
-    } catch (e) {
-      if (mounted) setState(() => _error = e.toString());
+    } catch (_) {
+      // DB no disponible: se reintentará con el siguiente cambio
     }
   }
 
