@@ -183,7 +183,8 @@ class CardDatabase {
       double? minPriceEur,
       double? maxPriceEur,
       int? yearMin,
-      int? yearMax}) async {
+      int? yearMax,
+      String? format}) async {
     final db = await _open();
     final pool = <String, fe.Card>{};
     final ids = ownedByOracle.keys.toList();
@@ -258,6 +259,7 @@ class CardDatabase {
           manaCost: (r['mana_cost'] as String?) ?? '',
           cmc: ((r['cmc'] as num?) ?? 0).round(),
           colors: (r['colors'] as String?) ?? '',
+          colorIdentity: r['color_identity'] as String?,
           types: ((r['type_line'] as String?) ?? '')
               .split('—')
               .first
@@ -270,13 +272,26 @@ class CardDatabase {
           toughness: int.tryParse((r['toughness'] as String?) ?? ''),
         );
 
+    bool legalIn(Row r) {
+      if (format == null) return true;
+      try {
+        final legal = jsonDecode((r['legalities'] as String?) ?? '{}')
+            as Map<String, dynamic>;
+        return legal[format] == 'legal';
+      } catch (_) {
+        return false;
+      }
+    }
+
     for (final entry in ownedByOracle.entries) {
       if (tooExpensive.contains(entry.key)) continue;
       final rows = db.select(
-          'SELECT name, mana_cost, cmc, colors, type_line, oracle_text, power, toughness '
+          'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
+          'oracle_text, power, toughness, legalities '
           'FROM cards WHERE oracle_id = ?1',
           [entry.key]);
       if (rows.isEmpty) continue;
+      if (!legalIn(rows.first)) continue;
       final card = rowToCard(rows.first, entry.value);
       pool[card.name] = card;
     }
@@ -475,14 +490,14 @@ extension DeckQueries on CardDatabase {
     final pool = <String, fe.Card>{};
     for (final entry in qtyByName.entries) {
       var rows = db.select(
-          'SELECT name, mana_cost, cmc, colors, type_line, oracle_text, '
-          'power, toughness FROM cards WHERE name = ?1',
+          'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
+          'oracle_text, power, toughness FROM cards WHERE name = ?1',
           [entry.key]);
       if (rows.isEmpty) {
         // cartas de dos caras: la lista suele traer solo la cara delantera
         rows = db.select(
-            'SELECT name, mana_cost, cmc, colors, type_line, oracle_text, '
-            "power, toughness FROM cards WHERE name LIKE ?1 || ' //%'",
+            'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
+            "oracle_text, power, toughness FROM cards WHERE name LIKE ?1 || ' //%'",
             [entry.key]);
       }
       if (rows.isEmpty) continue;
@@ -493,6 +508,7 @@ extension DeckQueries on CardDatabase {
         manaCost: (r['mana_cost'] as String?) ?? '',
         cmc: ((r['cmc'] as num?) ?? 0).round(),
         colors: (r['colors'] as String?) ?? '',
+        colorIdentity: r['color_identity'] as String?,
         types: ((r['type_line'] as String?) ?? '')
             .split('—')
             .first

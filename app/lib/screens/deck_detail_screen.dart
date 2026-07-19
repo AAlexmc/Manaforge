@@ -263,7 +263,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                         child: Text('Curva de maná',
                             style: Theme.of(context).textTheme.titleMedium),
                       ),
-                      if (!_editingCurve)
+                      if (!_editingCurve &&
+                          _gen.deck.totalCards == 60)
                         TextButton.icon(
                           onPressed: () => _startEditing(hist),
                           icon: const Icon(Icons.tune, size: 18),

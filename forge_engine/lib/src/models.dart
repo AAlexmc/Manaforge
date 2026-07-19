@@ -10,6 +10,9 @@ class Card {
   final int? power; // null para no-criaturas o poder variable (*)
   final int? toughness;
 
+  /// Identidad de color (Commander). Null = usar [colors].
+  final String? colorIdentity;
+
   const Card({
     required this.name,
     required this.qty,
@@ -20,7 +23,10 @@ class Card {
     required this.oracle,
     this.power,
     this.toughness,
+    this.colorIdentity,
   });
+
+  String get identity => colorIdentity ?? colors;
 
   static int? _stat(dynamic v) =>
       v is int ? v : (v is String ? int.tryParse(v) : null);
@@ -35,10 +41,13 @@ class Card {
         oracle: (json['oracle'] ?? '') as String,
         power: _stat(json['power']),
         toughness: _stat(json['toughness']),
+        colorIdentity: json['color_identity'] as String?,
       );
 
   bool get isLand => types.contains('Land');
   bool get isCreature => types.contains('Creature');
+  bool get isLegendaryCreature =>
+      isCreature && types.contains('Legendary');
 }
 
 /// Arquetipos soportados y sus rangos (aprox. Frank Karsten, mazos de 60).

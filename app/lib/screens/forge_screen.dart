@@ -43,6 +43,8 @@ class _ForgeScreenState extends State<ForgeScreen> {
   // Opciones del jugador: colores, arquetipo, rango de precio y de años
   final Set<String> _selColors = {};
   String? _selArchetype;
+  String _format = 'casual'; // casual · standard · pioneer · modern ·
+  // pauper · legacy · commander
   final _minPriceCtrl = TextEditingController();
   final _maxPriceCtrl = TextEditingController();
   final _yearFromCtrl = TextEditingController();
@@ -97,27 +99,37 @@ class _ForgeScreenState extends State<ForgeScreen> {
     try {
       final pool = await widget.db.buildPool(widget.collection.qtyByOracle,
           assumeBasics: _assumeBasics,
+          basicsQty: _format == 'commander' ? 40 : 25,
           minPriceEur: _parsePrice(_minPriceCtrl),
           maxPriceEur: _parsePrice(_maxPriceCtrl),
           yearMin: _parseYear(_yearFromCtrl),
-          yearMax: _parseYear(_yearToCtrl));
+          yearMax: _parseYear(_yearToCtrl),
+          format: _format == 'casual' ? null : _format);
       // pequeña pausa para que la animación cuente su historia
       await Future.delayed(const Duration(milliseconds: 2200));
-      final proposals = fe.generateProposals(pool,
-          allowedColors: _selColors.isEmpty ? null : _selColors.join(),
-          archetypeOverride: _selArchetype);
+      final proposals = _format == 'commander'
+          ? fe.generateCommanderProposals(pool)
+          : fe.generateProposals(pool,
+              allowedColors:
+                  _selColors.isEmpty ? null : _selColors.join(),
+              archetypeOverride: _selArchetype);
       _messageTimer?.cancel();
       if (!mounted) return;
       setState(() {
         _forging = false;
         _pool = pool;
         if (proposals.isEmpty) {
-          _cantReason =
-              'Con las cartas actuales no me sale ningún mazo completo de 60 '
-              'que cumpla mis reglas (tierras suficientes, curva sana y solo '
-              'cartas tuyas). Añade más cartas — sobre todo de tus colores '
-              'principales — y vuelve a intentarlo. Antes que darte un mazo '
-              'defectuoso, prefiero avisarte.';
+          _cantReason = _format == 'commander'
+              ? 'No me sale un Commander legal: hacen falta un comandante '
+                  'legendario y ~62 cartas DISTINTAS dentro de su identidad '
+                  '(es singleton), más básicas suficientes. Prueba otro '
+                  'formato o amplía la colección.'
+              : 'Con las cartas actuales no me sale ningún mazo completo '
+                  '${_format == 'casual' ? 'de 60' : 'LEGAL en $_format'} '
+                  'que cumpla mis reglas (tierras suficientes, curva sana y '
+                  'solo cartas tuyas). Añade más cartas — sobre todo de tus '
+                  'colores principales — y vuelve a intentarlo. Antes que '
+                  'darte un mazo defectuoso, prefiero avisarte.';
         } else {
           _proposals = proposals;
         }
@@ -219,6 +231,44 @@ class _ForgeScreenState extends State<ForgeScreen> {
             subtitle: const Text(
                 'Casi todo el mundo tiene básicas de mazos de inicio; '
                 'desactívalo para usar SOLO las básicas de tu colección.'),
+          ),
+          const SizedBox(height: 12),
+          Text('Formato de juego',
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final f in const [
+                ('casual', 'Casual 60'),
+                ('standard', 'Standard'),
+                ('pioneer', 'Pioneer'),
+                ('modern', 'Modern'),
+                ('pauper', 'Pauper'),
+                ('legacy', 'Legacy'),
+                ('commander', 'Commander'),
+              ])
+                ChoiceChip(
+                  visualDensity: VisualDensity.compact,
+                  label: Text(f.$2),
+                  selected: _format == f.$1,
+                  onSelected: (_) => setState(() => _format = f.$1),
+                ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              _format == 'commander'
+                  ? '100 cartas · singleton · comandante legendario de tu '
+                      'colección · identidad de color respetada.'
+                  : _format == 'casual'
+                      ? '60 cartas, sin restricción de legalidad: todo vale.'
+                      : '60 cartas usando SOLO tus cartas legales en '
+                          '${_format[0].toUpperCase()}${_format.substring(1)}.',
+              style: const TextStyle(fontSize: 11.5),
+            ),
           ),
           const SizedBox(height: 12),
           Text('A tu gusto (opcional)',
@@ -474,7 +524,10 @@ class _ProposalCard extends StatelessWidget {
                       color: accent.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(deck.archetype.name.toUpperCase(),
+                    child: Text(
+                        deck.totalCards == 100
+                            ? 'COMMANDER'
+                            : deck.archetype.name.toUpperCase(),
                         style: const TextStyle(
                             fontSize: 10, fontWeight: FontWeight.bold)),
                   ),
