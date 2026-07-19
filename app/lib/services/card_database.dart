@@ -253,6 +253,7 @@ class AlbumCard {
   final String? printedName;
   final String? imageSmall;
   final String colors;
+  final String typeLine;
 
   const AlbumCard({
     required this.oracleId,
@@ -261,7 +262,10 @@ class AlbumCard {
     this.printedName,
     this.imageSmall,
     required this.colors,
+    this.typeLine = '',
   });
+
+  bool get isBasicLand => typeLine.startsWith('Basic');
 }
 
 /// Consultas del álbum por expansiones (estilo TCG Pocket): todas las cartas
@@ -300,8 +304,10 @@ extension AlbumQueries on CardDatabase {
           i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
       final marks = List.filled(chunk.length, '?').join(',');
       final rows = db.select(
-        'SELECT set_code, COUNT(DISTINCT collector_number) AS owned '
-        'FROM printings WHERE oracle_id IN ($marks) GROUP BY set_code',
+        'SELECT p.set_code, COUNT(DISTINCT p.collector_number) AS owned '
+        'FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id '
+        "WHERE p.oracle_id IN ($marks) AND c.type_line NOT LIKE 'Basic%' "
+        'GROUP BY p.set_code',
         chunk,
       );
       for (final r in rows) {
@@ -319,7 +325,7 @@ extension AlbumQueries on CardDatabase {
     final db = await _open();
     final rows = db.select('''
       SELECT p.oracle_id, p.collector_number, p.printed_name, p.image_small,
-             c.name, c.colors,
+             c.name, c.colors, c.type_line,
              MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref
       FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
       WHERE p.set_code = ?1
@@ -335,6 +341,7 @@ extension AlbumQueries on CardDatabase {
           printedName: r['printed_name'] as String?,
           imageSmall: r['image_small'] as String?,
           colors: (r['colors'] as String?) ?? '',
+          typeLine: (r['type_line'] as String?) ?? '',
         )
     ];
   }
@@ -343,11 +350,14 @@ extension AlbumQueries on CardDatabase {
 
 /// Consultas de apoyo para el detalle y los mazos guardados.
 extension DeckQueries on CardDatabase {
-  /// Imagen (normal y small) de cada carta por nombre inglés, preferencia EN.
+  /// Imagen (normal y small) de cada carta por nombre inglés.
+  /// Con [ownedPrintings] (claves "set|nº"), elige la ILUSTRACIÓN QUE EL
+  /// USUARIO POSEE; si no la hay, una impresión en inglés cualquiera.
   Future<Map<String, (String?, String?)>> imagesForNames(
-      Iterable<String> names) async {
+      Iterable<String> names,
+      {Set<String>? ownedPrintings}) async {
     final db = await _open();
-    final out = <String, (String?, String?)>{};
+    final best = <String, (int, String?, String?)>{}; // rango, normal, small
     final list = names.toList();
     const chunkSize = 200;
     for (var i = 0; i < list.length; i += chunkSize) {
@@ -355,18 +365,30 @@ extension DeckQueries on CardDatabase {
           i, i + chunkSize > list.length ? list.length : i + chunkSize);
       final marks = List.filled(chunk.length, '?').join(',');
       final rows = db.select(
-        'SELECT c.name, p.image_normal, p.image_small, '
-        "MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref "
+        'SELECT c.name, p.set_code, p.collector_number, p.lang, '
+        'p.image_normal, p.image_small '
         'FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id '
-        'WHERE c.name IN ($marks) GROUP BY c.oracle_id',
+        'WHERE c.name IN ($marks)',
         chunk,
       );
       for (final r in rows) {
-        out[r['name'] as String] =
-            (r['image_normal'] as String?, r['image_small'] as String?);
+        final name = r['name'] as String;
+        final normal = r['image_normal'] as String?;
+        final small = r['image_small'] as String?;
+        if (normal == null && small == null) continue;
+        final key = '${((r['set_code'] as String?) ?? '').toLowerCase()}|'
+            '${(r['collector_number'] as String?) ?? ''}';
+        // rango: 0 = la tuya · 1 = inglés · 2 = lo que haya
+        final rank = (ownedPrintings?.contains(key) ?? false)
+            ? 0
+            : ((r['lang'] as String?) == 'en' ? 1 : 2);
+        final current = best[name];
+        if (current == null || rank < current.$1) {
+          best[name] = (rank, normal, small);
+        }
       }
     }
-    return out;
+    return {for (final e in best.entries) e.key: (e.value.$2, e.value.$3)};
   }
 
   /// Pool del motor para un conjunto {nombre: cantidad} (mazos guardados:

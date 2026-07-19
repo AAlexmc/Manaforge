@@ -16,11 +16,19 @@ class DeckDetailScreen extends StatefulWidget {
 
   /// Con [db], el detalle muestra el banner horizontal con las imágenes de
   /// las cartas; con [decks], aparece el botón de guardar el mazo.
+  /// [ownedPrintings] (claves "set|nº") hace que el banner enseñe la
+  /// ilustración de TU edición, no una cualquiera.
   final CardDatabase? db;
   final DeckStore? decks;
+  final Set<String>? ownedPrintings;
 
   const DeckDetailScreen(
-      {super.key, required this.gen, required this.pool, this.db, this.decks});
+      {super.key,
+      required this.gen,
+      required this.pool,
+      this.db,
+      this.decks,
+      this.ownedPrintings});
 
   @override
   State<DeckDetailScreen> createState() => _DeckDetailScreenState();
@@ -43,7 +51,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
     final db = widget.db;
     if (db == null) return;
     _imagesF = db.imagesForNames(
-        [..._gen.deck.cards.keys, ..._gen.deck.lands.keys]);
+        [..._gen.deck.cards.keys, ..._gen.deck.lands.keys],
+        ownedPrintings: widget.ownedPrintings);
   }
 
   void _saveDeck() {

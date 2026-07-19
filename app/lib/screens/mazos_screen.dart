@@ -49,6 +49,7 @@ class _MazosScreenState extends State<MazosScreen> {
           pool: pool,
           db: widget.db,
           decks: widget.decks,
+          ownedPrintings: widget.collection.printingQty.keys.toSet(),
         ),
       ));
     } catch (e) {

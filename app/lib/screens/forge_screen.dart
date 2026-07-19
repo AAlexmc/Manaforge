@@ -9,6 +9,7 @@ import '../services/deck_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'deck_detail_screen.dart';
+import 'test_screen.dart';
 
 const _minCardsForForge = 30;
 
@@ -175,8 +176,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
   Widget _buildSelector() {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ListView(
         children: [
           _header(),
           const SizedBox(height: 8),
@@ -277,7 +277,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                   'Nunca inventa copias que no tienes.'),
             ),
           ),
-          const Spacer(),
+          const SizedBox(height: 20),
           if (_cantReason != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
@@ -297,6 +297,19 @@ class _ForgeScreenState extends State<ForgeScreen> {
             onPressed: _forge,
             icon: const Icon(Icons.auto_awesome),
             label: const Text('Forjar mis mazos'),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => TestScreen(
+                    db: widget.db,
+                    collection: widget.collection,
+                    decks: widget.decks),
+              ),
+            ),
+            icon: const Icon(Icons.sports_kabaddi, size: 18),
+            label: const Text('Modo Test: vence a un mazo del meta'),
           ),
         ],
       ),
@@ -359,7 +372,9 @@ class _ForgeScreenState extends State<ForgeScreen> {
                 gen: proposals[i],
                 pool: _pool!,
                 db: widget.db,
-                decks: widget.decks),
+                decks: widget.decks,
+                ownedPrintings:
+                    widget.collection.printingQty.keys.toSet()),
           ),
         ),
         const SizedBox(height: 12),
@@ -373,12 +388,14 @@ class _ProposalCard extends StatelessWidget {
   final Map<String, fe.Card> pool;
   final CardDatabase db;
   final DeckStore decks;
+  final Set<String> ownedPrintings;
 
   const _ProposalCard(
       {required this.gen,
       required this.pool,
       required this.db,
-      required this.decks});
+      required this.decks,
+      required this.ownedPrintings});
 
   @override
   Widget build(BuildContext context) {
@@ -433,7 +450,11 @@ class _ProposalCard extends StatelessWidget {
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (_) => DeckDetailScreen(
-                            gen: gen, pool: pool, db: db, decks: decks)),
+                            gen: gen,
+                            pool: pool,
+                            db: db,
+                            decks: decks,
+                            ownedPrintings: ownedPrintings)),
                   ),
                   child: const Text('Ver mazo completo'),
                 ),

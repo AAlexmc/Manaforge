@@ -93,6 +93,24 @@ class _AlbumScreenState extends State<AlbumScreen> {
             )
           : Column(
               children: [
+                if (!widget.collection.hasPrintingData &&
+                    widget.collection.distinctCards > 0)
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: MFColors.warning.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'Álbum en modo aproximado: aún no sé qué EDICIÓN exacta '
+                      'tienes de cada carta. Reimporta tu CSV con "Sustituir '
+                      'mi colección actual" activado y el álbum se afinará '
+                      'por ilustraciones.',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                   child: Row(
@@ -247,11 +265,17 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                 final byPrinting = widget.collection.hasPrintingData;
                 final printingQty = widget.collection.printingQty;
                 final qtyByOracle = widget.collection.qtyByOracle;
-                int qtyOf(AlbumCard c) => byPrinting
-                    ? (printingQty[
+                int qtyOf(AlbumCard c) {
+                  if (byPrinting) {
+                    return printingQty[
                             '${widget.set.code.toLowerCase()}|${c.collectorNumber}'] ??
-                        0)
-                    : (qtyByOracle[c.oracleId] ?? 0);
+                        0;
+                  }
+                  // modo aproximado: nunca marcar tierras básicas (tener
+                  // "un Island" no significa tener ESTA ilustración)
+                  if (c.isBasicLand) return 0;
+                  return qtyByOracle[c.oracleId] ?? 0;
+                }
                 var ownedHere = 0;
                 for (final c in cards) {
                   if (qtyOf(c) > 0) ownedHere++;

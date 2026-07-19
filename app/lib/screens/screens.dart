@@ -5,6 +5,7 @@ import '../theme/mf_theme.dart';
 export 'album_screen.dart';
 export 'coleccion_screen.dart';
 export 'mazos_screen.dart';
+export 'test_screen.dart';
 export 'deck_detail_screen.dart';
 export 'forge_screen.dart';
 export 'import_csv_screen.dart';
