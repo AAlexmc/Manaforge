@@ -10,6 +10,14 @@ import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
 
+/// isReady() de verdad hace IO (path_provider + File.exists): en la zona
+/// FakeAsync de flutter test ese future JAMÁS se resuelve y la puerta se
+/// queda en el spinner. Este doble responde al instante: "no descargada".
+class _ScannerSinBase extends ScannerDatabase {
+  @override
+  Future<bool> isReady() async => false;
+}
+
 void main() {
   testWidgets('ScanScreen (foto) arranca y pide la base de huellas',
       (tester) async {
@@ -17,7 +25,7 @@ void main() {
       home: ScanScreen(
           db: CardDatabase(),
           collection: CollectionStore(),
-          scanner: ScannerDatabase()),
+          scanner: _ScannerSinBase()),
     ));
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -32,7 +40,7 @@ void main() {
       home: LiveScanScreen(
           db: CardDatabase(),
           collection: CollectionStore(),
-          scanner: ScannerDatabase()),
+          scanner: _ScannerSinBase()),
     ));
     await tester.pump(const Duration(milliseconds: 100));
 
