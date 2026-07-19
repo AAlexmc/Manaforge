@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS art_hashes (
     name        TEXT NOT NULL,
     set_code    TEXT,
     collector_number TEXT,
-    hash_h      INTEGER NOT NULL,  -- dHash horizontal 16x8 (64 bits)
-    hash_v      INTEGER NOT NULL   -- dHash vertical 8x16 (64 bits)
+    hash_h      INTEGER NOT NULL,  -- dHash horizontal 8x8 (64 bits, firmado)
+    hash_v      INTEGER NOT NULL   -- dHash vertical 8x8 (64 bits, firmado)
 );
 CREATE INDEX IF NOT EXISTS idx_hashes_oracle ON art_hashes(oracle_id);
 """
@@ -48,27 +48,37 @@ USER_AGENT = "ManaForge-ScannerDB/1.0 (github.com/AAlexmc/Manaforge)"
 
 
 def dhash_pair(img) -> tuple[int, int]:
-    """dHash doble de una imagen PIL: (horizontal 16x8, vertical 8x16)."""
+    """dHash doble de una imagen PIL: horizontal 8x8 + vertical 8x8.
+
+    Cada huella son EXACTAMENTE 64 bits (cabe en el INTEGER de SQLite);
+    juntas, 128 bits de firma. La app Dart debe replicar esta fórmula
+    bit a bit (tests espejo).
+    """
     grey = img.convert("L")
-    # horizontal: 17x8, compara columnas vecinas
-    small = grey.resize((17, 8), Image.LANCZOS)
+    # horizontal: 9x8, compara columnas vecinas
+    small = grey.resize((9, 8), Image.LANCZOS)
     px = list(small.getdata())
     h = 0
     for row in range(8):
-        for col in range(16):
-            left = px[row * 17 + col]
-            right = px[row * 17 + col + 1]
+        for col in range(8):
+            left = px[row * 9 + col]
+            right = px[row * 9 + col + 1]
             h = (h << 1) | (1 if left > right else 0)
-    # vertical: 8x17, compara filas vecinas
-    small = grey.resize((8, 17), Image.LANCZOS)
+    # vertical: 8x9, compara filas vecinas
+    small = grey.resize((8, 9), Image.LANCZOS)
     px = list(small.getdata())
     v = 0
     for col in range(8):
-        for row in range(16):
+        for row in range(8):
             top = px[row * 8 + col]
             bottom = px[(row + 1) * 8 + col]
             v = (v << 1) | (1 if top > bottom else 0)
     return h, v
+
+
+def to_signed64(n: int) -> int:
+    """Complemento a dos: [0, 2^64) -> INTEGER firmado de SQLite."""
+    return n - (1 << 64) if n >= (1 << 63) else n
 
 
 def hamming(a: int, b: int) -> int:
@@ -148,8 +158,7 @@ def build(bulk_path: Path, db_path: Path, limit: int | None = None,
                 "INSERT OR REPLACE INTO art_hashes VALUES (?,?,?,?,?,?,?)",
                 (item["id"], item["oracle_id"], item["name"], item["set"],
                  item["collector_number"],
-                 h - (1 << 63) if h >= (1 << 63) else h,   # SQLite INTEGER es firmado
-                 v - (1 << 63) if v >= (1 << 63) else v),
+                 to_signed64(h), to_signed64(v)),
             )
             n_new += 1
             if n_new % 500 == 0:

@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 from PIL import Image, ImageDraw
 
-from build_hash_db import dhash_pair, hamming
+from build_hash_db import dhash_pair, hamming, to_signed64
 
 
 def _art(seed: int) -> Image.Image:
@@ -36,4 +36,20 @@ def test_mismo_arte_reescalado_coincide():
 def test_artes_distintos_no_coinciden():
     h1, v1 = dhash_pair(_art(3))
     h2, v2 = dhash_pair(_art(4))
-    assert hamming(h1, h2) + hamming(v1, v2) > 30
+    assert hamming(h1, h2) + hamming(v1, v2) > 20
+
+
+def test_hash_cabe_en_sqlite():
+    """El bug que tumbó scan-db-1: la huella debe caber en 64 bits."""
+    for seed in range(8):
+        h, v = dhash_pair(_art(seed))
+        assert 0 <= h < (1 << 64)
+        assert 0 <= v < (1 << 64)
+        assert -(1 << 63) <= to_signed64(h) < (1 << 63)
+        assert -(1 << 63) <= to_signed64(v) < (1 << 63)
+
+
+def test_signed64_ida_y_vuelta():
+    for n in (0, 1, (1 << 63) - 1, 1 << 63, (1 << 64) - 1):
+        signed = to_signed64(n)
+        assert (signed + (1 << 64)) % (1 << 64) == n
