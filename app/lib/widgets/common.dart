@@ -304,3 +304,69 @@ class _CurveEditorState extends State<CurveEditor> {
     );
   }
 }
+
+
+/// Visor de carta a pantalla completa: toca una carta en cualquier parte de
+/// la app y se amplía (con zoom de pellizco/rueda). Toca fuera para cerrar.
+void showCardZoom(BuildContext context,
+    {required String name, String? imageUrl, String colors = ''}) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.black.withValues(alpha: 0.88),
+    builder: (context) => GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: InteractiveViewer(
+              maxScale: 4,
+              child: AspectRatio(
+                aspectRatio: 63 / 88,
+                child: imageUrl == null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: (manaColors[
+                                      colors.isEmpty ? '' : colors[0]] ??
+                                  Colors.blueGrey)
+                              .withValues(alpha: 0.35),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(20),
+                        child: Text(name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 18)),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(18),
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.contain,
+                          loadingBuilder: (context, child, progress) =>
+                              progress == null
+                                  ? child
+                                  : const Center(
+                                      child: CircularProgressIndicator()),
+                          errorBuilder: (context, error, stack) => Center(
+                              child: Text(name,
+                                  textAlign: TextAlign.center)),
+                        ),
+                      ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Text(name,
+                style: const TextStyle(
+                    fontSize: 15, fontWeight: FontWeight.w600)),
+          ),
+          const Text('toca fuera para cerrar',
+              style: TextStyle(fontSize: 11, color: Colors.white54)),
+        ],
+      ),
+    ),
+  );
+}

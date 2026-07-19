@@ -285,6 +285,10 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                 itemBuilder: (context, i) {
                   final hit = _results[i];
                   return ListTile(
+                    onTap: () => showCardZoom(context,
+                        name: hit.printedName ?? hit.name,
+                        imageUrl: hit.imageNormal ?? hit.imageSmall,
+                        colors: hit.colors),
                     leading: CardThumb(
                         url: hit.imageSmall,
                         colors: hit.colors,
@@ -324,6 +328,10 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                 itemBuilder: (context, i) {
                   final card = owned[i];
                   return ListTile(
+                    onTap: () => showCardZoom(context,
+                        name: card.printedName ?? card.name,
+                        imageUrl: card.imageNormal ?? card.imageSmall,
+                        colors: card.colors),
                     leading: CardThumb(
                         url: card.imageSmall,
                         colors: card.colors,

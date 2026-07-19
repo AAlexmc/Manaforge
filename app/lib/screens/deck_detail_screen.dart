@@ -367,8 +367,11 @@ class _DeckImageStrip extends StatelessWidget {
               final url = urls?.$1 ?? urls?.$2; // normal, si no small
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child: Stack(
-                  children: [
+                child: GestureDetector(
+                  onTap: () => showCardZoom(context,
+                      name: e.key, imageUrl: url),
+                  child: Stack(
+                    children: [
                     SizedBox(
                       width: 120,
                       height: 168,
@@ -406,22 +409,24 @@ class _DeckImageStrip extends StatelessWidget {
                               ),
                             ),
                     ),
-                    Positioned(
-                      right: 4,
-                      top: 4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.78),
-                          borderRadius: BorderRadius.circular(9),
+                      Positioned(
+                        right: 4,
+                        top: 4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.78),
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          child: Text('x${e.value}',
+                              style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold)),
                         ),
-                        child: Text('x${e.value}',
-                            style: const TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

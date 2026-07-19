@@ -148,10 +148,10 @@ class _Player {
   final List<_SimCard> hand = [];
   final List<_Permanent> board = [];
   final List<String> lands = []; // color producido por cada tierra en mesa
-  int life = 20;
+  int life;
   bool usedResponse = false; // una respuesta instantánea por turno rival
 
-  _Player(this.library);
+  _Player(this.library, {this.life = 20});
 
   void draw([int n = 1]) {
     for (var i = 0; i < n && library.isNotEmpty; i++) {
@@ -428,9 +428,10 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
 
 /// Juega UNA partida. 1 = gana A · 0 = gana B · 0.5 = tablas.
 double _playGame(
-    List<_SimCard> deckA, List<_SimCard> deckB, Random rng, bool aFirst) {
-  final a = _Player(List.of(deckA)..shuffle(rng));
-  final b = _Player(List.of(deckB)..shuffle(rng));
+    List<_SimCard> deckA, List<_SimCard> deckB, Random rng, bool aFirst,
+    {int startingLife = 20}) {
+  final a = _Player(List.of(deckA)..shuffle(rng), life: startingLife);
+  final b = _Player(List.of(deckB)..shuffle(rng), life: startingLife);
   a.openingHand(rng);
   b.openingHand(rng);
   final order = aFirst ? [a, b] : [b, a];
@@ -457,6 +458,7 @@ double simulateMatch(
   Map<String, Card> poolB, {
   int games = 200,
   int seed = 7,
+  int startingLife = 20, // 40 para enfrentamientos tipo Commander
 }) {
   final simA = _expand(deckA, poolA);
   final simB = _expand(deckB, poolB);
@@ -464,7 +466,7 @@ double simulateMatch(
   final rng = Random(seed);
   var wins = 0.0;
   for (var g = 0; g < games; g++) {
-    wins += _playGame(simA, simB, rng, g.isEven);
+    wins += _playGame(simA, simB, rng, g.isEven, startingLife: startingLife);
   }
   return wins / games;
 }
@@ -494,6 +496,7 @@ OptimizeResult? optimizeAgainst(
   int games = 160,
   int climbs = 30,
   int seed = 7,
+  int startingLife = 20,
 }) {
   final proposals = generateProposals(pool, maxProposals: 10);
   if (proposals.isEmpty) return null;
@@ -504,7 +507,7 @@ OptimizeResult? optimizeAgainst(
   double eval(Deck d) {
     tried++;
     return simulateMatch(d, pool, meta, metaPool,
-        games: games, seed: seed + tried);
+        games: games, seed: seed + tried, startingLife: startingLife);
   }
 
   GeneratedDeck best = proposals.first;

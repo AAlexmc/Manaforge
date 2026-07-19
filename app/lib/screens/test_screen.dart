@@ -33,6 +33,7 @@ class _TestScreenState extends State<TestScreen> {
   List<MetaDeck> _decks = metaDecks;
   String _decksSource = 'Cargando meta…';
   String _metaId = metaDecks.first.id;
+  String? _formatFilter;
   bool _running = false;
   fe.OptimizeResult? _result;
   MetaDeck? _resultMeta;
@@ -56,6 +57,26 @@ class _TestScreenState extends State<TestScreen> {
 
   MetaDeck get _meta => _decks.firstWhere((m) => m.id == _metaId);
 
+  /// Formatos presentes en los mazos cargados (null = todos).
+  List<String?> _formats() {
+    final formats = <String>{};
+    for (final m in _decks) {
+      if (m.format.isNotEmpty) formats.add(m.format);
+    }
+    return [null, ...formats.toList()..sort()];
+  }
+
+  List<MetaDeck> _visibleDecks() {
+    final visible = _formatFilter == null
+        ? _decks
+        : _decks.where((m) => m.format == _formatFilter).toList();
+    // si el mazo elegido queda fuera del filtro, elegir el primero visible
+    if (visible.isNotEmpty && !visible.any((m) => m.id == _metaId)) {
+      _metaId = visible.first.id;
+    }
+    return visible;
+  }
+
   /// El closure del isolate se crea AQUÍ, en una función estática, para que
   /// solo capture los argumentos (un closure creado dentro del State captura
   /// el State entero, que no es serializable → crash "object is unsendable").
@@ -63,9 +84,10 @@ class _TestScreenState extends State<TestScreen> {
       Map<String, fe.Card> pool,
       fe.Deck metaDeck,
       Map<String, fe.Card> metaPool,
-      int seed) {
-    return Isolate.run(
-        () => fe.optimizeAgainst(pool, metaDeck, metaPool, seed: seed));
+      int seed,
+      int startingLife) {
+    return Isolate.run(() => fe.optimizeAgainst(pool, metaDeck, metaPool,
+        seed: seed, startingLife: startingLife));
   }
 
   Future<void> _run() async {
@@ -80,7 +102,10 @@ class _TestScreenState extends State<TestScreen> {
       final metaPool = await widget.db.poolByNames(meta.allNames);
       final metaDeck = meta.toDeck();
       final seed = DateTime.now().millisecondsSinceEpoch & 0xffff;
-      final result = await _optimizeInIsolate(pool, metaDeck, metaPool, seed);
+      // Commander se juega a 40 vidas
+      final life = meta.format.toLowerCase().contains('commander') ? 40 : 20;
+      final result =
+          await _optimizeInIsolate(pool, metaDeck, metaPool, seed, life);
       if (!mounted) return;
       setState(() {
         _running = false;
@@ -121,7 +146,22 @@ class _TestScreenState extends State<TestScreen> {
                 style: const TextStyle(
                     fontSize: 11.5, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            for (final m in _decks)
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final f in _formats())
+                  FilterChip(
+                    visualDensity: VisualDensity.compact,
+                    label: Text(f ?? 'Todos'),
+                    selected: _formatFilter == f,
+                    onSelected: (_) =>
+                        setState(() => _formatFilter = f),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            for (final m in _visibleDecks())
               Card(
                 child: RadioListTile<String>(
                   value: m.id,

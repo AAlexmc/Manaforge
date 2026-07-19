@@ -252,6 +252,7 @@ class AlbumCard {
   final String name;
   final String? printedName;
   final String? imageSmall;
+  final String? imageNormal;
   final String colors;
   final String typeLine;
 
@@ -261,6 +262,7 @@ class AlbumCard {
     required this.name,
     this.printedName,
     this.imageSmall,
+    this.imageNormal,
     required this.colors,
     this.typeLine = '',
   });
@@ -325,7 +327,7 @@ extension AlbumQueries on CardDatabase {
     final db = await _open();
     final rows = db.select('''
       SELECT p.oracle_id, p.collector_number, p.printed_name, p.image_small,
-             c.name, c.colors, c.type_line,
+             p.image_normal, c.name, c.colors, c.type_line,
              MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref
       FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
       WHERE p.set_code = ?1
@@ -340,6 +342,7 @@ extension AlbumQueries on CardDatabase {
           name: r['name'] as String,
           printedName: r['printed_name'] as String?,
           imageSmall: r['image_small'] as String?,
+          imageNormal: r['image_normal'] as String?,
           colors: (r['colors'] as String?) ?? '',
           typeLine: (r['type_line'] as String?) ?? '',
         )

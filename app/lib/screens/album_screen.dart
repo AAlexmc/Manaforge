@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../theme/mf_theme.dart';
+import '../widgets/common.dart';
 
 /// Álbum por expansiones, estilo TCG Pocket: cada set es una página con
 /// TODAS sus cartas en rejilla; las que no tienes se ven apagadas y las
@@ -407,7 +408,12 @@ class _AlbumCell extends StatelessWidget {
           '${card.printedName ?? card.name} · #${card.collectorNumber}'
           '${owned ? ' · tienes $qty' : ' · te falta'}',
       waitDuration: const Duration(milliseconds: 500),
-      child: Stack(
+      child: GestureDetector(
+        onTap: () => showCardZoom(context,
+            name: card.printedName ?? card.name,
+            imageUrl: card.imageNormal ?? card.imageSmall,
+            colors: card.colors),
+        child: Stack(
         fit: StackFit.expand,
         children: [
           image,
@@ -430,7 +436,8 @@ class _AlbumCell extends StatelessWidget {
                         color: MFColors.success)),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
