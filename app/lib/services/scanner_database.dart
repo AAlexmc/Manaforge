@@ -51,13 +51,45 @@ class HashIndex {
 
   int get length => _entries.length;
 
-  /// Los [k] mejores candidatos para la firma [sig], DISTINTOS a nivel de
-  /// carta (oracle): la misma ilustración reimpresa no debe comerse el top.
-  /// Para cada carta se queda la impresión que mejor casa (su printingKey).
-  List<ScanMatch> topMatches(DHashPair sig, {int k = 3}) {
+  /// Los [k] mejores candidatos para las firmas [sigs] (variantes
+  /// multi-recorte de la MISMA carta vista: cuenta la mejor), DISTINTOS a
+  /// nivel de carta (oracle): la misma ilustración reimpresa no debe
+  /// comerse el top. Para cada carta gana su impresión que mejor casa
+  /// (printingKey exacta).
+  List<ScanMatch> topMatches(List<DHashPair> sigs, {int k = 3}) {
+    if (sigs.isEmpty) return const [];
+    // Fase 1: barrido completo solo con la firma CENTRAL (artSignatures
+    // pone la variante sin desplazamiento la primera) y preselección de
+    // los ~1000 mejores por counting-sort de distancias (0..128).
+    final center = sigs.first;
+    final d0 = Uint8List(_entries.length);
+    final histogram = List<int>.filled(129, 0);
+    for (var i = 0; i < _entries.length; i++) {
+      final d = hamming64(center.h, _hashH[i]) +
+          hamming64(center.v, _hashV[i]);
+      d0[i] = d;
+      histogram[d]++;
+    }
+    var cutoff = 128;
+    var cumulative = 0;
+    for (var d = 0; d <= 128; d++) {
+      cumulative += histogram[d];
+      if (cumulative >= 1000) {
+        cutoff = d;
+        break;
+      }
+    }
+    // Fase 2: refinar los preseleccionados con TODAS las variantes.
     final bestByOracle = <String, ScanMatch>{};
     for (var i = 0; i < _entries.length; i++) {
-      final d = hamming64(sig.h, _hashH[i]) + hamming64(sig.v, _hashV[i]);
+      if (d0[i] > cutoff) continue;
+      final hh = _hashH[i];
+      final vv = _hashV[i];
+      var d = d0[i].toInt();
+      for (final sig in sigs) {
+        final di = hamming64(sig.h, hh) + hamming64(sig.v, vv);
+        if (di < d) d = di;
+      }
       final e = _entries[i];
       final current = bestByOracle[e.oracleId];
       if (current == null || d < current.distance) {

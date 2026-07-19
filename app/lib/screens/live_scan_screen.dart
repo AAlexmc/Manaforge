@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../scanner/burst_controller.dart';
-import '../scanner/dhash.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/scanner_database.dart';
@@ -118,8 +117,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       final outcome = await compute(processScanPhoto, bytes);
       if (outcome == null || !mounted) return;
       final index = await widget.scanner.loadIndex();
-      final matches =
-          index.topMatches(DHashPair(outcome.hashH, outcome.hashV));
+      final matches = index.topMatches(outcome.signatures);
       final best = matches.isEmpty ? null : matches.first;
       final recognition = _burst.feed(matches);
       if (!mounted) return;

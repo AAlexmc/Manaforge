@@ -198,6 +198,45 @@ DHashPair dhashPairFromRgb(Uint8List rgb, int w, int h) {
   return dhashPairFromGrey(grey, w, h);
 }
 
+/// Firmas MULTI-RECORTE del arte de una carta rectificada (480x670 RGB):
+/// la ventana del arte se prueba con pequeños desplazamientos y escalas
+/// (rejilla ±2 % / ±1.5 %) y el matching se queda con la mejor distancia.
+/// Compensa el error de esquinas del detector: en las pruebas de banco
+/// bajó la distancia de la carta correcta de ~20 a ~7 bits sin apenas
+/// acercar a las incorrectas.
+List<DHashPair> artSignatures(Uint8List warpedRgb, int w, int h) {
+  // gris una sola vez; cada variante recorta y hashea sobre el gris
+  final grey = Uint8List(w * h);
+  for (var i = 0, j = 0; i < grey.length; i++, j += 3) {
+    grey[i] = rgbToL(warpedRgb[j], warpedRgb[j + 1], warpedRgb[j + 2]);
+  }
+  const artL = 0.077, artR = 0.923, artT = 0.117, artB = 0.545;
+  final sigs = <DHashPair>[];
+  // la variante CENTRAL (sin desplazamiento) va PRIMERO: el matching la
+  // usa para la preselección rápida antes de refinar con el resto
+  for (final dx in const [0.0, -0.02, -0.01, 0.01, 0.02]) {
+    for (final dy in const [0.0, -0.02, -0.01, 0.01, 0.02]) {
+      for (final s in const [0.0, 0.015, -0.015]) {
+        final x0 = ((artL + dx + s) * w).round().clamp(0, w - 2).toInt();
+        final x1 = ((artR + dx - s) * w).round().clamp(x0 + 1, w).toInt();
+        final y0 =
+            ((artT + dy + s * 0.66) * h).round().clamp(0, h - 2).toInt();
+        final y1 =
+            ((artB + dy - s * 0.66) * h).round().clamp(y0 + 1, h).toInt();
+        final cw = x1 - x0;
+        final ch = y1 - y0;
+        final crop = Uint8List(cw * ch);
+        for (var y = 0; y < ch; y++) {
+          crop.setRange(
+              y * cw, (y + 1) * cw, grey, (y0 + y) * w + x0);
+        }
+        sigs.add(dhashPairFromGrey(crop, cw, ch));
+      }
+    }
+  }
+  return sigs;
+}
+
 /// Distancia de Hamming entre dos enteros de 64 bits (popcount del XOR).
 int hamming64(int a, int b) {
   var x = a ^ b;

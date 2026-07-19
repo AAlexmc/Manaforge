@@ -28,7 +28,7 @@ void main() {
         _entry('d', 'o4', 'MuyCerca'), // 4 bits
       ],
     );
-    final matches = index.topMatches(const DHashPair(0, 0), k: 3);
+    final matches = index.topMatches(const [DHashPair(0, 0)], k: 3);
 
     expect(matches, hasLength(3));
     expect(matches[0].entry.name, 'Exacta');
@@ -52,7 +52,7 @@ void main() {
         _entry('b', 'o2', 'Shock'),
       ],
     );
-    final matches = index.topMatches(const DHashPair(0, 0), k: 3);
+    final matches = index.topMatches(const [DHashPair(0, 0)], k: 3);
 
     expect(matches, hasLength(2)); // solo 2 cartas distintas
     expect(matches[0].entry.name, 'Bolt');
@@ -69,7 +69,7 @@ void main() {
         _entry('nuevo', 'o1', 'Bolt', set: 'sta', num: '42'),
       ],
     );
-    final matches = index.topMatches(const DHashPair(0, 0), k: 1);
+    final matches = index.topMatches(const [DHashPair(0, 0)], k: 1);
 
     expect(matches.single.entry.scryfallId, 'nuevo');
     expect(matches.single.entry.printingKey, 'sta|42');
@@ -85,12 +85,62 @@ void main() {
       Int64List.fromList([0]),
       [_entry('x', 'o', 'Real')],
     );
-    final exact = index.topMatches(const DHashPair(stored, 0), k: 1);
+    final exact = index.topMatches(const [DHashPair(stored, 0)], k: 1);
     expect(exact.single.distance, 0);
 
     // a un bit de distancia
     final oneOff =
-        index.topMatches(DHashPair(stored ^ (1 << 63), 0), k: 1);
+        index.topMatches([DHashPair(stored ^ (1 << 63), 0)], k: 1);
     expect(oneOff.single.distance, 1);
+  });
+
+  test('multi-firma: cuenta la MEJOR variante para cada candidato', () {
+    final index = HashIndex(
+      Int64List.fromList([0xFF, 0xF0F0]),
+      Int64List.fromList([0, 0]),
+      [
+        _entry('a', 'o1', 'Bolt'),
+        _entry('b', 'o2', 'Shock'),
+      ],
+    );
+    // variante central lejos de todo; una variante desplazada clava a Bolt
+    final matches = index.topMatches(
+        const [DHashPair(0, 0), DHashPair(0xFF, 0)], k: 2);
+
+    expect(matches[0].entry.name, 'Bolt');
+    expect(matches[0].distance, 0); // gracias a la 2ª variante
+    expect(matches[1].entry.name, 'Shock');
+  });
+
+  test('artSignatures: 75 variantes y la primera es la central', () {
+    // carta rectificada sintética con degradado (firma no trivial)
+    const w = 480, h = 670;
+    final rgb = Uint8List(w * h * 3);
+    var i = 0;
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        rgb[i++] = (x * 255 ~/ (w - 1));
+        rgb[i++] = (y * 255 ~/ (h - 1));
+        rgb[i++] = ((x + y) % 251);
+      }
+    }
+    final sigs = artSignatures(rgb, w, h);
+    expect(sigs, hasLength(75));
+
+    // la primera firma debe ser EXACTAMENTE la del recorte central del arte
+    final grey = Uint8List(w * h);
+    for (var p = 0, j = 0; p < grey.length; p++, j += 3) {
+      grey[p] = rgbToL(rgb[j], rgb[j + 1], rgb[j + 2]);
+    }
+    final x0 = (0.077 * w).round(), x1 = (0.923 * w).round();
+    final y0 = (0.117 * h).round(), y1 = (0.545 * h).round();
+    final cw = x1 - x0, ch = y1 - y0;
+    final crop = Uint8List(cw * ch);
+    for (var y = 0; y < ch; y++) {
+      crop.setRange(y * cw, (y + 1) * cw, grey, (y0 + y) * w + x0);
+    }
+    final center = dhashPairFromGrey(crop, cw, ch);
+    expect(sigs.first.h, center.h);
+    expect(sigs.first.v, center.v);
   });
 }

@@ -37,20 +37,20 @@ class ScanScreen extends StatefulWidget {
 
 /// Resultado del pipeline pesado (corre en un isolate con compute()).
 class ScanOutcome {
-  final int hashH;
-  final int hashV;
+  /// Firmas multi-recorte del arte (la primera es la central): el matching
+  /// se queda con la mejor por candidato, tolerando el error de esquinas.
+  final List<DHashPair> signatures;
   final Uint8List artPng; // recorte del arte, para enseñarlo
   final bool usedFallback;
 
   const ScanOutcome({
-    required this.hashH,
-    required this.hashV,
+    required this.signatures,
     required this.artPng,
     required this.usedFallback,
   });
 }
 
-/// Foto → carta → arte → huella. Función de nivel superior para compute().
+/// Foto → carta → arte → firmas. Función de nivel superior para compute().
 ScanOutcome? processScanPhoto(Uint8List bytes) {
   final decoded = img.decodeImage(bytes);
   if (decoded == null) return null;
@@ -58,8 +58,8 @@ ScanOutcome? processScanPhoto(Uint8List bytes) {
   final photo = RgbImage(
       rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
   final detected = detectCard(photo);
+  final warped = detected.warped;
   final art = detected.artCrop;
-  final sig = dhashPairFromRgb(art.pixels, art.width, art.height);
   final artImage = img.Image.fromBytes(
       width: art.width,
       height: art.height,
@@ -67,8 +67,7 @@ ScanOutcome? processScanPhoto(Uint8List bytes) {
       numChannels: 3,
       order: img.ChannelOrder.rgb);
   return ScanOutcome(
-    hashH: sig.h,
-    hashV: sig.v,
+    signatures: artSignatures(warped.pixels, warped.width, warped.height),
     artPng: img.encodePng(artImage),
     usedFallback: detected.usedFallback,
   );
@@ -115,8 +114,7 @@ class _ScanScreenState extends State<ScanScreen> {
         throw Exception('No pude leer esa imagen (¿es una foto válida?)');
       }
       final index = await widget.scanner.loadIndex();
-      final matches =
-          index.topMatches(DHashPair(outcome.hashH, outcome.hashV));
+      final matches = index.topMatches(outcome.signatures);
       final candidates = <_Candidate>[];
       for (final m in matches) {
         CardHit? hit;

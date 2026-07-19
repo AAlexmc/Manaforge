@@ -1,11 +1,20 @@
 /// Tests del detector de cartas (contornos + perspectiva + recorte de arte).
+///
+/// Incluye las ESCENAS de regresión (escena_manta = la foto real de Ale que
+/// tumbó al detector v1; escena_madera): fotos compuestas generadas por
+/// scripts/tests/make_scene_fixtures.py con esquinas verdaderas y huella
+/// del arte prístino en escenas_expected.json.
 library;
 
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image/image.dart' as img;
 import 'package:manaforge_app/scanner/card_detector.dart';
+import 'package:manaforge_app/scanner/dhash.dart';
 
 /// Foto sintética: fondo oscuro con una "carta" clara (cuadrilátero convexo
 /// definido por sus 4 esquinas), rellena por test de punto-en-polígono.
@@ -110,5 +119,72 @@ void main() {
         (artBottom * warpedHeight).round() - (artTop * warpedHeight).round();
     expect(result.artCrop.width, expectedW);
     expect(result.artCrop.height, expectedH);
+  });
+
+  group('escenas de regresión (fotos compuestas realistas)', () {
+    const dir = 'test/scanner/fixtures';
+    final expected = jsonDecode(File('$dir/escenas_expected.json')
+        .readAsStringSync()) as Map<String, dynamic>;
+
+    for (final entry in expected.entries) {
+      final e = entry.value as Map<String, dynamic>;
+
+      test('${entry.key}: encuentra la carta donde está', () {
+        final decoded =
+            img.decodeImage(File('$dir/${entry.key}').readAsBytesSync())!;
+        final rgb = decoded.convert(numChannels: 3);
+        final photo = RgbImage(
+            rgb.getBytes(order: img.ChannelOrder.rgb),
+            rgb.width,
+            rgb.height);
+        final result = detectCard(photo);
+
+        expect(result.usedFallback, isFalse,
+            reason: 'no vio la carta en ${entry.key} (el fallo original)');
+        final want = [
+          for (final c in e['corners'] as List)
+            Pt((c[0] as num).toDouble(), (c[1] as num).toDouble())
+        ];
+        final tol = (e['corner_tolerance'] as num).toDouble();
+        // la orientación puede rotar el orden de esquinas: vale cualquiera
+        var best = double.infinity;
+        for (var r = 0; r < 4; r++) {
+          var worst = 0.0;
+          for (var i = 0; i < 4; i++) {
+            final p = result.corners[(i + r) % 4];
+            final dx = (p.x - want[i].x).abs();
+            final dy = (p.y - want[i].y).abs();
+            worst = math.max(worst, math.max(dx, dy));
+          }
+          best = math.min(best, worst);
+        }
+        expect(best, lessThan(tol),
+            reason: 'esquinas a $best px de las reales en ${entry.key}');
+      });
+
+      test('${entry.key}: la huella del arte detectado casa con la de la DB',
+          () {
+        final decoded =
+            img.decodeImage(File('$dir/${entry.key}').readAsBytesSync())!;
+        final rgb = decoded.convert(numChannels: 3);
+        final photo = RgbImage(
+            rgb.getBytes(order: img.ChannelOrder.rgb),
+            rgb.width,
+            rgb.height);
+        final result = detectCard(photo);
+        final sigs = artSignatures(result.warped.pixels,
+            result.warped.width, result.warped.height);
+        final db = DHashPair(int.parse(e['art_h'] as String),
+            int.parse(e['art_v'] as String));
+        var bestDist = 999;
+        for (final sig in sigs) {
+          bestDist = math.min(bestDist, sig.distanceTo(db));
+        }
+        expect(bestDist,
+            lessThanOrEqualTo((e['max_multi_distance'] as num).toInt()),
+            reason: 'distancia $bestDist en ${entry.key}: el escáner no '
+                'reconocería esta carta');
+      });
+    }
   });
 }

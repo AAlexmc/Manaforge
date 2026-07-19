@@ -164,11 +164,9 @@ Uint8List _greyDownscale(RgbImage src, int outW, int outH) {
   return out;
 }
 
-/// Bordes (Sobel) → umbral adaptativo → dilatación → componente conexa
-/// mayor → envolvente convexa → 4 esquinas. null si nada creíble.
-List<Pt>? _findQuad(Uint8List grey, int w, int h) {
-  // suavizado 3x3
-  final blur = Uint8List(w * h);
+/// Suavizado 3x3 (media de caja).
+Uint8List _blur3(Uint8List grey, int w, int h) {
+  final out = Uint8List(w * h);
   for (var y = 0; y < h; y++) {
     for (var x = 0; x < w; x++) {
       var sum = 0;
@@ -183,29 +181,242 @@ List<Pt>? _findQuad(Uint8List grey, int w, int h) {
           n++;
         }
       }
-      blur[y * w + x] = sum ~/ n;
+      out[y * w + x] = sum ~/ n;
     }
   }
+  return out;
+}
 
-  // Sobel
+/// Umbral de Otsu del histograma (separa carta de fondo por intensidad).
+int _otsu(Uint8List grey) {
+  final hist = List<int>.filled(256, 0);
+  for (final v in grey) {
+    hist[v]++;
+  }
+  final total = grey.length;
+  var totalSum = 0;
+  for (var i = 0; i < 256; i++) {
+    totalSum += i * hist[i];
+  }
+  var sumB = 0;
+  var wB = 0;
+  var bestT = 127;
+  var bestVar = -1.0;
+  for (var t = 0; t < 256; t++) {
+    wB += hist[t];
+    if (wB == 0) continue;
+    final wF = total - wB;
+    if (wF == 0) break;
+    sumB += t * hist[t];
+    final mB = sumB / wB;
+    final mF = (totalSum - sumB) / wF;
+    final v = wB * wF * (mB - mF) * (mB - mF);
+    if (v > bestVar) {
+      bestVar = v;
+      bestT = t;
+    }
+  }
+  return bestT;
+}
+
+/// Componentes conexas (8-conexas) de una máscara binaria, de mayor a
+/// menor, hasta [maxComponents] con al menos [minSize] píxeles.
+List<List<int>> _components(Uint8List mask, int w, int h,
+    {int minSize = 40, int maxComponents = 3}) {
+  final label = Int32List(w * h);
+  final comps = <List<int>>[];
+  var next = 1;
+  final stack = <int>[];
+  for (var start = 0; start < mask.length; start++) {
+    if (mask[start] == 0 || label[start] != 0) continue;
+    final comp = <int>[];
+    stack.add(start);
+    label[start] = next;
+    while (stack.isNotEmpty) {
+      final i = stack.removeLast();
+      comp.add(i);
+      final x = i % w;
+      final y = i ~/ w;
+      for (var dy = -1; dy <= 1; dy++) {
+        final yy = y + dy;
+        if (yy < 0 || yy >= h) continue;
+        for (var dx = -1; dx <= 1; dx++) {
+          final xx = x + dx;
+          if (xx < 0 || xx >= w) continue;
+          final j = yy * w + xx;
+          if (mask[j] != 0 && label[j] == 0) {
+            label[j] = next;
+            stack.add(j);
+          }
+        }
+      }
+    }
+    next++;
+    if (comp.length >= minSize) comps.add(comp);
+  }
+  comps.sort((a, b) => b.length.compareTo(a.length));
+  return comps.length > maxComponents
+      ? comps.sublist(0, maxComponents)
+      : comps;
+}
+
+/// Envolvente convexa del componente → 4 esquinas por extremos x±y.
+List<Pt>? _quadFromComponent(List<int> comp, int w) {
+  final pts = <Pt>[
+    for (final i in comp) Pt((i % w).toDouble(), (i ~/ w).toDouble())
+  ];
+  final hull = _convexHull(pts);
+  if (hull.length < 4) return null;
+  var tl = hull.first, tr = hull.first, br = hull.first, bl = hull.first;
+  for (final p in hull) {
+    if (p.x + p.y < tl.x + tl.y) tl = p;
+    if (p.x - p.y > tr.x - tr.y) tr = p;
+    if (p.x + p.y > br.x + br.y) br = p;
+    if (p.x - p.y < bl.x - bl.y) bl = p;
+  }
+  return [tl, tr, br, bl];
+}
+
+/// Fracción de UN lado del cuadrilátero con gradiente fuerte Y
+/// PERPENDICULAR al lado. En fondos con textura (una manta, madera) hay
+/// gradiente por todas partes, pero solo el borde real de la carta lo
+/// tiene alineado con la normal del lado — este es el discriminador que
+/// tumba a los cuadriláteros de textura/sombras.
+double _sideCoverage(Pt p0, Pt p1, Int32List gxa, Int32List gya,
+    Uint16List mag, int w, int h, double threshold) {
+  final nx = -(p1.y - p0.y);
+  final ny = p1.x - p0.x;
+  final nlen2 = nx * nx + ny * ny;
+  if (nlen2 == 0) return 0;
+  var covered = 0;
+  const samples = 24;
+  for (var s = 0; s < samples; s++) {
+    final t = (s + 0.5) / samples;
+    final x = (p0.x + (p1.x - p0.x) * t).toInt();
+    final y = (p0.y + (p1.y - p0.y) * t).toInt();
+    var hit = false;
+    for (var dy = -2; dy <= 2 && !hit; dy++) {
+      final yy = y + dy;
+      if (yy < 0 || yy >= h) continue;
+      for (var dx = -2; dx <= 2; dx++) {
+        final xx = x + dx;
+        if (xx < 0 || xx >= w) continue;
+        final i = yy * w + xx;
+        if (mag[i] <= threshold) continue;
+        final gx = gxa[i];
+        final gy = gya[i];
+        final dot = (gx * nx + gy * ny).toDouble();
+        final g2 = (gx * gx + gy * gy).toDouble();
+        if (dot * dot >= 0.5 * g2 * nlen2) {
+          // |cos| >= ~0.71: el gradiente apunta como la normal del lado
+          hit = true;
+          break;
+        }
+      }
+    }
+    if (hit) covered++;
+  }
+  return covered / samples;
+}
+
+/// Puntuación de "parecido a carta" de un cuadrilátero candidato, o null
+/// si no cuela (área, lados, proporción 63:88, relleno, bordes por lado).
+double? _scoreQuad(List<Pt> q, int compSize, int w, int h, Int32List gxa,
+    Int32List gya, Uint16List mag, double edgeThr) {
+  final area = _quadArea(q);
+  final imgArea = w * h;
+  if (area < 0.06 * imgArea || area > 0.92 * imgArea) return null;
+  final sides = [for (var i = 0; i < 4; i++) _dist(q[i], q[(i + 1) % 4])];
+  if (sides.reduce(math.min) < 0.12 * math.min(w, h)) return null;
+  final top = sides[0], right = sides[1], bottom = sides[2], left = sides[3];
+  final aLen = (top + bottom) / 2;
+  final bLen = (left + right) / 2;
+  final ratio = math.min(aLen, bLen) / math.max(aLen, bLen);
+  if (ratio < 0.50 || ratio > 0.95) return null;
+  if (math.min(top, bottom) / math.max(top, bottom) < 0.55) return null;
+  if (math.min(left, right) / math.max(left, right) < 0.55) return null;
+  final fill = compSize / area;
+  if (fill < 0.08) return null;
+  final covs = [
+    for (var i = 0; i < 4; i++)
+      _sideCoverage(q[i], q[(i + 1) % 4], gxa, gya, mag, w, h, edgeThr)
+  ];
+  if (covs.reduce(math.min) < 0.45) return null; // cada lado, borde real
+  final meanCov = covs.reduce((a, b) => a + b) / 4;
+  if (meanCov < 0.60) return null;
+  // proporción: penalización cuadrática centrada en 63:88 = 0.716
+  final dev = (ratio - 0.716).abs() / 0.15;
+  final aspectFit = math.max(0.05, 1.0 - dev * dev);
+  return area * aspectFit * meanCov;
+}
+
+/// Detección multi-hipótesis: candidatos por segmentación de intensidad
+/// (Otsu ±, máscaras oscura y clara) y por bordes (Sobel con umbral por
+/// percentil), validados y puntuados; gana el mejor. null si nada creíble.
+List<Pt>? _findQuad(Uint8List grey, int w, int h) {
+  final blurred = _blur3(grey, w, h);
+
+  // Sobel: magnitud + dirección; umbral por percentil 92 (con la media,
+  // como el v1, la textura del fondo cegaba al detector)
   final mag = Uint16List(w * h);
-  var magSum = 0;
+  final gxa = Int32List(w * h);
+  final gya = Int32List(w * h);
+  final mags = <int>[];
   for (var y = 1; y < h - 1; y++) {
     for (var x = 1; x < w - 1; x++) {
       final i = y * w + x;
-      final gx = -blur[i - w - 1] - 2 * blur[i - 1] - blur[i + w - 1] +
-          blur[i - w + 1] + 2 * blur[i + 1] + blur[i + w + 1];
-      final gy = -blur[i - w - 1] - 2 * blur[i - w] - blur[i - w + 1] +
-          blur[i + w - 1] + 2 * blur[i + w] + blur[i + w + 1];
+      final gx = -blurred[i - w - 1] - 2 * blurred[i - 1] -
+          blurred[i + w - 1] +
+          blurred[i - w + 1] +
+          2 * blurred[i + 1] +
+          blurred[i + w + 1];
+      final gy = -blurred[i - w - 1] - 2 * blurred[i - w] -
+          blurred[i - w + 1] +
+          blurred[i + w - 1] +
+          2 * blurred[i + w] +
+          blurred[i + w + 1];
       final m = math.min(gx.abs() + gy.abs(), 1020);
       mag[i] = m;
-      magSum += m;
+      gxa[i] = gx;
+      gya[i] = gy;
+      mags.add(m);
     }
   }
-  final mean = magSum / ((w - 2) * (h - 2));
-  final threshold = math.max(30.0, mean * 2.5);
+  mags.sort();
+  final threshold = math.max(40, mags[(mags.length * 0.92).toInt()]);
+  final coverageThr = threshold * 0.75;
 
-  // binario + dilatación 3x3
+  final candidates = <(double, List<Pt>)>[];
+
+  void consider(List<List<int>> comps) {
+    for (final comp in comps) {
+      final q = _quadFromComponent(comp, w);
+      if (q == null) continue;
+      final s =
+          _scoreQuad(q, comp.length, w, h, gxa, gya, mag, coverageThr);
+      if (s != null) candidates.add((s, q));
+    }
+  }
+
+  // 1) máscaras de intensidad alrededor de Otsu (carta oscura sobre fondo
+  //    claro y carta clara sobre fondo oscuro)
+  final t0 = _otsu(blurred);
+  for (final factor in const [0.65, 0.85, 1.0]) {
+    final t = (t0 * factor).toInt().clamp(1, 254).toInt();
+    final dark = Uint8List(w * h);
+    for (var i = 0; i < blurred.length; i++) {
+      if (blurred[i] < t) dark[i] = 1;
+    }
+    consider(_components(dark, w, h));
+  }
+  final tLight = (t0 * 1.15).toInt().clamp(1, 254).toInt();
+  final light = Uint8List(w * h);
+  for (var i = 0; i < blurred.length; i++) {
+    if (blurred[i] > tLight) light[i] = 1;
+  }
+  consider(_components(light, w, h));
+
+  // 2) componentes de los propios bordes (dilatados)
   final edge = Uint8List(w * h);
   for (var i = 0; i < mag.length; i++) {
     if (mag[i] > threshold) edge[i] = 1;
@@ -229,65 +440,11 @@ List<Pt>? _findQuad(Uint8List grey, int w, int h) {
       dil[y * w + x] = on;
     }
   }
+  consider(_components(dil, w, h));
 
-  // componente conexa mayor (8-conexa, BFS con pila plana)
-  final label = Int32List(w * h); // 0 = sin etiqueta
-  var best = <int>[];
-  var next = 1;
-  final stack = <int>[];
-  for (var start = 0; start < dil.length; start++) {
-    if (dil[start] == 0 || label[start] != 0) continue;
-    final comp = <int>[];
-    stack.add(start);
-    label[start] = next;
-    while (stack.isNotEmpty) {
-      final i = stack.removeLast();
-      comp.add(i);
-      final x = i % w;
-      final y = i ~/ w;
-      for (var dy = -1; dy <= 1; dy++) {
-        final yy = y + dy;
-        if (yy < 0 || yy >= h) continue;
-        for (var dx = -1; dx <= 1; dx++) {
-          final xx = x + dx;
-          if (xx < 0 || xx >= w) continue;
-          final j = yy * w + xx;
-          if (dil[j] != 0 && label[j] == 0) {
-            label[j] = next;
-            stack.add(j);
-          }
-        }
-      }
-    }
-    if (comp.length > best.length) best = comp;
-    next++;
-  }
-  if (best.length < 40) return null;
-
-  // envolvente convexa (monotone chain) sobre los puntos del componente
-  final pts = <Pt>[for (final i in best) Pt((i % w).toDouble(), (i ~/ w).toDouble())];
-  final hull = _convexHull(pts);
-  if (hull.length < 4) return null;
-
-  // esquinas por extremos: TL=min(x+y) TR=max(x-y) BR=max(x+y) BL=min(x-y)
-  var tl = hull.first, tr = hull.first, br = hull.first, bl = hull.first;
-  for (final p in hull) {
-    if (p.x + p.y < tl.x + tl.y) tl = p;
-    if (p.x - p.y > tr.x - tr.y) tr = p;
-    if (p.x + p.y > br.x + br.y) br = p;
-    if (p.x - p.y < bl.x - bl.y) bl = p;
-  }
-  final quad = [tl, tr, br, bl];
-
-  // filtros de credibilidad: área suficiente y lados no degenerados
-  final area = _quadArea(quad);
-  if (area < 0.05 * w * h) return null;
-  for (var i = 0; i < 4; i++) {
-    if (_dist(quad[i], quad[(i + 1) % 4]) < math.min(w, h) * 0.15) {
-      return null;
-    }
-  }
-  return quad;
+  if (candidates.isEmpty) return null;
+  candidates.sort((a, b) => b.$1.compareTo(a.$1));
+  return candidates.first.$2;
 }
 
 double _quadArea(List<Pt> q) {
