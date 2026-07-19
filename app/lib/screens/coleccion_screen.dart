@@ -6,6 +6,7 @@ import '../widgets/common.dart';
 import 'album_screen.dart';
 import 'card_detail_screen.dart';
 import 'import_csv_screen.dart';
+import 'scan_screen.dart';
 
 /// Colección: primera pestaña. Estados: sin base de datos (descargar),
 /// colección vacía (empezar), y colección viva (buscar/añadir/gestionar).
@@ -145,10 +146,12 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
     return Scaffold(
       floatingActionButton: _dbReady == true
           ? FloatingActionButton.extended(
-              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text(
-                          'El escáner llega en la siguiente versión — de momento busca o importa tu CSV.'))),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ScanScreen(
+                      db: widget.db, collection: widget.collection),
+                ),
+              ),
               icon: const Icon(Icons.qr_code_scanner),
               label: const Text('Escanear'),
             )
