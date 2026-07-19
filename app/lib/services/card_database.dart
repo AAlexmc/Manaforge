@@ -397,10 +397,17 @@ extension DeckQueries on CardDatabase {
     final db = await _open();
     final pool = <String, fe.Card>{};
     for (final entry in qtyByName.entries) {
-      final rows = db.select(
+      var rows = db.select(
           'SELECT name, mana_cost, cmc, colors, type_line, oracle_text, '
           'power, toughness FROM cards WHERE name = ?1',
           [entry.key]);
+      if (rows.isEmpty) {
+        // cartas de dos caras: la lista suele traer solo la cara delantera
+        rows = db.select(
+            'SELECT name, mana_cost, cmc, colors, type_line, oracle_text, '
+            "power, toughness FROM cards WHERE name LIKE ?1 || ' //%'",
+            [entry.key]);
+      }
       if (rows.isEmpty) continue;
       final r = rows.first;
       pool[entry.key] = fe.Card(

@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "updated": "2026-07-19",
+  "source": "MTGGoldfish · metagame Standard",
+  "decks": [
+    {
+      "id": "izzet_prowess",
+      "name": "Izzet Prowess",
+      "format": "Standard",
+      "share": "12%",
+      "colors": "UR",
+      "archetype": "tempo",
+      "description": "Criaturas que crecen con cada hechizo barato: presión desde el turno 1 y daño directo para rematar.",
+      "cards": {
+        "Slickshot Show-Off": 4,
+        "Drake Hatcher": 2,
+        "Colorstorm Stallion": 2,
+        "Eddymurk Crab": 3,
+        "Sleight of Hand": 4,
+        "Boomerang Basics": 4,
+        "Flow State": 3,
+        "Wild Ride": 2,
+        "Burst Lightning": 4,
+        "Opt": 4,
+        "Secret Identity": 2,
+        "Stormchaser's Talent": 4
+      },
+      "lands": {
+        "Steam Vents": 4,
+        "Spirebluff Canal": 4,
+        "Riverpyre Verge": 4,
+        "Multiversal Passage": 2,
+        "Island": 6,
+        "Mountain": 2
+      }
+    },
+    {
+      "id": "selesnya_ouroboroid",
+      "name": "Selesnya Ouroboroid",
+      "format": "Standard",
+      "share": "13%",
+      "colors": "WG",
+      "archetype": "midrange",
+      "description": "Maná acelerado y criaturas que se refuerzan entre sí hasta desbordar la mesa.",
+      "cards": {
+        "Llanowar Elves": 4,
+        "Pawpatch Recruit": 4,
+        "Badgermole Cub": 4,
+        "Spider Manifestation": 3,
+        "Surrak, Elusive Hunter": 3,
+        "Brightglass Gearhulk": 4,
+        "Leatherhead, Swamp Stalker": 4,
+        "Ouroboroid": 2,
+        "Keen-Eyed Curator": 1,
+        "Practiced Offense": 4,
+        "Bushwhack": 1,
+        "Seam Rip": 2,
+        "Meltstrider's Resolve": 1
+      },
+      "lands": {
+        "Temple Garden": 4,
+        "Hushwood Verge": 4,
+        "Abandoned Air Temple": 3,
+        "Multiversal Passage": 2,
+        "Starting Town": 2,
+        "Ba Sing Se": 1,
+        "Forest": 5,
+        "Plains": 2
+      }
+    },
+    {
+      "id": "jeskai_lessons",
+      "name": "Jeskai Lessons",
+      "format": "Standard",
+      "share": "13%",
+      "colors": "WUR",
+      "archetype": "control",
+      "description": "Control a base de lecciones: responde, roba el doble que tú y cierra con una revelación explosiva.",
+      "cards": {
+        "Gran-Gran": 4,
+        "Firebending Lesson": 4,
+        "Abandon Attachments": 4,
+        "Accumulate Wisdom": 4,
+        "Combustion Technique": 4,
+        "It'll Quench Ya!": 2,
+        "Jeskai Revelation": 4,
+        "Iroh's Demonstration": 2,
+        "Stock Up": 4,
+        "Flashback": 1,
+        "Improvisation Capstone": 1,
+        "Tablet of Discovery": 4
+      },
+      "lands": {
+        "Great Hall of the Biblioplex": 4,
+        "Hallowed Fountain": 3,
+        "Steam Vents": 4,
+        "Spirebluff Canal": 3,
+        "Riverpyre Verge": 4,
+        "Sundown Pass": 1,
+        "Mistrise Village": 1,
+        "Island": 2
+      }
+    }
+  ]
+}

@@ -3,46 +3,89 @@ import 'dart:math';
 import 'classify.dart';
 import 'deck_validator.dart';
 import 'generator.dart';
+import 'mana_curve.dart';
 import 'models.dart';
 
 /// Modo Test: simulador de enfrentamientos y optimizador contra un mazo
 /// objetivo (p. ej. un mazo del meta).
 ///
-/// HONESTIDAD ANTE TODO: las partidas son MUY simplificadas (maná sin
-/// colores, combate por fuerza/resistencia, contramagia tratada como
-/// respuesta a la mayor amenaza, sin habilidades). El % de victoria es una
-/// ESTIMACIÓN comparativa entre mazos, no una predicción real. Determinista
-/// con semilla para poder testearlo.
+/// v2 — más fiel que la v1: colores de maná reales (las tierras producen
+/// colores y los costes coloreados se comprueban), mulligan sencillo,
+/// evasión y combate con keywords (volar, alcance, arrollar, toque mortal,
+/// vínculo vital, iniciativa, prisa, amenaza), removal instantáneo en el
+/// turno del rival y contramagia de verdad (contrarresta la amenaza gorda).
+///
+/// Sigue siendo una SIMULACIÓN simplificada: sin habilidades activadas ni
+/// texto de reglas completo. El % es comparativo, no una predicción exacta.
+/// Determinista con semilla para poder testearlo.
 
-/// Carta precocinada para simular rápido.
 class _SimCard {
   final String name;
   final int cmc;
+  final String manaCost;
   final bool isLand;
   final bool isCreature;
+  final bool isInstant;
   final int power;
   final int toughness;
-  final bool isRemoval; // removal puntual, counterspell o burn a criatura
+  final bool isRemoval; // destruye/exilia la mayor amenaza
+  final bool isCounter; // contramagia
   final bool isSweeper;
-  final int burnFace; // daño directo posible a cara (0 = no es burn)
-  final int draws; // roba N cartas
-  final bool isRamp; // acelera: cuenta como tierra extra
+  final int burn; // daño del hechizo (regex "deals N damage")
+  final bool burnAnyTarget; // puede ir a la cara
+  final int draws;
+  final bool isRamp;
+  // keywords de combate
+  final bool flying;
+  final bool reach;
+  final bool trample;
+  final bool deathtouch;
+  final bool lifelink;
+  final bool firstStrike;
+  final bool haste;
+  final bool menace;
+  final String landColor; // 'W'..'G', '*' = cualquiera (no básicas), '' no-tierra
 
   const _SimCard({
     required this.name,
     required this.cmc,
+    required this.manaCost,
     required this.isLand,
     required this.isCreature,
+    required this.isInstant,
     required this.power,
     required this.toughness,
     required this.isRemoval,
+    required this.isCounter,
     required this.isSweeper,
-    required this.burnFace,
+    required this.burn,
+    required this.burnAnyTarget,
     required this.draws,
     required this.isRamp,
+    required this.flying,
+    required this.reach,
+    required this.trample,
+    required this.deathtouch,
+    required this.lifelink,
+    required this.firstStrike,
+    required this.haste,
+    required this.menace,
+    required this.landColor,
   });
 
   static final _dmg = RegExp(r'deals? (\d+) damage');
+  static const _basicColor = {
+    'Plains': 'W',
+    'Island': 'U',
+    'Swamp': 'B',
+    'Mountain': 'R',
+    'Forest': 'G',
+    'Snow-Covered Plains': 'W',
+    'Snow-Covered Island': 'U',
+    'Snow-Covered Swamp': 'B',
+    'Snow-Covered Mountain': 'R',
+    'Snow-Covered Forest': 'G',
+  };
 
   factory _SimCard.fromCard(Card c) {
     final tags = classify(c);
@@ -52,47 +95,111 @@ class _SimCard {
       final m = _dmg.firstMatch(oracle);
       burn = m == null ? 2 : int.parse(m.group(1)!);
     }
-    final targetsFace = oracle.contains('any target') ||
+    final anyTarget = oracle.contains('any target') ||
         oracle.contains('target player') ||
         oracle.contains('each opponent');
+    var landColor = '';
+    if (c.isLand) {
+      landColor = _basicColor[c.name] ?? '*';
+    }
+    bool kw(String k) => oracle.contains(k);
     return _SimCard(
       name: c.name,
       cmc: c.cmc,
+      manaCost: c.manaCost,
       isLand: c.isLand,
       isCreature: c.isCreature,
+      isInstant: c.types.contains('Instant'),
       power: c.power ?? 0,
       toughness: c.toughness ?? 0,
-      isRemoval: tags.contains('removal') ||
-          tags.contains('counterspell') ||
-          (burn > 0 && !targetsFace),
+      isRemoval:
+          tags.contains('removal') || (burn > 0 && !anyTarget),
+      isCounter: tags.contains('counterspell'),
       isSweeper: tags.contains('sweeper'),
-      burnFace: targetsFace ? burn : 0,
+      burn: burn,
+      burnAnyTarget: anyTarget && burn > 0,
       draws: tags.contains('draw') ? 1 : 0,
       isRamp: tags.contains('ramp') && !c.isCreature,
+      flying: kw('flying'),
+      reach: kw('reach'),
+      trample: kw('trample'),
+      deathtouch: kw('deathtouch'),
+      lifelink: kw('lifelink'),
+      firstStrike: kw('first strike') || kw('double strike'),
+      haste: kw('haste'),
+      menace: kw('menace'),
+      landColor: landColor,
     );
   }
 }
 
 class _Permanent {
-  final int power;
-  final int toughness;
-  bool sick; // mareo de invocación
+  final _SimCard card;
+  bool sick;
 
-  _Permanent(this.power, this.toughness, {this.sick = true});
+  _Permanent(this.card, {required this.sick});
+
+  int get power => card.power;
+  int get toughness => card.toughness;
 }
 
 class _Player {
   final List<_SimCard> library;
   final List<_SimCard> hand = [];
   final List<_Permanent> board = [];
-  int lands = 0;
+  final List<String> lands = []; // color producido por cada tierra en mesa
   int life = 20;
+  bool usedResponse = false; // una respuesta instantánea por turno rival
 
   _Player(this.library);
 
   void draw([int n = 1]) {
     for (var i = 0; i < n && library.isNotEmpty; i++) {
       hand.add(library.removeLast());
+    }
+  }
+
+  /// ¿Puede pagar este coste con sus tierras (colores incluidos)?
+  bool canPay(_SimCard c, int manaLeft) {
+    if (c.cmc > manaLeft) return false;
+    final syms = ManaCurve.colorSymbols(c.manaCost);
+    if (syms.isEmpty) return true;
+    final pool = List<String>.from(lands);
+    for (final e in syms.entries) {
+      for (var k = 0; k < e.value; k++) {
+        final i = pool.indexOf(e.key);
+        if (i >= 0) {
+          pool.removeAt(i);
+        } else {
+          final any = pool.indexOf('*');
+          if (any >= 0) {
+            pool.removeAt(any);
+          } else {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  /// Mulligan sencillo: si la mano inicial tiene <2 o >5 tierras, roba una
+  /// nueva de 7 y descarta la carta más cara (mano de 6).
+  void openingHand(Random rng) {
+    draw(7);
+    final landCount = hand.where((c) => c.isLand).length;
+    if (landCount >= 2 && landCount <= 5) return;
+    library.addAll(hand);
+    hand.clear();
+    library.shuffle(rng);
+    draw(7);
+    if (hand.isNotEmpty) {
+      _SimCard worst = hand.first;
+      for (final c in hand) {
+        if (!c.isLand && c.cmc > worst.cmc) worst = c;
+      }
+      hand.remove(worst);
+      library.insert(0, worst);
     }
   }
 }
@@ -115,72 +222,126 @@ List<_SimCard> _expand(Deck deck, Map<String, Card> pool) {
   return out;
 }
 
-/// Juega un turno del jugador [me] contra [foe].
+/// El rival intenta contrarrestar una amenaza gorda (cmc>=3 o bicho gordo).
+bool _tryCounter(_Player foe, _SimCard spell) {
+  if (foe.usedResponse) return false;
+  final big = spell.cmc >= 3 || (spell.isCreature && spell.power >= 4);
+  if (!big) return false;
+  for (final c in foe.hand) {
+    if (c.isCounter && foe.canPay(c, foe.lands.length)) {
+      foe.hand.remove(c);
+      foe.usedResponse = true;
+      return true;
+    }
+  }
+  return false;
+}
+
+/// Removal instantáneo del rival al final del turno del jugador activo.
+void _foeInstantResponse(_Player me, _Player foe) {
+  if (foe.usedResponse || me.board.isEmpty) return;
+  final biggest =
+      me.board.reduce((a, b) => a.power >= b.power ? a : b);
+  if (biggest.power < 3) return;
+  for (final c in foe.hand) {
+    final canKill = c.isInstant &&
+        (c.isRemoval || (c.burn >= biggest.toughness && c.burn > 0));
+    if (canKill && foe.canPay(c, foe.lands.length)) {
+      foe.hand.remove(c);
+      foe.usedResponse = true;
+      me.board.remove(biggest);
+      return;
+    }
+  }
+}
+
 void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
+  me.usedResponse = false; // sus respuestas se renuevan en mi turno
   if (!skipDraw) me.draw();
 
-  // tierra del turno
-  final landIdx = me.hand.indexWhere((c) => c.isLand);
-  if (landIdx >= 0) {
-    me.hand.removeAt(landIdx);
-    me.lands++;
+  // tierra del turno: la del color más pedido por la mano
+  final landsInHand = me.hand.where((c) => c.isLand).toList();
+  if (landsInHand.isNotEmpty) {
+    final needed = <String, int>{};
+    for (final c in me.hand) {
+      ManaCurve.colorSymbols(c.manaCost).forEach((color, k) {
+        needed[color] = (needed[color] ?? 0) + k;
+      });
+    }
+    landsInHand.sort((a, b) =>
+        (needed[b.landColor] ?? (b.landColor == '*' ? 1 : 0))
+            .compareTo(needed[a.landColor] ?? (a.landColor == '*' ? 1 : 0)));
+    final land = landsInHand.first;
+    me.hand.remove(land);
+    me.lands.add(land.landColor);
   }
 
-  // fase principal: gastar el maná en lo más útil
-  var mana = me.lands;
+  // fase principal
+  var mana = me.lands.length;
   var acted = true;
   while (acted && mana > 0) {
     acted = false;
     _SimCard? pick;
-    int Function(_SimCard) worth = (c) => 0;
 
-    List<_SimCard> affordable(bool Function(_SimCard) test) =>
-        me.hand.where((c) => !c.isLand && c.cmc <= mana && test(c)).toList();
+    List<_SimCard> affordable(bool Function(_SimCard) test) => me.hand
+        .where((c) => !c.isLand && c.cmc <= mana && me.canPay(c, mana) && test(c))
+        .toList();
 
-    // 1) barrer si el rival tiene la mesa mucho mejor
+    // 1: barrer una mesa rival muy superior
     final sweepers = affordable((c) => c.isSweeper);
     if (sweepers.isNotEmpty &&
         foe.board.length >= me.board.length + 2 &&
         foe.board.length >= 3) {
       pick = sweepers.first;
-      me.board.clear();
-      foe.board.clear();
-    }
-    // 2) matar la mayor amenaza
-    if (pick == null && foe.board.isNotEmpty) {
-      final removals = affordable((c) => c.isRemoval);
-      final biggest = foe.board.reduce(
-          (a, b) => a.power >= b.power ? a : b);
-      if (removals.isNotEmpty && biggest.power >= 2) {
-        pick = removals.first;
-        foe.board.remove(biggest);
+      if (!_tryCounter(foe, pick)) {
+        me.board.clear();
+        foe.board.clear();
       }
     }
-    // 3) bajar la mayor criatura pagable
+    // 2: matar la mayor amenaza rival
+    if (pick == null && foe.board.isNotEmpty) {
+      final removals =
+          affordable((c) => c.isRemoval || (c.burn > 0 && !c.isCounter));
+      if (removals.isNotEmpty) {
+        final biggest =
+            foe.board.reduce((a, b) => a.power >= b.power ? a : b);
+        if (biggest.power >= 2) {
+          final usable = removals.where((c) =>
+              c.isRemoval || c.burn >= biggest.toughness);
+          if (usable.isNotEmpty) {
+            pick = usable.first;
+            foe.board.remove(biggest);
+          }
+        }
+      }
+    }
+    // 3: bajar la mayor criatura pagable
     if (pick == null) {
       final creatures = affordable((c) => c.isCreature);
       if (creatures.isNotEmpty) {
-        worth = (c) => c.power + c.toughness;
-        creatures.sort((a, b) => worth(b).compareTo(worth(a)));
+        creatures.sort((a, b) =>
+            (b.power + b.toughness).compareTo(a.power + a.toughness));
         pick = creatures.first;
-        me.board.add(_Permanent(pick.power, pick.toughness));
+        if (!_tryCounter(foe, pick)) {
+          me.board.add(_Permanent(pick, sick: !pick.haste));
+        }
       }
     }
-    // 4) quemar la cara si acerca la victoria
+    // 4: quemar la cara
     if (pick == null) {
-      final burns = affordable((c) => c.burnFace > 0);
+      final burns = affordable((c) => c.burnAnyTarget);
       if (burns.isNotEmpty) {
         pick = burns.first;
-        foe.life -= pick.burnFace;
+        if (!_tryCounter(foe, pick)) foe.life -= pick.burn;
       }
     }
-    // 5) robar cartas / rampa
+    // 5: robar / rampa
     if (pick == null) {
       final utils = affordable((c) => c.draws > 0 || c.isRamp);
       if (utils.isNotEmpty) {
         pick = utils.first;
         if (pick.draws > 0) me.draw(pick.draws);
-        if (pick.isRamp) me.lands++;
+        if (pick.isRamp) me.lands.add('*');
       }
     }
 
@@ -191,20 +352,30 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
     }
   }
 
-  // combate: atacan todas las que pueden
-  final attackers =
-      me.board.where((p) => !p.sick && p.power > 0).toList()
-        ..sort((a, b) => b.power.compareTo(a.power));
+  // combate
+  final attackers = me.board
+      .where((p) => !p.sick && p.power > 0)
+      .toList()
+    ..sort((a, b) => b.power.compareTo(a.power));
   if (attackers.isNotEmpty) {
     final blockers = List<_Permanent>.from(foe.board)
       ..sort((a, b) => b.toughness.compareTo(a.toughness));
-    final blocked = <_Permanent, _Permanent>{}; // atacante -> bloqueador
+    final blocked = <_Permanent, _Permanent>{};
     for (final blocker in blockers) {
       _Permanent? target;
       for (final a in attackers) {
         if (blocked.containsKey(a)) continue;
-        final kills = blocker.power >= a.toughness;
-        final survives = blocker.toughness > a.power;
+        // evasión: volar solo lo bloquean volar/alcance; amenaza pide 2
+        if (a.card.flying && !(blocker.card.flying || blocker.card.reach)) {
+          continue;
+        }
+        if (a.card.menace) continue; // simplificación: amenaza no se bloquea
+        final kills = blocker.card.deathtouch
+            ? blocker.power >= 1
+            : blocker.power >= a.toughness;
+        final survives = a.card.deathtouch
+            ? false
+            : blocker.toughness > a.power;
         final favorable = kills && survives;
         final trade = kills && !survives;
         if (favorable || (trade && foe.life <= 12)) {
@@ -218,26 +389,50 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
       final blocker = blocked[a];
       if (blocker == null) {
         foe.life -= a.power;
+        if (a.card.lifelink) me.life += a.power;
       } else {
-        if (blocker.power >= a.toughness) me.board.remove(a);
-        if (a.power >= blocker.toughness) foe.board.remove(blocker);
+        var attackerKills = a.card.deathtouch
+            ? a.power >= 1
+            : a.power >= blocker.toughness;
+        var blockerKills = blocker.card.deathtouch
+            ? blocker.power >= 1
+            : blocker.power >= a.toughness;
+        // iniciativa: el rápido mata antes de recibir daño
+        if (a.card.firstStrike && !blocker.card.firstStrike && attackerKills) {
+          blockerKills = false;
+        } else if (blocker.card.firstStrike &&
+            !a.card.firstStrike &&
+            blockerKills) {
+          attackerKills = false;
+        }
+        if (attackerKills) {
+          foe.board.remove(blocker);
+          if (a.card.trample) {
+            final excess = a.power - blocker.toughness;
+            if (excess > 0) foe.life -= excess;
+          }
+          if (a.card.lifelink) me.life += a.power;
+        }
+        if (blockerKills) me.board.remove(a);
       }
     }
   }
 
-  // fin de turno: se quita el mareo
+  // el rival puede responder al final del turno (removal instantáneo)
+  _foeInstantResponse(me, foe);
+
   for (final p in me.board) {
     p.sick = false;
   }
 }
 
-/// Juega UNA partida. Devuelve 1 si gana A, 0 si gana B, 0.5 si se atasca.
+/// Juega UNA partida. 1 = gana A · 0 = gana B · 0.5 = tablas.
 double _playGame(
     List<_SimCard> deckA, List<_SimCard> deckB, Random rng, bool aFirst) {
   final a = _Player(List.of(deckA)..shuffle(rng));
   final b = _Player(List.of(deckB)..shuffle(rng));
-  a.draw(7);
-  b.draw(7);
+  a.openingHand(rng);
+  b.openingHand(rng);
   final order = aFirst ? [a, b] : [b, a];
   for (var turn = 0; turn < 30; turn++) {
     for (var i = 0; i < 2; i++) {
@@ -322,7 +517,6 @@ OptimizeResult? optimizeAgainst(
     }
   }
 
-  // hill-climbing: prueba cambios de una copia y quédate con lo que gane más
   final candidateNames = pool.values
       .where((c) =>
           !c.isLand &&

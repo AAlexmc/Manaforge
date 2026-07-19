@@ -30,6 +30,8 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> {
+  List<MetaDeck> _decks = metaDecks;
+  String _decksSource = 'Cargando meta…';
   String _metaId = metaDecks.first.id;
   bool _running = false;
   fe.OptimizeResult? _result;
@@ -37,7 +39,34 @@ class _TestScreenState extends State<TestScreen> {
   Map<String, fe.Card>? _pool;
   String? _error;
 
-  MetaDeck get _meta => metaDecks.firstWhere((m) => m.id == _metaId);
+  @override
+  void initState() {
+    super.initState();
+    MetaDeckService().load().then((result) {
+      if (!mounted) return;
+      setState(() {
+        _decks = result.decks;
+        _decksSource = result.source;
+        if (!_decks.any((m) => m.id == _metaId)) {
+          _metaId = _decks.first.id;
+        }
+      });
+    });
+  }
+
+  MetaDeck get _meta => _decks.firstWhere((m) => m.id == _metaId);
+
+  /// El closure del isolate se crea AQUÍ, en una función estática, para que
+  /// solo capture los argumentos (un closure creado dentro del State captura
+  /// el State entero, que no es serializable → crash "object is unsendable").
+  static Future<fe.OptimizeResult?> _optimizeInIsolate(
+      Map<String, fe.Card> pool,
+      fe.Deck metaDeck,
+      Map<String, fe.Card> metaPool,
+      int seed) {
+    return Isolate.run(
+        () => fe.optimizeAgainst(pool, metaDeck, metaPool, seed: seed));
+  }
 
   Future<void> _run() async {
     setState(() {
@@ -51,8 +80,7 @@ class _TestScreenState extends State<TestScreen> {
       final metaPool = await widget.db.poolByNames(meta.allNames);
       final metaDeck = meta.toDeck();
       final seed = DateTime.now().millisecondsSinceEpoch & 0xffff;
-      final result = await Isolate.run(
-          () => fe.optimizeAgainst(pool, metaDeck, metaPool, seed: seed));
+      final result = await _optimizeInIsolate(pool, metaDeck, metaPool, seed);
       if (!mounted) return;
       setState(() {
         _running = false;
@@ -88,8 +116,12 @@ class _TestScreenState extends State<TestScreen> {
                 'construye mazos con TUS cartas, simula cientos de partidas '
                 'contra él y se queda con el que más gana — probando además '
                 'cambios de carta uno a uno para afinarlo.'),
-            const SizedBox(height: 16),
-            for (final m in metaDecks)
+            const SizedBox(height: 8),
+            Text(_decksSource,
+                style: const TextStyle(
+                    fontSize: 11.5, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            for (final m in _decks)
               Card(
                 child: RadioListTile<String>(
                   value: m.id,
@@ -102,6 +134,11 @@ class _TestScreenState extends State<TestScreen> {
                       ColorIdentityDots(colors: m.colors, size: 12),
                       const SizedBox(width: 8),
                       Text(m.name),
+                      if (m.share.isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        Text('${m.format} · ${m.share} del meta',
+                            style: const TextStyle(fontSize: 11)),
+                      ],
                     ],
                   ),
                   subtitle: Text(m.description),
@@ -139,9 +176,11 @@ class _TestScreenState extends State<TestScreen> {
             if (_result != null) _buildResult(),
             const SizedBox(height: 12),
             const Text(
-              'Honestidad: las partidas simuladas son simplificadas (sin '
-              'habilidades ni colores de maná). El porcentaje sirve para '
-              'COMPARAR tus mazos entre sí, no como predicción exacta.',
+              'Honestidad: la simulación entiende colores de maná, mulligans, '
+              'evasión (volar, arrollar, toque mortal…), removal instantáneo '
+              'y contramagia — pero no el texto completo de cada carta. El '
+              'porcentaje sirve para COMPARAR tus mazos entre sí, no como '
+              'predicción exacta.',
               style: TextStyle(fontSize: 11.5),
             ),
           ],

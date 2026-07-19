@@ -1,9 +1,14 @@
-import 'package:forge_engine/forge_engine.dart' as fe;
+import 'dart:convert';
+import 'dart:io';
 
-/// Mazos del meta para el Modo Test: listas representativas de arquetipos
-/// clásicos, con cartas archiconocidas que están en la base de datos local.
-/// No son listas de torneo al día (eso llegará con datos online); son
-/// sparrings honestos de cada estilo de juego.
+import 'package:forge_engine/forge_engine.dart' as fe;
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+/// Mazos del meta para el Modo Test. Los REALES se descargan del repo
+/// (data/meta_decks.json, actualizable sin tocar la app) y se cachean 24 h;
+/// si no hay conexión, se usan los presets locales de más abajo.
 class MetaDeck {
   final String id;
   final String name;
@@ -12,6 +17,8 @@ class MetaDeck {
   final fe.Archetype archetype;
   final Map<String, int> cards;
   final Map<String, int> lands;
+  final String format; // "Standard"… ('' en presets locales)
+  final String share; // cuota de meta, p. ej. "12%"
 
   const MetaDeck({
     required this.id,
@@ -21,7 +28,23 @@ class MetaDeck {
     required this.archetype,
     required this.cards,
     required this.lands,
+    this.format = '',
+    this.share = '',
   });
+
+  factory MetaDeck.fromJson(Map<String, dynamic> json) => MetaDeck(
+        id: json['id'] as String,
+        name: json['name'] as String,
+        description: (json['description'] as String?) ?? '',
+        colors: (json['colors'] as String?) ?? '',
+        archetype: fe.Archetype.values.firstWhere(
+            (a) => a.name == (json['archetype'] as String? ?? ''),
+            orElse: () => fe.Archetype.midrange),
+        cards: Map<String, int>.from(json['cards'] as Map),
+        lands: Map<String, int>.from(json['lands'] as Map),
+        format: (json['format'] as String?) ?? '',
+        share: (json['share'] as String?) ?? '',
+      );
 
   fe.Deck toDeck() => fe.Deck(
         name: name,
@@ -32,6 +55,71 @@ class MetaDeck {
       );
 
   Map<String, int> get allNames => {...cards, ...lands};
+}
+
+/// Resultado de la carga: mazos + de dónde salieron.
+class MetaDecksResult {
+  final List<MetaDeck> decks;
+  final String source; // p. ej. "Meta Standard · MTGGoldfish · 2026-07-19"
+  final bool online;
+  const MetaDecksResult(this.decks, this.source, {required this.online});
+}
+
+/// Descarga los mazos del meta reales publicados en el repo, con caché de
+/// 24 h en disco y fallback a los presets locales si no hay red.
+class MetaDeckService {
+  static const url =
+      'https://raw.githubusercontent.com/AAlexmc/Manaforge/main/data/meta_decks.json';
+
+  Future<File?> _cacheFile() async {
+    try {
+      final dir = await getApplicationSupportDirectory();
+      return File(p.join(dir.path, 'meta_decks.json'));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  MetaDecksResult _parse(String body, {required bool online}) {
+    final json = jsonDecode(body) as Map<String, dynamic>;
+    final decks = [
+      for (final d in (json['decks'] as List<dynamic>))
+        MetaDeck.fromJson(d as Map<String, dynamic>)
+    ];
+    final source = '${json['source'] ?? 'meta'} · ${json['updated'] ?? ''}';
+    return MetaDecksResult(decks, source, online: online);
+  }
+
+  Future<MetaDecksResult> load() async {
+    final cache = await _cacheFile();
+    // caché fresca (<24 h): no molestar a la red
+    if (cache != null && await cache.exists()) {
+      final age = DateTime.now().difference(await cache.lastModified());
+      if (age.inHours < 24) {
+        try {
+          return _parse(await cache.readAsString(), online: true);
+        } catch (_) {/* caché corrupta: seguir */}
+      }
+    }
+    try {
+      final response = await http
+          .get(Uri.parse(url))
+          .timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        final result = _parse(response.body, online: true);
+        await cache?.writeAsString(response.body);
+        return result;
+      }
+    } catch (_) {/* sin red: fallback */}
+    // caché vieja mejor que nada
+    if (cache != null && await cache.exists()) {
+      try {
+        return _parse(await cache.readAsString(), online: true);
+      } catch (_) {/* corrupta */}
+    }
+    return const MetaDecksResult(
+        metaDecks, 'Presets locales (sin conexión)', online: false);
+  }
 }
 
 const metaDecks = <MetaDeck>[
