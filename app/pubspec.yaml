@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   forge_engine:
     path: ../forge_engine
+  camera: ^0.11.0
+  camera_windows: ^0.2.6
   desktop_drop: ^0.4.4
   file_selector: ^1.0.3
   http: ^1.2.0

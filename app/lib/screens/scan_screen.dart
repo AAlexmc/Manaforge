@@ -13,6 +13,7 @@ import '../services/collection_store.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/scanner_db_gate.dart';
 
 /// Escáner de cartas, fase B: suelta una FOTO de una carta y ManaForge la
 /// reconoce — detección de contornos, rectificación de perspectiva, huella
@@ -22,8 +23,13 @@ import '../widgets/common.dart';
 class ScanScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
+  final ScannerDatabase scanner;
 
-  const ScanScreen({super.key, required this.db, required this.collection});
+  const ScanScreen(
+      {super.key,
+      required this.db,
+      required this.collection,
+      required this.scanner});
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -77,10 +83,6 @@ class _Candidate {
 }
 
 class _ScanScreenState extends State<ScanScreen> {
-  final _scannerDb = ScannerDatabase();
-
-  bool? _ready; // null = comprobando
-  double? _downloadProgress;
   String? _error;
 
   bool _processing = false;
@@ -89,39 +91,6 @@ class _ScanScreenState extends State<ScanScreen> {
   List<_Candidate> _candidates = const [];
   int _selected = 0;
   int _sessionCount = 0; // cartas añadidas en esta sesión de escaneo
-
-  @override
-  void initState() {
-    super.initState();
-    _scannerDb.isReady().then((ready) {
-      if (mounted) setState(() => _ready = ready);
-    });
-  }
-
-  Future<void> _download() async {
-    setState(() {
-      _downloadProgress = 0;
-      _error = null;
-    });
-    try {
-      await for (final p in _scannerDb.download()) {
-        if (mounted) setState(() => _downloadProgress = p < 0 ? null : p);
-      }
-      if (mounted) {
-        setState(() {
-          _ready = true;
-          _downloadProgress = null;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _downloadProgress = null;
-          _error = e.toString();
-        });
-      }
-    }
-  }
 
   Future<void> _pickPhoto() async {
     const typeGroup = XTypeGroup(
@@ -145,7 +114,7 @@ class _ScanScreenState extends State<ScanScreen> {
       if (outcome == null) {
         throw Exception('No pude leer esa imagen (¿es una foto válida?)');
       }
-      final index = await _scannerDb.loadIndex();
+      final index = await widget.scanner.loadIndex();
       final matches =
           index.topMatches(DHashPair(outcome.hashH, outcome.hashV));
       final candidates = <_Candidate>[];
@@ -242,57 +211,8 @@ class _ScanScreenState extends State<ScanScreen> {
         ],
       ),
       body: SafeArea(
-        child: _ready == null
-            ? const Center(child: CircularProgressIndicator())
-            : (_ready == false ? _buildNeedsDb() : _buildScanner()),
-      ),
-    );
-  }
-
-  /// Primer uso: hay que descargar la base de huellas.
-  Widget _buildNeedsDb() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Spacer(),
-          const Icon(Icons.fingerprint, size: 56),
-          const SizedBox(height: 12),
-          Text('El ojo del escáner',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 8),
-          const Text(
-            'Para reconocer cartas sin internet necesito la base de huellas '
-            'visuales (~12 MB): la firma del arte de cada ilustración de '
-            'Magic. Se descarga una vez.',
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
-          if (_downloadProgress != null) ...[
-            LinearProgressIndicator(value: _downloadProgress),
-            const SizedBox(height: 8),
-            Text(
-              'Descargando… ${((_downloadProgress ?? 0) * 100).toStringAsFixed(0)} %',
-              textAlign: TextAlign.center,
-            ),
-          ] else
-            FilledButton.icon(
-              onPressed: _download,
-              icon: const Icon(Icons.download),
-              label: const Text('Descargar base de huellas'),
-            ),
-          if (_error != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Text(_error!,
-                  textAlign: TextAlign.center,
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.error)),
-            ),
-          const Spacer(),
-        ],
+        child: ScannerDbGate(
+            scanner: widget.scanner, builder: (_) => _buildScanner()),
       ),
     );
   }

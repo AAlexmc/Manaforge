@@ -5,17 +5,22 @@ import '../services/collection_store.dart';
 import '../widgets/common.dart';
 import 'album_screen.dart';
 import 'card_detail_screen.dart';
+import '../services/scanner_database.dart';
 import 'import_csv_screen.dart';
-import 'scan_screen.dart';
+import 'live_scan_screen.dart';
 
 /// Colección: primera pestaña. Estados: sin base de datos (descargar),
 /// colección vacía (empezar), y colección viva (buscar/añadir/gestionar).
 class ColeccionScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
+  final ScannerDatabase scanner;
 
   const ColeccionScreen(
-      {super.key, required this.db, required this.collection});
+      {super.key,
+      required this.db,
+      required this.collection,
+      required this.scanner});
 
   @override
   State<ColeccionScreen> createState() => _ColeccionScreenState();
@@ -148,8 +153,10 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
           ? FloatingActionButton.extended(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => ScanScreen(
-                      db: widget.db, collection: widget.collection),
+                  builder: (_) => LiveScanScreen(
+                      db: widget.db,
+                      collection: widget.collection,
+                      scanner: widget.scanner),
                 ),
               ),
               icon: const Icon(Icons.qr_code_scanner),
