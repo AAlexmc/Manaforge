@@ -25,6 +25,7 @@ class MercadoScreen extends StatefulWidget {
 class _MercadoScreenState extends State<MercadoScreen> {
   final _history = ValueHistory();
   final _searchCtrl = TextEditingController();
+  final _bannerCtrl = ScrollController();
 
   double? _totalValue;
   List<ValuedCard> _top = const [];
@@ -47,7 +48,18 @@ class _MercadoScreenState extends State<MercadoScreen> {
   void dispose() {
     widget.collection.removeListener(_load);
     _searchCtrl.dispose();
+    _bannerCtrl.dispose();
     super.dispose();
+  }
+
+  void _scrollBanners(double delta) {
+    if (!_bannerCtrl.hasClients) return;
+    _bannerCtrl.animateTo(
+      (_bannerCtrl.offset + delta).clamp(
+          0.0, _bannerCtrl.position.maxScrollExtent),
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOut,
+    );
   }
 
   Future<void> _load() async {
@@ -273,31 +285,53 @@ class _MercadoScreenState extends State<MercadoScreen> {
               ),
             if (_banners.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Text('EXPANSIONES',
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelLarge
-                      ?.copyWith(letterSpacing: 1)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('EXPANSIONES (${_banners.length})',
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge
+                            ?.copyWith(letterSpacing: 1)),
+                  ),
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    tooltip: 'Anteriores',
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () => _scrollBanners(-600),
+                  ),
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    tooltip: 'Siguientes',
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () => _scrollBanners(600),
+                  ),
+                ],
+              ),
               const SizedBox(height: 8),
               SizedBox(
                 height: 110,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _banners.length,
-                  itemBuilder: (context, i) {
-                    final set = _banners[i];
-                    return _SetBannerTile(
-                      set: set,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => SetMarketScreen(
-                              db: widget.db,
-                              collection: widget.collection,
-                              set: set),
+                child: ScrollConfiguration(
+                  behavior: const DragScrollBehavior(),
+                  child: ListView.builder(
+                    controller: _bannerCtrl,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _banners.length,
+                    itemBuilder: (context, i) {
+                      final set = _banners[i];
+                      return _SetBannerTile(
+                        set: set,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => SetMarketScreen(
+                                db: widget.db,
+                                collection: widget.collection,
+                                set: set),
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

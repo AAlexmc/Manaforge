@@ -410,8 +410,10 @@ class _DeckImageStrip extends StatelessWidget {
         ];
         return SizedBox(
           height: 176,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
+          child: ScrollConfiguration(
+            behavior: const DragScrollBehavior(),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
             itemCount: entries.length,
             itemBuilder: (context, i) {
               final e = entries[i];
@@ -485,7 +487,8 @@ class _DeckImageStrip extends StatelessWidget {
                   ),
                 ),
               );
-            },
+              },
+            ),
           ),
         );
       },

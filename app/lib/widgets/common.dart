@@ -1,6 +1,22 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/mf_theme.dart';
+
+/// En escritorio, las listas horizontales no se pueden arrastrar con el
+/// ratón por defecto: este comportamiento lo permite (tiras de cartas,
+/// banners de expansiones…).
+class DragScrollBehavior extends MaterialScrollBehavior {
+  const DragScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus,
+      };
+}
 
 /// Color de cada símbolo de maná (tokens del DesignSystem).
 const Map<String, Color> manaColors = {

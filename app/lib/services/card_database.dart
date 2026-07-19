@@ -818,7 +818,7 @@ class SetCardPrice {
 extension SetMarketQueries on CardDatabase {
   /// Expansiones "de verdad" (≥50 cartas), nuevas primero, con la carta
   /// más cara de cada una como imagen de banner.
-  Future<List<SetBanner>> marketSets({int limit = 60}) async {
+  Future<List<SetBanner>> marketSets({int limit = 500}) async {
     final db = await _open();
     final hasDate = await _hasColumn('printings', 'released_at');
     final rows = db.select(
@@ -826,7 +826,7 @@ extension SetMarketQueries on CardDatabase {
       'COUNT(DISTINCT collector_number) AS total'
       '${hasDate ? ', MAX(released_at) AS rel' : ''} '
       'FROM printings WHERE set_code IS NOT NULL '
-      'GROUP BY set_code HAVING total >= 50 '
+      'GROUP BY set_code HAVING total >= 25 '
       'ORDER BY ${hasDate ? 'rel DESC' : 'set_name'} LIMIT ?1',
       [limit],
     );
