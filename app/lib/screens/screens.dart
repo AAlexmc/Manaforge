@@ -8,6 +8,7 @@ export 'coleccion_screen.dart';
 export 'card_detail_screen.dart';
 export 'mazos_screen.dart';
 export 'mercado_screen.dart';
+export 'set_market_screen.dart';
 export 'test_screen.dart';
 export 'deck_detail_screen.dart';
 export 'forge_screen.dart';

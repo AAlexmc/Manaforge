@@ -767,3 +767,135 @@ extension MarketQueries on CardDatabase {
     return out;
   }
 }
+
+/// Una expansión para la tira del Mercado (estilo banner de gacha).
+class SetBanner {
+  final String code;
+  final String name;
+  final int total;
+  final String? releasedAt;
+  final String? imageNormal; // la carta más cara del set como fondo
+
+  const SetBanner({
+    required this.code,
+    required this.name,
+    required this.total,
+    this.releasedAt,
+    this.imageNormal,
+  });
+
+  String get year => (releasedAt ?? '').split('-').first;
+}
+
+/// Una carta de un set con sus precios (vista de mercado por expansión).
+class SetCardPrice {
+  final String oracleId;
+  final String name;
+  final String? printedName;
+  final String collectorNumber;
+  final String rarity;
+  final String colors;
+  final String? imageSmall;
+  final String? imageNormal;
+  final double? priceEur;
+  final double? priceEurFoil;
+
+  const SetCardPrice({
+    required this.oracleId,
+    required this.name,
+    this.printedName,
+    required this.collectorNumber,
+    required this.rarity,
+    required this.colors,
+    this.imageSmall,
+    this.imageNormal,
+    this.priceEur,
+    this.priceEurFoil,
+  });
+}
+
+/// Consultas de mercado por expansión.
+extension SetMarketQueries on CardDatabase {
+  /// Expansiones "de verdad" (≥50 cartas), nuevas primero, con la carta
+  /// más cara de cada una como imagen de banner.
+  Future<List<SetBanner>> marketSets({int limit = 60}) async {
+    final db = await _open();
+    final hasDate = await _hasColumn('printings', 'released_at');
+    final rows = db.select(
+      'SELECT set_code, MAX(set_name) AS set_name, '
+      'COUNT(DISTINCT collector_number) AS total'
+      '${hasDate ? ', MAX(released_at) AS rel' : ''} '
+      'FROM printings WHERE set_code IS NOT NULL '
+      'GROUP BY set_code HAVING total >= 50 '
+      'ORDER BY ${hasDate ? 'rel DESC' : 'set_name'} LIMIT ?1',
+      [limit],
+    );
+    final banners = [
+      for (final r in rows)
+        SetBanner(
+          code: r['set_code'] as String,
+          name: (r['set_name'] as String?) ?? '',
+          total: r['total'] as int,
+          releasedAt: hasDate ? r['rel'] as String? : null,
+        )
+    ];
+    if (banners.isEmpty) return banners;
+    // fondo: la carta más cara de cada set, en una sola pasada
+    final marks = List.filled(banners.length, '?').join(',');
+    final imgs = db.select(
+      'SELECT set_code, image_normal, '
+      'MAX(CAST(price_eur AS REAL)) AS maxp '
+      'FROM printings WHERE set_code IN ($marks) '
+      'AND image_normal IS NOT NULL AND price_eur IS NOT NULL '
+      'GROUP BY set_code',
+      [for (final b in banners) b.code],
+    );
+    final imageBySet = <String, String?>{
+      for (final r in imgs)
+        r['set_code'] as String: r['image_normal'] as String?
+    };
+    return [
+      for (final b in banners)
+        SetBanner(
+          code: b.code,
+          name: b.name,
+          total: b.total,
+          releasedAt: b.releasedAt,
+          imageNormal: imageBySet[b.code],
+        )
+    ];
+  }
+
+  /// Cartas de un set con precios, una por número de coleccionista.
+  Future<List<SetCardPrice>> setCardsWithPrices(String setCode) async {
+    final db = await _open();
+    final hasFoil = await _hasColumn('printings', 'price_eur_foil');
+    final rows = db.select(
+      'SELECT p.oracle_id, p.collector_number, p.printed_name, '
+      'p.image_small, p.image_normal, p.rarity, p.price_eur, '
+      '${hasFoil ? 'p.price_eur_foil, ' : ''}'
+      'c.name, c.colors, '
+      "MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref "
+      'FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id '
+      'WHERE p.set_code = ?1 GROUP BY p.collector_number',
+      [setCode],
+    );
+    return [
+      for (final r in rows)
+        SetCardPrice(
+          oracleId: r['oracle_id'] as String,
+          name: r['name'] as String,
+          printedName: r['printed_name'] as String?,
+          collectorNumber: (r['collector_number'] as String?) ?? '',
+          rarity: (r['rarity'] as String?) ?? '',
+          colors: (r['colors'] as String?) ?? '',
+          imageSmall: r['image_small'] as String?,
+          imageNormal: r['image_normal'] as String?,
+          priceEur: double.tryParse((r['price_eur'] as String?) ?? ''),
+          priceEurFoil: hasFoil
+              ? double.tryParse((r['price_eur_foil'] as String?) ?? '')
+              : null,
+        )
+    ];
+  }
+}

@@ -6,6 +6,7 @@ import '../services/value_history.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'card_detail_screen.dart';
+import 'set_market_screen.dart';
 
 /// Mercado: el valor de tu colección con evolución local, tus cartas más
 /// valiosas y un buscador de precios de cualquier carta. Precios Cardmarket
@@ -30,6 +31,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
   List<ValuePoint> _points = const [];
   String? _bulkDate;
   List<CardHit> _results = const [];
+  List<SetBanner> _banners = const [];
   double? _updateProgress;
   bool _approximate = false;
   String? _error;
@@ -103,12 +105,15 @@ class _MercadoScreenState extends State<MercadoScreen> {
       final points =
           await _history.record(total, widget.collection.totalCopies);
       final bulkDate = await widget.db.bulkDate();
+      final banners =
+          _banners.isEmpty ? await widget.db.marketSets() : _banners;
       if (!mounted) return;
       setState(() {
         _totalValue = total;
         _top = valued.take(20).toList();
         _points = points;
         _bulkDate = bulkDate;
+        _banners = banners;
         _approximate = !byPrinting;
         _error = null;
       });
@@ -266,6 +271,36 @@ class _MercadoScreenState extends State<MercadoScreen> {
                 child: Text('Mercado sin datos: descarga la base de '
                     'datos en Colección. ($_error)'),
               ),
+            if (_banners.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text('EXPANSIONES',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge
+                      ?.copyWith(letterSpacing: 1)),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 110,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _banners.length,
+                  itemBuilder: (context, i) {
+                    final set = _banners[i];
+                    return _SetBannerTile(
+                      set: set,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => SetMarketScreen(
+                              db: widget.db,
+                              collection: widget.collection,
+                              set: set),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
             const SizedBox(height: 14),
             TextField(
               controller: _searchCtrl,
@@ -381,4 +416,82 @@ class _SparklinePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _SparklinePainter oldDelegate) =>
       oldDelegate.points != points;
+}
+
+
+/// Banner de expansión estilo gacha: la carta más cara del set de fondo,
+/// nombre y año por encima.
+class _SetBannerTile extends StatelessWidget {
+  final SetBanner set;
+  final VoidCallback onTap;
+
+  const _SetBannerTile({required this.set, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: GestureDetector(
+        onTap: onTap,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(
+            width: 190,
+            height: 110,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                if (set.imageNormal != null)
+                  Image.network(
+                    set.imageNormal!,
+                    fit: BoxFit.cover,
+                    alignment: const Alignment(0, -0.6), // el arte, no el texto
+                    errorBuilder: (context, error, stack) =>
+                        Container(color: Colors.white10),
+                  )
+                else
+                  Container(color: Colors.white10),
+                // velo para que el texto respire
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black87],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        set.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            height: 1.15),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${set.code.toUpperCase()}'
+                        '${set.year.isEmpty ? '' : ' · ${set.year}'}'
+                        ' · ${set.total} cartas',
+                        style: const TextStyle(
+                            fontSize: 10.5, color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
