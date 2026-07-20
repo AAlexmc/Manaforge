@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/collection_value.dart';
 import '../services/value_history.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
@@ -64,55 +65,16 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   Future<void> _load() async {
     try {
-      final cards = widget.collection.cards;
-      final byPrinting = widget.collection.hasPrintingData;
-      double total = 0;
-      final valued = <ValuedCard>[];
-
-      if (byPrinting) {
-        // preciso: precio de TU edición exacta
-        final printingQty = widget.collection.printingQty;
-        final prices =
-            await widget.db.pricesForPrintings(printingQty.keys);
-        // el valor por carta (para el top) se agrega a nivel oracle con
-        // el precio de la edición más cara que tengas de esa carta
-        final oraclePrices = await widget.db
-            .pricesForOracles(cards.map((c) => c.oracleId));
-        printingQty.forEach((key, qty) {
-          total += (prices[key] ?? 0) * qty;
-        });
-        for (final c in cards) {
-          final unit = oraclePrices[c.oracleId] ?? 0;
-          valued.add(ValuedCard(
-            oracleId: c.oracleId,
-            name: c.name,
-            printedName: c.printedName,
-            imageSmall: c.imageSmall,
-            imageNormal: c.imageNormal,
-            colors: c.colors,
-            qty: c.qty,
-            unitPrice: unit,
-          ));
-        }
-      } else {
-        final oraclePrices = await widget.db
-            .pricesForOracles(cards.map((c) => c.oracleId));
-        for (final c in cards) {
-          final unit = oraclePrices[c.oracleId] ?? 0;
-          total += unit * c.qty;
-          valued.add(ValuedCard(
-            oracleId: c.oracleId,
-            name: c.name,
-            printedName: c.printedName,
-            imageSmall: c.imageSmall,
-            imageNormal: c.imageNormal,
-            colors: c.colors,
-            qty: c.qty,
-            unitPrice: unit,
-          ));
-        }
-      }
-      valued.sort((a, b) => b.total.compareTo(a.total));
+      // fórmula compartida con Home (services/collection_value.dart)
+      final valuation = await computeCollectionValue(
+        cards: widget.collection.cards,
+        byPrinting: widget.collection.hasPrintingData,
+        printingQty: widget.collection.printingQty,
+        oraclePrices: widget.db.pricesForOracles,
+        printingPrices: widget.db.pricesForPrintings,
+      );
+      final total = valuation.total;
+      final valued = valuation.valued;
 
       final points =
           await _history.record(total, widget.collection.totalCopies);
@@ -126,7 +88,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
         _points = points;
         _bulkDate = bulkDate;
         _banners = banners;
-        _approximate = !byPrinting;
+        _approximate = valuation.approximate;
         _error = null;
       });
     } catch (e) {
