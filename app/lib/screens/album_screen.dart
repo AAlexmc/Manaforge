@@ -4,6 +4,7 @@ import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import 'album_filters.dart';
 import 'card_detail_screen.dart';
 
 /// Álbum por expansiones, estilo TCG Pocket: cada set es una página con
@@ -24,8 +25,15 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Map<String, int> _owned = const {};
   bool _onlyMine = true;
   String _query = '';
-  String _sort = 'progreso'; // progreso · fecha · nombre
+  String _sort = 'progreso'; // progreso · fecha · antiguas · nombre
+  String? _letter; // inicial A-Z o '#'; null = todas
+  String? _year; // año de lanzamiento; null = todos
   String? _error;
+
+  static const _letters = [
+    '#', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+  ];
 
   @override
   void initState() {
@@ -93,33 +101,15 @@ class _AlbumScreenState extends State<AlbumScreen> {
   @override
   Widget build(BuildContext context) {
     final sets = _sets;
-    List<SetInfo> visible = const [];
-    if (sets != null) {
-      visible = sets.where((s) {
-        if (_onlyMine && (_owned[s.code] ?? 0) == 0) return false;
-        if (_query.isNotEmpty &&
-            !s.name.toLowerCase().contains(_query.toLowerCase()) &&
-            !s.code.toLowerCase().contains(_query.toLowerCase())) {
-          return false;
-        }
-        return true;
-      }).toList();
-      switch (_sort) {
-        case 'fecha':
-          visible.sort((a, b) =>
-              (b.releasedAt ?? '').compareTo(a.releasedAt ?? ''));
-        case 'nombre':
-          visible.sort((a, b) => a.name.compareTo(b.name));
-        default: // progreso: primero los que más completos llevas
-          visible.sort((a, b) {
-            final pa =
-                (_owned[a.code] ?? 0) / (a.total == 0 ? 1 : a.total);
-            final pb =
-                (_owned[b.code] ?? 0) / (b.total == 0 ? 1 : b.total);
-            return pb.compareTo(pa);
-          });
-      }
-    }
+    final visible = sets == null
+        ? const <SetInfo>[]
+        : filterAlbumSets(sets,
+            query: _query,
+            letter: _letter,
+            year: _year,
+            onlyMine: _onlyMine,
+            owned: _owned,
+            sort: _sort);
     return Scaffold(
       appBar: AppBar(title: const Text('Álbum')),
       body: sets == null
@@ -207,11 +197,72 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                 value: 'fecha',
                                 child: Text('Más nuevas')),
                             DropdownMenuItem(
+                                value: 'antiguas',
+                                child: Text('Más antiguas')),
+                            DropdownMenuItem(
                                 value: 'nombre',
                                 child: Text('Por nombre')),
                           ],
                           onChanged: (v) => setState(
                               () => _sort = v ?? 'progreso'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // segunda fila: filtro por año de salida y por letra inicial
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+                  child: Row(
+                    children: [
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton<String?>(
+                          value: _year,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontSize: 12.5),
+                          borderRadius: BorderRadius.circular(10),
+                          items: [
+                            const DropdownMenuItem<String?>(
+                                value: null, child: Text('Año: todos')),
+                            for (final y in availableYears(sets))
+                              DropdownMenuItem<String?>(
+                                  value: y, child: Text(y)),
+                          ],
+                          onChanged: (v) => setState(() => _year = v),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SizedBox(
+                          height: 34,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 6),
+                                child: ChoiceChip(
+                                  label: const Text('Todas'),
+                                  selected: _letter == null,
+                                  visualDensity: VisualDensity.compact,
+                                  onSelected: (_) =>
+                                      setState(() => _letter = null),
+                                ),
+                              ),
+                              for (final l in _letters)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 6),
+                                  child: ChoiceChip(
+                                    label: Text(l),
+                                    selected: _letter == l,
+                                    visualDensity: VisualDensity.compact,
+                                    onSelected: (_) => setState(() =>
+                                        _letter = _letter == l ? null : l),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ],

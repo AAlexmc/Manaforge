@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/collection_value.dart';
 import '../services/value_history.dart';
+import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'card_detail_screen.dart';
 import 'set_market_screen.dart';
+import 'wishlist_screen.dart';
 
 /// Mercado: el valor de tu colección con evolución local, tus cartas más
 /// valiosas y un buscador de precios de cualquier carta. Precios Cardmarket
@@ -14,9 +17,13 @@ import 'set_market_screen.dart';
 class MercadoScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
+  final WishlistStore wishlist;
 
   const MercadoScreen(
-      {super.key, required this.db, required this.collection});
+      {super.key,
+      required this.db,
+      required this.collection,
+      required this.wishlist});
 
   @override
   State<MercadoScreen> createState() => _MercadoScreenState();
@@ -40,16 +47,46 @@ class _MercadoScreenState extends State<MercadoScreen> {
   @override
   void initState() {
     super.initState();
+    widget.wishlist.load().then((_) => _checkWishlist());
     _load();
     widget.collection.addListener(_load);
+    widget.wishlist.addListener(_onWishlistChanged);
   }
 
   @override
   void dispose() {
     widget.collection.removeListener(_load);
+    widget.wishlist.removeListener(_onWishlistChanged);
     _searchCtrl.dispose();
     _bannerCtrl.dispose();
     super.dispose();
+  }
+
+  void _onWishlistChanged() {
+    if (mounted) setState(() {});
+  }
+
+  /// Cruza los precios actuales con la wishlist y avisa de lo que ACABA de
+  /// caer a su precio objetivo.
+  Future<void> _checkWishlist() async {
+    final items = widget.wishlist.items;
+    if (items.isEmpty) return;
+    try {
+      final prices = await widget.db
+          .pricesForOracles(items.map((i) => i.oracleId));
+      final hits = widget.wishlist.updatePrices(prices);
+      if (hits.isEmpty || !mounted) return;
+      final msg = hits.length == 1
+          ? '🔔 ¡${hits.first.printedName ?? hits.first.name} está a '
+              '${_euro(hits.first.lastPrice!)} '
+              '(tu objetivo: ${_euro(hits.first.targetPrice)})!'
+          : '🔔 ¡${hits.length} cartas de tu wishlist han caído a su '
+              'precio objetivo!';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(msg),
+        duration: const Duration(seconds: 5),
+      ));
+    } catch (_) {/* DB no disponible: se reintenta en el próximo load */}
   }
 
   void _scrollBanners(double delta) {
@@ -64,55 +101,16 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   Future<void> _load() async {
     try {
-      final cards = widget.collection.cards;
-      final byPrinting = widget.collection.hasPrintingData;
-      double total = 0;
-      final valued = <ValuedCard>[];
-
-      if (byPrinting) {
-        // preciso: precio de TU edición exacta
-        final printingQty = widget.collection.printingQty;
-        final prices =
-            await widget.db.pricesForPrintings(printingQty.keys);
-        // el valor por carta (para el top) se agrega a nivel oracle con
-        // el precio de la edición más cara que tengas de esa carta
-        final oraclePrices = await widget.db
-            .pricesForOracles(cards.map((c) => c.oracleId));
-        printingQty.forEach((key, qty) {
-          total += (prices[key] ?? 0) * qty;
-        });
-        for (final c in cards) {
-          final unit = oraclePrices[c.oracleId] ?? 0;
-          valued.add(ValuedCard(
-            oracleId: c.oracleId,
-            name: c.name,
-            printedName: c.printedName,
-            imageSmall: c.imageSmall,
-            imageNormal: c.imageNormal,
-            colors: c.colors,
-            qty: c.qty,
-            unitPrice: unit,
-          ));
-        }
-      } else {
-        final oraclePrices = await widget.db
-            .pricesForOracles(cards.map((c) => c.oracleId));
-        for (final c in cards) {
-          final unit = oraclePrices[c.oracleId] ?? 0;
-          total += unit * c.qty;
-          valued.add(ValuedCard(
-            oracleId: c.oracleId,
-            name: c.name,
-            printedName: c.printedName,
-            imageSmall: c.imageSmall,
-            imageNormal: c.imageNormal,
-            colors: c.colors,
-            qty: c.qty,
-            unitPrice: unit,
-          ));
-        }
-      }
-      valued.sort((a, b) => b.total.compareTo(a.total));
+      // fórmula compartida con Home (services/collection_value.dart)
+      final valuation = await computeCollectionValue(
+        cards: widget.collection.cards,
+        byPrinting: widget.collection.hasPrintingData,
+        printingQty: widget.collection.printingQty,
+        oraclePrices: widget.db.pricesForOracles,
+        printingPrices: widget.db.pricesForPrintings,
+      );
+      final total = valuation.total;
+      final valued = valuation.valued;
 
       final points =
           await _history.record(total, widget.collection.totalCopies);
@@ -126,12 +124,93 @@ class _MercadoScreenState extends State<MercadoScreen> {
         _points = points;
         _bulkDate = bulkDate;
         _banners = banners;
-        _approximate = !byPrinting;
+        _approximate = valuation.approximate;
         _error = null;
       });
+      await _checkWishlist();
     } catch (e) {
       if (mounted) setState(() => _error = '$e');
     }
+  }
+
+  /// Añadir/quitar una carta de la wishlist desde los resultados de búsqueda.
+  Future<void> _toggleWish(CardHit hit) async {
+    if (widget.wishlist.contains(hit.oracleId)) {
+      widget.wishlist.remove(hit.oracleId);
+      return;
+    }
+    double? current;
+    try {
+      current =
+          (await widget.db.pricesForOracles([hit.oracleId]))[hit.oracleId];
+    } catch (_) {/* sin DB de precios: se pide el objetivo a ciegas */}
+    if (!mounted) return;
+    final target =
+        await _askTargetPrice(hit.printedName ?? hit.name, current);
+    if (target == null) return;
+    widget.wishlist.add(WishItem(
+      oracleId: hit.oracleId,
+      name: hit.name,
+      printedName: hit.printedName,
+      imageSmall: hit.imageSmall,
+      colors: hit.colors,
+      targetPrice: target,
+      lastPrice: current,
+      // si YA está a precio al añadirla, no hace falta re-avisar luego
+      alerted: current != null && current <= target,
+    ));
+  }
+
+  Future<void> _editWish(WishItem item) async {
+    final target = await _askTargetPrice(
+        item.printedName ?? item.name, item.lastPrice);
+    if (target != null) widget.wishlist.setTarget(item.oracleId, target);
+  }
+
+  Future<double?> _askTargetPrice(String name, double? current) {
+    final ctrl = TextEditingController(
+        text: current?.toStringAsFixed(2) ?? '');
+    return showDialog<double>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Avísame cuando baje'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(name,
+                style: const TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            TextField(
+              controller: ctrl,
+              autofocus: true,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                labelText: 'Precio objetivo',
+                suffixText: '€',
+                helperText:
+                    current != null ? 'Ahora: ${_euro(current)}' : null,
+                border: const OutlineInputBorder(),
+              ),
+              onSubmitted: (v) => Navigator.of(context)
+                  .pop(double.tryParse(v.replaceAll(',', '.'))),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context)
+                .pop(double.tryParse(ctrl.text.replaceAll(',', '.'))),
+            child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _search(String query) async {
@@ -177,6 +256,36 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   String _euro(double v) => '${v.toStringAsFixed(2)} €';
 
+  /// Botón de acceso a la wishlist, con contador de cartas y punto verde si
+  /// alguna está ya a precio de compra.
+  Widget _wishlistButton() {
+    return ListenableBuilder(
+      listenable: widget.wishlist,
+      builder: (context, _) {
+        final n = widget.wishlist.items.length;
+        final atPrice = widget.wishlist.items.any((i) => i.inRange);
+        return Badge(
+          isLabelVisible: n > 0,
+          label: Text('$n'),
+          backgroundColor: atPrice ? MFColors.success : MFColors.manaRed,
+          child: FilledButton.tonalIcon(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => WishlistScreen(
+                  db: widget.db,
+                  wishlist: widget.wishlist,
+                  onEditTarget: _editWish,
+                ),
+              ),
+            ),
+            icon: const Icon(Icons.bookmark, size: 18),
+            label: const Text('Wishlist'),
+          ),
+        );
+      },
+    );
+  }
+
   (double, double)? _delta() {
     if (_points.length < 2 || _totalValue == null) return null;
     final prev = _points[_points.length - 2].value;
@@ -199,6 +308,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
                 const SizedBox(width: 8),
                 Text('Mercado',
                     style: Theme.of(context).textTheme.headlineMedium),
+                const Spacer(),
+                _wishlistButton(),
               ],
             ),
             const SizedBox(height: 12),
@@ -359,9 +470,82 @@ class _MercadoScreenState extends State<MercadoScreen> {
                   title: Text(hit.printedName ?? hit.name),
                   subtitle: Text(hit.typeLine,
                       maxLines: 1, overflow: TextOverflow.ellipsis),
-                  trailing: const Icon(Icons.chevron_right, size: 18),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        tooltip: widget.wishlist.contains(hit.oracleId)
+                            ? 'Quitar de la wishlist'
+                            : 'A la wishlist: avísame cuando baje',
+                        icon: Icon(
+                          widget.wishlist.contains(hit.oracleId)
+                              ? Icons.bookmark
+                              : Icons.bookmark_add_outlined,
+                          size: 20,
+                          color: widget.wishlist.contains(hit.oracleId)
+                              ? MFColors.manaRed
+                              : null,
+                        ),
+                        onPressed: () => _toggleWish(hit),
+                      ),
+                      const Icon(Icons.chevron_right, size: 18),
+                    ],
+                  ),
                 ),
             ] else ...[
+              if (widget.wishlist.items.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text('TU WISHLIST',
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(letterSpacing: 1)),
+                const SizedBox(height: 6),
+                for (final item in widget.wishlist.items)
+                  ListTile(
+                    dense: true,
+                    onTap: () => _openDetail(oracleId: item.oracleId),
+                    leading: CardThumb(
+                        url: item.imageSmall,
+                        colors: item.colors,
+                        name: item.name),
+                    title: Text(item.printedName ?? item.name),
+                    subtitle: Text(
+                        'objetivo ≤ ${_euro(item.targetPrice)}'
+                        '${item.lastPrice != null ? ' · ahora ${_euro(item.lastPrice!)}' : ''}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (item.inRange)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color:
+                                  MFColors.success.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Text('¡a precio!',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                    color: MFColors.success)),
+                          ),
+                        IconButton(
+                          tooltip: 'Cambiar precio objetivo',
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          onPressed: () => _editWish(item),
+                        ),
+                        IconButton(
+                          tooltip: 'Quitar de la wishlist',
+                          icon: const Icon(Icons.delete_outline, size: 18),
+                          onPressed: () =>
+                              widget.wishlist.remove(item.oracleId),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
               const SizedBox(height: 16),
               Text('TUS CARTAS MÁS VALIOSAS',
                   style: Theme.of(context)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/collection_value.dart';
 import '../services/deck_store.dart';
 import '../services/meta_decks.dart';
 import '../services/recents_store.dart';
@@ -66,33 +67,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _load() async {
     try {
-      final cards = widget.collection.cards;
-      final prices =
-          await widget.db.pricesForOracles(cards.map((c) => c.oracleId));
-      double total = 0;
-      final valued = <ValuedCard>[];
-      for (final c in cards) {
-        final unit = prices[c.oracleId] ?? 0;
-        total += unit * c.qty;
-        valued.add(ValuedCard(
-          oracleId: c.oracleId,
-          name: c.name,
-          printedName: c.printedName,
-          imageSmall: c.imageSmall,
-          imageNormal: c.imageNormal,
-          colors: c.colors,
-          qty: c.qty,
-          unitPrice: unit,
-        ));
-      }
-      valued.sort((a, b) => b.total.compareTo(a.total));
+      // misma fórmula que Mercado: que los dos totales SIEMPRE cuadren
+      final valuation = await computeCollectionValue(
+        cards: widget.collection.cards,
+        byPrinting: widget.collection.hasPrintingData,
+        printingQty: widget.collection.printingQty,
+        oraclePrices: widget.db.pricesForOracles,
+        printingPrices: widget.db.pricesForPrintings,
+      );
       final sets = _sets.isEmpty
           ? await widget.db.marketSets(limit: 15)
           : _sets;
       if (!mounted) return;
       setState(() {
-        _value = total;
-        _jewels = valued.take(12).toList();
+        _value = valuation.total;
+        _jewels = valuation.valued.take(12).toList();
         _sets = sets;
       });
     } catch (_) {/* sin DB aún: héroe en modo bienvenida */}

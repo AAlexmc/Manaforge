@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -6,27 +7,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../scanner/burst_controller.dart';
+import '../scanner/presence_gate.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/linux_camera.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/session_tray.dart';
 import '../widgets/set_lock.dart';
+import '../widgets/version_picker.dart';
 import 'scan_screen.dart';
 
 /// Escáner en vivo, fase C: la webcam mira la mesa y ManaForge reconoce las
-/// cartas que le pases por delante — modo ráfaga, sin tocar nada. Cada
-/// reconocimiento suena, parpadea y entra en la cola de confirmación; al
-/// final revisas la cola y añades todo de un golpe.
+/// cartas que le pases por delante — sin tocar nada. Cada reconocimiento
+/// suena, parpadea y entra en la cola de confirmación; al final revisas la
+/// cola y añades todo de un golpe.
 ///
-/// En Windows el plugin de cámara no da streaming de frames (issue #97542
-/// de Flutter), así que capturamos fotos periódicamente: cada captura pasa
-/// por el MISMO pipeline de la fase B (contornos → perspectiva → recorte
-/// del arte → dHash → Hamming contra la base de huellas).
+/// El muestreo continuo solo alimenta una PUERTA DE PRESENCIA barata
+/// (miniaturas grises); el pipeline pesado de la fase B (contornos →
+/// perspectiva → recorte del arte → dHash → Hamming) corre únicamente
+/// cuando una carta se asienta delante de la cámara, con el frame ya
+/// quieto (sin blur de movimiento). Quitar la carta rearma la puerta:
+/// dos copias iguales seguidas cuentan como dos.
 class LiveScanScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
@@ -44,12 +49,24 @@ class LiveScanScreen extends StatefulWidget {
 
 class _LiveScanScreenState extends State<LiveScanScreen> {
   CameraController? _camera;
+  LinuxCamera? _linuxCam; // en Linux el plugin `camera` no existe: GStreamer
   String? _cameraError;
   bool _starting = true;
 
   Timer? _timer;
   bool _busy = false; // hay una captura en proceso
-  final _burst = BurstController();
+
+  /// El pipeline pesado NO corre cada tick: la puerta de presencia mira
+  /// miniaturas baratas y solo dispara el reconocimiento cuando pones una
+  /// carta y se asienta (o la cambias). Quitarla rearma la puerta, así
+  /// dos copias iguales seguidas cuentan como dos. Se ESTRENA en cada
+  /// arranque de cámara: la línea base de una sesión anterior (otra
+  /// exposición) dejaría la puerta creyendo que siempre hay carta.
+  PresenceGate _gate = PresenceGate();
+
+  /// Última línea añadida a la bandeja: para el botón "+1 igual" (por si
+  /// pasas otra copia y la puerta no llega a verte retirar la primera).
+  TrayLine? _lastAdded;
 
   final ScanTray _tray = ScanTray();
   final Map<String, CardHit?> _hitCache = {}; // scryfallId -> carta
@@ -68,8 +85,12 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   /// Set bloqueado (escanear una caja entera); null = buscar en todas.
   String? _lockSet;
 
-  /// Cada cuánto miramos la mesa (captura + reconocimiento).
-  static const _period = Duration(milliseconds: 900);
+  /// Cada cuánto muestreamos la mesa (miniatura barata para la puerta de
+  /// presencia; el reconocimiento solo corre cuando la puerta dispara).
+  /// En Windows takePicture() es caro (foto real con obturador): más lento.
+  Duration get _period => Platform.isLinux
+      ? const Duration(milliseconds: 300)
+      : const Duration(milliseconds: 900);
 
   @override
   void initState() {
@@ -78,10 +99,41 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   }
 
   Future<void> _startCamera() async {
+    // Reintentar es reentrante: apagar lo que hubiera antes de arrancar otra
+    // vez, que no queden dos timers/cámaras vivos.
+    _timer?.cancel();
+    _timer = null;
+    _camera?.dispose();
+    _camera = null;
+    _stopLinuxCam();
+    _gate = PresenceGate();
     setState(() {
       _starting = true;
       _cameraError = null;
     });
+    if (Platform.isLinux) {
+      try {
+        final cam = await LinuxCamera.autoStart();
+        if (!mounted) {
+          cam.dispose();
+          return;
+        }
+        cam.died.addListener(_onLinuxCamDied);
+        setState(() {
+          _linuxCam = cam;
+          _starting = false;
+        });
+        _timer = Timer.periodic(_period, (_) => _tick());
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _starting = false;
+            _cameraError = e.toString();
+          });
+        }
+      }
+      return;
+    }
     try {
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
@@ -112,33 +164,94 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     }
   }
 
+  void _stopLinuxCam() {
+    _linuxCam?.died.removeListener(_onLinuxCamDied);
+    _linuxCam?.dispose();
+    _linuxCam = null;
+  }
+
+  /// El pipeline gst murió a media sesión (cámara desenchufada): parar el
+  /// tick y enseñar el error con su botón de Reintentar.
+  void _onLinuxCamDied() {
+    if (!mounted) return;
+    _timer?.cancel();
+    _timer = null;
+    _stopLinuxCam();
+    setState(() {
+      _cameraError = 'La cámara se ha desconectado a media sesión. '
+          'Revisa el cable y dale a Reintentar.';
+    });
+  }
+
   Future<void> _tick() async {
     final camera = _camera;
-    if (camera == null || _busy || !camera.value.isInitialized) return;
+    final linux = _linuxCam;
+    if (_busy) return;
+    if (linux == null &&
+        (camera == null || !camera.value.isInitialized)) {
+      return;
+    }
     _busy = true;
     try {
-      final shot = await camera.takePicture();
-      final bytes = await shot.readAsBytes();
-      final outcome = await compute(processScanPhoto, bytes);
-      if (outcome == null || !mounted) return;
-      final index = await widget.scanner.loadIndex();
-      final matches =
-          index.topMatches(outcome.signatures, lockSet: _lockSet);
-      final best = matches.isEmpty ? null : matches.first;
-      final recognition = _burst.feed(matches);
-      if (!mounted) return;
-      setState(() {
-        _lastSeenName = best != null && best.distance <= 30
-            ? best.entry.name
-            : null;
-      });
-      if (recognition != null) {
-        await _onRecognition(recognition);
+      final bytes = await _captureBytes();
+      if (bytes == null || !mounted) return; // aún sin frame
+      final thumb = await compute(presenceThumbFromJpeg, bytes);
+      if (thumb == null || !mounted) return;
+      switch (_gate.feed(thumb)) {
+        case PresenceEvent.cardPlaced:
+        case PresenceEvent.cardChanged:
+          await _recognizeSettled(bytes);
+        case PresenceEvent.cardRemoved:
+          setState(() => _lastSeenName = null);
+        case PresenceEvent.none:
+          break;
       }
     } catch (_) {
       // captura fallida (cámara ocupada, foto corrupta): al siguiente tick
     } finally {
       _busy = false;
+    }
+  }
+
+  Future<Uint8List?> _captureBytes() async {
+    final linux = _linuxCam;
+    if (linux != null) return linux.latestJpeg;
+    final shot = await _camera!.takePicture();
+    return shot.readAsBytes();
+  }
+
+  /// Una carta acaba de asentarse (o cambiar): hasta 3 intentos de
+  /// reconocimiento — el primero con el frame que disparó la puerta, los
+  /// siguientes con frames frescos por si el primero salió justo movido.
+  Future<void> _recognizeSettled(Uint8List firstBytes) async {
+    final index = await widget.scanner.loadIndex();
+    Recognition? fallback; // mejor resultado ambiguo visto
+    var bytes = firstBytes;
+    for (var attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) {
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        if (!mounted) return;
+        final fresh = await _captureBytes();
+        if (fresh == null) break;
+        bytes = fresh;
+      }
+      final outcome = await compute(processScanPhoto, bytes);
+      if (!mounted) return;
+      if (outcome == null) continue;
+      final matches =
+          index.topMatches(outcome.signatures, lockSet: _lockSet);
+      final decision = decideScan(matches);
+      setState(() => _lastSeenName = decision.best?.entry.name);
+      if (decision.confidence == ScanConfidence.confident) {
+        await _onRecognition(Recognition(matches, decision.confidence));
+        return;
+      }
+      if (decision.confidence == ScanConfidence.ambiguous) {
+        fallback = Recognition(matches, decision.confidence);
+      }
+    }
+    if (fallback != null && mounted) {
+      await _onRecognition(fallback);
     }
   }
 
@@ -156,7 +269,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
 
   void _addToTray(Recognition rec) {
     setState(() {
-      _tray.add(rec);
+      _lastAdded = _tray.add(rec);
       _flash = true;
     });
     _feedback(soft: rec.confidence == ScanConfidence.ambiguous);
@@ -232,6 +345,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     setState(() {
       _sessionCount += added;
       _tray.clear();
+      _lastAdded = null;
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('✓ $added carta${added == 1 ? '' : 's'} a la colección'),
@@ -243,6 +357,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   void dispose() {
     _timer?.cancel();
     _camera?.dispose();
+    _stopLinuxCam();
     super.dispose();
   }
 
@@ -317,7 +432,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       );
     }
     final camera = _camera;
-    if (camera == null) {
+    final linux = _linuxCam;
+    if (camera == null && linux == null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -370,7 +486,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Center(child: CameraPreview(camera)),
+              Center(
+                child: linux != null
+                    ? _LinuxPreview(camera: linux)
+                    : CameraPreview(camera!),
+              ),
               // guía de encuadre: coloca la carta dentro del marco (con un
               // poco de margen alrededor el detector la recorta mejor)
               IgnorePointer(
@@ -397,6 +517,23 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                 duration: const Duration(milliseconds: 120),
                 child: const ColoredBox(color: Colors.white),
               ),
+              // "+1 igual": otra copia de la última carta, por si pasas dos
+              // iguales tan rápido que la puerta no ve el hueco entre ellas
+              if (_lastAdded != null && _tray.lines.contains(_lastAdded))
+                Positioned(
+                  right: 12,
+                  bottom: 12,
+                  child: ActionChip(
+                    avatar: const Icon(Icons.control_point_duplicate,
+                        size: 18),
+                    label: Text(
+                        '+1 igual · ${_hitCache[_lastAdded!.chosen.entry.scryfallId]?.printedName ?? _lastAdded!.chosen.entry.name} (×${_lastAdded!.qty})'),
+                    onPressed: () {
+                      setState(() => _lastAdded!.qty++);
+                      _feedback(soft: true);
+                    },
+                  ),
+                ),
               // pie de estado: qué está viendo ahora mismo
               Positioned(
                 left: 12,
@@ -566,41 +703,29 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   /// Selector de versión entre los candidatos de una línea. Devuelve el
   /// índice elegido, o null si se cierra sin elegir.
   Future<int?> _pickVersion(TrayLine line) {
-    return showModalBottomSheet<int>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(12),
-              child: Text('¿Cuál es?'),
-            ),
-            for (var c = 0; c < line.candidates.length; c++)
-              ListTile(
-                onTap: () => Navigator.of(context).pop(c),
-                leading: CardThumb(
-                    url: _hitCache[line.candidates[c].entry.scryfallId]
-                        ?.imageSmall,
-                    colors: _hitCache[line.candidates[c].entry.scryfallId]
-                            ?.colors ??
-                        '',
-                    name: line.candidates[c].entry.name),
-                title: Text(
-                    _hitCache[line.candidates[c].entry.scryfallId]
-                            ?.printedName ??
-                        line.candidates[c].entry.name),
-                subtitle: Text(
-                    '${line.candidates[c].entry.setCode.toUpperCase()} '
-                    '#${line.candidates[c].entry.collectorNumber}'),
-                trailing: c == line.selected
-                    ? const Icon(Icons.check_circle,
-                        color: MFColors.success)
-                    : null,
-              ),
-          ],
-        ),
-      ),
+    return showVersionPicker(context,
+        choices: versionChoicesFrom(line, _hitCache),
+        selected: line.selected);
+  }
+}
+
+/// Preview de la cámara Linux: repinta el último JPEG del pipeline GStreamer.
+class _LinuxPreview extends StatelessWidget {
+  final LinuxCamera camera;
+
+  const _LinuxPreview({required this.camera});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<Uint8List?>(
+      valueListenable: camera.frame,
+      builder: (context, frame, _) => frame == null
+          ? const Center(child: CircularProgressIndicator())
+          : Image.memory(frame,
+              gaplessPlayback: true, // sin parpadeo entre frames
+              fit: BoxFit.contain,
+              width: double.infinity,
+              height: double.infinity),
     );
   }
 }

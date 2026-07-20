@@ -105,6 +105,276 @@ DetectedCard detectCard(RgbImage photo) {
     fallback = false;
   }
 
+  return _rectify(photo, corners, fallback);
+}
+
+/// Detecta VARIAS cartas en una foto (página de álbum, cartas sobre la
+/// mesa): candidatos puntuados como siempre, se suprimen los CONTENEDORES
+/// (un quad con ≥2 candidatos más pequeños dentro es la página, no una
+/// carta) y se eligen sin solapes por puntuación. Vacía si nada creíble —
+/// aquí NO hay fallback de imagen entera (eso es cosa de [detectCard]).
+List<DetectedCard> detectCards(RgbImage photo, {int maxCards = 12}) {
+  final maxDim = math.max(photo.width, photo.height);
+  final scale = maxDim > 640 ? maxDim / 640 : 1.0;
+  final sw = (photo.width / scale).round().clamp(2, photo.width).toInt();
+  final sh = (photo.height / scale).round().clamp(2, photo.height).toInt();
+  final grey = _greyDownscale(photo, sw, sh);
+
+  // cartas de página de álbum son pequeñas: umbral de área más permisivo
+  final scored = _scoredQuads(grey, sw, sh, minAreaFrac: 0.025);
+  if (scored.isEmpty) return const [];
+
+  final kept = <(double, List<Pt>)>[];
+  for (final c in scored) {
+    final area = _quadArea(c.$2);
+    final box = _bbox(c.$2);
+    var contained = 0;
+    for (final other in scored) {
+      if (identical(other, c)) continue;
+      if (_quadArea(other.$2) >= area * 0.5) continue;
+      if (!_bboxHasPoint(box, _quadCenter(other.$2))) continue;
+      // la ventana del ARTE de una carta también es un quad interior con
+      // proporción de carta: no convierte a su carta en "contenedora"
+      if (_looksLikeArtWindow(_bbox(other.$2), box)) continue;
+      contained++;
+    }
+    if (contained == 0) kept.add(c);
+  }
+  kept.sort((a, b) => b.$1.compareTo(a.$1));
+
+  final picked = <List<Pt>>[];
+  for (final (_, q) in kept) {
+    if (picked.length >= maxCards) break;
+    if (picked.any((p) => _bboxIou(_bbox(p), _bbox(q)) > 0.2)) continue;
+    picked.add(q);
+  }
+
+  final fx = photo.width / sw;
+  final fy = photo.height / sh;
+  return [
+    for (final q in picked)
+      _rectify(photo, [for (final p in q) Pt(p.x * fx, p.y * fy)], false),
+  ];
+}
+
+/// Detección de REJILLA para páginas de carpeta (binder): 9 cartas 3×3 (o
+/// 4×3, etc.) pegadas en fundas. La detección por contornos fusiona cartas
+/// contiguas en un blob y las pierde; aquí en cambio se localizan las
+/// separaciones entre bolsillos por los VALLES de energía de gradiente
+/// (el interior de una carta tiene arte/texto = mucho detalle; el hueco
+/// entre cartas es funda lisa = poco), lo que separa cartas pegadas.
+///
+/// Devuelve las celdas con proporción de carta, rectificadas. Vacío si no
+/// se ve una rejilla creíble (≥2 columnas y ≥2 filas).
+List<DetectedCard> detectCardGrid(RgbImage photo, {int maxCards = 24}) {
+  final g = _gridProfiles(photo);
+  final colLines = _gridLines(g.gxCol);
+  final rowLines = _gridLines(g.gyRow);
+  // hace falta al menos un eje con ≥3 líneas (≥2 celdas) regularmente
+  // espaciadas para hablar de rejilla
+  final colReg = _axisRegularity(colLines);
+  final rowReg = _axisRegularity(rowLines);
+  if (colReg == null && rowReg == null) return const [];
+
+  // eje ANCLA: el de gaps más regulares. Sus líneas SON las fronteras de
+  // celda (las cartas no tienen divisores fuertes en ese eje). Del otro
+  // eje solo fío el principio y el fin; el número de celdas y su tamaño
+  // los deriva la proporción 63:88.
+  const cardRatio = 63 / 88; // ancho/alto
+  final bool colIsAnchor;
+  if (colReg == null) {
+    colIsAnchor = false;
+  } else if (rowReg == null) {
+    colIsAnchor = true;
+  } else {
+    colIsAnchor = colReg.cv <= rowReg.cv;
+  }
+
+  List<double> xs; // fronteras verticales (columnas)
+  List<double> ys; // fronteras horizontales (filas)
+  if (colIsAnchor) {
+    xs = [for (final l in colLines) l.toDouble()];
+    final cellW = colReg!.step;
+    final cellH = cellW / cardRatio;
+    ys = _deriveLines(rowLines, g.sh, cellH);
+  } else {
+    ys = [for (final l in rowLines) l.toDouble()];
+    final cellH = rowReg!.step;
+    final cellW = cellH * cardRatio;
+    xs = _deriveLines(colLines, g.sw, cellW);
+  }
+  if (xs.length < 2 || ys.length < 2) return const [];
+
+  final fx = photo.width / g.sw;
+  final fy = photo.height / g.sh;
+  final out = <DetectedCard>[];
+  for (var r = 0; r + 1 < ys.length; r++) {
+    for (var c = 0; c + 1 < xs.length; c++) {
+      if (out.length >= maxCards) break;
+      // encoger un pelín cada celda hacia dentro: quita el hueco de funda
+      // y el marco compartido, deja el arte más centrado para el hash
+      final mx = (xs[c + 1] - xs[c]) * 0.04;
+      final my = (ys[r + 1] - ys[r]) * 0.04;
+      final cx0 = (xs[c] + mx) * fx;
+      final cx1 = (xs[c + 1] - mx) * fx;
+      final cy0 = (ys[r] + my) * fy;
+      final cy1 = (ys[r + 1] - my) * fy;
+      out.add(_rectify(photo, [
+        Pt(cx0, cy0),
+        Pt(cx1, cy0),
+        Pt(cx1, cy1),
+        Pt(cx0, cy1),
+      ], false));
+    }
+  }
+  return out;
+}
+
+class _AxisReg {
+  final double step; // paso mediano entre líneas (tamaño de celda)
+  final double cv; // coeficiente de variación de los pasos (0 = perfecto)
+  _AxisReg(this.step, this.cv);
+}
+
+/// Regularidad del espaciado de un conjunto de líneas: null si hay menos
+/// de 3 (no forman rejilla) o si los pasos son demasiado irregulares.
+_AxisReg? _axisRegularity(List<int> lines) {
+  if (lines.length < 3) return null;
+  final gaps = [for (var i = 1; i < lines.length; i++) lines[i] - lines[i - 1]];
+  var mean = 0.0;
+  for (final gp in gaps) {
+    mean += gp / gaps.length;
+  }
+  if (mean <= 0) return null;
+  var varSum = 0.0;
+  for (final gp in gaps) {
+    varSum += (gp - mean) * (gp - mean);
+  }
+  final cv = math.sqrt(varSum / gaps.length) / mean;
+  if (cv > 0.25) return null; // gaps muy dispares: no es una rejilla limpia
+  final sorted = [...gaps]..sort();
+  return _AxisReg(sorted[sorted.length ~/ 2].toDouble(), cv);
+}
+
+/// Fronteras del eje DERIVADO: del primer al último borde detectado,
+/// equiespaciadas por el nº de celdas que predice la proporción de carta.
+List<double> _deriveLines(List<int> lines, int extent, double cellSize) {
+  final top = lines.isEmpty ? 0.0 : lines.first.toDouble();
+  final bottom = lines.isEmpty ? extent.toDouble() : lines.last.toDouble();
+  final span = bottom - top;
+  final n = (span / cellSize).round();
+  if (n < 1) return const [];
+  return [for (var k = 0; k <= n; k++) top + span * k / n];
+}
+
+/// Salida de diagnóstico de [debugGridProfiles].
+class GridDebug {
+  final Float64List colE, rowE;
+  final double colMin, colMax, rowMin, rowMax;
+  final List<(double, double)> colBands, rowBands;
+  GridDebug(this.colE, this.rowE, this.colMin, this.colMax, this.rowMin,
+      this.rowMax, this.colBands, this.rowBands);
+}
+
+/// Expone los perfiles y líneas del detector de rejilla (solo para el
+/// harness `tool/grid_debug.dart`).
+GridDebug debugGridProfiles(RgbImage photo) {
+  final g = _gridProfiles(photo);
+  double lo(Float64List p) => p.reduce(math.min);
+  double hi(Float64List p) => p.reduce(math.max);
+  final cl = _gridLines(g.gxCol);
+  final rl = _gridLines(g.gyRow);
+  return GridDebug(
+      g.gxCol,
+      g.gyRow,
+      lo(g.gxCol),
+      hi(g.gxCol),
+      lo(g.gyRow),
+      hi(g.gyRow),
+      [for (final x in cl) (x.toDouble(), x.toDouble())],
+      [for (final y in rl) (y.toDouble(), y.toDouble())]);
+}
+
+class _GridProfiles {
+  final Float64List gxCol, gyRow;
+  final int sw, sh;
+  _GridProfiles(this.gxCol, this.gyRow, this.sw, this.sh);
+}
+
+/// Perfiles DIRECCIONALES: |gx| por columna (marca los bordes verticales
+/// = separadores de columnas) y |gy| por fila (bordes horizontales).
+_GridProfiles _gridProfiles(RgbImage photo) {
+  final maxDim = math.max(photo.width, photo.height);
+  final scale = maxDim > 600 ? maxDim / 600 : 1.0;
+  final sw = (photo.width / scale).round().clamp(2, photo.width).toInt();
+  final sh = (photo.height / scale).round().clamp(2, photo.height).toInt();
+  final grey = _blur3(_greyDownscale(photo, sw, sh), sw, sh);
+  final gxCol = Float64List(sw);
+  final gyRow = Float64List(sh);
+  for (var y = 1; y < sh - 1; y++) {
+    for (var x = 1; x < sw - 1; x++) {
+      final i = y * sw + x;
+      final gx = -grey[i - sw - 1] - 2 * grey[i - 1] - grey[i + sw - 1] +
+          grey[i - sw + 1] + 2 * grey[i + 1] + grey[i + sw + 1];
+      final gy = -grey[i - sw - 1] - 2 * grey[i - sw] - grey[i - sw + 1] +
+          grey[i + sw - 1] + 2 * grey[i + sw] + grey[i + sw + 1];
+      gxCol[x] += gx.abs() / sh;
+      gyRow[y] += gy.abs() / sw;
+    }
+  }
+  _smooth(gxCol, (sw * 0.01).round().clamp(1, sw));
+  _smooth(gyRow, (sh * 0.01).round().clamp(1, sh));
+  return _GridProfiles(gxCol, gyRow, sw, sh);
+}
+
+/// Posiciones de las LÍNEAS de rejilla en un perfil direccional: máximos
+/// locales fuertes (media + 0.6·desv) separados al menos un ~7% del largo
+/// (dos separadores de carta no caen más juntos que eso).
+List<int> _gridLines(Float64List p) {
+  final n = p.length;
+  var mean = 0.0;
+  for (final v in p) {
+    mean += v / n;
+  }
+  var varSum = 0.0;
+  for (final v in p) {
+    varSum += (v - mean) * (v - mean);
+  }
+  final std = math.sqrt(varSum / n);
+  final thr = mean + 0.6 * std;
+  final minGap = (n * 0.07).round();
+  final peaks = <int>[];
+  for (var i = 1; i < n - 1; i++) {
+    if (p[i] < thr) continue;
+    if (p[i] < p[i - 1] || p[i] < p[i + 1]) continue;
+    if (peaks.isNotEmpty && i - peaks.last < minGap) {
+      if (p[i] > p[peaks.last]) peaks[peaks.length - 1] = i;
+      continue;
+    }
+    peaks.add(i);
+  }
+  return peaks;
+}
+
+/// Media móvil en sitio (radio [r]) para alisar un perfil 1-D.
+void _smooth(Float64List p, int r) {
+  if (r < 1) return;
+  final src = Float64List.fromList(p);
+  for (var i = 0; i < p.length; i++) {
+    var sum = 0.0;
+    var n = 0;
+    for (var d = -r; d <= r; d++) {
+      final j = i + d;
+      if (j < 0 || j >= src.length) continue;
+      sum += src[j];
+      n++;
+    }
+    p[i] = sum / n;
+  }
+}
+
+/// Esquinas (en coordenadas de la foto) → carta rectificada + arte.
+DetectedCard _rectify(RgbImage photo, List<Pt> corners, bool fallback) {
   // la carta se rectifica en VERTICAL: el lado corto debe ser el de arriba;
   // si el cuadrilátero está tumbado, rotamos el orden de esquinas
   final topLen = _dist(corners[0], corners[1]) + _dist(corners[3], corners[2]);
@@ -125,6 +395,68 @@ DetectedCard detectCard(RgbImage photo) {
 
   return DetectedCard(
       corners: corners, warped: warped, artCrop: art, usedFallback: fallback);
+}
+
+/// Caja envolvente (minX, minY, maxX, maxY) de un cuadrilátero.
+(double, double, double, double) _bbox(List<Pt> q) {
+  var minX = q.first.x, minY = q.first.y, maxX = q.first.x, maxY = q.first.y;
+  for (final p in q) {
+    minX = math.min(minX, p.x);
+    minY = math.min(minY, p.y);
+    maxX = math.max(maxX, p.x);
+    maxY = math.max(maxY, p.y);
+  }
+  return (minX, minY, maxX, maxY);
+}
+
+Pt _quadCenter(List<Pt> q) {
+  var cx = 0.0, cy = 0.0;
+  for (final p in q) {
+    cx += p.x / q.length;
+    cy += p.y / q.length;
+  }
+  return Pt(cx, cy);
+}
+
+bool _bboxHasPoint((double, double, double, double) b, Pt p) =>
+    p.x >= b.$1 && p.x <= b.$3 && p.y >= b.$2 && p.y <= b.$4;
+
+/// ¿[inner] tiene la pinta de la VENTANA DEL ARTE de la carta [outer]?
+/// (centrada, pegada arriba, ~36% del área, casi todo el ancho — las
+/// proporciones artLeft/artRight/artTop/artBottom con margen). Sirve para
+/// no confundir una carta con una "página contenedora" por culpa de su
+/// propia ilustración.
+bool _looksLikeArtWindow((double, double, double, double) inner,
+    (double, double, double, double) outer) {
+  final ow = outer.$3 - outer.$1;
+  final oh = outer.$4 - outer.$2;
+  if (ow <= 0 || oh <= 0) return false;
+  final iw = inner.$3 - inner.$1;
+  final ih = inner.$4 - inner.$2;
+  final areaRatio = (iw * ih) / (ow * oh);
+  final cxOff =
+      ((inner.$1 + inner.$3) / 2 - (outer.$1 + outer.$3) / 2).abs() / ow;
+  final topOff = (inner.$2 - outer.$2) / oh;
+  return areaRatio > 0.25 &&
+      areaRatio < 0.48 &&
+      cxOff < 0.08 &&
+      topOff > 0.05 &&
+      topOff < 0.22 &&
+      iw / ow > 0.70 &&
+      iw / ow < 0.95;
+}
+
+double _bboxIou(
+    (double, double, double, double) a, (double, double, double, double) b) {
+  final ix = math.max(
+      0.0, math.min(a.$3, b.$3) - math.max(a.$1, b.$1));
+  final iy = math.max(
+      0.0, math.min(a.$4, b.$4) - math.max(a.$2, b.$2));
+  final inter = ix * iy;
+  final areaA = (a.$3 - a.$1) * (a.$4 - a.$2);
+  final areaB = (b.$3 - b.$1) * (b.$4 - b.$2);
+  final union = areaA + areaB - inter;
+  return union <= 0 ? 0 : inter / union;
 }
 
 double _dist(Pt a, Pt b) {
@@ -322,10 +654,11 @@ double _sideCoverage(Pt p0, Pt p1, Int32List gxa, Int32List gya,
 /// Puntuación de "parecido a carta" de un cuadrilátero candidato, o null
 /// si no cuela (área, lados, proporción 63:88, relleno, bordes por lado).
 double? _scoreQuad(List<Pt> q, int compSize, int w, int h, Int32List gxa,
-    Int32List gya, Uint16List mag, double edgeThr) {
+    Int32List gya, Uint16List mag, double edgeThr,
+    {double minAreaFrac = 0.06}) {
   final area = _quadArea(q);
   final imgArea = w * h;
-  if (area < 0.06 * imgArea || area > 0.92 * imgArea) return null;
+  if (area < minAreaFrac * imgArea || area > 0.92 * imgArea) return null;
   final sides = [for (var i = 0; i < 4; i++) _dist(q[i], q[(i + 1) % 4])];
   if (sides.reduce(math.min) < 0.12 * math.min(w, h)) return null;
   final top = sides[0], right = sides[1], bottom = sides[2], left = sides[3];
@@ -354,6 +687,15 @@ double? _scoreQuad(List<Pt> q, int compSize, int w, int h, Int32List gxa,
 /// (Otsu ±, máscaras oscura y clara) y por bordes (Sobel con umbral por
 /// percentil), validados y puntuados; gana el mejor. null si nada creíble.
 List<Pt>? _findQuad(Uint8List grey, int w, int h) {
+  final scored = _scoredQuads(grey, w, h);
+  return scored.isEmpty ? null : scored.first.$2;
+}
+
+/// Todos los cuadriláteros "con pinta de carta", puntuados y ordenados de
+/// mejor a peor (pueden venir casi-duplicados de máscaras distintas: el
+/// llamador deduplica por solape si le importa).
+List<(double, List<Pt>)> _scoredQuads(Uint8List grey, int w, int h,
+    {double minAreaFrac = 0.06}) {
   final blurred = _blur3(grey, w, h);
 
   // Sobel: magnitud + dirección; umbral por percentil 92 (con la media,
@@ -392,8 +734,8 @@ List<Pt>? _findQuad(Uint8List grey, int w, int h) {
     for (final comp in comps) {
       final q = _quadFromComponent(comp, w);
       if (q == null) continue;
-      final s =
-          _scoreQuad(q, comp.length, w, h, gxa, gya, mag, coverageThr);
+      final s = _scoreQuad(q, comp.length, w, h, gxa, gya, mag, coverageThr,
+          minAreaFrac: minAreaFrac);
       if (s != null) candidates.add((s, q));
     }
   }
@@ -442,9 +784,8 @@ List<Pt>? _findQuad(Uint8List grey, int w, int h) {
   }
   consider(_components(dil, w, h));
 
-  if (candidates.isEmpty) return null;
   candidates.sort((a, b) => b.$1.compareTo(a.$1));
-  return candidates.first.$2;
+  return candidates;
 }
 
 double _quadArea(List<Pt> q) {

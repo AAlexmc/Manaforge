@@ -18,6 +18,7 @@ import '../widgets/common.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/set_lock.dart';
 import '../widgets/tray_list.dart';
+import '../widgets/version_picker.dart';
 
 /// Escáner de cartas, fase B: suelta una FOTO de una carta y ManaForge la
 /// reconoce — detección de contornos, rectificación de perspectiva, huella
@@ -61,7 +62,28 @@ ScanOutcome? processScanPhoto(Uint8List bytes) {
   final rgb3 = decoded.convert(numChannels: 3);
   final photo = RgbImage(
       rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
-  final detected = detectCard(photo);
+  return _outcomeFrom(detectCard(photo));
+}
+
+/// Foto → TODAS las cartas que haya. Prioridades:
+///  1. Página de CARPETA (binder): rejilla regular ≥2×2 de cartas pegadas
+///     → detector de rejilla (los contornos fusionan cartas contiguas).
+///  2. Varias cartas sueltas sobre la mesa → detector multi por contornos.
+///  3. Una carta → detector de una, con su fallback de imagen entera.
+List<ScanOutcome> processScanPhotoAll(Uint8List bytes) {
+  final decoded = img.decodeImage(bytes);
+  if (decoded == null) return const [];
+  final rgb3 = decoded.convert(numChannels: 3);
+  final photo = RgbImage(
+      rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
+  final grid = detectCardGrid(photo);
+  if (grid.length >= 4) return [for (final d in grid) _outcomeFrom(d)];
+  final detected = detectCards(photo);
+  if (detected.length > 1) return [for (final d in detected) _outcomeFrom(d)];
+  return [_outcomeFrom(detectCard(photo))];
+}
+
+ScanOutcome _outcomeFrom(DetectedCard detected) {
   final warped = detected.warped;
   final art = detected.artCrop;
   final artImage = img.Image.fromBytes(
@@ -130,10 +152,16 @@ class _ScanScreenState extends State<ScanScreen> {
     });
     try {
       final bytes = await file.readAsBytes();
-      final outcome = await compute(processScanPhoto, bytes);
-      if (outcome == null) {
+      final outcomes = await compute(processScanPhotoAll, bytes);
+      if (outcomes.isEmpty) {
         throw Exception('No pude leer esa imagen (¿es una foto válida?)');
       }
+      if (outcomes.length > 1) {
+        // una foto con VARIAS cartas (página de álbum): a la bandeja
+        await _batchFromOutcomes(outcomes);
+        return;
+      }
+      final outcome = outcomes.first;
       final index = await widget.scanner.loadIndex();
       final matches =
           index.topMatches(outcome.signatures, lockSet: _lockSet);
@@ -200,6 +228,25 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  /// Una foto con varias cartas detectadas: montar la bandeja directamente.
+  Future<void> _batchFromOutcomes(List<ScanOutcome> outcomes) async {
+    final index = await widget.scanner.loadIndex();
+    final perCard = <List<ScanMatch>>[];
+    for (final o in outcomes) {
+      final matches = index.topMatches(o.signatures, lockSet: _lockSet);
+      perCard.add(matches);
+      await _precache(matches);
+    }
+    if (!mounted) return;
+    setState(() {
+      _processing = false;
+      _batch = buildBatchTray(perCard);
+      _batchProcessing = false;
+      _batchDone = 0;
+      _batchTotal = 0;
+    });
+  }
+
   /// Procesa VARIAS fotos: reconoce cada una y las junta en una bandeja para
   /// que revises y añadas las que quieras (agrupa copias iguales en ×N).
   Future<void> _scanBatch(List<XFile> files) async {
@@ -220,8 +267,9 @@ class _ScanScreenState extends State<ScanScreen> {
       for (final f in files) {
         try {
           final bytes = await f.readAsBytes();
-          final outcome = await compute(processScanPhoto, bytes);
-          if (outcome != null) {
+          // cada foto puede traer VARIAS cartas (página de álbum)
+          final outcomes = await compute(processScanPhotoAll, bytes);
+          for (final outcome in outcomes) {
             final matches =
                 index.topMatches(outcome.signatures, lockSet: _lockSet);
             perPhoto.add(matches);
@@ -453,37 +501,9 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Future<int?> _pickVersion(TrayLine line) {
-    return showModalBottomSheet<int>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Padding(padding: EdgeInsets.all(12), child: Text('¿Cuál es?')),
-            for (var c = 0; c < line.candidates.length; c++)
-              ListTile(
-                onTap: () => Navigator.of(context).pop(c),
-                leading: CardThumb(
-                    url: _hitCache[line.candidates[c].entry.scryfallId]
-                        ?.imageSmall,
-                    colors: _hitCache[line.candidates[c].entry.scryfallId]
-                            ?.colors ??
-                        '',
-                    name: line.candidates[c].entry.name),
-                title: Text(_hitCache[line.candidates[c].entry.scryfallId]
-                        ?.printedName ??
-                    line.candidates[c].entry.name),
-                subtitle: Text(
-                    '${line.candidates[c].entry.setCode.toUpperCase()} '
-                    '#${line.candidates[c].entry.collectorNumber}'),
-                trailing: c == line.selected
-                    ? const Icon(Icons.check_circle, color: MFColors.success)
-                    : null,
-              ),
-          ],
-        ),
-      ),
-    );
+    return showVersionPicker(context,
+        choices: versionChoicesFrom(line, _hitCache),
+        selected: line.selected);
   }
 
   Widget _buildDropZone() {
@@ -501,9 +521,10 @@ class _ScanScreenState extends State<ScanScreen> {
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             const Text(
-              'Una o varias a la vez: reconozco cada carta y las junto en una '
-              'lista para que revises y añadas las que quieras. Vale foto del '
-              'móvil o escaneo — encuentro la carta, enderezo y comparo el arte.',
+              'Una o varias a la vez — y si una foto trae VARIAS cartas '
+              '(una página del álbum, la mesa llena), las saco todas y las '
+              'junto en una lista para que revises y añadas las que quieras. '
+              'Vale foto del móvil o escaneo.',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
