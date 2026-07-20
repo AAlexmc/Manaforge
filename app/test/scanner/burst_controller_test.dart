@@ -3,18 +3,23 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/scanner/burst_controller.dart';
+import 'package:manaforge_app/scanner/scan_gate.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
 
-List<ScanMatch> _frame(String oracle, int distance) => [
-      ScanMatch(
-          HashEntry(
-              scryfallId: 'sf-$oracle',
-              oracleId: oracle,
-              name: 'Carta $oracle',
-              setCode: 'tst',
-              collectorNumber: '1'),
-          distance),
-    ];
+ScanMatch _match(String oracle, int distance) => ScanMatch(
+    HashEntry(
+        scryfallId: 'sf-$oracle',
+        oracleId: oracle,
+        name: 'Carta $oracle',
+        setCode: 'tst',
+        collectorNumber: '1'),
+    distance);
+
+List<ScanMatch> _frame(String oracle, int distance) => [_match(oracle, distance)];
+
+/// Un frame con dos candidatos (para probar confianza ambigua).
+List<ScanMatch> _frame2(String o1, int d1, String o2, int d2) =>
+    [_match(o1, d1), _match(o2, d2)];
 
 void main() {
   test('reconoce tras N frames estables con la misma carta', () {
@@ -26,10 +31,28 @@ void main() {
   });
 
   test('frames lejanos (ruido, mesa vacía) no cuentan', () {
-    final c = BurstController(stableFrames: 2, maxDistance: 24);
+    final c = BurstController(stableFrames: 2, noMatchMax: 24);
     expect(c.feed(_frame('bolt', 60)), isNull);
     expect(c.feed(_frame('bolt', 60)), isNull);
     expect(c.feed(const []), isNull);
+  });
+
+  test('un ganador claro se reconoce como confident', () {
+    final c = BurstController(stableFrames: 2);
+    c.feed(_frame('bolt', 5));
+    final rec = c.feed(_frame('bolt', 6));
+    expect(rec, isNotNull);
+    expect(rec!.confidence, ScanConfidence.confident);
+  });
+
+  test('dos candidatos pegados se reconocen pero como ambiguous', () {
+    // bolt@8 y shock@10: margen 2 → hay que revisar, pero NO se descarta
+    final c = BurstController(stableFrames: 2);
+    c.feed(_frame2('bolt', 8, 'shock', 10));
+    final rec = c.feed(_frame2('bolt', 8, 'shock', 10));
+    expect(rec, isNotNull);
+    expect(rec!.confidence, ScanConfidence.ambiguous);
+    expect(rec.best.entry.oracleId, 'bolt');
   });
 
   test('cambiar de carta a medias reinicia la racha', () {

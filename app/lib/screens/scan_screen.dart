@@ -8,6 +8,7 @@ import 'package:image/image.dart' as img;
 
 import '../scanner/card_detector.dart';
 import '../scanner/dhash.dart';
+import '../scanner/scan_gate.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/scanner_database.dart';
@@ -90,6 +91,8 @@ class _ScanScreenState extends State<ScanScreen> {
   List<_Candidate> _candidates = const [];
   int _selected = 0;
   int _sessionCount = 0; // cartas añadidas en esta sesión de escaneo
+  ScanConfidence _confidence = ScanConfidence.none;
+  bool _showAll = false; // en un match claro, desplegar todas las opciones
 
   Future<void> _pickPhoto() async {
     const typeGroup = XTypeGroup(
@@ -106,6 +109,8 @@ class _ScanScreenState extends State<ScanScreen> {
       _outcome = null;
       _candidates = const [];
       _selected = 0;
+      _confidence = ScanConfidence.none;
+      _showAll = false;
     });
     try {
       final bytes = await file.readAsBytes();
@@ -115,6 +120,7 @@ class _ScanScreenState extends State<ScanScreen> {
       }
       final index = await widget.scanner.loadIndex();
       final matches = index.topMatches(outcome.signatures);
+      final decision = decideScan(matches);
       final candidates = <_Candidate>[];
       for (final m in matches) {
         CardHit? hit;
@@ -129,6 +135,7 @@ class _ScanScreenState extends State<ScanScreen> {
         setState(() {
           _outcome = outcome;
           _candidates = candidates;
+          _confidence = decision.confidence;
           _processing = false;
         });
       }
@@ -180,6 +187,8 @@ class _ScanScreenState extends State<ScanScreen> {
       _sessionCount++;
       _outcome = null;
       _candidates = const [];
+      _confidence = ScanConfidence.none;
+      _showAll = false;
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('✓ ${entry.name} '
@@ -284,14 +293,100 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
-  String _confidence(int distance) {
+  String _confidenceLabel(int distance) {
     if (distance <= 14) return 'coincidencia alta';
     if (distance <= 26) return 'coincidencia media';
     return 'coincidencia baja';
   }
 
+  void _reset() => setState(() {
+        _outcome = null;
+        _candidates = const [];
+        _confidence = ScanConfidence.none;
+        _showAll = false;
+      });
+
   Widget _buildResults() {
+    // Un ganador claro y sin desplegar → enseñar UNA carta, como ManaBox.
+    if (_confidence == ScanConfidence.confident && !_showAll) {
+      return _buildHero();
+    }
+    return _buildCandidateList();
+  }
+
+  /// Vista de UNA carta: el escáner está seguro. Confirmar con un toque.
+  Widget _buildHero() {
+    final best = _candidates.first;
+    final entry = best.match.entry;
+    final hit = best.hit;
+    final img = hit?.imageNormal ?? hit?.imageSmall;
+    return ListView(
+      padding: const EdgeInsets.all(24),
+      children: [
+        Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: img != null
+                ? Image.network(img,
+                    height: 340,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => _heroArtFallback())
+                : _heroArtFallback(),
+          ),
+        ),
+        const SizedBox(height: 18),
+        Center(
+          child: Text(hit?.printedName ?? entry.name,
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center),
+        ),
+        const SizedBox(height: 6),
+        Center(
+          child: Text(
+            '${entry.setCode.toUpperCase()} #${entry.collectorNumber}'
+            '  ·  ${_confidenceLabel(best.match.distance)}',
+            style: TextStyle(
+                color: Theme.of(context).textTheme.bodySmall?.color),
+          ),
+        ),
+        const SizedBox(height: 24),
+        FilledButton.icon(
+          onPressed: _confirmSelected,
+          icon: const Icon(Icons.add),
+          label: const Text('Añadir a la colección'),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              onPressed: () => setState(() => _showAll = true),
+              icon: const Icon(Icons.unfold_more, size: 18),
+              label: const Text('No es esta — ver opciones'),
+            ),
+            const SizedBox(width: 8),
+            TextButton.icon(
+              onPressed: _reset,
+              icon: const Icon(Icons.refresh, size: 18),
+              label: const Text('Escanear otra'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _heroArtFallback() {
     final outcome = _outcome;
+    return outcome != null
+        ? Image.memory(outcome.artPng, height: 340, fit: BoxFit.contain)
+        : const SizedBox(height: 340);
+  }
+
+  /// Lista de candidatos: hay duda (o el usuario pidió ver todas).
+  Widget _buildCandidateList() {
+    final outcome = _outcome;
+    final unsure = _confidence == ScanConfidence.none;
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
@@ -308,15 +403,18 @@ class _ScanScreenState extends State<ScanScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('¿Cuál es?',
+                  Text(unsure ? 'No estoy seguro' : '¿Cuál es?',
                       style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 4),
                   Text(
-                    outcome?.usedFallback == true
-                        ? 'No vi los bordes de la carta, así que he usado la '
-                            'imagen entera. Estos son los parecidos:'
-                        : 'Esto es lo que he recortado. Los candidatos, por '
-                            'parecido:',
+                    unsure
+                        ? 'Ninguna encaja del todo. ¿Es alguna de estas? Si '
+                            'no, prueba otra foto con mejor luz.'
+                        : outcome?.usedFallback == true
+                            ? 'No vi los bordes de la carta, así que he usado '
+                                'la imagen entera. Estos son los parecidos:'
+                            : 'Esto es lo que he recortado. Los candidatos, '
+                                'por parecido:',
                     style: const TextStyle(fontSize: 12.5),
                   ),
                 ],
@@ -341,7 +439,7 @@ class _ScanScreenState extends State<ScanScreen> {
               subtitle: Text(
                   '${_candidates[i].match.entry.setCode.toUpperCase()} '
                   '#${_candidates[i].match.entry.collectorNumber} · '
-                  '${_confidence(_candidates[i].match.distance)}'),
+                  '${_confidenceLabel(_candidates[i].match.distance)}'),
               trailing: i == _selected
                   ? const Icon(Icons.check_circle, color: MFColors.success)
                   : const Icon(Icons.radio_button_unchecked),
@@ -355,10 +453,7 @@ class _ScanScreenState extends State<ScanScreen> {
         ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
-          onPressed: () => setState(() {
-            _outcome = null;
-            _candidates = const [];
-          }),
+          onPressed: _reset,
           icon: const Icon(Icons.refresh),
           label: const Text('Descartar y escanear otra'),
         ),

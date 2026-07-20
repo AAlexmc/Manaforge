@@ -15,7 +15,8 @@
 ///    se añada veinte veces, y escanear 4 copias pasándolas una a una.
 library;
 
-import '../services/scanner_database.dart';
+import 'hash_index.dart';
+import 'scan_gate.dart';
 
 /// Una carta reconocida en vivo, lista para la cola de confirmación.
 class Recognition {
@@ -23,14 +24,26 @@ class Recognition {
   /// primero es el elegido por defecto, el resto alternativas en la cola.
   final List<ScanMatch> candidates;
 
-  const Recognition(this.candidates);
+  /// Confianza del gate: [ScanConfidence.confident] = ganador claro (se
+  /// puede auto-añadir); [ScanConfidence.ambiguous] = reconocida pero hay
+  /// que revisar la versión. Nunca es none (esos frames no disparan).
+  final ScanConfidence confidence;
+
+  const Recognition(this.candidates, this.confidence);
 
   ScanMatch get best => candidates.first;
 }
 
 class BurstController {
-  /// Distancia Hamming máxima (0..128) para considerar "visto algo".
-  final int maxDistance;
+  /// Distancia Hamming del top-1 por encima de la cual no se reconoce nada
+  /// (ruido, mesa vacía). Se pasa a [decideScan] como su noMatchMax.
+  final int noMatchMax;
+
+  /// Umbral de auto-aceptación del gate (ver [decideScan]).
+  final int acceptMax;
+
+  /// Margen mínimo sobre el 2º candidato para dar por claro el ganador.
+  final int minMargin;
 
   /// Frames seguidos con la misma carta para darla por reconocida.
   final int stableFrames;
@@ -39,7 +52,9 @@ class BurstController {
   final int gapFrames;
 
   BurstController({
-    this.maxDistance = 24,
+    this.noMatchMax = kNoMatchMax,
+    this.acceptMax = kAcceptMax,
+    this.minMargin = kMinMargin,
     this.stableFrames = 2,
     this.gapFrames = 3,
   })  : assert(stableFrames >= 1),
@@ -53,8 +68,10 @@ class BurstController {
   /// Procesa los candidatos de un frame. Devuelve la carta reconocida en
   /// este frame, o null (nada nuevo).
   Recognition? feed(List<ScanMatch> matches) {
-    final best = matches.isEmpty ? null : matches.first;
-    final seen = best != null && best.distance <= maxDistance;
+    final decision = decideScan(matches,
+        acceptMax: acceptMax, minMargin: minMargin, noMatchMax: noMatchMax);
+    final best = decision.best;
+    final seen = best != null; // best es null solo cuando confidence == none
     final oracle = seen ? best.entry.oracleId : null;
 
     // gestión del bloqueo anti-duplicados
@@ -88,7 +105,7 @@ class BurstController {
     _framesSinceLastSeen = 0;
     _streak = 0;
     _streakOracle = null;
-    return Recognition(matches);
+    return Recognition(matches, decision.confidence);
   }
 
   /// Olvida el estado (al pausar/cerrar la cámara).
