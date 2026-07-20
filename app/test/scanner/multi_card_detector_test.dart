@@ -67,7 +67,68 @@ bool _hasNear(List<DetectedCard> dets, double x, double y, double tol) =>
       return (c.x - x).abs() < tol && (c.y - y).abs() < tol;
     });
 
+/// Página de carpeta sintética: rejilla rows×cols de "cartas" (marco
+/// oscuro + relleno con textura ruidosa para dar energía de gradiente),
+/// separadas por finos huecos de funda clara. Reproduce el caso real de
+/// binder: cartas pegadas que la detección por contornos fusiona.
+RgbImage _binderPage(int rows, int cols,
+    {double cardW = 120, double cardH = 168, double gap = 10, double pad = 30}) {
+  final w = (pad * 2 + cols * cardW + (cols - 1) * gap).round();
+  final h = (pad * 2 + rows * cardH + (rows - 1) * gap).round();
+  final px = Uint8List(w * h * 3);
+  final rnd = math.Random(11);
+  // fondo de funda: claro y liso (poca energía → separa las cartas)
+  for (var i = 0; i < px.length; i++) {
+    px[i] = 205 + rnd.nextInt(8);
+  }
+  void setP(int x, int y, int v) {
+    if (x < 0 || x >= w || y < 0 || y >= h) return;
+    final i = (y * w + x) * 3;
+    px[i] = v;
+    px[i + 1] = v;
+    px[i + 2] = v;
+  }
+
+  for (var r = 0; r < rows; r++) {
+    for (var c = 0; c < cols; c++) {
+      final x0 = (pad + c * (cardW + gap)).round();
+      final y0 = (pad + r * (cardH + gap)).round();
+      for (var yy = 0; yy < cardH; yy++) {
+        for (var xx = 0; xx < cardW; xx++) {
+          final onFrame =
+              xx < 5 || yy < 5 || xx >= cardW - 5 || yy >= cardH - 5;
+          // marco oscuro + interior con textura fuerte (arte)
+          final v = onFrame ? 15 : 60 + rnd.nextInt(150);
+          setP(x0 + xx, y0 + yy, v);
+        }
+      }
+    }
+  }
+  return RgbImage(px, w, h);
+}
+
 void main() {
+  test('página de carpeta 3x3: la rejilla saca las 9 cartas', () {
+    final page = _binderPage(3, 3);
+    final dets = detectCardGrid(page);
+    expect(dets, hasLength(9));
+    for (final d in dets) {
+      expect(d.warped.width, warpedWidth);
+      expect(d.usedFallback, isFalse);
+    }
+  });
+
+  test('página 4x3: saca 12', () {
+    expect(detectCardGrid(_binderPage(4, 3)), hasLength(12));
+  });
+
+  test('una sola carta NO dispara la rejilla (menos de 2x2)', () {
+    final photo = _scene(400, 440, [
+      (_cardRect(80, 50, w: 240, h: 335), 210),
+    ]);
+    expect(detectCardGrid(photo), isEmpty);
+  });
+
   test('tres cartas sueltas en una foto: las encuentra las tres', () {
     final photo = _scene(640, 480, [
       (_cardRect(40, 60), 210),

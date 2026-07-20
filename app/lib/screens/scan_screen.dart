@@ -65,18 +65,22 @@ ScanOutcome? processScanPhoto(Uint8List bytes) {
   return _outcomeFrom(detectCard(photo));
 }
 
-/// Foto → TODAS las cartas que haya (página de álbum, varias sobre la
-/// mesa). Si el detector multi no ve ninguna, cae al detector de UNA con
-/// su fallback de imagen entera — una foto normal sigue funcionando igual.
+/// Foto → TODAS las cartas que haya. Prioridades:
+///  1. Página de CARPETA (binder): rejilla regular ≥2×2 de cartas pegadas
+///     → detector de rejilla (los contornos fusionan cartas contiguas).
+///  2. Varias cartas sueltas sobre la mesa → detector multi por contornos.
+///  3. Una carta → detector de una, con su fallback de imagen entera.
 List<ScanOutcome> processScanPhotoAll(Uint8List bytes) {
   final decoded = img.decodeImage(bytes);
   if (decoded == null) return const [];
   final rgb3 = decoded.convert(numChannels: 3);
   final photo = RgbImage(
       rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
+  final grid = detectCardGrid(photo);
+  if (grid.length >= 4) return [for (final d in grid) _outcomeFrom(d)];
   final detected = detectCards(photo);
-  if (detected.isEmpty) return [_outcomeFrom(detectCard(photo))];
-  return [for (final d in detected) _outcomeFrom(d)];
+  if (detected.length > 1) return [for (final d in detected) _outcomeFrom(d)];
+  return [_outcomeFrom(detectCard(photo))];
 }
 
 ScanOutcome _outcomeFrom(DetectedCard detected) {
