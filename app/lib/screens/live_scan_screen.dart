@@ -14,6 +14,7 @@ import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/scanner_db_gate.dart';
+import '../widgets/set_lock.dart';
 import 'scan_screen.dart';
 
 /// Escáner en vivo, fase C: la webcam mira la mesa y ManaForge reconoce las
@@ -62,6 +63,9 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
 
   /// En modo "con cuidado", una carta dudosa pendiente de que elijas cuál es.
   Recognition? _pending;
+
+  /// Set bloqueado (escanear una caja entera); null = buscar en todas.
+  String? _lockSet;
 
   /// Cada cuánto miramos la mesa (captura + reconocimiento).
   static const _period = Duration(milliseconds: 900);
@@ -117,7 +121,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       final outcome = await compute(processScanPhoto, bytes);
       if (outcome == null || !mounted) return;
       final index = await widget.scanner.loadIndex();
-      final matches = index.topMatches(outcome.signatures);
+      final matches =
+          index.topMatches(outcome.signatures, lockSet: _lockSet);
       final best = matches.isEmpty ? null : matches.first;
       final recognition = _burst.feed(matches);
       if (!mounted) return;
@@ -181,6 +186,12 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     } catch (_) {/* sin sonido en esta plataforma */}
   }
 
+  Future<void> _editLock() async {
+    final result = await showSetLockDialog(context, _lockSet);
+    if (result == null || !mounted) return; // cancelado
+    setState(() => _lockSet = result.isEmpty ? null : result);
+  }
+
   void _confirmAll() {
     var added = 0;
     for (final line in _tray.lines) {
@@ -240,6 +251,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       appBar: AppBar(
         title: const Text('Escanear en vivo'),
         actions: [
+          SetLockChip(lock: _lockSet, onTap: _editLock),
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),

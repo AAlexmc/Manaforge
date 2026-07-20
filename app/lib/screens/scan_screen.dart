@@ -15,6 +15,7 @@ import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/scanner_db_gate.dart';
+import '../widgets/set_lock.dart';
 
 /// Escáner de cartas, fase B: suelta una FOTO de una carta y ManaForge la
 /// reconoce — detección de contornos, rectificación de perspectiva, huella
@@ -93,6 +94,7 @@ class _ScanScreenState extends State<ScanScreen> {
   int _sessionCount = 0; // cartas añadidas en esta sesión de escaneo
   ScanConfidence _confidence = ScanConfidence.none;
   bool _showAll = false; // en un match claro, desplegar todas las opciones
+  String? _lockSet; // set bloqueado (escanear una caja); null = todas
 
   Future<void> _pickPhoto() async {
     const typeGroup = XTypeGroup(
@@ -119,7 +121,8 @@ class _ScanScreenState extends State<ScanScreen> {
         throw Exception('No pude leer esa imagen (¿es una foto válida?)');
       }
       final index = await widget.scanner.loadIndex();
-      final matches = index.topMatches(outcome.signatures);
+      final matches =
+          index.topMatches(outcome.signatures, lockSet: _lockSet);
       final decision = decideScan(matches);
       final candidates = <_Candidate>[];
       for (final m in matches) {
@@ -203,6 +206,7 @@ class _ScanScreenState extends State<ScanScreen> {
       appBar: AppBar(
         title: const Text('Escanear'),
         actions: [
+          SetLockChip(lock: _lockSet, onTap: _editLock),
           if (_sessionCount > 0)
             Padding(
               padding: const EdgeInsets.only(right: 12),
@@ -297,6 +301,12 @@ class _ScanScreenState extends State<ScanScreen> {
     if (distance <= 14) return 'coincidencia alta';
     if (distance <= 26) return 'coincidencia media';
     return 'coincidencia baja';
+  }
+
+  Future<void> _editLock() async {
+    final result = await showSetLockDialog(context, _lockSet);
+    if (result == null || !mounted) return; // cancelado
+    setState(() => _lockSet = result.isEmpty ? null : result);
   }
 
   void _reset() => setState(() {

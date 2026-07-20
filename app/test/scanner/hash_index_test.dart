@@ -143,4 +143,37 @@ void main() {
     expect(sigs.first.h, center.h);
     expect(sigs.first.v, center.v);
   });
+
+  group('set-lock (bloquear edición)', () {
+    HashIndex build() => HashIndex(
+          Int64List.fromList([0, 0, 0xFFFF]),
+          Int64List.fromList([0, 0, 0]),
+          [
+            _entry('a', 'o1', 'Bolt', set: 'aer', num: '1'),
+            _entry('b', 'o2', 'Shock', set: 'm10', num: '2'),
+            _entry('c', 'o3', 'Otra', set: 'aer', num: '3'), // lejos
+          ],
+        );
+
+    test('sin lock: salen candidatos de cualquier set', () {
+      final m = build().topMatches(const [DHashPair(0, 0)], k: 3);
+      final sets = m.map((x) => x.entry.setCode).toSet();
+      expect(sets, containsAll(['aer', 'm10']));
+    });
+
+    test('lockSet filtra a solo ese set', () {
+      final m =
+          build().topMatches(const [DHashPair(0, 0)], k: 3, lockSet: 'm10');
+      expect(m, hasLength(1));
+      expect(m.single.entry.setCode, 'm10');
+      expect(m.single.entry.name, 'Shock');
+    });
+
+    test('lockSet es insensible a mayúsculas', () {
+      final m =
+          build().topMatches(const [DHashPair(0, 0)], k: 3, lockSet: 'AER');
+      expect(m.every((x) => x.entry.setCode == 'aer'), isTrue);
+      expect(m.first.entry.name, 'Bolt'); // el cercano gana al lejano
+    });
+  });
 }

@@ -56,12 +56,17 @@ class HashIndex {
   /// multi-recorte de la MISMA carta vista: cuenta la mejor), DISTINTOS a
   /// nivel de carta (oracle): la misma ilustración reimpresa no debe
   /// comerse el top. Para cada carta gana su impresión que mejor casa
-  /// (printingKey exacta).
-  List<ScanMatch> topMatches(List<DHashPair> sigs, {int k = 3}) {
+  /// (printingKey exacta). Si [lockSet] no es null, SOLO se consideran las
+  /// impresiones de ese set (bloqueo de edición para escanear una caja: es el
+  /// truco con el que ManaBox clava el printing exacto de un precon/sobre).
+  List<ScanMatch> topMatches(List<DHashPair> sigs, {int k = 3, String? lockSet}) {
     if (sigs.isEmpty) return const [];
+    final lock = lockSet?.toLowerCase();
     // Fase 1: barrido completo solo con la firma CENTRAL (artSignatures
     // pone la variante sin desplazamiento la primera) y preselección de
-    // los ~1000 mejores por counting-sort de distancias (0..128).
+    // los ~1000 mejores por counting-sort de distancias (0..128). El
+    // histograma cuenta solo las entradas del set bloqueado, para que el
+    // cutoff no se agote con cartas que luego se descartan.
     final center = sigs.first;
     final d0 = Uint8List(_entries.length);
     final histogram = List<int>.filled(129, 0);
@@ -69,7 +74,9 @@ class HashIndex {
       final d = hamming64(center.h, _hashH[i]) +
           hamming64(center.v, _hashV[i]);
       d0[i] = d;
-      histogram[d]++;
+      if (lock == null || _entries[i].setCode.toLowerCase() == lock) {
+        histogram[d]++;
+      }
     }
     var cutoff = 128;
     var cumulative = 0;
@@ -85,6 +92,7 @@ class HashIndex {
     for (var i = 0; i < _entries.length; i++) {
       if (d0[i] > cutoff) continue;
       final e = _entries[i];
+      if (lock != null && e.setCode.toLowerCase() != lock) continue;
       final hh = _hashH[i];
       final vv = _hashV[i];
       var d = d0[i].toInt();
