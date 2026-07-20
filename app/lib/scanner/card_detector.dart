@@ -255,8 +255,9 @@ List<Pt>? _refineCellQuad(
   final sub = _crop(photo, x0, y0, x1 - x0, y1 - y0);
   final maxDim = math.max(sub.width, sub.height);
   final scale = maxDim > 360 ? maxDim / 360 : 1.0;
-  final sw = (sub.width / scale).round().clamp(2, sub.width).toInt();
-  final sh = (sub.height / scale).round().clamp(2, sub.height).toInt();
+  // mínimo 4: _scoredQuads necesita ≥3 px por eje para su Sobel interior
+  final sw = (sub.width / scale).round().clamp(4, sub.width).toInt();
+  final sh = (sub.height / scale).round().clamp(4, sub.height).toInt();
   final grey = _greyDownscale(sub, sw, sh);
 
   // pasada 1: sub tal cual. La carta llena ~65% de la celda expandida; se
