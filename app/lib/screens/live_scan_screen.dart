@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,7 @@ import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/linux_camera.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/scanner_db_gate.dart';
@@ -44,6 +46,7 @@ class LiveScanScreen extends StatefulWidget {
 
 class _LiveScanScreenState extends State<LiveScanScreen> {
   CameraController? _camera;
+  LinuxCamera? _linuxCam; // en Linux el plugin `camera` no existe: GStreamer
   String? _cameraError;
   bool _starting = true;
 
@@ -78,10 +81,40 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   }
 
   Future<void> _startCamera() async {
+    // Reintentar es reentrante: apagar lo que hubiera antes de arrancar otra
+    // vez, que no queden dos timers/cámaras vivos.
+    _timer?.cancel();
+    _timer = null;
+    _camera?.dispose();
+    _camera = null;
+    _stopLinuxCam();
     setState(() {
       _starting = true;
       _cameraError = null;
     });
+    if (Platform.isLinux) {
+      try {
+        final cam = await LinuxCamera.autoStart();
+        if (!mounted) {
+          cam.dispose();
+          return;
+        }
+        cam.died.addListener(_onLinuxCamDied);
+        setState(() {
+          _linuxCam = cam;
+          _starting = false;
+        });
+        _timer = Timer.periodic(_period, (_) => _tick());
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _starting = false;
+            _cameraError = e.toString();
+          });
+        }
+      }
+      return;
+    }
     try {
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
@@ -112,13 +145,44 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     }
   }
 
+  void _stopLinuxCam() {
+    _linuxCam?.died.removeListener(_onLinuxCamDied);
+    _linuxCam?.dispose();
+    _linuxCam = null;
+  }
+
+  /// El pipeline gst murió a media sesión (cámara desenchufada): parar el
+  /// tick y enseñar el error con su botón de Reintentar.
+  void _onLinuxCamDied() {
+    if (!mounted) return;
+    _timer?.cancel();
+    _timer = null;
+    _stopLinuxCam();
+    setState(() {
+      _cameraError = 'La cámara se ha desconectado a media sesión. '
+          'Revisa el cable y dale a Reintentar.';
+    });
+  }
+
   Future<void> _tick() async {
     final camera = _camera;
-    if (camera == null || _busy || !camera.value.isInitialized) return;
+    final linux = _linuxCam;
+    if (_busy) return;
+    if (linux == null &&
+        (camera == null || !camera.value.isInitialized)) {
+      return;
+    }
     _busy = true;
     try {
-      final shot = await camera.takePicture();
-      final bytes = await shot.readAsBytes();
+      final Uint8List bytes;
+      if (linux != null) {
+        final f = linux.latestJpeg;
+        if (f == null) return; // aún sin frame
+        bytes = f;
+      } else {
+        final shot = await camera!.takePicture();
+        bytes = await shot.readAsBytes();
+      }
       final outcome = await compute(processScanPhoto, bytes);
       if (outcome == null || !mounted) return;
       final index = await widget.scanner.loadIndex();
@@ -243,6 +307,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   void dispose() {
     _timer?.cancel();
     _camera?.dispose();
+    _stopLinuxCam();
     super.dispose();
   }
 
@@ -317,7 +382,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       );
     }
     final camera = _camera;
-    if (camera == null) {
+    final linux = _linuxCam;
+    if (camera == null && linux == null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -370,7 +436,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Center(child: CameraPreview(camera)),
+              Center(
+                child: linux != null
+                    ? _LinuxPreview(camera: linux)
+                    : CameraPreview(camera!),
+              ),
               // guía de encuadre: coloca la carta dentro del marco (con un
               // poco de margen alrededor el detector la recorta mejor)
               IgnorePointer(
@@ -569,5 +639,26 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     return showVersionPicker(context,
         choices: versionChoicesFrom(line, _hitCache),
         selected: line.selected);
+  }
+}
+
+/// Preview de la cámara Linux: repinta el último JPEG del pipeline GStreamer.
+class _LinuxPreview extends StatelessWidget {
+  final LinuxCamera camera;
+
+  const _LinuxPreview({required this.camera});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<Uint8List?>(
+      valueListenable: camera.frame,
+      builder: (context, frame, _) => frame == null
+          ? const Center(child: CircularProgressIndicator())
+          : Image.memory(frame,
+              gaplessPlayback: true, // sin parpadeo entre frames
+              fit: BoxFit.contain,
+              width: double.infinity,
+              height: double.infinity),
+    );
   }
 }
