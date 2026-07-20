@@ -9,6 +9,7 @@ import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'card_detail_screen.dart';
 import 'set_market_screen.dart';
+import 'wishlist_screen.dart';
 
 /// Mercado: el valor de tu colección con evolución local, tus cartas más
 /// valiosas y un buscador de precios de cualquier carta. Precios Cardmarket
@@ -255,6 +256,36 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   String _euro(double v) => '${v.toStringAsFixed(2)} €';
 
+  /// Botón de acceso a la wishlist, con contador de cartas y punto verde si
+  /// alguna está ya a precio de compra.
+  Widget _wishlistButton() {
+    return ListenableBuilder(
+      listenable: widget.wishlist,
+      builder: (context, _) {
+        final n = widget.wishlist.items.length;
+        final atPrice = widget.wishlist.items.any((i) => i.inRange);
+        return Badge(
+          isLabelVisible: n > 0,
+          label: Text('$n'),
+          backgroundColor: atPrice ? MFColors.success : MFColors.manaRed,
+          child: FilledButton.tonalIcon(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => WishlistScreen(
+                  db: widget.db,
+                  wishlist: widget.wishlist,
+                  onEditTarget: _editWish,
+                ),
+              ),
+            ),
+            icon: const Icon(Icons.bookmark, size: 18),
+            label: const Text('Wishlist'),
+          ),
+        );
+      },
+    );
+  }
+
   (double, double)? _delta() {
     if (_points.length < 2 || _totalValue == null) return null;
     final prev = _points[_points.length - 2].value;
@@ -277,6 +308,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
                 const SizedBox(width: 8),
                 Text('Mercado',
                     style: Theme.of(context).textTheme.headlineMedium),
+                const Spacer(),
+                _wishlistButton(),
               ],
             ),
             const SizedBox(height: 12),
