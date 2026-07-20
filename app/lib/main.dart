@@ -5,6 +5,7 @@ import 'services/card_database.dart';
 import 'services/collection_store.dart';
 import 'services/deck_store.dart';
 import 'services/scanner_database.dart';
+import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
 
 void main() => runApp(const ManaForgeApp());
@@ -38,6 +39,7 @@ class _HomeShellState extends State<HomeShell> {
   final _collection = CollectionStore();
   final _decks = DeckStore();
   final _scanner = ScannerDatabase();
+  final _wishlist = WishlistStore();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class _HomeShellState extends State<HomeShell> {
       AlbumScreen(db: _db, collection: _collection),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
-      MercadoScreen(db: _db, collection: _collection),
+      MercadoScreen(db: _db, collection: _collection, wishlist: _wishlist),
       AjustesScreen(db: _db),
     ];
     return Scaffold(
