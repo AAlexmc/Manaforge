@@ -72,7 +72,11 @@ bool _hasNear(List<DetectedCard> dets, double x, double y, double tol) =>
 /// separadas por finos huecos de funda clara. Reproduce el caso real de
 /// binder: cartas pegadas que la detección por contornos fusiona.
 RgbImage _binderPage(int rows, int cols,
-    {double cardW = 120, double cardH = 168, double gap = 10, double pad = 30}) {
+    {double cardW = 120,
+    double cardH = 168,
+    double gap = 10,
+    double pad = 30,
+    List<(double, double)>? jitter}) {
   final w = (pad * 2 + cols * cardW + (cols - 1) * gap).round();
   final h = (pad * 2 + rows * cardH + (rows - 1) * gap).round();
   final px = Uint8List(w * h * 3);
@@ -91,8 +95,9 @@ RgbImage _binderPage(int rows, int cols,
 
   for (var r = 0; r < rows; r++) {
     for (var c = 0; c < cols; c++) {
-      final x0 = (pad + c * (cardW + gap)).round();
-      final y0 = (pad + r * (cardH + gap)).round();
+      final (jx, jy) = jitter?[r * cols + c] ?? (0.0, 0.0);
+      final x0 = (pad + c * (cardW + gap) + jx).round();
+      final y0 = (pad + r * (cardH + gap) + jy).round();
       for (var yy = 0; yy < cardH; yy++) {
         for (var xx = 0; xx < cardW; xx++) {
           final onFrame =
@@ -120,6 +125,56 @@ void main() {
 
   test('página 4x3: saca 12', () {
     expect(detectCardGrid(_binderPage(4, 3)), hasLength(12));
+  });
+
+  test('cartas descentradas en su funda: la caja se ajusta a CADA carta', () {
+    // caso real de binder: cada carta baila unos px dentro de su funda; la
+    // celda uniforme de la rejilla recorta el arte desplazado y el hash no
+    // casa. La caja final debe clavarse al borde de la carta, no a la celda.
+    const jit = [
+      (-7.0, 4.0), (5.0, -6.0), (0.0, 7.0),
+      (6.0, 5.0), (-1.0, -7.0), (7.0, 0.0),
+      (-6.0, -4.0), (4.0, 6.0), (-4.0, -5.0),
+    ];
+    final page = _binderPage(3, 3, jitter: jit);
+    final dets = detectCardGrid(page);
+    expect(dets, hasLength(9));
+    for (var r = 0; r < 3; r++) {
+      for (var c = 0; c < 3; c++) {
+        final (jx, jy) = jit[r * 3 + c];
+        final x0 = 30 + c * 130 + jx;
+        final y0 = 30 + r * 178 + jy;
+        final tc = Pt(x0 + 60, y0 + 84);
+        DetectedCard best = dets.first;
+        var bestD = double.infinity;
+        for (final d in dets) {
+          final ct = _center(d);
+          final dd = (ct.x - tc.x) * (ct.x - tc.x) +
+              (ct.y - tc.y) * (ct.y - tc.y);
+          if (dd < bestD) {
+            bestD = dd;
+            best = d;
+          }
+        }
+        var minX = double.infinity, minY = double.infinity;
+        var maxX = -double.infinity, maxY = -double.infinity;
+        for (final p in best.corners) {
+          minX = math.min(minX, p.x);
+          minY = math.min(minY, p.y);
+          maxX = math.max(maxX, p.x);
+          maxY = math.max(maxY, p.y);
+        }
+        const tol = 6.0;
+        expect((minX - x0).abs(), lessThan(tol),
+            reason: 'celda ($r,$c) borde izquierdo');
+        expect((minY - y0).abs(), lessThan(tol),
+            reason: 'celda ($r,$c) borde superior');
+        expect((maxX - (x0 + 120)).abs(), lessThan(tol),
+            reason: 'celda ($r,$c) borde derecho');
+        expect((maxY - (y0 + 168)).abs(), lessThan(tol),
+            reason: 'celda ($r,$c) borde inferior');
+      }
+    }
   });
 
   test('una sola carta NO dispara la rejilla (menos de 2x2)', () {
