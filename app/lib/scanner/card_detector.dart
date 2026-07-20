@@ -105,6 +105,58 @@ DetectedCard detectCard(RgbImage photo) {
     fallback = false;
   }
 
+  return _rectify(photo, corners, fallback);
+}
+
+/// Detecta VARIAS cartas en una foto (página de álbum, cartas sobre la
+/// mesa): candidatos puntuados como siempre, se suprimen los CONTENEDORES
+/// (un quad con ≥2 candidatos más pequeños dentro es la página, no una
+/// carta) y se eligen sin solapes por puntuación. Vacía si nada creíble —
+/// aquí NO hay fallback de imagen entera (eso es cosa de [detectCard]).
+List<DetectedCard> detectCards(RgbImage photo, {int maxCards = 12}) {
+  final maxDim = math.max(photo.width, photo.height);
+  final scale = maxDim > 640 ? maxDim / 640 : 1.0;
+  final sw = (photo.width / scale).round().clamp(2, photo.width).toInt();
+  final sh = (photo.height / scale).round().clamp(2, photo.height).toInt();
+  final grey = _greyDownscale(photo, sw, sh);
+
+  // cartas de página de álbum son pequeñas: umbral de área más permisivo
+  final scored = _scoredQuads(grey, sw, sh, minAreaFrac: 0.025);
+  if (scored.isEmpty) return const [];
+
+  final kept = <(double, List<Pt>)>[];
+  for (final c in scored) {
+    final area = _quadArea(c.$2);
+    final box = _bbox(c.$2);
+    var contained = 0;
+    for (final other in scored) {
+      if (identical(other, c)) continue;
+      if (_quadArea(other.$2) < area * 0.5 &&
+          _bboxHasPoint(box, _quadCenter(other.$2))) {
+        contained++;
+      }
+    }
+    if (contained < 2) kept.add(c);
+  }
+  kept.sort((a, b) => b.$1.compareTo(a.$1));
+
+  final picked = <List<Pt>>[];
+  for (final (_, q) in kept) {
+    if (picked.length >= maxCards) break;
+    if (picked.any((p) => _bboxIou(_bbox(p), _bbox(q)) > 0.2)) continue;
+    picked.add(q);
+  }
+
+  final fx = photo.width / sw;
+  final fy = photo.height / sh;
+  return [
+    for (final q in picked)
+      _rectify(photo, [for (final p in q) Pt(p.x * fx, p.y * fy)], false),
+  ];
+}
+
+/// Esquinas (en coordenadas de la foto) → carta rectificada + arte.
+DetectedCard _rectify(RgbImage photo, List<Pt> corners, bool fallback) {
   // la carta se rectifica en VERTICAL: el lado corto debe ser el de arriba;
   // si el cuadrilátero está tumbado, rotamos el orden de esquinas
   final topLen = _dist(corners[0], corners[1]) + _dist(corners[3], corners[2]);
@@ -125,6 +177,43 @@ DetectedCard detectCard(RgbImage photo) {
 
   return DetectedCard(
       corners: corners, warped: warped, artCrop: art, usedFallback: fallback);
+}
+
+/// Caja envolvente (minX, minY, maxX, maxY) de un cuadrilátero.
+(double, double, double, double) _bbox(List<Pt> q) {
+  var minX = q.first.x, minY = q.first.y, maxX = q.first.x, maxY = q.first.y;
+  for (final p in q) {
+    minX = math.min(minX, p.x);
+    minY = math.min(minY, p.y);
+    maxX = math.max(maxX, p.x);
+    maxY = math.max(maxY, p.y);
+  }
+  return (minX, minY, maxX, maxY);
+}
+
+Pt _quadCenter(List<Pt> q) {
+  var cx = 0.0, cy = 0.0;
+  for (final p in q) {
+    cx += p.x / q.length;
+    cy += p.y / q.length;
+  }
+  return Pt(cx, cy);
+}
+
+bool _bboxHasPoint((double, double, double, double) b, Pt p) =>
+    p.x >= b.$1 && p.x <= b.$3 && p.y >= b.$2 && p.y <= b.$4;
+
+double _bboxIou(
+    (double, double, double, double) a, (double, double, double, double) b) {
+  final ix = math.max(
+      0.0, math.min(a.$3, b.$3) - math.max(a.$1, b.$1));
+  final iy = math.max(
+      0.0, math.min(a.$4, b.$4) - math.max(a.$2, b.$2));
+  final inter = ix * iy;
+  final areaA = (a.$3 - a.$1) * (a.$4 - a.$2);
+  final areaB = (b.$3 - b.$1) * (b.$4 - b.$2);
+  final union = areaA + areaB - inter;
+  return union <= 0 ? 0 : inter / union;
 }
 
 double _dist(Pt a, Pt b) {
@@ -322,10 +411,11 @@ double _sideCoverage(Pt p0, Pt p1, Int32List gxa, Int32List gya,
 /// Puntuación de "parecido a carta" de un cuadrilátero candidato, o null
 /// si no cuela (área, lados, proporción 63:88, relleno, bordes por lado).
 double? _scoreQuad(List<Pt> q, int compSize, int w, int h, Int32List gxa,
-    Int32List gya, Uint16List mag, double edgeThr) {
+    Int32List gya, Uint16List mag, double edgeThr,
+    {double minAreaFrac = 0.06}) {
   final area = _quadArea(q);
   final imgArea = w * h;
-  if (area < 0.06 * imgArea || area > 0.92 * imgArea) return null;
+  if (area < minAreaFrac * imgArea || area > 0.92 * imgArea) return null;
   final sides = [for (var i = 0; i < 4; i++) _dist(q[i], q[(i + 1) % 4])];
   if (sides.reduce(math.min) < 0.12 * math.min(w, h)) return null;
   final top = sides[0], right = sides[1], bottom = sides[2], left = sides[3];
@@ -354,6 +444,15 @@ double? _scoreQuad(List<Pt> q, int compSize, int w, int h, Int32List gxa,
 /// (Otsu ±, máscaras oscura y clara) y por bordes (Sobel con umbral por
 /// percentil), validados y puntuados; gana el mejor. null si nada creíble.
 List<Pt>? _findQuad(Uint8List grey, int w, int h) {
+  final scored = _scoredQuads(grey, w, h);
+  return scored.isEmpty ? null : scored.first.$2;
+}
+
+/// Todos los cuadriláteros "con pinta de carta", puntuados y ordenados de
+/// mejor a peor (pueden venir casi-duplicados de máscaras distintas: el
+/// llamador deduplica por solape si le importa).
+List<(double, List<Pt>)> _scoredQuads(Uint8List grey, int w, int h,
+    {double minAreaFrac = 0.06}) {
   final blurred = _blur3(grey, w, h);
 
   // Sobel: magnitud + dirección; umbral por percentil 92 (con la media,
@@ -392,8 +491,8 @@ List<Pt>? _findQuad(Uint8List grey, int w, int h) {
     for (final comp in comps) {
       final q = _quadFromComponent(comp, w);
       if (q == null) continue;
-      final s =
-          _scoreQuad(q, comp.length, w, h, gxa, gya, mag, coverageThr);
+      final s = _scoreQuad(q, comp.length, w, h, gxa, gya, mag, coverageThr,
+          minAreaFrac: minAreaFrac);
       if (s != null) candidates.add((s, q));
     }
   }
@@ -442,9 +541,8 @@ List<Pt>? _findQuad(Uint8List grey, int w, int h) {
   }
   consider(_components(dil, w, h));
 
-  if (candidates.isEmpty) return null;
   candidates.sort((a, b) => b.$1.compareTo(a.$1));
-  return candidates.first.$2;
+  return candidates;
 }
 
 double _quadArea(List<Pt> q) {

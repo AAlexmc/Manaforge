@@ -62,7 +62,24 @@ ScanOutcome? processScanPhoto(Uint8List bytes) {
   final rgb3 = decoded.convert(numChannels: 3);
   final photo = RgbImage(
       rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
-  final detected = detectCard(photo);
+  return _outcomeFrom(detectCard(photo));
+}
+
+/// Foto → TODAS las cartas que haya (página de álbum, varias sobre la
+/// mesa). Si el detector multi no ve ninguna, cae al detector de UNA con
+/// su fallback de imagen entera — una foto normal sigue funcionando igual.
+List<ScanOutcome> processScanPhotoAll(Uint8List bytes) {
+  final decoded = img.decodeImage(bytes);
+  if (decoded == null) return const [];
+  final rgb3 = decoded.convert(numChannels: 3);
+  final photo = RgbImage(
+      rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
+  final detected = detectCards(photo);
+  if (detected.isEmpty) return [_outcomeFrom(detectCard(photo))];
+  return [for (final d in detected) _outcomeFrom(d)];
+}
+
+ScanOutcome _outcomeFrom(DetectedCard detected) {
   final warped = detected.warped;
   final art = detected.artCrop;
   final artImage = img.Image.fromBytes(
@@ -131,10 +148,16 @@ class _ScanScreenState extends State<ScanScreen> {
     });
     try {
       final bytes = await file.readAsBytes();
-      final outcome = await compute(processScanPhoto, bytes);
-      if (outcome == null) {
+      final outcomes = await compute(processScanPhotoAll, bytes);
+      if (outcomes.isEmpty) {
         throw Exception('No pude leer esa imagen (¿es una foto válida?)');
       }
+      if (outcomes.length > 1) {
+        // una foto con VARIAS cartas (página de álbum): a la bandeja
+        await _batchFromOutcomes(outcomes);
+        return;
+      }
+      final outcome = outcomes.first;
       final index = await widget.scanner.loadIndex();
       final matches =
           index.topMatches(outcome.signatures, lockSet: _lockSet);
@@ -201,6 +224,25 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  /// Una foto con varias cartas detectadas: montar la bandeja directamente.
+  Future<void> _batchFromOutcomes(List<ScanOutcome> outcomes) async {
+    final index = await widget.scanner.loadIndex();
+    final perCard = <List<ScanMatch>>[];
+    for (final o in outcomes) {
+      final matches = index.topMatches(o.signatures, lockSet: _lockSet);
+      perCard.add(matches);
+      await _precache(matches);
+    }
+    if (!mounted) return;
+    setState(() {
+      _processing = false;
+      _batch = buildBatchTray(perCard);
+      _batchProcessing = false;
+      _batchDone = 0;
+      _batchTotal = 0;
+    });
+  }
+
   /// Procesa VARIAS fotos: reconoce cada una y las junta en una bandeja para
   /// que revises y añadas las que quieras (agrupa copias iguales en ×N).
   Future<void> _scanBatch(List<XFile> files) async {
@@ -221,8 +263,9 @@ class _ScanScreenState extends State<ScanScreen> {
       for (final f in files) {
         try {
           final bytes = await f.readAsBytes();
-          final outcome = await compute(processScanPhoto, bytes);
-          if (outcome != null) {
+          // cada foto puede traer VARIAS cartas (página de álbum)
+          final outcomes = await compute(processScanPhotoAll, bytes);
+          for (final outcome in outcomes) {
             final matches =
                 index.topMatches(outcome.signatures, lockSet: _lockSet);
             perPhoto.add(matches);
@@ -474,9 +517,10 @@ class _ScanScreenState extends State<ScanScreen> {
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             const Text(
-              'Una o varias a la vez: reconozco cada carta y las junto en una '
-              'lista para que revises y añadas las que quieras. Vale foto del '
-              'móvil o escaneo — encuentro la carta, enderezo y comparo el arte.',
+              'Una o varias a la vez — y si una foto trae VARIAS cartas '
+              '(una página del álbum, la mesa llena), las saco todas y las '
+              'junto en una lista para que revises y añadas las que quieras. '
+              'Vale foto del móvil o escaneo.',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
