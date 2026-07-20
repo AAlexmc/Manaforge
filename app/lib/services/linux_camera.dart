@@ -103,40 +103,75 @@ class LinuxCamera {
   StreamSubscription<List<int>>? _sub;
   StreamSubscription<String>? _errSub;
   bool _disposed = false;
-  final _splitter = MjpegSplitter();
 
   Uint8List? get latestJpeg => frame.value;
 
-  static List<String> _pipelineFor(String device) => [
-        '-q', // sin -q, gst-launch escupe mensajes por el MISMO stdout
-        'v4l2src', 'device=$device', '!',
-        'videoconvert', '!', 'videorate', '!',
-        'video/x-raw,framerate=10/1', '!',
-        'jpegenc', 'quality=85', '!',
-        'fdsink', 'fd=1',
+  /// Variantes de pipeline, de mejor a peor: MJPEG nativo de la cámara a
+  /// 1280x720 (resolución alta gratis, casi todo UVC lo trae), raw 720p
+  /// re-comprimido, y por último lo que la cámara quiera dar por defecto
+  /// (que suele ser 640x480, justito para el detector).
+  static List<List<String>> _pipelinesFor(String device) => [
+        [
+          '-q', // sin -q, gst-launch escupe mensajes por el MISMO stdout
+          'v4l2src', 'device=$device', '!',
+          'image/jpeg,width=1280,height=720', '!',
+          'fdsink', 'fd=1',
+        ],
+        [
+          '-q',
+          'v4l2src', 'device=$device', '!',
+          'video/x-raw,width=1280,height=720', '!',
+          'videoconvert', '!', 'videorate', '!',
+          'video/x-raw,framerate=10/1', '!',
+          'jpegenc', 'quality=85', '!',
+          'fdsink', 'fd=1',
+        ],
+        [
+          '-q',
+          'v4l2src', 'device=$device', '!',
+          'videoconvert', '!', 'videorate', '!',
+          'video/x-raw,framerate=10/1', '!',
+          'jpegenc', 'quality=85', '!',
+          'fdsink', 'fd=1',
+        ],
       ];
 
   /// Arranca el pipeline y espera al primer frame (o falla con motivo).
+  /// Sin [argsOverride], prueba las variantes de [_pipelinesFor] en orden.
   Future<void> start(String device, {List<String>? argsOverride}) async {
+    if (argsOverride != null) {
+      return _startPipeline(device, argsOverride);
+    }
+    CameraUnavailable? lastError;
+    for (final args in _pipelinesFor(device)) {
+      try {
+        return await _startPipeline(device, args);
+      } on CameraUnavailable catch (e) {
+        lastError = e;
+      }
+    }
+    throw lastError!;
+  }
+
+  Future<void> _startPipeline(String device, List<String> args) async {
     final stderrBuf = StringBuffer();
     final Process proc;
     try {
-      proc = await Process.start(
-          'gst-launch-1.0', argsOverride ?? _pipelineFor(device));
+      proc = await Process.start('gst-launch-1.0', args);
     } on ProcessException {
       throw const CameraUnavailable(
           'GStreamer no está instalado. Instálalo con:\n'
           'sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good');
     }
-    _proc = proc;
+    final splitter = MjpegSplitter();
     final first = Completer<void>();
-    _sub = proc.stdout.listen((chunk) {
-      for (final f in _splitter.feed(chunk)) {
+    final sub = proc.stdout.listen((chunk) {
+      for (final f in splitter.feed(chunk)) {
         frame.value = f;
       }
       if (frame.value != null && !first.isCompleted) first.complete();
     });
-    _errSub = proc.stderr
+    final errSub = proc.stderr
         .transform(const SystemEncoding().decoder)
         .listen(stderrBuf.write);
     unawaited(proc.exitCode.then((code) {
@@ -144,8 +179,8 @@ class LinuxCamera {
         first.completeError(CameraUnavailable(
             'La cámara $device no da imagen (gst-launch salió con $code).\n'
             '${stderrBuf.toString().trim()}'));
-      } else if (!_disposed) {
-        died.value = true; // murió con la sesión en marcha
+      } else if (!_disposed && _proc == proc) {
+        died.value = true; // el pipeline ACTIVO murió con la sesión en marcha
       }
     }));
     try {
@@ -153,9 +188,15 @@ class LinuxCamera {
           onTimeout: () => throw CameraUnavailable(
               'La cámara $device no ha dado ningún frame en 6 s.'));
     } catch (_) {
-      dispose();
+      // intento fallido: limpiar SOLO lo suyo (otra variante puede seguir)
+      sub.cancel();
+      errSub.cancel();
+      proc.kill();
       rethrow;
     }
+    _proc = proc;
+    _sub = sub;
+    _errSub = errSub;
   }
 
   /// Busca cámaras y arranca la primera que dé imagen.
