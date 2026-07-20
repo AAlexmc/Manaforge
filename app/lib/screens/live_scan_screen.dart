@@ -81,6 +81,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   }
 
   Future<void> _startCamera() async {
+    // Reintentar es reentrante: apagar lo que hubiera antes de arrancar otra
+    // vez, que no queden dos timers/cámaras vivos.
+    _timer?.cancel();
+    _timer = null;
+    _camera?.dispose();
+    _camera = null;
+    _stopLinuxCam();
     setState(() {
       _starting = true;
       _cameraError = null;
@@ -92,6 +99,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
           cam.dispose();
           return;
         }
+        cam.died.addListener(_onLinuxCamDied);
         setState(() {
           _linuxCam = cam;
           _starting = false;
@@ -135,6 +143,25 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
         });
       }
     }
+  }
+
+  void _stopLinuxCam() {
+    _linuxCam?.died.removeListener(_onLinuxCamDied);
+    _linuxCam?.dispose();
+    _linuxCam = null;
+  }
+
+  /// El pipeline gst murió a media sesión (cámara desenchufada): parar el
+  /// tick y enseñar el error con su botón de Reintentar.
+  void _onLinuxCamDied() {
+    if (!mounted) return;
+    _timer?.cancel();
+    _timer = null;
+    _stopLinuxCam();
+    setState(() {
+      _cameraError = 'La cámara se ha desconectado a media sesión. '
+          'Revisa el cable y dale a Reintentar.';
+    });
   }
 
   Future<void> _tick() async {
@@ -280,7 +307,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   void dispose() {
     _timer?.cancel();
     _camera?.dispose();
-    _linuxCam?.dispose();
+    _stopLinuxCam();
     super.dispose();
   }
 

@@ -51,6 +51,17 @@ void main() {
       final frames = MjpegSplitter().feed(a);
       expect(frames.single, a);
     });
+
+    test('SOI sin EOI gigante se descarta y no envenena el siguiente', () {
+      final splitter = MjpegSplitter();
+      final poison = Uint8List(MjpegSplitter.maxPending + 16);
+      poison[0] = 0xFF;
+      poison[1] = 0xD8; // SOI… y nunca llega el EOI
+      expect(splitter.feed(poison), isEmpty);
+      // sin la cota, este frame saldría fusionado con la basura anterior
+      final clean = _jpeg([1, 2, 3]);
+      expect(splitter.feed(clean).single, clean);
+    });
   });
 
   group('listVideoDevices', () {
@@ -85,6 +96,22 @@ void main() {
       final frame = cam.latestJpeg!;
       expect(frame.sublist(0, 2), [0xFF, 0xD8]);
       expect(frame.sublist(frame.length - 2), [0xFF, 0xD9]);
+    }, skip: !_hasGst ? 'sin gst-launch-1.0 en esta máquina' : false);
+
+    test('si el pipeline muere tras arrancar, avisa por `died`', () async {
+      final cam = LinuxCamera();
+      addTearDown(cam.dispose);
+      await cam.start('testsrc', argsOverride: [
+        '-q', 'videotestsrc', 'num-buffers=3', '!',
+        'video/x-raw,width=64,height=64', '!', 'videoconvert', '!',
+        'jpegenc', '!', 'fdsink', 'fd=1',
+      ]);
+      // con num-buffers=3 el proceso acaba solo enseguida
+      final deadline = DateTime.now().add(const Duration(seconds: 5));
+      while (!cam.died.value && DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+      expect(cam.died.value, isTrue);
     }, skip: !_hasGst ? 'sin gst-launch-1.0 en esta máquina' : false);
 
     test('sin cámaras, autoStart falla con mensaje claro', () async {

@@ -51,6 +51,10 @@ Future<List<VideoDevice>> listVideoDevices(
 class MjpegSplitter {
   Uint8List _pending = Uint8List(0);
 
+  /// Cota defensiva: un frame legítimo de jpegenc nunca llega aquí. Si un
+  /// stream corrupto trae SOI sin EOI, se descarta en vez de crecer sin fin.
+  static const int maxPending = 8 << 20;
+
   List<Uint8List> feed(List<int> chunk) {
     final data = Uint8List(_pending.length + chunk.length)
       ..setAll(0, _pending)
@@ -69,7 +73,9 @@ class MjpegSplitter {
       final eoi = _marker(data, 0xD9, soi + 2);
       if (eoi < 0) {
         // frame a medias: guardar desde el SOI y esperar más datos
-        _pending = Uint8List.fromList(data.sublist(soi));
+        _pending = data.length - soi > maxPending
+            ? Uint8List(0)
+            : Uint8List.fromList(data.sublist(soi));
         return frames;
       }
       frames.add(Uint8List.fromList(data.sublist(soi, eoi + 2)));
@@ -89,8 +95,14 @@ class LinuxCamera {
   /// Último frame JPEG; el preview escucha aquí y se repinta.
   final ValueNotifier<Uint8List?> frame = ValueNotifier(null);
 
+  /// Pasa a true si el pipeline muere DESPUÉS de arrancar (cámara
+  /// desenchufada a media sesión); la pantalla escucha y enseña el error.
+  final ValueNotifier<bool> died = ValueNotifier(false);
+
   Process? _proc;
   StreamSubscription<List<int>>? _sub;
+  StreamSubscription<String>? _errSub;
+  bool _disposed = false;
   final _splitter = MjpegSplitter();
 
   Uint8List? get latestJpeg => frame.value;
@@ -124,12 +136,16 @@ class LinuxCamera {
       }
       if (frame.value != null && !first.isCompleted) first.complete();
     });
-    proc.stderr.transform(const SystemEncoding().decoder).listen(stderrBuf.write);
+    _errSub = proc.stderr
+        .transform(const SystemEncoding().decoder)
+        .listen(stderrBuf.write);
     unawaited(proc.exitCode.then((code) {
       if (!first.isCompleted) {
         first.completeError(CameraUnavailable(
             'La cámara $device no da imagen (gst-launch salió con $code).\n'
             '${stderrBuf.toString().trim()}'));
+      } else if (!_disposed) {
+        died.value = true; // murió con la sesión en marcha
       }
     }));
     try {
@@ -168,7 +184,9 @@ class LinuxCamera {
   }
 
   void dispose() {
+    _disposed = true; // que el exitCode del kill no dispare `died`
     _sub?.cancel();
+    _errSub?.cancel();
     _proc?.kill();
     _proc = null;
   }
