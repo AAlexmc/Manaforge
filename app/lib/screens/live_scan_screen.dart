@@ -14,6 +14,7 @@ import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/scanner_db_gate.dart';
+import '../widgets/session_tray.dart';
 import '../widgets/set_lock.dart';
 import 'scan_screen.dart';
 
@@ -429,7 +430,15 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
             ],
           ),
         ),
-        _buildTray(),
+        SessionTray(
+          tray: _tray,
+          hitCache: _hitCache,
+          quickMode: _quickMode,
+          onEdit: _editLine,
+          onRemove: (line) => setState(() => _tray.remove(line)),
+          onConfirm: _confirmAll,
+          onClear: () => setState(_tray.clear),
+        ),
       ],
     );
   }
@@ -478,143 +487,6 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       _tray.lines.add(line);
       _pending = null;
     });
-  }
-
-  /// Bandeja de la sesión: cada carta reconocida se apunta aquí, agrupando
-  /// las copias iguales en ×N; al terminar confirmas todas de un golpe.
-  Widget _buildTray() {
-    final lines = _tray.lines;
-    if (lines.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(12),
-        child: Text(
-          _quickMode
-              ? 'Pasa cartas por delante: las claras se apuntan solas aquí '
-                  '(las copias iguales suman ×N). Las dudosas, marcadas para '
-                  'revisar. Al terminar, confirmas todas.'
-              : 'Pasa cartas por delante: las claras se apuntan solas; las '
-                  'dudosas te preguntan cuál es. Al terminar, confirmas todas.',
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 12),
-        ),
-      );
-    }
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: 124,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            itemCount: lines.length,
-            itemBuilder: (context, i) => _trayTile(lines[i]),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          child: Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: _confirmAll,
-                  icon: const Icon(Icons.playlist_add_check),
-                  label: Text('Añadir ${_tray.totalQty} a la colección'),
-                ),
-              ),
-              const SizedBox(width: 10),
-              OutlinedButton(
-                onPressed: () => setState(_tray.clear),
-                child: const Text('Vaciar'),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _trayTile(TrayLine line) {
-    final entry = line.chosen.entry;
-    final hit = _hitCache[entry.scryfallId];
-    return Padding(
-      padding: const EdgeInsets.all(6),
-      child: InkWell(
-        onTap: () => _editLine(line),
-        borderRadius: BorderRadius.circular(10),
-        child: SizedBox(
-          width: 88,
-          child: Column(
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    decoration: line.needsReview
-                        ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            border: Border.all(
-                                color: MFColors.warning, width: 2))
-                        : null,
-                    child: CardThumb(
-                        url: hit?.imageSmall,
-                        colors: hit?.colors ?? '',
-                        name: entry.name,
-                        width: 50,
-                        height: 70),
-                  ),
-                  // cantidad ×N
-                  if (line.qty > 1)
-                    Positioned(
-                      left: -4,
-                      bottom: -4,
-                      child: CircleAvatar(
-                        radius: 11,
-                        backgroundColor: MFColors.manaRed,
-                        child: Text('×${line.qty}',
-                            style: const TextStyle(
-                                fontSize: 11,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                  // aviso de revisión
-                  if (line.needsReview)
-                    const Positioned(
-                      left: -4,
-                      top: -4,
-                      child: Icon(Icons.help,
-                          size: 18, color: MFColors.warning),
-                    ),
-                  // quitar
-                  Positioned(
-                    right: -4,
-                    top: -4,
-                    child: GestureDetector(
-                      onTap: () => setState(() => _tray.remove(line)),
-                      child: const CircleAvatar(
-                        radius: 9,
-                        backgroundColor: Colors.black54,
-                        child: Icon(Icons.close,
-                            size: 12, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Text(
-                hit?.printedName ?? entry.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 10.5),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   /// Editar una línea de la bandeja: cantidad + versión.
