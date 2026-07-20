@@ -119,4 +119,41 @@ void main() {
     final photo = _scene(400, 300, const []);
     expect(detectCards(photo), isEmpty);
   });
+
+  test('página con UNA sola carta dentro: sale la carta, no la página', () {
+    // página A4-ish (ratio ~0.71, cuela como carta por proporción) con una
+    // única carta dentro — el caso que antes exigía ≥2 hijos para suprimir
+    final photo = _scene(
+      640,
+      480,
+      [
+        ([const Pt(170, 20), const Pt(490, 20), const Pt(490, 466), const Pt(170, 466)], 60),
+        (_cardRect(260, 140), 210),
+      ],
+      bg: 230,
+    );
+    final dets = detectCards(photo);
+    expect(dets, hasLength(1));
+    expect(_hasNear(dets, 260 + 63, 140 + 88, 20), isTrue);
+  });
+
+  test('la ventana del ARTE dentro de una carta no la convierte en página',
+      () {
+    // carta con su ilustración marcada (quad interior a proporciones del
+    // arte MTG): la carta NO debe suprimirse como contenedora
+    const cx = 100.0, cy = 50.0, cw = 240.0, ch = 335.0;
+    final art = [
+      Pt(cx + 0.077 * cw, cy + 0.117 * ch),
+      Pt(cx + 0.923 * cw, cy + 0.117 * ch),
+      Pt(cx + 0.923 * cw, cy + 0.545 * ch),
+      Pt(cx + 0.077 * cw, cy + 0.545 * ch),
+    ];
+    final photo = _scene(440, 440, [
+      (_cardRect(cx, cy, w: cw, h: ch), 210),
+      (art, 120),
+    ]);
+    final dets = detectCards(photo);
+    expect(dets, hasLength(1));
+    expect(_hasNear(dets, cx + cw / 2, cy + ch / 2, 15), isTrue);
+  });
 }

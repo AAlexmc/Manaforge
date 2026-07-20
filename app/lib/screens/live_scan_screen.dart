@@ -59,8 +59,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   /// El pipeline pesado NO corre cada tick: la puerta de presencia mira
   /// miniaturas baratas y solo dispara el reconocimiento cuando pones una
   /// carta y se asienta (o la cambias). Quitarla rearma la puerta, así
-  /// dos copias iguales seguidas cuentan como dos.
-  final _gate = PresenceGate();
+  /// dos copias iguales seguidas cuentan como dos. Se ESTRENA en cada
+  /// arranque de cámara: la línea base de una sesión anterior (otra
+  /// exposición) dejaría la puerta creyendo que siempre hay carta.
+  PresenceGate _gate = PresenceGate();
 
   /// Última línea añadida a la bandeja: para el botón "+1 igual" (por si
   /// pasas otra copia y la puerta no llega a verte retirar la primera).
@@ -104,6 +106,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     _camera?.dispose();
     _camera = null;
     _stopLinuxCam();
+    _gate = PresenceGate();
     setState(() {
       _starting = true;
       _cameraError = null;

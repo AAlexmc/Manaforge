@@ -131,12 +131,14 @@ List<DetectedCard> detectCards(RgbImage photo, {int maxCards = 12}) {
     var contained = 0;
     for (final other in scored) {
       if (identical(other, c)) continue;
-      if (_quadArea(other.$2) < area * 0.5 &&
-          _bboxHasPoint(box, _quadCenter(other.$2))) {
-        contained++;
-      }
+      if (_quadArea(other.$2) >= area * 0.5) continue;
+      if (!_bboxHasPoint(box, _quadCenter(other.$2))) continue;
+      // la ventana del ARTE de una carta también es un quad interior con
+      // proporción de carta: no convierte a su carta en "contenedora"
+      if (_looksLikeArtWindow(_bbox(other.$2), box)) continue;
+      contained++;
     }
-    if (contained < 2) kept.add(c);
+    if (contained == 0) kept.add(c);
   }
   kept.sort((a, b) => b.$1.compareTo(a.$1));
 
@@ -202,6 +204,31 @@ Pt _quadCenter(List<Pt> q) {
 
 bool _bboxHasPoint((double, double, double, double) b, Pt p) =>
     p.x >= b.$1 && p.x <= b.$3 && p.y >= b.$2 && p.y <= b.$4;
+
+/// ¿[inner] tiene la pinta de la VENTANA DEL ARTE de la carta [outer]?
+/// (centrada, pegada arriba, ~36% del área, casi todo el ancho — las
+/// proporciones artLeft/artRight/artTop/artBottom con margen). Sirve para
+/// no confundir una carta con una "página contenedora" por culpa de su
+/// propia ilustración.
+bool _looksLikeArtWindow((double, double, double, double) inner,
+    (double, double, double, double) outer) {
+  final ow = outer.$3 - outer.$1;
+  final oh = outer.$4 - outer.$2;
+  if (ow <= 0 || oh <= 0) return false;
+  final iw = inner.$3 - inner.$1;
+  final ih = inner.$4 - inner.$2;
+  final areaRatio = (iw * ih) / (ow * oh);
+  final cxOff =
+      ((inner.$1 + inner.$3) / 2 - (outer.$1 + outer.$3) / 2).abs() / ow;
+  final topOff = (inner.$2 - outer.$2) / oh;
+  return areaRatio > 0.25 &&
+      areaRatio < 0.48 &&
+      cxOff < 0.08 &&
+      topOff > 0.05 &&
+      topOff < 0.22 &&
+      iw / ow > 0.70 &&
+      iw / ow < 0.95;
+}
 
 double _bboxIou(
     (double, double, double, double) a, (double, double, double, double) b) {
