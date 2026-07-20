@@ -211,8 +211,16 @@ List<DetectedCard> detectCardGrid(RgbImage photo, {int maxCards = 24}) {
   for (var r = 0; r + 1 < ys.length; r++) {
     for (var c = 0; c + 1 < xs.length; c++) {
       if (out.length >= maxCards) break;
-      // encoger un pelín cada celda hacia dentro: quita el hueco de funda
-      // y el marco compartido, deja el arte más centrado para el hash
+      // la celda es solo APROXIMADA: la carta baila dentro de su funda y la
+      // página sale inclinada, así que se afina al contorno real de la carta
+      final refined = _refineCellQuad(
+          photo, xs[c] * fx, ys[r] * fy, xs[c + 1] * fx, ys[r + 1] * fy);
+      if (refined != null) {
+        out.add(_rectify(photo, refined, false));
+        continue;
+      }
+      // sin contorno creíble: celda encogida un pelín (quita el hueco de
+      // funda y el marco compartido, deja el arte más centrado para el hash)
       final mx = (xs[c + 1] - xs[c]) * 0.04;
       final my = (ys[r + 1] - ys[r]) * 0.04;
       final cx0 = (xs[c] + mx) * fx;
@@ -228,6 +236,209 @@ List<DetectedCard> detectCardGrid(RgbImage photo, {int maxCards = 24}) {
     }
   }
   return out;
+}
+
+/// Afina una celda de rejilla al contorno REAL de su carta: busca el mejor
+/// cuadrilátero "con pinta de carta" dentro de la celda expandida un 12%.
+/// El desplazamiento de la carta dentro de la funda (±10% es normal) mueve
+/// el recorte del arte y arruina el dHash aunque la rejilla sea correcta.
+/// Devuelve null si no hay quad creíble (el llamador usa la celda tal cual).
+List<Pt>? _refineCellQuad(
+    RgbImage photo, double cx0, double cy0, double cx1, double cy1) {
+  final cw = cx1 - cx0;
+  final ch = cy1 - cy0;
+  if (cw < 8 || ch < 8) return null;
+  final x0 = (cx0 - cw * 0.12).floor().clamp(0, photo.width - 2);
+  final y0 = (cy0 - ch * 0.12).floor().clamp(0, photo.height - 2);
+  final x1 = (cx1 + cw * 0.12).ceil().clamp(x0 + 2, photo.width);
+  final y1 = (cy1 + ch * 0.12).ceil().clamp(y0 + 2, photo.height);
+  final sub = _crop(photo, x0, y0, x1 - x0, y1 - y0);
+  final maxDim = math.max(sub.width, sub.height);
+  final scale = maxDim > 360 ? maxDim / 360 : 1.0;
+  // mínimo 4: _scoredQuads necesita ≥3 px por eje para su Sobel interior
+  final sw = (sub.width / scale).round().clamp(4, sub.width).toInt();
+  final sh = (sub.height / scale).round().clamp(4, sub.height).toInt();
+  final grey = _greyDownscale(sub, sw, sh);
+
+  // pasada 1: sub tal cual. La carta llena ~65% de la celda expandida; se
+  // exige ≥55% para no aceptar el borde INTERIOR del marco (~48%).
+  var best = _plausibleCardQuad(
+      _scoredQuads(grey, sw, sh, minAreaFrac: 0.30), sw, sh, 0.55);
+  if (best == null) {
+    // pasada 2: los trozos de cartas VECINAS que entran por la expansión
+    // contaminan las máscaras (el componente toca el borde del sub y el
+    // candidato muere por cobertura). Se pinta el anillo fuera de la celda
+    // con el tono de la funda y se reintenta sobre el sub limpio.
+    final cleaned = Uint8List.fromList(grey);
+    final rx0 = ((cx0 - x0) / scale).round().clamp(0, sw - 1).toInt();
+    final ry0 = ((cy0 - y0) / scale).round().clamp(0, sh - 1).toInt();
+    final rx1 = ((cx1 - x0) / scale).round().clamp(rx0 + 1, sw).toInt();
+    final ry1 = ((cy1 - y0) / scale).round().clamp(ry0 + 1, sh).toInt();
+    final ring = <int>[];
+    for (var yy = 0; yy < sh; yy++) {
+      for (var xx = 0; xx < sw; xx++) {
+        if (xx >= rx0 && xx < rx1 && yy >= ry0 && yy < ry1) continue;
+        ring.add(cleaned[yy * sw + xx]);
+      }
+    }
+    if (ring.isNotEmpty) {
+      ring.sort();
+      final sleeve = ring[ring.length ~/ 2];
+      for (var yy = 0; yy < sh; yy++) {
+        for (var xx = 0; xx < sw; xx++) {
+          if (xx >= rx0 && xx < rx1 && yy >= ry0 && yy < ry1) continue;
+          cleaned[yy * sw + xx] = sleeve;
+        }
+      }
+      best = _plausibleCardQuad(
+          _scoredQuads(cleaned, sw, sh, minAreaFrac: 0.30), sw, sh, 0.50);
+    }
+  }
+  if (best == null) {
+    // pasada 3: la carta puede estar tan descentrada que se sale de la
+    // celda expandida (o las máscaras no dan quad). Se parte de la CELDA
+    // y se desliza cada lado hasta la pared real con el snap de signo
+    // (rango amplio); el signo descarta bordes de vecinos y del interior.
+    return _snapSearchFromCell(photo, cx0, cy0, cx1, cy1);
+  }
+  best = _snapQuadToEdges(grey, sw, sh, best, strict: true);
+  final fx = sub.width / sw;
+  final fy = sub.height / sh;
+  return [for (final p in best) Pt(x0 + p.x * fx, y0 + p.y * fy)];
+}
+
+/// Pasada de rescate: sub grande (celda +30%), quad inicial = la celda tal
+/// cual, y snap de signo con rango ±22% del tamaño de celda. Solo se
+/// acepta si el resultado mantiene la proporción de carta (±12%).
+List<Pt>? _snapSearchFromCell(
+    RgbImage photo, double cx0, double cy0, double cx1, double cy1) {
+  final cw = cx1 - cx0;
+  final ch = cy1 - cy0;
+  if (cw < 8 || ch < 8) return null;
+  final x0 = (cx0 - cw * 0.30).floor().clamp(0, photo.width - 2);
+  final y0 = (cy0 - ch * 0.30).floor().clamp(0, photo.height - 2);
+  final x1 = (cx1 + cw * 0.30).ceil().clamp(x0 + 2, photo.width);
+  final y1 = (cy1 + ch * 0.30).ceil().clamp(y0 + 2, photo.height);
+  final sub = _crop(photo, x0, y0, x1 - x0, y1 - y0);
+  final maxDim = math.max(sub.width, sub.height);
+  final scale = maxDim > 420 ? maxDim / 420 : 1.0;
+  final sw = (sub.width / scale).round().clamp(4, sub.width).toInt();
+  final sh = (sub.height / scale).round().clamp(4, sub.height).toInt();
+  final grey = _greyDownscale(sub, sw, sh);
+  final cell = [
+    Pt((cx0 - x0) / scale, (cy0 - y0) / scale),
+    Pt((cx1 - x0) / scale, (cy0 - y0) / scale),
+    Pt((cx1 - x0) / scale, (cy1 - y0) / scale),
+    Pt((cx0 - x0) / scale, (cy1 - y0) / scale),
+  ];
+  final range = (math.min(cw, ch) * 0.22 / scale).round().clamp(6, 60);
+  final snapped =
+      _snapQuadToEdges(grey, sw, sh, cell, range: range, strict: true);
+  final wBox = _dist(snapped[0], snapped[1]);
+  final hBox = _dist(snapped[1], snapped[2]);
+  if (hBox < 8) return null;
+  final ratio = wBox / hBox;
+  if (ratio < 0.716 * 0.88 || ratio > 0.716 * 1.12) return null;
+  // consistencia: la carta descentrada DESPLAZA la caja (lados opuestos se
+  // mueven igual, suma ≈ 0); un lado solo que se mete hacia dentro es una
+  // trampa (el borde de la ventana del arte también es oscuro→claro)
+  final ds = List<double>.generate(4, (i) {
+    final c0 = cell[i];
+    final c1 = cell[(i + 1) % 4];
+    final len = _dist(c0, c1);
+    if (len < 1) return 0.0;
+    final nx = (c1.y - c0.y) / len;
+    final ny = -(c1.x - c0.x) / len;
+    return (snapped[i].x - c0.x) * nx + (snapped[i].y - c0.y) * ny;
+  });
+  if ((ds[0] + ds[2]).abs() > 0.06 * ch / scale) return null;
+  if ((ds[1] + ds[3]).abs() > 0.06 * cw / scale) return null;
+  final fx = sub.width / sw;
+  final fy = sub.height / sh;
+  return [for (final p in snapped) Pt(x0 + p.x * fx, y0 + p.y * fy)];
+}
+
+/// Pulido fino: desliza cada lado del quad por su normal (±12 px) hasta el
+/// gradiente perpendicular más fuerte con el SIGNO correcto (de dentro
+/// oscuro a fuera claro: marco → funda). El signo descarta el borde
+/// interior del marco y los bordes de cartas vecinas (van al revés).
+List<Pt> _snapQuadToEdges(Uint8List grey, int sw, int sh, List<Pt> q,
+    {int range = 12, bool strict = false}) {
+  double sobelDot(double px, double py, double nx, double ny) {
+    final x = px.round();
+    final y = py.round();
+    if (x < 1 || x >= sw - 1 || y < 1 || y >= sh - 1) return 0;
+    final i = y * sw + x;
+    final gx = -grey[i - sw - 1] - 2 * grey[i - 1] - grey[i + sw - 1] +
+        grey[i - sw + 1] + 2 * grey[i + 1] + grey[i + sw + 1];
+    final gy = -grey[i - sw - 1] - 2 * grey[i - sw] - grey[i - sw + 1] +
+        grey[i + sw - 1] + 2 * grey[i + sw] + grey[i + sw + 1];
+    return gx * nx + gy * ny;
+  }
+
+  final out = [...q];
+  for (var i = 0; i < 4; i++) {
+    final p0 = out[i];
+    final p1 = out[(i + 1) % 4];
+    final dx = p1.x - p0.x;
+    final dy = p1.y - p0.y;
+    final len = math.sqrt(dx * dx + dy * dy);
+    if (len < 4) continue;
+    final nx = dy / len; // normal hacia FUERA (quad en orden horario)
+    final ny = -dx / len;
+    var bestD = 0.0;
+    var bestScore = 0.0;
+    var zeroScore = 0.0;
+    for (var d = -range; d <= range; d++) {
+      var score = 0.0;
+      var strong = 0;
+      const samples = 16;
+      for (var s = 0; s < samples; s++) {
+        final t = 0.1 + 0.8 * s / (samples - 1); // evita las esquinas
+        final dot = sobelDot(
+            p0.x + dx * t + nx * d, p0.y + dy * t + ny * d, nx, ny);
+        if (dot > 0) score += dot; // solo oscuro→claro hacia fuera
+        if (dot > 60) strong++;
+      }
+      if (d == 0) zeroScore = score;
+      // en modo estricto (búsqueda a rango amplio) solo cuenta una
+      // posición con borde CONSISTENTE a lo largo del lado: evita que un
+      // reflejo o textura puntual arrastre el lado lejos de la celda
+      if (strict && strong < 10) continue;
+      if (score > bestScore ||
+          (score == bestScore && d.abs() < bestD.abs())) {
+        bestScore = score;
+        bestD = d.toDouble();
+      }
+    }
+    if (strict && bestScore < zeroScore * 1.3) continue;
+    if (bestD != 0) {
+      out[i] = Pt(p0.x + nx * bestD, p0.y + ny * bestD);
+      out[(i + 1) % 4] = Pt(p1.x + nx * bestD, p1.y + ny * bestD);
+    }
+  }
+  return out;
+}
+
+/// El mejor quad "que es LA carta de la celda": grande (≥ [minFrac] del
+/// sub), centrado, y de entre los válidos el MAYOR (el borde exterior del
+/// marco, no el interior; la ventana del arte queda fuera por tamaño).
+List<Pt>? _plausibleCardQuad(
+    List<(double, List<Pt>)> scored, int sw, int sh, double minFrac) {
+  List<Pt>? best;
+  var bestArea = 0.0;
+  for (final (_, q) in scored) {
+    final area = _quadArea(q);
+    if (area < minFrac * sw * sh) continue;
+    final ctr = _quadCenter(q);
+    if ((ctr.x - sw / 2).abs() > 0.15 * sw) continue;
+    if ((ctr.y - sh / 2).abs() > 0.15 * sh) continue;
+    if (area > bestArea) {
+      bestArea = area;
+      best = q;
+    }
+  }
+  return best;
 }
 
 class _AxisReg {
