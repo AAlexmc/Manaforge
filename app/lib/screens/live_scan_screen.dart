@@ -12,10 +12,10 @@ import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/session_tray.dart';
 import '../widgets/set_lock.dart';
+import '../widgets/version_picker.dart';
 import 'scan_screen.dart';
 
 /// Escáner en vivo, fase C: la webcam mira la mesa y ManaForge reconoce las
@@ -566,41 +566,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   /// Selector de versión entre los candidatos de una línea. Devuelve el
   /// índice elegido, o null si se cierra sin elegir.
   Future<int?> _pickVersion(TrayLine line) {
-    return showModalBottomSheet<int>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(12),
-              child: Text('¿Cuál es?'),
-            ),
-            for (var c = 0; c < line.candidates.length; c++)
-              ListTile(
-                onTap: () => Navigator.of(context).pop(c),
-                leading: CardThumb(
-                    url: _hitCache[line.candidates[c].entry.scryfallId]
-                        ?.imageSmall,
-                    colors: _hitCache[line.candidates[c].entry.scryfallId]
-                            ?.colors ??
-                        '',
-                    name: line.candidates[c].entry.name),
-                title: Text(
-                    _hitCache[line.candidates[c].entry.scryfallId]
-                            ?.printedName ??
-                        line.candidates[c].entry.name),
-                subtitle: Text(
-                    '${line.candidates[c].entry.setCode.toUpperCase()} '
-                    '#${line.candidates[c].entry.collectorNumber}'),
-                trailing: c == line.selected
-                    ? const Icon(Icons.check_circle,
-                        color: MFColors.success)
-                    : null,
-              ),
-          ],
-        ),
-      ),
-    );
+    return showVersionPicker(context,
+        choices: versionChoicesFrom(line, _hitCache),
+        selected: line.selected);
   }
 }
