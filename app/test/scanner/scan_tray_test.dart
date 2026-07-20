@@ -109,4 +109,38 @@ void main() {
     expect(tray.lines, isEmpty);
     expect(tray.totalQty, 0);
   });
+
+  group('buildBatchTray (varias fotos → bandeja)', () {
+    List<ScanMatch> _far() =>
+        [_md('x', 99), _md('y', 100)]; // nada reconocible → none
+
+    test('agrupa fotos de la misma carta y salta las no reconocidas', () {
+      final tray = buildBatchTray([
+        [_md('bolt', 8), _md('shock', 30)], // bolt, confident
+        _far(), // no reconocida → se salta
+        [_md('bolt', 9), _md('shock', 31)], // bolt otra vez → ×2
+        [_md('sol', 6)], // otra carta, confident
+      ]);
+      expect(tray.lines, hasLength(2));
+      expect(tray.totalQty, 3);
+      final bolt = tray.lines.firstWhere((l) => l.chosen.entry.oracleId == 'bolt');
+      expect(bolt.qty, 2);
+    });
+
+    test('una foto dudosa entra marcada para revisar', () {
+      final tray = buildBatchTray([
+        [_md('bolt', 20), _md('shock', 24)], // margen 4 → ambiguous
+      ]);
+      expect(tray.lines.single.needsReview, isTrue);
+    });
+  });
 }
+
+ScanMatch _md(String oracle, int distance) => ScanMatch(
+    HashEntry(
+        scryfallId: '$oracle-$distance',
+        oracleId: oracle,
+        name: oracle,
+        setCode: 'tst',
+        collectorNumber: oracle == 'bolt' ? '1' : '2'),
+    distance);

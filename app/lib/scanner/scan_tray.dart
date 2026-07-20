@@ -75,3 +75,18 @@ class ScanTray {
 
   void clear() => lines.clear();
 }
+
+/// Construye una bandeja a partir del top-k de VARIAS fotos (escaneo por
+/// lotes): cada foto pasa por el gate de confianza; las reconocidas
+/// (confident o ambiguous) entran agrupando copias iguales en ×N, las no
+/// reconocidas (none) se saltan.
+ScanTray buildBatchTray(Iterable<List<ScanMatch>> perPhoto) {
+  final tray = ScanTray();
+  for (final matches in perPhoto) {
+    final decision = decideScan(matches);
+    if (decision.confidence != ScanConfidence.none) {
+      tray.add(Recognition(matches, decision.confidence));
+    }
+  }
+  return tray;
+}

@@ -9,6 +9,7 @@ import 'package:image/image.dart' as img;
 import '../scanner/card_detector.dart';
 import '../scanner/dhash.dart';
 import '../scanner/scan_gate.dart';
+import '../scanner/scan_tray.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/scanner_database.dart';
@@ -16,6 +17,7 @@ import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/set_lock.dart';
+import '../widgets/tray_list.dart';
 
 /// Escáner de cartas, fase B: suelta una FOTO de una carta y ManaForge la
 /// reconoce — detección de contornos, rectificación de perspectiva, huella
@@ -96,12 +98,24 @@ class _ScanScreenState extends State<ScanScreen> {
   bool _showAll = false; // en un match claro, desplegar todas las opciones
   String? _lockSet; // set bloqueado (escanear una caja); null = todas
 
-  Future<void> _pickPhoto() async {
-    const typeGroup = XTypeGroup(
-        label: 'Fotos',
-        extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp']);
-    final file = await openFile(acceptedTypeGroups: const [typeGroup]);
-    if (file != null) await _scanFile(file);
+  // Escaneo por lotes: varias fotos de golpe → bandeja para revisar y añadir.
+  ScanTray? _batch;
+  bool _batchProcessing = false;
+  int _batchDone = 0;
+  int _batchTotal = 0;
+  final Map<String, CardHit?> _hitCache = {};
+
+  static const _typeGroup = XTypeGroup(
+      label: 'Fotos', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp']);
+
+  Future<void> _pickPhotos() async {
+    final files = await openFiles(acceptedTypeGroups: const [_typeGroup]);
+    if (files.isEmpty) return;
+    if (files.length == 1) {
+      await _scanFile(files.first);
+    } else {
+      await _scanBatch(files);
+    }
   }
 
   Future<void> _scanFile(XFile file) async {
@@ -152,40 +166,114 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  /// Añade UNA impresión a la colección (con su cantidad), con o sin ficha.
+  void _addOwned(HashEntry entry, CardHit? hit, int qty) {
+    final card = hit != null
+        ? OwnedCard(
+            oracleId: hit.oracleId,
+            name: hit.name,
+            printedName: hit.printedName,
+            imageSmall: hit.imageSmall,
+            imageNormal: hit.imageNormal,
+            colors: hit.colors,
+            typeLine: hit.typeLine,
+            cmc: hit.cmc,
+            power: hit.power,
+            toughness: hit.toughness,
+            qty: qty,
+          )
+        : OwnedCard(
+            oracleId: entry.oracleId, name: entry.name, colors: '', qty: qty);
+    widget.collection.add(card, qty: qty, printingKey: entry.printingKey);
+  }
+
+  Future<void> _precache(List<ScanMatch> matches) async {
+    for (final m in matches) {
+      if (!_hitCache.containsKey(m.entry.scryfallId)) {
+        try {
+          _hitCache[m.entry.scryfallId] =
+              await widget.db.byScryfallId(m.entry.scryfallId);
+        } catch (_) {
+          _hitCache[m.entry.scryfallId] = null;
+        }
+      }
+    }
+  }
+
+  /// Procesa VARIAS fotos: reconoce cada una y las junta en una bandeja para
+  /// que revises y añadas las que quieras (agrupa copias iguales en ×N).
+  Future<void> _scanBatch(List<XFile> files) async {
+    setState(() {
+      _error = null;
+      _outcome = null;
+      _candidates = const [];
+      _confidence = ScanConfidence.none;
+      _showAll = false;
+      _batch = ScanTray();
+      _batchProcessing = true;
+      _batchDone = 0;
+      _batchTotal = files.length;
+    });
+    try {
+      final index = await widget.scanner.loadIndex();
+      final perPhoto = <List<ScanMatch>>[];
+      for (final f in files) {
+        try {
+          final bytes = await f.readAsBytes();
+          final outcome = await compute(processScanPhoto, bytes);
+          if (outcome != null) {
+            final matches =
+                index.topMatches(outcome.signatures, lockSet: _lockSet);
+            perPhoto.add(matches);
+            await _precache(matches);
+          }
+        } catch (_) {
+          // una foto ilegible no debe tumbar el lote entero
+        }
+        if (!mounted) return;
+        setState(() => _batchDone++);
+      }
+      // misma lógica testeada (gate + agrupación ×N) para lo que se ve
+      if (mounted) {
+        setState(() {
+          _batch = buildBatchTray(perPhoto);
+          _batchProcessing = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _batchProcessing = false;
+          _error = e.toString();
+        });
+      }
+    }
+  }
+
+  void _confirmBatch() {
+    final tray = _batch;
+    if (tray == null) return;
+    var added = 0;
+    for (final line in tray.lines) {
+      _addOwned(line.chosen.entry, _hitCache[line.chosen.entry.scryfallId],
+          line.qty);
+      added += line.qty;
+    }
+    setState(() {
+      _sessionCount += added;
+      _batch = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('✓ $added carta${added == 1 ? '' : 's'} a la colección'),
+      duration: const Duration(milliseconds: 1400),
+    ));
+  }
+
   void _confirmSelected() {
     if (_candidates.isEmpty) return;
     final c = _candidates[_selected];
-    final hit = c.hit;
     final entry = c.match.entry;
-    if (hit != null) {
-      widget.collection.add(
-        OwnedCard(
-          oracleId: hit.oracleId,
-          name: hit.name,
-          printedName: hit.printedName,
-          imageSmall: hit.imageSmall,
-          imageNormal: hit.imageNormal,
-          colors: hit.colors,
-          typeLine: hit.typeLine,
-          cmc: hit.cmc,
-          power: hit.power,
-          toughness: hit.toughness,
-          qty: 1,
-        ),
-        printingKey: entry.printingKey,
-      );
-    } else {
-      // la DB de cartas no conoce la impresión: al menos nombre + edición
-      widget.collection.add(
-        OwnedCard(
-          oracleId: entry.oracleId,
-          name: entry.name,
-          colors: '',
-          qty: 1,
-        ),
-        printingKey: entry.printingKey,
-      );
-    }
+    _addOwned(entry, c.hit, 1);
     setState(() {
       _sessionCount++;
       _outcome = null;
@@ -234,25 +322,166 @@ class _ScanScreenState extends State<ScanScreen> {
       onDragExited: (_) => setState(() => _dragging = false),
       onDragDone: (detail) {
         setState(() => _dragging = false);
-        if (detail.files.isNotEmpty) _scanFile(detail.files.first);
+        final files = detail.files;
+        if (files.isEmpty) return;
+        if (files.length == 1) {
+          _scanFile(files.first);
+        } else {
+          _scanBatch(files);
+        }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         color: _dragging
             ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08)
             : Colors.transparent,
-        child: _processing
-            ? const Center(
+        child: _buildBody(),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_batch != null) return _buildBatch();
+    if (_processing) {
+      return const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 12),
+            Text('Buscando la carta en la foto…'),
+          ],
+        ),
+      );
+    }
+    return _candidates.isNotEmpty ? _buildResults() : _buildDropZone();
+  }
+
+  /// Revisión del lote: mientras procesa muestra el progreso; al terminar,
+  /// la lista de cartas reconocidas para quitar las que no quieras y añadir.
+  Widget _buildBatch() {
+    final tray = _batch!;
+    final review = tray.lines.where((l) => l.needsReview).length;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+          child: Row(
+            children: [
+              Expanded(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 12),
-                    Text('Buscando la carta en la foto…'),
+                    Text(
+                      _batchProcessing
+                          ? 'Reconociendo… $_batchDone/$_batchTotal'
+                          : '${tray.lines.length} carta'
+                              '${tray.lines.length == 1 ? '' : 's'} · '
+                              '${tray.totalQty} en total',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    if (!_batchProcessing && review > 0)
+                      Text('$review para revisar (tócalas)',
+                          style: const TextStyle(
+                              fontSize: 12.5, color: MFColors.warning)),
                   ],
                 ),
-              )
-            : (_candidates.isNotEmpty ? _buildResults() : _buildDropZone()),
+              ),
+              if (_batchProcessing)
+                const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2.5)),
+            ],
+          ),
+        ),
+        if (tray.lines.isEmpty && !_batchProcessing)
+          const Expanded(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Text('No reconocí ninguna carta en esas fotos. '
+                    'Prueba con mejor luz o menos reflejo.',
+                    textAlign: TextAlign.center),
+              ),
+            ),
+          )
+        else
+          Expanded(
+            child: TrayList(
+              tray: tray,
+              hitCache: _hitCache,
+              onEdit: _editBatchLine,
+              onRemove: (l) => setState(() => tray.remove(l)),
+              onQty: (l, q) => setState(() => tray.setQty(l, q)),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: _batchProcessing || tray.lines.isEmpty
+                      ? null
+                      : _confirmBatch,
+                  icon: const Icon(Icons.playlist_add_check),
+                  label: Text('Añadir ${tray.totalQty} a la colección'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              OutlinedButton(
+                onPressed: () => setState(() => _batch = null),
+                child: const Text('Cancelar'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Tocar una fila del lote: elegir la versión correcta entre los candidatos.
+  Future<void> _editBatchLine(TrayLine line) async {
+    final picked = await _pickVersion(line);
+    if (picked != null && mounted) {
+      setState(() {
+        line.selected = picked;
+        line.reviewed = true;
+      });
+    }
+  }
+
+  Future<int?> _pickVersion(TrayLine line) {
+    return showModalBottomSheet<int>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(padding: EdgeInsets.all(12), child: Text('¿Cuál es?')),
+            for (var c = 0; c < line.candidates.length; c++)
+              ListTile(
+                onTap: () => Navigator.of(context).pop(c),
+                leading: CardThumb(
+                    url: _hitCache[line.candidates[c].entry.scryfallId]
+                        ?.imageSmall,
+                    colors: _hitCache[line.candidates[c].entry.scryfallId]
+                            ?.colors ??
+                        '',
+                    name: line.candidates[c].entry.name),
+                title: Text(_hitCache[line.candidates[c].entry.scryfallId]
+                        ?.printedName ??
+                    line.candidates[c].entry.name),
+                subtitle: Text(
+                    '${line.candidates[c].entry.setCode.toUpperCase()} '
+                    '#${line.candidates[c].entry.collectorNumber}'),
+                trailing: c == line.selected
+                    ? const Icon(Icons.check_circle, color: MFColors.success)
+                    : null,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -268,20 +497,20 @@ class _ScanScreenState extends State<ScanScreen> {
                 size: 64,
                 color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 16),
-            Text('Suelta aquí la foto de una carta',
+            Text('Suelta aquí las fotos de tus cartas',
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             const Text(
-              'Vale una foto del móvil o un escaneo: encuentro la carta, '
-              'enderezo la perspectiva y comparo su arte con todas las '
-              'ilustraciones de Magic.',
+              'Una o varias a la vez: reconozco cada carta y las junto en una '
+              'lista para que revises y añadas las que quieras. Vale foto del '
+              'móvil o escaneo — encuentro la carta, enderezo y comparo el arte.',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             FilledButton.tonalIcon(
-              onPressed: _pickPhoto,
+              onPressed: _pickPhotos,
               icon: const Icon(Icons.photo_library_outlined),
-              label: const Text('Elegir foto'),
+              label: const Text('Elegir fotos'),
             ),
             if (_error != null)
               Padding(

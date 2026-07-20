@@ -104,10 +104,15 @@ List<DHashPair> _signatures(Uint8List bytes, {bool pad = false}) {
 }
 
 bool _pad = false;
+String? _lock;
 
 Future<void> main(List<String> args) async {
   _pad = args.contains('--pad');
-  args = args.where((a) => a != '--pad').toList();
+  _lock = args
+      .where((a) => a.startsWith('--lock='))
+      .map((a) => a.substring(7).toLowerCase())
+      .firstOrNull;
+  args = args.where((a) => a != '--pad' && !a.startsWith('--lock=')).toList();
   // Si se pasa un path a una base ya descomprimida, se usa; si no, se baja.
   String dbPath;
   Directory? tmp;
@@ -124,6 +129,33 @@ Future<void> main(List<String> args) async {
   stdout.writeln('Cargando índice…');
   final index = await _loadIndex(dbPath);
   print('${index.length} firmas.\n');
+
+  // Modo ficheros locales: los args restantes son rutas de imágenes.
+  final localFiles =
+      args.skip(1).where((a) => File(a).existsSync()).toList();
+  if (localFiles.isNotEmpty) {
+    if (_lock != null) print('== set-lock: ${_lock!.toUpperCase()} ==\n');
+    for (final path in localFiles) {
+      final name = path.split('/').last;
+      try {
+        final sigs = _signatures(File(path).readAsBytesSync(), pad: _pad);
+        final matches = index.topMatches(sigs, lockSet: _lock);
+        final decision = decideScan(matches);
+        print('▸ $name');
+        print('   veredicto: ${decision.confidence.name}');
+        for (final m in matches) {
+          print('     ${m.distance.toString().padLeft(3)}  '
+              '${m.entry.name}  (${m.entry.setCode.toUpperCase()} '
+              '#${m.entry.collectorNumber})');
+        }
+        print('');
+      } catch (e) {
+        print('▸ $name  ERROR: $e\n');
+      }
+    }
+    tmp?.deleteSync(recursive: true);
+    return;
+  }
 
   var ok = 0;
   for (final name in _cards) {
