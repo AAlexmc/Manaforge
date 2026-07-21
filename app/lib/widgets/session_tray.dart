@@ -17,6 +17,16 @@ class SessionTray extends StatelessWidget {
   final bool quickMode;
   final void Function(TrayLine) onEdit;
   final void Function(TrayLine) onRemove;
+
+  /// Sumar o restar copias de una línea con un toque. Es la vía rápida para
+  /// un montón de repetidas: mucho mejor que pasarlas una a una por delante
+  /// de la cámara, y es además la forma HONESTA de contar dos copias
+  /// idénticas (la cámara no puede distinguirlas).
+  final void Function(TrayLine, int delta) onQty;
+
+  /// La impresión que está ahora mismo sobre la mesa, para marcarla. Que se
+  /// vea que está ahí y que no va a sumar sola.
+  final String? onTableKey;
   final VoidCallback onConfirm;
   final VoidCallback onClear;
 
@@ -27,6 +37,8 @@ class SessionTray extends StatelessWidget {
     required this.quickMode,
     required this.onEdit,
     required this.onRemove,
+    required this.onQty,
+    this.onTableKey,
     required this.onConfirm,
     required this.onClear,
   });
@@ -53,7 +65,7 @@ class SessionTray extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 124,
+          height: 148,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -87,13 +99,14 @@ class SessionTray extends StatelessWidget {
   Widget _tile(TrayLine line) {
     final entry = line.chosen.entry;
     final hit = hitCache[entry.scryfallId];
+    final enMesa = onTableKey != null && line.key == onTableKey;
     return Padding(
       padding: const EdgeInsets.all(6),
       child: InkWell(
         onTap: () => onEdit(line),
         borderRadius: BorderRadius.circular(10),
         child: SizedBox(
-          width: 88,
+          width: 92,
           child: Column(
             children: [
               Stack(
@@ -149,16 +162,62 @@ class SessionTray extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 2),
+              // sumar copias a mano: la cámara no puede distinguir dos
+              // cartas idénticas, así que esta es la forma de decirlo
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _StepButton(
+                      icon: Icons.remove,
+                      tooltip: 'Una menos',
+                      onTap: () => onQty(line, -1)),
+                  Text('${line.qty}',
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold)),
+                  _StepButton(
+                      icon: Icons.add,
+                      tooltip: 'Otra igual',
+                      onTap: () => onQty(line, 1)),
+                ],
+              ),
               Text(
-                hit?.printedName ?? entry.name,
-                maxLines: 2,
+                enMesa ? 'en mesa' : (hit?.printedName ?? entry.name),
+                maxLines: enMesa ? 1 : 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 10.5),
+                style: TextStyle(
+                    fontSize: 10.5,
+                    fontStyle: enMesa ? FontStyle.italic : null,
+                    color: enMesa ? MFColors.warning : null),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Botoncito de ±1 de la ficha: área táctil decente sin ocupar media ficha.
+class _StepButton extends StatelessWidget {
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  const _StepButton(
+      {required this.icon, required this.tooltip, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: InkResponse(
+        onTap: onTap,
+        radius: 16,
+        child: Padding(
+          padding: const EdgeInsets.all(3),
+          child: Icon(icon, size: 15),
         ),
       ),
     );

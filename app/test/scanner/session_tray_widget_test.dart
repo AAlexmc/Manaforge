@@ -27,7 +27,11 @@ Recognition _rec(String oracle,
           5)
     ], conf);
 
-Widget _host(ScanTray tray, {VoidCallback? onEdit}) => MaterialApp(
+Widget _host(ScanTray tray,
+        {VoidCallback? onEdit,
+        void Function(TrayLine, int)? onQty,
+        String? onTableKey}) =>
+    MaterialApp(
       home: Scaffold(
         body: SessionTray(
           tray: tray,
@@ -35,6 +39,8 @@ Widget _host(ScanTray tray, {VoidCallback? onEdit}) => MaterialApp(
           quickMode: true,
           onEdit: (_) => onEdit?.call(),
           onRemove: (_) {},
+          onQty: (line, delta) => onQty?.call(line, delta),
+          onTableKey: onTableKey,
           onConfirm: () {},
           onClear: () {},
         ),
@@ -72,5 +78,45 @@ void main() {
     await tester.pumpWidget(_host(tray, onEdit: () => edited = true));
     await tester.tap(find.text('bolt'));
     expect(edited, isTrue);
+  });
+
+  testWidgets('el contador de la ficha suma copias con un toque',
+      (tester) async {
+    final tray = ScanTray()..add(_rec('sol', set: 'lea', num: '270'));
+    final cambios = <int>[];
+
+    await tester.pumpWidget(_host(tray, onQty: (_, d) => cambios.add(d)));
+    await tester.tap(find.byTooltip('Otra igual'));
+    await tester.pump();
+
+    expect(cambios, [1]);
+  });
+
+  testWidgets('el contador también resta', (tester) async {
+    final tray = ScanTray()..add(_rec('sol', set: 'lea', num: '270'));
+    final cambios = <int>[];
+
+    await tester.pumpWidget(_host(tray, onQty: (_, d) => cambios.add(d)));
+    await tester.tap(find.byTooltip('Una menos'));
+    await tester.pump();
+
+    expect(cambios, [-1]);
+  });
+
+  testWidgets('la carta que está sobre la mesa se marca', (tester) async {
+    final tray = ScanTray()..add(_rec('sol', set: 'lea', num: '270'));
+    final linea = tray.lines.single;
+
+    await tester.pumpWidget(_host(tray, onTableKey: linea.key));
+
+    expect(find.text('en mesa'), findsOneWidget);
+  });
+
+  testWidgets('sin nada en la mesa no se marca ninguna ficha', (tester) async {
+    final tray = ScanTray()..add(_rec('sol', set: 'lea', num: '270'));
+
+    await tester.pumpWidget(_host(tray));
+
+    expect(find.text('en mesa'), findsNothing);
   });
 }

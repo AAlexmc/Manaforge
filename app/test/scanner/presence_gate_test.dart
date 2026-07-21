@@ -91,6 +91,99 @@ void main() {
       }
       expect(gate.cardPresent, isFalse);
     });
+
+    // --- El bug de la carta quieta (2026-07-21) --------------------------
+
+    test('un cambio de brillo pequeño sobre la MISMA carta no es un cambio '
+        'de carta', () {
+      gate.feed(_flat(120));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.cardPlaced);
+
+      // algo se mueve delante (una mano, una sombra): marca movimiento
+      expect(gate.feed(_flat(140)), PresenceEvent.none);
+      // y la escena se asienta otra vez con la MISMA carta, solo que la
+      // autoexposición ha subido un poco el brillo
+      expect(gate.feed(_flat(128)), PresenceEvent.none);
+      expect(gate.feed(_flat(128)), PresenceEvent.none,
+          reason: 'sigue siendo la misma carta: no puede contar otra vez');
+    });
+
+    test('una sombra que cruza y se va deja la carta como estaba', () {
+      gate.feed(_flat(120));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.cardPlaced);
+
+      // sombra: baja el brillo y vuelve
+      gate.feed(_flat(100));
+      gate.feed(_flat(100));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.none);
+      expect(gate.feed(_flat(120)), PresenceEvent.none);
+      expect(gate.cardPresent, isTrue);
+    });
+
+    test('una carta quieta un buen rato con la luz cambiando despacio no '
+        'dispara ni una vez más', () {
+      gate.feed(_flat(120));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.cardPlaced);
+
+      // una hora bajo la cámara = muchos frames con deriva de exposición
+      var brillo = 120;
+      for (var i = 0; i < 200; i++) {
+        brillo += (i ~/ 20).isEven ? 1 : -1; // sube y baja despacio
+        expect(gate.feed(_flat(brillo)), PresenceEvent.none,
+            reason: 'frame $i (brillo $brillo) no debería disparar nada');
+      }
+    });
+
+    test('un frame suelto que parece mesa vacía no rearma la puerta', () {
+      gate.feed(_flat(120));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.cardPlaced);
+
+      // parpadeo: un frame asentado que se parece a la mesa, y vuelta
+      gate.feed(_flat(51));
+      expect(gate.feed(_flat(51)), PresenceEvent.none,
+          reason: 'hace falta más de un frame para dar la carta por retirada');
+      gate.feed(_flat(120));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.none,
+          reason: 'la carta nunca se fue: no puede volver a contar');
+    });
+
+    test('retirar la carta de verdad (varios frames) sí rearma', () {
+      gate.feed(_flat(120));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.cardPlaced);
+
+      gate.feed(_flat(50));
+      gate.feed(_flat(50));
+      gate.feed(_flat(50));
+      gate.feed(_flat(50));
+      expect(gate.cardPresent, isFalse);
+    });
+
+    test('la línea base no se toca con una carta delante', () {
+      gate.feed(_flat(120));
+      gate.feed(_flat(120));
+      expect(gate.feed(_flat(120)), PresenceEvent.cardPlaced);
+      // muchos frames con la carta puesta: si la base se fuera adaptando a
+      // la carta, al retirarla la mesa parecería "algo puesto"
+      for (var i = 0; i < 50; i++) {
+        gate.feed(_flat(120));
+      }
+      gate.feed(_flat(50));
+      gate.feed(_flat(50));
+      gate.feed(_flat(50));
+      gate.feed(_flat(50));
+
+      expect(gate.cardPresent, isFalse);
+      for (var i = 0; i < 5; i++) {
+        expect(gate.feed(_flat(50)), PresenceEvent.none);
+      }
+    });
   });
 
   group('presenceThumbFromJpeg', () {

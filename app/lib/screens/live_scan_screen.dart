@@ -10,6 +10,7 @@ import '../scanner/burst_controller.dart';
 import '../scanner/presence_gate.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
+import '../scanner/table_memory.dart';
 import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
@@ -69,6 +70,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   /// exposición) dejaría la puerta creyendo que siempre hay carta.
   PresenceGate _gate = PresenceGate();
 
+  /// Qué carta hay AHORA sobre la mesa. La puerta de presencia mira píxeles,
+  /// así que una carta que se mueve un solo píxel (pasa una mano, se roza la
+  /// mesa) le parece una carta nueva y volvía a sumarla: una carta olvidada
+  /// bajo la cámara se contaba muchas veces. Quien decide si hay copia nueva
+  /// es la IDENTIDAD de lo reconocido, no la puerta.
+  final TableMemory _table = TableMemory();
+
   /// Última línea añadida a la bandeja: para el botón "+1 igual" (por si
   /// pasas otra copia y la puerta no llega a verte retirar la primera).
   TrayLine? _lastAdded;
@@ -95,6 +103,12 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   /// Set bloqueado (escanear una caja entera); null = buscar en todas.
   String? _lockSet;
 
+  /// Cuánto esperar antes de reintentar el reconocimiento: lo justo para que
+  /// la cámara haya entregado un frame nuevo.
+  Duration get _retryDelay => Platform.isLinux
+      ? const Duration(milliseconds: 120)
+      : const Duration(milliseconds: 300);
+
   /// Cada cuánto muestreamos la mesa (miniatura barata para la puerta de
   /// presencia; el reconocimiento solo corre cuando la puerta dispara).
   /// En Windows takePicture() es caro (foto real con obturador): más lento.
@@ -117,6 +131,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     _camera = null;
     _stopLinuxCam();
     _gate = PresenceGate();
+    _table.reset(); // sesión nueva: la mesa está vacía para nosotros
     setState(() {
       _starting = true;
       _cameraError = null;
@@ -207,7 +222,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       if (bytes == null || !mounted) return; // aún sin frame
       final thumb = await compute(presenceThumbFromJpeg, bytes);
       if (thumb == null || !mounted) return;
-      switch (_gate.feed(thumb)) {
+      final event = _gate.feed(thumb);
+      // mesa vacía: hacia el olvido de lo que había encima (hacen falta
+      // varios ticks seguidos, un parpadeo no vale)
+      if (!_gate.cardPresent) _table.sawEmpty();
+      switch (event) {
         case PresenceEvent.cardPlaced:
         case PresenceEvent.cardChanged:
           await _recognizeSettled(bytes);
@@ -243,7 +262,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     var sinCarta = 0; // intentos seguidos en los que no había carta
     for (var attempt = 0; attempt < 3; attempt++) {
       if (attempt > 0) {
-        await Future<void>.delayed(const Duration(milliseconds: 300));
+        // esperar solo a que llegue un frame NUEVO, no un tercio de
+        // segundo: en Linux el pipeline de GStreamer va a 10 fps, así que
+        // con ~120 ms ya hay imagen fresca. Eran 300 ms y con dos reintentos
+        // se iban 600 ms de más en cada carta dudosa.
+        await Future<void>.delayed(_retryDelay);
         if (!mounted) return;
         final fresh = await _captureBytes();
         if (fresh == null) break;
@@ -291,6 +314,15 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   }
 
   Future<void> _onRecognition(Recognition rec) async {
+    // ¿es la misma carta que ya está en la mesa? Entonces no es una copia
+    // nueva: la puerta ha re-disparado porque la escena se ha reasentado.
+    // Ni se suma ni se pregunta.
+    final key =
+        '${rec.best.entry.oracleId}|${rec.best.entry.printingKey}';
+    if (!_table.shouldCount(key)) {
+      if (mounted) setState(() => _lastSeenName = rec.best.entry.name);
+      return;
+    }
     await _precache(rec.candidates);
     if (!mounted) return;
     // Dudosa y en modo "con cuidado": parar y preguntar antes de añadir.
@@ -620,6 +652,9 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
           quickMode: _quickMode,
           onEdit: _editLine,
           onRemove: (line) => setState(() => _tray.remove(line)),
+          onQty: (line, delta) =>
+              setState(() => _tray.setQty(line, line.qty + delta)),
+          onTableKey: _table.onTable,
           onConfirm: _confirmAll,
           onClear: () => setState(_tray.clear),
         ),

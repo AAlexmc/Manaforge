@@ -264,3 +264,47 @@ que reorganizar carpetas te desmontara un mazo:
     la tienes", y el mazo enseña arriba "te faltan N cartas". Vender un Sol Ring
     no puede deshacer un mazo que costó una tarde montar; y si de verdad se
     quiere fuera, se quita a mano desde el mazo.
+
+---
+
+## Bloque B · lo medido (2026-07-21)
+
+**El bug, reproducido de verdad.** Con frames sintéticos con estructura (no
+planos), la misma carta movida **un solo píxel** tras pasar una mano dispara
+`cardChanged`, la pantalla re-reconoce y la bandeja suma otra copia. Corrección
+a lo que se supuso al diseñar: la deriva de brillo por sí sola **no** lo
+dispara; el disparador es que la carta se reasiente movida.
+
+De ahí que el arreglo NO pueda estar en la puerta: mira píxeles, no cartas, y
+"la misma carta movida" y "otra carta" le parecen lo mismo. Decide la identidad
+de lo reconocido (`TableMemory`).
+
+**Coste del tick de presencia**, medido con frames del tamaño real de la cámara
+(1280×720, que es lo que pide el pipeline de GStreamer):
+
+| etapa | ms |
+|---|---|
+| decodificar el JPEG | 75,0 |
+| remuestrear a 64×36 (`average`, el actual) | 8,0 |
+| remuestrear con `nearest` | 0,1 |
+| muestreo directo a mano | 0,1 |
+| **total por tick** | **~89** |
+
+Conclusión incómoda: el remuestreo no es el problema, la decodificación sí, y
+`package:image` no sabe decodificar JPEG a escala reducida. Cambiar a `nearest`
+ahorraría 8 ms de 89 (9 %): no merece tocar código que funciona.
+
+Las únicas vías reales, si algún día molesta:
+1. **Segundo stream diminuto desde GStreamer** (un `tee` a 64×36 en crudo):
+   cero decodificación por tick. Es la buena, pero es solo Linux y toca el
+   pipeline de cámara.
+2. Bajar el ritmo de muestreo (ya está a 300 ms).
+3. Dejarlo: corre en un isolate, no bloquea la interfaz.
+
+**Lo que sí se cambió**: los reintentos de reconocimiento esperaban 300 ms por
+un frame fresco cuando el pipeline entrega uno cada ~100 ms. Con dos reintentos
+eso eran ~600 ms perdidos en cada carta dudosa. Ahora esperan 120 ms en Linux.
+
+**Lo que NO se tocó, a propósito**: `settleFrames` (2 frames = ~600 ms antes de
+reconocer). Bajarlo aceleraría cada carta, pero arriesga reconocer una carta aún
+en movimiento, y eso no se puede decidir sin medir aciertos con fotos reales.
