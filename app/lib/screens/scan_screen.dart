@@ -48,10 +48,23 @@ class ScanOutcome {
   final Uint8List artPng; // recorte del arte, para enseñarlo
   final bool usedFallback;
 
+  /// Grupos de firmas de HIPÓTESIS de posición (celdas de rejilla donde la
+  /// geometría no encontró la carta): el matching prueba cada grupo con
+  /// [HashIndex.bestGroupMatches] y gana el que mejor casa.
+  final List<List<DHashPair>> altSignatures;
+
+  /// Detalle de la ventana del arte y su brillo medio: los usa el escaneo
+  /// en vivo para no "reconocer" superficies lisas (ver [decideLiveScan]).
+  final double artDetail;
+  final double artMean;
+
   const ScanOutcome({
     required this.signatures,
     required this.artPng,
     required this.usedFallback,
+    this.altSignatures = const [],
+    this.artDetail = double.infinity,
+    this.artMean = 0,
   });
 }
 
@@ -85,6 +98,7 @@ List<ScanOutcome> processScanPhotoAll(Uint8List bytes) {
 
 ScanOutcome _outcomeFrom(DetectedCard detected) {
   final warped = detected.warped;
+  final likeness = cardLikeness(warped.pixels, warped.width, warped.height);
   final art = detected.artCrop;
   final artImage = img.Image.fromBytes(
       width: art.width,
@@ -96,6 +110,12 @@ ScanOutcome _outcomeFrom(DetectedCard detected) {
     signatures: artSignatures(warped.pixels, warped.width, warped.height),
     artPng: img.encodePng(artImage),
     usedFallback: detected.usedFallback,
+    artDetail: likeness.artDetail,
+    artMean: likeness.artMean,
+    altSignatures: [
+      for (final w in detected.altWarps)
+        artSignatures(w.pixels, w.width, w.height, compact: true)
+    ],
   );
 }
 
@@ -163,8 +183,9 @@ class _ScanScreenState extends State<ScanScreen> {
       }
       final outcome = outcomes.first;
       final index = await widget.scanner.loadIndex();
-      final matches =
-          index.topMatches(outcome.signatures, lockSet: _lockSet);
+      final (matches, _) = index.bestGroupMatches(
+          outcome.signatures, outcome.altSignatures,
+          lockSet: _lockSet);
       final decision = decideScan(matches);
       final candidates = <_Candidate>[];
       for (final m in matches) {
@@ -195,7 +216,8 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   /// Añade UNA impresión a la colección (con su cantidad), con o sin ficha.
-  void _addOwned(HashEntry entry, CardHit? hit, int qty) {
+  /// [at] permite sellar todo un lote con el mismo instante.
+  void _addOwned(HashEntry entry, CardHit? hit, int qty, {DateTime? at}) {
     final card = hit != null
         ? OwnedCard(
             oracleId: hit.oracleId,
@@ -212,7 +234,8 @@ class _ScanScreenState extends State<ScanScreen> {
           )
         : OwnedCard(
             oracleId: entry.oracleId, name: entry.name, colors: '', qty: qty);
-    widget.collection.add(card, qty: qty, printingKey: entry.printingKey);
+    widget.collection
+        .add(card, qty: qty, printingKey: entry.printingKey, at: at);
   }
 
   Future<void> _precache(List<ScanMatch> matches) async {
@@ -231,10 +254,12 @@ class _ScanScreenState extends State<ScanScreen> {
   /// Una foto con varias cartas detectadas: montar la bandeja directamente.
   Future<void> _batchFromOutcomes(List<ScanOutcome> outcomes) async {
     final index = await widget.scanner.loadIndex();
-    final perCard = <List<ScanMatch>>[];
+    final perCard = <(List<ScanMatch>, Uint8List?)>[];
     for (final o in outcomes) {
-      final matches = index.topMatches(o.signatures, lockSet: _lockSet);
-      perCard.add(matches);
+      final (matches, _) = index.bestGroupMatches(
+          o.signatures, o.altSignatures,
+          lockSet: _lockSet);
+      perCard.add((matches, o.artPng));
       await _precache(matches);
     }
     if (!mounted) return;
@@ -263,16 +288,17 @@ class _ScanScreenState extends State<ScanScreen> {
     });
     try {
       final index = await widget.scanner.loadIndex();
-      final perPhoto = <List<ScanMatch>>[];
+      final perPhoto = <(List<ScanMatch>, Uint8List?)>[];
       for (final f in files) {
         try {
           final bytes = await f.readAsBytes();
           // cada foto puede traer VARIAS cartas (página de álbum)
           final outcomes = await compute(processScanPhotoAll, bytes);
           for (final outcome in outcomes) {
-            final matches =
-                index.topMatches(outcome.signatures, lockSet: _lockSet);
-            perPhoto.add(matches);
+            final (matches, _) = index.bestGroupMatches(
+                outcome.signatures, outcome.altSignatures,
+                lockSet: _lockSet);
+            perPhoto.add((matches, outcome.artPng));
             await _precache(matches);
           }
         } catch (_) {
@@ -302,9 +328,12 @@ class _ScanScreenState extends State<ScanScreen> {
     final tray = _batch;
     if (tray == null) return;
     var added = 0;
+    final at = DateTime.now(); // el lote entero entra "a la vez"
     for (final line in tray.lines) {
+      // sin reconocer = no se sabe qué carta es: no se añade nada
+      if (line.unrecognized) continue;
       _addOwned(line.chosen.entry, _hitCache[line.chosen.entry.scryfallId],
-          line.qty);
+          line.qty, at: at);
       added += line.qty;
     }
     setState(() {
@@ -410,6 +439,7 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget _buildBatch() {
     final tray = _batch!;
     final review = tray.lines.where((l) => l.needsReview).length;
+    final unknown = tray.lines.where((l) => l.unrecognized).length;
     return Column(
       children: [
         Padding(
@@ -432,6 +462,13 @@ class _ScanScreenState extends State<ScanScreen> {
                       Text('$review para revisar (tócalas)',
                           style: const TextStyle(
                               fontSize: 12.5, color: MFColors.warning)),
+                    if (!_batchProcessing && unknown > 0)
+                      Text(
+                          '$unknown sin reconocer (toca para elegir '
+                          'a mano)',
+                          style: TextStyle(
+                              fontSize: 12.5,
+                              color: Theme.of(context).colorScheme.error)),
                   ],
                 ),
               ),
@@ -490,12 +527,16 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   /// Tocar una fila del lote: elegir la versión correcta entre los candidatos.
+  /// En una línea SIN reconocer, elegir un candidato a mano la convierte en
+  /// reconocida (cuenta para "Añadir N").
   Future<void> _editBatchLine(TrayLine line) async {
+    if (line.candidates.isEmpty) return; // sin apuestas: solo re-foto/borrar
     final picked = await _pickVersion(line);
     if (picked != null && mounted) {
       setState(() {
         line.selected = picked;
         line.reviewed = true;
+        line.unrecognized = false;
       });
     }
   }

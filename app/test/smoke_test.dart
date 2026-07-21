@@ -6,6 +6,12 @@ void main() {
     await tester.pumpWidget(const ManaForgeApp());
     await tester.pump(const Duration(milliseconds: 100));
 
+    // pantalla de arranque: sin carpeta de datos (tests) no hay nada que
+    // descargar y se entra sola en cuanto vence la comprobación
+    expect(find.text('ManaForge'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(milliseconds: 100));
+
     expect(find.text('Inicio'), findsWidgets);
     expect(find.text('Colección'), findsWidgets);
     expect(find.text('Álbum'), findsWidgets);

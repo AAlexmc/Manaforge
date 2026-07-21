@@ -74,6 +74,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   bool _flash = false; // fogonazo visual al reconocer
   String? _lastSeenName; // pie de estado ("viendo: …")
 
+  /// Por qué no se está reconociendo nada, cuando la puerta de presencia
+  /// dispara pero no hay carta: sin esto los tres motivos (mesa vacía, mal
+  /// encuadre, superficie lisa) decían lo mismo.
+  String? _noCardHint;
+
   /// Quick Mode (como ManaBox): ON = las cartas claras entran solas en la
   /// bandeja; las dudosas entran marcadas para revisar. OFF ("Con cuidado")
   /// = las claras entran solas, pero las dudosas se paran y te preguntan.
@@ -202,7 +207,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
         case PresenceEvent.cardChanged:
           await _recognizeSettled(bytes);
         case PresenceEvent.cardRemoved:
-          setState(() => _lastSeenName = null);
+          setState(() {
+            _lastSeenName = null;
+            _noCardHint = null;
+          });
         case PresenceEvent.none:
           break;
       }
@@ -227,6 +235,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     final index = await widget.scanner.loadIndex();
     Recognition? fallback; // mejor resultado ambiguo visto
     var bytes = firstBytes;
+    var sinCarta = 0; // intentos seguidos en los que no había carta
     for (var attempt = 0; attempt < 3; attempt++) {
       if (attempt > 0) {
         await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -240,17 +249,38 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       if (outcome == null) continue;
       final matches =
           index.topMatches(outcome.signatures, lockSet: _lockSet);
-      final decision = decideScan(matches);
-      setState(() => _lastSeenName = decision.best?.entry.name);
+      // usedFallback = el detector no encontró carta y hasheó el encuadre
+      // entero: eso es la mesa, no una carta (ver decideLiveScan)
+      final decision = decideLiveScan(matches,
+          cardDetected: !outcome.usedFallback,
+          artDetail: outcome.artDetail,
+          artMean: outcome.artMean);
+      if (decision.confidence == ScanConfidence.none) {
+        // dos veces seguidas sin carta: no gastar más pipeline (cada
+        // intento son ~230 ms de isolate) y decir POR QUÉ no se ve
+        sinCarta++;
+        setState(() => _lastSeenName = null);
+        setState(() => _noCardHint = outcome.usedFallback
+            ? 'Encuadra la carta dentro del marco'
+            : 'No veo ninguna carta ahí');
+        if (sinCarta >= 2) return;
+        continue;
+      }
+      sinCarta = 0;
+      setState(() {
+        _lastSeenName = decision.best?.entry.name;
+        _noCardHint = null;
+      });
       if (decision.confidence == ScanConfidence.confident) {
         await _onRecognition(Recognition(matches, decision.confidence));
         return;
       }
-      if (decision.confidence == ScanConfidence.ambiguous) {
-        fallback = Recognition(matches, decision.confidence);
-      }
+      fallback = Recognition(matches, decision.confidence);
     }
     if (fallback != null && mounted) {
+      // el pie decía "viendo X": que no se añada algo distinto de lo que
+      // dice estar viendo
+      setState(() => _lastSeenName = fallback!.best.entry.name);
       await _onRecognition(fallback);
     }
   }
@@ -308,6 +338,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
 
   void _confirmAll() {
     var added = 0;
+    final at = DateTime.now(); // toda la bandeja entra "a la vez"
     for (final line in _tray.lines) {
       final entry = line.chosen.entry;
       final hit = _hitCache[entry.scryfallId];
@@ -328,6 +359,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
           ),
           qty: line.qty,
           printingKey: entry.printingKey,
+          at: at,
         );
       } else {
         widget.collection.add(
@@ -338,6 +370,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
               qty: line.qty),
           qty: line.qty,
           printingKey: entry.printingKey,
+          at: at,
         );
       }
       added += line.qty;
@@ -547,9 +580,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 6),
                     child: Text(
-                      _lastSeenName == null
-                          ? 'Pasa una carta por delante de la cámara…'
-                          : 'Viendo: $_lastSeenName',
+                      _lastSeenName != null
+                          ? 'Viendo: $_lastSeenName'
+                          : _noCardHint ??
+                              'Pasa una carta por delante de la cámara…',
                       style: const TextStyle(
                           color: Colors.white, fontSize: 12.5),
                     ),

@@ -59,13 +59,22 @@ void main() {
     final rgb3 = decoded.convert(numChannels: 3);
     final photo = RgbImage(
         rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
+    gridRefineTrace = <String>[];
     final cards = detectCardGrid(photo);
+    final trace = gridRefineTrace!;
     for (var i = 0; i < cards.length; i++) {
       final expected = e.value[i];
       final w = cards[i].warped;
       final sigs = artSignatures(w.pixels, w.width, w.height);
+      final alts = [
+        for (final aw in cards[i].altWarps)
+          artSignatures(aw.pixels, aw.width, aw.height, compact: true)
+      ];
+      // el grupo ganador con la MISMA regla que la app
+      final (_, chosen) = index.bestGroupMatches(sigs, alts);
+      final winner = chosen == -1 ? sigs : alts[chosen];
       // distancia mínima multi-recorte a CADA entrada, como topMatches
-      final all = index.topMatches(sigs, k: 200000);
+      final all = index.topMatches(winner, k: 200000);
       final top = all.first;
       var rank = -1;
       var dist = -1;
@@ -76,7 +85,9 @@ void main() {
           break;
         }
       }
-      print('  celda $i: esperada "$expected" rank=$rank dist=$dist | '
+      print('  celda $i [${trace.length > i ? trace[i] : "?"}'
+          '${chosen == -1 ? "" : " alt$chosen"}]: '
+          'esperada "$expected" rank=$rank dist=$dist | '
           'top1 ${top.entry.name} ${top.distance}');
     }
   }

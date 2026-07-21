@@ -109,4 +109,28 @@ class HashIndex {
       ..sort((a, b) => a.distance.compareTo(b.distance));
     return all.take(k).toList();
   }
+
+  /// Matching con HIPÓTESIS de posición: el grupo [primary] manda salvo
+  /// que algún grupo de [alts] mejore su top-1 en ≥3 bits (histéresis:
+  /// probar N grupos sesga el mínimo hacia abajo y sin margen un falso
+  /// podría robarle el sitio a un acierto mediocre). Devuelve los matches
+  /// ganadores y el índice del grupo elegido (-1 = primario).
+  (List<ScanMatch>, int) bestGroupMatches(
+      List<DHashPair> primary, List<List<DHashPair>> alts,
+      {String? lockSet}) {
+    var matches = topMatches(primary, lockSet: lockSet);
+    var chosen = -1;
+    if (alts.isEmpty) return (matches, chosen);
+    var best = matches.isEmpty ? 999 : matches.first.distance;
+    for (var i = 0; i < alts.length; i++) {
+      final m = topMatches(alts[i], lockSet: lockSet);
+      if (m.isEmpty) continue;
+      if (m.first.distance <= best - 3) {
+        best = m.first.distance;
+        matches = m;
+        chosen = i;
+      }
+    }
+    return (matches, chosen);
+  }
 }

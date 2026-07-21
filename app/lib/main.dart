@@ -4,6 +4,8 @@ import 'screens/screens.dart';
 import 'services/card_database.dart';
 import 'services/collection_store.dart';
 import 'services/deck_store.dart';
+import 'services/price_history.dart';
+import 'services/price_series_database.dart';
 import 'services/scanner_database.dart';
 import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
@@ -35,14 +37,39 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
+  bool _started = false; // false = pantalla de arranque (puesta al día)
   final _db = CardDatabase();
   final _collection = CollectionStore();
   final _decks = DeckStore();
   final _scanner = ScannerDatabase();
   final _wishlist = WishlistStore();
+  final _prices = PriceSeriesDatabase();
+
+  @override
+  void initState() {
+    super.initState();
+    // el historial local se apoya en los ~90 días reales de Cardmarket que
+    // trae la base descargable (si el usuario la ha traído)
+    priceHistoryStore.baseSeriesProvider = _prices.seriesFor;
+  }
+
+  @override
+  void dispose() {
+    priceHistoryStore.baseSeriesProvider = null;
+    _prices.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!_started) {
+      return StartupScreen(
+        sources: defaultUpdateSources(
+            db: _db, prices: _prices, scanner: _scanner),
+        collection: _collection,
+        onReady: () => setState(() => _started = true),
+      );
+    }
     final screens = [
       HomeScreen(
           db: _db,
@@ -53,7 +80,11 @@ class _HomeShellState extends State<HomeShell> {
       AlbumScreen(db: _db, collection: _collection),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
-      MercadoScreen(db: _db, collection: _collection, wishlist: _wishlist),
+      MercadoScreen(
+          db: _db,
+          collection: _collection,
+          wishlist: _wishlist,
+          prices: _prices),
       AjustesScreen(db: _db),
     ];
     return Scaffold(

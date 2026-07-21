@@ -5,6 +5,16 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+/// Máximo que admite DateTime.fromMillisecondsSinceEpoch: un valor mayor
+/// (fichero editado a mano, otra versión) reventaría al pintar la fila.
+const int _maxStamp = 8640000000000000;
+
+int? _saneStamp(Object? raw) {
+  final value = raw is num ? raw.toInt() : null;
+  if (value == null || value.abs() > _maxStamp) return null;
+  return value;
+}
+
 /// Una carta poseída (nivel Oracle) con los datos mínimos para pintarla
 /// y filtrarla (coste, tipo, fuerza/resistencia).
 class OwnedCard {
@@ -20,6 +30,11 @@ class OwnedCard {
   final int? toughness;
   int qty;
 
+  /// Cuándo entró a la colección (ms desde época). Se refresca al añadir
+  /// copias, así lo último que escaneas sale primero. null = colección
+  /// anterior a esta versión: se trata como lo más antiguo.
+  int? addedAt;
+
   OwnedCard({
     required this.oracleId,
     required this.name,
@@ -32,6 +47,7 @@ class OwnedCard {
     this.power,
     this.toughness,
     required this.qty,
+    this.addedAt,
   });
 
   bool get isCreature => typeLine.contains('Creature');
@@ -48,6 +64,7 @@ class OwnedCard {
         'power': power,
         'toughness': toughness,
         'qty': qty,
+        if (addedAt != null) 'addedAt': addedAt,
       };
 
   factory OwnedCard.fromJson(Map<String, dynamic> json) => OwnedCard(
@@ -62,7 +79,21 @@ class OwnedCard {
         power: json['power'] as int?,
         toughness: json['toughness'] as int?,
         qty: json['qty'] as int,
+        addedAt: _saneStamp(json['addedAt']),
       );
+}
+
+/// Orden "lo último que tocaste, primero". Las cartas sin fecha (guardadas
+/// por versiones anteriores) van al final, entre ellas por nombre. Vive
+/// aquí para que la pantalla y el almacén ordenen EXACTAMENTE igual.
+int compareByRecent(OwnedCard a, OwnedCard b) {
+  final at = a.addedAt;
+  final bt = b.addedAt;
+  if (at == null && bt == null) return a.name.compareTo(b.name);
+  if (at == null) return 1;
+  if (bt == null) return -1;
+  if (at != bt) return bt.compareTo(at);
+  return a.name.compareTo(b.name);
 }
 
 /// Colección del usuario. Persistencia local en JSON (sin cuentas, sin nube:
@@ -87,6 +118,11 @@ class CollectionStore extends ChangeNotifier {
       ..sort((a, b) => a.name.compareTo(b.name));
     return list;
   }
+
+  /// Las más recientemente añadidas primero (lo que acabas de escanear
+  /// arriba del todo).
+  List<OwnedCard> get cardsByRecent =>
+      _cards.values.toList()..sort(compareByRecent);
 
   int get totalCopies =>
       _cards.values.fold(0, (a, c) => a + c.qty);
@@ -141,12 +177,25 @@ class CollectionStore extends ChangeNotifier {
     }));
   }
 
-  void add(OwnedCard card, {int qty = 1, String? printingKey}) {
+  /// [at] sella cuándo entra (por defecto, ahora): pasando el MISMO
+  /// instante a todo un lote, sus cartas empatan y salen por nombre en vez
+  /// de en el orden en que se recorrió la lista.
+  ///
+  /// [bump] = false deja intacta la fecha de una carta que YA tenías y solo
+  /// le suma copias. Lo usa el importador de CSV: reimportar no debe
+  /// re-sellar toda la colección (enterraría lo que acabas de escanear
+  /// bajo 300 cartas viejas, y esa información no se recupera).
+  void add(OwnedCard card,
+      {int qty = 1, String? printingKey, DateTime? at, bool bump = true}) {
+    final stamp = (at ?? DateTime.now()).millisecondsSinceEpoch;
     final existing = _cards[card.oracleId];
     if (existing != null) {
       existing.qty += qty;
+      if (bump) existing.addedAt = stamp; // volver a tocarla la sube arriba
     } else {
-      _cards[card.oracleId] = card..qty = qty;
+      _cards[card.oracleId] = card
+        ..qty = qty
+        ..addedAt = stamp;
     }
     if (printingKey != null && printingKey.isNotEmpty) {
       _printings[printingKey] = (_printings[printingKey] ?? 0) + qty;

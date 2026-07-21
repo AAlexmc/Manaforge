@@ -27,6 +27,18 @@ class ScannerDatabase {
     return File(p.join(dir.path, 'manaforge_hashes.sqlite'));
   }
 
+  /// Cuándo se trajo la copia local (para no re-descargar cada arranque
+  /// cuando la fecha del contenido nunca alcanza al día de hoy).
+  Future<DateTime?> lastDownloaded() async {
+    try {
+      final file = await _dbFile();
+      if (!await file.exists()) return null;
+      return file.lastModified();
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<bool> isReady() async {
     try {
       return await (await _dbFile()).exists();
@@ -36,11 +48,14 @@ class ScannerDatabase {
   }
 
   /// Descarga y descomprime la base, emitiendo progreso 0..1 (-1 = indet.).
+  /// Como en CardDatabase: la base buena solo se sustituye al final, y una
+  /// cancelación a media descarga no deja sinks abiertos ni restos.
   Stream<double> download() async* {
-    _index = null;
     final dbFile = await _dbFile();
     final gzFile = File('${dbFile.path}.gz');
+    final tmpFile = File('${dbFile.path}.tmp');
     final client = http.Client();
+    IOSink? sink;
     try {
       final request = http.Request('GET', Uri.parse(releaseUrl));
       final response = await client.send(request);
@@ -51,18 +66,30 @@ class ScannerDatabase {
       }
       final total = response.contentLength ?? -1;
       var received = 0;
-      final sink = gzFile.openWrite();
+      sink = gzFile.openWrite();
       await for (final chunk in response.stream) {
         sink.add(chunk);
         received += chunk.length;
         yield total > 0 ? received / total : -1;
       }
       await sink.close();
-      await gzFile.openRead().transform(gzip.decoder).pipe(dbFile.openWrite());
-      await gzFile.delete();
+      sink = null;
+      await gzFile.openRead().transform(gzip.decoder).pipe(tmpFile.openWrite());
+      _index = null;
+      await tmpFile.rename(dbFile.path);
       yield 1.0;
     } finally {
       client.close();
+      try {
+        await sink?.close();
+      } catch (_) {/* ya estaba rota */}
+      for (final leftover in [gzFile, tmpFile]) {
+        if (await leftover.exists()) {
+          try {
+            await leftover.delete();
+          } catch (_) {/* nada que hacer */}
+        }
+      }
     }
   }
 

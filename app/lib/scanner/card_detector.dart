@@ -57,11 +57,19 @@ class DetectedCard {
   /// true si no hubo contorno creíble y se usó la foto entera.
   final bool usedFallback;
 
+  /// Warps ALTERNATIVOS para celdas de rejilla donde el refinado no
+  /// encontró la carta (borde débil, carta muy descentrada en la funda):
+  /// hipótesis de posición desplazadas. El matching prueba cada una y se
+  /// queda con la que mejor casa contra la base — la geometría no supo
+  /// decidir, decide el reconocimiento.
+  final List<RgbImage> altWarps;
+
   const DetectedCard({
     required this.corners,
     required this.warped,
     required this.artCrop,
     required this.usedFallback,
+    this.altWarps = const [],
   });
 }
 
@@ -75,6 +83,83 @@ const artLeft = 0.077;
 const artRight = 0.923;
 const artTop = 0.117;
 const artBottom = 0.545;
+
+/// Cuánto se parece un recorte rectificado a una carta de Magic DE VERDAD,
+/// mirando lo que toda carta tiene y una mesa, una mano o un pañuelo no:
+/// detalle en la ventana del arte y, sobre todo, la caja de texto con sus
+/// renglones. Sin esto, el escáner en vivo "encontraba" cartas en un
+/// pliegue de servilleta y las casaba a ~25 bits.
+class CardLikeness {
+  /// Desviación típica de la luminancia en la ventana del arte (0..127).
+  final double artDetail;
+
+  /// Luminancia media de esa misma ventana.
+  final double artMean;
+
+  /// Energía de gradiente HORIZONTAL media en la caja de texto: los
+  /// renglones de texto la disparan, una superficie lisa no.
+  final double textLines;
+
+  const CardLikeness(this.artDetail, this.artMean, this.textLines);
+
+  /// Detalle RELATIVO al brillo. La desviación típica a secas escala con
+  /// la exposición: la misma carta con menos luz da la mitad de detalle y
+  /// se colaba por debajo de cualquier umbral absoluto, así que se
+  /// descartaban cartas buenas a media luz. Dividir por el brillo medio
+  /// deja la medida donde importa: cuánta VARIACIÓN hay para el nivel de
+  /// luz que haya.
+  double get relativeDetail => artDetail / (artMean + 8);
+
+  @override
+  String toString() => 'arte ${artDetail.toStringAsFixed(1)} '
+      '(rel ${relativeDetail.toStringAsFixed(3)}) · '
+      'texto ${textLines.toStringAsFixed(1)}';
+}
+
+CardLikeness cardLikeness(Uint8List warpedRgb, int w, int h) {
+  double lum(int x, int y) {
+    final i = (y * w + x) * 3;
+    return 0.299 * warpedRgb[i] +
+        0.587 * warpedRgb[i + 1] +
+        0.114 * warpedRgb[i + 2];
+  }
+
+  // ventana del arte: desviación típica
+  final ax0 = (artLeft * w).round();
+  final ax1 = (artRight * w).round();
+  final ay0 = (artTop * h).round();
+  final ay1 = (artBottom * h).round();
+  var sum = 0.0;
+  var sumSq = 0.0;
+  var n = 0;
+  for (var y = ay0; y < ay1; y += 2) {
+    for (var x = ax0; x < ax1; x += 2) {
+      final v = lum(x, y);
+      sum += v;
+      sumSq += v * v;
+      n++;
+    }
+  }
+  final mean = n == 0 ? 0.0 : sum / n;
+  final variance = n == 0 ? 0.0 : (sumSq / n) - mean * mean;
+  final artDetail = variance <= 0 ? 0.0 : math.sqrt(variance);
+
+  // caja de texto (mitad inferior del marco): energía de |gy|, que es lo
+  // que dispara la sucesión de renglones
+  final tx0 = (0.10 * w).round();
+  final tx1 = (0.90 * w).round();
+  final ty0 = (0.60 * h).round();
+  final ty1 = (0.92 * h).round();
+  var energy = 0.0;
+  var count = 0;
+  for (var y = ty0 + 1; y < ty1 - 1; y += 2) {
+    for (var x = tx0; x < tx1; x += 3) {
+      energy += (lum(x, y + 1) - lum(x, y - 1)).abs();
+      count++;
+    }
+  }
+  return CardLikeness(artDetail, mean, count == 0 ? 0.0 : energy / count);
+}
 
 /// Detecta la carta de [photo] y devuelve carta rectificada + arte.
 DetectedCard detectCard(RgbImage photo) {
@@ -166,6 +251,11 @@ List<DetectedCard> detectCards(RgbImage photo, {int maxCards = 12}) {
 ///
 /// Devuelve las celdas con proporción de carta, rectificadas. Vacío si no
 /// se ve una rejilla creíble (≥2 columnas y ≥2 filas).
+/// Traza de diagnóstico por celda de la última llamada a [detectCardGrid]
+/// ('pass1'/'pass2'/'pass3'/'fallback'). Solo para herramientas de tool/;
+/// la app no la lee.
+List<String>? gridRefineTrace;
+
 List<DetectedCard> detectCardGrid(RgbImage photo, {int maxCards = 24}) {
   final g = _gridProfiles(photo);
   final colLines = _gridLines(g.gxCol);
@@ -207,35 +297,111 @@ List<DetectedCard> detectCardGrid(RgbImage photo, {int maxCards = 24}) {
 
   final fx = photo.width / g.sw;
   final fy = photo.height / g.sh;
-  final out = <DetectedCard>[];
+
+  // fase 1: refinar cada celda por su cuenta (pasadas 1-3)
+  final rects = <List<double>>[]; // cx0, cy0, cx1, cy1 por celda
+  final quads = <List<Pt>?>[];
+  final passes = <String>[];
   for (var r = 0; r + 1 < ys.length; r++) {
     for (var c = 0; c + 1 < xs.length; c++) {
-      if (out.length >= maxCards) break;
+      if (rects.length >= maxCards) break;
       // la celda es solo APROXIMADA: la carta baila dentro de su funda y la
       // página sale inclinada, así que se afina al contorno real de la carta
+      if (debugCellRefine) dbgRejCounts.clear();
       final refined = _refineCellQuad(
           photo, xs[c] * fx, ys[r] * fy, xs[c + 1] * fx, ys[r + 1] * fy);
-      if (refined != null) {
-        out.add(_rectify(photo, refined, false));
-        continue;
+      if (debugCellRefine) {
+        // ignore: avoid_print
+        print('  celda ${rects.length}: '
+            '${refined == null ? "FALLBACK" : _lastRefinePass} '
+            'rej=$dbgRejCounts');
       }
-      // sin contorno creíble: celda encogida un pelín (quita el hueco de
-      // funda y el marco compartido, deja el arte más centrado para el hash)
-      final mx = (xs[c + 1] - xs[c]) * 0.04;
-      final my = (ys[r + 1] - ys[r]) * 0.04;
-      final cx0 = (xs[c] + mx) * fx;
-      final cx1 = (xs[c + 1] - mx) * fx;
-      final cy0 = (ys[r] + my) * fy;
-      final cy1 = (ys[r + 1] - my) * fy;
-      out.add(_rectify(photo, [
-        Pt(cx0, cy0),
-        Pt(cx1, cy0),
-        Pt(cx1, cy1),
-        Pt(cx0, cy1),
-      ], false));
+      rects.add([xs[c] * fx, ys[r] * fy, xs[c + 1] * fx, ys[r + 1] * fy]);
+      quads.add(refined);
+      passes.add(refined == null ? 'fallback' : _lastRefinePass);
+    }
+  }
+
+  // fase 2: para las celdas donde la geometría NO encontró la carta con
+  // confianza (fallback, o el snap amplio de pass3 que a veces se agarra
+  // a un borde falso), la posición real es indecidible desde los píxeles
+  // de la celda (borde débil, blanco sobre blanco, foto oscura). En vez
+  // de apostar por un quad, se emiten HIPÓTESIS: la celda encogida
+  // desplazada en rejilla (±4/8/12 % del tamaño de celda) más la plantilla
+  // de CONSENSO de las celdas fiables (mediana de sus quads normalizados:
+  // captura inclinación de página y tamaño de carta en funda). El matching
+  // prueba cada warp contra la base y gana el que mejor casa.
+  final anchors = <List<double>>[];
+  for (var i = 0; i < quads.length; i++) {
+    if (quads[i] == null) continue;
+    if (passes[i] != 'pass1' && passes[i] != 'pass2') continue;
+    anchors.add(_normQuad(quads[i]!, rects[i]));
+  }
+  List<double>? template;
+  if (anchors.length >= 3) {
+    template = List<double>.generate(8, (k) {
+      final vals = [for (final a in anchors) a[k]]..sort();
+      return vals[vals.length ~/ 2];
+    });
+  }
+
+  final out = <DetectedCard>[];
+  for (var i = 0; i < quads.length; i++) {
+    final rc = rects[i];
+    final cw = rc[2] - rc[0];
+    final ch = rc[3] - rc[1];
+    final mx = cw * 0.04;
+    final my = ch * 0.04;
+    List<Pt> shrunk(double dx, double dy) => [
+          Pt(rc[0] + mx + dx * cw, rc[1] + my + dy * ch),
+          Pt(rc[2] - mx + dx * cw, rc[1] + my + dy * ch),
+          Pt(rc[2] - mx + dx * cw, rc[3] - my + dy * ch),
+          Pt(rc[0] + mx + dx * cw, rc[3] - my + dy * ch),
+        ];
+
+    final confident = passes[i] == 'pass1' || passes[i] == 'pass2';
+    if (confident) {
+      gridRefineTrace?.add(passes[i]);
+      out.add(_rectify(photo, quads[i]!, false));
+      continue;
+    }
+    final alts = <List<Pt>>[
+      for (final d in [-0.08, -0.04, 0.0, 0.04, 0.08])
+        for (final e in [-0.08, -0.04, 0.0, 0.04, 0.08])
+          if (d != 0.0 || e != 0.0) shrunk(d, e),
+      shrunk(0.12, 0), shrunk(-0.12, 0), shrunk(0, 0.12), shrunk(0, -0.12),
+      if (template != null) _denormQuad(template, rc),
+    ];
+    if (quads[i] != null) {
+      // pass3: su quad de primaria, y la celda encogida como hipótesis más
+      alts.add(shrunk(0, 0));
+      gridRefineTrace?.add('pass3+alt');
+      out.add(_rectify(photo, quads[i]!, false, altQuads: alts));
+    } else {
+      gridRefineTrace?.add('fallback+alt');
+      out.add(_rectify(photo, shrunk(0, 0), false, altQuads: alts));
     }
   }
   return out;
+}
+
+/// Quad en coordenadas normalizadas de su celda [rc] = (cx0,cy0,cx1,cy1):
+/// 8 valores (x,y por esquina) en unidades de tamaño de celda.
+List<double> _normQuad(List<Pt> q, List<double> rc) {
+  final cw = rc[2] - rc[0];
+  final ch = rc[3] - rc[1];
+  return [
+    for (final p in q) ...[(p.x - rc[0]) / cw, (p.y - rc[1]) / ch]
+  ];
+}
+
+List<Pt> _denormQuad(List<double> n, List<double> rc) {
+  final cw = rc[2] - rc[0];
+  final ch = rc[3] - rc[1];
+  return [
+    for (var i = 0; i < 4; i++)
+      Pt(rc[0] + n[i * 2] * cw, rc[1] + n[i * 2 + 1] * ch)
+  ];
 }
 
 /// Afina una celda de rejilla al contorno REAL de su carta: busca el mejor
@@ -243,8 +409,11 @@ List<DetectedCard> detectCardGrid(RgbImage photo, {int maxCards = 24}) {
 /// El desplazamiento de la carta dentro de la funda (±10% es normal) mueve
 /// el recorte del arte y arruina el dHash aunque la rejilla sea correcta.
 /// Devuelve null si no hay quad creíble (el llamador usa la celda tal cual).
+String _lastRefinePass = '';
+
 List<Pt>? _refineCellQuad(
     RgbImage photo, double cx0, double cy0, double cx1, double cy1) {
+  _lastRefinePass = 'pass1';
   final cw = cx1 - cx0;
   final ch = cy1 - cy0;
   if (cw < 8 || ch < 8) return null;
@@ -262,8 +431,15 @@ List<Pt>? _refineCellQuad(
 
   // pasada 1: sub tal cual. La carta llena ~65% de la celda expandida; se
   // exige ≥55% para no aceptar el borde INTERIOR del marco (~48%).
+  // cobertura relajada respecto al detector de foto completa: en la celda
+  // hay UNA carta casi centrada seguro, y en fotos oscuras el borde real
+  // queda por debajo del 0.45 (el ruido de textura fija el percentil 92)
   var best = _plausibleCardQuad(
-      _scoredQuads(grey, sw, sh, minAreaFrac: 0.30), sw, sh, 0.55);
+      _scoredQuads(grey, sw, sh,
+          minAreaFrac: 0.30, covMinSide: 0.30, covMinMean: 0.45),
+      sw,
+      sh,
+      0.55);
   if (best == null) {
     // pasada 2: los trozos de cartas VECINAS que entran por la expansión
     // contaminan las máscaras (el componente toca el borde del sub y el
@@ -282,6 +458,7 @@ List<Pt>? _refineCellQuad(
       }
     }
     if (ring.isNotEmpty) {
+      _lastRefinePass = 'pass2';
       ring.sort();
       final sleeve = ring[ring.length ~/ 2];
       for (var yy = 0; yy < sh; yy++) {
@@ -291,7 +468,11 @@ List<Pt>? _refineCellQuad(
         }
       }
       best = _plausibleCardQuad(
-          _scoredQuads(cleaned, sw, sh, minAreaFrac: 0.30), sw, sh, 0.50);
+          _scoredQuads(cleaned, sw, sh,
+              minAreaFrac: 0.30, covMinSide: 0.30, covMinMean: 0.45),
+          sw,
+          sh,
+          0.50);
     }
   }
   if (best == null) {
@@ -299,6 +480,7 @@ List<Pt>? _refineCellQuad(
     // celda expandida (o las máscaras no dan quad). Se parte de la CELDA
     // y se desliza cada lado hasta la pared real con el snap de signo
     // (rango amplio); el signo descarta bordes de vecinos y del interior.
+    _lastRefinePass = 'pass3';
     return _snapSearchFromCell(photo, cx0, cy0, cx1, cy1);
   }
   best = _snapQuadToEdges(grey, sw, sh, best, strict: true);
@@ -429,10 +611,19 @@ List<Pt>? _plausibleCardQuad(
   var bestArea = 0.0;
   for (final (_, q) in scored) {
     final area = _quadArea(q);
-    if (area < minFrac * sw * sh) continue;
+    if (area < minFrac * sw * sh) {
+      _rej('plaus-small');
+      continue;
+    }
     final ctr = _quadCenter(q);
-    if ((ctr.x - sw / 2).abs() > 0.15 * sw) continue;
-    if ((ctr.y - sh / 2).abs() > 0.15 * sh) continue;
+    if ((ctr.x - sw / 2).abs() > 0.15 * sw) {
+      _rej('plaus-offx');
+      continue;
+    }
+    if ((ctr.y - sh / 2).abs() > 0.15 * sh) {
+      _rej('plaus-offy');
+      continue;
+    }
     if (area > bestArea) {
       bestArea = area;
       best = q;
@@ -585,7 +776,8 @@ void _smooth(Float64List p, int r) {
 }
 
 /// Esquinas (en coordenadas de la foto) → carta rectificada + arte.
-DetectedCard _rectify(RgbImage photo, List<Pt> corners, bool fallback) {
+DetectedCard _rectify(RgbImage photo, List<Pt> corners, bool fallback,
+    {List<List<Pt>> altQuads = const []}) {
   // la carta se rectifica en VERTICAL: el lado corto debe ser el de arriba;
   // si el cuadrilátero está tumbado, rotamos el orden de esquinas
   final topLen = _dist(corners[0], corners[1]) + _dist(corners[3], corners[2]);
@@ -605,7 +797,17 @@ DetectedCard _rectify(RgbImage photo, List<Pt> corners, bool fallback) {
   final art = _crop(warped, x0, y0, x1 - x0, y1 - y0);
 
   return DetectedCard(
-      corners: corners, warped: warped, artCrop: art, usedFallback: fallback);
+    corners: corners,
+    warped: warped,
+    artCrop: art,
+    usedFallback: fallback,
+    // las hipótesis solo alimentan un dHash 9x8 del arte, así que se
+    // rectifican a media resolución: 4× más baratas y misma huella
+    altWarps: [
+      for (final q in altQuads)
+        _warp(photo, q, warpedWidth ~/ 2, warpedHeight ~/ 2)
+    ],
+  );
 }
 
 /// Caja envolvente (minX, minY, maxX, maxY) de un cuadrilátero.
@@ -864,30 +1066,62 @@ double _sideCoverage(Pt p0, Pt p1, Int32List gxa, Int32List gya,
 
 /// Puntuación de "parecido a carta" de un cuadrilátero candidato, o null
 /// si no cuela (área, lados, proporción 63:88, relleno, bordes por lado).
+bool debugCellRefine = false;
+final Map<String, int> dbgRejCounts = {};
+void _rej(String r) {
+  if (debugCellRefine) dbgRejCounts[r] = (dbgRejCounts[r] ?? 0) + 1;
+}
+
 double? _scoreQuad(List<Pt> q, int compSize, int w, int h, Int32List gxa,
     Int32List gya, Uint16List mag, double edgeThr,
-    {double minAreaFrac = 0.06}) {
+    {double minAreaFrac = 0.06,
+    double covMinSide = 0.45,
+    double covMinMean = 0.60}) {
   final area = _quadArea(q);
   final imgArea = w * h;
-  if (area < minAreaFrac * imgArea || area > 0.92 * imgArea) return null;
+  if (area < minAreaFrac * imgArea || area > 0.92 * imgArea) {
+    _rej(area < minAreaFrac * imgArea ? 'area<' : 'area>');
+    return null;
+  }
   final sides = [for (var i = 0; i < 4; i++) _dist(q[i], q[(i + 1) % 4])];
-  if (sides.reduce(math.min) < 0.12 * math.min(w, h)) return null;
+  if (sides.reduce(math.min) < 0.12 * math.min(w, h)) {
+    _rej('side-short');
+    return null;
+  }
   final top = sides[0], right = sides[1], bottom = sides[2], left = sides[3];
   final aLen = (top + bottom) / 2;
   final bLen = (left + right) / 2;
   final ratio = math.min(aLen, bLen) / math.max(aLen, bLen);
-  if (ratio < 0.50 || ratio > 0.95) return null;
-  if (math.min(top, bottom) / math.max(top, bottom) < 0.55) return null;
-  if (math.min(left, right) / math.max(left, right) < 0.55) return null;
+  if (ratio < 0.50 || ratio > 0.95) {
+    _rej('ratio');
+    return null;
+  }
+  if (math.min(top, bottom) / math.max(top, bottom) < 0.55) {
+    _rej('parallel-h');
+    return null;
+  }
+  if (math.min(left, right) / math.max(left, right) < 0.55) {
+    _rej('parallel-v');
+    return null;
+  }
   final fill = compSize / area;
-  if (fill < 0.08) return null;
+  if (fill < 0.08) {
+    _rej('fill');
+    return null;
+  }
   final covs = [
     for (var i = 0; i < 4; i++)
       _sideCoverage(q[i], q[(i + 1) % 4], gxa, gya, mag, w, h, edgeThr)
   ];
-  if (covs.reduce(math.min) < 0.45) return null; // cada lado, borde real
+  if (covs.reduce(math.min) < covMinSide) {
+    _rej('cov-min');
+    return null; // cada lado, borde real
+  }
   final meanCov = covs.reduce((a, b) => a + b) / 4;
-  if (meanCov < 0.60) return null;
+  if (meanCov < covMinMean) {
+    _rej('cov-mean');
+    return null;
+  }
   // proporción: penalización cuadrática centrada en 63:88 = 0.716
   final dev = (ratio - 0.716).abs() / 0.15;
   final aspectFit = math.max(0.05, 1.0 - dev * dev);
@@ -906,7 +1140,9 @@ List<Pt>? _findQuad(Uint8List grey, int w, int h) {
 /// mejor a peor (pueden venir casi-duplicados de máscaras distintas: el
 /// llamador deduplica por solape si le importa).
 List<(double, List<Pt>)> _scoredQuads(Uint8List grey, int w, int h,
-    {double minAreaFrac = 0.06}) {
+    {double minAreaFrac = 0.06,
+    double covMinSide = 0.45,
+    double covMinMean = 0.60}) {
   final blurred = _blur3(grey, w, h);
 
   // Sobel: magnitud + dirección; umbral por percentil 92 (con la media,
@@ -946,7 +1182,9 @@ List<(double, List<Pt>)> _scoredQuads(Uint8List grey, int w, int h,
       final q = _quadFromComponent(comp, w);
       if (q == null) continue;
       final s = _scoreQuad(q, comp.length, w, h, gxa, gya, mag, coverageThr,
-          minAreaFrac: minAreaFrac);
+          minAreaFrac: minAreaFrac,
+          covMinSide: covMinSide,
+          covMinMean: covMinMean);
       if (s != null) candidates.add((s, q));
     }
   }

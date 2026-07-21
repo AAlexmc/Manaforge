@@ -114,24 +114,67 @@ void main() {
     List<ScanMatch> _far() =>
         [_md('x', 99), _md('y', 100)]; // nada reconocible → none
 
-    test('agrupa fotos de la misma carta y salta las no reconocidas', () {
+    test('agrupa fotos de la misma carta; la no reconocida entra como '
+        'línea "sin reconocer" que no suma al total', () {
       final tray = buildBatchTray([
-        [_md('bolt', 8), _md('shock', 30)], // bolt, confident
-        _far(), // no reconocida → se salta
-        [_md('bolt', 9), _md('shock', 31)], // bolt otra vez → ×2
-        [_md('sol', 6)], // otra carta, confident
+        ([_md('bolt', 8), _md('shock', 30)], null), // bolt, confident
+        (_far(), null), // no reconocida → línea sin reconocer
+        ([_md('bolt', 9), _md('shock', 31)], null), // bolt otra vez → ×2
+        ([_md('sol', 6)], null), // otra carta, confident
       ]);
-      expect(tray.lines, hasLength(2));
-      expect(tray.totalQty, 3);
-      final bolt = tray.lines.firstWhere((l) => l.chosen.entry.oracleId == 'bolt');
+      expect(tray.lines, hasLength(3));
+      expect(tray.totalQty, 3); // la sin reconocer NO cuenta
+      final bolt = tray.lines
+          .firstWhere((l) => !l.unrecognized && l.chosen.entry.oracleId == 'bolt');
       expect(bolt.qty, 2);
+      expect(tray.lines.where((l) => l.unrecognized), hasLength(1));
     });
 
-    test('una foto dudosa entra marcada para revisar', () {
+    test('una foto dudosa con top-1 creíble entra marcada para revisar', () {
       final tray = buildBatchTray([
-        [_md('bolt', 20), _md('shock', 24)], // margen 4 → ambiguous
+        ([_md('bolt', 20), _md('shock', 24)], null), // margen 4 → ambiguous
       ]);
       expect(tray.lines.single.needsReview, isTrue);
+      expect(tray.lines.single.unrecognized, isFalse);
+    });
+
+    test('ambigua con top-1 en zona de error (≥ kUntrustedMin) NO propone '
+        'carta: sale "sin reconocer" con sus apuestas para elegir a mano', () {
+      final tray = buildBatchTray([
+        ([_md('plains', 30), _md('island', 32)], null), // basura típica
+      ]);
+      final line = tray.lines.single;
+      expect(line.unrecognized, isTrue);
+      expect(line.candidates, isNotEmpty); // apuestas para el picker manual
+      expect(tray.totalQty, 0);
+    });
+
+    test('una carta buena NO se agrupa dentro de una línea sin reconocer '
+        'aunque compartan top-1', () {
+      // la celda dudosa tiene 'bolt' como top-1 basura (dist 30); una foto
+      // posterior reconoce bolt de verdad: debe salir en su PROPIA línea,
+      // no sumarse a la que no se añade a la colección
+      final tray = buildBatchTray([
+        ([_md('bolt', 30), _md('shock', 32)], null), // sin reconocer
+        ([_md('bolt', 8), _md('shock', 30)], null), // bolt de verdad
+      ]);
+      expect(tray.lines, hasLength(2));
+      expect(tray.lines.first.unrecognized, isTrue);
+      expect(tray.lines.first.qty, 1);
+      expect(tray.lines.last.unrecognized, isFalse);
+      expect(tray.totalQty, 1); // solo la buena
+    });
+
+    test('elegir a mano una línea sin reconocer la convierte en normal', () {
+      final tray = buildBatchTray([
+        ([_md('plains', 30), _md('island', 32)], null),
+      ]);
+      final line = tray.lines.single
+        ..selected = 1
+        ..reviewed = true
+        ..unrecognized = false;
+      expect(line.chosen.entry.oracleId, 'island');
+      expect(tray.totalQty, 1);
     });
   });
 }

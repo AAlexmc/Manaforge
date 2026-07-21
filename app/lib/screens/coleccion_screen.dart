@@ -26,6 +26,60 @@ class ColeccionScreen extends StatefulWidget {
   State<ColeccionScreen> createState() => _ColeccionScreenState();
 }
 
+/// Cómo se ordena la lista de la colección.
+enum CollectionSort {
+  /// Lo último que has escaneado o añadido, primero.
+  recent('Recién añadidas'),
+  alpha('Nombre A-Z'),
+  cmc('Coste'),
+  qty('Cantidad'),
+  ;
+
+  final String label;
+  const CollectionSort(this.label);
+}
+
+/// Ordena una copia de [cards] según [sort]. Función pura (la colección ya
+/// llega ordenada por nombre; aquí solo se reordena) para poder testearla.
+List<OwnedCard> sortCollection(List<OwnedCard> cards, CollectionSort sort) {
+  final list = [...cards];
+  switch (sort) {
+    case CollectionSort.alpha:
+      list.sort((a, b) => a.name.compareTo(b.name));
+    case CollectionSort.cmc:
+      list.sort((a, b) {
+        final c = a.cmc.compareTo(b.cmc);
+        return c != 0 ? c : a.name.compareTo(b.name);
+      });
+    case CollectionSort.qty:
+      list.sort((a, b) {
+        final c = b.qty.compareTo(a.qty);
+        return c != 0 ? c : a.name.compareTo(b.name);
+      });
+    case CollectionSort.recent:
+      // mismo comparador que usa el almacén: una sola fuente de verdad
+      list.sort(compareByRecent);
+  }
+  return list;
+}
+
+/// "hoy", "ayer", "hace 3 días", o la fecha si es vieja.
+String addedLabel(int? addedAt, {DateTime? now}) {
+  if (addedAt == null) return 'sin fecha';
+  final when = DateTime.fromMillisecondsSinceEpoch(addedAt);
+  final today = now ?? DateTime.now();
+  // los días civiles se cuentan en UTC: en hora local, el día del cambio
+  // de hora dura 23 h y `inDays` lo trunca (ayer salía como "hoy")
+  final days = DateTime.utc(today.year, today.month, today.day)
+      .difference(DateTime.utc(when.year, when.month, when.day))
+      .inDays;
+  if (days <= 0) return 'hoy';
+  if (days == 1) return 'ayer';
+  if (days < 7) return 'hace $days días';
+  two(int n) => n < 10 ? '0$n' : '$n';
+  return '${two(when.day)}/${two(when.month)}/${when.year}';
+}
+
 class _ColeccionScreenState extends State<ColeccionScreen> {
   bool? _dbReady;
   double? _downloadProgress;
@@ -39,6 +93,9 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
   String? _fType;
   int? _fMinPower;
   int? _fMinToughness;
+
+  /// Por defecto, lo recién escaneado arriba: es lo que acabas de hacer.
+  CollectionSort _sort = CollectionSort.recent;
 
   bool get _anyFilter =>
       _fColors.isNotEmpty ||
@@ -229,7 +286,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
       listenable: widget.collection,
       builder: (context, _) {
         final allOwned = widget.collection.cards;
-        final owned = _applyFilters(allOwned);
+        final owned = sortCollection(_applyFilters(allOwned), _sort);
         final missingData =
             _anyFilter && allOwned.any((c) => c.typeLine.isEmpty);
         return CustomScrollView(
@@ -285,6 +342,21 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Text('Ordenar por',
+                            style: TextStyle(fontSize: 12.5)),
+                        const SizedBox(width: 8),
+                        _dropdown<CollectionSort>(
+                          hint: 'Orden',
+                          value: _sort,
+                          items: {
+                            for (final s in CollectionSort.values) s: s.label,
+                          },
+                          onChanged: (v) => setState(() => _sort = v),
+                        ),
+                      ],
+                    ),
                     _buildFilterBar(),
                     if (_anyFilter)
                       Padding(
@@ -361,9 +433,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                         colors: card.colors,
                         name: card.name),
                     title: Text(card.printedName ?? card.name),
-                    subtitle: Text(card.name != (card.printedName ?? card.name)
-                        ? card.name
-                        : ''),
+                    subtitle: Text(_subtitleFor(card)),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -390,6 +460,18 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
         );
       },
     );
+  }
+
+  /// Bajo el nombre: el nombre inglés si la carta es de otro idioma y,
+  /// ordenando por recientes, cuándo entró (que es lo que estás mirando).
+  String _subtitleFor(OwnedCard card) {
+    final english =
+        card.name != (card.printedName ?? card.name) ? card.name : '';
+    // sin fecha (colección anterior a esta versión) no se dice nada: ya lo
+    // cuenta la posición, y "añadida sin fecha" en 300 filas es ruido
+    if (_sort != CollectionSort.recent || card.addedAt == null) return english;
+    final added = 'añadida ${addedLabel(card.addedAt)}';
+    return english.isEmpty ? added : '$english · $added';
   }
 
   static const _typeOptions = <String, String>{

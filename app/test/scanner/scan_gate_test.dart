@@ -64,4 +64,77 @@ void main() {
     expect(d.confidence, ScanConfidence.none);
     expect(d.candidates, hasLength(1));
   });
+
+  group('decideLiveScan (frame de cámara, no foto elegida)', () {
+    test('sin carta detectada NO reconoce, por muy cerca que quede algo', () {
+      // el detector no encontró contorno y hasheó el encuadre entero: eso
+      // es la mesa. Antes entraba a la bandeja como carta inventada.
+      final d = decideLiveScan([_m('o1', 6)], cardDetected: false);
+      expect(d.confidence, ScanConfidence.none);
+      expect(d.best, isNull);
+    });
+
+    test('carta detectada y match claro → confident', () {
+      final d = decideLiveScan([_m('o1', 8), _m('o2', 30)],
+          cardDetected: true);
+      expect(d.confidence, ScanConfidence.confident);
+    });
+
+    test('ambigua en zona de error (≥28) NO reconoce aunque haya contorno',
+        () {
+      // las distancias de los falsos positivos reales caen en 28-34
+      final d = decideLiveScan([_m('o1', 30), _m('o2', 33)],
+          cardDetected: true);
+      expect(d.confidence, ScanConfidence.none);
+    });
+
+    test('ambigua pero creíble (<28) sigue reconociéndose para revisar', () {
+      final d = decideLiveScan([_m('o1', 20), _m('o2', 24)],
+          cardDetected: true);
+      expect(d.confidence, ScanConfidence.ambiguous);
+      expect(d.best?.entry.oracleId, 'o1');
+    });
+
+    test('un recorte liso (mesa, servilleta) NO es carta aunque el detector '
+        'haya encontrado un rectángulo y case cerca', () {
+      // caso REAL de Ale: un pliegue de servilleta pasaba por carta y
+      // casaba a 25 bits; su ventana de arte tiene detalle ~6, las cartas
+      // reales 17-57
+      final d = decideLiveScan([_m('o1', 25), _m('o2', 34)],
+          cardDetected: true, artDetail: 6.1, artMean: 200);
+      expect(d.confidence, ScanConfidence.none);
+    });
+
+    test('una carta poco contrastada pero con arte de verdad sí pasa', () {
+      final d = decideLiveScan([_m('o1', 10), _m('o2', 30)],
+          cardDetected: true, artDetail: 17.3, artMean: 60);
+      expect(d.confidence, ScanConfidence.confident);
+    });
+
+    test('la MISMA carta con menos luz sigue pasando (el detalle va '
+        'relativo al brillo, no absoluto)', () {
+      // medido: 19.05.44 da arte 31 con luz normal y 12 a media luz; en
+      // relativo se queda en 0,58 y 0,48
+      final normal = decideLiveScan([_m('o1', 14), _m('o2', 30)],
+          cardDetected: true, artDetail: 31.1, artMean: 46);
+      final penumbra = decideLiveScan([_m('o1', 17), _m('o2', 32)],
+          cardDetected: true, artDetail: 12.0, artMean: 17);
+      expect(normal.confidence, ScanConfidence.confident);
+      expect(penumbra.confidence, ScanConfidence.confident);
+    });
+
+    test('una escena casi negra no cuela por el suelo absoluto', () {
+      // std bajísima pero media ~0: el relativo saldría alto
+      final d = decideLiveScan([_m('o1', 20), _m('o2', 35)],
+          cardDetected: true, artDetail: 3.0, artMean: 2);
+      expect(d.confidence, ScanConfidence.none);
+    });
+
+    test('sin candidatos y sin carta: none, sin reventar', () {
+      expect(decideLiveScan(const [], cardDetected: false).confidence,
+          ScanConfidence.none);
+      expect(decideLiveScan(const [], cardDetected: true).confidence,
+          ScanConfidence.none);
+    });
+  });
 }

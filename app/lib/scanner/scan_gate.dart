@@ -57,6 +57,62 @@ const int kMinMargin = 8;
 /// reconozco nada (evita "alucinar" una carta con cualquier foto).
 const int kNoMatchMax = 40;
 
+/// Una propuesta AMBIGUA cuyo top-1 está a esta distancia o más tampoco es
+/// creíble como carta concreta (los matches ERRÓNEOS de fotos reales caen
+/// en 28-34): la bandeja la enseña como "sin reconocer" — recorte + elegir
+/// a mano — en vez de proponer una carta casi seguro equivocada. Mejor no
+/// decir nada que decir mentira.
+const int kUntrustedMin = 28;
+
+/// Detalle mínimo RELATIVO al brillo (desviación típica / luminancia media)
+/// de la ventana del arte para que un recorte pueda ser una carta. Va
+/// relativo porque la desviación a secas escala con la exposición: medido
+/// sobre las fotos de Ale a media luz, cartas buenas caían de 31 a 12 y un
+/// umbral absoluto las tiraba, mientras que en relativo se quedan en
+/// 0,25-0,58 (0,37-0,48 a media luz) y la servilleta en 0,04-0,14.
+const double kMinRelativeArtDetail = 0.18;
+
+/// Suelo absoluto, por si la escena es casi negra: ahí la media es tan
+/// baja que cualquier ruido daría un relativo alto.
+const double kMinArtDetail = 6;
+
+/// Veredicto para un frame de VÍDEO, que es un problema distinto al de una
+/// foto: en la foto el usuario ha decidido que ahí hay una carta, mientras
+/// que la cámara está casi siempre enfocando una mesa vacía.
+///
+/// Tres reglas de más, las tres por lo mismo — el escáner en vivo se
+/// llenaba de cartas inventadas apuntando a un pañuelo:
+///  - si el detector NO ha encontrado carta ([cardDetected] false, es decir
+///    ha tenido que usar la foto entera), no hay carta que reconocer;
+///  - si lo que ha encontrado no tiene detalle de arte para el brillo que
+///    hay ([artDetail] y [artMean], ver [kMinRelativeArtDetail]), es un
+///    pliegue de tela o una sombra con forma de rectángulo;
+///  - una ambigua con el top-1 en zona de error (≥ [kUntrustedMin]) es
+///    ruido que se parece vagamente a un arte, no una carta.
+ScanDecision decideLiveScan(
+  List<ScanMatch> matches, {
+  required bool cardDetected,
+  double artDetail = double.infinity,
+  double artMean = 0,
+  double minArtDetail = kMinArtDetail,
+  double minRelativeArtDetail = kMinRelativeArtDetail,
+  int untrustedMin = kUntrustedMin,
+}) {
+  if (!cardDetected) return ScanDecision(ScanConfidence.none, matches);
+  if (artDetail.isFinite) {
+    final relative = artDetail / (artMean + 8);
+    if (artDetail < minArtDetail || relative < minRelativeArtDetail) {
+      return ScanDecision(ScanConfidence.none, matches);
+    }
+  }
+  final decision = decideScan(matches);
+  if (decision.confidence == ScanConfidence.ambiguous &&
+      matches.first.distance >= untrustedMin) {
+    return ScanDecision(ScanConfidence.none, matches);
+  }
+  return decision;
+}
+
 /// Decide qué enseñar a partir del top-k del matching (candidatos distintos
 /// por carta, ordenados por distancia ascendente).
 ScanDecision decideScan(

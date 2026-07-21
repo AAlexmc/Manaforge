@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
+import '../services/price_history.dart';
+import '../services/price_series_database.dart';
 import '../services/value_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/price_chart.dart';
 import 'card_detail_screen.dart';
 import 'set_market_screen.dart';
 import 'wishlist_screen.dart';
@@ -19,11 +22,15 @@ class MercadoScreen extends StatefulWidget {
   final CollectionStore collection;
   final WishlistStore wishlist;
 
+  /// Histórico real de Cardmarket (~90 días), descargable aparte.
+  final PriceSeriesDatabase prices;
+
   const MercadoScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.wishlist});
+      required this.wishlist,
+      required this.prices});
 
   @override
   State<MercadoScreen> createState() => _MercadoScreenState();
@@ -37,6 +44,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
   double? _totalValue;
   List<ValuedCard> _top = const [];
   List<ValuePoint> _points = const [];
+  Map<String, List<PricePoint>> _cardHistory = const {};
+  (String, String)? _historyCovered; // tramo del histórico descargado
+  bool _historyDownloading = false;
+  double? _historyProgress; // null con descarga en curso = indeterminado
   String? _bulkDate;
   List<CardHit> _results = const [];
   List<SetBanner> _banners = const [];
@@ -66,6 +77,13 @@ class _MercadoScreenState extends State<MercadoScreen> {
     if (mounted) setState(() {});
   }
 
+  /// Apunta precios al historial sin que un fallo de almacenamiento afecte
+  /// a lo que el usuario ha venido a hacer (ver su valor, cobrar alertas).
+  void _recordPrices(Map<String, double> prices) {
+    if (prices.isEmpty) return;
+    priceHistoryStore.recordAll(prices).catchError((_) {});
+  }
+
   /// Cruza los precios actuales con la wishlist y avisa de lo que ACABA de
   /// caer a su precio objetivo.
   Future<void> _checkWishlist() async {
@@ -75,6 +93,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
       final prices = await widget.db
           .pricesForOracles(items.map((i) => i.oracleId));
       final hits = widget.wishlist.updatePrices(prices);
+      // las de la wishlist también acumulan gráfica aunque no las tengas;
+      // va DESPUÉS y con su propio catch: que no se pueda guardar el
+      // historial no debe cargarse la alerta de precio objetivo
+      _recordPrices(prices);
       if (hits.isEmpty || !mounted) return;
       final msg = hits.length == 1
           ? '🔔 ¡${hits.first.printedName ?? hits.first.name} está a '
@@ -112,16 +134,37 @@ class _MercadoScreenState extends State<MercadoScreen> {
       final total = valuation.total;
       final valued = valuation.valued;
 
+      // foto diaria del precio de CADA carta de la colección: es lo que
+      // alimenta la gráfica de evolución de su ficha (Scryfall solo da el
+      // precio de hoy, la historia se construye con el uso). Sin await ni
+      // propagación: el Mercado no debe romperse porque falle el disco.
+      _recordPrices({
+        for (final c in valued)
+          if (c.unitPrice > 0) c.oracleId: c.unitPrice
+      });
+
       final points =
           await _history.record(total, widget.collection.totalCopies);
       final bulkDate = await widget.db.bulkDate();
       final banners =
           _banners.isEmpty ? await widget.db.marketSets() : _banners;
+      final top = valued.take(20).toList();
+      final cardHistory = await priceHistoryStore.forCards([
+        for (final c in top) c.oracleId,
+        for (final i in widget.wishlist.items) i.oracleId,
+      ]);
+      // el histórico es opcional: si falla, el Mercado sigue pintando
+      (String, String)? covered;
+      try {
+        covered = await widget.prices.covered();
+      } catch (_) {/* sin tramo cubierto */}
       if (!mounted) return;
       setState(() {
         _totalValue = total;
-        _top = valued.take(20).toList();
+        _top = top;
         _points = points;
+        _cardHistory = cardHistory;
+        _historyCovered = covered;
         _bulkDate = bulkDate;
         _banners = banners;
         _approximate = valuation.approximate;
@@ -241,6 +284,75 @@ class _MercadoScreenState extends State<MercadoScreen> {
             SnackBar(content: Text('No pude actualizar: $e')));
       }
     }
+  }
+
+  /// Trae los ~90 días de histórico real de Cardmarket (≈4 MB) para TODAS
+  /// las cartas: sin esto las gráficas arrancan vacías, porque Scryfall
+  /// solo publica el precio de hoy.
+  Future<void> _downloadHistory() async {
+    if (_historyDownloading) return; // dos descargas a la vez se pisarían
+    setState(() {
+      _historyDownloading = true;
+      _historyProgress = 0;
+    });
+    try {
+      await for (final p in widget.prices.download()) {
+        // p < 0 = sin Content-Length: barra indeterminada, pero la descarga
+        // SIGUE en curso (el botón no debe reaparecer)
+        if (mounted) setState(() => _historyProgress = p < 0 ? null : p);
+      }
+      if (!mounted) return;
+      setState(() => _historyProgress = null);
+      await _load();
+      if (mounted) {
+        setState(() => _historyDownloading = false);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('✓ Histórico de precios listo: las gráficas ya '
+                'enseñan los últimos meses')));
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _historyDownloading = false;
+          _historyProgress = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('No pude traer el histórico '
+                '(el que ya tenías sigue intacto): $e')));
+      }
+    } finally {
+      _historyDownloading = false;
+    }
+  }
+
+  Widget _historyRow() {
+    final covered = _historyCovered;
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            covered == null
+                ? 'Histórico de precios: solo el que ManaForge apunta a '
+                    'diario en tu equipo. Tráete los últimos ~90 días '
+                    'reales de Cardmarket (≈4 MB).'
+                : 'Histórico real de Cardmarket del ${covered.$1} al '
+                    '${covered.$2}, y desde ahí lo que apunta ManaForge.',
+            style: const TextStyle(fontSize: 11.5),
+          ),
+        ),
+        if (_historyDownloading)
+          SizedBox(
+            width: 120,
+            child: LinearProgressIndicator(value: _historyProgress),
+          )
+        else
+          TextButton.icon(
+            onPressed: _downloadHistory,
+            icon: const Icon(Icons.timeline, size: 16),
+            label: Text(covered == null ? 'Traer histórico' : 'Actualizar'),
+          ),
+      ],
+    );
   }
 
   void _openDetail({String? oracleId, String? byName}) {
@@ -384,6 +496,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
                           ),
                       ],
                     ),
+                    _historyRow(),
                   ],
                 ),
               ),
@@ -516,6 +629,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        MiniPriceLine(
+                            points: _cardHistory[item.oracleId] ?? const []),
+                        const SizedBox(width: 6),
                         if (item.inRange)
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -569,9 +685,17 @@ class _MercadoScreenState extends State<MercadoScreen> {
                   title: Text(card.printedName ?? card.name),
                   subtitle: Text(
                       'x${card.qty} · ${_euro(card.unitPrice)}/ud'),
-                  trailing: Text(_euro(card.total),
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      MiniPriceLine(
+                          points: _cardHistory[card.oracleId] ?? const []),
+                      const SizedBox(width: 10),
+                      Text(_euro(card.total),
+                          style:
+                              const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
             ],
             const SizedBox(height: 24),
