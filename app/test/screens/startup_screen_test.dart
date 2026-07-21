@@ -15,9 +15,10 @@ class _FakeSource {
   int downloads = 0;
   String? date;
   final bool fails;
-  final List<double> progress;
 
-  _FakeSource({this.date, this.fails = false, this.progress = const [0.5, 1]});
+  _FakeSource({this.date, this.fails = false});
+
+  static const progress = [0.5, 1.0]; // dos tirones y listo
 
   UpdateSource build({String name = 'Base', int maxAgeDays = 1}) =>
       UpdateSource(
