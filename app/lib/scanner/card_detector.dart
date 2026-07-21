@@ -724,8 +724,11 @@ DetectedCard _rectify(RgbImage photo, List<Pt> corners, bool fallback,
     warped: warped,
     artCrop: art,
     usedFallback: fallback,
+    // las hipótesis solo alimentan un dHash 9x8 del arte, así que se
+    // rectifican a media resolución: 4× más baratas y misma huella
     altWarps: [
-      for (final q in altQuads) _warp(photo, q, warpedWidth, warpedHeight)
+      for (final q in altQuads)
+        _warp(photo, q, warpedWidth ~/ 2, warpedHeight ~/ 2)
     ],
   );
 }
