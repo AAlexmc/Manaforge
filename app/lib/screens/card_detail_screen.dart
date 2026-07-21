@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/price_history.dart';
 import '../services/recents_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/price_chart.dart';
 
 /// Ficha completa de una carta: imagen, reglas, tus copias, legalidades y
 /// precios por edición (normal y foil). El corazón del Mercado.
@@ -31,6 +33,9 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
   List<CardVersion> _versions = const [];
   bool _loading = true;
   String? _error;
+
+  List<PricePoint> _history = const [];
+  double? _todayPrice;
 
   // formatos que se muestran, en orden (nombre Scryfall -> etiqueta)
   static const _formats = <String, String>{
@@ -81,6 +86,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
             : versions.first.imageNormal ?? versions.first.imageSmall,
         colors: detail.colors,
       ));
+      await _loadPriceHistory(detail.oracleId, versions);
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -89,6 +95,29 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
         });
       }
     }
+  }
+
+  /// Apunta el precio de HOY de esta carta y carga su historial: cualquier
+  /// carta que mires empieza a acumular gráfica, la tengas o no (mismo
+  /// criterio de precio que el Mercado: la edición más barata con precio).
+  Future<void> _loadPriceHistory(
+      String oracleId, List<CardVersion> versions) async {
+    double? today;
+    for (final v in versions) {
+      final p = v.priceEur;
+      if (p != null && p > 0 && (today == null || p < today)) today = p;
+    }
+    try {
+      if (today != null) {
+        await priceHistoryStore.recordOne(oracleId, today);
+      }
+      final history = await priceHistoryStore.forCard(oracleId);
+      if (!mounted) return;
+      setState(() {
+        _history = history;
+        _todayPrice = today;
+      });
+    } catch (_) {/* sin almacenamiento: la ficha sigue funcionando */}
   }
 
   String _euro(double? v) => v == null ? '—' : '${v.toStringAsFixed(2)} €';
@@ -204,6 +233,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                           ),
                         ),
                       ),
+                    const SizedBox(height: 12),
+                    PriceChart(points: _history, currentPrice: _todayPrice),
                     const SizedBox(height: 12),
                     Text('LEGALIDADES',
                         style: Theme.of(context)

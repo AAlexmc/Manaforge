@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
+import '../services/price_history.dart';
 import '../services/value_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/price_chart.dart';
 import 'card_detail_screen.dart';
 import 'set_market_screen.dart';
 import 'wishlist_screen.dart';
@@ -37,6 +39,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
   double? _totalValue;
   List<ValuedCard> _top = const [];
   List<ValuePoint> _points = const [];
+  Map<String, List<PricePoint>> _cardHistory = const {};
   String? _bulkDate;
   List<CardHit> _results = const [];
   List<SetBanner> _banners = const [];
@@ -74,6 +77,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
     try {
       final prices = await widget.db
           .pricesForOracles(items.map((i) => i.oracleId));
+      // las de la wishlist también acumulan gráfica aunque no las tengas
+      await priceHistoryStore.recordAll(prices);
       final hits = widget.wishlist.updatePrices(prices);
       if (hits.isEmpty || !mounted) return;
       final msg = hits.length == 1
@@ -112,16 +117,30 @@ class _MercadoScreenState extends State<MercadoScreen> {
       final total = valuation.total;
       final valued = valuation.valued;
 
+      // foto diaria del precio de CADA carta de la colección: es lo que
+      // alimenta la gráfica de evolución de su ficha (Scryfall solo da el
+      // precio de hoy, la historia se construye con el uso)
+      await priceHistoryStore.recordAll({
+        for (final c in valued)
+          if (c.unitPrice > 0) c.oracleId: c.unitPrice
+      });
+
       final points =
           await _history.record(total, widget.collection.totalCopies);
       final bulkDate = await widget.db.bulkDate();
       final banners =
           _banners.isEmpty ? await widget.db.marketSets() : _banners;
+      final top = valued.take(20).toList();
+      final cardHistory = await priceHistoryStore.forCards([
+        for (final c in top) c.oracleId,
+        for (final i in widget.wishlist.items) i.oracleId,
+      ]);
       if (!mounted) return;
       setState(() {
         _totalValue = total;
-        _top = valued.take(20).toList();
+        _top = top;
         _points = points;
+        _cardHistory = cardHistory;
         _bulkDate = bulkDate;
         _banners = banners;
         _approximate = valuation.approximate;
@@ -516,6 +535,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        MiniPriceLine(
+                            points: _cardHistory[item.oracleId] ?? const []),
+                        const SizedBox(width: 6),
                         if (item.inRange)
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -569,9 +591,17 @@ class _MercadoScreenState extends State<MercadoScreen> {
                   title: Text(card.printedName ?? card.name),
                   subtitle: Text(
                       'x${card.qty} · ${_euro(card.unitPrice)}/ud'),
-                  trailing: Text(_euro(card.total),
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      MiniPriceLine(
+                          points: _cardHistory[card.oracleId] ?? const []),
+                      const SizedBox(width: 10),
+                      Text(_euro(card.total),
+                          style:
+                              const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
             ],
             const SizedBox(height: 24),

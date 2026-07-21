@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
+import '../services/price_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/price_chart.dart';
 import 'card_detail_screen.dart';
 
 /// Pantalla dedicada de la wishlist: las cartas que quieres comprar con su
 /// precio objetivo. Cuando el precio actual cae al objetivo, la carta se
 /// marca "¡a precio!" (y el Mercado lanza la alerta al refrescar precios).
-class WishlistScreen extends StatelessWidget {
+class WishlistScreen extends StatefulWidget {
   final CardDatabase db;
   final WishlistStore wishlist;
 
@@ -23,10 +25,33 @@ class WishlistScreen extends StatelessWidget {
       required this.wishlist,
       required this.onEditTarget});
 
+  @override
+  State<WishlistScreen> createState() => _WishlistScreenState();
+}
+
+class _WishlistScreenState extends State<WishlistScreen> {
+  Map<String, List<PricePoint>> _history = const {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHistory();
+  }
+
+  Future<void> _loadHistory() async {
+    try {
+      final h = await priceHistoryStore
+          .forCards(widget.wishlist.items.map((i) => i.oracleId));
+      if (mounted) setState(() => _history = h);
+    } catch (_) {/* sin almacenamiento: lista sin mini-gráficas */}
+  }
+
   String _euro(double v) => '${v.toStringAsFixed(2)} €';
 
   @override
   Widget build(BuildContext context) {
+    final wishlist = widget.wishlist;
+    final db = widget.db;
     return Scaffold(
       appBar: AppBar(title: const Text('Wishlist')),
       body: ListenableBuilder(
@@ -101,6 +126,9 @@ class WishlistScreen extends StatelessWidget {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        MiniPriceLine(
+                            points: _history[item.oracleId] ?? const []),
+                        const SizedBox(width: 6),
                         if (item.inRange)
                           const Padding(
                             padding: EdgeInsets.only(right: 4),
@@ -110,7 +138,7 @@ class WishlistScreen extends StatelessWidget {
                         IconButton(
                           tooltip: 'Cambiar precio objetivo',
                           icon: const Icon(Icons.edit_outlined, size: 20),
-                          onPressed: () => onEditTarget(item),
+                          onPressed: () => widget.onEditTarget(item),
                         ),
                         IconButton(
                           tooltip: 'Quitar de la wishlist',
