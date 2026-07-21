@@ -20,6 +20,11 @@ class OwnedCard {
   final int? toughness;
   int qty;
 
+  /// Cuándo entró a la colección (ms desde época). Se refresca al añadir
+  /// copias, así lo último que escaneas sale primero. null = colección
+  /// anterior a esta versión: se trata como lo más antiguo.
+  int? addedAt;
+
   OwnedCard({
     required this.oracleId,
     required this.name,
@@ -32,6 +37,7 @@ class OwnedCard {
     this.power,
     this.toughness,
     required this.qty,
+    this.addedAt,
   });
 
   bool get isCreature => typeLine.contains('Creature');
@@ -48,6 +54,7 @@ class OwnedCard {
         'power': power,
         'toughness': toughness,
         'qty': qty,
+        if (addedAt != null) 'addedAt': addedAt,
       };
 
   factory OwnedCard.fromJson(Map<String, dynamic> json) => OwnedCard(
@@ -62,6 +69,7 @@ class OwnedCard {
         power: json['power'] as int?,
         toughness: json['toughness'] as int?,
         qty: json['qty'] as int,
+        addedAt: json['addedAt'] as int?,
       );
 }
 
@@ -85,6 +93,23 @@ class CollectionStore extends ChangeNotifier {
   List<OwnedCard> get cards {
     final list = _cards.values.toList()
       ..sort((a, b) => a.name.compareTo(b.name));
+    return list;
+  }
+
+  /// Las más recientemente añadidas primero (lo que acabas de escanear
+  /// arriba del todo). Las que no tienen fecha —colecciones importadas
+  /// antes de que se guardara— van al final, por nombre.
+  List<OwnedCard> get cardsByRecent {
+    final list = _cards.values.toList()
+      ..sort((a, b) {
+        final at = a.addedAt;
+        final bt = b.addedAt;
+        if (at == null && bt == null) return a.name.compareTo(b.name);
+        if (at == null) return 1;
+        if (bt == null) return -1;
+        if (at != bt) return bt.compareTo(at);
+        return a.name.compareTo(b.name);
+      });
     return list;
   }
 
@@ -141,12 +166,16 @@ class CollectionStore extends ChangeNotifier {
     }));
   }
 
-  void add(OwnedCard card, {int qty = 1, String? printingKey}) {
+  void add(OwnedCard card, {int qty = 1, String? printingKey, DateTime? at}) {
+    final stamp = (at ?? DateTime.now()).millisecondsSinceEpoch;
     final existing = _cards[card.oracleId];
     if (existing != null) {
       existing.qty += qty;
+      existing.addedAt = stamp; // añadir copias también la sube arriba
     } else {
-      _cards[card.oracleId] = card..qty = qty;
+      _cards[card.oracleId] = card
+        ..qty = qty
+        ..addedAt = card.addedAt ?? stamp;
     }
     if (printingKey != null && printingKey.isNotEmpty) {
       _printings[printingKey] = (_printings[printingKey] ?? 0) + qty;
