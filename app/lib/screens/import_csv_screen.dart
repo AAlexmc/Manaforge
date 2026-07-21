@@ -95,7 +95,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
     var copies = 0;
     var tokensIgnored = 0;
     final unrecognized = <String>[];
-    for (final (name, scryfallId, qty, setName) in rows) {
+    for (final (name, scryfallId, qty, setName, foil) in rows) {
       CardHit? hit;
       var exactPrinting = false;
       try {
@@ -138,6 +138,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         qty: qty,
         // solo si el CSV traía el Scryfall ID sabemos la edición exacta
         printingKey: exactPrinting ? hit.printingKey : null,
+        foil: foil,
         at: at,
         // reimportar NO re-sella lo que ya tenías: enterraría bajo cientos
         // de cartas viejas lo que acabas de escanear

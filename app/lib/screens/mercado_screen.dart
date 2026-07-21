@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
+import '../services/market_prefs.dart';
+import '../services/market_prices.dart';
+import '../services/markets.dart';
 import '../services/price_history.dart';
 import '../services/price_series_database.dart';
 import '../services/value_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/market_picker.dart';
 import '../widgets/price_chart.dart';
 import 'card_detail_screen.dart';
 import 'set_market_screen.dart';
@@ -25,12 +29,16 @@ class MercadoScreen extends StatefulWidget {
   /// Histórico real de Cardmarket (~90 días), descargable aparte.
   final PriceSeriesDatabase prices;
 
+  /// Mercado elegido (se recuerda entre arranques).
+  final MarketPreference market;
+
   const MercadoScreen(
       {super.key,
       required this.db,
       required this.collection,
       required this.wishlist,
-      required this.prices});
+      required this.prices,
+      required this.market});
 
   @override
   State<MercadoScreen> createState() => _MercadoScreenState();
@@ -55,6 +63,15 @@ class _MercadoScreenState extends State<MercadoScreen> {
   bool _approximate = false;
   String? _error;
 
+  /// Precio por carta en el mercado elegido (si no es Cardmarket, sustituye
+  /// al de la valoración, que es siempre en euros).
+  Map<String, MarketPrice> _marketPrices = const {};
+
+  MarketPrices get _prices =>
+      MarketPrices(db: widget.db, series: widget.prices);
+
+  Market get _market => widget.market.market;
+
   @override
   void initState() {
     super.initState();
@@ -62,12 +79,15 @@ class _MercadoScreenState extends State<MercadoScreen> {
     _load();
     widget.collection.addListener(_load);
     widget.wishlist.addListener(_onWishlistChanged);
+    widget.market.load().then((_) => _load());
+    widget.market.addListener(_load);
   }
 
   @override
   void dispose() {
     widget.collection.removeListener(_load);
     widget.wishlist.removeListener(_onWishlistChanged);
+    widget.market.removeListener(_load);
     _searchCtrl.dispose();
     _bannerCtrl.dispose();
     super.dispose();
@@ -149,10 +169,18 @@ class _MercadoScreenState extends State<MercadoScreen> {
       final banners =
           _banners.isEmpty ? await widget.db.marketSets() : _banners;
       final top = valued.take(20).toList();
-      final cardHistory = await priceHistoryStore.forCards([
+      final watched = [
         for (final c in top) c.oracleId,
         for (final i in widget.wishlist.items) i.oracleId,
-      ]);
+      ];
+      final cardHistory =
+          await _prices.historyFor(watched, _market);
+      // el precio que se ENSEÑA por carta es el del mercado elegido; el
+      // total de la colección se queda en Cardmarket (es la valoración
+      // canónica que comparten Inicio, carpetas y logros)
+      final marketPrices = _market == Market.cardmarket
+          ? const <String, MarketPrice>{}
+          : await _prices.byOracle(watched, _market);
       // el histórico es opcional: si falla, el Mercado sigue pintando
       (String, String)? covered;
       try {
@@ -164,6 +192,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
         _top = top;
         _points = points;
         _cardHistory = cardHistory;
+        _marketPrices = marketPrices;
         _historyCovered = covered;
         _bulkDate = bulkDate;
         _banners = banners;
@@ -362,11 +391,35 @@ class _MercadoScreenState extends State<MercadoScreen> {
         collection: widget.collection,
         oracleId: oracleId,
         byName: byName,
+        market: widget.market,
+        prices: widget.prices,
       ),
     ));
   }
 
   String _euro(double v) => '${v.toStringAsFixed(2)} €';
+
+  /// Lo que suman TUS copias de esa carta en el mercado elegido.
+  String _totalOf(ValuedCard card) {
+    final price = _marketPrices[card.oracleId];
+    if (price != null) return formatMoney(price.value * card.qty, _market);
+    if (_market == Market.cardmarket) return _euro(card.total);
+    return '—';
+  }
+
+  /// Precio de una carta en el mercado elegido; null si ese mercado no tiene
+  /// dato de esa carta.
+  String? _priceOf(String oracleId, {double? fallbackEur}) {
+    final price = _marketPrices[oracleId];
+    if (price != null) {
+      final label = formatMoney(price.value, _market);
+      return price.isFresh ? label : '$label (${price.asOf})';
+    }
+    if (_market == Market.cardmarket && fallbackEur != null) {
+      return _euro(fallbackEur);
+    }
+    return null;
+  }
 
   /// Botón de acceso a la wishlist, con contador de cartas y punto verde si
   /// alguna está ya a precio de compra.
@@ -424,14 +477,20 @@ class _MercadoScreenState extends State<MercadoScreen> {
                 _wishlistButton(),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
+            // elegir mercado: cambia el precio de cada carta y su gráfica
+            MarketPicker(
+                preference: widget.market,
+                available: widget.prices.markets),
+            MarketNote(market: _market),
+            const SizedBox(height: 10),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Valor de tu colección',
+                    const Text('Valor de tu colección · Cardmarket',
                         style: TextStyle(fontSize: 13)),
                     const SizedBox(height: 4),
                     Row(
@@ -550,7 +609,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
                             builder: (_) => SetMarketScreen(
                                 db: widget.db,
                                 collection: widget.collection,
-                                set: set),
+                                set: set,
+                                market: widget.market,
+                                prices: widget.prices),
                           ),
                         ),
                       );
@@ -625,7 +686,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
                     title: Text(item.printedName ?? item.name),
                     subtitle: Text(
                         'objetivo ≤ ${_euro(item.targetPrice)}'
-                        '${item.lastPrice != null ? ' · ahora ${_euro(item.lastPrice!)}' : ''}'),
+                        '${_priceOf(item.oracleId, fallbackEur: item.lastPrice) != null ? ' · ahora ${_priceOf(item.oracleId, fallbackEur: item.lastPrice)}' : ''}'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -684,14 +745,18 @@ class _MercadoScreenState extends State<MercadoScreen> {
                       name: card.name),
                   title: Text(card.printedName ?? card.name),
                   subtitle: Text(
-                      'x${card.qty} · ${_euro(card.unitPrice)}/ud'),
+                      'x${card.qty} · '
+                      '${_priceOf(card.oracleId, fallbackEur: card.unitPrice) ?? 'sin precio en ${_market.label}'}/ud'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       MiniPriceLine(
                           points: _cardHistory[card.oracleId] ?? const []),
                       const SizedBox(width: 10),
-                      Text(_euro(card.total),
+                      // el total de la fila también en el mercado elegido:
+                      // enseñar euros al lado de un precio en dólares era
+                      // pedir que se leyera mal
+                      Text(_totalOf(card),
                           style:
                               const TextStyle(fontWeight: FontWeight.bold)),
                     ],

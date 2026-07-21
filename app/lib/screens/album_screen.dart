@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
+import '../services/collection_sets.dart';
 import '../services/collection_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
@@ -73,20 +74,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   Future<void> _computeOwned() async {
     try {
-      Map<String, int> owned;
-      if (widget.collection.hasPrintingData) {
-        // preciso: sabemos la edición exacta de cada carta (clave "set|nº")
-        owned = {};
-        widget.collection.printingQty.forEach((key, qty) {
-          if (qty <= 0) return;
-          final set = key.split('|').first;
-          owned[set] = (owned[set] ?? 0) + 1;
-        });
-      } else {
-        // aproximado (colecciones antiguas): por carta, no por edición
-        owned = await widget.db
-            .ownedCountBySet(widget.collection.qtyByOracle.keys);
-      }
+      // misma cuenta que usan los logros: una sola fuente de verdad
+      final owned = await ownedCardsBySet(widget.db, widget.collection);
       if (!mounted) return;
       setState(() {
         _owned = owned;

@@ -1,0 +1,420 @@
+import 'package:flutter/material.dart';
+
+import '../services/card_database.dart';
+import '../services/collection_store.dart';
+import '../services/collection_value.dart';
+import '../services/folder_store.dart';
+import '../services/folder_value.dart';
+import '../widgets/common.dart';
+import '../widgets/folder_tile.dart';
+import 'card_detail_screen.dart';
+import 'collection_filters.dart';
+import 'folder_pick_screen.dart';
+
+/// Lo que se edita de una carpeta: nombre, color e icono.
+typedef FolderLook = ({String name, int colorValue, String icon});
+
+/// Diálogo de crear/editar carpeta. Devuelve null si cancelas.
+Future<FolderLook?> showFolderEditor(
+  BuildContext context, {
+  CardFolder? folder,
+}) {
+  final ctrl = TextEditingController(text: folder?.name ?? '');
+  var color = folder?.colorValue ?? kDefaultFolderColor;
+  var icon = folder?.icon ?? 'folder';
+  const palette = [
+    kDefaultFolderColor,
+    0xFFE05B5B,
+    0xFF4CAF6E,
+    0xFFE0A63C,
+    0xFF9C6BE0,
+    0xFF3CC5D6,
+    0xFF8A8F98,
+  ];
+  return showDialog<FolderLook>(
+    context: context,
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) => AlertDialog(
+        title: Text(folder == null ? 'Nueva carpeta' : 'Editar carpeta'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: ctrl,
+                autofocus: true,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre',
+                  hintText: 'Rares de Aetherdrift, Para vender…',
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text('Color', style: TextStyle(fontSize: 12.5)),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final c in palette)
+                    InkWell(
+                      onTap: () => setState(() => color = c),
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Color(c),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: color == c ? 3 : 1,
+                            color: color == c
+                                ? Colors.white
+                                : Colors.white24,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text('Icono', style: TextStyle(fontSize: 12.5)),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final key in kFolderIcons)
+                    IconButton(
+                      isSelected: icon == key,
+                      onPressed: () => setState(() => icon = key),
+                      icon: Icon(folderIconFor(key)),
+                      color: icon == key ? Color(color) : null,
+                      style: IconButton.styleFrom(
+                        backgroundColor: icon == key
+                            ? Color(color).withValues(alpha: 0.16)
+                            : null,
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final name = ctrl.text.trim();
+              Navigator.of(context).pop((
+                name: name.isEmpty ? 'Carpeta' : name,
+                colorValue: color,
+                icon: icon,
+              ));
+            },
+            child: Text(folder == null ? 'Crear' : 'Guardar'),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+/// Una carpeta por dentro: sus cartas (con los filtros de siempre), su valor,
+/// y las acciones para editarla.
+class FolderDetailScreen extends StatefulWidget {
+  final CardDatabase db;
+  final CollectionStore collection;
+  final FolderStore folders;
+  final String folderId;
+
+  const FolderDetailScreen({
+    super.key,
+    required this.db,
+    required this.collection,
+    required this.folders,
+    required this.folderId,
+  });
+
+  @override
+  State<FolderDetailScreen> createState() => _FolderDetailScreenState();
+}
+
+class _FolderDetailScreenState extends State<FolderDetailScreen> {
+  CollectionFilters _filters = const CollectionFilters();
+  CollectionSort _sort = CollectionSort.alpha;
+  CollectionValuation? _valuation;
+  int _valuationToken = 0;
+  bool _computing = false;
+  bool _needsRecompute = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.folders.addListener(_recompute);
+    widget.collection.addListener(_recompute);
+    _recompute();
+  }
+
+  @override
+  void dispose() {
+    widget.folders.removeListener(_recompute);
+    widget.collection.removeListener(_recompute);
+    super.dispose();
+  }
+
+  /// Igual que la portada: confirmar una bandeja de 20 cartas avisa 20
+  /// veces, y sin esto salían 20 consultas a la base de precios a la vez.
+  Future<void> _recompute() async {
+    if (_computing) {
+      _needsRecompute = true;
+      return;
+    }
+    _computing = true;
+    try {
+      do {
+        _needsRecompute = false;
+        await _computeOnce();
+      } while (_needsRecompute && mounted);
+    } finally {
+      _computing = false;
+    }
+  }
+
+  Future<void> _computeOnce() async {
+    final folder = widget.folders.byId(widget.folderId);
+    if (folder == null) return;
+    final token = ++_valuationToken;
+    try {
+      final v = await folderValue(
+          folder: folder, collection: widget.collection, db: widget.db);
+      // si mientras tanto ha cambiado algo, manda el cálculo más nuevo
+      if (mounted && token == _valuationToken) {
+        setState(() => _valuation = v);
+      }
+    } catch (_) {
+      if (mounted && token == _valuationToken) {
+        setState(() => _valuation = null); // sin base de cartas: sin precio
+      }
+    }
+  }
+
+  Future<void> _editCards(CardFolder folder) async {
+    final picked = await Navigator.of(context).push<Set<String>>(
+      MaterialPageRoute(
+        builder: (_) => FolderPickScreen(
+          collection: widget.collection,
+          initial: folder.cardIds,
+          title: folder.name,
+        ),
+      ),
+    );
+    if (picked != null) widget.folders.setCards(folder.id, picked);
+  }
+
+  Future<void> _editLook(CardFolder folder) async {
+    final look = await showFolderEditor(context, folder: folder);
+    if (look == null) return;
+    widget.folders.edit(folder.id,
+        name: look.name, colorValue: look.colorValue, icon: look.icon);
+  }
+
+  Future<void> _confirmDelete(CardFolder folder) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('¿Borrar "${folder.name}"?'),
+        content: const Text(
+            'Se borra solo la carpeta: las cartas siguen en tu colección.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar')),
+          FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Borrar')),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    widget.folders.remove(folder.id);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: Listenable.merge([widget.folders, widget.collection]),
+      builder: (context, _) {
+        final folder = widget.folders.byId(widget.folderId);
+        if (folder == null) {
+          // borrada desde otra pantalla: no dejar un esqueleto a medias
+          return Scaffold(
+            appBar: AppBar(),
+            body: const Center(child: Text('Esta carpeta ya no existe.')),
+          );
+        }
+        final owned = {for (final c in widget.collection.cards) c.oracleId};
+        final missing = folder.missingIn(owned);
+        final cards = sortCollection(
+          _filters.apply(widget.collection.cards
+              .where((c) => folder.cardIds.contains(c.oracleId))
+              .toList()),
+          _sort,
+        );
+        final color = Color(folder.colorValue);
+        final inFolder = widget.collection.cards
+            .where((c) => folder.cardIds.contains(c.oracleId))
+            .toList();
+        final copies = inFolder.fold(0, (a, c) => a + c.qty);
+        final present = inFolder.length;
+        return Scaffold(
+          appBar: AppBar(
+            title: Row(
+              children: [
+                Icon(folderIconFor(folder.icon), color: color, size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: Text(folder.name, overflow: TextOverflow.ellipsis)),
+              ],
+            ),
+            actions: [
+              IconButton(
+                tooltip: 'Editar nombre, color e icono',
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () => _editLook(folder),
+              ),
+              IconButton(
+                tooltip: 'Borrar carpeta',
+                icon: const Icon(Icons.delete_outline),
+                onPressed: () => _confirmDelete(folder),
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () => _editCards(folder),
+            icon: const Icon(Icons.playlist_add),
+            label: const Text('Añadir o quitar'),
+          ),
+          body: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _valuation == null
+                            ? '…'
+                            : '${_valuation!.approximate ? '~' : ''}'
+                                '${_valuation!.total.toStringAsFixed(2)} €',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(
+                                color: color, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        // cuentas de lo que TIENES en la carpeta, sin filtrar:
+                        // el valor de arriba también es sin filtrar
+                        '$present cartas distintas · $copies copias'
+                        '${cards.length != present ? ' · ${cards.length} pasan el filtro' : ''}'
+                        '${_valuation?.approximate == true ? ' · valor orientativo' : ''}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      if (missing.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${missing.length} '
+                                  '${missing.length == 1 ? 'carta ya no está' : 'cartas ya no están'} '
+                                  'en tu colección (siguen apuntadas por si vuelven).',
+                                  style: const TextStyle(fontSize: 11.5),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => widget.folders
+                                    .removeMissing(folder.id, owned),
+                                child: const Text('Quitarlas'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 4),
+                      CollectionSortPicker(
+                        value: _sort,
+                        onChanged: (v) => setState(() => _sort = v),
+                      ),
+                      CollectionFilterBar(
+                        value: _filters,
+                        onChanged: (f) => setState(() => _filters = f),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (cards.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Text(
+                        _filters.any
+                            ? 'Ninguna carta de la carpeta pasa estos filtros.'
+                            : 'Carpeta vacía. Dale a "Añadir o quitar" y marca '
+                                'las cartas que quieres meter.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                SliverList.builder(
+                  itemCount: cards.length,
+                  itemBuilder: (context, i) {
+                    final card = cards[i];
+                    return ListTile(
+                      onTap: () => showCardZoom(context,
+                          name: card.printedName ?? card.name,
+                          imageUrl: card.imageNormal ?? card.imageSmall,
+                          colors: card.colors,
+                          onDetails: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => CardDetailScreen(
+                                      db: widget.db,
+                                      collection: widget.collection,
+                                      oracleId: card.oracleId),
+                                ),
+                              )),
+                      leading: CardThumb(
+                          url: card.imageSmall,
+                          colors: card.colors,
+                          name: card.name),
+                      title: Text(card.printedName ?? card.name),
+                      subtitle: Text('${card.qty} '
+                          '${card.qty == 1 ? 'copia' : 'copias'}'
+                          '${card.typeLine.isEmpty ? '' : ' · ${card.typeLine}'}'),
+                      trailing: IconButton(
+                        tooltip: 'Quitar de la carpeta',
+                        icon: const Icon(Icons.remove_circle_outline),
+                        onPressed: () =>
+                            widget.folders.toggleCard(folder.id, card.oracleId),
+                      ),
+                    );
+                  },
+                ),
+              const SliverToBoxAdapter(child: SizedBox(height: 90)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

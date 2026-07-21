@@ -10,6 +10,7 @@ import '../scanner/burst_controller.dart';
 import '../scanner/presence_gate.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
+import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/linux_camera.dart';
@@ -37,11 +38,15 @@ class LiveScanScreen extends StatefulWidget {
   final CollectionStore collection;
   final ScannerDatabase scanner;
 
+  /// Opcional: si está, el escaneo cuenta para los logros.
+  final AchievementsController? achievements;
+
   const LiveScanScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.scanner});
+      required this.scanner,
+      this.achievements});
 
   @override
   State<LiveScanScreen> createState() => _LiveScanScreenState();
@@ -375,6 +380,12 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       }
       added += line.qty;
     }
+    // para los logros: copias añadidas, cartas distintas y si la tanda salió
+    // limpia (ninguna línea sin reconocer ni pendiente de revisar)
+    final clean = _tray.lines.every((l) => !l.unrecognized && !l.needsReview);
+    final distinct = _tray.lines.where((l) => !l.unrecognized).length;
+    widget.achievements
+        ?.recordScan(copies: added, distinct: distinct, perfect: clean);
     setState(() {
       _sessionCount += added;
       _tray.clear();
@@ -437,7 +448,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                 builder: (_) => ScanScreen(
                     db: widget.db,
                     collection: widget.collection,
-                    scanner: widget.scanner),
+                    scanner: widget.scanner,
+                    achievements: widget.achievements),
               ),
             ),
           ),
@@ -499,7 +511,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                         builder: (_) => ScanScreen(
                             db: widget.db,
                             collection: widget.collection,
-                            scanner: widget.scanner),
+                            scanner: widget.scanner,
+                            achievements: widget.achievements),
                       ),
                     ),
                     icon: const Icon(Icons.photo_library_outlined),

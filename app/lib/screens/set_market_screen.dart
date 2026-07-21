@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/market_prefs.dart';
+import '../services/markets.dart';
+import '../services/price_series_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/market_picker.dart';
 import 'card_detail_screen.dart';
 
 /// Mercado de una expansión: todas sus cartas con precio, con filtros
@@ -13,11 +17,18 @@ class SetMarketScreen extends StatefulWidget {
   final CollectionStore collection;
   final SetBanner set;
 
+  /// Si vienen, se puede cambiar de mercado y los precios de CADA carta de
+  /// la expansión pasan a ese mercado.
+  final MarketPreference? market;
+  final PriceSeriesDatabase? prices;
+
   const SetMarketScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.set});
+      required this.set,
+      this.market,
+      this.prices});
 
   @override
   State<SetMarketScreen> createState() => _SetMarketScreenState();
@@ -42,10 +53,27 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
     'common': 'Común',
   };
 
+  Market get _market => widget.market?.market ?? Market.cardmarket;
+
   @override
   void initState() {
     super.initState();
-    widget.db.setCardsWithPrices(widget.set.code).then((cards) {
+    _loadCards();
+    widget.market?.addListener(_loadCards);
+  }
+
+  @override
+  void dispose() {
+    widget.market?.removeListener(_loadCards);
+    super.dispose();
+  }
+
+  /// Los precios se piden PARA el mercado elegido: cambiarlo recarga la
+  /// lista entera (es una consulta a la base local, va sobrada).
+  void _loadCards() {
+    widget.db
+        .setCardsWithPrices(widget.set.code, market: _market)
+        .then((cards) {
       if (mounted) setState(() => _cards = cards);
     }).catchError((e) {
       if (mounted) setState(() => _error = '$e');
@@ -89,10 +117,10 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
     switch (_sort) {
       case _Sort.priceDesc:
         list.sort(
-            (a, b) => (b.priceEur ?? -1).compareTo(a.priceEur ?? -1));
+            (a, b) => (b.price ?? -1).compareTo(a.price ?? -1));
       case _Sort.priceAsc:
         list.sort((a, b) =>
-            (a.priceEur ?? 1e9).compareTo(b.priceEur ?? 1e9));
+            (a.price ?? 1e9).compareTo(b.price ?? 1e9));
       case _Sort.number:
         list.sort(byNumber);
       case _Sort.name:
@@ -101,14 +129,14 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
     return list;
   }
 
-  String _euro(double? v) => v == null ? '—' : '${v.toStringAsFixed(2)} €';
+  String _euro(double? v) => v == null ? '—' : formatMoney(v, _market);
 
   @override
   Widget build(BuildContext context) {
     final cards = _cards;
     final visible = _visible();
     final totalValue = visible.fold<double>(
-        0, (a, c) => a + (c.priceEur ?? 0));
+        0, (a, c) => a + (c.price ?? 0));
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -215,6 +243,13 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                     ],
                   ),
                 ),
+                if (widget.market != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
+                    child: MarketPicker(
+                        preference: widget.market!,
+                        available: widget.prices?.markets ?? const {}),
+                  ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
@@ -222,7 +257,11 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                       Text('${visible.length} cartas',
                           style: const TextStyle(fontSize: 11.5)),
                       const Spacer(),
-                      Text('valor listado: ${_euro(totalValue)}',
+                      Text(
+                          _market.todayColumn == null
+                              ? '${_market.label}: sin precio por edición'
+                              : 'valor listado (${_market.label}): '
+                                  '${_euro(totalValue)}',
                           style: const TextStyle(fontSize: 11.5)),
                     ],
                   ),
@@ -248,7 +287,9 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                                 builder: (_) => CardDetailScreen(
                                     db: widget.db,
                                     collection: widget.collection,
-                                    oracleId: card.oracleId),
+                                    oracleId: card.oracleId,
+                                    market: widget.market,
+                                    prices: widget.prices),
                               ),
                             ),
                             leading: CardThumb(
@@ -272,13 +313,13 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                               crossAxisAlignment:
                                   CrossAxisAlignment.end,
                               children: [
-                                Text(_euro(card.priceEur),
+                                Text(_euro(card.price),
                                     style: const TextStyle(
                                         fontWeight:
                                             FontWeight.bold)),
-                                if (card.priceEurFoil != null)
+                                if (card.priceFoil != null)
                                   Text(
-                                      'foil ${_euro(card.priceEurFoil)}',
+                                      'foil ${_euro(card.priceFoil)}',
                                       style: const TextStyle(
                                           fontSize: 10.5,
                                           color: MFColors.warning)),

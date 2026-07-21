@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'screens/logros_screen.dart';
 import 'screens/screens.dart';
+import 'services/achievement_store.dart';
+import 'services/achievements_controller.dart';
 import 'services/card_database.dart';
+import 'services/certificate_store.dart';
 import 'services/collection_store.dart';
+import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
+import 'services/folder_store.dart';
 import 'services/price_history.dart';
 import 'services/price_series_database.dart';
 import 'services/scanner_database.dart';
@@ -41,23 +47,56 @@ class _HomeShellState extends State<HomeShell> {
   final _db = CardDatabase();
   final _collection = CollectionStore();
   final _decks = DeckStore();
+  final _folders = FolderStore();
   final _scanner = ScannerDatabase();
   final _wishlist = WishlistStore();
   final _prices = PriceSeriesDatabase();
+  final _market = MarketPreference();
+  final _progress = AchievementStore();
+  final _certificates = CertificateStore();
+  late final AchievementsController _achievements = AchievementsController(
+    db: _db,
+    collection: _collection,
+    decks: _decks,
+    folders: _folders,
+    wishlist: _wishlist,
+    progress: _progress,
+  );
 
   @override
   void initState() {
     super.initState();
     // el historial local se apoya en los ~90 días reales de Cardmarket que
     // trae la base descargable (si el usuario la ha traído)
-    priceHistoryStore.baseSeriesProvider = _prices.seriesFor;
+    priceHistoryStore.baseSeriesProvider =
+        (ids, market) => _prices.seriesFor(ids, market: market);
+    _achievements.addListener(_onAchievements);
+    // los logros necesitan lo que hay guardado antes de evaluar nada
+    _progress.load().then((_) {
+      _achievements.markActive(); // un día más de racha
+    });
   }
 
   @override
   void dispose() {
     priceHistoryStore.baseSeriesProvider = null;
+    _achievements.removeListener(_onAchievements);
+    _achievements.dispose();
     _prices.close();
     super.dispose();
+  }
+
+  /// Avisa de los logros nuevos caigan donde caigan (escáner, importador,
+  /// carpetas…): el aviso sale sobre la pestaña en la que estés.
+  void _onAchievements() {
+    if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      showAchievementToasts(context, _achievements);
+      if (_achievements.leveledUp) {
+        showLevelUpDialog(context, _achievements);
+      }
+    });
   }
 
   @override
@@ -75,8 +114,15 @@ class _HomeShellState extends State<HomeShell> {
           db: _db,
           collection: _collection,
           decks: _decks,
+          achievements: _achievements,
+          certificates: _certificates,
           onGoToTab: (i) => setState(() => _index = i)),
-      ColeccionScreen(db: _db, collection: _collection, scanner: _scanner),
+      ColeccionScreen(
+          db: _db,
+          collection: _collection,
+          scanner: _scanner,
+          folders: _folders,
+          achievements: _achievements),
       AlbumScreen(db: _db, collection: _collection),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
@@ -84,7 +130,8 @@ class _HomeShellState extends State<HomeShell> {
           db: _db,
           collection: _collection,
           wishlist: _wishlist,
-          prices: _prices),
+          prices: _prices,
+          market: _market),
       AjustesScreen(db: _db),
     ];
     return Scaffold(

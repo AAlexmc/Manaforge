@@ -7,6 +7,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
+import 'markets.dart';
+
 /// Resultado de búsqueda: una carta (nivel Oracle) con su impresión visible.
 class CardHit {
   final String oracleId;
@@ -50,10 +52,16 @@ class CardDatabase {
   static const releaseUrl =
       'https://github.com/AAlexmc/Manaforge/releases/download/card-db-latest/manaforge_cards.sqlite.gz';
 
+  /// Solo para tests: dónde vive la base (por defecto, la carpeta de datos
+  /// de la app).
+  final Directory? dataDir;
+
+  CardDatabase({this.dataDir});
+
   Database? _db;
 
   Future<File> _dbFile() async {
-    final dir = await getApplicationSupportDirectory();
+    final dir = dataDir ?? await getApplicationSupportDirectory();
     return File(p.join(dir.path, 'manaforge_cards.sqlite'));
   }
 
@@ -584,8 +592,11 @@ class CardVersion {
   final String collectorNumber;
   final String rarity;
   final String? releasedAt;
-  final double? priceEur;
-  final double? priceEurFoil;
+
+  /// Precio de ESTA edición en el mercado con el que se pidió la lista
+  /// (no siempre son euros: el mercado lo elige el usuario).
+  final double? price;
+  final double? priceFoil;
   final String? imageSmall;
   final String? imageNormal;
 
@@ -595,8 +606,8 @@ class CardVersion {
     required this.collectorNumber,
     required this.rarity,
     this.releasedAt,
-    this.priceEur,
-    this.priceEurFoil,
+    this.price,
+    this.priceFoil,
     this.imageSmall,
     this.imageNormal,
   });
@@ -692,9 +703,18 @@ extension MarketQueries on CardDatabase {
 
   /// Todas las versiones impresas (una por set+número, preferencia EN),
   /// nuevas primero.
-  Future<List<CardVersion>> versionsOf(String oracleId) async {
+  /// Ediciones de una carta con su precio EN EL MERCADO ELEGIDO. Los
+  /// mercados sin precio por edición (Card Kingdom, Mana Pool: de esos solo
+  /// hay histórico a nivel carta) devuelven las ediciones sin precio, y la
+  /// ficha lo explica en vez de enseñar euros con otra etiqueta.
+  Future<List<CardVersion>> versionsOf(String oracleId,
+      {Market market = Market.cardmarket}) async {
     final db = await _open();
-    final hasFoil = await _hasColumn('printings', 'price_eur_foil');
+    final priceCol = market.todayColumn;
+    final foilCol = market.todayFoilColumn;
+    final hasPrice =
+        priceCol != null && await _hasColumn('printings', priceCol);
+    final hasFoil = foilCol != null && await _hasColumn('printings', foilCol);
     final hasDate = await _hasColumn('printings', 'released_at');
     final cols = [
       'set_code',
@@ -703,8 +723,8 @@ extension MarketQueries on CardDatabase {
       'rarity',
       'image_small',
       'image_normal',
-      'price_eur',
-      if (hasFoil) 'price_eur_foil',
+      if (hasPrice) priceCol,
+      if (hasFoil) foilCol,
       if (hasDate) 'released_at',
     ].join(', ');
     final rows = db.select(
@@ -722,10 +742,11 @@ extension MarketQueries on CardDatabase {
           collectorNumber: (r['collector_number'] as String?) ?? '',
           rarity: (r['rarity'] as String?) ?? '',
           releasedAt: hasDate ? r['released_at'] as String? : null,
-          priceEur: double.tryParse((r['price_eur'] as String?) ?? ''),
-          priceEurFoil: hasFoil
-              ? double.tryParse((r['price_eur_foil'] as String?) ?? '')
+          price: hasPrice
+              ? double.tryParse((r[priceCol] as String?) ?? '')
               : null,
+          priceFoil:
+              hasFoil ? double.tryParse((r[foilCol] as String?) ?? '') : null,
           imageSmall: r['image_small'] as String?,
           imageNormal: r['image_normal'] as String?,
         )
@@ -734,9 +755,50 @@ extension MarketQueries on CardDatabase {
     return versions;
   }
 
-  /// Precio unitario por impresión exacta ("set|nº" -> €).
-  Future<Map<String, double>> pricesForPrintings(
+  /// A qué carta pertenece cada impresión ("set|nº" -> oracleId). Lo usan las
+  /// carpetas para repartir las cantidades por edición de la colección entre
+  /// las cartas que tiene cada carpeta.
+  Future<Map<String, String>> oracleByPrintings(
       Iterable<String> printingKeys) async {
+    final db = await _open();
+    final out = <String, String>{};
+    final keys = printingKeys.toList();
+    const chunkSize = 150; // 2 parámetros por clave
+    for (var i = 0; i < keys.length; i += chunkSize) {
+      final chunk = keys.sublist(
+          i, i + chunkSize > keys.length ? keys.length : i + chunkSize);
+      final where = List.filled(
+              chunk.length, '(set_code = ? AND collector_number = ?)')
+          .join(' OR ');
+      final params = <String>[];
+      for (final k in chunk) {
+        final parts = k.split('|');
+        params.add(parts.first);
+        params.add(parts.length > 1 ? parts[1] : '');
+      }
+      final rows = db.select(
+        'SELECT set_code, collector_number, oracle_id '
+        'FROM printings WHERE $where',
+        params,
+      );
+      for (final r in rows) {
+        final key =
+            '${(r['set_code'] as String).toLowerCase()}|${r['collector_number']}';
+        out[key] = r['oracle_id'] as String;
+      }
+    }
+    return out;
+  }
+
+  /// Precio unitario por impresión exacta ("set|nº" -> dinero del mercado
+  /// elegido). Si ese mercado no publica precio de HOY (Card Kingdom, Mana
+  /// Pool) o la base descargada es vieja y no trae su columna, devuelve
+  /// vacío: quien llame se apaña con el histórico.
+  Future<Map<String, double>> pricesForPrintings(Iterable<String> printingKeys,
+      {Market market = Market.cardmarket}) async {
+    final column = market.todayColumn;
+    if (column == null) return const {};
+    if (!await _hasColumn('printings', column)) return const {};
     final db = await _open();
     final out = <String, double>{};
     final keys = printingKeys.toList();
@@ -755,8 +817,8 @@ extension MarketQueries on CardDatabase {
       }
       final rows = db.select(
         'SELECT set_code, collector_number, '
-        'MIN(CAST(price_eur AS REAL)) AS p '
-        'FROM printings WHERE price_eur IS NOT NULL AND ($where) '
+        'MIN(CAST($column AS REAL)) AS p '
+        'FROM printings WHERE $column IS NOT NULL AND ($where) '
         'GROUP BY set_code, collector_number',
         params,
       );
@@ -770,9 +832,13 @@ extension MarketQueries on CardDatabase {
     return out;
   }
 
-  /// Precio mínimo conocido por oracle id (modo aproximado y mazos).
-  Future<Map<String, double>> pricesForOracles(
-      Iterable<String> oracleIds) async {
+  /// Precio mínimo conocido por oracle id (modo aproximado y mazos), en el
+  /// mercado elegido.
+  Future<Map<String, double>> pricesForOracles(Iterable<String> oracleIds,
+      {Market market = Market.cardmarket}) async {
+    final column = market.todayColumn;
+    if (column == null) return const {};
+    if (!await _hasColumn('printings', column)) return const {};
     final db = await _open();
     final out = <String, double>{};
     final ids = oracleIds.toList();
@@ -782,9 +848,9 @@ extension MarketQueries on CardDatabase {
           i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
       final marks = List.filled(chunk.length, '?').join(',');
       final rows = db.select(
-        'SELECT oracle_id, MIN(CAST(price_eur AS REAL)) AS p '
+        'SELECT oracle_id, MIN(CAST($column AS REAL)) AS p '
         'FROM printings WHERE oracle_id IN ($marks) '
-        'AND price_eur IS NOT NULL GROUP BY oracle_id',
+        'AND $column IS NOT NULL GROUP BY oracle_id',
         chunk,
       );
       for (final r in rows) {
@@ -850,8 +916,10 @@ class SetCardPrice {
   final String colors;
   final String? imageSmall;
   final String? imageNormal;
-  final double? priceEur;
-  final double? priceEurFoil;
+
+  /// Precio en el mercado con el que se pidió la lista.
+  final double? price;
+  final double? priceFoil;
 
   const SetCardPrice({
     required this.oracleId,
@@ -862,8 +930,8 @@ class SetCardPrice {
     required this.colors,
     this.imageSmall,
     this.imageNormal,
-    this.priceEur,
-    this.priceEurFoil,
+    this.price,
+    this.priceFoil,
   });
 }
 
@@ -920,13 +988,19 @@ extension SetMarketQueries on CardDatabase {
   }
 
   /// Cartas de un set con precios, una por número de coleccionista.
-  Future<List<SetCardPrice>> setCardsWithPrices(String setCode) async {
+  Future<List<SetCardPrice>> setCardsWithPrices(String setCode,
+      {Market market = Market.cardmarket}) async {
     final db = await _open();
-    final hasFoil = await _hasColumn('printings', 'price_eur_foil');
+    final priceCol = market.todayColumn;
+    final foilCol = market.todayFoilColumn;
+    final hasPrice =
+        priceCol != null && await _hasColumn('printings', priceCol);
+    final hasFoil = foilCol != null && await _hasColumn('printings', foilCol);
     final rows = db.select(
       'SELECT p.oracle_id, p.collector_number, p.printed_name, '
-      'p.image_small, p.image_normal, p.rarity, p.price_eur, '
-      '${hasFoil ? 'p.price_eur_foil, ' : ''}'
+      'p.image_small, p.image_normal, p.rarity, '
+      '${hasPrice ? 'p.$priceCol, ' : ''}'
+      '${hasFoil ? 'p.$foilCol, ' : ''}'
       'c.name, c.colors, '
       "MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref "
       'FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id '
@@ -944,11 +1018,142 @@ extension SetMarketQueries on CardDatabase {
           colors: (r['colors'] as String?) ?? '',
           imageSmall: r['image_small'] as String?,
           imageNormal: r['image_normal'] as String?,
-          priceEur: double.tryParse((r['price_eur'] as String?) ?? ''),
-          priceEurFoil: hasFoil
-              ? double.tryParse((r['price_eur_foil'] as String?) ?? '')
+          price: hasPrice
+              ? double.tryParse((r[priceCol] as String?) ?? '')
               : null,
+          priceFoil:
+              hasFoil ? double.tryParse((r[foilCol] as String?) ?? '') : null,
         )
     ];
+  }
+}
+
+/// Consultas que usan los LOGROS: rareza, año y precio foil.
+extension StatsQueries on CardDatabase {
+  /// Rareza y año de las impresiones EXACTAS que tiene el usuario
+  /// ("set|nº" -> carta, rareza, año). Es lo que hay que mirar para los
+  /// logros: tener el Counterspell de una caja de 1999 no te hace dueño de
+  /// la versión mítica de otra edición.
+  Future<Map<String, ({String oracleId, String rarity, int year})>>
+      factsForPrintings(Iterable<String> printingKeys) async {
+    final db = await _open();
+    final hasDate = await supportsYearFilter();
+    final out = <String, ({String oracleId, String rarity, int year})>{};
+    final keys = printingKeys.toList();
+    const chunkSize = 150; // 2 parámetros por clave
+    for (var i = 0; i < keys.length; i += chunkSize) {
+      final chunk = keys.sublist(
+          i, i + chunkSize > keys.length ? keys.length : i + chunkSize);
+      final where = List.filled(
+              chunk.length, '(set_code = ? AND collector_number = ?)')
+          .join(' OR ');
+      final params = <String>[];
+      for (final k in chunk) {
+        final parts = k.split('|');
+        params.add(parts.first);
+        params.add(parts.length > 1 ? parts[1] : '');
+      }
+      final rows = db.select(
+        'SELECT set_code, collector_number, oracle_id, rarity'
+        '${hasDate ? ', released_at' : ''} '
+        'FROM printings WHERE $where',
+        params,
+      );
+      for (final r in rows) {
+        final key =
+            '${(r['set_code'] as String).toLowerCase()}|${r['collector_number']}';
+        out[key] = (
+          oracleId: r['oracle_id'] as String,
+          rarity: ((r['rarity'] as String?) ?? '').toLowerCase(),
+          year: hasDate
+              ? int.tryParse(
+                      ((r['released_at'] as String?) ?? '').split('-').first) ??
+                  0
+              : 0,
+        );
+      }
+    }
+    return out;
+  }
+
+  /// Rareza (la más alta de sus impresiones) y año (el de la más antigua)
+  /// de cada carta. Solo para colecciones SIN datos de edición exacta.
+  Future<Map<String, ({String rarity, int year})>> factsForOracles(
+      Iterable<String> oracleIds) async {
+    final db = await _open();
+    final hasDate = await supportsYearFilter();
+    const order = {'common': 0, 'uncommon': 1, 'rare': 2, 'mythic': 3};
+    final out = <String, ({String rarity, int year})>{};
+    final ids = oracleIds.toList();
+    const chunkSize = 400;
+    for (var i = 0; i < ids.length; i += chunkSize) {
+      final chunk = ids.sublist(
+          i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT oracle_id, rarity'
+        '${hasDate ? ', released_at' : ''} '
+        'FROM printings WHERE oracle_id IN ($marks)',
+        chunk,
+      );
+      for (final r in rows) {
+        final id = r['oracle_id'] as String;
+        final rarity = ((r['rarity'] as String?) ?? '').toLowerCase();
+        final year = hasDate
+            ? int.tryParse(((r['released_at'] as String?) ?? '').split('-').first) ?? 0
+            : 0;
+        final old = out[id];
+        final bestRarity = old == null
+            ? rarity
+            : ((order[rarity] ?? -1) > (order[old.rarity] ?? -1)
+                ? rarity
+                : old.rarity);
+        final oldestYear = old == null || old.year == 0
+            ? year
+            : (year > 0 && year < old.year ? year : old.year);
+        out[id] = (rarity: bestRarity, year: oldestYear);
+      }
+    }
+    return out;
+  }
+
+  /// Precio de la versión FOIL por impresión exacta, en el mercado elegido.
+  Future<Map<String, double>> foilPricesForPrintings(
+      Iterable<String> printingKeys,
+      {Market market = Market.cardmarket}) async {
+    final column = market.todayFoilColumn;
+    if (column == null) return const {};
+    if (!await _hasColumn('printings', column)) return const {};
+    final db = await _open();
+    final out = <String, double>{};
+    final keys = printingKeys.toList();
+    const chunkSize = 150; // 2 parámetros por clave
+    for (var i = 0; i < keys.length; i += chunkSize) {
+      final chunk = keys.sublist(
+          i, i + chunkSize > keys.length ? keys.length : i + chunkSize);
+      final where = List.filled(
+              chunk.length, '(set_code = ? AND collector_number = ?)')
+          .join(' OR ');
+      final params = <String>[];
+      for (final k in chunk) {
+        final parts = k.split('|');
+        params.add(parts.first);
+        params.add(parts.length > 1 ? parts[1] : '');
+      }
+      final rows = db.select(
+        'SELECT set_code, collector_number, '
+        'MIN(CAST($column AS REAL)) AS p '
+        'FROM printings WHERE $column IS NOT NULL AND ($where) '
+        'GROUP BY set_code, collector_number',
+        params,
+      );
+      for (final r in rows) {
+        final key =
+            '${(r['set_code'] as String).toLowerCase()}|${r['collector_number']}';
+        final p = r['p'] as double?;
+        if (p != null) out[key] = p;
+      }
+    }
+    return out;
   }
 }

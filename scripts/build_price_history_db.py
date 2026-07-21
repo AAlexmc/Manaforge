@@ -62,13 +62,30 @@ def _data_items(path: Path):
 SCHEMA = """
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE price_series (
-    oracle_id  TEXT PRIMARY KEY,
+    oracle_id  TEXT NOT NULL,
+    -- mercado: cardmarket · tcgplayer · cardkingdom · manapool · cardhoarder
+    provider   TEXT NOT NULL,
     -- float32 LITTLE-ENDIAN por día desde meta.start_date; NaN = sin dato.
     -- El lector (app/lib/services/price_series_database.dart) asume ese
     -- orden de bytes explícitamente.
-    values_f32 BLOB NOT NULL
+    values_f32 BLOB NOT NULL,
+    PRIMARY KEY (oracle_id, provider)
 );
 """
+
+# Qué proveedores se sacan de MTGJSON y de dónde. `paper` son cartas
+# físicas; `mtgo` son digitales (Cardhoarder cotiza en tix, que NO son una
+# divisa: no se convierten a nada).
+#
+# Star City Games no está en MTGJSON ni tiene API abierta: se queda fuera a
+# propósito (scrapear su web es frágil y de legalidad dudosa).
+PROVIDERS: list[tuple[str, str, str]] = [
+    ("cardmarket", "paper", "EUR"),
+    ("tcgplayer", "paper", "USD"),
+    ("cardkingdom", "paper", "USD"),
+    ("manapool", "paper", "USD"),
+    ("cardhoarder", "mtgo", "TIX"),
+]
 
 
 def _uuid_to_oracle(identifiers_path: Path) -> dict[str, str]:
@@ -85,37 +102,43 @@ def _uuid_to_oracle(identifiers_path: Path) -> dict[str, str]:
 
 def _series_by_oracle(
     prices_path: Path, uuid_to_oracle: dict[str, str]
-) -> dict[str, dict[str, float]]:
-    """Para cada oracle y día, el precio MÁS BARATO entre sus ediciones."""
-    out: dict[str, dict[str, float]] = {}
+) -> dict[str, dict[str, dict[str, float]]]:
+    """Por proveedor, oracle y día: el precio MÁS BARATO entre sus ediciones.
+
+    Devuelve {provider: {oracle: {día: precio}}}. Una sola pasada por el
+    fichero (pesa ~1,2 GB) para los cinco proveedores.
+    """
+    out: dict[str, dict[str, dict[str, float]]] = {
+        name: {} for name, _, _ in PROVIDERS
+    }
     for uuid, entry in _data_items(prices_path):
         oracle = uuid_to_oracle.get(uuid)
         if not oracle:
             continue
-        # cada nivel puede venir a null en el volcado: un solo null sin
-        # defender tumbaba el build semanal entero con AttributeError
-        daily = (
-            (((entry or {}).get("paper") or {}).get("cardmarket") or {})
-            .get("retail")
-            or {}
-        ).get("normal")
-        if not isinstance(daily, dict):
-            continue
-        bucket = out.setdefault(oracle, {})
-        for day, price in daily.items():
-            try:
-                price = float(price)
-            except (TypeError, ValueError):
+        for name, medium, _currency in PROVIDERS:
+            # cada nivel puede venir a null en el volcado: un solo null sin
+            # defender tumbaba el build semanal entero con AttributeError
+            daily = (
+                (((entry or {}).get(medium) or {}).get(name) or {}).get("retail")
+                or {}
+            ).get("normal")
+            if not isinstance(daily, dict):
                 continue
-            if price <= 0 or not math.isfinite(price):
-                continue
-            if not _DAY_RE.match(day):
-                continue  # clave de día con formato raro
-            current = bucket.get(day)
-            if current is None or price < current:
-                bucket[day] = price
-        if not bucket:
-            del out[oracle]
+            bucket = out[name].setdefault(oracle, {})
+            for day, price in daily.items():
+                try:
+                    price = float(price)
+                except (TypeError, ValueError):
+                    continue
+                if price <= 0 or not math.isfinite(price):
+                    continue
+                if not _DAY_RE.match(day):
+                    continue  # clave de día con formato raro
+                current = bucket.get(day)
+                if current is None or price < current:
+                    bucket[day] = price
+            if not bucket:
+                del out[name][oracle]
     return out
 
 
@@ -125,12 +148,18 @@ def build(prices_path: Path, identifiers_path: Path, out_path: Path) -> None:
     print(f"  {len(uuid_to_oracle):,} impresiones con oracle_id", flush=True)
 
     print(f"Leyendo precios de {prices_path}…", flush=True)
-    by_oracle = _series_by_oracle(prices_path, uuid_to_oracle)
-    print(f"  {len(by_oracle):,} cartas con histórico de Cardmarket", flush=True)
-    if not by_oracle:
+    by_provider = _series_by_oracle(prices_path, uuid_to_oracle)
+    for name, _, _ in PROVIDERS:
+        print(f"  {len(by_provider[name]):,} cartas en {name}", flush=True)
+    if not by_provider["cardmarket"]:
         raise SystemExit("Ningún histórico: ¿cambió el formato de MTGJSON?")
 
-    all_days = {day for series in by_oracle.values() for day in series}
+    all_days = {
+        day
+        for series_by_oracle in by_provider.values()
+        for series in series_by_oracle.values()
+        for day in series
+    }
     start = date.fromisoformat(min(all_days))
     end = date.fromisoformat(max(all_days))
     span = (end - start).days + 1
@@ -148,33 +177,44 @@ def build(prices_path: Path, identifiers_path: Path, out_path: Path) -> None:
         out_path.unlink()
     db = sqlite3.connect(out_path)
     db.executescript(SCHEMA)
-    rows = []
-    for oracle, series in by_oracle.items():
-        values = [math.nan] * span
-        for day, price in series.items():
-            i = index.get(day)
-            if i is not None:
-                values[i] = price
-        # little-endian explícito: el runner podría no serlo y el lector de
-        # la app fija Endian.little (si no, floats basura sin avisar)
-        rows.append((oracle, struct.pack(f"<{span}f", *values)))
-    db.executemany("INSERT INTO price_series VALUES (?, ?)", rows)
-    db.executemany(
-        "INSERT INTO meta VALUES (?, ?)",
-        [
-            ("schema", "1"),
-            ("start_date", start.isoformat()),
-            ("end_date", end.isoformat()),
-            ("days", str(span)),
-            ("source", "MTGJSON AllPrices · paper.cardmarket.retail.normal"),
-            ("currency", "EUR"),
-        ],
-    )
+    total_rows = 0
+    for name, medium, currency in PROVIDERS:
+        rows = []
+        for oracle, series in by_provider[name].items():
+            values = [math.nan] * span
+            for day, price in series.items():
+                i = index.get(day)
+                if i is not None:
+                    values[i] = price
+            # little-endian explícito: el runner podría no serlo y el lector
+            # de la app fija Endian.little (si no, floats basura sin avisar)
+            rows.append((oracle, name, struct.pack(f"<{span}f", *values)))
+        db.executemany("INSERT INTO price_series VALUES (?, ?, ?)", rows)
+        total_rows += len(rows)
+    meta = [
+        ("schema", "2"),
+        ("start_date", start.isoformat()),
+        ("end_date", end.isoformat()),
+        ("days", str(span)),
+        ("source", "MTGJSON AllPrices · <medio>.<proveedor>.retail.normal"),
+        ("providers", ",".join(name for name, _, _ in PROVIDERS)),
+        # la divisa es POR proveedor: cada uno publica en la suya y la app no
+        # convierte nada
+        ("currency", "EUR"),
+    ]
+    meta += [
+        (f"currency:{name}", currency) for name, _, currency in PROVIDERS
+    ]
+    db.executemany("INSERT INTO meta VALUES (?, ?)", meta)
     db.commit()
     db.execute("VACUUM")
     db.close()
     size = out_path.stat().st_size / 1024 / 1024
-    print(f"✓ {out_path} — {len(rows):,} cartas, {size:.1f} MB", flush=True)
+    print(
+        f"✓ {out_path} — {total_rows:,} series "
+        f"({len(PROVIDERS)} mercados), {size:.1f} MB",
+        flush=True,
+    )
 
 
 def main(argv: list[str]) -> int:

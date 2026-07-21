@@ -4,7 +4,11 @@ import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
 
 export 'album_screen.dart';
+export 'all_cards_screen.dart';
 export 'coleccion_screen.dart';
+export 'collection_filters.dart';
+export 'folder_detail_screen.dart';
+export 'folder_pick_screen.dart';
 export 'home_screen.dart';
 export 'card_detail_screen.dart';
 export 'mazos_screen.dart';

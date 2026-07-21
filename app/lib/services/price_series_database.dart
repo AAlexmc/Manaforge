@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
+import 'markets.dart';
 import 'price_history.dart';
 
 /// Histórico REAL de precios de Cardmarket (~90 días por carta), generado
@@ -33,6 +34,18 @@ class PriceSeriesDatabase {
   Database? _db;
   Future<Database?>? _opening;
   String? _startDate;
+
+  /// ¿La base descargada distingue mercados? Las de la primera versión solo
+  /// traían Cardmarket y no tienen la columna `provider`.
+  bool _hasProvider = false;
+
+  /// Mercados que trae la base descargada.
+  Set<String> _providers = const {'cardmarket'};
+
+  Set<Market> get markets => {
+        for (final m in Market.values)
+          if (_providers.contains(m.id)) m
+      };
 
   Future<File> _dbFile() async {
     final dir = _dir ?? await getApplicationSupportDirectory();
@@ -136,6 +149,16 @@ class PriceSeriesDatabase {
         return null;
       }
       _startDate = rows.first['value'] as String;
+      _hasProvider = db
+          .select('PRAGMA table_info(price_series)')
+          .any((r) => r['name'] == 'provider');
+      _providers = _hasProvider
+          ? {
+              for (final r
+                  in db.select('SELECT DISTINCT provider FROM price_series'))
+                r['provider'] as String
+            }
+          : const {'cardmarket'};
       _db = db;
       return db;
     } catch (_) {
@@ -172,13 +195,18 @@ class PriceSeriesDatabase {
 
   /// Series históricas de varias cartas. Las que no estén en la base (o si
   /// no está descargada) simplemente no salen en el mapa.
-  Future<Map<String, List<PricePoint>>> seriesFor(
-      Iterable<String> oracleIds) async {
+  Future<Map<String, List<PricePoint>>> seriesFor(Iterable<String> oracleIds,
+      {Market market = Market.cardmarket}) async {
     final db = await _open();
     final start = _startDate;
     if (db == null || start == null) return const {};
     final ids = oracleIds.toSet().toList();
     if (ids.isEmpty) return const {};
+    // base vieja (solo Cardmarket): pedir otro mercado no devuelve nada, y
+    // es mejor eso que enseñar precios de Cardmarket con la etiqueta de
+    // TCGplayer
+    if (!_hasProvider && market != Market.cardmarket) return const {};
+    if (_hasProvider && !_providers.contains(market.id)) return const {};
     final out = <String, List<PricePoint>>{};
     final first = DateTime.parse(start);
     two(int n) => n < 10 ? '0$n' : '$n';
@@ -197,8 +225,9 @@ class PriceSeriesDatabase {
       final marks = List.filled(chunk.length, '?').join(',');
       final rows = db.select(
           'SELECT oracle_id, values_f32 FROM price_series '
-          'WHERE oracle_id IN ($marks)',
-          chunk);
+          'WHERE oracle_id IN ($marks)'
+          '${_hasProvider ? ' AND provider = ?' : ''}',
+          [...chunk, if (_hasProvider) market.id]);
       for (final row in rows) {
         final blob = row['values_f32'] as Uint8List;
         // ByteData y NO buffer.asFloat32List: el blob que devuelve sqlite3

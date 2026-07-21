@@ -27,6 +27,8 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'markets.dart';
+
 /// Un punto de la evolución de precio de UNA carta.
 class PricePoint {
   final String date; // YYYY-MM-DD
@@ -80,7 +82,7 @@ class PriceHistoryStore {
   /// Histórico previo (los ~90 días reales de Cardmarket que trae la base
   /// descargable): se usa de BASE y lo apuntado en local manda en los días
   /// que tenga. Si no se enchufa nada, solo hay historial local.
-  Future<Map<String, List<PricePoint>>> Function(Iterable<String>)?
+  Future<Map<String, List<PricePoint>>> Function(Iterable<String>, Market)?
       baseSeriesProvider;
 
   Map<String, List<PricePoint>>? _cache;
@@ -203,21 +205,39 @@ class PriceHistoryStore {
 
   /// Historial de una carta, ordenado por fecha ascendente: el histórico
   /// descargado como base + lo apuntado en local encima.
+  Future<List<PricePoint>> forCardIn(String oracleId, Market market) async {
+    if (market == Market.cardmarket) return forCard(oracleId);
+    final base = await _base([oracleId], market);
+    return List<PricePoint>.unmodifiable(base[oracleId] ?? const []);
+  }
+
   Future<List<PricePoint>> forCard(String oracleId) async {
     final local = await _serialize(() async {
       final data = await _load();
       return List<PricePoint>.from(data[oracleId] ?? const []);
     });
-    final base = await _base([oracleId]);
+    final base = await _base([oracleId], Market.cardmarket);
     return List<PricePoint>.unmodifiable(
         _merge(base[oracleId] ?? const [], local));
   }
 
   /// Historiales de varias cartas de golpe (listas de Mercado/wishlist);
   /// solo las que tienen algún punto.
-  Future<Map<String, List<PricePoint>>> forCards(
-      Iterable<String> oracleIds) async {
+  ///
+  /// El apunte diario que hace la app es de Scryfall en EUROS, o sea
+  /// Cardmarket: en cualquier otro mercado NO se mezcla (sumarle euros a una
+  /// serie en dólares sería inventarse la gráfica) y solo sale el histórico
+  /// descargado de ese mercado.
+  Future<Map<String, List<PricePoint>>> forCards(Iterable<String> oracleIds,
+      {Market market = Market.cardmarket}) async {
     final ids = oracleIds.toSet();
+    if (market != Market.cardmarket) {
+      final base = await _base(ids, market);
+      return {
+        for (final e in base.entries)
+          if (e.value.isNotEmpty) e.key: List<PricePoint>.unmodifiable(e.value)
+      };
+    }
     final local = await _serialize(() async {
       final data = await _load();
       return {
@@ -225,7 +245,7 @@ class PriceHistoryStore {
           if (data[id] != null) id: List<PricePoint>.from(data[id]!)
       };
     });
-    final base = await _base(ids);
+    final base = await _base(ids, market);
     final out = <String, List<PricePoint>>{};
     for (final id in ids) {
       final merged = _merge(base[id] ?? const [], local[id] ?? const []);
@@ -234,11 +254,12 @@ class PriceHistoryStore {
     return out;
   }
 
-  Future<Map<String, List<PricePoint>>> _base(Iterable<String> ids) async {
+  Future<Map<String, List<PricePoint>>> _base(
+      Iterable<String> ids, Market market) async {
     final provider = baseSeriesProvider;
     if (provider == null) return const {};
     try {
-      return await provider(ids);
+      return await provider(ids, market);
     } catch (_) {
       return const {}; // sin histórico previo se sigue con el local
     }

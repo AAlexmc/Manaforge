@@ -40,6 +40,31 @@ void main() {
     expect(parseManaBoxCsv('foo,bar\n1,2\n'), isEmpty);
   });
 
+  test('lee la columna Foil del CSV de ManaBox', () {
+    const csv = 'Name,Foil,Quantity,Scryfall ID\n'
+        'Shock,normal,2,aaa\n'
+        'Lightning Bolt,foil,1,bbb\n'
+        'Sol Ring,etched,1,ccc\n';
+    final rows = parseManaBoxCsv(csv);
+    expect(rows[0].$5, isFalse);
+    expect(rows[1].$5, isTrue);
+    expect(rows[2].$5, isTrue); // etched también brilla
+  });
+
+  test('la colección cuenta las copias foil por edición', () {
+    final store = CollectionStore();
+    OwnedCard card() =>
+        OwnedCard(oracleId: 'o1', name: 'Test', colors: 'W', qty: 1);
+    store.add(card(), qty: 2, printingKey: 'aer|1');
+    store.add(card(), qty: 1, printingKey: 'aer|1', foil: true);
+    store.add(card(), qty: 3, printingKey: 'kld|5', foil: true);
+    expect(store.foilCopies, 4);
+    expect(store.foilPrintings['aer|1'], 1);
+    expect(store.printingQty['aer|1'], 3); // las foil también son copias
+    store.clear();
+    expect(store.foilCopies, 0);
+  });
+
   test('la colección suma y elimina cantidades', () {
     final store = CollectionStore();
     final card = OwnedCard(
