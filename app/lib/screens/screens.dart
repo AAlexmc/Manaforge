@@ -17,6 +17,7 @@ export 'forge_screen.dart';
 export 'import_csv_screen.dart';
 export 'live_scan_screen.dart';
 export 'scan_screen.dart';
+export 'startup_screen.dart';
 
 class AjustesScreen extends StatefulWidget {
   final CardDatabase db;

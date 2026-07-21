@@ -37,6 +37,7 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
+  bool _started = false; // false = pantalla de arranque (puesta al día)
   final _db = CardDatabase();
   final _collection = CollectionStore();
   final _decks = DeckStore();
@@ -61,6 +62,14 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_started) {
+      return StartupScreen(
+        sources: defaultUpdateSources(
+            db: _db, prices: _prices, scanner: _scanner),
+        collection: _collection,
+        onReady: () => setState(() => _started = true),
+      );
+    }
     final screens = [
       HomeScreen(
           db: _db,

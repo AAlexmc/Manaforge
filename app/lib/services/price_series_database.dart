@@ -39,6 +39,18 @@ class PriceSeriesDatabase {
     return File(p.join(dir.path, 'manaforge_prices.sqlite'));
   }
 
+  /// Cuándo se trajo la copia local (para no re-descargar cada arranque
+  /// cuando la fecha del contenido nunca alcanza al día de hoy).
+  Future<DateTime?> lastDownloaded() async {
+    try {
+      final file = await _dbFile();
+      if (!await file.exists()) return null;
+      return file.lastModified();
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<bool> isReady() async {
     try {
       return await (await _dbFile()).exists();
