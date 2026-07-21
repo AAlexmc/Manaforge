@@ -105,6 +105,11 @@ class CollectionStore extends ChangeNotifier {
   /// Las rellena el importador (el CSV trae el Scryfall ID): permiten que el
   /// álbum ilumine SOLO la ilustración que de verdad tienes.
   final Map<String, int> _printings = {};
+
+  /// Cuántas de esas copias son FOIL (misma clave "set|nºcoleccionista").
+  /// Lo rellena el importador con la columna `Foil` del CSV: el escáner no
+  /// distingue el brillo, así que aquí solo entra lo importado.
+  final Map<String, int> _foils = {};
   bool _loaded = false;
 
   /// ¿Sabemos qué impresiones exactas tiene el usuario? (Colecciones
@@ -112,6 +117,11 @@ class CollectionStore extends ChangeNotifier {
   bool get hasPrintingData => _printings.isNotEmpty;
 
   Map<String, int> get printingQty => Map.unmodifiable(_printings);
+
+  Map<String, int> get foilPrintings => Map.unmodifiable(_foils);
+
+  /// Copias foil que sabemos que tienes.
+  int get foilCopies => _foils.values.fold(0, (a, b) => a + b);
 
   List<OwnedCard> get cards {
     final list = _cards.values.toList()
@@ -150,6 +160,7 @@ class CollectionStore extends ChangeNotifier {
       final decoded = jsonDecode(await file.readAsString());
       _cards.clear();
       _printings.clear();
+      _foils.clear();
       // v1: lista de cartas · v2: {cards: [...], printings: {...}}
       final list = decoded is List
           ? decoded
@@ -161,6 +172,11 @@ class CollectionStore extends ChangeNotifier {
       if (decoded is Map<String, dynamic>) {
         final prints = decoded['printings'] as Map<String, dynamic>? ?? {};
         prints.forEach((k, v) => _printings[k] = v as int);
+        // v3: cuántas de cada edición son foil (ausente en versiones viejas)
+        final foils = decoded['foils'] as Map<String, dynamic>? ?? {};
+        foils.forEach((k, v) {
+          if (v is int) _foils[k] = v;
+        });
       }
       notifyListeners();
     } catch (_) {
@@ -174,6 +190,7 @@ class CollectionStore extends ChangeNotifier {
     await file.writeAsString(jsonEncode({
       'cards': [for (final c in _cards.values) c.toJson()],
       'printings': _printings,
+      'foils': _foils,
     }));
   }
 
@@ -185,8 +202,14 @@ class CollectionStore extends ChangeNotifier {
   /// le suma copias. Lo usa el importador de CSV: reimportar no debe
   /// re-sellar toda la colección (enterraría lo que acabas de escanear
   /// bajo 300 cartas viejas, y esa información no se recupera).
+  ///
+  /// [foil] marca que ESAS copias son foil (lo sabe el CSV de ManaBox).
   void add(OwnedCard card,
-      {int qty = 1, String? printingKey, DateTime? at, bool bump = true}) {
+      {int qty = 1,
+      String? printingKey,
+      DateTime? at,
+      bool bump = true,
+      bool foil = false}) {
     final stamp = (at ?? DateTime.now()).millisecondsSinceEpoch;
     final existing = _cards[card.oracleId];
     if (existing != null) {
@@ -199,6 +222,7 @@ class CollectionStore extends ChangeNotifier {
     }
     if (printingKey != null && printingKey.isNotEmpty) {
       _printings[printingKey] = (_printings[printingKey] ?? 0) + qty;
+      if (foil) _foils[printingKey] = (_foils[printingKey] ?? 0) + qty;
     }
     notifyListeners();
     _save();
@@ -208,6 +232,7 @@ class CollectionStore extends ChangeNotifier {
   void clear() {
     _cards.clear();
     _printings.clear();
+    _foils.clear();
     notifyListeners();
     _save();
   }
@@ -250,9 +275,9 @@ bool looksLikeToken(String name, String? setName) {
 }
 
 /// Parsea un CSV de ManaBox: detecta separador y las columnas Name /
-/// Quantity / Scryfall ID / Set name. Devuelve filas
-/// (name, scryfallId, qty, setName).
-List<(String, String?, int, String?)> parseManaBoxCsv(String content) {
+/// Quantity / Scryfall ID / Set name / Foil. Devuelve filas
+/// (name, scryfallId, qty, setName, foil).
+List<(String, String?, int, String?, bool)> parseManaBoxCsv(String content) {
   final lines = const LineSplitter().convert(content);
   if (lines.isEmpty) return const [];
   final sep = lines.first.contains(';') ? ';' : ',';
@@ -261,6 +286,7 @@ List<(String, String?, int, String?)> parseManaBoxCsv(String content) {
   int? qtyIdx;
   int? idIdx;
   int? setIdx;
+  int? foilIdx;
   for (var i = 0; i < header.length; i++) {
     final h = header[i].toLowerCase().trim();
     if (h == 'name' || h == 'nombre') nameIdx = i;
@@ -269,9 +295,10 @@ List<(String, String?, int, String?)> parseManaBoxCsv(String content) {
     }
     if (h == 'scryfall id') idIdx = i;
     if (h == 'set name' || h == 'edition' || h == 'edición') setIdx = i;
+    if (h == 'foil') foilIdx = i;
   }
   if (nameIdx == null) return const [];
-  final rows = <(String, String?, int, String?)>[];
+  final rows = <(String, String?, int, String?, bool)>[];
   for (final line in lines.skip(1)) {
     if (line.trim().isEmpty) continue;
     final cols = _splitCsvLine(line, sep);
@@ -284,7 +311,13 @@ List<(String, String?, int, String?)> parseManaBoxCsv(String content) {
     final id = idIdx != null && cols.length > idIdx ? cols[idIdx].trim() : null;
     final setName =
         setIdx != null && cols.length > setIdx ? cols[setIdx].trim() : null;
-    rows.add((name, id != null && id.isNotEmpty ? id : null, qty, setName));
+    // ManaBox escribe normal / foil / etched; las dos últimas brillan
+    final finish = foilIdx != null && cols.length > foilIdx
+        ? cols[foilIdx].trim().toLowerCase()
+        : 'normal';
+    final foil = finish == 'foil' || finish == 'etched';
+    rows.add(
+        (name, id != null && id.isNotEmpty ? id : null, qty, setName, foil));
   }
   return rows;
 }
