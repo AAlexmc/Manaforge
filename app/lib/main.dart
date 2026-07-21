@@ -7,6 +7,7 @@ import 'services/achievements_controller.dart';
 import 'services/card_database.dart';
 import 'services/certificate_store.dart';
 import 'services/collection_store.dart';
+import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
 import 'services/folder_store.dart';
 import 'services/price_history.dart';
@@ -50,6 +51,7 @@ class _HomeShellState extends State<HomeShell> {
   final _scanner = ScannerDatabase();
   final _wishlist = WishlistStore();
   final _prices = PriceSeriesDatabase();
+  final _market = MarketPreference();
   final _progress = AchievementStore();
   final _certificates = CertificateStore();
   late final AchievementsController _achievements = AchievementsController(
@@ -66,7 +68,8 @@ class _HomeShellState extends State<HomeShell> {
     super.initState();
     // el historial local se apoya en los ~90 días reales de Cardmarket que
     // trae la base descargable (si el usuario la ha traído)
-    priceHistoryStore.baseSeriesProvider = _prices.seriesFor;
+    priceHistoryStore.baseSeriesProvider =
+        (ids, market) => _prices.seriesFor(ids, market: market);
     _achievements.addListener(_onAchievements);
     // los logros necesitan lo que hay guardado antes de evaluar nada
     _progress.load().then((_) {
@@ -127,7 +130,8 @@ class _HomeShellState extends State<HomeShell> {
           db: _db,
           collection: _collection,
           wishlist: _wishlist,
-          prices: _prices),
+          prices: _prices,
+          market: _market),
       AjustesScreen(db: _db),
     ];
     return Scaffold(

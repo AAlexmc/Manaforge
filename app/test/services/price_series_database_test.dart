@@ -7,11 +7,38 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:manaforge_app/services/markets.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 
-/// Crea una base con el mismo esquema que genera el script de CI.
+/// Crea una base MULTIMERCADO, como la que genera el script hoy
+/// (price_series con columna `provider`).
+void _writeMarketDb(Directory dir,
+    {required String start,
+    required String end,
+    required Map<String, Map<String, List<double>>> byProvider}) {
+  final db = sqlite3.open(p.join(dir.path, 'manaforge_prices.sqlite'));
+  db.execute('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
+  db.execute('CREATE TABLE price_series ('
+      'oracle_id TEXT NOT NULL, provider TEXT NOT NULL, '
+      'values_f32 BLOB NOT NULL, PRIMARY KEY (oracle_id, provider))');
+  for (final e in {'start_date': start, 'end_date': end}.entries) {
+    db.execute('INSERT INTO meta VALUES (?, ?)', [e.key, e.value]);
+  }
+  byProvider.forEach((provider, series) {
+    series.forEach((oracle, values) {
+      db.execute('INSERT INTO price_series VALUES (?, ?, ?)', [
+        oracle,
+        provider,
+        Float32List.fromList(values).buffer.asUint8List()
+      ]);
+    });
+  });
+  db.dispose();
+}
+
+/// Crea una base con el esquema VIEJO (solo Cardmarket, sin `provider`).
 void _writeDb(Directory dir,
     {required String start,
     required String end,
@@ -41,6 +68,46 @@ void main() {
     expect(await db.isReady(), isFalse);
     expect(await db.covered(), isNull);
     expect(await db.seriesFor(['bolt']), isEmpty);
+  });
+
+  test('cada mercado devuelve SU serie', () async {
+    _writeMarketDb(dir, start: '2026-07-01', end: '2026-07-02', byProvider: {
+      'cardmarket': {
+        'bolt': [1.0, 1.1]
+      },
+      'tcgplayer': {
+        'bolt': [2.0, 2.2]
+      },
+      'cardhoarder': {
+        'bolt': [0.5, 0.5]
+      },
+    });
+    final db = PriceSeriesDatabase(directory: dir);
+    expect((await db.seriesFor(['bolt'])).values.first.first.value,
+        closeTo(1.0, 0.001));
+    expect(
+        (await db.seriesFor(['bolt'], market: Market.tcgplayer))
+            .values
+            .first
+            .first
+            .value,
+        closeTo(2.0, 0.001));
+    expect(db.markets, contains(Market.cardhoarder));
+    // Mana Pool no está en esta base: mejor vacío que precios de otro sitio
+    expect(await db.seriesFor(['bolt'], market: Market.manapool), isEmpty);
+  });
+
+  test('base vieja (solo Cardmarket): otros mercados salen vacíos', () async {
+    _writeDb(dir,
+        start: '2026-07-01',
+        end: '2026-07-02',
+        series: {
+          'bolt': [1.0, 1.1]
+        });
+    final db = PriceSeriesDatabase(directory: dir);
+    expect(await db.seriesFor(['bolt']), isNotEmpty);
+    expect(await db.seriesFor(['bolt'], market: Market.tcgplayer), isEmpty);
+    expect(db.markets, {Market.cardmarket});
   });
 
   test('decodifica el blob a un punto por día desde start_date', () async {

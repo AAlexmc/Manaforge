@@ -98,7 +98,7 @@ void main() {
   group('fusión con el histórico descargado (Cardmarket vía MTGJSON)', () {
     test('la base rellena los días que el local no tiene', () async {
       final store = PriceHistoryStore()
-        ..baseSeriesProvider = (ids) async => {
+        ..baseSeriesProvider = (ids, market) async => {
               'bolt': const [
                 PricePoint('2026-07-01', 1.0),
                 PricePoint('2026-07-02', 1.1),
@@ -117,14 +117,14 @@ void main() {
       await store.recordAll({'bolt': 9.0});
       final today = (await store.forCard('bolt')).single.date;
       store.baseSeriesProvider =
-          (ids) async => {'bolt': [PricePoint(today, 1.0)]};
+          (ids, market) async => {'bolt': [PricePoint(today, 1.0)]};
       final history = await store.forCard('bolt');
       expect(history.single.value, 9.0);
     });
 
     test('carta sin apuntes locales sale con la serie de la base', () async {
       final store = PriceHistoryStore()
-        ..baseSeriesProvider = (ids) async => {
+        ..baseSeriesProvider = (ids, market) async => {
               'sol': const [
                 PricePoint('2026-06-01', 5.0),
                 PricePoint('2026-06-02', 6.0),
@@ -136,14 +136,14 @@ void main() {
 
     test('si la base falla, el historial local sigue saliendo', () async {
       final store = PriceHistoryStore()
-        ..baseSeriesProvider = (ids) async => throw Exception('sin base');
+        ..baseSeriesProvider = (ids, market) async => throw Exception('sin base');
       await store.recordAll({'bolt': 3.0});
       expect(await store.forCard('bolt'), hasLength(1));
     });
 
     test('el resultado fusionado va ordenado por fecha', () async {
       final store = PriceHistoryStore()
-        ..baseSeriesProvider = (ids) async => {
+        ..baseSeriesProvider = (ids, market) async => {
               'bolt': const [
                 PricePoint('2026-05-02', 2.0),
                 PricePoint('2026-05-01', 1.0), // base desordenada

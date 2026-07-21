@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/market_prefs.dart';
+import '../services/market_prices.dart';
+import '../services/markets.dart';
 import '../services/price_history.dart';
+import '../services/price_series_database.dart';
 import '../services/recents_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/market_picker.dart';
 import '../widgets/price_chart.dart';
 
 /// Ficha completa de una carta: imagen, reglas, tus copias, legalidades y
@@ -16,12 +21,19 @@ class CardDetailScreen extends StatefulWidget {
   final String? oracleId;
   final String? byName; // alternativa cuando solo se conoce el nombre
 
+  /// Si vienen, la ficha deja elegir mercado y su precio y su gráfica pasan
+  /// a ese mercado.
+  final MarketPreference? market;
+  final PriceSeriesDatabase? prices;
+
   const CardDetailScreen(
       {super.key,
       required this.db,
       this.collection,
       this.oracleId,
-      this.byName})
+      this.byName,
+      this.market,
+      this.prices})
       : assert(oracleId != null || byName != null);
 
   @override
@@ -36,6 +48,12 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
 
   List<PricePoint> _history = const [];
   double? _todayPrice;
+
+  /// De qué día es el precio cuando el mercado no publica el de hoy.
+  String? _priceAsOf;
+  String? _oracleId;
+
+  Market get _market => widget.market?.market ?? Market.cardmarket;
 
   // formatos que se muestran, en orden (nombre Scryfall -> etiqueta)
   static const _formats = <String, String>{
@@ -55,6 +73,20 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
   void initState() {
     super.initState();
     _load();
+    widget.market?.addListener(_reloadPrices);
+  }
+
+  @override
+  void dispose() {
+    widget.market?.removeListener(_reloadPrices);
+    super.dispose();
+  }
+
+  /// Cambiar de mercado no recarga la carta entera: solo su precio y su
+  /// gráfica.
+  void _reloadPrices() {
+    final id = _oracleId;
+    if (id != null) _loadPriceHistory(id, _versions);
   }
 
   Future<void> _load() async {
@@ -102,20 +134,38 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
   /// criterio de precio que el Mercado: la edición más barata con precio).
   Future<void> _loadPriceHistory(
       String oracleId, List<CardVersion> versions) async {
-    double? today;
+    _oracleId = oracleId;
+    // el precio en euros de las ediciones que ya trae la ficha: es el que se
+    // apunta a diario en local (y el de Cardmarket)
+    double? eur;
     for (final v in versions) {
       final p = v.priceEur;
-      if (p != null && p > 0 && (today == null || p < today)) today = p;
+      if (p != null && p > 0 && (eur == null || p < eur)) eur = p;
     }
     try {
-      if (today != null) {
-        await priceHistoryStore.recordOne(oracleId, today);
+      if (eur != null) {
+        await priceHistoryStore.recordOne(oracleId, eur);
       }
-      final history = await priceHistoryStore.forCard(oracleId);
+      final market = _market;
+      double? today = eur;
+      String? asOf;
+      if (market != Market.cardmarket) {
+        final series = widget.prices;
+        today = null;
+        if (series != null) {
+          final prices = await MarketPrices(db: widget.db, series: series)
+              .byOracle([oracleId], market);
+          final price = prices[oracleId];
+          today = price?.value;
+          asOf = price?.isFresh == false ? price?.asOf : null;
+        }
+      }
+      final history = await priceHistoryStore.forCardIn(oracleId, market);
       if (!mounted) return;
       setState(() {
         _history = history;
         _todayPrice = today;
+        _priceAsOf = asOf;
       });
     } catch (_) {/* sin almacenamiento: la ficha sigue funcionando */}
   }
@@ -234,6 +284,22 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                         ),
                       ),
                     const SizedBox(height: 12),
+                    if (widget.market != null) ...[
+                      MarketPicker(
+                          preference: widget.market!,
+                          available: widget.prices?.markets ?? const {}),
+                      const SizedBox(height: 6),
+                    ],
+                    if (_market != Market.cardmarket)
+                      Text(
+                        _todayPrice == null
+                            ? 'Sin precio de esta carta en ${_market.label}.'
+                            : '${_market.label}: '
+                                '${formatMoney(_todayPrice!, _market)}'
+                                '${_priceAsOf != null ? ' (último dato: $_priceAsOf)' : ''}',
+                        style: const TextStyle(
+                            fontSize: 12.5, fontWeight: FontWeight.bold),
+                      ),
                     PriceChart(points: _history, currentPrice: _todayPrice),
                     const SizedBox(height: 12),
                     Text('LEGALIDADES',

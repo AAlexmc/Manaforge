@@ -189,14 +189,20 @@ class AchievementState {
     this.unlockedAt,
   });
 
-  /// "34/50" para pintarlo debajo de la medalla.
+  /// "34/50" para pintarlo debajo de la medalla. Los logros de dinero llevan
+  /// decimales mientras son pequeños: "6,91/20 €" dice mucho más que "6/20".
   String get progressLabel {
     final goal = achievement.goal;
-    if (goal >= 10 && goal is double) {
-      return '${current.toStringAsFixed(0)}/${goal.toStringAsFixed(0)}';
+    final money = achievement.category == AchievementCategory.valor ||
+        achievement.id.startsWith('foiljoya') ||
+        achievement.id.startsWith('carpetavalor');
+    if (money) {
+      final shown = current < 100
+          ? current.toStringAsFixed(2)
+          : current.toStringAsFixed(0);
+      return '$shown/${goal.toStringAsFixed(0)} €';
     }
-    return '${current is int ? current : current.toStringAsFixed(0)}/'
-        '${goal is int ? goal : goal.toStringAsFixed(0)}';
+    return '${current.toStringAsFixed(0)}/${goal.toStringAsFixed(0)}';
   }
 }
 

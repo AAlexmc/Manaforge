@@ -51,7 +51,14 @@ CREATE TABLE printings (
     image_png    TEXT,
     price_eur    TEXT,
     released_at  TEXT,          -- fecha de salida del set (filtros por año)
-    price_eur_foil TEXT         -- precio Cardmarket de la versión foil
+    price_eur_foil TEXT,        -- precio Cardmarket de la versión foil
+    -- precios de HOY de los otros mercados que publica Scryfall:
+    -- usd/usd_foil son de TCGplayer y tix son de MTGO (Cardhoarder).
+    -- Card Kingdom y Mana Pool no están aquí: de esos solo hay histórico
+    -- (MTGJSON), ver scripts/build_price_history_db.py
+    price_usd      TEXT,
+    price_usd_foil TEXT,
+    price_tix      TEXT
 );
 CREATE INDEX idx_printings_oracle ON printings(oracle_id);
 CREATE INDEX idx_printings_printed_name ON printings(printed_name);
@@ -134,7 +141,8 @@ def build(bulk_path: Path, db_path: Path, bulk_date: str = "") -> dict:
             n_cards += 1
         small, normal, png = _images(card)
         con.execute(
-            "INSERT OR REPLACE INTO printings VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT OR REPLACE INTO printings "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 card["id"],
                 oracle_id,
@@ -150,11 +158,14 @@ def build(bulk_path: Path, db_path: Path, bulk_date: str = "") -> dict:
                 (card.get("prices") or {}).get("eur"),
                 card.get("released_at"),
                 (card.get("prices") or {}).get("eur_foil"),
+                (card.get("prices") or {}).get("usd"),
+                (card.get("prices") or {}).get("usd_foil"),
+                (card.get("prices") or {}).get("tix"),
             ),
         )
         n_printings += 1
 
-    con.execute("INSERT INTO meta VALUES ('schema_version', '3')")
+    con.execute("INSERT INTO meta VALUES ('schema_version', '4')")
     con.execute("INSERT INTO meta VALUES ('bulk_date', ?)", (bulk_date,))
     con.commit()
     con.execute("VACUUM")

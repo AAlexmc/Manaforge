@@ -151,6 +151,17 @@ void main() {
     }
   });
 
+  test('los logros de dinero enseñan decimales mientras son pequeños', () {
+    final s = evaluateAchievements(_snap(totalValue: 125.12, bestCardValue: 6.91));
+    final carta =
+        s.firstWhere((x) => x.achievement.id == 'joya-20');
+    expect(carta.progressLabel, '6.91/20 €');
+    final total = s.firstWhere((x) => x.achievement.id == 'valor-250');
+    expect(total.progressLabel, '125/250 €');
+    final cartas = s.firstWhere((x) => x.achievement.id == 'copias-50');
+    expect(cartas.progressLabel, '0/50'); // los que no van de dinero, igual
+  });
+
   test('newlyUnlocked encuentra lo que se acaba de conseguir', () {
     final before = evaluateAchievements(_snap());
     final after = evaluateAchievements(_snap(totalCopies: 10));

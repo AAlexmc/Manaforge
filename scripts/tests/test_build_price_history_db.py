@@ -22,6 +22,7 @@ IDENTIFIERS = {
         "uuid-barata": {"identifiers": {"scryfallOracleId": "o-bolt"}},
         "uuid-cara": {"identifiers": {"scryfallOracleId": "o-bolt"}},
         "uuid-sol": {"identifiers": {"scryfallOracleId": "o-sol"}},
+        "uuid-multi": {"identifiers": {"scryfallOracleId": "o-multi"}},
         "uuid-null": None,                       # entrada a null
         "uuid-sin-ids": {"identifiers": {}},     # sin scryfallOracleId
     },
@@ -30,6 +31,10 @@ IDENTIFIERS = {
 
 def _paper(cardmarket):
     return {"paper": {"cardmarket": cardmarket}}
+
+
+def _series_of(days):
+    return {"retail": {"normal": days}}
 
 
 PRICES = {
@@ -64,6 +69,16 @@ PRICES = {
         "uuid-desconocido": _paper(
             {"retail": {"normal": {"2026-07-01": 4.0}}}
         ),
+        # los otros mercados: TCGplayer y Card Kingdom en papel, Cardhoarder
+        # en MTGO (tix)
+        "uuid-multi": {
+            "paper": {
+                "tcgplayer": _series_of({"2026-07-01": 2.5, "2026-07-03": 2.7}),
+                "cardkingdom": _series_of({"2026-07-03": 3.9}),
+                "manapool": _series_of({"2026-07-02": 2.2}),
+            },
+            "mtgo": {"cardhoarder": _series_of({"2026-07-01": 0.5})},
+        },
     },
 }
 
@@ -79,9 +94,11 @@ def built(tmp_path):
     return sqlite3.connect(out)
 
 
-def _series(db, oracle):
+def _series(db, oracle, provider="cardmarket"):
     row = db.execute(
-        "SELECT values_f32 FROM price_series WHERE oracle_id = ?", (oracle,)
+        "SELECT values_f32 FROM price_series "
+        "WHERE oracle_id = ? AND provider = ?",
+        (oracle, provider),
     ).fetchone()
     if row is None:
         return None
@@ -94,6 +111,31 @@ def test_meta_describe_el_tramo(built):
     assert meta["end_date"] == "2026-07-03"
     assert meta["days"] == "3"
     assert meta["currency"] == "EUR"
+
+
+def test_cada_mercado_tiene_su_serie(built):
+    assert _series(built, "o-multi", "tcgplayer") == pytest.approx(
+        (2.5, float("nan"), 2.7), nan_ok=True
+    )
+    assert _series(built, "o-multi", "cardkingdom")[2] == pytest.approx(3.9)
+    assert _series(built, "o-multi", "manapool")[1] == pytest.approx(2.2)
+    assert _series(built, "o-multi", "cardhoarder")[0] == pytest.approx(0.5)
+    # la carta de Cardmarket no se cuela en los otros mercados
+    assert _series(built, "o-bolt", "tcgplayer") is None
+
+
+def test_meta_dice_los_mercados_y_su_divisa(built):
+    meta = dict(built.execute("SELECT key, value FROM meta"))
+    assert meta["schema"] == "2"
+    assert meta["providers"].split(",") == [
+        "cardmarket",
+        "tcgplayer",
+        "cardkingdom",
+        "manapool",
+        "cardhoarder",
+    ]
+    assert meta["currency:tcgplayer"] == "USD"
+    assert meta["currency:cardhoarder"] == "TIX"
 
 
 def test_gana_la_edicion_mas_barata_de_cada_dia(built):
@@ -120,7 +162,12 @@ def test_los_null_de_mtgjson_no_tumban_el_build(built):
 
 
 def test_las_cartas_sin_ningun_precio_valido_no_ocupan_fila(built):
-    ids = {r[0] for r in built.execute("SELECT oracle_id FROM price_series")}
+    ids = {
+        r[0]
+        for r in built.execute(
+            "SELECT oracle_id FROM price_series WHERE provider = 'cardmarket'"
+        )
+    }
     assert ids == {"o-bolt", "o-sol"}
 
 

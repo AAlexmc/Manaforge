@@ -198,11 +198,13 @@ Future<AchievementSnapshot> gatherSnapshot({
   final folderValues = <String, double>{};
 
   try {
-    final raw = await db.factsForOracles(cards.map((c) => c.oracleId));
-    facts = {
-      for (final e in raw.entries)
-        e.key: CardFacts(rarity: e.value.rarity, year: e.value.year)
-    };
+    facts = collection.hasPrintingData
+        // lo honesto: la rareza y el año de las ediciones que TIENES. Mirando
+        // todas las impresiones de la carta, un común reimpreso alguna vez
+        // como mítico te contaba como mítico (y un Counterspell moderno como
+        // carta de los 90)
+        ? await _factsFromOwnedPrintings(db, collection)
+        : await _factsFromAllPrintings(db, cards);
     ownedBySet = await ownedCardsBySet(db, collection);
     // "expansión completa" solo se puede afirmar sabiendo las ediciones
     // exactas: en el modo aproximado, `ownedCardsBySet` no cuenta básicas y
@@ -219,8 +221,21 @@ Future<AchievementSnapshot> gatherSnapshot({
       printingPrices: db.pricesForPrintings,
     );
     totalValue = valuation.total;
-    for (final v in valuation.valued) {
-      if (v.unitPrice > bestCard) bestCard = v.unitPrice;
+    if (collection.hasPrintingData) {
+      // "tu carta más cara" = la EDICIÓN más cara que tienes, con el mismo
+      // criterio que el total. A nivel carta se usaba el precio de su
+      // impresión más barata, que no es la que tienes en la mano.
+      final prices =
+          await db.pricesForPrintings(collection.printingQty.keys);
+      prices.forEach((key, price) {
+        if ((collection.printingQty[key] ?? 0) > 0 && price > bestCard) {
+          bestCard = price;
+        }
+      });
+    } else {
+      for (final v in valuation.valued) {
+        if (v.unitPrice > bestCard) bestCard = v.unitPrice;
+      }
     }
 
     if (collection.foilPrintings.isNotEmpty) {
@@ -267,4 +282,43 @@ Future<AchievementSnapshot> gatherSnapshot({
     progress: progress,
     wishlistCards: wishlistCards,
   );
+}
+
+const _rarityOrder = {'common': 0, 'uncommon': 1, 'rare': 2, 'mythic': 3};
+
+/// Rareza/año de las ediciones exactas que tiene el usuario. Si tiene la
+/// misma carta en dos ediciones, manda la rareza más alta DE LAS SUYAS y el
+/// año de la más antigua DE LAS SUYAS.
+Future<Map<String, CardFacts>> _factsFromOwnedPrintings(
+    CardDatabase db, CollectionStore collection) async {
+  final owned = await db.factsForPrintings(collection.printingQty.keys);
+  final out = <String, CardFacts>{};
+  owned.forEach((key, fact) {
+    if ((collection.printingQty[key] ?? 0) <= 0) return;
+    final old = out[fact.oracleId];
+    if (old == null) {
+      out[fact.oracleId] = CardFacts(rarity: fact.rarity, year: fact.year);
+      return;
+    }
+    final rarity =
+        (_rarityOrder[fact.rarity] ?? -1) > (_rarityOrder[old.rarity] ?? -1)
+            ? fact.rarity
+            : old.rarity;
+    final year = old.year == 0
+        ? fact.year
+        : (fact.year > 0 && fact.year < old.year ? fact.year : old.year);
+    out[fact.oracleId] = CardFacts(rarity: rarity, year: year);
+  });
+  return out;
+}
+
+/// Sin datos de edición (colecciones viejas): lo mejor que se puede hacer es
+/// mirar todas las impresiones de la carta.
+Future<Map<String, CardFacts>> _factsFromAllPrintings(
+    CardDatabase db, List<OwnedCard> cards) async {
+  final raw = await db.factsForOracles(cards.map((c) => c.oracleId));
+  return {
+    for (final e in raw.entries)
+      e.key: CardFacts(rarity: e.value.rarity, year: e.value.year)
+  };
 }
