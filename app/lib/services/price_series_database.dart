@@ -141,16 +141,19 @@ class PriceSeriesDatabase {
           chunk);
       for (final row in rows) {
         final blob = row['values_f32'] as Uint8List;
-        final values = blob.buffer
-            .asFloat32List(blob.offsetInBytes, blob.lengthInBytes ~/ 4);
+        // ByteData y NO buffer.asFloat32List: el blob que devuelve sqlite3
+        // puede ser una vista con offset no múltiplo de 4, y ahí
+        // asFloat32List lanza. El script escribe little-endian.
+        final data = ByteData.sublistView(blob);
+        final days = blob.lengthInBytes ~/ 4;
         final points = <PricePoint>[];
-        for (var d = 0; d < values.length; d++) {
-          final v = values[d];
+        for (var d = 0; d < days; d++) {
+          final v = data.getFloat32(d * 4, Endian.little);
           if (v.isNaN || v <= 0) continue; // día sin dato
           final day = first.add(Duration(days: d));
           two(int n) => n < 10 ? '0$n' : '$n';
           points.add(PricePoint(
-              '${day.year}-${two(day.month)}-${two(day.day)}', v.toDouble()));
+              '${day.year}-${two(day.month)}-${two(day.day)}', v));
         }
         if (points.isNotEmpty) out[row['oracle_id'] as String] = points;
       }

@@ -94,6 +94,31 @@ void main() {
         ('2026-04-21', '2026-07-20'));
   });
 
+  test('lee un blob con offset no alineado a 4 bytes (lo que puede '
+      'devolver sqlite3) sin lanzar', () async {
+    final values = Float32List.fromList([1.0, 2.0, 3.0]);
+    // vista desalineada: mismos bytes, empezando en el byte 1 de un buffer
+    final padded = Uint8List(values.lengthInBytes + 1)
+      ..setRange(1, values.lengthInBytes + 1, values.buffer.asUint8List());
+    final unaligned = Uint8List.sublistView(padded, 1);
+    expect(unaligned.offsetInBytes % 4, isNot(0));
+
+    final db = sqlite3.open(p.join(dir.path, 'manaforge_prices.sqlite'));
+    db.execute('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
+    db.execute('CREATE TABLE price_series ('
+        'oracle_id TEXT PRIMARY KEY, values_f32 BLOB NOT NULL)');
+    db.execute("INSERT INTO meta VALUES ('start_date', '2026-07-01')");
+    db.execute("INSERT INTO meta VALUES ('end_date', '2026-07-03')");
+    db.execute(
+        'INSERT INTO price_series VALUES (?, ?)', ['bolt', unaligned]);
+    db.dispose();
+
+    final bolt = (await PriceSeriesDatabase(directory: dir)
+        .seriesFor(['bolt']))['bolt']!;
+    expect([for (final pt in bolt) pt.value],
+        [closeTo(1.0, 0.001), closeTo(2.0, 0.001), closeTo(3.0, 0.001)]);
+  });
+
   test('base corrupta: se ignora en vez de tumbar el Mercado', () async {
     File(p.join(dir.path, 'manaforge_prices.sqlite'))
         .writeAsStringSync('esto no es una sqlite');
