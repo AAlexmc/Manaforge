@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/achievements_controller.dart';
 import '../services/collection_value.dart';
 import '../services/deck_store.dart';
 import '../services/meta_decks.dart';
@@ -11,6 +12,7 @@ import '../widgets/common.dart';
 import 'card_detail_screen.dart';
 import 'deck_detail_screen.dart';
 import 'import_csv_screen.dart';
+import 'logros_screen.dart';
 import 'mercado_screen.dart';
 import 'set_market_screen.dart';
 import 'test_screen.dart';
@@ -21,6 +23,7 @@ class HomeScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
   final DeckStore decks;
+  final AchievementsController achievements;
   final void Function(int tabIndex) onGoToTab;
 
   const HomeScreen({
@@ -28,6 +31,7 @@ class HomeScreen extends StatefulWidget {
     required this.db,
     required this.collection,
     required this.decks,
+    required this.achievements,
     required this.onGoToTab,
   });
 
@@ -115,6 +119,74 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (_) {
       widget.onGoToTab(3); // sin DB: a la pestaña Mazos con su mensaje
     }
+  }
+
+  void _openLogros() => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => LogrosScreen(achievements: widget.achievements),
+        ),
+      );
+
+  /// Tu nivel de un vistazo: cuánto llevas y cuánto falta para el siguiente.
+  Widget _levelCard(BuildContext context) {
+    return ListenableBuilder(
+      listenable: widget.achievements,
+      builder: (context, _) {
+        final a = widget.achievements;
+        final level = a.level;
+        final ratio =
+            level.xpForNext == 0 ? 0.0 : level.xpInLevel / level.xpForNext;
+        return Card(
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: _openLogros,
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: MFColors.forge.withValues(alpha: 0.16),
+                      border: Border.all(color: MFColors.forge, width: 2),
+                    ),
+                    child: Text('${level.level}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(level.title,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15)),
+                        Text(
+                            '${a.unlockedCount}/${a.totalCount} logros · '
+                            '${level.xpForNext - level.xpInLevel} XP para el '
+                            'nivel ${level.level + 1}',
+                            style: const TextStyle(fontSize: 11.5)),
+                        const SizedBox(height: 6),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                              value: ratio.clamp(0.0, 1.0), minHeight: 6),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget _sectionTitle(String title) => Padding(
@@ -226,6 +298,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                _levelCard(context),
+                const SizedBox(height: 12),
                 // accesos rápidos
                 Wrap(
                   spacing: 8,
@@ -255,6 +329,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon:
                           const Icon(Icons.auto_stories, size: 18),
                       label: const Text('Álbum'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: _openLogros,
+                      icon: const Icon(Icons.emoji_events_outlined,
+                          size: 18),
+                      label: const Text('Logros'),
                     ),
                   ],
                 ),

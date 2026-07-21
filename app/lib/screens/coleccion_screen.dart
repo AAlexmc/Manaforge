@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
@@ -28,12 +29,16 @@ class ColeccionScreen extends StatefulWidget {
   final ScannerDatabase scanner;
   final FolderStore folders;
 
+  /// Opcional: si está, escanear y crear carpetas cuentan para los logros.
+  final AchievementsController? achievements;
+
   const ColeccionScreen({
     super.key,
     required this.db,
     required this.collection,
     required this.scanner,
     required this.folders,
+    this.achievements,
   });
 
   @override
@@ -50,6 +55,8 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
   Map<String, CollectionValuation> _folderValues = const {};
   CollectionValuation? _total;
   int _valuesToken = 0;
+  bool _computing = false;
+  bool _needsRecompute = false;
 
   @override
   void initState() {
@@ -74,6 +81,24 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
   /// Una sola pasada para todas las carpetas: el mapa impresión -> carta se
   /// pide UNA vez y se reparte, en vez de una consulta por carpeta.
   Future<void> _recomputeValues() async {
+    // importar un CSV avisa una vez POR CARTA: sin esto son cientos de
+    // pasadas a la base de precios para acabar pintando solo la última
+    if (_computing) {
+      _needsRecompute = true;
+      return;
+    }
+    _computing = true;
+    try {
+      do {
+        _needsRecompute = false;
+        await _computeValuesOnce();
+      } while (_needsRecompute && mounted);
+    } finally {
+      _computing = false;
+    }
+  }
+
+  Future<void> _computeValuesOnce() async {
     final token = ++_valuesToken;
     final folders = widget.folders.folders;
     final cards = widget.collection.cards;
@@ -190,7 +215,8 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                   builder: (_) => LiveScanScreen(
                       db: widget.db,
                       collection: widget.collection,
-                      scanner: widget.scanner),
+                      scanner: widget.scanner,
+                      achievements: widget.achievements),
                 ),
               ),
               icon: const Icon(Icons.qr_code_scanner),

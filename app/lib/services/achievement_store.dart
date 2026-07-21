@@ -11,7 +11,6 @@ abstract final class AchievementCounters {
   static const cardsScanned = 'cardsScanned';
   static const bestPhotoCards = 'bestPhotoCards';
   static const perfectScans = 'perfectScans';
-  static const foldersCreated = 'foldersCreated';
 }
 
 /// Qué logros has conseguido, los contadores de actividad y qué días has
