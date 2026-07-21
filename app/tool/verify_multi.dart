@@ -16,6 +16,7 @@ import 'package:manaforge_app/scanner/card_detector.dart';
 import 'package:manaforge_app/scanner/dhash.dart';
 import 'package:manaforge_app/scanner/hash_index.dart';
 import 'package:manaforge_app/scanner/scan_gate.dart';
+import 'package:manaforge_app/scanner/scan_tray.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 Future<HashIndex> _loadIndex(String path) async {
@@ -85,6 +86,7 @@ Future<void> main(List<String> args) async {
       mode = 'una carta';
     }
     print('modo: $mode, ${cards.length} cartas');
+    final perCell = <(List<ScanMatch>, Uint8List?)>[];
     for (var i = 0; i < cards.length; i++) {
       final d = cards[i];
       final w = d.warped;
@@ -94,6 +96,7 @@ Future<void> main(List<String> args) async {
           artSignatures(aw.pixels, aw.width, aw.height, compact: true)
       ];
       final (matches, _) = index.bestGroupMatches(sigs, alts, lockSet: lock);
+      perCell.add((matches, null));
       final decision = decideScan(matches);
       final top = matches.isEmpty ? null : matches.first;
       print('  celda $i: ${decision.confidence.name.padRight(10)} '
@@ -112,6 +115,16 @@ Future<void> main(List<String> args) async {
         File('${base}_c${i}_art.png')
             .writeAsBytesSync(img.encodePng(_toImg(d.artCrop)));
       }
+    }
+    // lo que vería Ale en la bandeja (misma función que la app)
+    final tray = buildBatchTray(perCell);
+    print('  bandeja: ${tray.lines.length} líneas · '
+        '${tray.totalQty} para añadir · '
+        '${tray.lines.where((l) => l.unrecognized).length} sin reconocer · '
+        '${tray.lines.where((l) => l.needsReview).length} a revisar');
+    for (final l in tray.lines) {
+      print('    ${l.unrecognized ? "SIN RECONOCER" : "${l.chosen.entry.name}"
+          " x${l.qty}${l.needsReview ? " (revisar)" : ""}"}');
     }
     print('');
   }
