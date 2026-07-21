@@ -734,6 +734,41 @@ extension MarketQueries on CardDatabase {
     return versions;
   }
 
+  /// A qué carta pertenece cada impresión ("set|nº" -> oracleId). Lo usan las
+  /// carpetas para repartir las cantidades por edición de la colección entre
+  /// las cartas que tiene cada carpeta.
+  Future<Map<String, String>> oracleByPrintings(
+      Iterable<String> printingKeys) async {
+    final db = await _open();
+    final out = <String, String>{};
+    final keys = printingKeys.toList();
+    const chunkSize = 150; // 2 parámetros por clave
+    for (var i = 0; i < keys.length; i += chunkSize) {
+      final chunk = keys.sublist(
+          i, i + chunkSize > keys.length ? keys.length : i + chunkSize);
+      final where = List.filled(
+              chunk.length, '(set_code = ? AND collector_number = ?)')
+          .join(' OR ');
+      final params = <String>[];
+      for (final k in chunk) {
+        final parts = k.split('|');
+        params.add(parts.first);
+        params.add(parts.length > 1 ? parts[1] : '');
+      }
+      final rows = db.select(
+        'SELECT set_code, collector_number, oracle_id '
+        'FROM printings WHERE $where',
+        params,
+      );
+      for (final r in rows) {
+        final key =
+            '${(r['set_code'] as String).toLowerCase()}|${r['collector_number']}';
+        out[key] = r['oracle_id'] as String;
+      }
+    }
+    return out;
+  }
+
   /// Precio unitario por impresión exacta ("set|nº" -> €).
   Future<Map<String, double>> pricesForPrintings(
       Iterable<String> printingKeys) async {
