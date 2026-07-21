@@ -39,8 +39,20 @@ class _PriceChartState extends State<PriceChart> {
   int? _hover; // índice del punto bajo el cursor/dedo
 
   @override
+  void didUpdateWidget(PriceChart old) {
+    super.didUpdateWidget(old);
+    // otro historial: el punto señalado ya no significa lo mismo
+    if (!identical(old.points, widget.points)) _hover = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final shown = filterRange(widget.points, _range.days);
+    var shown = filterRange(widget.points, _range.days);
+    // si el rango elegido deja menos de dos puntos pero SÍ hay historia
+    // más antigua, enseñarla: decir "aún no hay datos" sería mentira
+    if (shown.length < 2 && widget.points.length >= 2) {
+      shown = widget.points;
+    }
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
@@ -212,6 +224,19 @@ class _PriceChartState extends State<PriceChart> {
   }
 }
 
+/// Comparación por CONTENIDO (longitud + extremos): las listas de puntos
+/// pueden llegar mutadas en sitio desde el almacén, así que comparar por
+/// identidad dejaría la gráfica congelada con datos viejos.
+bool _samePoints(List<PricePoint> a, List<PricePoint> b) {
+  if (identical(a, b)) return true;
+  if (a.length != b.length) return false;
+  if (a.isEmpty) return true;
+  return a.first.date == b.first.date &&
+      a.first.value == b.first.value &&
+      a.last.date == b.last.date &&
+      a.last.value == b.last.value;
+}
+
 /// Línea de tendencia en miniatura para una fila de lista (Mercado,
 /// wishlist): solo la forma, verde si sube y roja si baja respecto al
 /// primer punto del tramo. Vacía si aún no hay dos días apuntados.
@@ -275,7 +300,7 @@ class _MiniLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_MiniLinePainter old) =>
-      old.points != points || old.color != color;
+      old.color != color || !_samePoints(old.points, points);
 }
 
 class _RangeChip extends StatelessWidget {
@@ -483,5 +508,11 @@ class _PriceChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_PriceChartPainter old) =>
-      old.points != points || old.hover != hover || old.line != line;
+      old.hover != hover ||
+      old.line != line ||
+      old.grid != grid ||
+      old.text != text ||
+      old.tooltipBg != tooltipBg ||
+      old.tooltipFg != tooltipFg ||
+      !_samePoints(old.points, points);
 }

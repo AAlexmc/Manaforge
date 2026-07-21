@@ -36,6 +36,14 @@ class _WishlistScreenState extends State<WishlistScreen> {
   void initState() {
     super.initState();
     _loadHistory();
+    // al añadir/quitar cartas cambia qué historiales hacen falta
+    widget.wishlist.addListener(_loadHistory);
+  }
+
+  @override
+  void dispose() {
+    widget.wishlist.removeListener(_loadHistory);
+    super.dispose();
   }
 
   Future<void> _loadHistory() async {

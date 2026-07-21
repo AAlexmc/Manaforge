@@ -69,6 +69,13 @@ class _MercadoScreenState extends State<MercadoScreen> {
     if (mounted) setState(() {});
   }
 
+  /// Apunta precios al historial sin que un fallo de almacenamiento afecte
+  /// a lo que el usuario ha venido a hacer (ver su valor, cobrar alertas).
+  void _recordPrices(Map<String, double> prices) {
+    if (prices.isEmpty) return;
+    priceHistoryStore.recordAll(prices).catchError((_) {});
+  }
+
   /// Cruza los precios actuales con la wishlist y avisa de lo que ACABA de
   /// caer a su precio objetivo.
   Future<void> _checkWishlist() async {
@@ -77,9 +84,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
     try {
       final prices = await widget.db
           .pricesForOracles(items.map((i) => i.oracleId));
-      // las de la wishlist también acumulan gráfica aunque no las tengas
-      await priceHistoryStore.recordAll(prices);
       final hits = widget.wishlist.updatePrices(prices);
+      // las de la wishlist también acumulan gráfica aunque no las tengas;
+      // va DESPUÉS y con su propio catch: que no se pueda guardar el
+      // historial no debe cargarse la alerta de precio objetivo
+      _recordPrices(prices);
       if (hits.isEmpty || !mounted) return;
       final msg = hits.length == 1
           ? '🔔 ¡${hits.first.printedName ?? hits.first.name} está a '
@@ -119,8 +128,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
       // foto diaria del precio de CADA carta de la colección: es lo que
       // alimenta la gráfica de evolución de su ficha (Scryfall solo da el
-      // precio de hoy, la historia se construye con el uso)
-      await priceHistoryStore.recordAll({
+      // precio de hoy, la historia se construye con el uso). Sin await ni
+      // propagación: el Mercado no debe romperse porque falle el disco.
+      _recordPrices({
         for (final c in valued)
           if (c.unitPrice > 0) c.oracleId: c.unitPrice
       });

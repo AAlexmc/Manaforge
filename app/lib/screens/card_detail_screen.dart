@@ -301,24 +301,31 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                           subtitle: Text(
                               '${v.setCode.toUpperCase()} · #${v.collectorNumber}'
                               ' · ${v.year} · ${v.rarity}'),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(_euro(v.priceEur),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
-                              Text('foil ${_euro(v.priceEurFoil)}',
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      color: MFColors.warning)),
-                              if ((printingQty[v.printingKey] ?? 0) > 0)
-                                Text(
-                                    'tienes x${printingQty[v.printingKey]}',
+                          // FittedBox: con la tercera línea ("tienes xN")
+                          // las tres no caben en un ListTile dense y se
+                          // recortaba por abajo
+                          trailing: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerRight,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(_euro(v.priceEur),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                Text('foil ${_euro(v.priceEurFoil)}',
                                     style: const TextStyle(
                                         fontSize: 11,
-                                        color: MFColors.success)),
-                            ],
+                                        color: MFColors.warning)),
+                                if ((printingQty[v.printingKey] ?? 0) > 0)
+                                  Text(
+                                      'tienes x${printingQty[v.printingKey]}',
+                                      style: const TextStyle(
+                                          fontSize: 11,
+                                          color: MFColors.success)),
+                              ],
+                            ),
                           ),
                         ),
                       ),

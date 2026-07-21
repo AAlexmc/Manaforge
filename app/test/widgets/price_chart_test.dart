@@ -53,9 +53,9 @@ void main() {
 
   testWidgets('cambiar a Semana recorta el tramo (y su resumen)',
       (tester) async {
-    // 10 días: 1 € el primero y 5 € el resto. En Semana entran los de los
-    // últimos 7 días (hoy incluido = 8 puntos), que ya arrancan a 5 € →
-    // variación 0; en Mes entra el de 1 € y la subida es del 400 %
+    // 10 días: 1 € el primero y 5 € el resto. En Semana entran hoy y los 6
+    // anteriores (7 puntos), que ya arrancan a 5 € → variación 0; en Mes
+    // entra el de 1 € y la subida es del 400 %
     await tester.pumpWidget(_wrap(PriceChart(
         points: _daily([1, 5, 5, 5, 5, 5, 5, 5, 5, 5]))));
     expect(find.textContaining('+4.00 € (400.0%)'), findsOneWidget);
@@ -63,7 +63,20 @@ void main() {
     await tester.tap(find.text('Semana'));
     await tester.pump();
     expect(find.textContaining('+0.00 € (0.0%)'), findsOneWidget);
-    expect(find.textContaining('8 días'), findsOneWidget);
+    expect(find.textContaining('7 días'), findsOneWidget);
+  });
+
+  testWidgets('historial solo antiguo: enseña la gráfica en vez de decir '
+      'que no hay datos', (tester) async {
+    // dos puntos de hace más de un mes: el rango Mes (por defecto) los
+    // dejaría fuera, pero historia SÍ hay
+    final old = [
+      const PricePoint('2020-01-01', 2.0),
+      const PricePoint('2020-01-05', 3.0),
+    ];
+    await tester.pumpWidget(_wrap(PriceChart(points: old)));
+    expect(find.textContaining('en cuanto haya varios días'), findsNothing);
+    expect(find.textContaining('+1.00 € (50.0%)'), findsOneWidget);
   });
 
   testWidgets('tocar la gráfica marca un punto y no revienta el pintado',
