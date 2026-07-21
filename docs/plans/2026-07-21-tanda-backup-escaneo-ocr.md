@@ -20,7 +20,7 @@ propia, buylist, importar/exportar mazos.
 ## Estado de partida
 
 - Rama `feat/carpetas-y-logros`, PR #4 abierto y CI verde, 334 tests.
-- Doce almacenes JSON en `~/.local/share/com.example.manaforge/`:
+- Once almacenes JSON en `~/.local/share/com.example.manaforge/`:
   `collection.json`, `folders.json`, `decks.json`, `achievements.json`,
   `wishlist.json`, `certificates.json`, `market.json`, `recents.json`,
   `value_history.json`, `price_history.jsonl`, `meta_decks.json`
