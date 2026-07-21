@@ -64,6 +64,45 @@ const int kNoMatchMax = 40;
 /// decir nada que decir mentira.
 const int kUntrustedMin = 28;
 
+/// Detalle mínimo (desviación típica de la luminancia) de la ventana del
+/// arte para que un recorte pueda ser una carta. Medido sobre fotos reales:
+/// las cartas dan 17-57 y una mesa/servilleta 6. Por debajo de esto es una
+/// superficie lisa, no un arte — y el índice SIEMPRE devuelve su vecino más
+/// cercano, así que una servilleta "casaba" a 25 bits.
+const double kMinArtDetail = 12;
+
+/// Veredicto para un frame de VÍDEO, que es un problema distinto al de una
+/// foto: en la foto el usuario ha decidido que ahí hay una carta, mientras
+/// que la cámara está casi siempre enfocando una mesa vacía.
+///
+/// Tres reglas de más, las tres por lo mismo — el escáner en vivo se
+/// llenaba de cartas inventadas apuntando a un pañuelo:
+///  - si el detector NO ha encontrado carta ([cardDetected] false, es decir
+///    ha tenido que usar la foto entera), no hay carta que reconocer;
+///  - si lo que ha encontrado no tiene detalle de arte ([artDetail] por
+///    debajo de [kMinArtDetail]), es un pliegue de tela o una sombra con
+///    forma de rectángulo;
+///  - una ambigua con el top-1 en zona de error (≥ [kUntrustedMin]) es
+///    ruido que se parece vagamente a un arte, no una carta.
+ScanDecision decideLiveScan(
+  List<ScanMatch> matches, {
+  required bool cardDetected,
+  double artDetail = double.infinity,
+  double minArtDetail = kMinArtDetail,
+  int untrustedMin = kUntrustedMin,
+}) {
+  if (!cardDetected) return ScanDecision(ScanConfidence.none, matches);
+  if (artDetail < minArtDetail) {
+    return ScanDecision(ScanConfidence.none, matches);
+  }
+  final decision = decideScan(matches);
+  if (decision.confidence == ScanConfidence.ambiguous &&
+      matches.first.distance >= untrustedMin) {
+    return ScanDecision(ScanConfidence.none, matches);
+  }
+  return decision;
+}
+
 /// Decide qué enseñar a partir del top-k del matching (candidatos distintos
 /// por carta, ordenados por distancia ascendente).
 ScanDecision decideScan(

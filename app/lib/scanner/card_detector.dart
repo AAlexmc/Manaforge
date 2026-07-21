@@ -84,6 +84,71 @@ const artRight = 0.923;
 const artTop = 0.117;
 const artBottom = 0.545;
 
+/// Cuánto se parece un recorte rectificado a una carta de Magic DE VERDAD,
+/// mirando lo que toda carta tiene y una mesa, una mano o un pañuelo no:
+/// detalle en la ventana del arte y, sobre todo, la caja de texto con sus
+/// renglones. Sin esto, el escáner en vivo "encontraba" cartas en un
+/// pliegue de servilleta y las casaba a ~25 bits.
+class CardLikeness {
+  /// Desviación típica de la luminancia en la ventana del arte (0..127).
+  final double artDetail;
+
+  /// Energía de gradiente HORIZONTAL media en la caja de texto: los
+  /// renglones de texto la disparan, una superficie lisa no.
+  final double textLines;
+
+  const CardLikeness(this.artDetail, this.textLines);
+
+  @override
+  String toString() => 'arte ${artDetail.toStringAsFixed(1)} · '
+      'texto ${textLines.toStringAsFixed(1)}';
+}
+
+CardLikeness cardLikeness(Uint8List warpedRgb, int w, int h) {
+  double lum(int x, int y) {
+    final i = (y * w + x) * 3;
+    return 0.299 * warpedRgb[i] +
+        0.587 * warpedRgb[i + 1] +
+        0.114 * warpedRgb[i + 2];
+  }
+
+  // ventana del arte: desviación típica
+  final ax0 = (artLeft * w).round();
+  final ax1 = (artRight * w).round();
+  final ay0 = (artTop * h).round();
+  final ay1 = (artBottom * h).round();
+  var sum = 0.0;
+  var sumSq = 0.0;
+  var n = 0;
+  for (var y = ay0; y < ay1; y += 2) {
+    for (var x = ax0; x < ax1; x += 2) {
+      final v = lum(x, y);
+      sum += v;
+      sumSq += v * v;
+      n++;
+    }
+  }
+  final mean = n == 0 ? 0.0 : sum / n;
+  final variance = n == 0 ? 0.0 : (sumSq / n) - mean * mean;
+  final artDetail = variance <= 0 ? 0.0 : math.sqrt(variance);
+
+  // caja de texto (mitad inferior del marco): energía de |gy|, que es lo
+  // que dispara la sucesión de renglones
+  final tx0 = (0.10 * w).round();
+  final tx1 = (0.90 * w).round();
+  final ty0 = (0.60 * h).round();
+  final ty1 = (0.92 * h).round();
+  var energy = 0.0;
+  var count = 0;
+  for (var y = ty0 + 1; y < ty1 - 1; y += 2) {
+    for (var x = tx0; x < tx1; x += 3) {
+      energy += (lum(x, y + 1) - lum(x, y - 1)).abs();
+      count++;
+    }
+  }
+  return CardLikeness(artDetail, count == 0 ? 0.0 : energy / count);
+}
+
 /// Detecta la carta de [photo] y devuelve carta rectificada + arte.
 DetectedCard detectCard(RgbImage photo) {
   // 1. reducir + gris

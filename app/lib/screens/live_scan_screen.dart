@@ -240,7 +240,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       if (outcome == null) continue;
       final matches =
           index.topMatches(outcome.signatures, lockSet: _lockSet);
-      final decision = decideScan(matches);
+      // usedFallback = el detector no encontró carta y hasheó el encuadre
+      // entero: eso es la mesa, no una carta (ver decideLiveScan)
+      final decision = decideLiveScan(matches,
+          cardDetected: !outcome.usedFallback,
+          artDetail: outcome.artDetail);
       setState(() => _lastSeenName = decision.best?.entry.name);
       if (decision.confidence == ScanConfidence.confident) {
         await _onRecognition(Recognition(matches, decision.confidence));
