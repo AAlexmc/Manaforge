@@ -399,6 +399,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   String _euro(double v) => '${v.toStringAsFixed(2)} €';
 
+  /// Lo que suman TUS copias de esa carta en el mercado elegido.
+  String _totalOf(ValuedCard card) {
+    final price = _marketPrices[card.oracleId];
+    if (price != null) return formatMoney(price.value * card.qty, _market);
+    if (_market == Market.cardmarket) return _euro(card.total);
+    return '—';
+  }
+
   /// Precio de una carta en el mercado elegido; null si ese mercado no tiene
   /// dato de esa carta.
   String? _priceOf(String oracleId, {double? fallbackEur}) {
@@ -601,7 +609,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
                             builder: (_) => SetMarketScreen(
                                 db: widget.db,
                                 collection: widget.collection,
-                                set: set),
+                                set: set,
+                                market: widget.market,
+                                prices: widget.prices),
                           ),
                         ),
                       );
@@ -743,7 +753,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
                       MiniPriceLine(
                           points: _cardHistory[card.oracleId] ?? const []),
                       const SizedBox(width: 10),
-                      Text(_euro(card.total),
+                      // el total de la fila también en el mercado elegido:
+                      // enseñar euros al lado de un precio en dólares era
+                      // pedir que se leyera mal
+                      Text(_totalOf(card),
                           style:
                               const TextStyle(fontWeight: FontWeight.bold)),
                     ],

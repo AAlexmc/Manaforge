@@ -52,10 +52,16 @@ class CardDatabase {
   static const releaseUrl =
       'https://github.com/AAlexmc/Manaforge/releases/download/card-db-latest/manaforge_cards.sqlite.gz';
 
+  /// Solo para tests: dónde vive la base (por defecto, la carpeta de datos
+  /// de la app).
+  final Directory? dataDir;
+
+  CardDatabase({this.dataDir});
+
   Database? _db;
 
   Future<File> _dbFile() async {
-    final dir = await getApplicationSupportDirectory();
+    final dir = dataDir ?? await getApplicationSupportDirectory();
     return File(p.join(dir.path, 'manaforge_cards.sqlite'));
   }
 
@@ -586,8 +592,11 @@ class CardVersion {
   final String collectorNumber;
   final String rarity;
   final String? releasedAt;
-  final double? priceEur;
-  final double? priceEurFoil;
+
+  /// Precio de ESTA edición en el mercado con el que se pidió la lista
+  /// (no siempre son euros: el mercado lo elige el usuario).
+  final double? price;
+  final double? priceFoil;
   final String? imageSmall;
   final String? imageNormal;
 
@@ -597,8 +606,8 @@ class CardVersion {
     required this.collectorNumber,
     required this.rarity,
     this.releasedAt,
-    this.priceEur,
-    this.priceEurFoil,
+    this.price,
+    this.priceFoil,
     this.imageSmall,
     this.imageNormal,
   });
@@ -694,9 +703,18 @@ extension MarketQueries on CardDatabase {
 
   /// Todas las versiones impresas (una por set+número, preferencia EN),
   /// nuevas primero.
-  Future<List<CardVersion>> versionsOf(String oracleId) async {
+  /// Ediciones de una carta con su precio EN EL MERCADO ELEGIDO. Los
+  /// mercados sin precio por edición (Card Kingdom, Mana Pool: de esos solo
+  /// hay histórico a nivel carta) devuelven las ediciones sin precio, y la
+  /// ficha lo explica en vez de enseñar euros con otra etiqueta.
+  Future<List<CardVersion>> versionsOf(String oracleId,
+      {Market market = Market.cardmarket}) async {
     final db = await _open();
-    final hasFoil = await _hasColumn('printings', 'price_eur_foil');
+    final priceCol = market.todayColumn;
+    final foilCol = market.todayFoilColumn;
+    final hasPrice =
+        priceCol != null && await _hasColumn('printings', priceCol);
+    final hasFoil = foilCol != null && await _hasColumn('printings', foilCol);
     final hasDate = await _hasColumn('printings', 'released_at');
     final cols = [
       'set_code',
@@ -705,8 +723,8 @@ extension MarketQueries on CardDatabase {
       'rarity',
       'image_small',
       'image_normal',
-      'price_eur',
-      if (hasFoil) 'price_eur_foil',
+      if (hasPrice) priceCol,
+      if (hasFoil) foilCol,
       if (hasDate) 'released_at',
     ].join(', ');
     final rows = db.select(
@@ -724,10 +742,11 @@ extension MarketQueries on CardDatabase {
           collectorNumber: (r['collector_number'] as String?) ?? '',
           rarity: (r['rarity'] as String?) ?? '',
           releasedAt: hasDate ? r['released_at'] as String? : null,
-          priceEur: double.tryParse((r['price_eur'] as String?) ?? ''),
-          priceEurFoil: hasFoil
-              ? double.tryParse((r['price_eur_foil'] as String?) ?? '')
+          price: hasPrice
+              ? double.tryParse((r[priceCol] as String?) ?? '')
               : null,
+          priceFoil:
+              hasFoil ? double.tryParse((r[foilCol] as String?) ?? '') : null,
           imageSmall: r['image_small'] as String?,
           imageNormal: r['image_normal'] as String?,
         )
@@ -897,8 +916,10 @@ class SetCardPrice {
   final String colors;
   final String? imageSmall;
   final String? imageNormal;
-  final double? priceEur;
-  final double? priceEurFoil;
+
+  /// Precio en el mercado con el que se pidió la lista.
+  final double? price;
+  final double? priceFoil;
 
   const SetCardPrice({
     required this.oracleId,
@@ -909,8 +930,8 @@ class SetCardPrice {
     required this.colors,
     this.imageSmall,
     this.imageNormal,
-    this.priceEur,
-    this.priceEurFoil,
+    this.price,
+    this.priceFoil,
   });
 }
 
@@ -967,13 +988,19 @@ extension SetMarketQueries on CardDatabase {
   }
 
   /// Cartas de un set con precios, una por número de coleccionista.
-  Future<List<SetCardPrice>> setCardsWithPrices(String setCode) async {
+  Future<List<SetCardPrice>> setCardsWithPrices(String setCode,
+      {Market market = Market.cardmarket}) async {
     final db = await _open();
-    final hasFoil = await _hasColumn('printings', 'price_eur_foil');
+    final priceCol = market.todayColumn;
+    final foilCol = market.todayFoilColumn;
+    final hasPrice =
+        priceCol != null && await _hasColumn('printings', priceCol);
+    final hasFoil = foilCol != null && await _hasColumn('printings', foilCol);
     final rows = db.select(
       'SELECT p.oracle_id, p.collector_number, p.printed_name, '
-      'p.image_small, p.image_normal, p.rarity, p.price_eur, '
-      '${hasFoil ? 'p.price_eur_foil, ' : ''}'
+      'p.image_small, p.image_normal, p.rarity, '
+      '${hasPrice ? 'p.$priceCol, ' : ''}'
+      '${hasFoil ? 'p.$foilCol, ' : ''}'
       'c.name, c.colors, '
       "MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref "
       'FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id '
@@ -991,10 +1018,11 @@ extension SetMarketQueries on CardDatabase {
           colors: (r['colors'] as String?) ?? '',
           imageSmall: r['image_small'] as String?,
           imageNormal: r['image_normal'] as String?,
-          priceEur: double.tryParse((r['price_eur'] as String?) ?? ''),
-          priceEurFoil: hasFoil
-              ? double.tryParse((r['price_eur_foil'] as String?) ?? '')
+          price: hasPrice
+              ? double.tryParse((r[priceCol] as String?) ?? '')
               : null,
+          priceFoil:
+              hasFoil ? double.tryParse((r[foilCol] as String?) ?? '') : null,
         )
     ];
   }

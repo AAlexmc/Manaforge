@@ -82,11 +82,15 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     super.dispose();
   }
 
-  /// Cambiar de mercado no recarga la carta entera: solo su precio y su
-  /// gráfica.
-  void _reloadPrices() {
+  /// Cambiar de mercado no recarga la carta entera: solo los precios (el de
+  /// arriba, el de CADA edición y la gráfica).
+  Future<void> _reloadPrices() async {
     final id = _oracleId;
-    if (id != null) _loadPriceHistory(id, _versions);
+    if (id == null) return;
+    final versions = await widget.db.versionsOf(id, market: _market);
+    if (!mounted) return;
+    setState(() => _versions = versions);
+    await _loadPriceHistory(id, versions);
   }
 
   Future<void> _load() async {
@@ -102,7 +106,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
         }
         return;
       }
-      final versions = await widget.db.versionsOf(detail.oracleId);
+      final versions =
+          await widget.db.versionsOf(detail.oracleId, market: _market);
       if (!mounted) return;
       setState(() {
         _detail = detail;
@@ -135,23 +140,28 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
   Future<void> _loadPriceHistory(
       String oracleId, List<CardVersion> versions) async {
     _oracleId = oracleId;
-    // el precio en euros de las ediciones que ya trae la ficha: es el que se
-    // apunta a diario en local (y el de Cardmarket)
-    double? eur;
+    // el precio de las ediciones que ya trae la ficha, en el mercado que se
+    // esté mirando (la lista de versiones se pide con ese mercado)
+    double? cheapest;
     for (final v in versions) {
-      final p = v.priceEur;
-      if (p != null && p > 0 && (eur == null || p < eur)) eur = p;
+      final p = v.price;
+      if (p != null && p > 0 && (cheapest == null || p < cheapest)) {
+        cheapest = p;
+      }
     }
     try {
-      if (eur != null) {
-        await priceHistoryStore.recordOne(oracleId, eur);
-      }
       final market = _market;
-      double? today = eur;
+      // el apunte diario que guarda la app es SIEMPRE de Cardmarket (euros):
+      // mezclarlo con dólares rompería la gráfica local
+      if (market == Market.cardmarket && cheapest != null) {
+        await priceHistoryStore.recordOne(oracleId, cheapest);
+      }
+      double? today = cheapest;
       String? asOf;
-      if (market != Market.cardmarket) {
+      if (market != Market.cardmarket && today == null) {
+        // mercados sin precio por edición (Card Kingdom, Mana Pool): el
+        // último día del histórico de ESE mercado
         final series = widget.prices;
-        today = null;
         if (series != null) {
           final prices = await MarketPrices(db: widget.db, series: series)
               .byOracle([oracleId], market);
@@ -170,7 +180,9 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     } catch (_) {/* sin almacenamiento: la ficha sigue funcionando */}
   }
 
-  String _euro(double? v) => v == null ? '—' : '${v.toStringAsFixed(2)} €';
+  /// Precio en la moneda del mercado elegido ('—' si ese mercado no lo
+  /// publica para esa edición).
+  String _price(double? v) => v == null ? '—' : formatMoney(v, _market);
 
   @override
   Widget build(BuildContext context) {
@@ -343,8 +355,12 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                                 .labelLarge
                                 ?.copyWith(letterSpacing: 1)),
                         const Spacer(),
-                        const Text('precios Cardmarket · normal / foil',
-                            style: TextStyle(fontSize: 11)),
+                        Text(
+                            _market.todayColumn == null
+                                ? 'sin precio por edición en ${_market.label}'
+                                : 'precios ${_market.label} '
+                                    '(${_market.currency}) · normal / foil',
+                            style: const TextStyle(fontSize: 11)),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -377,10 +393,10 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(_euro(v.priceEur),
+                                Text(_price(v.price),
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
-                                Text('foil ${_euro(v.priceEurFoil)}',
+                                Text('foil ${_price(v.priceFoil)}',
                                     style: const TextStyle(
                                         fontSize: 11,
                                         color: MFColors.warning)),
