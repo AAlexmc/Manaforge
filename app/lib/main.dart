@@ -4,6 +4,8 @@ import 'screens/screens.dart';
 import 'services/card_database.dart';
 import 'services/collection_store.dart';
 import 'services/deck_store.dart';
+import 'services/price_history.dart';
+import 'services/price_series_database.dart';
 import 'services/scanner_database.dart';
 import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
@@ -40,6 +42,15 @@ class _HomeShellState extends State<HomeShell> {
   final _decks = DeckStore();
   final _scanner = ScannerDatabase();
   final _wishlist = WishlistStore();
+  final _prices = PriceSeriesDatabase();
+
+  @override
+  void initState() {
+    super.initState();
+    // el historial local se apoya en los ~90 días reales de Cardmarket que
+    // trae la base descargable (si el usuario la ha traído)
+    priceHistoryStore.baseSeriesProvider = _prices.seriesFor;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +64,11 @@ class _HomeShellState extends State<HomeShell> {
       AlbumScreen(db: _db, collection: _collection),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
-      MercadoScreen(db: _db, collection: _collection, wishlist: _wishlist),
+      MercadoScreen(
+          db: _db,
+          collection: _collection,
+          wishlist: _wishlist,
+          prices: _prices),
       AjustesScreen(db: _db),
     ];
     return Scaffold(

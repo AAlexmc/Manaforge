@@ -77,6 +77,12 @@ class PriceHistoryStore {
 
   PriceHistoryStore({Directory? directory}) : _dir = directory;
 
+  /// Histórico previo (los ~90 días reales de Cardmarket que trae la base
+  /// descargable): se usa de BASE y lo apuntado en local manda en los días
+  /// que tenga. Si no se enchufa nada, solo hay historial local.
+  Future<Map<String, List<PricePoint>>> Function(Iterable<String>)?
+      baseSeriesProvider;
+
   Map<String, List<PricePoint>>? _cache;
   Future<Map<String, List<PricePoint>>>? _loading;
   int _lines = 0; // líneas del log en disco (para decidir compactación)
@@ -195,25 +201,62 @@ class PriceHistoryStore {
     return '${now.year}-${two(now.month)}-${two(now.day)}';
   }
 
-  /// Historial de una carta, ordenado por fecha ascendente. Copia: el
-  /// llamador (widgets que comparan por identidad para repintar) no debe
-  /// recibir la lista viva del caché.
-  Future<List<PricePoint>> forCard(String oracleId) => _serialize(() async {
-        final data = await _load();
-        return List<PricePoint>.unmodifiable(data[oracleId] ?? const []);
-      });
+  /// Historial de una carta, ordenado por fecha ascendente: el histórico
+  /// descargado como base + lo apuntado en local encima.
+  Future<List<PricePoint>> forCard(String oracleId) async {
+    final local = await _serialize(() async {
+      final data = await _load();
+      return List<PricePoint>.from(data[oracleId] ?? const []);
+    });
+    final base = await _base([oracleId]);
+    return List<PricePoint>.unmodifiable(
+        _merge(base[oracleId] ?? const [], local));
+  }
 
   /// Historiales de varias cartas de golpe (listas de Mercado/wishlist);
   /// solo las que tienen algún punto.
-  Future<Map<String, List<PricePoint>>> forCards(Iterable<String> oracleIds) =>
-      _serialize(() async {
-        final data = await _load();
-        return {
-          for (final id in oracleIds)
-            if (data[id] != null && data[id]!.isNotEmpty)
-              id: List<PricePoint>.unmodifiable(data[id]!)
-        };
-      });
+  Future<Map<String, List<PricePoint>>> forCards(
+      Iterable<String> oracleIds) async {
+    final ids = oracleIds.toSet();
+    final local = await _serialize(() async {
+      final data = await _load();
+      return {
+        for (final id in ids)
+          if (data[id] != null) id: List<PricePoint>.from(data[id]!)
+      };
+    });
+    final base = await _base(ids);
+    final out = <String, List<PricePoint>>{};
+    for (final id in ids) {
+      final merged = _merge(base[id] ?? const [], local[id] ?? const []);
+      if (merged.isNotEmpty) out[id] = List<PricePoint>.unmodifiable(merged);
+    }
+    return out;
+  }
+
+  Future<Map<String, List<PricePoint>>> _base(Iterable<String> ids) async {
+    final provider = baseSeriesProvider;
+    if (provider == null) return const {};
+    try {
+      return await provider(ids);
+    } catch (_) {
+      return const {}; // sin histórico previo se sigue con el local
+    }
+  }
+
+  /// Une base + local por fecha; para un día presente en los dos manda el
+  /// apunte LOCAL (es el precio que la app vio de verdad ese día).
+  static List<PricePoint> _merge(
+      List<PricePoint> base, List<PricePoint> local) {
+    if (local.isEmpty) return base;
+    if (base.isEmpty) return local;
+    final byDate = <String, double>{
+      for (final pt in base) pt.date: pt.value,
+      for (final pt in local) pt.date: pt.value,
+    };
+    final dates = byDate.keys.toList()..sort();
+    return [for (final d in dates) PricePoint(d, byDate[d]!)];
+  }
 
   /// Apunta el precio de HOY de cada carta (sustituye la foto del día si
   /// ya existía). Ignora precios nulos/cero: "sin precio" no es un punto.

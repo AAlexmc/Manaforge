@@ -1,0 +1,53 @@
+name: Build price history database
+on:
+  workflow_dispatch:        # lanzable a mano desde la pestaña Actions
+  schedule:
+    - cron: '30 5 * * 1'    # y cada lunes (MTGJSON publica a diario, pero
+                            # la serie va de ~90 días: semanal sobra)
+  push:
+    tags: ['build-price-db-*']
+permissions:
+  contents: write           # para publicar la release
+jobs:
+  build-price-db:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install ijson
+      - name: Descargar histórico de precios de MTGJSON
+        run: |
+          set -euo pipefail
+          # AllPrices: ~90 días de precio por carta y proveedor (usamos
+          # paper.cardmarket.retail.normal). AllIdentifiers: uuid → oracle_id
+          # de Scryfall, que es como identifica las cartas ManaForge.
+          curl -sfL --retry 3 -H "User-Agent: ManaForge-CI/1.0 (github.com/AAlexmc/Manaforge)" \
+            https://mtgjson.com/api/v5/AllPrices.json.gz -o AllPrices.json.gz
+          curl -sfL --retry 3 -H "User-Agent: ManaForge-CI/1.0 (github.com/AAlexmc/Manaforge)" \
+            https://mtgjson.com/api/v5/AllIdentifiers.json.gz -o AllIdentifiers.json.gz
+          gunzip AllPrices.json.gz AllIdentifiers.json.gz
+          ls -lh AllPrices.json AllIdentifiers.json
+      - name: Construir SQLite
+        run: |
+          set -euo pipefail
+          python3 scripts/build_price_history_db.py \
+            AllPrices.json AllIdentifiers.json manaforge_prices.sqlite
+          python3 - <<'PY' >> "$GITHUB_ENV"
+          import sqlite3
+          meta = dict(sqlite3.connect('manaforge_prices.sqlite')
+                      .execute('SELECT key, value FROM meta'))
+          print(f"PRICE_START={meta['start_date']}")
+          print(f"PRICE_END={meta['end_date']}")
+          PY
+          rm -f AllPrices.json AllIdentifiers.json
+          gzip -9 manaforge_prices.sqlite
+          ls -lh manaforge_prices.sqlite.gz
+      - name: Publicar como release price-db-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete price-db-latest --yes || true
+          gh release create price-db-latest manaforge_prices.sqlite.gz \
+            --title "Histórico de precios ($PRICE_START → $PRICE_END)" \
+            --notes "Serie diaria de precio de Cardmarket por carta (nivel oracle, la edición más barata de cada día), generada de los datos abiertos de MTGJSON. La app la descarga desde Mercado para que las gráficas arranquen con historia. Datos: MTGJSON (CC BY 4.0) · precios de Cardmarket. Cartas: © Wizards of the Coast (Fan Content Policy)."

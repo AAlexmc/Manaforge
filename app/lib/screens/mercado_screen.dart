@@ -4,6 +4,7 @@ import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
 import '../services/price_history.dart';
+import '../services/price_series_database.dart';
 import '../services/value_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
@@ -21,11 +22,15 @@ class MercadoScreen extends StatefulWidget {
   final CollectionStore collection;
   final WishlistStore wishlist;
 
+  /// Histórico real de Cardmarket (~90 días), descargable aparte.
+  final PriceSeriesDatabase prices;
+
   const MercadoScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.wishlist});
+      required this.wishlist,
+      required this.prices});
 
   @override
   State<MercadoScreen> createState() => _MercadoScreenState();
@@ -40,6 +45,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
   List<ValuedCard> _top = const [];
   List<ValuePoint> _points = const [];
   Map<String, List<PricePoint>> _cardHistory = const {};
+  (String, String)? _historyCovered; // tramo del histórico descargado
+  double? _historyProgress; // descarga del histórico en curso
   String? _bulkDate;
   List<CardHit> _results = const [];
   List<SetBanner> _banners = const [];
@@ -145,12 +152,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
         for (final c in top) c.oracleId,
         for (final i in widget.wishlist.items) i.oracleId,
       ]);
+      final covered = await widget.prices.covered();
       if (!mounted) return;
       setState(() {
         _totalValue = total;
         _top = top;
         _points = points;
         _cardHistory = cardHistory;
+        _historyCovered = covered;
         _bulkDate = bulkDate;
         _banners = banners;
         _approximate = valuation.approximate;
@@ -270,6 +279,62 @@ class _MercadoScreenState extends State<MercadoScreen> {
             SnackBar(content: Text('No pude actualizar: $e')));
       }
     }
+  }
+
+  /// Trae los ~90 días de histórico real de Cardmarket (≈4 MB) para TODAS
+  /// las cartas: sin esto las gráficas arrancan vacías, porque Scryfall
+  /// solo publica el precio de hoy.
+  Future<void> _downloadHistory() async {
+    setState(() => _historyProgress = 0);
+    try {
+      await for (final p in widget.prices.download()) {
+        if (mounted) setState(() => _historyProgress = p < 0 ? null : p);
+      }
+      if (!mounted) return;
+      setState(() => _historyProgress = null);
+      await _load();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('✓ Histórico de precios listo: las gráficas ya '
+                'enseñan los últimos meses')));
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _historyProgress = null);
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('No pude traer el histórico: $e')));
+      }
+    }
+  }
+
+  Widget _historyRow() {
+    final covered = _historyCovered;
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            covered == null
+                ? 'Histórico de precios: solo el que ManaForge apunta a '
+                    'diario en tu equipo. Tráete los últimos ~90 días '
+                    'reales de Cardmarket (≈4 MB).'
+                : 'Histórico real de Cardmarket del ${covered.$1} al '
+                    '${covered.$2}, y desde ahí lo que apunta ManaForge.',
+            style: const TextStyle(fontSize: 11.5),
+          ),
+        ),
+        if (_historyProgress != null)
+          SizedBox(
+            width: 120,
+            child: LinearProgressIndicator(value: _historyProgress),
+          )
+        else
+          TextButton.icon(
+            onPressed: _downloadHistory,
+            icon: const Icon(Icons.timeline, size: 16),
+            label: Text(covered == null ? 'Traer histórico' : 'Actualizar'),
+          ),
+      ],
+    );
   }
 
   void _openDetail({String? oracleId, String? byName}) {
@@ -413,6 +478,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
                           ),
                       ],
                     ),
+                    _historyRow(),
                   ],
                 ),
               ),

@@ -95,6 +95,67 @@ void main() {
     });
   });
 
+  group('fusión con el histórico descargado (Cardmarket vía MTGJSON)', () {
+    test('la base rellena los días que el local no tiene', () async {
+      final store = PriceHistoryStore()
+        ..baseSeriesProvider = (ids) async => {
+              'bolt': const [
+                PricePoint('2026-07-01', 1.0),
+                PricePoint('2026-07-02', 1.1),
+              ]
+            };
+      await store.recordAll({'bolt': 2.0}); // hoy, en local
+      final history = await store.forCard('bolt');
+      expect(history.length, 3);
+      expect(history.first.date, '2026-07-01');
+      expect(history.last.value, 2.0); // el apunte local es el más nuevo
+    });
+
+    test('para un mismo día manda el apunte LOCAL (es lo que vio la app)',
+        () async {
+      final store = PriceHistoryStore();
+      await store.recordAll({'bolt': 9.0});
+      final today = (await store.forCard('bolt')).single.date;
+      store.baseSeriesProvider =
+          (ids) async => {'bolt': [PricePoint(today, 1.0)]};
+      final history = await store.forCard('bolt');
+      expect(history.single.value, 9.0);
+    });
+
+    test('carta sin apuntes locales sale con la serie de la base', () async {
+      final store = PriceHistoryStore()
+        ..baseSeriesProvider = (ids) async => {
+              'sol': const [
+                PricePoint('2026-06-01', 5.0),
+                PricePoint('2026-06-02', 6.0),
+              ]
+            };
+      expect(await store.forCard('sol'), hasLength(2));
+      expect((await store.forCards(['sol']))['sol'], hasLength(2));
+    });
+
+    test('si la base falla, el historial local sigue saliendo', () async {
+      final store = PriceHistoryStore()
+        ..baseSeriesProvider = (ids) async => throw Exception('sin base');
+      await store.recordAll({'bolt': 3.0});
+      expect(await store.forCard('bolt'), hasLength(1));
+    });
+
+    test('el resultado fusionado va ordenado por fecha', () async {
+      final store = PriceHistoryStore()
+        ..baseSeriesProvider = (ids) async => {
+              'bolt': const [
+                PricePoint('2026-05-02', 2.0),
+                PricePoint('2026-05-01', 1.0), // base desordenada
+              ]
+            };
+      await store.recordAll({'bolt': 4.0});
+      final dates = [for (final pt in await store.forCard('bolt')) pt.date];
+      final sorted = [...dates]..sort();
+      expect(dates, sorted);
+    });
+  });
+
   group('PriceHistoryStore con disco', () {
     late Directory dir;
 
