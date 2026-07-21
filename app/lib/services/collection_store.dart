@@ -234,6 +234,13 @@ class CollectionStore extends ChangeNotifier {
     _queue = _queue.then((_) => _write()).catchError((Object _) {});
   }
 
+  /// Espera a que la cola de guardado vacíe. Los `_save()` son
+  /// fire-and-forget: sin esto, un test que mira el fichero puede llegar
+  /// antes que la escritura (y fallar solo a veces, en la máquina lenta de
+  /// turno).
+  @visibleForTesting
+  Future<void> get pendingSave => _queue;
+
   /// Temporal + rename: si la app muere a media escritura, la colección
   /// anterior sigue entera en disco.
   Future<void> _write() async {

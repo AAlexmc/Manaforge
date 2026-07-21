@@ -17,10 +17,6 @@ void main() {
   setUp(() => dir = Directory.systemTemp.createTempSync('manaforge_test'));
   tearDown(() => dir.deleteSync(recursive: true));
 
-  /// Espera a que la cola de guardado vacíe (los `_save()` son fire-and-forget).
-  Future<void> settle() =>
-      Future<void>.delayed(const Duration(milliseconds: 120));
-
   test('dos guardados en el mismo turno dejan un JSON válido y completo',
       () async {
     final store = FolderStore(dataDir: dir);
@@ -28,7 +24,7 @@ void main() {
     // el diálogo de editar hacía justo esto: dos escrituras seguidas
     store.rename(folder.id, 'B');
     store.setAppearance(folder.id, colorValue: 0xFF010203, icon: 'star');
-    await settle();
+    await store.pendingSave;
 
     final file = File('${dir.path}/folders.json');
     expect(file.existsSync(), isTrue);
@@ -48,7 +44,7 @@ void main() {
         printingKey: 'aer|$i',
       );
     }
-    await settle();
+    await store.pendingSave;
 
     final decoded = jsonDecode(
         File('${dir.path}/collection.json').readAsStringSync());
@@ -86,7 +82,7 @@ void main() {
     store.bump(AchievementCounters.cardsScanned, 5);
     store.raise(AchievementCounters.bestPhotoCards, 9);
     store.markDayActive();
-    await settle();
+    await store.pendingSave;
 
     final again = AchievementStore(dataDir: dir);
     await again.load();
@@ -115,7 +111,7 @@ void main() {
     fresh.backfillPrintingOwners({'aer|1': 'o1'}); // …hasta que lo aprende
     fresh.setQty('o1', 0);
     expect(fresh.printingQty.containsKey('aer|1'), isFalse);
-    await settle();
+    await fresh.pendingSave;
   });
 
   test('vender una carta baja también sus copias por edición', () async {
@@ -135,6 +131,6 @@ void main() {
     expect(store.printingQty.containsKey('aer|1'), isFalse);
     expect(store.foilCopies, 0);
     expect(store.printingQty['kld|9'], 1); // la otra carta ni se toca
-    await settle();
+    await store.pendingSave;
   });
 }

@@ -80,7 +80,7 @@ void main() {
           cards: 194,
           earnedAt: '2026-01-05')
     ]);
-    await Future<void>.delayed(const Duration(milliseconds: 120));
+    await store.pendingSave;
 
     final again = CertificateStore(dataDir: dir);
     await again.load();
