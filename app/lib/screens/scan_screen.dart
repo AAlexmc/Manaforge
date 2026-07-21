@@ -10,6 +10,7 @@ import '../scanner/card_detector.dart';
 import '../scanner/dhash.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
+import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/scanner_database.dart';
@@ -30,11 +31,17 @@ class ScanScreen extends StatefulWidget {
   final CollectionStore collection;
   final ScannerDatabase scanner;
 
+  /// Opcional: si está, lo escaneado cuenta para los logros. Escanear por
+  /// FOTO es el único camino cuando no hay cámara, así que tiene que contar
+  /// igual que el escáner en vivo.
+  final AchievementsController? achievements;
+
   const ScanScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.scanner});
+      required this.scanner,
+      this.achievements});
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -336,6 +343,10 @@ class _ScanScreenState extends State<ScanScreen> {
           line.qty, at: at);
       added += line.qty;
     }
+    final clean = tray.lines.every((l) => !l.unrecognized && !l.needsReview);
+    final distinct = tray.lines.where((l) => !l.unrecognized).length;
+    widget.achievements
+        ?.recordScan(copies: added, distinct: distinct, perfect: clean);
     setState(() {
       _sessionCount += added;
       _batch = null;
@@ -351,6 +362,7 @@ class _ScanScreenState extends State<ScanScreen> {
     final c = _candidates[_selected];
     final entry = c.match.entry;
     _addOwned(entry, c.hit, 1);
+    widget.achievements?.recordScan(copies: 1, distinct: 1);
     setState(() {
       _sessionCount++;
       _outcome = null;

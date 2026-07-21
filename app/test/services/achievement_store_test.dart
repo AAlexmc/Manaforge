@@ -44,7 +44,8 @@ void main() {
     store.markDayActive(now: _d(2026, 7, 26));
     expect(store.activeDays, 5);
     expect(store.longestStreak, 3);
-    expect(store.currentStreak, 2);
+    expect(store.currentStreak(now: _d(2026, 7, 26)), 2);
+    expect(store.currentStreak(now: _d(2026, 8, 30)), 0); // racha vieja
   });
 
   test('la racha cruza el cambio de mes y de año', () {

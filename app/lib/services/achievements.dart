@@ -249,11 +249,13 @@ List<Achievement> newlyUnlocked({
 /// Curva suave: nivel 2 a los 40, nivel 5 a los 400, nivel 10 a los 1.800.
 int xpToReach(int level) => level <= 1 ? 0 : 20 * level * (level - 1);
 
-/// Título del rango según el nivel.
+/// Título del rango según el nivel. Los cortes están puestos para que el
+/// último rango SEA alcanzable con el catálogo de hoy (3.395 XP = nivel 13):
+/// si se añaden logros, se suben los cortes.
 String levelTitle(int level) {
-  if (level >= 15) return 'Planeswalker';
-  if (level >= 11) return 'Maestro';
-  if (level >= 8) return 'Archimago';
+  if (level >= 13) return 'Planeswalker';
+  if (level >= 10) return 'Maestro';
+  if (level >= 7) return 'Archimago';
   if (level >= 5) return 'Mago';
   if (level >= 3) return 'Invocador';
   return 'Aprendiz';
@@ -700,7 +702,7 @@ final List<Achievement> kAchievements = [
     category: AchievementCategory.dedicacion,
     steps: [(4, _s)],
     title: (_) => 'Mes de compras',
-    description: (_) => 'Añade cartas en 4 semanas seguidas.',
+    description: (_) => 'Usa ManaForge 4 semanas seguidas.',
     value: (s) => s.weeksInARow,
   ),
 

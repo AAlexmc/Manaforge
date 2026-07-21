@@ -204,7 +204,12 @@ Future<AchievementSnapshot> gatherSnapshot({
         e.key: CardFacts(rarity: e.value.rarity, year: e.value.year)
     };
     ownedBySet = await ownedCardsBySet(db, collection);
-    setTotals = {for (final s in await db.sets()) s.code: s.total};
+    // "expansión completa" solo se puede afirmar sabiendo las ediciones
+    // exactas: en el modo aproximado, `ownedCardsBySet` no cuenta básicas y
+    // los totales de `sets()` sí, así que nunca cuadrarían
+    setTotals = collection.hasPrintingData
+        ? {for (final s in await db.sets()) s.code: s.total}
+        : const <String, int>{};
 
     final valuation = await computeCollectionValue(
       cards: cards,
@@ -229,6 +234,7 @@ Future<AchievementSnapshot> gatherSnapshot({
     final owners = collection.hasPrintingData
         ? await db.oracleByPrintings(collection.printingQty.keys)
         : const <String, String>{};
+    if (owners.isNotEmpty) collection.backfillPrintingOwners(owners);
     for (final f in folders.folders) {
       final v = await computeFolderValue(
         folderCardIds: f.cardIds,

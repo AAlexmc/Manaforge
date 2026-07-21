@@ -147,6 +147,8 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
   CollectionSort _sort = CollectionSort.alpha;
   CollectionValuation? _valuation;
   int _valuationToken = 0;
+  bool _computing = false;
+  bool _needsRecompute = false;
 
   @override
   void initState() {
@@ -163,7 +165,25 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
     super.dispose();
   }
 
+  /// Igual que la portada: confirmar una bandeja de 20 cartas avisa 20
+  /// veces, y sin esto salían 20 consultas a la base de precios a la vez.
   Future<void> _recompute() async {
+    if (_computing) {
+      _needsRecompute = true;
+      return;
+    }
+    _computing = true;
+    try {
+      do {
+        _needsRecompute = false;
+        await _computeOnce();
+      } while (_needsRecompute && mounted);
+    } finally {
+      _computing = false;
+    }
+  }
+
+  Future<void> _computeOnce() async {
     final folder = widget.folders.byId(widget.folderId);
     if (folder == null) return;
     final token = ++_valuationToken;
@@ -197,9 +217,8 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
   Future<void> _editLook(CardFolder folder) async {
     final look = await showFolderEditor(context, folder: folder);
     if (look == null) return;
-    widget.folders.rename(folder.id, look.name);
-    widget.folders
-        .setAppearance(folder.id, colorValue: look.colorValue, icon: look.icon);
+    widget.folders.edit(folder.id,
+        name: look.name, colorValue: look.colorValue, icon: look.icon);
   }
 
   Future<void> _confirmDelete(CardFolder folder) async {
@@ -246,7 +265,11 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
           _sort,
         );
         final color = Color(folder.colorValue);
-        final copies = cards.fold(0, (a, c) => a + c.qty);
+        final inFolder = widget.collection.cards
+            .where((c) => folder.cardIds.contains(c.oracleId))
+            .toList();
+        final copies = inFolder.fold(0, (a, c) => a + c.qty);
+        final present = inFolder.length;
         return Scaffold(
           appBar: AppBar(
             title: Row(
@@ -295,8 +318,11 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
                                 color: color, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '${folder.count} cartas distintas · $copies copias'
-                        '${_valuation?.approximate == true ? ' · valor orientativo (sin datos de edición)' : ''}',
+                        // cuentas de lo que TIENES en la carpeta, sin filtrar:
+                        // el valor de arriba también es sin filtrar
+                        '$present cartas distintas · $copies copias'
+                        '${cards.length != present ? ' · ${cards.length} pasan el filtro' : ''}'
+                        '${_valuation?.approximate == true ? ' · valor orientativo' : ''}',
                         style: const TextStyle(fontSize: 12),
                       ),
                       if (missing.isNotEmpty)

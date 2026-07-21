@@ -99,6 +99,11 @@ int compareByRecent(OwnedCard a, OwnedCard b) {
 /// Colección del usuario. Persistencia local en JSON (sin cuentas, sin nube:
 /// tus cartas son tuyas). ChangeNotifier para que la UI reaccione.
 class CollectionStore extends ChangeNotifier {
+  /// Solo para tests: dónde guardar el JSON.
+  final Directory? dataDir;
+
+  CollectionStore({this.dataDir});
+
   final Map<String, OwnedCard> _cards = {}; // por oracleId
 
   /// Cantidades por impresión exacta, clave "set|nºcoleccionista".
@@ -110,6 +115,10 @@ class CollectionStore extends ChangeNotifier {
   /// Lo rellena el importador con la columna `Foil` del CSV: el escáner no
   /// distingue el brillo, así que aquí solo entra lo importado.
   final Map<String, int> _foils = {};
+
+  /// A qué carta pertenece cada impresión ("set|nº" -> oracleId). Sin esto,
+  /// vender una carta dejaba sus ediciones contando en el valor total.
+  final Map<String, String> _printingOwner = {};
   bool _loaded = false;
 
   /// ¿Sabemos qué impresiones exactas tiene el usuario? (Colecciones
@@ -144,13 +153,20 @@ class CollectionStore extends ChangeNotifier {
 
   Future<File?> _file() async {
     try {
-      final dir = await getApplicationSupportDirectory();
+      final dir = dataDir ?? await getApplicationSupportDirectory();
       return File(p.join(dir.path, 'collection.json'));
     } catch (_) {
       return null; // sin plugin (tests): solo en memoria
     }
   }
 
+  /// Carga la colección del disco. Se parsea TODO a variables locales y solo
+  /// al final se vuelca al estado: si el fichero está a medias o una carta
+  /// tiene un campo raro, la colección en memoria se queda como estaba en
+  /// vez de vaciarse (y el siguiente `_save()` guardaría ese vacío).
+  ///
+  /// Si el JSON no se puede leer, se aparta una copia `.roto` antes de
+  /// seguir: los datos del usuario no se tiran a la basura en silencio.
   Future<void> load() async {
     if (_loaded) return;
     _loaded = true;
@@ -158,29 +174,54 @@ class CollectionStore extends ChangeNotifier {
     if (file == null || !await file.exists()) return;
     try {
       final decoded = jsonDecode(await file.readAsString());
-      _cards.clear();
-      _printings.clear();
-      _foils.clear();
-      // v1: lista de cartas · v2: {cards: [...], printings: {...}}
+      final cards = <String, OwnedCard>{};
+      final printings = <String, int>{};
+      final foils = <String, int>{};
+      final owners = <String, String>{};
+      // v1: lista de cartas · v2: {cards, printings} · v3: + foils/owners
       final list = decoded is List
           ? decoded
           : ((decoded as Map<String, dynamic>)['cards'] as List<dynamic>);
       for (final item in list) {
-        final card = OwnedCard.fromJson(item as Map<String, dynamic>);
-        _cards[card.oracleId] = card;
+        if (item is! Map<String, dynamic>) continue;
+        try {
+          final card = OwnedCard.fromJson(item);
+          cards[card.oracleId] = card;
+        } catch (_) {
+          continue; // una carta mala no se lleva por delante las demás
+        }
       }
       if (decoded is Map<String, dynamic>) {
-        final prints = decoded['printings'] as Map<String, dynamic>? ?? {};
-        prints.forEach((k, v) => _printings[k] = v as int);
-        // v3: cuántas de cada edición son foil (ausente en versiones viejas)
-        final foils = decoded['foils'] as Map<String, dynamic>? ?? {};
-        foils.forEach((k, v) {
-          if (v is int) _foils[k] = v;
+        (decoded['printings'] as Map<String, dynamic>? ?? {}).forEach((k, v) {
+          if (v is int) printings[k] = v;
+        });
+        (decoded['foils'] as Map<String, dynamic>? ?? {}).forEach((k, v) {
+          if (v is int) foils[k] = v;
+        });
+        (decoded['printingOwner'] as Map<String, dynamic>? ?? {})
+            .forEach((k, v) {
+          if (v is String) owners[k] = v;
         });
       }
+      _cards
+        ..clear()
+        ..addAll(cards);
+      _printings
+        ..clear()
+        ..addAll(printings);
+      _foils
+        ..clear()
+        ..addAll(foils);
+      _printingOwner
+        ..clear()
+        ..addAll(owners);
       notifyListeners();
-    } catch (_) {
-      // archivo corrupto: mejor colección vacía que crash
+    } catch (e) {
+      // fichero ilegible: apartarlo con otro nombre y arrancar vacío, pero
+      // sin borrarlo (se puede recuperar a mano)
+      try {
+        await file.rename('${file.path}.roto');
+      } catch (_) {/* si tampoco se puede renombrar, no hay más que hacer */}
     }
   }
 
@@ -202,6 +243,7 @@ class CollectionStore extends ChangeNotifier {
       'cards': [for (final c in _cards.values) c.toJson()],
       'printings': _printings,
       'foils': _foils,
+      'printingOwner': _printingOwner,
     });
     final tmp = File('${file.path}.tmp');
     await tmp.writeAsString(data, flush: true);
@@ -236,10 +278,27 @@ class CollectionStore extends ChangeNotifier {
     }
     if (printingKey != null && printingKey.isNotEmpty) {
       _printings[printingKey] = (_printings[printingKey] ?? 0) + qty;
+      _printingOwner[printingKey] = card.oracleId;
       if (foil) _foils[printingKey] = (_foils[printingKey] ?? 0) + qty;
     }
     notifyListeners();
     _save();
+  }
+
+  /// Rellena el mapa impresión -> carta para las colecciones importadas
+  /// ANTES de que existiera (las de Ale, por ejemplo). Lo llaman las
+  /// pantallas que ya piden ese mapa a la base de cartas, así no cuesta una
+  /// consulta extra. No avisa a nadie: no cambia lo que se ve, solo permite
+  /// que vender una carta baje también sus copias por edición.
+  void backfillPrintingOwners(Map<String, String> owners) {
+    var changed = false;
+    owners.forEach((key, oracleId) {
+      if (!_printings.containsKey(key)) return;
+      if (_printingOwner[key] == oracleId) return;
+      _printingOwner[key] = oracleId;
+      changed = true;
+    });
+    if (changed) _save();
   }
 
   /// Vacía la colección (modo "sustituir" del importador).
@@ -247,19 +306,56 @@ class CollectionStore extends ChangeNotifier {
     _cards.clear();
     _printings.clear();
     _foils.clear();
+    _printingOwner.clear();
     notifyListeners();
     _save();
   }
 
   /// Cambia la cantidad; a 0 la elimina.
+  ///
+  /// Baja TAMBIÉN las copias por edición: si no, vender una carta la quitaba
+  /// de la lista pero su precio seguía sumando en Inicio, Mercado y el total
+  /// de Colección (y las foils nunca bajaban).
   void setQty(String oracleId, int qty) {
     if (qty <= 0) {
       _cards.remove(oracleId);
     } else {
       _cards[oracleId]?.qty = qty;
     }
+    _trimPrintings(oracleId, qty < 0 ? 0 : qty);
     notifyListeners();
     _save();
+  }
+
+  /// Deja las copias por edición de [oracleId] sumando como mucho [qty],
+  /// quitando de la última edición apuntada hacia atrás. Es una heurística:
+  /// la app no sabe QUÉ edición concreta has vendido, pero es mucho mejor
+  /// que dejar el contador inflado para siempre.
+  void _trimPrintings(String oracleId, int qty) {
+    final keys = [
+      for (final e in _printingOwner.entries)
+        if (e.value == oracleId) e.key
+    ];
+    if (keys.isEmpty) return;
+    var total = keys.fold(0, (sum, k) => sum + (_printings[k] ?? 0));
+    for (final key in keys.reversed) {
+      if (total <= qty) break;
+      final have = _printings[key] ?? 0;
+      if (have == 0) continue;
+      final drop = have < (total - qty) ? have : (total - qty);
+      final left = have - drop;
+      total -= drop;
+      if (left <= 0) {
+        _printings.remove(key);
+        _foils.remove(key);
+        _printingOwner.remove(key);
+      } else {
+        _printings[key] = left;
+        final foil = _foils[key];
+        // las foils no pueden pasar de las copias que quedan
+        if (foil != null && foil > left) _foils[key] = left;
+      }
+    }
   }
 }
 

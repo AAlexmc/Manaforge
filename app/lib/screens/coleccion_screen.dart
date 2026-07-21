@@ -108,6 +108,11 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
       final owners = byPrinting && printingQty.isNotEmpty
           ? await widget.db.oracleByPrintings(printingQty.keys)
           : const <String, String>{};
+      // de paso, las colecciones viejas aprenden a qué carta pertenece cada
+      // edición (hace falta para que vender baje el valor)
+      if (owners.isNotEmpty) {
+        widget.collection.backfillPrintingOwners(owners);
+      }
       Future<Map<String, String>> cachedOwners(Iterable<String> _) async =>
           owners;
       final values = <String, CollectionValuation>{};
@@ -177,11 +182,13 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
             collection: widget.collection, title: look.name),
       ),
     );
+    // dar atrás en el selector = no quiero la carpeta (antes se creaba vacía)
+    if (picked == null) return;
     widget.folders.create(
       name: look.name,
       colorValue: look.colorValue,
       icon: look.icon,
-      cardIds: picked ?? const {},
+      cardIds: picked,
     );
   }
 

@@ -1,7 +1,10 @@
 # Carpetas en Colección · Logros y niveles · Certificados
 
-> **Estado 2026-07-21 noche:** Fase 1 (carpetas) y Fase 2 (logros y niveles)
-> HECHAS y en verde (307 tests). Fase 3 (certificados) sigue sin construir.
+> **Estado 2026-07-21 noche:** las TRES fases hechas y en verde (320 tests):
+> carpetas, logros con niveles y certificados descargables. Pasada de review
+> de Opus aplicada entera (carreras de guardado, `load()` que se comía los
+> datos al primer JSON raro, escáner por foto que no contaba para los logros,
+> vender una carta que no bajaba el valor, rango de nivel inalcanzable).
 > Las cuatro decisiones de abajo las tomé yo con Ale ausente: son lo primero
 > que hay que confirmar.
 
@@ -275,7 +278,20 @@ Hearthstone y ManaBox:
 
 ---
 
-## Fase 3 — Certificados descargables (apuntado, aún sin construir)
+## Fase 3 — Certificados descargables (HECHO)
+
+Implementado tal cual estaba pensado: `services/certificates.dart` (qué sets
+tienes enteros + código estable tipo `MF-XXXXXXX`), `certificate_store.dart`
+(`certificates.json`: fecha del primer día que estuvo completo y a nombre de
+quién sale) y `screens/certificados_screen.dart` (lista + certificado a
+tamaño completo + "Descargar PNG" vía `RepaintBoundary` → `toImage(3x)` →
+`getSaveLocation`, con caída a la carpeta de Descargas). Se entra desde
+Logros (icono de la medalla arriba a la derecha).
+
+Pendiente de decidir con Ale: ¿certificados también por logros míticos, no
+solo por expansiones? ¿PDF además de PNG?
+
+### Diseño original (referencia)
 
 Idea de Ale: al completar una colección entera (una expansión, o un reto grande),
 poder **descargar un certificado**. Diseño previsto:

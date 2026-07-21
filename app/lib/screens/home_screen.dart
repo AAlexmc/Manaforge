@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/achievements_controller.dart';
+import '../services/certificate_store.dart';
 import '../services/collection_value.dart';
 import '../services/deck_store.dart';
 import '../services/meta_decks.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends StatefulWidget {
   final CollectionStore collection;
   final DeckStore decks;
   final AchievementsController achievements;
+  final CertificateStore certificates;
   final void Function(int tabIndex) onGoToTab;
 
   const HomeScreen({
@@ -32,6 +34,7 @@ class HomeScreen extends StatefulWidget {
     required this.collection,
     required this.decks,
     required this.achievements,
+    required this.certificates,
     required this.onGoToTab,
   });
 
@@ -123,7 +126,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _openLogros() => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => LogrosScreen(achievements: widget.achievements),
+          builder: (_) => LogrosScreen(
+            achievements: widget.achievements,
+            db: widget.db,
+            collection: widget.collection,
+            certificates: widget.certificates,
+          ),
         ),
       );
 

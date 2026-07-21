@@ -127,6 +127,9 @@ void main() {
     final level = levelFor(everything).level;
     expect(level, inInclusiveRange(12, 25),
         reason: 'XP total $everything da nivel $level: recalibrar la curva');
+    // el rango más alto tiene que poder tocarse con el catálogo de hoy
+    expect(levelFor(everything).title, levelTitle(99),
+        reason: 'el último rango es inalcanzable con $everything XP');
   });
 
   test('logros secretos no cuentan distinto para el XP', () {

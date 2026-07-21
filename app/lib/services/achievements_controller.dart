@@ -82,6 +82,10 @@ class AchievementsController extends ChangeNotifier {
   }
 
   Future<void> _refresh() async {
+    // sin esto se evaluaría con el fichero de logros aún sin leer: los
+    // logros viejos no estarían en `unlockedAt` y el guardado siguiente se
+    // los llevaría por delante
+    await progress.ready;
     do {
       _dirty = false;
       final snapshot = await gatherSnapshot(
@@ -123,11 +127,15 @@ class AchievementsController extends ChangeNotifier {
 
   /// Cartas reconocidas por el escáner (foto o cámara). [perfect] = la
   /// tanda entera salió sin ninguna carta "para revisar".
-  void recordScan({required int cards, bool perfect = false}) {
-    if (cards <= 0) return;
-    progress.bump(AchievementCounters.cardsScanned, cards);
-    progress.raise(AchievementCounters.bestPhotoCards, cards);
-    if (perfect && cards >= 9) {
+  /// [copies] son copias añadidas (para "cartas escaneadas") y [distinct]
+  /// cuántas cartas distintas salieron en esa tanda (para "página entera":
+  /// 3 cartas x4 copias NO es una página de 9).
+  void recordScan(
+      {required int copies, required int distinct, bool perfect = false}) {
+    if (copies <= 0) return;
+    progress.bump(AchievementCounters.cardsScanned, copies);
+    progress.raise(AchievementCounters.bestPhotoCards, distinct);
+    if (perfect && distinct >= 9) {
       progress.bump(AchievementCounters.perfectScans);
     }
     refresh();

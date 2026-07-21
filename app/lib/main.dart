@@ -5,6 +5,7 @@ import 'screens/screens.dart';
 import 'services/achievement_store.dart';
 import 'services/achievements_controller.dart';
 import 'services/card_database.dart';
+import 'services/certificate_store.dart';
 import 'services/collection_store.dart';
 import 'services/deck_store.dart';
 import 'services/folder_store.dart';
@@ -50,6 +51,7 @@ class _HomeShellState extends State<HomeShell> {
   final _wishlist = WishlistStore();
   final _prices = PriceSeriesDatabase();
   final _progress = AchievementStore();
+  final _certificates = CertificateStore();
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -110,6 +112,7 @@ class _HomeShellState extends State<HomeShell> {
           collection: _collection,
           decks: _decks,
           achievements: _achievements,
+          certificates: _certificates,
           onGoToTab: (i) => setState(() => _index = i)),
       ColeccionScreen(
           db: _db,

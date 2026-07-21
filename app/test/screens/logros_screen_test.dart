@@ -95,7 +95,7 @@ void main() {
     // dentro de runAsync: recordScan dispara su propio refresco y con el
     // reloj falso se quedaría a medias
     await tester.runAsync(() async {
-      c.recordScan(cards: 9, perfect: true);
+      c.recordScan(copies: 9, distinct: 9, perfect: true);
       await c.refresh();
     });
     await _open(tester, c);

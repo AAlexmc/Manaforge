@@ -19,11 +19,16 @@ abstract final class AchievementCounters {
 /// Un logro conseguido NO se pierde: se guarda con su fecha aunque luego
 /// vendas las cartas.
 class AchievementStore extends ChangeNotifier {
+  /// Solo para tests: dónde guardar el JSON.
+  final Directory? dataDir;
+
+  AchievementStore({this.dataDir});
+
   final Map<String, String> _unlocked = {}; // id -> ISO-8601
   final Map<String, int> _counters = {};
   final Set<String> _days = {}; // 'YYYY-MM-DD' (día local)
   int _lastSeenLevel = 1;
-  bool _loaded = false;
+  Future<void>? _loading;
 
   Map<String, String> get unlockedAt => Map.unmodifiable(_unlocked);
   int get unlockedCount => _unlocked.length;
@@ -54,8 +59,17 @@ class AchievementStore extends ChangeNotifier {
   /// Racha más larga de días seguidos.
   int get longestStreak => _streaks().$1;
 
-  /// Racha que sigue viva ahora mismo (la última).
-  int get currentStreak => _streaks().$2;
+  /// Racha que sigue viva AHORA: si el último día activo no es hoy ni ayer,
+  /// la racha está rota y vale 0.
+  int currentStreak({DateTime? now}) {
+    final days = _sortedDays;
+    if (days.isEmpty) return 0;
+    final today = _parseDay(_dayKey(now ?? DateTime.now()));
+    if (today == null) return 0;
+    final gap = today.difference(days.last).inDays;
+    if (gap > 1) return 0;
+    return _streaks().$2;
+  }
 
   (int, int) _streaks() {
     final days = _sortedDays;
@@ -167,16 +181,22 @@ class AchievementStore extends ChangeNotifier {
 
   Future<File?> _file() async {
     try {
-      final dir = await getApplicationSupportDirectory();
+      final dir = dataDir ?? await getApplicationSupportDirectory();
       return File(p.join(dir.path, 'achievements.json'));
     } catch (_) {
       return null; // sin plugin (tests): solo en memoria
     }
   }
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Carga (una sola vez) y deja el futuro a mano: quien vaya a evaluar
+  /// logros DEBE esperarlo, o evaluaría con cero desbloqueos y guardaría un
+  /// fichero que se come los logros viejos.
+  Future<void> load() => _loading ??= _load();
+
+  /// Lo mismo que [load], pensado para hacer `await store.ready`.
+  Future<void> get ready => load();
+
+  Future<void> _load() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {

@@ -380,9 +380,12 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       }
       added += line.qty;
     }
-    // para los logros: cuántas cartas y si la tanda salió limpia
+    // para los logros: copias añadidas, cartas distintas y si la tanda salió
+    // limpia (ninguna línea sin reconocer ni pendiente de revisar)
     final clean = _tray.lines.every((l) => !l.unrecognized && !l.needsReview);
-    widget.achievements?.recordScan(cards: added, perfect: clean);
+    final distinct = _tray.lines.where((l) => !l.unrecognized).length;
+    widget.achievements
+        ?.recordScan(copies: added, distinct: distinct, perfect: clean);
     setState(() {
       _sessionCount += added;
       _tray.clear();
@@ -445,7 +448,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                 builder: (_) => ScanScreen(
                     db: widget.db,
                     collection: widget.collection,
-                    scanner: widget.scanner),
+                    scanner: widget.scanner,
+                    achievements: widget.achievements),
               ),
             ),
           ),
@@ -507,7 +511,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                         builder: (_) => ScanScreen(
                             db: widget.db,
                             collection: widget.collection,
-                            scanner: widget.scanner),
+                            scanner: widget.scanner,
+                            achievements: widget.achievements),
                       ),
                     ),
                     icon: const Icon(Icons.photo_library_outlined),

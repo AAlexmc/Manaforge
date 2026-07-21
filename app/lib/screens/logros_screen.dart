@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../services/achievements.dart';
 import '../services/achievements_controller.dart';
+import '../services/card_database.dart';
+import '../services/certificate_store.dart';
+import '../services/collection_store.dart';
+import 'certificados_screen.dart';
 
 /// Color de cada rareza de logro (bronce, plata, oro, mítico).
 Color tierColor(AchievementTier tier) => switch (tier) {
@@ -30,7 +34,18 @@ IconData categoryIcon(AchievementCategory c) => switch (c) {
 class LogrosScreen extends StatefulWidget {
   final AchievementsController achievements;
 
-  const LogrosScreen({super.key, required this.achievements});
+  /// Si vienen, sale el acceso a los certificados descargables.
+  final CardDatabase? db;
+  final CollectionStore? collection;
+  final CertificateStore? certificates;
+
+  const LogrosScreen({
+    super.key,
+    required this.achievements,
+    this.db,
+    this.collection,
+    this.certificates,
+  });
 
   @override
   State<LogrosScreen> createState() => _LogrosScreenState();
@@ -53,7 +68,27 @@ class _LogrosScreenState extends State<LogrosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Logros')),
+      appBar: AppBar(
+        title: const Text('Logros'),
+        actions: [
+          if (widget.db != null &&
+              widget.collection != null &&
+              widget.certificates != null)
+            IconButton(
+              tooltip: 'Certificados',
+              icon: const Icon(Icons.workspace_premium_outlined),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => CertificadosScreen(
+                    db: widget.db!,
+                    collection: widget.collection!,
+                    certificates: widget.certificates!,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
       body: ListenableBuilder(
         listenable: widget.achievements,
         builder: (context, _) {
@@ -293,13 +328,18 @@ void showLevelUpDialog(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Vale'),
         ),
-        FilledButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => LogrosScreen(achievements: achievements)));
-          },
-          child: const Text('Ver logros'),
+        Builder(
+          builder: (context) => FilledButton(
+            onPressed: () {
+              // el navigator se coge ANTES del pop: después este context ya
+              // está desactivado y buscar por él es inseguro
+              final nav = Navigator.of(context);
+              nav.pop();
+              nav.push(MaterialPageRoute(
+                  builder: (_) => LogrosScreen(achievements: achievements)));
+            },
+            child: const Text('Ver logros'),
+          ),
         ),
       ],
     ),

@@ -93,7 +93,7 @@ class CardFolder {
         icon: (json['icon'] as String?) ?? 'folder',
         cardIds: {
           for (final id in (json['cards'] as List<dynamic>? ?? const []))
-            id as String
+            if (id is String) id
         },
         createdAt: (json['createdAt'] as String?) ?? '',
       );
@@ -103,6 +103,12 @@ class CardFolder {
 /// `collection.json` no se toca), mismo patrón que [DeckStore]: JSON local,
 /// sin cuentas ni nube.
 class FolderStore extends ChangeNotifier {
+  /// Solo para tests: dónde guardar el JSON (por defecto, la carpeta de
+  /// datos de la app). Permite comprobar de verdad lo que acaba en disco.
+  final Directory? dataDir;
+
+  FolderStore({this.dataDir});
+
   final List<CardFolder> _folders = [];
   bool _loaded = false;
   int _lastMicros = 0;
@@ -123,29 +129,40 @@ class FolderStore extends ChangeNotifier {
 
   Future<File?> _file() async {
     try {
-      final dir = await getApplicationSupportDirectory();
+      final dir = dataDir ?? await getApplicationSupportDirectory();
       return File(p.join(dir.path, 'folders.json'));
     } catch (_) {
       return null; // sin plugin (tests): solo en memoria
     }
   }
 
+  /// Carga las carpetas. Se parsea a una lista local y una carpeta con algún
+  /// campo raro se SALTA en vez de tirar todas: las carpetas las ha hecho el
+  /// usuario a mano y no se recuperan de ningún sitio.
   Future<void> load() async {
     if (_loaded) return;
     _loaded = true;
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
-      final list = jsonDecode(await file.readAsString()) as List<dynamic>;
+      final decoded = jsonDecode(await file.readAsString());
+      if (decoded is! List) return;
+      final parsed = <CardFolder>[];
+      for (final item in decoded) {
+        if (item is! Map<String, dynamic>) continue;
+        try {
+          parsed.add(CardFolder.fromJson(item));
+        } catch (_) {
+          continue; // esta carpeta no, las demás sí
+        }
+      }
       _folders
         ..clear()
-        ..addAll([
-          for (final item in list)
-            CardFolder.fromJson(item as Map<String, dynamic>)
-        ]);
+        ..addAll(parsed);
       notifyListeners();
     } catch (_) {
-      // archivo corrupto: mejor sin carpetas que crash
+      // fichero ilegible: se deja como está (vacío) y NO se sobrescribe
+      // hasta que el usuario toque algo
     }
   }
 
@@ -206,6 +223,17 @@ class FolderStore extends ChangeNotifier {
 
   void rename(String id, String name) =>
       _update(id, (f) => f.copyWith(name: name));
+
+  /// Nombre + aspecto de una tacada (el diálogo de editar cambia las tres
+  /// cosas a la vez: una sola escritura en vez de dos).
+  void edit(String id,
+          {required String name,
+          required int colorValue,
+          required String icon}) =>
+      _update(
+          id,
+          (f) => f.copyWith(
+              name: name, colorValue: colorValue, icon: icon));
 
   void setAppearance(String id, {int? colorValue, String? icon}) =>
       _update(id, (f) => f.copyWith(colorValue: colorValue, icon: icon));
