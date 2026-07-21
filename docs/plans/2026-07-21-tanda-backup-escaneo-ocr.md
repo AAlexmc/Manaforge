@@ -241,11 +241,26 @@ puede calcular en ese mercado.
 
 ---
 
-## Decisiones de carpetas (pendiente de confirmar por Ale)
+## Decisiones de carpetas (confirmadas por Ale el 2026-07-21)
 
-| # | Decisión | Propuesta |
+| # | Decisión | Resultado |
 |---|---|---|
-| 1 | Una carta puede estar en varias carpetas | Mantener: carpetas = etiquetas |
-| 2 | Carpeta ≠ mazo | Mantener |
-| 3 | La carpeta guarda pertenencia; la cantidad la manda la colección | Mantener |
-| 4 | Borrar de la colección NO la quita de las carpetas | **Cambiar**: que se quite (si no, quedan cartas fantasma) |
+| 1 | Una carta puede estar en varias carpetas | **Se mantiene**: carpetas = etiquetas |
+| 2 | Carpeta ≠ mazo | **Se mantiene** |
+| 3 | La carpeta guarda pertenencia; la cantidad la manda la colección | **Se mantiene** |
+| 4 | Borrar de la colección NO la quita de las carpetas | **Cambia**: se quita (si no, quedan cartas fantasma) |
+
+### Cascada al dejar de tener una carta (bloque propio, tras mergear el PR #4)
+
+Dos acciones DISTINTAS y bien separadas en la UI. Confundirlas es lo que haría
+que reorganizar carpetas te desmontara un mazo:
+
+- **"Quitar de la carpeta"** → solo desetiqueta. La carta se sigue teniendo: no
+  se toca ni el álbum ni ningún mazo. Es coherente con la decisión 3.
+- **"Ya no tengo esta carta"** (borrar de la colección) → cascada:
+  - sale de **todas** las carpetas;
+  - su hueco en el álbum vuelve a vacío;
+  - **los mazos NO pierden la carta**: se queda en la lista marcada como "ya no
+    la tienes", y el mazo enseña arriba "te faltan N cartas". Vender un Sol Ring
+    no puede deshacer un mazo que costó una tarde montar; y si de verdad se
+    quiere fuera, se quita a mano desde el mazo.
