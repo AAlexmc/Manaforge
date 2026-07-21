@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
@@ -8,6 +11,7 @@ import '../services/price_series_database.dart';
 import '../services/scanner_database.dart';
 import '../services/startup_updates.dart';
 import '../theme/mf_theme.dart';
+import 'backup_screen.dart';
 
 /// Las tres bases que ManaForge se descarga, en el orden en que hacen
 /// falta: sin la de cartas no hay app; el histórico y las huellas mejoran
@@ -63,6 +67,9 @@ class StartupScreen extends StatefulWidget {
   final CollectionStore collection;
   final VoidCallback onReady;
 
+  /// Se ha restaurado una copia desde aquí: la app tiene que releerlo todo.
+  final VoidCallback onRestored;
+
   /// Pausa antes de entrar cuando ya está todo (para que dé tiempo a leer
   /// el resultado). En tests se pone a cero.
   final Duration settleDelay;
@@ -81,6 +88,7 @@ class StartupScreen extends StatefulWidget {
     required this.sources,
     required this.collection,
     required this.onReady,
+    required this.onRestored,
     this.settleDelay = const Duration(milliseconds: 700),
     this.canDownload = storageAvailable,
     this.downloadTimeout = const Duration(minutes: 6),
@@ -110,6 +118,15 @@ class _StartupScreenState extends State<StartupScreen> {
 
   bool _finished = false;
   bool _entered = false;
+  bool _showBackup = false;
+
+  Future<Directory?> _dataDir() async {
+    try {
+      return await getApplicationSupportDirectory();
+    } catch (_) {
+      return null;
+    }
+  }
 
   @override
   void initState() {
@@ -282,6 +299,21 @@ class _StartupScreenState extends State<StartupScreen> {
                     ),
                   ],
                 ),
+                // aquí es donde acabas cuando algo se ha roto: si el único
+                // sitio para restaurar estuviera dentro de la app, una app
+                // que no arranca bien dejaría la copia inservible
+                TextButton(
+                  onPressed: () => setState(() => _showBackup = !_showBackup),
+                  child: const Text('Restaurar copia'),
+                ),
+                if (_showBackup)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: BackupCard(
+                      dataDir: _dataDir,
+                      onRestored: widget.onRestored,
+                    ),
+                  ),
               ],
             ),
           ),

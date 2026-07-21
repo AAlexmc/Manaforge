@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'screens/logros_screen.dart';
 import 'screens/screens.dart';
 import 'services/achievement_store.dart';
+import 'services/backup.dart';
 import 'services/achievements_controller.dart';
 import 'services/card_database.dart';
 import 'services/certificate_store.dart';
@@ -18,8 +22,19 @@ import 'theme/mf_theme.dart';
 
 void main() => runApp(const ManaForgeApp());
 
-class ManaForgeApp extends StatelessWidget {
+class ManaForgeApp extends StatefulWidget {
   const ManaForgeApp({super.key});
+
+  @override
+  State<ManaForgeApp> createState() => _ManaForgeAppState();
+}
+
+class _ManaForgeAppState extends State<ManaForgeApp> {
+  /// Sube al restaurar una copia. Cambia la Key de `HomeShell`, así que
+  /// Flutter tira su State y construye otro: los almacenes se crean de cero y
+  /// releen el disco nuevo. Más simple y más difícil de romper que inventar
+  /// un `reload()` en cada uno de los diez.
+  int _session = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +44,19 @@ class ManaForgeApp extends StatelessWidget {
       theme: mfTheme(Brightness.light),
       darkTheme: mfTheme(Brightness.dark),
       themeMode: ThemeMode.dark, // oscuro por defecto (decisión de diseño)
-      home: const HomeShell(),
+      home: HomeShell(
+        key: ValueKey(_session),
+        onRestored: () => setState(() => _session++),
+      ),
     );
   }
 }
 
 class HomeShell extends StatefulWidget {
-  const HomeShell({super.key});
+  /// Se ha restaurado una copia: la app entera vuelve a empezar.
+  final VoidCallback onRestored;
+
+  const HomeShell({super.key, required this.onRestored});
 
   @override
   State<HomeShell> createState() => _HomeShellState();
@@ -75,6 +96,10 @@ class _HomeShellState extends State<HomeShell> {
     _progress.load().then((_) {
       _achievements.markActive(); // un día más de racha
     });
+    // red de seguridad semanal, en segundo plano: si algo falla (disco lleno,
+    // permisos), la app arranca igual — una copia que no sale no es motivo
+    // para no dejarte entrar
+    unawaited(_autoBackup());
   }
 
   @override
@@ -84,6 +109,13 @@ class _HomeShellState extends State<HomeShell> {
     _achievements.dispose();
     _prices.close();
     super.dispose();
+  }
+
+  Future<void> _autoBackup() async {
+    try {
+      await autoBackupIfStale(await getApplicationSupportDirectory());
+    } catch (_) {/* sin copia automática esta vez; se reintenta al siguiente
+      arranque */}
   }
 
   /// Avisa de los logros nuevos caigan donde caigan (escáner, importador,
@@ -107,6 +139,7 @@ class _HomeShellState extends State<HomeShell> {
             db: _db, prices: _prices, scanner: _scanner),
         collection: _collection,
         onReady: () => setState(() => _started = true),
+        onRestored: widget.onRestored,
       );
     }
     final screens = [
@@ -132,7 +165,7 @@ class _HomeShellState extends State<HomeShell> {
           wishlist: _wishlist,
           prices: _prices,
           market: _market),
-      AjustesScreen(db: _db),
+      AjustesScreen(db: _db, onRestored: widget.onRestored),
     ];
     return Scaffold(
       body: IndexedStack(index: _index, children: screens),
