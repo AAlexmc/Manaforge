@@ -1,5 +1,10 @@
 # Carpetas en Colección · Logros y niveles · Certificados
 
+> **Estado 2026-07-21 noche:** Fase 1 (carpetas) y Fase 2 (logros y niveles)
+> HECHAS y en verde (307 tests). Fase 3 (certificados) sigue sin construir.
+> Las cuatro decisiones de abajo las tomé yo con Ale ausente: son lo primero
+> que hay que confirmar.
+
 **Objetivo:** organizar la colección en carpetas con su valor, y añadir una capa de
 progresión (logros + nivel) que dé una razón para seguir completando cosas.
 
