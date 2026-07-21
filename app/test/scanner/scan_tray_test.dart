@@ -149,6 +149,22 @@ void main() {
       expect(tray.totalQty, 0);
     });
 
+    test('una carta buena NO se agrupa dentro de una línea sin reconocer '
+        'aunque compartan top-1', () {
+      // la celda dudosa tiene 'bolt' como top-1 basura (dist 30); una foto
+      // posterior reconoce bolt de verdad: debe salir en su PROPIA línea,
+      // no sumarse a la que no se añade a la colección
+      final tray = buildBatchTray([
+        ([_md('bolt', 30), _md('shock', 32)], null), // sin reconocer
+        ([_md('bolt', 8), _md('shock', 30)], null), // bolt de verdad
+      ]);
+      expect(tray.lines, hasLength(2));
+      expect(tray.lines.first.unrecognized, isTrue);
+      expect(tray.lines.first.qty, 1);
+      expect(tray.lines.last.unrecognized, isFalse);
+      expect(tray.totalQty, 1); // solo la buena
+    });
+
     test('elegir a mano una línea sin reconocer la convierte en normal', () {
       final tray = buildBatchTray([
         ([_md('plains', 30), _md('island', 32)], null),

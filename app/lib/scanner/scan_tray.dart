@@ -75,6 +75,10 @@ class ScanTray {
     final key =
         '${rec.best.entry.oracleId}|${rec.best.entry.printingKey}';
     for (final l in lines) {
+      // las líneas SIN reconocer no agrupan: su top-1 es justo la apuesta
+      // dudosa que no se quiere proponer, y sumarle cantidad escondería
+      // una carta buena dentro de una línea que no se añade a la colección
+      if (l.unrecognized) continue;
       if (l.key == key) {
         l.qty++;
         return l;
