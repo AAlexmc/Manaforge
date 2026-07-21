@@ -211,11 +211,19 @@ class AchievementStore extends ChangeNotifier {
   /// guardados a la vez y se pisaban el fichero temporal (el segundo
   /// `rename` reventaba porque el primero ya se lo había llevado).
   Future<void> _queue = Future.value();
+  bool _pendingSave = false;
 
   void _save() {
-    _queue = _queue
-        .then((_) => _write())
-        .catchError((Object _) {}); // la cola sigue viva si una falla
+    // si ya hay una escritura encolada, esa verá el estado FINAL: encolar
+    // otra solo repetiría el mismo JSON (importar 300 cartas encolaba 300)
+    if (_pendingSave) return;
+    _pendingSave = true;
+    _queue = _queue.then((_) {
+      _pendingSave = false;
+      return _write();
+    }).catchError((Object _) {
+      _pendingSave = false; // la cola sigue viva si una escritura falla
+    });
   }
 
   /// Espera a que la cola de guardado vacíe. Los `_save()` son

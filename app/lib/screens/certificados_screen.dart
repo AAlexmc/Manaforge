@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:file_selector/file_selector.dart';
@@ -48,7 +49,12 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
       final sets = await widget.db.sets();
       final certs = certificatesForSets(
         ownedBySet: owned,
-        setTotals: {for (final s in sets) s.code: s.total},
+        // igual que el logro "expansión completa": sin saber las ediciones
+        // exactas, lo poseído no cuenta básicas y el total sí, así que
+        // nunca cuadraría (y saldrían cero certificados por otra razón)
+        setTotals: widget.collection.hasPrintingData
+            ? {for (final s in sets) s.code: s.total}
+            : const <String, int>{},
         setNames: {for (final s in sets) s.code: s.name},
         today: certificateDay(DateTime.now()),
       );
@@ -116,9 +122,13 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
                 padding: const EdgeInsets.all(32),
                 child: Text(
                   _error ??
-                      'Todavía no tienes ninguna expansión completa. Cuando '
-                          'completes una entera en el Álbum, aquí saldrá tu '
-                          'certificado para descargar.',
+                      (widget.collection.hasPrintingData
+                          ? 'Todavía no tienes ninguna expansión completa. '
+                              'Cuando completes una entera en el Álbum, aquí '
+                              'saldrá tu certificado para descargar.'
+                          : 'Para certificar una expansión hace falta saber '
+                              'la edición exacta de tus cartas: reimporta tu '
+                              'CSV de ManaBox (trae el Scryfall ID).'),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -322,30 +332,35 @@ Future<String?> saveCertificatePng(GlobalKey boundaryKey, String name) async {
       boundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
   if (boundary == null) return null;
   final image = await boundary.toImage(pixelRatio: 3);
-  final data = await image.toByteData(format: ui.ImageByteFormat.png);
-  image.dispose();
-  if (data == null) return null;
-  final bytes = data.buffer.asUint8List();
-
+  Uint8List bytes;
   try {
-    final location = await getSaveLocation(
+    final data = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (data == null) return null;
+    bytes = data.buffer.asUint8List();
+  } finally {
+    image.dispose();
+  }
+
+  FileSaveLocation? location;
+  try {
+    location = await getSaveLocation(
       suggestedName: name,
       acceptedTypeGroups: const [
         XTypeGroup(label: 'PNG', extensions: ['png'])
       ],
     );
-    if (location != null) {
-      await File(location.path).writeAsBytes(bytes);
-      return location.path;
-    }
-    // el usuario canceló: no hay que inventarse un guardado
-    return null;
   } catch (_) {
-    // sin diálogo nativo: a Descargas
+    // esta plataforma no tiene diálogo de guardar: a Descargas
     final dir = await getDownloadsDirectory() ??
         await getApplicationSupportDirectory();
     final file = File(p.join(dir.path, name));
     await file.writeAsBytes(bytes);
     return file.path;
   }
+  // el usuario canceló: no hay que inventarse un guardado
+  if (location == null) return null;
+  // si esto falla (permisos), que se entere: NO se guarda a escondidas en
+  // otro sitio y se canta esa ruta como si fuera la que pidió
+  await File(location.path).writeAsBytes(bytes);
+  return location.path;
 }

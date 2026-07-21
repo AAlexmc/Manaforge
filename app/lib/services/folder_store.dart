@@ -169,9 +169,19 @@ class FolderStore extends ChangeNotifier {
   /// Cola de escrituras: dos guardados a la vez se pisaban el fichero
   /// temporal y el segundo `rename` fallaba.
   Future<void> _queue = Future.value();
+  bool _pendingSave = false;
 
   void _save() {
-    _queue = _queue.then((_) => _write()).catchError((Object _) {});
+    // si ya hay una escritura encolada, esa verá el estado FINAL: encolar
+    // otra solo repetiría el mismo JSON (importar 300 cartas encolaba 300)
+    if (_pendingSave) return;
+    _pendingSave = true;
+    _queue = _queue.then((_) {
+      _pendingSave = false;
+      return _write();
+    }).catchError((Object _) {
+      _pendingSave = false; // la cola sigue viva si una escritura falla
+    });
   }
 
   /// Espera a que la cola de guardado vacíe. Los `_save()` son

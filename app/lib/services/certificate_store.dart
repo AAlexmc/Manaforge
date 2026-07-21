@@ -19,7 +19,7 @@ class CertificateStore extends ChangeNotifier {
 
   final Map<String, String> _earnedAt = {}; // id -> 'YYYY-MM-DD'
   String _ownerName = '';
-  bool _loaded = false;
+  Future<void>? _loading;
 
   Map<String, String> get earnedAt => Map.unmodifiable(_earnedAt);
   String get ownerName => _ownerName;
@@ -82,9 +82,11 @@ class CertificateStore extends ChangeNotifier {
     }
   }
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Future memoizado: dos `load()` a la vez no pueden dejar el mapa vacío
+  /// mientras `sync()` corre (re-sellaría todas las fechas a hoy).
+  Future<void> load() => _loading ??= _load();
+
+  Future<void> _load() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
@@ -97,9 +99,19 @@ class CertificateStore extends ChangeNotifier {
 
   /// Cola de escrituras (dos guardados a la vez se pisan el temporal).
   Future<void> _queue = Future.value();
+  bool _pendingSave = false;
 
   void _save() {
-    _queue = _queue.then((_) => _write()).catchError((Object _) {});
+    // si ya hay una escritura encolada, esa verá el estado FINAL: encolar
+    // otra solo repetiría el mismo JSON (importar 300 cartas encolaba 300)
+    if (_pendingSave) return;
+    _pendingSave = true;
+    _queue = _queue.then((_) {
+      _pendingSave = false;
+      return _write();
+    }).catchError((Object _) {
+      _pendingSave = false; // la cola sigue viva si una escritura falla
+    });
   }
 
   /// Espera a que la cola de guardado vacíe. Los `_save()` son

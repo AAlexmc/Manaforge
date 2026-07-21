@@ -172,6 +172,7 @@ class CollectionStore extends ChangeNotifier {
     _loaded = true;
     final file = await _file();
     if (file == null || !await file.exists()) return;
+    var ok = false;
     try {
       final decoded = jsonDecode(await file.readAsString());
       final cards = <String, OwnedCard>{};
@@ -215,23 +216,36 @@ class CollectionStore extends ChangeNotifier {
       _printingOwner
         ..clear()
         ..addAll(owners);
-      notifyListeners();
-    } catch (e) {
+      ok = true;
+    } catch (_) {
       // fichero ilegible: apartarlo con otro nombre y arrancar vacío, pero
       // sin borrarlo (se puede recuperar a mano)
       try {
         await file.rename('${file.path}.roto');
       } catch (_) {/* si tampoco se puede renombrar, no hay más que hacer */}
     }
+    // fuera del try: si un listener revienta, NO se debe apartar como rota
+    // una colección que se ha leído perfectamente
+    if (ok) notifyListeners();
   }
 
   /// Cola de escrituras: importar un CSV llama a `add()` una vez por carta,
   /// y cientos de `writeAsString` a la vez sobre el MISMO fichero se pisan
   /// entre ellas (colección corrupta o a medias).
   Future<void> _queue = Future.value();
+  bool _pendingSave = false;
 
   void _save() {
-    _queue = _queue.then((_) => _write()).catchError((Object _) {});
+    // si ya hay una escritura encolada, esa verá el estado FINAL: encolar
+    // otra solo repetiría el mismo JSON (importar 300 cartas encolaba 300)
+    if (_pendingSave) return;
+    _pendingSave = true;
+    _queue = _queue.then((_) {
+      _pendingSave = false;
+      return _write();
+    }).catchError((Object _) {
+      _pendingSave = false; // la cola sigue viva si una escritura falla
+    });
   }
 
   /// Espera a que la cola de guardado vacíe. Los `_save()` son
