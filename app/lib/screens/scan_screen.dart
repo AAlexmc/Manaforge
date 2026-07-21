@@ -48,10 +48,16 @@ class ScanOutcome {
   final Uint8List artPng; // recorte del arte, para enseñarlo
   final bool usedFallback;
 
+  /// Grupos de firmas de HIPÓTESIS de posición (celdas de rejilla donde la
+  /// geometría no encontró la carta): el matching prueba cada grupo con
+  /// [HashIndex.bestGroupMatches] y gana el que mejor casa.
+  final List<List<DHashPair>> altSignatures;
+
   const ScanOutcome({
     required this.signatures,
     required this.artPng,
     required this.usedFallback,
+    this.altSignatures = const [],
   });
 }
 
@@ -96,6 +102,10 @@ ScanOutcome _outcomeFrom(DetectedCard detected) {
     signatures: artSignatures(warped.pixels, warped.width, warped.height),
     artPng: img.encodePng(artImage),
     usedFallback: detected.usedFallback,
+    altSignatures: [
+      for (final w in detected.altWarps)
+        artSignatures(w.pixels, w.width, w.height, compact: true)
+    ],
   );
 }
 
@@ -163,8 +173,9 @@ class _ScanScreenState extends State<ScanScreen> {
       }
       final outcome = outcomes.first;
       final index = await widget.scanner.loadIndex();
-      final matches =
-          index.topMatches(outcome.signatures, lockSet: _lockSet);
+      final (matches, _) = index.bestGroupMatches(
+          outcome.signatures, outcome.altSignatures,
+          lockSet: _lockSet);
       final decision = decideScan(matches);
       final candidates = <_Candidate>[];
       for (final m in matches) {
@@ -233,7 +244,9 @@ class _ScanScreenState extends State<ScanScreen> {
     final index = await widget.scanner.loadIndex();
     final perCard = <List<ScanMatch>>[];
     for (final o in outcomes) {
-      final matches = index.topMatches(o.signatures, lockSet: _lockSet);
+      final (matches, _) = index.bestGroupMatches(
+          o.signatures, o.altSignatures,
+          lockSet: _lockSet);
       perCard.add(matches);
       await _precache(matches);
     }
@@ -270,8 +283,9 @@ class _ScanScreenState extends State<ScanScreen> {
           // cada foto puede traer VARIAS cartas (página de álbum)
           final outcomes = await compute(processScanPhotoAll, bytes);
           for (final outcome in outcomes) {
-            final matches =
-                index.topMatches(outcome.signatures, lockSet: _lockSet);
+            final (matches, _) = index.bestGroupMatches(
+                outcome.signatures, outcome.altSignatures,
+                lockSet: _lockSet);
             perPhoto.add(matches);
             await _precache(matches);
           }

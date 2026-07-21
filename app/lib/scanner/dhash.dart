@@ -204,7 +204,12 @@ DHashPair dhashPairFromRgb(Uint8List rgb, int w, int h) {
 /// Compensa el error de esquinas del detector: en las pruebas de banco
 /// bajó la distancia de la carta correcta de ~20 a ~7 bits sin apenas
 /// acercar a las incorrectas.
-List<DHashPair> artSignatures(Uint8List warpedRgb, int w, int h) {
+/// Con [compact] se emite una rejilla reducida (9 firmas, solo ±2 % sin
+/// escala): para los grupos de HIPÓTESIS de posición del detector de
+/// rejilla, donde el desplazamiento grueso ya lo aporta la hipótesis y 75
+/// variantes por grupo serían prohibitivas.
+List<DHashPair> artSignatures(Uint8List warpedRgb, int w, int h,
+    {bool compact = false}) {
   // gris una sola vez; cada variante recorta y hashea sobre el gris
   final grey = Uint8List(w * h);
   for (var i = 0, j = 0; i < grey.length; i++, j += 3) {
@@ -214,9 +219,16 @@ List<DHashPair> artSignatures(Uint8List warpedRgb, int w, int h) {
   final sigs = <DHashPair>[];
   // la variante CENTRAL (sin desplazamiento) va PRIMERO: el matching la
   // usa para la preselección rápida antes de refinar con el resto
-  for (final dx in const [0.0, -0.02, -0.01, 0.01, 0.02]) {
-    for (final dy in const [0.0, -0.02, -0.01, 0.01, 0.02]) {
-      for (final s in const [0.0, 0.015, -0.015]) {
+  final dxs = compact
+      ? const [0.0, -0.02, 0.02]
+      : const [0.0, -0.02, -0.01, 0.01, 0.02];
+  final dys = compact
+      ? const [0.0, -0.02, 0.02]
+      : const [0.0, -0.02, -0.01, 0.01, 0.02];
+  final scales = compact ? const [0.0] : const [0.0, 0.015, -0.015];
+  for (final dx in dxs) {
+    for (final dy in dys) {
+      for (final s in scales) {
         final x0 = ((artL + dx + s) * w).round().clamp(0, w - 2).toInt();
         final x1 = ((artR + dx - s) * w).round().clamp(x0 + 1, w).toInt();
         final y0 =

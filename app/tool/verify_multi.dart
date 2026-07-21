@@ -89,7 +89,11 @@ Future<void> main(List<String> args) async {
       final d = cards[i];
       final w = d.warped;
       final sigs = artSignatures(w.pixels, w.width, w.height);
-      final matches = index.topMatches(sigs, lockSet: lock);
+      final alts = [
+        for (final aw in d.altWarps)
+          artSignatures(aw.pixels, aw.width, aw.height, compact: true)
+      ];
+      final (matches, _) = index.bestGroupMatches(sigs, alts, lockSet: lock);
       final decision = decideScan(matches);
       final top = matches.isEmpty ? null : matches.first;
       print('  celda $i: ${decision.confidence.name.padRight(10)} '
