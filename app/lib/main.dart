@@ -4,6 +4,7 @@ import 'screens/screens.dart';
 import 'services/card_database.dart';
 import 'services/collection_store.dart';
 import 'services/deck_store.dart';
+import 'services/folder_store.dart';
 import 'services/price_history.dart';
 import 'services/price_series_database.dart';
 import 'services/scanner_database.dart';
@@ -41,6 +42,7 @@ class _HomeShellState extends State<HomeShell> {
   final _db = CardDatabase();
   final _collection = CollectionStore();
   final _decks = DeckStore();
+  final _folders = FolderStore();
   final _scanner = ScannerDatabase();
   final _wishlist = WishlistStore();
   final _prices = PriceSeriesDatabase();
@@ -76,7 +78,11 @@ class _HomeShellState extends State<HomeShell> {
           collection: _collection,
           decks: _decks,
           onGoToTab: (i) => setState(() => _index = i)),
-      ColeccionScreen(db: _db, collection: _collection, scanner: _scanner),
+      ColeccionScreen(
+          db: _db,
+          collection: _collection,
+          scanner: _scanner,
+          folders: _folders),
       AlbumScreen(db: _db, collection: _collection),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
