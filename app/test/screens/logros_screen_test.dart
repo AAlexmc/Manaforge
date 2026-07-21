@@ -89,6 +89,24 @@ void main() {
     expect(secret, findsWidgets);
   });
 
+  testWidgets('recalcular quita los logros que ya no se cumplen',
+      (tester) async {
+    final collection = CollectionStore()
+      ..add(OwnedCard(oracleId: 'o1', name: 'X', colors: 'G', qty: 1));
+    final c = _controller(collection);
+    // un logro guardado a mano que la colección NO cumple (lo que pasaba
+    // con las míticas: la rareza salía de todas las impresiones)
+    c.progress.unlockAll(['miticas-10']);
+    await tester.runAsync(() => c.refresh());
+    expect(c.progress.unlockedAt.containsKey('miticas-10'), isTrue);
+
+    final removed = await tester.runAsync(() => c.recalculate());
+    expect(removed, 1);
+    expect(c.progress.unlockedAt.containsKey('miticas-10'), isFalse);
+    // lo que sí se cumple se queda
+    expect(c.progress.unlockedAt.containsKey('copias-1'), isTrue);
+  });
+
   testWidgets('un escaneo cuenta para los logros del escáner',
       (tester) async {
     final c = _controller(CollectionStore());

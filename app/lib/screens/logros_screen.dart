@@ -65,12 +65,48 @@ class _LogrosScreenState extends State<LogrosScreen> {
     });
   }
 
+  /// Quita los logros guardados que hoy no se cumplen (los que dio de más
+  /// una versión con las cuentas mal).
+  Future<void> _recalculate() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Recalcular logros?'),
+        content: const Text(
+            'Se vuelven a mirar tus cartas y se quitan los logros que hoy no '
+            'se cumplan. Sirve para arreglar los que se dieron por error; si '
+            'has vendido cartas, también perderás esos.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar')),
+          FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Recalcular')),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    final removed = await widget.achievements.recalculate();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(removed == 0
+          ? 'Todo cuadraba: no se ha quitado ningún logro.'
+          : 'Quitados $removed logros que ya no se cumplen.'),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Logros'),
         actions: [
+          IconButton(
+            tooltip: 'Recalcular con mis cartas de ahora',
+            icon: const Icon(Icons.refresh),
+            onPressed: _recalculate,
+          ),
           if (widget.db != null &&
               widget.collection != null &&
               widget.certificates != null)

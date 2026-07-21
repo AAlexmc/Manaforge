@@ -113,6 +113,35 @@ class AchievementsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Vuelve a mirar la colección y quita los logros guardados que HOY no se
+  /// cumplen. Es para arreglar los que se dieron por un cálculo malo (la
+  /// rareza salía de todas las impresiones de la carta, no de las tuyas).
+  /// Devuelve cuántos se han quitado.
+  Future<int> recalculate() async {
+    final snapshot = await gatherSnapshot(
+      db: db,
+      collection: collection,
+      decks: decks,
+      folders: folders,
+      progress: progress,
+      wishlistCards: wishlist.items.length,
+    );
+    // sin `unlockedAt`: solo cuenta lo que se cumple AHORA
+    final live = evaluateAchievements(snapshot);
+    final achievedNow = {
+      for (final s in live)
+        if (s.unlocked) s.achievement.id
+    };
+    final stale = [
+      for (final id in progress.unlockedAt.keys)
+        if (!achievedNow.contains(id)) id
+    ];
+    progress.forget(stale);
+    _toCelebrate.clear(); // recalcular no es "conseguir"
+    await refresh();
+    return stale.length;
+  }
+
   /// Se lleva los logros pendientes de avisar (y los da por avisados).
   List<Achievement> takeCelebrations() {
     final out = [..._toCelebrate];

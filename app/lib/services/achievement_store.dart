@@ -125,6 +125,18 @@ class AchievementStore extends ChangeNotifier {
     _save();
   }
 
+  /// Olvida logros guardados. Solo lo usa "recalcular": sirve para tirar
+  /// los que se dieron por un cálculo equivocado, y por eso NUNCA pasa sola.
+  void forget(Iterable<String> ids) {
+    var changed = false;
+    for (final id in ids) {
+      if (_unlocked.remove(id) != null) changed = true;
+    }
+    if (!changed) return;
+    notifyListeners();
+    _save();
+  }
+
   /// Suma al contador (cartas escaneadas, carpetas creadas…).
   void bump(String key, [int by = 1]) {
     if (by == 0) return;
