@@ -23,6 +23,7 @@ Corre en GitHub Actions (workflow build-price-db) igual que build_card_db.py.
 """
 from __future__ import annotations
 
+import json
 import math
 import re
 import sqlite3
@@ -36,10 +37,27 @@ _DAY_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 try:
     import ijson  # streaming: los dos ficheros suman ~2 GB descomprimidos
 except ImportError:
-    raise SystemExit(
-        "Hace falta ijson (pip install ijson): AllPrices.json son 1,2 GB y "
-        "json.load pediría del orden de 10 GB de RAM."
-    )
+    ijson = None
+
+# Sin ijson solo se admiten ficheros pequeños (fixtures de test): json.load
+# sobre AllPrices.json —1,2 GB— pediría del orden de 10 GB de RAM, así que
+# no es un fallback, es un OOM con otra pila.
+_MAX_JSON_LOAD_BYTES = 64 * 1024 * 1024
+
+
+def _data_items(path: Path):
+    """(clave, valor) de `data`, por streaming cuando hay ijson."""
+    if ijson is not None:
+        with path.open("rb") as fh:
+            yield from ijson.kvitems(fh, "data", use_float=True)
+        return
+    if path.stat().st_size > _MAX_JSON_LOAD_BYTES:
+        raise SystemExit(
+            f"{path.name} es demasiado grande para leerlo de golpe: "
+            "instala ijson (pip install ijson) para procesarlo por streaming."
+        )
+    with path.open("rb") as fh:
+        yield from json.load(fh)["data"].items()
 
 SCHEMA = """
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT);
@@ -56,13 +74,12 @@ CREATE TABLE price_series (
 def _uuid_to_oracle(identifiers_path: Path) -> dict[str, str]:
     """uuid de MTGJSON → oracle_id de Scryfall (el que usa ManaForge)."""
     out: dict[str, str] = {}
-    with identifiers_path.open("rb") as fh:
-        for uuid, card in ijson.kvitems(fh, "data", use_float=True):
-            oracle = ((card or {}).get("identifiers") or {}).get(
-                "scryfallOracleId"
-            )
-            if oracle:
-                out[uuid] = oracle
+    for uuid, card in _data_items(identifiers_path):
+        oracle = ((card or {}).get("identifiers") or {}).get(
+            "scryfallOracleId"
+        )
+        if oracle:
+            out[uuid] = oracle
     return out
 
 
@@ -71,35 +88,34 @@ def _series_by_oracle(
 ) -> dict[str, dict[str, float]]:
     """Para cada oracle y día, el precio MÁS BARATO entre sus ediciones."""
     out: dict[str, dict[str, float]] = {}
-    with prices_path.open("rb") as fh:
-        for uuid, entry in ijson.kvitems(fh, "data", use_float=True):
-            oracle = uuid_to_oracle.get(uuid)
-            if not oracle:
+    for uuid, entry in _data_items(prices_path):
+        oracle = uuid_to_oracle.get(uuid)
+        if not oracle:
+            continue
+        # cada nivel puede venir a null en el volcado: un solo null sin
+        # defender tumbaba el build semanal entero con AttributeError
+        daily = (
+            (((entry or {}).get("paper") or {}).get("cardmarket") or {})
+            .get("retail")
+            or {}
+        ).get("normal")
+        if not isinstance(daily, dict):
+            continue
+        bucket = out.setdefault(oracle, {})
+        for day, price in daily.items():
+            try:
+                price = float(price)
+            except (TypeError, ValueError):
                 continue
-            # cada nivel puede venir a null en el volcado: un solo null sin
-            # defender tumbaba el build semanal entero con AttributeError
-            daily = (
-                (((entry or {}).get("paper") or {}).get("cardmarket") or {})
-                .get("retail")
-                or {}
-            ).get("normal")
-            if not isinstance(daily, dict):
+            if price <= 0 or not math.isfinite(price):
                 continue
-            bucket = out.setdefault(oracle, {})
-            for day, price in daily.items():
-                try:
-                    price = float(price)
-                except (TypeError, ValueError):
-                    continue
-                if price <= 0 or not math.isfinite(price):
-                    continue
-                if not _DAY_RE.match(day):
-                    continue  # clave de día con formato raro
-                current = bucket.get(day)
-                if current is None or price < current:
-                    bucket[day] = price
-            if not bucket:
-                del out[oracle]
+            if not _DAY_RE.match(day):
+                continue  # clave de día con formato raro
+            current = bucket.get(day)
+            if current is None or price < current:
+                bucket[day] = price
+        if not bucket:
+            del out[oracle]
     return out
 
 

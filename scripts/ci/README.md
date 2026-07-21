@@ -5,6 +5,11 @@ SQLite) y la publica como release `price-db-latest`. Está aquí y no en
 `.github/workflows/` porque el token de `gh` de la máquina de desarrollo no
 tiene el permiso `workflow` y GitHub rechaza el push de ficheros de workflow.
 
+Conviene además añadir `ijson` al `pip install` de `.github/workflows/ci.yml`
+(hoy instala `pytest pillow`). Los tests de `build_price_history_db.py`
+funcionan sin él —los fixtures son pequeños y caen a `json.load`—, pero con
+`ijson` se ejerce el mismo camino de streaming que usa el build real.
+
 Para instalarlo:
 
 ```sh
