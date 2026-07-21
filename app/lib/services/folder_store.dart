@@ -149,9 +149,17 @@ class FolderStore extends ChangeNotifier {
     }
   }
 
+  /// Cola de escrituras: dos guardados a la vez se pisaban el fichero
+  /// temporal y el segundo `rename` fallaba.
+  Future<void> _queue = Future.value();
+
+  void _save() {
+    _queue = _queue.then((_) => _write()).catchError((Object _) {});
+  }
+
   /// Escribe por temporal + rename: un corte a mitad de escritura dejaría el
   /// fichero anterior intacto en vez de una lista de carpetas truncada.
-  Future<void> _save() async {
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
     final data = jsonEncode([for (final f in _folders) f.toJson()]);

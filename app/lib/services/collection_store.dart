@@ -184,14 +184,28 @@ class CollectionStore extends ChangeNotifier {
     }
   }
 
-  Future<void> _save() async {
+  /// Cola de escrituras: importar un CSV llama a `add()` una vez por carta,
+  /// y cientos de `writeAsString` a la vez sobre el MISMO fichero se pisan
+  /// entre ellas (colección corrupta o a medias).
+  Future<void> _queue = Future.value();
+
+  void _save() {
+    _queue = _queue.then((_) => _write()).catchError((Object _) {});
+  }
+
+  /// Temporal + rename: si la app muere a media escritura, la colección
+  /// anterior sigue entera en disco.
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
-    await file.writeAsString(jsonEncode({
+    final data = jsonEncode({
       'cards': [for (final c in _cards.values) c.toJson()],
       'printings': _printings,
       'foils': _foils,
-    }));
+    });
+    final tmp = File('${file.path}.tmp');
+    await tmp.writeAsString(data, flush: true);
+    await tmp.rename(file.path);
   }
 
   /// [at] sella cuándo entra (por defecto, ahora): pasando el MISMO

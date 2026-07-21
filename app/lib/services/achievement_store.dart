@@ -187,9 +187,20 @@ class AchievementStore extends ChangeNotifier {
     }
   }
 
+  /// Cola de escrituras: desbloquear varios logros de golpe llamaba a varios
+  /// guardados a la vez y se pisaban el fichero temporal (el segundo
+  /// `rename` reventaba porque el primero ya se lo había llevado).
+  Future<void> _queue = Future.value();
+
+  void _save() {
+    _queue = _queue
+        .then((_) => _write())
+        .catchError((Object _) {}); // la cola sigue viva si una falla
+  }
+
   /// Temporal + rename: un corte a media escritura no debe borrar años de
   /// logros.
-  Future<void> _save() async {
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
     final tmp = File('${file.path}.tmp');
