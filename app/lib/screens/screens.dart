@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
+import 'backup_screen.dart';
 
 export 'album_screen.dart';
+export 'backup_screen.dart';
 export 'all_cards_screen.dart';
 export 'coleccion_screen.dart';
 export 'collection_filters.dart';
@@ -26,7 +31,12 @@ export 'startup_screen.dart';
 class AjustesScreen extends StatefulWidget {
   final CardDatabase db;
 
-  const AjustesScreen({super.key, required this.db});
+  /// Los datos de disco han cambiado (se ha restaurado una copia): hay que
+  /// releerlo todo.
+  final VoidCallback onRestored;
+
+  const AjustesScreen(
+      {super.key, required this.db, required this.onRestored});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -35,6 +45,16 @@ class AjustesScreen extends StatefulWidget {
 class _AjustesScreenState extends State<AjustesScreen> {
   double? _progress;
   String? _status;
+
+  /// Dónde viven los datos. Devuelve null si no hay plugin de rutas (tests):
+  /// la tarjeta se pinta igual y solo falla al pulsar.
+  Future<Directory?> _dataDir() async {
+    try {
+      return await getApplicationSupportDirectory();
+    } catch (_) {
+      return null;
+    }
+  }
 
   Future<void> _redownload() async {
     setState(() {
@@ -110,6 +130,8 @@ class _AjustesScreenState extends State<AjustesScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 16),
+            BackupCard(dataDir: _dataDir, onRestored: widget.onRestored),
             const SizedBox(height: 16),
             const Text(
                 'Datos e imágenes de cartas por Scryfall. Magic: The Gathering '
