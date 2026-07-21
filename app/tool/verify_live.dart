@@ -45,11 +45,17 @@ Future<HashIndex> _loadIndex(String path) async {
 
 Future<void> main(List<String> args) async {
   final index = await _loadIndex(args.first);
-  for (final path in args.skip(1)) {
+  for (final path in args.skip(1).where((a) => !a.startsWith('--'))) {
     final decoded = img.decodeImage(File(path).readAsBytesSync())!;
     final rgb3 = decoded.convert(numChannels: 3);
     final photo = RgbImage(
         rgb3.getBytes(order: img.ChannelOrder.rgb), rgb3.width, rgb3.height);
+    if (args.contains('--dim')) {
+      // simula media luz: la misma escena peor iluminada
+      for (var i = 0; i < photo.pixels.length; i++) {
+        photo.pixels[i] = (photo.pixels[i] * 0.35).round();
+      }
+    }
     final detected = detectCard(photo);
     final sigs = artSignatures(
         detected.warped.pixels, detected.warped.width, detected.warped.height);
@@ -58,7 +64,8 @@ Future<void> main(List<String> args) async {
         detected.warped.pixels, detected.warped.width, detected.warped.height);
     final live = decideLiveScan(matches,
         cardDetected: !detected.usedFallback,
-        artDetail: likeness.artDetail);
+        artDetail: likeness.artDetail,
+        artMean: likeness.artMean);
     final top = matches.isEmpty ? null : matches.first;
     final w = detected.warped;
     print('${path.split('/').last}');

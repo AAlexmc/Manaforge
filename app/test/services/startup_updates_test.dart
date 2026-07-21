@@ -78,9 +78,29 @@ void main() {
           UpdateNeed.stale);
     });
 
-    test('que no esté descargada gana a todo lo demás', () {
+    test('base presente pero SIN fecha legible (esquema viejo): manda '
+        'cuándo se trajo, no se re-descarga en bucle', () {
       expect(updateNeed(null, maxAgeDays: 1, now: hoy, downloadedAt: hoy),
-          UpdateNeed.missing);
+          UpdateNeed.fresh);
+      expect(
+          updateNeed(null,
+              maxAgeDays: 1,
+              now: hoy,
+              downloadedAt: DateTime(2026, 7, 1)),
+          UpdateNeed.stale);
+    });
+
+    test('sin fichero y sin fecha: falta', () {
+      expect(updateNeed(null, maxAgeDays: 1, now: hoy), UpdateNeed.missing);
+    });
+
+    test('un mtime en el FUTURO no congela la base para siempre', () {
+      expect(
+          updateNeed('2020-01-01',
+              maxAgeDays: 1,
+              now: hoy,
+              downloadedAt: DateTime(2027, 1, 1)),
+          UpdateNeed.stale);
     });
   });
 }

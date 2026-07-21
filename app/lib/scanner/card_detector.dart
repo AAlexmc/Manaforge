@@ -93,14 +93,26 @@ class CardLikeness {
   /// Desviación típica de la luminancia en la ventana del arte (0..127).
   final double artDetail;
 
+  /// Luminancia media de esa misma ventana.
+  final double artMean;
+
   /// Energía de gradiente HORIZONTAL media en la caja de texto: los
   /// renglones de texto la disparan, una superficie lisa no.
   final double textLines;
 
-  const CardLikeness(this.artDetail, this.textLines);
+  const CardLikeness(this.artDetail, this.artMean, this.textLines);
+
+  /// Detalle RELATIVO al brillo. La desviación típica a secas escala con
+  /// la exposición: la misma carta con menos luz da la mitad de detalle y
+  /// se colaba por debajo de cualquier umbral absoluto, así que se
+  /// descartaban cartas buenas a media luz. Dividir por el brillo medio
+  /// deja la medida donde importa: cuánta VARIACIÓN hay para el nivel de
+  /// luz que haya.
+  double get relativeDetail => artDetail / (artMean + 8);
 
   @override
-  String toString() => 'arte ${artDetail.toStringAsFixed(1)} · '
+  String toString() => 'arte ${artDetail.toStringAsFixed(1)} '
+      '(rel ${relativeDetail.toStringAsFixed(3)}) · '
       'texto ${textLines.toStringAsFixed(1)}';
 }
 
@@ -146,7 +158,7 @@ CardLikeness cardLikeness(Uint8List warpedRgb, int w, int h) {
       count++;
     }
   }
-  return CardLikeness(artDetail, count == 0 ? 0.0 : energy / count);
+  return CardLikeness(artDetail, mean, count == 0 ? 0.0 : energy / count);
 }
 
 /// Detecta la carta de [photo] y devuelve carta rectificada + arte.

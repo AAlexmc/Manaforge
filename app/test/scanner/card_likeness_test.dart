@@ -40,12 +40,24 @@ void main() {
     final likeness =
         cardLikeness(_warp(artNoise: 0, textRows: 0), warpedWidth, warpedHeight);
     expect(likeness.artDetail, lessThan(kMinArtDetail));
+    expect(likeness.relativeDetail, lessThan(kMinRelativeArtDetail));
   });
 
   test('un arte de verdad supera el mínimo con holgura', () {
     final likeness = cardLikeness(
         _warp(artNoise: 60, textRows: 0), warpedWidth, warpedHeight);
     expect(likeness.artDetail, greaterThan(kMinArtDetail * 2));
+    expect(likeness.relativeDetail, greaterThan(kMinRelativeArtDetail));
+  });
+
+  test('el detalle RELATIVO aguanta la falta de luz; el absoluto no', () {
+    final claro = _warp(artNoise: 60, textRows: 4);
+    final oscuro = Uint8List.fromList(
+        [for (final v in claro) (v * 0.35).round()]);
+    final a = cardLikeness(claro, warpedWidth, warpedHeight);
+    final b = cardLikeness(oscuro, warpedWidth, warpedHeight);
+    expect(b.artDetail, lessThan(a.artDetail * 0.5)); // el absoluto se hunde
+    expect(b.relativeDetail, greaterThan(kMinRelativeArtDetail));
   });
 
   test('los renglones de la caja de texto se ven en la energía vertical',

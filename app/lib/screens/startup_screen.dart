@@ -71,6 +71,11 @@ class StartupScreen extends StatefulWidget {
   /// capado) no tiene sentido descargar nada: se entra directo.
   final Future<bool> Function() canDownload;
 
+  /// Tope de espera por descarga. Sin esto, una red que acepta la conexión
+  /// y no contesta (portal cautivo) deja el arranque colgado para siempre:
+  /// al vencer se marca esa base como fallida y se sigue con las demás.
+  final Duration downloadTimeout;
+
   const StartupScreen({
     super.key,
     required this.sources,
@@ -78,6 +83,7 @@ class StartupScreen extends StatefulWidget {
     required this.onReady,
     this.settleDelay = const Duration(milliseconds: 700),
     this.canDownload = storageAvailable,
+    this.downloadTimeout = const Duration(minutes: 6),
   });
 
   @override
@@ -108,7 +114,11 @@ class _StartupScreenState extends State<StartupScreen> {
   @override
   void initState() {
     super.initState();
-    _run();
+    // pase lo que pase ahí dentro, se entra: una pantalla de carga eterna
+    // es el peor final posible para una comprobación opcional
+    _run().catchError((_) {
+      if (mounted) _enter();
+    });
   }
 
   /// Entra a la app (una sola vez, la pulses tú o al terminar).
@@ -178,10 +188,17 @@ class _StartupScreenState extends State<StartupScreen> {
       });
     }
     try {
-      await for (final p in download()) {
-        if (!mounted) return;
-        setState(() => task.progress = p < 0 ? null : p);
-      }
+      // NO se sale del bucle si la pantalla ya no está: salir del `await
+      // for` CANCELA el stream, y una descarga cancelada a medias deja el
+      // fichero temporal y el sink abiertos. Al pulsar "Entrar ya" lo que
+      // quiere el usuario es entrar, no tirar los megas ya bajados. El
+      // tope de tiempo tampoco la corta: solo deja de esperarla.
+      await (() async {
+        await for (final p in download()) {
+          if (mounted) setState(() => task.progress = p < 0 ? null : p);
+        }
+      })()
+          .timeout(widget.downloadTimeout);
       String? fresh;
       try {
         fresh = await lastDate();

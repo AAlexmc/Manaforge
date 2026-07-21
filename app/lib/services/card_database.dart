@@ -78,11 +78,15 @@ class CardDatabase {
   }
 
   /// Descarga y descomprime la DB, emitiendo progreso 0..1 (-1 = indeterminado).
+  /// La DB que ya funcionaba NO se toca hasta que la nueva está entera y
+  /// descomprimida: una descarga cortada (o cancelada al entrar a la app)
+  /// deja la anterior intacta y no ficheros a medias.
   Stream<double> download() async* {
-    close(); // soltar el archivo si estaba abierto (Windows lo bloquea)
     final dbFile = await _dbFile();
     final gzFile = File('${dbFile.path}.gz');
+    final tmpFile = File('${dbFile.path}.tmp');
     final client = http.Client();
+    IOSink? sink;
     try {
       final request = http.Request('GET', Uri.parse(releaseUrl));
       final response = await client.send(request);
@@ -93,22 +97,33 @@ class CardDatabase {
       }
       final total = response.contentLength ?? -1;
       var received = 0;
-      final sink = gzFile.openWrite();
+      sink = gzFile.openWrite();
       await for (final chunk in response.stream) {
         sink.add(chunk);
         received += chunk.length;
         yield total > 0 ? received / total : -1;
       }
       await sink.close();
+      sink = null;
       // descompresión en streaming (la DB puede ocupar cientos de MB)
-      await gzFile
-          .openRead()
-          .transform(gzip.decoder)
-          .pipe(dbFile.openWrite());
-      await gzFile.delete();
+      await gzFile.openRead().transform(gzip.decoder).pipe(tmpFile.openWrite());
+      close(); // soltar el archivo (Windows lo bloquea)
+      await tmpFile.rename(dbFile.path);
       yield 1.0;
     } finally {
       client.close();
+      // si el consumidor cancela el stream (p. ej. al salir de la pantalla)
+      // solo corre esto: hay que cerrar el sink y no dejar restos
+      try {
+        await sink?.close();
+      } catch (_) {/* ya estaba rota */}
+      for (final leftover in [gzFile, tmpFile]) {
+        if (await leftover.exists()) {
+          try {
+            await leftover.delete();
+          } catch (_) {/* nada que hacer */}
+        }
+      }
     }
   }
 

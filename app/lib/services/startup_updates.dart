@@ -47,24 +47,30 @@ const int kHashesMaxAgeDays = 21; // solo cambian con colecciones nuevas
 /// bajaría 22 MB en cada arranque para acabar con el mismo fichero.
 UpdateNeed updateNeed(String? lastDate,
     {required int maxAgeDays, DateTime? now, DateTime? downloadedAt}) {
-  if (lastDate == null || lastDate.isEmpty) return UpdateNeed.missing;
-  final built = DateTime.tryParse(lastDate);
+  // "no sé su fecha" NO es lo mismo que "no está": una base descargada
+  // puede no tener la fila de meta que se le pide (esquemas antiguos). Si
+  // el fichero existe (hay downloadedAt) se juzga por cuándo se trajo; sin
+  // fichero, falta y punto.
+  final hasContentDate = lastDate != null && lastDate.isNotEmpty;
+  if (!hasContentDate && downloadedAt == null) return UpdateNeed.missing;
+
   final today = now ?? DateTime.now();
   final midnight = DateTime(today.year, today.month, today.day);
-  if (built != null) {
-    final days = midnight
-        .difference(DateTime(built.year, built.month, built.day))
-        .inDays;
-    if (days < maxAgeDays) return UpdateNeed.fresh;
+  int? daysSince(DateTime? d) => d == null
+      ? null
+      : midnight.difference(DateTime(d.year, d.month, d.day)).inDays;
+
+  if (hasContentDate) {
+    final days = daysSince(DateTime.tryParse(lastDate));
+    if (days != null && days < maxAgeDays) return UpdateNeed.fresh;
   }
-  // el contenido es viejo (o su fecha ilegible): solo se rebaja a "hay una
-  // nueva" si además hace tiempo que no se comprueba
-  if (downloadedAt != null) {
-    final days = midnight
-        .difference(DateTime(
-            downloadedAt.year, downloadedAt.month, downloadedAt.day))
-        .inDays;
-    if (days < maxAgeDays) return UpdateNeed.fresh;
+  // el contenido es viejo (o su fecha ilegible): solo se deja pasar si
+  // además se trajo hace poco. El >= 0 descarta un mtime en el FUTURO
+  // (reloj torcido, restaurar un backup), que si no dejaría la base
+  // marcada al día para siempre.
+  final since = daysSince(downloadedAt);
+  if (since != null && since >= 0 && since < maxAgeDays) {
+    return UpdateNeed.fresh;
   }
   return UpdateNeed.stale;
 }

@@ -53,9 +53,10 @@ class ScanOutcome {
   /// [HashIndex.bestGroupMatches] y gana el que mejor casa.
   final List<List<DHashPair>> altSignatures;
 
-  /// Detalle de la ventana del arte: lo usa el escaneo en vivo para no
-  /// "reconocer" superficies lisas (ver [decideLiveScan]).
+  /// Detalle de la ventana del arte y su brillo medio: los usa el escaneo
+  /// en vivo para no "reconocer" superficies lisas (ver [decideLiveScan]).
   final double artDetail;
+  final double artMean;
 
   const ScanOutcome({
     required this.signatures,
@@ -63,6 +64,7 @@ class ScanOutcome {
     required this.usedFallback,
     this.altSignatures = const [],
     this.artDetail = double.infinity,
+    this.artMean = 0,
   });
 }
 
@@ -96,6 +98,7 @@ List<ScanOutcome> processScanPhotoAll(Uint8List bytes) {
 
 ScanOutcome _outcomeFrom(DetectedCard detected) {
   final warped = detected.warped;
+  final likeness = cardLikeness(warped.pixels, warped.width, warped.height);
   final art = detected.artCrop;
   final artImage = img.Image.fromBytes(
       width: art.width,
@@ -107,8 +110,8 @@ ScanOutcome _outcomeFrom(DetectedCard detected) {
     signatures: artSignatures(warped.pixels, warped.width, warped.height),
     artPng: img.encodePng(artImage),
     usedFallback: detected.usedFallback,
-    artDetail:
-        cardLikeness(warped.pixels, warped.width, warped.height).artDetail,
+    artDetail: likeness.artDetail,
+    artMean: likeness.artMean,
     altSignatures: [
       for (final w in detected.altWarps)
         artSignatures(w.pixels, w.width, w.height, compact: true)

@@ -129,6 +129,120 @@ void main() {
     expect(find.text('Huellas'), findsOneWidget);
   });
 
+  testWidgets('entrar a media descarga NO la cancela: el fichero se cierra '
+      'bien', (tester) async {
+    // salir del `await for` cancelaría el stream y dejaría el .gz y su
+    // sink a medias, que es justo lo que no se quiere al pulsar "Entrar ya"
+    final completer = Completer<void>();
+    var cerrado = false;
+    var entradas = 0;
+    await tester.pumpWidget(MaterialApp(
+      home: StartupScreen(
+        sources: [
+          UpdateSource(
+            name: 'Lenta',
+            size: '1 MB',
+            what: 'de prueba',
+            maxAgeDays: 1,
+            lastDate: () async => null,
+            downloadedAt: () async => null,
+            download: () async* {
+              try {
+                yield 0.1;
+                await completer.future;
+                yield 1.0;
+              } finally {
+                cerrado = true;
+              }
+            },
+          )
+        ],
+        collection: CollectionStore(),
+        onReady: () => entradas++,
+        settleDelay: Duration.zero,
+        canDownload: () async => true,
+      ),
+    ));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+
+    await tester.tap(find.text('Entrar ya'));
+    await tester.pump();
+    expect(entradas, 1);
+    expect(cerrado, isFalse, reason: 'la descarga sigue viva, no cancelada');
+
+    completer.complete();
+    await tester.pumpAndSettle();
+    expect(cerrado, isTrue, reason: 'y termina cerrando sus recursos');
+  });
+
+  testWidgets('una descarga que se queda muda no cuelga el arranque',
+      (tester) async {
+    var entrado = false;
+    await tester.pumpWidget(MaterialApp(
+      home: StartupScreen(
+        sources: [
+          UpdateSource(
+            name: 'Muda',
+            size: '1 MB',
+            what: 'de prueba',
+            maxAgeDays: 1,
+            lastDate: () async => null,
+            downloadedAt: () async => null,
+            // emite un tramo y calla para siempre (portal cautivo)
+            download: () async* {
+              yield 0.1;
+              await Completer<void>().future;
+            },
+          )
+        ],
+        collection: CollectionStore(),
+        onReady: () => entrado = true,
+        settleDelay: Duration.zero,
+        canDownload: () async => true,
+        downloadTimeout: const Duration(milliseconds: 100),
+      ),
+    ));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('sin conexión'), findsOneWidget);
+    expect(entrado, isTrue, reason: 'se entra igual tras el timeout');
+  });
+
+  testWidgets('una fuente que revienta al preguntarle la fecha no impide '
+      'entrar', (tester) async {
+    var entrado = false;
+    await _pump(
+        tester,
+        [
+          UpdateSource(
+            name: 'Rota',
+            size: '1 MB',
+            what: 'de prueba',
+            maxAgeDays: 1,
+            lastDate: () async => throw Exception('base ilegible'),
+            downloadedAt: () async => throw Exception('disco raro'),
+            download: () async* {
+              yield 1.0;
+            },
+          )
+        ],
+        onReady: () => entrado = true);
+    expect(entrado, isTrue);
+  });
+
+  testWidgets('si la primera base falla, las siguientes se comprueban igual',
+      (tester) async {
+    final rota = _FakeSource(date: null, fails: true);
+    final buena = _FakeSource(date: null);
+    await _pump(tester, [rota.build(name: 'Rota'), buena.build(name: 'Buena')],
+        onReady: () {});
+    expect(rota.downloads, 1);
+    expect(buena.downloads, 1);
+  });
+
   testWidgets('"Entrar ya" entra sin esperar, y solo una vez',
       (tester) async {
     // una descarga que no termina hasta que el test la suelta
