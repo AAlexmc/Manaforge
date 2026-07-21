@@ -87,4 +87,62 @@ void main() {
     expect(again.ownerName, 'Ale'); // recortado
     expect(again.earnedAt['set:aer'], '2026-01-05');
   });
+
+  // --- Certificado de bienvenida -------------------------------------------
+
+  test('sin ninguna carta no hay certificado de bienvenida', () {
+    expect(welcomeCertificate(copies: 0, today: '2026-07-21'), isNull);
+  });
+
+  test('con la primera carta ya te llevas el de bienvenida', () {
+    final cert = welcomeCertificate(copies: 1, today: '2026-07-21');
+
+    expect(cert, isNotNull);
+    expect(cert!.id, 'bienvenida');
+    expect(cert.title, 'Bienvenido al mundo de Magic');
+    expect(cert.heading, 'CERTIFICADO DE BIENVENIDA');
+    expect(cert.earnedAt, '2026-07-21');
+  });
+
+  test('el de bienvenida no cuenta cartas: no es un certificado de cantidad',
+      () {
+    final cert = welcomeCertificate(copies: 283, today: '2026-07-21');
+
+    expect(cert!.cards, 0);
+  });
+
+  test('guardar la fecha real del certificado conserva su encabezado', () {
+    final cert = welcomeCertificate(copies: 1, today: '2026-07-21')!;
+
+    final antiguo = cert.withDate('2026-01-05');
+
+    expect(antiguo.heading, 'CERTIFICADO DE BIENVENIDA');
+    expect(antiguo.earnedAt, '2026-01-05');
+    expect(antiguo.code, certificateCode('bienvenida', '2026-01-05'));
+  });
+
+  test('los de expansión mantienen su encabezado de siempre', () {
+    final certs = certificatesForSets(
+      ownedBySet: owned,
+      setTotals: totals,
+      setNames: names,
+      today: '2026-07-21',
+    );
+
+    expect(certs.first.heading, 'CERTIFICADO DE COLECCIÓN COMPLETA');
+  });
+
+  test('la bienvenida va la primera aunque los de expansión tengan más cartas',
+      () {
+    final certs = allCertificates(
+      copies: 283,
+      ownedBySet: owned,
+      setTotals: totals,
+      setNames: names,
+      today: '2026-07-21',
+    );
+
+    expect(certs.first.id, 'bienvenida');
+    expect(certs.length, greaterThan(1));
+  });
 }

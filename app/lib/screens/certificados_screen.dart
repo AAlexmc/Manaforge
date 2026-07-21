@@ -44,10 +44,18 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
   }
 
   Future<void> _compute() async {
+    final today = certificateDay(DateTime.now());
+    // el de bienvenida se calcula aparte y ANTES: solo mira cuántas cartas
+    // tienes, así que una base de datos ausente no debe hacértelo perder
+    final welcome =
+        welcomeCertificate(copies: widget.collection.totalCopies, today: today);
     try {
       final owned = await ownedCardsBySet(widget.db, widget.collection);
       final sets = await widget.db.sets();
-      final certs = certificatesForSets(
+      final certs = allCertificates(
+        // el de bienvenida solo necesita que tengas UNA carta: no depende de
+        // la base de datos ni de saber las ediciones exactas
+        copies: widget.collection.totalCopies,
         ownedBySet: owned,
         // igual que el logro "expansión completa": sin saber las ediciones
         // exactas, lo poseído no cuenta básicas y el total sí, así que
@@ -56,15 +64,18 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
             ? {for (final s in sets) s.code: s.total}
             : const <String, int>{},
         setNames: {for (final s in sets) s.code: s.name},
-        today: certificateDay(DateTime.now()),
+        today: today,
       );
       final synced = widget.certificates.sync(certs);
       if (mounted) setState(() => _certs = synced);
     } catch (e) {
       if (mounted) {
         setState(() {
-          _certs = const [];
-          _error = 'Hace falta la base de datos de cartas ($e)';
+          // sin base de datos no hay certificados de expansión, pero el de
+          // bienvenida sí se puede dar
+          _certs = widget.certificates.sync([if (welcome != null) welcome]);
+          _error = 'Para los de expansión hace falta la base de datos de '
+              'cartas ($e)';
         });
       }
     }
@@ -250,75 +261,109 @@ class CertificateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const ink = Color(0xFF1A1526);
     const gold = Color(0xFFC9A227);
+    // Cinzel son capitales romanas: es la letra de los diplomas de toda la
+    // vida y aguanta el espaciado grande sin apelmazarse. Va con
+    // `fontVariations` porque el fichero es una fuente VARIABLE: pedirle
+    // `fontWeight` a secas no mueve el eje de peso.
+    const romana = 'Cinzel';
+    const negrita = [FontVariation('wght', 700)];
+    const normal = [FontVariation('wght', 400)];
+    // un título largo (el de bienvenida) no puede desbordar el papel
+    final tituloGrande = certificate.title.length <= 22;
     return Container(
       width: 420,
-      padding: const EdgeInsets.all(26),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: const Color(0xFFF7F3E8), // pergamino
         border: Border.all(color: gold, width: 3),
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.auto_awesome, color: gold, size: 30),
-          const SizedBox(height: 6),
-          const Text('MANAFORGE',
-              style: TextStyle(
-                  color: ink,
-                  fontSize: 13,
-                  letterSpacing: 4,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(height: 18),
-          const Text('CERTIFICADO DE COLECCIÓN COMPLETA',
+      // filete interior: el marco doble es lo que hace que un papel parezca
+      // un diploma y no una tarjeta
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+        decoration: BoxDecoration(
+          border: Border.all(color: gold.withValues(alpha: 0.55)),
+          borderRadius: BorderRadius.circular(3),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.auto_awesome, color: gold, size: 30),
+            const SizedBox(height: 8),
+            const Text('MANAFORGE',
+                style: TextStyle(
+                    color: ink,
+                    fontFamily: romana,
+                    fontVariations: negrita,
+                    fontSize: 13,
+                    letterSpacing: 6)),
+            const SizedBox(height: 18),
+            Text(certificate.heading,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: ink,
+                    fontFamily: romana,
+                    fontVariations: normal,
+                    fontSize: 10.5,
+                    letterSpacing: 2.2)),
+            const SizedBox(height: 16),
+            Text(
+              certificate.title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: ink, fontSize: 11, letterSpacing: 1.6)),
-          const SizedBox(height: 18),
-          Text(
-            certificate.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: ink,
-                fontSize: 24,
-                height: 1.15,
-                fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 6),
-          Text('${certificate.subtitle} · ${certificate.cards} cartas',
-              style: const TextStyle(color: ink, fontSize: 12)),
-          const SizedBox(height: 18),
-          Container(height: 1, width: 180, color: gold),
-          const SizedBox(height: 18),
-          Text(
-            ownerName.isEmpty
-                ? 'Coleccionista de ManaForge'
-                : 'Otorgado a $ownerName',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: ink,
-              fontSize: 14,
-              fontStyle: ownerName.isEmpty ? FontStyle.italic : null,
+                  color: ink,
+                  fontFamily: romana,
+                  fontVariations: negrita,
+                  fontSize: tituloGrande ? 26 : 21,
+                  height: 1.2,
+                  letterSpacing: 0.5),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text('el ${prettyDate(certificate.earnedAt)}',
-              style: const TextStyle(color: ink, fontSize: 12)),
-          const SizedBox(height: 22),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(certificate.code,
-                  style: const TextStyle(
-                      color: ink,
-                      fontSize: 11,
-                      letterSpacing: 1.2,
-                      fontFeatures: [FontFeature.tabularFigures()])),
-              const Text('Datos por Scryfall',
-                  style: TextStyle(color: ink, fontSize: 9)),
-            ],
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+                // el de bienvenida no va de cantidad: enseñar "0 cartas"
+                // sería absurdo
+                certificate.cards > 0
+                    ? '${certificate.subtitle} · ${certificate.cards} cartas'
+                    : certificate.subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: ink, fontSize: 12)),
+            const SizedBox(height: 18),
+            Container(height: 1, width: 180, color: gold),
+            const SizedBox(height: 18),
+            Text(
+              ownerName.isEmpty
+                  ? 'Coleccionista de ManaForge'
+                  : 'Otorgado a $ownerName',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: ink,
+                fontFamily: romana,
+                fontVariations: normal,
+                fontSize: 15,
+                letterSpacing: 0.6,
+                fontStyle: ownerName.isEmpty ? FontStyle.italic : null,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text('el ${prettyDate(certificate.earnedAt)}',
+                style: const TextStyle(color: ink, fontSize: 12)),
+            const SizedBox(height: 22),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(certificate.code,
+                    style: const TextStyle(
+                        color: ink,
+                        fontSize: 11,
+                        letterSpacing: 1.2,
+                        fontFeatures: [FontFeature.tabularFigures()])),
+                const Text('Datos por Scryfall',
+                    style: TextStyle(color: ink, fontSize: 9)),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

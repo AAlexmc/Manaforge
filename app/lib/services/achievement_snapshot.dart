@@ -47,6 +47,7 @@ AchievementSnapshot buildSnapshot({
   required double totalValue,
   required double bestCardValue,
   required double bestFoilValue,
+  required double foilValue,
   required List<SavedDeck> decks,
   required List<CardFolder> folders,
   required Map<String, double> folderValues,
@@ -157,6 +158,7 @@ AchievementSnapshot buildSnapshot({
     bestCardValue: bestCardValue,
     foilCopies: foilCopies,
     bestFoilValue: bestFoilValue,
+    foilValue: foilValue,
     decksSaved: decks.length,
     bestDeckScore: bestScore,
     maxDeckColors: maxDeckColors,
@@ -195,6 +197,7 @@ Future<AchievementSnapshot> gatherSnapshot({
   var totalValue = 0.0;
   var bestCard = 0.0;
   var bestFoil = 0.0;
+  var foilTotal = 0.0;
   final folderValues = <String, double>{};
 
   try {
@@ -241,9 +244,12 @@ Future<AchievementSnapshot> gatherSnapshot({
     if (collection.foilPrintings.isNotEmpty) {
       final foilPrices =
           await db.foilPricesForPrintings(collection.foilPrintings.keys);
-      for (final p in foilPrices.values) {
-        if (p > bestFoil) bestFoil = p;
-      }
+      foilPrices.forEach((printing, price) {
+        if (price > bestFoil) bestFoil = price;
+        // el valor de la vitrina foil entera: precio por las copias que hay
+        // de ESA impresión foil, no una por carta
+        foilTotal += price * (collection.foilPrintings[printing] ?? 0);
+      });
     }
 
     final owners = collection.hasPrintingData
@@ -276,6 +282,7 @@ Future<AchievementSnapshot> gatherSnapshot({
     totalValue: totalValue,
     bestCardValue: bestCard,
     bestFoilValue: bestFoil,
+    foilValue: foilTotal,
     decks: decks.decks,
     folders: folders.folders,
     folderValues: folderValues,

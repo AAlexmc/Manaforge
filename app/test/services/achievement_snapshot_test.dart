@@ -63,6 +63,7 @@ void main() {
         totalValue: totalValue,
         bestCardValue: bestCardValue,
         bestFoilValue: 0,
+        foilValue: 0,
         decks: const [],
         folders: folders,
         folderValues: folderValues,

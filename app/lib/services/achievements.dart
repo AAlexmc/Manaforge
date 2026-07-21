@@ -95,6 +95,10 @@ class AchievementSnapshot {
   final double bestCardValue;
   final int foilCopies;
   final double bestFoilValue;
+
+  /// Lo que valen TODAS tus foils juntas (no la mejor): es otra forma de
+  /// coleccionar y merece su propia serie de logros.
+  final double foilValue;
   final int decksSaved;
   final double bestDeckScore;
   final int maxDeckColors;
@@ -133,6 +137,7 @@ class AchievementSnapshot {
     this.bestCardValue = 0,
     this.foilCopies = 0,
     this.bestFoilValue = 0,
+    this.foilValue = 0,
     this.decksSaved = 0,
     this.bestDeckScore = 0,
     this.maxDeckColors = 0,
@@ -349,13 +354,21 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'distintas',
     category: AchievementCategory.coleccion,
-    steps: [(25, _b), (100, _b), (500, _s), (1000, _g), (2500, _m)],
+    steps: [
+      (25, _b),
+      (100, _b),
+      (500, _s),
+      (1000, _g),
+      (2500, _m),
+      (5000, _m),
+    ],
     title: (g) => switch (g) {
       25 => 'Variedad',
       100 => 'Cien caras',
       500 => 'Biblioteca',
       1000 => 'Enciclopedia',
-      _ => 'Catálogo vivo',
+      2500 => 'Catálogo vivo',
+      _ => 'Archivo',
     },
     description: (g) =>
         'Ten ${g.toStringAsFixed(0)} cartas DISTINTAS (sin contar repetidas).',
@@ -376,11 +389,12 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'comunes',
     category: AchievementCategory.rareza,
-    steps: [(10, _b), (50, _b), (200, _s)],
+    steps: [(10, _b), (50, _b), (200, _s), (500, _g)],
     title: (g) => switch (g) {
       10 => 'Pan de cada día',
       50 => 'El montón',
-      _ => 'Rey de las comunes',
+      200 => 'Rey de las comunes',
+      _ => 'Marea de comunes',
     },
     description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas comunes distintas.',
     value: (s) => s.rarity('common'),
@@ -388,11 +402,12 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'infrecuentes',
     category: AchievementCategory.rareza,
-    steps: [(10, _b), (50, _b), (200, _s)],
+    steps: [(10, _b), (50, _b), (200, _s), (500, _g)],
     title: (g) => switch (g) {
       10 => 'Algo mejor',
       50 => 'Plata fina',
-      _ => 'Cazador de uncommons',
+      200 => 'Cazador de uncommons',
+      _ => 'Plata a espuertas',
     },
     description: (g) =>
         'Ten ${g.toStringAsFixed(0)} cartas infrecuentes distintas.',
@@ -401,11 +416,12 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'raras',
     category: AchievementCategory.rareza,
-    steps: [(5, _b), (25, _s), (100, _g)],
+    steps: [(5, _b), (25, _s), (100, _g), (300, _m)],
     title: (g) => switch (g) {
       5 => 'Brilla el símbolo',
       25 => 'Cofre de raras',
-      _ => 'Cien raras',
+      100 => 'Cien raras',
+      _ => 'Cámara acorazada',
     },
     description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas raras distintas.',
     value: (s) => s.rarity('rare'),
@@ -413,11 +429,12 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'miticas',
     category: AchievementCategory.rareza,
-    steps: [(1, _b), (10, _s), (50, _g)],
+    steps: [(1, _b), (10, _s), (50, _g), (150, _m)],
     title: (g) => switch (g) {
       1 => 'Primera mítica',
       10 => 'Decena mítica',
-      _ => 'Coleccionista mítico',
+      50 => 'Coleccionista mítico',
+      _ => 'Panteón mítico',
     },
     description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas míticas distintas.',
     value: (s) => s.rarity('mythic'),
@@ -543,13 +560,23 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'valor',
     category: AchievementCategory.valor,
-    steps: [(10, _b), (50, _b), (250, _s), (1000, _g), (5000, _m)],
+    steps: [
+      (10, _b),
+      (50, _b),
+      (250, _s),
+      (1000, _g),
+      (5000, _m),
+      (10000, _m),
+      (25000, _m),
+    ],
     title: (g) => switch (g) {
       10 => 'Primeros euros',
       50 => 'Hucha',
       250 => 'Cartera gorda',
       1000 => 'Mil euros en cartón',
-      _ => 'Tesorería',
+      5000 => 'Tesorería',
+      10000 => 'Diez mil en cartón',
+      _ => 'Colección de museo',
     },
     description: (g) =>
         'Que tu colección valga ${g.toStringAsFixed(0)} € o más.',
@@ -558,11 +585,13 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'joya',
     category: AchievementCategory.valor,
-    steps: [(20, _b), (100, _s), (500, _g)],
+    steps: [(20, _b), (100, _s), (500, _g), (1000, _m), (2500, _m)],
     title: (g) => switch (g) {
       20 => 'Buena carta',
       100 => 'Joya',
-      _ => 'Pieza de museo',
+      500 => 'Pieza de museo',
+      1000 => 'Carta de leyenda',
+      _ => 'El santo grial',
     },
     description: (g) =>
         'Ten una sola carta que valga ${g.toStringAsFixed(0)} € o más.',
@@ -573,13 +602,14 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'foils',
     category: AchievementCategory.foils,
-    steps: [(1, _b), (10, _b), (50, _s), (200, _g), (500, _m)],
+    steps: [(1, _b), (10, _b), (50, _s), (200, _g), (500, _m), (1000, _m)],
     title: (g) => switch (g) {
       1 => 'Primer brillo',
       10 => 'Destellos',
       50 => 'Brilla la caja',
       200 => 'Colección brillante',
-      _ => 'Todo brilla',
+      500 => 'Todo brilla',
+      _ => 'Fábrica de brillos',
     },
     description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas foil.',
     value: (s) => s.foilCopies,
@@ -587,10 +617,29 @@ final List<Achievement> kAchievements = [
   ..._series(
     id: 'foiljoya',
     category: AchievementCategory.foils,
-    steps: [(50, _g)],
-    title: (_) => 'Foil de las caras',
-    description: (_) => 'Ten una foil que valga 50 € o más.',
+    steps: [(10, _s), (50, _g), (200, _m)],
+    title: (g) => switch (g) {
+      10 => 'Foil de las buenas',
+      50 => 'Foil de las caras',
+      _ => 'Foil de museo',
+    },
+    description: (g) =>
+        'Ten una foil que valga ${g.toStringAsFixed(0)} € o más.',
     value: (s) => s.bestFoilValue,
+  ),
+  ..._series(
+    id: 'foilvalor',
+    category: AchievementCategory.foils,
+    steps: [(50, _b), (250, _s), (1000, _g), (5000, _m)],
+    title: (g) => switch (g) {
+      50 => 'Vitrina que brilla',
+      250 => 'Vitrina cara',
+      1000 => 'Mil euros de brillo',
+      _ => 'Vitrina de museo',
+    },
+    description: (g) =>
+        'Que todas tus foils juntas valgan ${g.toStringAsFixed(0)} € o más.',
+    value: (s) => s.foilValue,
   ),
 
   // --- Forge ---------------------------------------------------------------
