@@ -987,3 +987,84 @@ extension SetMarketQueries on CardDatabase {
     ];
   }
 }
+
+/// Consultas que usan los LOGROS: rareza, año y precio foil.
+extension StatsQueries on CardDatabase {
+  /// Rareza (la más alta de sus impresiones) y año (el de la más antigua)
+  /// de cada carta.
+  Future<Map<String, ({String rarity, int year})>> factsForOracles(
+      Iterable<String> oracleIds) async {
+    final db = await _open();
+    final hasDate = await supportsYearFilter();
+    const order = {'common': 0, 'uncommon': 1, 'rare': 2, 'mythic': 3};
+    final out = <String, ({String rarity, int year})>{};
+    final ids = oracleIds.toList();
+    const chunkSize = 400;
+    for (var i = 0; i < ids.length; i += chunkSize) {
+      final chunk = ids.sublist(
+          i, i + chunkSize > ids.length ? ids.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT oracle_id, rarity'
+        '${hasDate ? ', released_at' : ''} '
+        'FROM printings WHERE oracle_id IN ($marks)',
+        chunk,
+      );
+      for (final r in rows) {
+        final id = r['oracle_id'] as String;
+        final rarity = ((r['rarity'] as String?) ?? '').toLowerCase();
+        final year = hasDate
+            ? int.tryParse(((r['released_at'] as String?) ?? '').split('-').first) ?? 0
+            : 0;
+        final old = out[id];
+        final bestRarity = old == null
+            ? rarity
+            : ((order[rarity] ?? -1) > (order[old.rarity] ?? -1)
+                ? rarity
+                : old.rarity);
+        final oldestYear = old == null || old.year == 0
+            ? year
+            : (year > 0 && year < old.year ? year : old.year);
+        out[id] = (rarity: bestRarity, year: oldestYear);
+      }
+    }
+    return out;
+  }
+
+  /// Precio de la versión FOIL por impresión exacta ("set|nº" -> €).
+  Future<Map<String, double>> foilPricesForPrintings(
+      Iterable<String> printingKeys) async {
+    final db = await _open();
+    if (!await _hasColumn('printings', 'price_eur_foil')) return {};
+    final out = <String, double>{};
+    final keys = printingKeys.toList();
+    const chunkSize = 150; // 2 parámetros por clave
+    for (var i = 0; i < keys.length; i += chunkSize) {
+      final chunk = keys.sublist(
+          i, i + chunkSize > keys.length ? keys.length : i + chunkSize);
+      final where = List.filled(
+              chunk.length, '(set_code = ? AND collector_number = ?)')
+          .join(' OR ');
+      final params = <String>[];
+      for (final k in chunk) {
+        final parts = k.split('|');
+        params.add(parts.first);
+        params.add(parts.length > 1 ? parts[1] : '');
+      }
+      final rows = db.select(
+        'SELECT set_code, collector_number, '
+        'MIN(CAST(price_eur_foil AS REAL)) AS p '
+        'FROM printings WHERE price_eur_foil IS NOT NULL AND ($where) '
+        'GROUP BY set_code, collector_number',
+        params,
+      );
+      for (final r in rows) {
+        final key =
+            '${(r['set_code'] as String).toLowerCase()}|${r['collector_number']}';
+        final p = r['p'] as double?;
+        if (p != null) out[key] = p;
+      }
+    }
+    return out;
+  }
+}
