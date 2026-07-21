@@ -169,4 +169,57 @@ void main() {
     expect(fresh.map((a) => a.id), contains('copias-10'));
     expect(newlyUnlocked(before: after, after: after), isEmpty);
   });
+
+  // --- Catálogo ampliado (2026-07-21) --------------------------------------
+
+  test('hay logros de valor por encima de los 10.000 €', () {
+    final metas = kAchievements
+        .where((a) => a.id.startsWith('valor-'))
+        .map((a) => a.goal)
+        .toList();
+
+    expect(metas, containsAll([10000, 25000]));
+  });
+
+  test('el valor de TODAS tus foils juntas tiene su propia serie', () {
+    final foilvalor =
+        kAchievements.where((a) => a.id.startsWith('foilvalor-')).toList();
+
+    expect(foilvalor, isNotEmpty);
+    // mide la vitrina entera, no la mejor foil
+    final snapshot = const AchievementSnapshot(foilValue: 300, bestFoilValue: 5);
+    final logrado = foilvalor.where((a) => a.value(snapshot) >= a.goal);
+    expect(logrado.map((a) => a.goal), containsAll([50, 250]));
+  });
+
+  test('el logro de foil cara sigue siendo una serie con su escalón de 50 '
+      'intacto (no se pierde lo ya desbloqueado)', () {
+    final ids = kAchievements.map((a) => a.id).toSet();
+
+    expect(ids, contains('foiljoya-50'));
+    expect(ids, containsAll(['foiljoya-10', 'foiljoya-200']));
+  });
+
+  test('ningún logro nuevo repite id', () {
+    final ids = kAchievements.map((a) => a.id).toList();
+
+    expect(ids.toSet().length, ids.length);
+  });
+
+  test('cada escalón de una serie tiene un título propio', () {
+    final porSerie = <String, Set<String>>{};
+    for (final a in kAchievements) {
+      final serie = a.id.substring(0, a.id.lastIndexOf('-'));
+      porSerie.putIfAbsent(serie, () => <String>{}).add(a.title);
+    }
+    final repetidos = <String>[];
+    for (final entry in porSerie.entries) {
+      final escalones =
+          kAchievements.where((a) => a.id.startsWith('${entry.key}-')).length;
+      if (entry.value.length != escalones) repetidos.add(entry.key);
+    }
+
+    expect(repetidos, isEmpty,
+        reason: 'series con dos escalones que se llaman igual: $repetidos');
+  });
 }

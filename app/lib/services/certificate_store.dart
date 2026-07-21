@@ -19,10 +19,25 @@ class CertificateStore extends ChangeNotifier {
 
   final Map<String, String> _earnedAt = {}; // id -> 'YYYY-MM-DD'
   String _ownerName = '';
+  FirstCard? _firstCard;
   Future<void>? _loading;
 
   Map<String, String> get earnedAt => Map.unmodifiable(_earnedAt);
   String get ownerName => _ownerName;
+
+  /// La carta con la que empezaste en Magic, si has elegido una.
+  FirstCard? get firstCard => _firstCard;
+
+  /// Elegir (o quitar, con null) la carta del certificado de bienvenida.
+  void setFirstCard(FirstCard? card) {
+    if (card?.oracleId == _firstCard?.oracleId &&
+        card?.image == _firstCard?.image) {
+      return;
+    }
+    _firstCard = card;
+    notifyListeners();
+    _save();
+  }
   int get count => _earnedAt.length;
 
   void setOwnerName(String name) {
@@ -58,6 +73,7 @@ class CertificateStore extends ChangeNotifier {
   Map<String, dynamic> toJson() => {
         'earnedAt': _earnedAt,
         'ownerName': _ownerName,
+        if (_firstCard != null) 'firstCard': _firstCard!.toJson(),
       };
 
   void restore(Map<String, dynamic> json) {
@@ -70,6 +86,7 @@ class CertificateStore extends ChangeNotifier {
     }
     final owner = json['ownerName'];
     _ownerName = owner is String ? owner : '';
+    _firstCard = FirstCard.fromJson(json['firstCard']);
     notifyListeners();
   }
 

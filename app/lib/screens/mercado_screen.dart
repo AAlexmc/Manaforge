@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
+import '../services/collection_value_series.dart';
 import '../services/market_prefs.dart';
 import '../services/market_prices.dart';
 import '../services/markets.dart';
@@ -165,6 +166,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
       final points =
           await _history.record(total, widget.collection.totalCopies);
+      final curva = await _valueCurve(points);
       final bulkDate = await widget.db.bulkDate();
       final banners =
           _banners.isEmpty ? await widget.db.marketSets() : _banners;
@@ -190,7 +192,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
       setState(() {
         _totalValue = total;
         _top = top;
-        _points = points;
+        _points = curva;
         _cardHistory = cardHistory;
         _marketPrices = marketPrices;
         _historyCovered = covered;
@@ -202,6 +204,34 @@ class _MercadoScreenState extends State<MercadoScreen> {
       await _checkWishlist();
     } catch (e) {
       if (mounted) setState(() => _error = '$e');
+    }
+  }
+
+  /// La curva del valor de la colección. Se construye con el histórico REAL
+  /// de cada carta que tienes (los ~90 días que trae la base descargable) y
+  /// se le pegan detrás las fotos diarias locales de los días que el
+  /// histórico ya no cubre.
+  ///
+  /// Antes se pintaban solo las fotos locales: con dos días de uso eran dos
+  /// puntos, y dos puntos siempre salen en línea recta.
+  ///
+  /// Si no hay base descargada, se queda con las fotos locales de siempre.
+  Future<List<ValuePoint>> _valueCurve(List<ValuePoint> local) async {
+    try {
+      final qty = widget.collection.qtyByOracle;
+      if (qty.isEmpty) return local;
+      // el total de la colección es el de Cardmarket, igual que en Inicio y
+      // en las carpetas: la curva tiene que ir en la misma moneda que el
+      // número grande de arriba
+      final series =
+          await widget.prices.seriesFor(qty.keys, market: Market.cardmarket);
+      final real =
+          collectionValueSeries(qtyByOracle: qty, seriesByOracle: series);
+      if (real.length < 2) return local;
+      final ultimo = real.last.date;
+      return [...real, ...local.where((p) => p.date.compareTo(ultimo) > 0)];
+    } catch (_) {
+      return local; // sin histórico: lo de siempre
     }
   }
 
@@ -451,10 +481,15 @@ class _MercadoScreenState extends State<MercadoScreen> {
     );
   }
 
+  /// Cuánto se ha movido de un punto al anterior. Los dos valores salen de la
+  /// MISMA serie a propósito: mezclar el total de hoy (calculado por
+  /// ediciones exactas) con un punto de la curva histórica (que va por carta)
+  /// daría una diferencia inventada por el cambio de fuente, no por el
+  /// mercado.
   (double, double)? _delta() {
-    if (_points.length < 2 || _totalValue == null) return null;
+    if (_points.length < 2) return null;
     final prev = _points[_points.length - 2].value;
-    final diff = _totalValue! - prev;
+    final diff = _points.last.value - prev;
     final pct = prev == 0 ? 0.0 : diff / prev * 100;
     return (diff, pct);
   }

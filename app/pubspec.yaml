@@ -29,3 +29,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    # Cinzel: capitales romanas, la letra de los certificados. Va dentro de la
+    # app (no se descarga) para que el papel salga igual sin conexión y en
+    # cualquier plataforma. Fuente variable: los pesos se piden con
+    # `fontVariations: [FontVariation('wght', N)]`.
+    # Licencia SIL Open Font 1.1 — assets/fonts/Cinzel-OFL.txt
+    - family: Cinzel
+      fonts:
+        - asset: assets/fonts/Cinzel-Variable.ttf
