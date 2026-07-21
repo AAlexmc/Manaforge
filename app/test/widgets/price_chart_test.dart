@@ -66,6 +66,19 @@ void main() {
     expect(find.textContaining('8 días'), findsOneWidget);
   });
 
+  testWidgets('tocar la gráfica marca un punto y no revienta el pintado',
+      (tester) async {
+    await tester.pumpWidget(_wrap(PriceChart(
+        points: _daily([for (var i = 0; i < 30; i++) 1.0 + i * 0.1]))));
+    final chart = find.byType(CustomPaint).last;
+    await tester.tapAt(tester.getCenter(chart));
+    await tester.pump();
+    // el pintado con tooltip corre sin excepciones y el arrastre también
+    await tester.drag(chart, const Offset(60, 0));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('MiniPriceLine no dibuja nada con menos de dos puntos',
       (tester) async {
     await tester.pumpWidget(_wrap(const MiniPriceLine(points: [])));
