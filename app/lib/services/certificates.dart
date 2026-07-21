@@ -3,6 +3,10 @@
 /// el almacén guarda cuándo lo conseguiste y a nombre de quién.
 library;
 
+/// Id del certificado de bienvenida, el único que enseña la carta con la que
+/// empezaste.
+const String kWelcomeCertificateId = 'bienvenida';
+
 /// Encabezado por defecto: el certificado clásico, por completar una
 /// expansión.
 const String kCertificateHeading = 'CERTIFICADO DE COLECCIÓN COMPLETA';
@@ -124,7 +128,7 @@ EarnedCertificate? welcomeCertificate({
 }) {
   if (copies < 1) return null;
   return EarnedCertificate(
-    id: 'bienvenida',
+    id: kWelcomeCertificateId,
     title: 'Bienvenido al mundo de Magic',
     subtitle: 'Tu primera carta',
     // no va de cantidad: da igual si es una carta o si son mil
@@ -154,4 +158,35 @@ List<EarnedCertificate> allCertificates({
       today: today,
     ),
   ];
+}
+
+/// La carta con la que empezaste en Magic, para que salga en el certificado
+/// de bienvenida. Es un recuerdo, no un dato de la colección: se guarda con
+/// su nombre y su imagen dentro, así que sigue saliendo aunque un día
+/// vendas esa carta o falte la base de datos.
+class FirstCard {
+  final String oracleId;
+  final String name;
+  final String? image;
+
+  const FirstCard({required this.oracleId, required this.name, this.image});
+
+  Map<String, dynamic> toJson() => {
+        'oracleId': oracleId,
+        'name': name,
+        if (image != null) 'image': image,
+      };
+
+  /// null si el JSON no trae lo mínimo (id y nombre): media carta guardada no
+  /// vale para enseñar nada.
+  static FirstCard? fromJson(Object? json) {
+    if (json is! Map) return null;
+    final id = json['oracleId'];
+    final name = json['name'];
+    if (id is! String || id.isEmpty) return null;
+    if (name is! String || name.isEmpty) return null;
+    final image = json['image'];
+    return FirstCard(
+        oracleId: id, name: name, image: image is String ? image : null);
+  }
 }

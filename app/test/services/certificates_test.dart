@@ -145,4 +145,74 @@ void main() {
     expect(certs.first.id, 'bienvenida');
     expect(certs.length, greaterThan(1));
   });
+
+  // --- La carta con la que empezaste --------------------------------------
+
+  test('sin elegir carta, el certificado de bienvenida no enseña ninguna', () {
+    final store = CertificateStore(dataDir: Directory.systemTemp.createTempSync('mfcert'));
+    addTearDown(() => store.dataDir!.deleteSync(recursive: true));
+
+    expect(store.firstCard, isNull);
+  });
+
+  test('la carta elegida se guarda y se relee del disco', () async {
+    final dir = Directory.systemTemp.createTempSync('mfcert');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final store = CertificateStore(dataDir: dir);
+
+    store.setFirstCard(const FirstCard(
+      oracleId: 'abc',
+      name: 'Shivan Dragon',
+      image: 'https://cards/shivan.jpg',
+    ));
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+
+    final otra = CertificateStore(dataDir: dir);
+    await otra.load();
+
+    expect(otra.firstCard?.oracleId, 'abc');
+    expect(otra.firstCard?.name, 'Shivan Dragon');
+    expect(otra.firstCard?.image, 'https://cards/shivan.jpg');
+  });
+
+  test('se puede quitar la carta elegida', () async {
+    final dir = Directory.systemTemp.createTempSync('mfcert');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final store = CertificateStore(dataDir: dir);
+    store.setFirstCard(
+        const FirstCard(oracleId: 'abc', name: 'Shivan Dragon'));
+
+    store.setFirstCard(null);
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+
+    final otra = CertificateStore(dataDir: dir);
+    await otra.load();
+    expect(otra.firstCard, isNull);
+  });
+
+  test('un certificates.json viejo (sin carta) se lee sin romperse', () async {
+    final dir = Directory.systemTemp.createTempSync('mfcert');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    File('${dir.path}/certificates.json').writeAsStringSync(
+        '{"earnedAt":{"set:aer":"2026-01-05"},"ownerName":"Ale"}');
+
+    final store = CertificateStore(dataDir: dir);
+    await store.load();
+
+    expect(store.firstCard, isNull);
+    expect(store.ownerName, 'Ale');
+  });
+
+  test('una carta guardada a medias (sin nombre) se ignora en vez de romper',
+      () async {
+    final dir = Directory.systemTemp.createTempSync('mfcert');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    File('${dir.path}/certificates.json')
+        .writeAsStringSync('{"firstCard":{"oracleId":"abc"}}');
+
+    final store = CertificateStore(dataDir: dir);
+    await store.load();
+
+    expect(store.firstCard, isNull);
+  });
 }
