@@ -46,7 +46,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
   List<ValuePoint> _points = const [];
   Map<String, List<PricePoint>> _cardHistory = const {};
   (String, String)? _historyCovered; // tramo del histórico descargado
-  double? _historyProgress; // descarga del histórico en curso
+  bool _historyDownloading = false;
+  double? _historyProgress; // null con descarga en curso = indeterminado
   String? _bulkDate;
   List<CardHit> _results = const [];
   List<SetBanner> _banners = const [];
@@ -152,7 +153,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
         for (final c in top) c.oracleId,
         for (final i in widget.wishlist.items) i.oracleId,
       ]);
-      final covered = await widget.prices.covered();
+      // el histórico es opcional: si falla, el Mercado sigue pintando
+      (String, String)? covered;
+      try {
+        covered = await widget.prices.covered();
+      } catch (_) {/* sin tramo cubierto */}
       if (!mounted) return;
       setState(() {
         _totalValue = total;
@@ -285,25 +290,38 @@ class _MercadoScreenState extends State<MercadoScreen> {
   /// las cartas: sin esto las gráficas arrancan vacías, porque Scryfall
   /// solo publica el precio de hoy.
   Future<void> _downloadHistory() async {
-    setState(() => _historyProgress = 0);
+    if (_historyDownloading) return; // dos descargas a la vez se pisarían
+    setState(() {
+      _historyDownloading = true;
+      _historyProgress = 0;
+    });
     try {
       await for (final p in widget.prices.download()) {
+        // p < 0 = sin Content-Length: barra indeterminada, pero la descarga
+        // SIGUE en curso (el botón no debe reaparecer)
         if (mounted) setState(() => _historyProgress = p < 0 ? null : p);
       }
       if (!mounted) return;
       setState(() => _historyProgress = null);
       await _load();
       if (mounted) {
+        setState(() => _historyDownloading = false);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('✓ Histórico de precios listo: las gráficas ya '
                 'enseñan los últimos meses')));
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _historyProgress = null);
+        setState(() {
+          _historyDownloading = false;
+          _historyProgress = null;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No pude traer el histórico: $e')));
+            SnackBar(content: Text('No pude traer el histórico '
+                '(el que ya tenías sigue intacto): $e')));
       }
+    } finally {
+      _historyDownloading = false;
     }
   }
 
@@ -322,7 +340,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
             style: const TextStyle(fontSize: 11.5),
           ),
         ),
-        if (_historyProgress != null)
+        if (_historyDownloading)
           SizedBox(
             width: 120,
             child: LinearProgressIndicator(value: _historyProgress),

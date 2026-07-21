@@ -125,5 +125,88 @@ void main() {
     final db = PriceSeriesDatabase(directory: dir);
     expect(await db.covered(), isNull);
     expect(await db.seriesFor(['bolt']), isEmpty);
+    // y repetido muchas veces no debe dejar handles abiertos por el camino
+    for (var i = 0; i < 50; i++) {
+      await db.seriesFor(['bolt']);
+    }
+    expect(await db.seriesFor(['bolt']), isEmpty);
+  });
+
+  test('una serie que cruza el cambio de hora NO repite ni salta días',
+      () async {
+    // el último domingo de octubre el día "dura" 25 h: sumar Duration(days)
+    // en hora local repetía una fecha y corría el resto
+    _writeDb(dir,
+        start: '2026-10-23',
+        end: '2026-10-28',
+        series: {
+          'bolt': [1, 2, 3, 4, 5, 6]
+        });
+    final bolt = (await PriceSeriesDatabase(directory: dir)
+        .seriesFor(['bolt']))['bolt']!;
+    expect([for (final pt in bolt) pt.date], [
+      '2026-10-23',
+      '2026-10-24',
+      '2026-10-25',
+      '2026-10-26',
+      '2026-10-27',
+      '2026-10-28',
+    ]);
+  });
+
+  test('una serie que cruza fin de mes y de año numera bien los días',
+      () async {
+    _writeDb(dir,
+        start: '2026-12-30',
+        end: '2027-01-02',
+        series: {
+          'bolt': [1, 2, 3, 4]
+        });
+    final bolt = (await PriceSeriesDatabase(directory: dir)
+        .seriesFor(['bolt']))['bolt']!;
+    expect([for (final pt in bolt) pt.date],
+        ['2026-12-30', '2026-12-31', '2027-01-01', '2027-01-02']);
+  });
+
+  test('más de 400 cartas: el troceo del IN las devuelve todas', () async {
+    final series = {
+      for (var i = 0; i < 401; i++) 'carta-$i': [1.0 + i]
+    };
+    _writeDb(dir, start: '2026-07-01', end: '2026-07-01', series: series);
+    final out = await PriceSeriesDatabase(directory: dir)
+        .seriesFor(series.keys);
+    expect(out, hasLength(401));
+    expect(out['carta-400']!.single.value, closeTo(401.0, 0.001));
+  });
+
+  test('precios 0 o negativos en el blob no son puntos', () async {
+    _writeDb(dir,
+        start: '2026-07-01',
+        end: '2026-07-04',
+        series: {
+          'bolt': [1.0, 0.0, -3.0, 2.0]
+        });
+    final bolt = (await PriceSeriesDatabase(directory: dir)
+        .seriesFor(['bolt']))['bolt']!;
+    expect([for (final pt in bolt) pt.date], ['2026-07-01', '2026-07-04']);
+  });
+
+  test('blob de longitud no múltiplo de 4: se leen los días completos',
+      () async {
+    final values = Float32List.fromList([1.0, 2.0]);
+    final truncado = Uint8List.sublistView(
+        values.buffer.asUint8List(), 0, values.lengthInBytes - 2);
+    final db = sqlite3.open(p.join(dir.path, 'manaforge_prices.sqlite'));
+    db.execute('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
+    db.execute('CREATE TABLE price_series ('
+        'oracle_id TEXT PRIMARY KEY, values_f32 BLOB NOT NULL)');
+    db.execute("INSERT INTO meta VALUES ('start_date', '2026-07-01')");
+    db.execute("INSERT INTO meta VALUES ('end_date', '2026-07-02')");
+    db.execute('INSERT INTO price_series VALUES (?, ?)', ['bolt', truncado]);
+    db.dispose();
+    final bolt = (await PriceSeriesDatabase(directory: dir)
+        .seriesFor(['bolt']))['bolt']!;
+    expect(bolt, hasLength(1));
+    expect(bolt.single.value, closeTo(1.0, 0.001));
   });
 }

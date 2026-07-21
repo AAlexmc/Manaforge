@@ -31,6 +31,7 @@ class PriceSeriesDatabase {
   PriceSeriesDatabase({Directory? directory}) : _dir = directory;
 
   Database? _db;
+  Future<Database?>? _opening;
   String? _startDate;
 
   Future<File> _dbFile() async {
@@ -47,11 +48,14 @@ class PriceSeriesDatabase {
   }
 
   /// Descarga y descomprime la base, emitiendo progreso 0..1 (-1 = indet.).
+  /// La base que ya funcionaba NO se toca hasta que la nueva está entera y
+  /// descomprimida: una descarga cortada deja el histórico anterior intacto.
   Stream<double> download() async* {
-    _close();
     final dbFile = await _dbFile();
     final gzFile = File('${dbFile.path}.gz');
+    final tmpFile = File('${dbFile.path}.tmp');
     final client = http.Client();
+    IOSink? gzSink;
     try {
       final response =
           await client.send(http.Request('GET', Uri.parse(releaseUrl)));
@@ -63,34 +67,57 @@ class PriceSeriesDatabase {
       }
       final total = response.contentLength ?? -1;
       var received = 0;
-      final sink = gzFile.openWrite();
+      gzSink = gzFile.openWrite();
       await for (final chunk in response.stream) {
-        sink.add(chunk);
+        gzSink.add(chunk);
         received += chunk.length;
         yield total > 0 ? received / total : -1;
       }
-      await sink.close();
-      await gzFile.openRead().transform(gzip.decoder).pipe(dbFile.openWrite());
-      await gzFile.delete();
+      await gzSink.close();
+      gzSink = null;
+      await gzFile.openRead().transform(gzip.decoder).pipe(tmpFile.openWrite());
+      // solo ahora se sustituye la buena (rename es atómico en POSIX)
+      close();
+      await tmpFile.rename(dbFile.path);
       yield 1.0;
     } finally {
       client.close();
+      try {
+        await gzSink?.close();
+      } catch (_) {/* ya estaba rota */}
+      for (final leftover in [gzFile, tmpFile]) {
+        if (await leftover.exists()) {
+          try {
+            await leftover.delete();
+          } catch (_) {/* nada que hacer */}
+        }
+      }
     }
   }
 
-  void _close() {
+  /// Cierra la base (al traer una nueva, o al terminar).
+  void close() {
     _db?.dispose();
     _db = null;
+    _opening = null;
     _startDate = null;
+    _covered = null;
   }
 
-  Future<Database?> _open() async {
+  Future<Database?> _open() {
     final cached = _db;
-    if (cached != null) return cached;
+    if (cached != null) return Future.value(cached);
+    // dedupe: _load() del Mercado corre por cada cambio de la colección, y
+    // sin esto varias llamadas concurrentes abrirían (y fugarían) handles
+    return _opening ??= _doOpen().whenComplete(() => _opening = null);
+  }
+
+  Future<Database?> _doOpen() async {
+    Database? db;
     try {
       final file = await _dbFile();
       if (!await file.exists()) return null;
-      final db = sqlite3.open(file.path, mode: OpenMode.readOnly);
+      db = sqlite3.open(file.path, mode: OpenMode.readOnly);
       final rows = db.select("SELECT value FROM meta WHERE key = 'start_date'");
       if (rows.isEmpty) {
         db.dispose();
@@ -100,23 +127,35 @@ class PriceSeriesDatabase {
       _db = db;
       return db;
     } catch (_) {
-      return null; // base ausente o corrupta: se sigue sin histórico previo
+      // base ausente o corrupta: se sigue sin histórico previo, pero el
+      // handle ya abierto hay que soltarlo (si no, uno por intento)
+      db?.dispose();
+      return null;
     }
   }
 
+  (String, String)? _covered;
+
   /// Tramo cubierto por la base descargada ("2026-04-21 → 2026-07-20"), o
-  /// null si no está.
+  /// null si no está. Se cachea: solo cambia al traer una base nueva.
   Future<(String, String)?> covered() async {
-    final db = await _open();
-    if (db == null) return null;
-    final rows = db.select(
-        "SELECT key, value FROM meta WHERE key IN ('start_date', 'end_date')");
-    final meta = {
-      for (final r in rows) r['key'] as String: r['value'] as String
-    };
-    final start = meta['start_date'];
-    final end = meta['end_date'];
-    return (start == null || end == null) ? null : (start, end);
+    final cached = _covered;
+    if (cached != null) return cached;
+    try {
+      final db = await _open();
+      if (db == null) return null;
+      final rows = db.select("SELECT key, value FROM meta "
+          "WHERE key IN ('start_date', 'end_date')");
+      final meta = {
+        for (final r in rows) r['key'] as String: r['value'] as String
+      };
+      final start = meta['start_date'];
+      final end = meta['end_date'];
+      if (start == null || end == null) return null;
+      return _covered = (start, end);
+    } catch (_) {
+      return null; // un fallo del histórico no debe tumbar el Mercado
+    }
   }
 
   /// Series históricas de varias cartas. Las que no estén en la base (o si
@@ -130,6 +169,15 @@ class PriceSeriesDatabase {
     if (ids.isEmpty) return const {};
     final out = <String, List<PricePoint>>{};
     final first = DateTime.parse(start);
+    two(int n) => n < 10 ? '0$n' : '$n';
+    // día de CALENDARIO, no 86400·n segundos: sumar Duration cruzando el
+    // cambio de hora repite o se salta un día (probado con TZ=Europe/Madrid
+    // a finales de octubre), y la ventana de ~90 días lo cruza medio año
+    String dayAt(int i) {
+      final d = DateTime(first.year, first.month, first.day + i);
+      return '${d.year}-${two(d.month)}-${two(d.day)}';
+    }
+
     const chunkSize = 400;
     for (var i = 0; i < ids.length; i += chunkSize) {
       final chunk =
@@ -150,10 +198,7 @@ class PriceSeriesDatabase {
         for (var d = 0; d < days; d++) {
           final v = data.getFloat32(d * 4, Endian.little);
           if (v.isNaN || v <= 0) continue; // día sin dato
-          final day = first.add(Duration(days: d));
-          two(int n) => n < 10 ? '0$n' : '$n';
-          points.add(PricePoint(
-              '${day.year}-${two(day.month)}-${two(day.day)}', v));
+          points.add(PricePoint(dayAt(d), v));
         }
         if (points.isNotEmpty) out[row['oracle_id'] as String] = points;
       }

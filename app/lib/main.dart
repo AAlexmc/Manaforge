@@ -53,6 +53,13 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   @override
+  void dispose() {
+    priceHistoryStore.baseSeriesProvider = null;
+    _prices.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screens = [
       HomeScreen(

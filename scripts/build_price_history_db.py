@@ -23,24 +23,32 @@ Corre en GitHub Actions (workflow build-price-db) igual que build_card_db.py.
 """
 from __future__ import annotations
 
-import array
 import math
+import re
 import sqlite3
+import struct
 import sys
 from datetime import date, timedelta
 from pathlib import Path
 
+_DAY_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
 try:
     import ijson  # streaming: los dos ficheros suman ~2 GB descomprimidos
-except ImportError:  # pragma: no cover - en CI siempre está
-    ijson = None
-    import json
+except ImportError:
+    raise SystemExit(
+        "Hace falta ijson (pip install ijson): AllPrices.json son 1,2 GB y "
+        "json.load pediría del orden de 10 GB de RAM."
+    )
 
 SCHEMA = """
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE price_series (
     oracle_id  TEXT PRIMARY KEY,
-    values_f32 BLOB NOT NULL   -- float32 por día desde meta.start_date; NaN = sin dato
+    -- float32 LITTLE-ENDIAN por día desde meta.start_date; NaN = sin dato.
+    -- El lector (app/lib/services/price_series_database.dart) asume ese
+    -- orden de bytes explícitamente.
+    values_f32 BLOB NOT NULL
 );
 """
 
@@ -49,14 +57,10 @@ def _uuid_to_oracle(identifiers_path: Path) -> dict[str, str]:
     """uuid de MTGJSON → oracle_id de Scryfall (el que usa ManaForge)."""
     out: dict[str, str] = {}
     with identifiers_path.open("rb") as fh:
-        if ijson is None:
-            for uuid, card in json.load(fh)["data"].items():
-                oracle = (card.get("identifiers") or {}).get("scryfallOracleId")
-                if oracle:
-                    out[uuid] = oracle
-            return out
         for uuid, card in ijson.kvitems(fh, "data", use_float=True):
-            oracle = (card.get("identifiers") or {}).get("scryfallOracleId")
+            oracle = ((card or {}).get("identifiers") or {}).get(
+                "scryfallOracleId"
+            )
             if oracle:
                 out[uuid] = oracle
     return out
@@ -68,31 +72,34 @@ def _series_by_oracle(
     """Para cada oracle y día, el precio MÁS BARATO entre sus ediciones."""
     out: dict[str, dict[str, float]] = {}
     with prices_path.open("rb") as fh:
-        items = (
-            ijson.kvitems(fh, "data", use_float=True)
-            if ijson is not None
-            else json.load(fh)["data"].items()
-        )
-        for uuid, entry in items:
+        for uuid, entry in ijson.kvitems(fh, "data", use_float=True):
             oracle = uuid_to_oracle.get(uuid)
             if not oracle:
                 continue
+            # cada nivel puede venir a null en el volcado: un solo null sin
+            # defender tumbaba el build semanal entero con AttributeError
             daily = (
-                ((entry or {}).get("paper") or {})
-                .get("cardmarket", {})
-                .get("retail", {})
-                .get("normal")
-            )
-            if not daily:
+                (((entry or {}).get("paper") or {}).get("cardmarket") or {})
+                .get("retail")
+                or {}
+            ).get("normal")
+            if not isinstance(daily, dict):
                 continue
             bucket = out.setdefault(oracle, {})
             for day, price in daily.items():
-                price = float(price)
-                if price <= 0:
+                try:
+                    price = float(price)
+                except (TypeError, ValueError):
                     continue
+                if price <= 0 or not math.isfinite(price):
+                    continue
+                if not _DAY_RE.match(day):
+                    continue  # clave de día con formato raro
                 current = bucket.get(day)
                 if current is None or price < current:
                     bucket[day] = price
+            if not bucket:
+                del out[oracle]
     return out
 
 
@@ -115,6 +122,11 @@ def build(prices_path: Path, identifiers_path: Path, out_path: Path) -> None:
         (start + timedelta(days=i)).isoformat(): i for i in range(span)
     }
     print(f"  {span} días, de {start} a {end}", flush=True)
+    if span > 400:
+        raise SystemExit(
+            f"Rango sospechoso ({span} días): MTGJSON publica ~90. "
+            "¿Se ha colado una fecha basura?"
+        )
 
     if out_path.exists():
         out_path.unlink()
@@ -122,10 +134,14 @@ def build(prices_path: Path, identifiers_path: Path, out_path: Path) -> None:
     db.executescript(SCHEMA)
     rows = []
     for oracle, series in by_oracle.items():
-        values = array.array("f", [math.nan]) * span
+        values = [math.nan] * span
         for day, price in series.items():
-            values[index[day]] = price
-        rows.append((oracle, values.tobytes()))
+            i = index.get(day)
+            if i is not None:
+                values[i] = price
+        # little-endian explícito: el runner podría no serlo y el lector de
+        # la app fija Endian.little (si no, floats basura sin avisar)
+        rows.append((oracle, struct.pack(f"<{span}f", *values)))
     db.executemany("INSERT INTO price_series VALUES (?, ?)", rows)
     db.executemany(
         "INSERT INTO meta VALUES (?, ?)",

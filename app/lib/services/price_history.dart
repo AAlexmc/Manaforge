@@ -248,8 +248,9 @@ class PriceHistoryStore {
   /// apunte LOCAL (es el precio que la app vio de verdad ese día).
   static List<PricePoint> _merge(
       List<PricePoint> base, List<PricePoint> local) {
-    if (local.isEmpty) return base;
-    if (base.isEmpty) return local;
+    if (base.isEmpty && local.isEmpty) return const [];
+    // siempre por la misma vía: el contrato es "ordenado por fecha" y el
+    // painter une los puntos en el orden de la lista
     final byDate = <String, double>{
       for (final pt in base) pt.date: pt.value,
       for (final pt in local) pt.date: pt.value,
