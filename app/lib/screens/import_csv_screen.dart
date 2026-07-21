@@ -88,6 +88,9 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
     });
     final rows = parseManaBoxCsv(_ctrl.text);
     if (_replace) widget.collection.clear();
+    // UN sello para todo el lote: si no, cada fila coge su propio instante
+    // y la colección acaba ordenada al revés que el CSV
+    final at = DateTime.now();
     var imported = 0;
     var copies = 0;
     var tokensIgnored = 0;
@@ -135,6 +138,10 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         qty: qty,
         // solo si el CSV traía el Scryfall ID sabemos la edición exacta
         printingKey: exactPrinting ? hit.printingKey : null,
+        at: at,
+        // reimportar NO re-sella lo que ya tenías: enterraría bajo cientos
+        // de cartas viejas lo que acabas de escanear
+        bump: false,
       );
       imported++;
       copies += qty;

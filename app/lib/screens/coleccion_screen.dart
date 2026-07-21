@@ -30,7 +30,7 @@ class ColeccionScreen extends StatefulWidget {
 enum CollectionSort {
   /// Lo último que has escaneado o añadido, primero.
   recent('Recién añadidas'),
-  name('Nombre A-Z'),
+  alpha('Nombre A-Z'),
   cmc('Coste'),
   qty('Cantidad'),
   ;
@@ -44,7 +44,7 @@ enum CollectionSort {
 List<OwnedCard> sortCollection(List<OwnedCard> cards, CollectionSort sort) {
   final list = [...cards];
   switch (sort) {
-    case CollectionSort.name:
+    case CollectionSort.alpha:
       list.sort((a, b) => a.name.compareTo(b.name));
     case CollectionSort.cmc:
       list.sort((a, b) {
@@ -57,16 +57,8 @@ List<OwnedCard> sortCollection(List<OwnedCard> cards, CollectionSort sort) {
         return c != 0 ? c : a.name.compareTo(b.name);
       });
     case CollectionSort.recent:
-      list.sort((a, b) {
-        final at = a.addedAt;
-        final bt = b.addedAt;
-        // las de antes de guardar la fecha (import viejo) al final
-        if (at == null && bt == null) return a.name.compareTo(b.name);
-        if (at == null) return 1;
-        if (bt == null) return -1;
-        if (at != bt) return bt.compareTo(at);
-        return a.name.compareTo(b.name);
-      });
+      // mismo comparador que usa el almacén: una sola fuente de verdad
+      list.sort(compareByRecent);
   }
   return list;
 }
@@ -76,8 +68,10 @@ String addedLabel(int? addedAt, {DateTime? now}) {
   if (addedAt == null) return 'sin fecha';
   final when = DateTime.fromMillisecondsSinceEpoch(addedAt);
   final today = now ?? DateTime.now();
-  final days = DateTime(today.year, today.month, today.day)
-      .difference(DateTime(when.year, when.month, when.day))
+  // los días civiles se cuentan en UTC: en hora local, el día del cambio
+  // de hora dura 23 h y `inDays` lo trunca (ayer salía como "hoy")
+  final days = DateTime.utc(today.year, today.month, today.day)
+      .difference(DateTime.utc(when.year, when.month, when.day))
       .inDays;
   if (days <= 0) return 'hoy';
   if (days == 1) return 'ayer';
@@ -348,6 +342,21 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Text('Ordenar por',
+                            style: TextStyle(fontSize: 12.5)),
+                        const SizedBox(width: 8),
+                        _dropdown<CollectionSort>(
+                          hint: 'Orden',
+                          value: _sort,
+                          items: {
+                            for (final s in CollectionSort.values) s: s.label,
+                          },
+                          onChanged: (v) => setState(() => _sort = v),
+                        ),
+                      ],
+                    ),
                     _buildFilterBar(),
                     if (_anyFilter)
                       Padding(
@@ -458,7 +467,9 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
   String _subtitleFor(OwnedCard card) {
     final english =
         card.name != (card.printedName ?? card.name) ? card.name : '';
-    if (_sort != CollectionSort.recent) return english;
+    // sin fecha (colección anterior a esta versión) no se dice nada: ya lo
+    // cuenta la posición, y "añadida sin fecha" en 300 filas es ruido
+    if (_sort != CollectionSort.recent || card.addedAt == null) return english;
     final added = 'añadida ${addedLabel(card.addedAt)}';
     return english.isEmpty ? added : '$english · $added';
   }
@@ -490,14 +501,6 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
             onSelected: (v) => setState(
                 () => v ? _fColors.add(c) : _fColors.remove(c)),
           ),
-        _dropdown<CollectionSort>(
-          hint: 'Orden',
-          value: _sort,
-          items: {
-            for (final s in CollectionSort.values) s: 'Orden: ${s.label}',
-          },
-          onChanged: (v) => setState(() => _sort = v),
-        ),
         _dropdown<int?>(
           hint: 'Coste',
           value: _fCmc,

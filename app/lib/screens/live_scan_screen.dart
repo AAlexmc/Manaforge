@@ -338,6 +338,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
 
   void _confirmAll() {
     var added = 0;
+    final at = DateTime.now(); // toda la bandeja entra "a la vez"
     for (final line in _tray.lines) {
       final entry = line.chosen.entry;
       final hit = _hitCache[entry.scryfallId];
@@ -358,6 +359,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
           ),
           qty: line.qty,
           printingKey: entry.printingKey,
+          at: at,
         );
       } else {
         widget.collection.add(
@@ -368,6 +370,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
               qty: line.qty),
           qty: line.qty,
           printingKey: entry.printingKey,
+          at: at,
         );
       }
       added += line.qty;

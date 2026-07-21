@@ -216,7 +216,8 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   /// Añade UNA impresión a la colección (con su cantidad), con o sin ficha.
-  void _addOwned(HashEntry entry, CardHit? hit, int qty) {
+  /// [at] permite sellar todo un lote con el mismo instante.
+  void _addOwned(HashEntry entry, CardHit? hit, int qty, {DateTime? at}) {
     final card = hit != null
         ? OwnedCard(
             oracleId: hit.oracleId,
@@ -233,7 +234,8 @@ class _ScanScreenState extends State<ScanScreen> {
           )
         : OwnedCard(
             oracleId: entry.oracleId, name: entry.name, colors: '', qty: qty);
-    widget.collection.add(card, qty: qty, printingKey: entry.printingKey);
+    widget.collection
+        .add(card, qty: qty, printingKey: entry.printingKey, at: at);
   }
 
   Future<void> _precache(List<ScanMatch> matches) async {
@@ -326,11 +328,12 @@ class _ScanScreenState extends State<ScanScreen> {
     final tray = _batch;
     if (tray == null) return;
     var added = 0;
+    final at = DateTime.now(); // el lote entero entra "a la vez"
     for (final line in tray.lines) {
       // sin reconocer = no se sabe qué carta es: no se añade nada
       if (line.unrecognized) continue;
       _addOwned(line.chosen.entry, _hitCache[line.chosen.entry.scryfallId],
-          line.qty);
+          line.qty, at: at);
       added += line.qty;
     }
     setState(() {
