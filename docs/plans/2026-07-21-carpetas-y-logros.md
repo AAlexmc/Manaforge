@@ -307,8 +307,35 @@ poder **descargar un certificado**. Diseño previsto:
 
 Pendiente decidir con Ale: ¿solo sets, o también logros? ¿PDF además de PNG?
 
-## Bloques que siguen pendientes (de la nota de la sesión anterior)
+## Bloque A — Multi-mercado (HECHO 2026-07-21 noche)
 
-- **A. Multi-mercado** (Cardmarket/TCGplayer/CardKingdom/Mana Pool/Cardhoarder).
-- **B. Divisas** (conversión con tipos del BCE, marcada como aproximada).
+Se elige mercado con unos chips en Mercado y en la ficha; el precio de la
+carta y su gráfica pasan a ese mercado y la elección se recuerda
+(`market.json`).
+
+- `services/markets.dart`: los cinco mercados con su divisa, su columna de
+  precio de hoy y si son digitales. Star City Games NO está: no aparece en
+  MTGJSON ni tiene API abierta (scrapear su web es frágil y de legalidad
+  dudosa).
+- `services/market_prices.dart`: precio de hoy del volcado de cartas
+  (Cardmarket EUR, TCGplayer USD, Cardhoarder tix) y, para los que no lo
+  publican (Card Kingdom, Mana Pool), el último día del histórico — marcado
+  con su fecha para no vender por fresco algo de hace una semana.
+- Bases regeneradas y publicadas: `price-db-latest` con 167.308 series
+  (5 mercados × ~33k cartas × 91 días, 13 MB gz) y `card-db-latest` con
+  `price_usd`, `price_usd_foil` y `price_tix` (schema 4).
+- El histórico local que apunta la app a diario es de Scryfall en EUROS: en
+  otros mercados NO se mezcla (sumar euros a una serie en dólares sería
+  inventarse la gráfica).
+
+**Decisión sobre el bloque B (divisas):** no se convierte nada. Cada mercado
+se enseña en SU divisa y el valor de la colección (Inicio, carpetas, logros)
+se queda en Cardmarket/EUR, que es la valoración canónica. Convertir pediría
+un tipo de cambio del día y marcarlo como aproximado; si Ale lo quiere, se
+hace luego con frankfurter.app (BCE) y los tix se quedan fuera (no son una
+divisa).
+
+## Bloques que siguen pendientes
+
+- **B. Divisas** (conversión opcional, ver decisión arriba).
 - **D. Pestaña "Escanear"** propia en la barra de abajo.
