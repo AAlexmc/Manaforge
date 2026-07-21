@@ -149,28 +149,40 @@ class _PriceChartState extends State<PriceChart> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
+        // el texto explicativo es largo y la caja tiene alto fijo: los
+        // Flexible evitan que se recorte por abajo en pantallas estrechas
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.show_chart,
                 size: 34,
                 color: Theme.of(context).dividerColor),
             const SizedBox(height: 8),
-            Text(
-              price == null
-                  ? 'Todavía sin historial de precio de esta carta.'
-                  : 'Precio de hoy: ${price.toStringAsFixed(2)} €.\n'
-                      'La gráfica aparece en cuanto haya varios días '
-                      'apuntados.',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12.5),
+            Flexible(
+              child: Text(
+                price == null
+                    ? 'Todavía sin historial de precio de esta carta.'
+                    : 'Precio de hoy: ${price.toStringAsFixed(2)} €. '
+                        'La gráfica aparece en cuanto haya varios días '
+                        'apuntados.',
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12.5),
+              ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'ManaForge apunta el precio de cada carta que miras o '
-              'tienes, día a día, en tu equipo.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11),
+            const Flexible(
+              child: Text(
+                'ManaForge apunta el precio de cada carta que miras o '
+                'tienes, día a día. Para arrancar con los últimos meses '
+                'reales de Cardmarket, trae el histórico desde Mercado.',
+                textAlign: TextAlign.center,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 11),
+              ),
             ),
           ],
         ),
