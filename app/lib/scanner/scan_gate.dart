@@ -57,6 +57,13 @@ const int kMinMargin = 8;
 /// reconozco nada (evita "alucinar" una carta con cualquier foto).
 const int kNoMatchMax = 40;
 
+/// Una propuesta AMBIGUA cuyo top-1 está a esta distancia o más tampoco es
+/// creíble como carta concreta (los matches ERRÓNEOS de fotos reales caen
+/// en 28-34): la bandeja la enseña como "sin reconocer" — recorte + elegir
+/// a mano — en vez de proponer una carta casi seguro equivocada. Mejor no
+/// decir nada que decir mentira.
+const int kUntrustedMin = 28;
+
 /// Decide qué enseñar a partir del top-k del matching (candidatos distintos
 /// por carta, ordenados por distancia ascendente).
 ScanDecision decideScan(

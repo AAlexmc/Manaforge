@@ -38,6 +38,7 @@ class TrayList extends StatelessWidget {
   }
 
   Widget _row(BuildContext context, TrayLine line) {
+    if (line.unrecognized) return _unrecognizedRow(context, line);
     final entry = line.chosen.entry;
     final hit = hitCache[entry.scryfallId];
     return ListTile(
@@ -101,6 +102,41 @@ class TrayList extends StatelessWidget {
             onPressed: () => onRemove(line),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Fila de celda SIN reconocer: enseña el RECORTE de lo que se vio (no
+  /// una carta propuesta — proponer una equivocada es mentir) y invita a
+  /// elegir a mano entre las mejores apuestas o quitarla.
+  Widget _unrecognizedRow(BuildContext context, TrayLine line) {
+    final errorColor = Theme.of(context).colorScheme.error;
+    return ListTile(
+      onTap: line.candidates.isEmpty ? null : () => onEdit(line),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      leading: SizedBox(
+        width: 42,
+        height: 58,
+        child: line.artPng == null
+            ? Icon(Icons.help_outline, color: errorColor)
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Image.memory(line.artPng!, fit: BoxFit.cover),
+              ),
+      ),
+      title: const Text('Sin reconocer',
+          maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Text(
+        line.candidates.isEmpty
+            ? 'nada parecido en la base — re-foto o quitar'
+            : 'toca para elegir a mano entre parecidas',
+        style: TextStyle(fontSize: 12.5, color: errorColor),
+      ),
+      trailing: IconButton(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.delete_outline, size: 20),
+        tooltip: 'Quitar',
+        onPressed: () => onRemove(line),
       ),
     );
   }

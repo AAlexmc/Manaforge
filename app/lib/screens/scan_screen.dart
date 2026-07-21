@@ -242,12 +242,12 @@ class _ScanScreenState extends State<ScanScreen> {
   /// Una foto con varias cartas detectadas: montar la bandeja directamente.
   Future<void> _batchFromOutcomes(List<ScanOutcome> outcomes) async {
     final index = await widget.scanner.loadIndex();
-    final perCard = <List<ScanMatch>>[];
+    final perCard = <(List<ScanMatch>, Uint8List?)>[];
     for (final o in outcomes) {
       final (matches, _) = index.bestGroupMatches(
           o.signatures, o.altSignatures,
           lockSet: _lockSet);
-      perCard.add(matches);
+      perCard.add((matches, o.artPng));
       await _precache(matches);
     }
     if (!mounted) return;
@@ -276,7 +276,7 @@ class _ScanScreenState extends State<ScanScreen> {
     });
     try {
       final index = await widget.scanner.loadIndex();
-      final perPhoto = <List<ScanMatch>>[];
+      final perPhoto = <(List<ScanMatch>, Uint8List?)>[];
       for (final f in files) {
         try {
           final bytes = await f.readAsBytes();
@@ -286,7 +286,7 @@ class _ScanScreenState extends State<ScanScreen> {
             final (matches, _) = index.bestGroupMatches(
                 outcome.signatures, outcome.altSignatures,
                 lockSet: _lockSet);
-            perPhoto.add(matches);
+            perPhoto.add((matches, outcome.artPng));
             await _precache(matches);
           }
         } catch (_) {
@@ -317,6 +317,8 @@ class _ScanScreenState extends State<ScanScreen> {
     if (tray == null) return;
     var added = 0;
     for (final line in tray.lines) {
+      // sin reconocer = no se sabe qué carta es: no se añade nada
+      if (line.unrecognized) continue;
       _addOwned(line.chosen.entry, _hitCache[line.chosen.entry.scryfallId],
           line.qty);
       added += line.qty;
@@ -424,6 +426,7 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget _buildBatch() {
     final tray = _batch!;
     final review = tray.lines.where((l) => l.needsReview).length;
+    final unknown = tray.lines.where((l) => l.unrecognized).length;
     return Column(
       children: [
         Padding(
@@ -446,6 +449,13 @@ class _ScanScreenState extends State<ScanScreen> {
                       Text('$review para revisar (tócalas)',
                           style: const TextStyle(
                               fontSize: 12.5, color: MFColors.warning)),
+                    if (!_batchProcessing && unknown > 0)
+                      Text(
+                          '$unknown sin reconocer (toca para elegir '
+                          'a mano)',
+                          style: TextStyle(
+                              fontSize: 12.5,
+                              color: Theme.of(context).colorScheme.error)),
                   ],
                 ),
               ),
@@ -504,12 +514,16 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   /// Tocar una fila del lote: elegir la versión correcta entre los candidatos.
+  /// En una línea SIN reconocer, elegir un candidato a mano la convierte en
+  /// reconocida (cuenta para "Añadir N").
   Future<void> _editBatchLine(TrayLine line) async {
+    if (line.candidates.isEmpty) return; // sin apuestas: solo re-foto/borrar
     final picked = await _pickVersion(line);
     if (picked != null && mounted) {
       setState(() {
         line.selected = picked;
         line.reviewed = true;
+        line.unrecognized = false;
       });
     }
   }
