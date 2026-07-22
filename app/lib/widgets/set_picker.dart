@@ -42,9 +42,11 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
   final _searchCtrl = TextEditingController();
   String _query = '';
 
-  /// Solo las expansiones de las que tienes algo. Empieza encendido: con
-  /// ~900 sets en la base, la lista entera no se puede recorrer a mano.
-  bool _soloMias = true;
+  /// Solo las expansiones de las que tienes algo. Empieza encendido porque
+  /// con ~790 sets la lista entera no se recorre a mano — pero NO cuando no
+  /// tienes nada: ahí dejaría la hoja vacía justo en el caso que estrena
+  /// esto (hacer un mazo con cartas que no tienes).
+  late bool _soloMias = widget.owned.values.any((v) => v > 0);
 
   @override
   void dispose() {

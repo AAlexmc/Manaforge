@@ -106,6 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _openDeck(SavedDeck saved) async {
     try {
       final pool = await widget.db.buildPool(widget.collection.qtyByOracle);
+      // lo que tienes DE VERDAD, ANTES de rellenar el pool con las cartas que
+      // ya no tienes: si no se pasa, el detalle mira el pool relleno y dice
+      // "las tienes todas" — y el mismo mazo abierto desde Mazos decía "te
+      // faltan N". El mazo no puede contar dos historias
+      final propias = {for (final e in pool.entries) e.key: e.value.qty};
       final extra =
           await widget.db.poolByNames({...saved.cards, ...saved.lands});
       extra.forEach((k, v) => pool.putIfAbsent(k, () => v));
@@ -117,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
           db: widget.db,
           decks: widget.decks,
           ownedPrintings: widget.collection.printingQty.keys.toSet(),
+          ownedByName: propias,
         ),
       ));
     } catch (_) {

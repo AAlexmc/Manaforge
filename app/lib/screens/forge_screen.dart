@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
@@ -8,6 +9,7 @@ import '../services/collection_sets.dart';
 import '../services/collection_store.dart';
 import '../services/deck_shortfall.dart';
 import '../services/deck_store.dart';
+import '../services/forge_job.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/set_picker.dart';
@@ -79,6 +81,10 @@ class _ForgeScreenState extends State<ForgeScreen> {
   /// del modo "cartas que no tengo" dice 4 de todo y mentiría.
   Map<String, int> _ownedByName = const {};
 
+  /// Cuántas cartas tiene el pool que se está forjando: con muchas
+  /// expansiones el motor tarda segundos y hay que decirlo.
+  int? _poolSize;
+
   /// El teaser (menos de 30 cartas) no puede ser un muro: con "cartas que no
   /// tengo" se puede forjar sin colección. Este flag abre el selector igual.
   bool _forceSelector = false;
@@ -89,7 +95,10 @@ class _ForgeScreenState extends State<ForgeScreen> {
     widget.db.supportsYearFilter().then((v) {
       if (mounted) setState(() => _yearSupported = v);
     });
-    _loadSets();
+    // las expansiones NO se cargan aquí: Forge es una pestaña y se construye
+    // al arrancar la app (IndexedStack). Listar los ~790 sets cuesta ~90 ms
+    // de hilo de ventana que nadie ha pedido todavía; se cargan al abrir el
+    // selector.
   }
 
   /// Las expansiones de la base, y cuántas casillas tienes de cada una (lo
@@ -114,6 +123,8 @@ class _ForgeScreenState extends State<ForgeScreen> {
   }
 
   Future<void> _pickSets() async {
+    if (_sets == null) await _loadSets();
+    if (!mounted) return;
     final sets = _sets;
     if (sets == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -169,6 +180,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
       _proposals = null;
       _shortfalls = null;
       _cantReason = null;
+      _poolSize = null;
     });
     _messageTimer =
         Timer.periodic(const Duration(milliseconds: 700), (_) {
@@ -191,14 +203,21 @@ class _ForgeScreenState extends State<ForgeScreen> {
           yearMin: _parseYear(_yearFromCtrl),
           yearMax: _parseYear(_yearToCtrl),
           format: _format == 'casual' ? null : _format);
-      // pequeña pausa para que la animación cuente su historia
+      if (mounted) setState(() => _poolSize = pool.length);
+      // el trabajo pesado va en otro isolate: con 10 expansiones son ~21 s y
+      // en el hilo de la ventana la app se queda colgada
+      final trabajo = compute(
+          runForgeJob,
+          ForgeJob(
+            pool: pool,
+            allowedColors: _selColors.isEmpty ? null : _selColors.join(),
+            archetype: _selArchetype,
+            commander: _format == 'commander',
+          ));
+      // la pausa corre EN PARALELO al trabajo: es para que la animación
+      // cuente su historia, no para hacer esperar de más
       await Future.delayed(const Duration(milliseconds: 2200));
-      final proposals = _format == 'commander'
-          ? fe.generateCommanderProposals(pool)
-          : fe.generateProposals(pool,
-              allowedColors:
-                  _selColors.isEmpty ? null : _selColors.join(),
-              archetypeOverride: _selArchetype);
+      final proposals = await trabajo;
       // copias con las que se CUENTA: las tuyas de verdad y, si el
       // interruptor de básicas está puesto, las básicas sueltas que se dan
       // por supuestas. Es la misma cuenta que verá el detalle del mazo, para
@@ -659,6 +678,14 @@ class _ForgeScreenState extends State<ForgeScreen> {
           const SizedBox(height: 8),
           const Text('Todo se calcula en tu dispositivo, sin internet',
               style: TextStyle(fontSize: 12)),
+          if ((_poolSize ?? 0) > 1200) ...[
+            const SizedBox(height: 6),
+            Text(
+                'Estás forjando con $_poolSize cartas: esto tarda unos '
+                'segundos. La ventana sigue viva.',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12)),
+          ],
         ],
       ),
     );

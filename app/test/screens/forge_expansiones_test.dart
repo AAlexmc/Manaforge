@@ -6,6 +6,8 @@
 /// tendrías que comprar".
 library;
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/screens/forge_screen.dart';
@@ -24,6 +26,11 @@ CollectionStore _conCartas(int copias) {
   return store;
 }
 
+/// Base de cartas que NO existe: es el caso real de alguien que aún no la ha
+/// descargado, y además no depende de plugins (en test no hay path_provider).
+CardDatabase _sinBase() =>
+    CardDatabase(dataDir: Directory('/ruta/que/no/existe/manaforge'));
+
 Future<void> _pump(WidgetTester tester, CollectionStore collection) async {
   // pantalla alta: el selector de Forge es una lista larga y lo que no cabe
   // no se construye (y no se puede tocar en un test)
@@ -32,7 +39,7 @@ Future<void> _pump(WidgetTester tester, CollectionStore collection) async {
   addTearDown(tester.view.reset);
   await tester.pumpWidget(MaterialApp(
     home: ForgeScreen(
-        db: CardDatabase(), collection: collection, decks: DeckStore()),
+        db: _sinBase(), collection: collection, decks: DeckStore()),
   ));
   await tester.pump(const Duration(milliseconds: 100));
 }
@@ -100,7 +107,12 @@ void main() {
     await _pump(tester, _conCartas(40));
 
     await tester.tap(find.text('Elegir expansiones'));
-    await tester.pump();
+    // las expansiones se piden AHORA (no al arrancar la app): hay que dejar
+    // que el intento falle antes de mirar el aviso. Nada de pumpAndSettle:
+    // adelanta el reloj lo bastante como para que el aviso ya se haya ido.
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 20));
+    }
 
     expect(find.textContaining('Necesito la base de cartas'), findsOneWidget);
   });
