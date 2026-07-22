@@ -381,10 +381,47 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                 ],
               ),
             ),
+          // el total, al final de la lista: es donde acabas de leer los
+          // precios carta a carta y donde se busca la cifra de "cuánto vale
+          // esto". Arriba también está, pero con el mazo entero desplegado
+          // queda a tres pantallas de scroll
+          if (_prices.isNotEmpty) ...[
+            const Divider(height: 28),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('Total del mazo: ~${_deckValue.toStringAsFixed(2)} €',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: MFColors.warning)),
+                  const SizedBox(height: 2),
+                  Text(
+                      _sinPrecio == 0
+                          ? 'precio de la edición más barata (Cardmarket)'
+                          : '$_sinPrecio sin precio conocido · edición más '
+                              'barata (Cardmarket)',
+                      style: const TextStyle(
+                          fontSize: 11, color: Colors.white54)),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 24),
         ],
       ),
     );
+  }
+
+  /// Cartas distintas del mazo sin precio en la base: el total es un mínimo,
+  /// no una cifra cerrada, y hay que decirlo.
+  int get _sinPrecio {
+    var n = 0;
+    for (final name in [..._gen.deck.cards.keys, ..._gen.deck.lands.keys]) {
+      if (_prices[name] == null) n++;
+    }
+    return n;
   }
 }
 
