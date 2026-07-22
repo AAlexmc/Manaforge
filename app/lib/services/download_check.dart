@@ -65,11 +65,9 @@ Future<String?> fetchPublishedSha256(
     final response = await secureSend(client, sumsUrlFor(assetUrl))
         .timeout(const Duration(seconds: 15));
     if (response.statusCode != 200) return null;
-    // el fichero son cuatro líneas; un tope evita que una respuesta rara se
-    // lea entera a memoria
-    final bytes = await response.stream.take(64 * 1024).toList();
-    final texto = String.fromCharCodes(bytes.expand((b) => b));
-    return sha256ForAsset(texto, assetNameOf(assetUrl));
+    // el fichero son cuatro líneas: tope en BYTES (ver readCappedBody)
+    final texto = await readCappedBody(response, 64 * 1024);
+    return texto == null ? null : sha256ForAsset(texto, assetNameOf(assetUrl));
   } catch (_) {
     return null; // sin huella publicada, o sin red para pedirla
   }

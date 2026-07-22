@@ -5,6 +5,7 @@
 library;
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
@@ -54,11 +55,13 @@ const Set<int> _redirectCodes = {301, 302, 303, 307, 308};
 /// sigue siendo la original), así que la única forma de saber que no se ha
 /// bajado a `http` es seguirlas uno mismo.
 Future<http.StreamedResponse> secureSend(http.Client client, Uri url,
-    {int maxRedirects = 5}) async {
+    {int maxRedirects = 5, Map<String, String> headers = const {}}) async {
   var actual = url;
   for (var salto = 0; salto <= maxRedirects; salto++) {
     ensureSecureDownload(actual);
-    final request = http.Request('GET', actual)..followRedirects = false;
+    final request = http.Request('GET', actual)
+      ..followRedirects = false
+      ..headers.addAll(headers);
     final response = await client.send(request);
     // por código Y por la marca: no todos los clientes marcan `isRedirect`
     if (!response.isRedirect && !_redirectCodes.contains(response.statusCode)) {
@@ -112,4 +115,24 @@ String? safeCardImageUrl(String? url) {
   if (uri.scheme != 'https') return null;
   if (!kCardImageHosts.contains(uri.host)) return null;
   return url;
+}
+
+/// Lee un cuerpo de respuesta PEQUEÑO con tope de verdad, en BYTES.
+///
+/// Está aquí porque el error es fácil de cometer y difícil de ver: hacer
+/// `response.stream.take(64 * 1024)` no limita a 64 KB, limita a 64.000
+/// TROZOS, y un trozo puede ser de cualquier tamaño. El tope entonces no
+/// existe. Esto corta de verdad, y devuelve null si se pasa: media respuesta
+/// no es una respuesta.
+Future<String?> readCappedBody(http.StreamedResponse response, int maxBytes) async {
+  final buffer = <int>[];
+  await for (final chunk in response.stream) {
+    buffer.addAll(chunk);
+    if (buffer.length > maxBytes) return null;
+  }
+  try {
+    return utf8.decode(buffer, allowMalformed: true);
+  } catch (_) {
+    return null;
+  }
 }

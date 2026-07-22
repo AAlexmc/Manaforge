@@ -66,9 +66,17 @@ class BackgroundPreference extends ChangeNotifier {
       final ruta = decoded['image'];
       if (ruta is String && ruta.isNotEmpty) {
         final imagen = File(ruta);
-        // si el fichero ya no está (carpeta de datos movida, limpieza), no se
-        // arrastra una ruta muerta
-        if (await imagen.exists()) _image = imagen;
+        // la ruta guardada solo vale si apunta DENTRO de la carpeta de datos:
+        // este JSON es un fichero de disco y podría venir manipulado, y una
+        // ruta cualquiera haría que la app pintase de fondo un fichero
+        // arbitrario del sistema
+        final dir = await _dir();
+        final dentro = dir != null &&
+            p.equals(p.dirname(imagen.path), dir.path) &&
+            kBackgroundExtensions.contains(p.extension(imagen.path).toLowerCase());
+        // y si el fichero ya no está (limpieza de disco), tampoco se arrastra
+        // una ruta muerta
+        if (dentro && await imagen.exists()) _image = imagen;
       }
       final dim = decoded['dim'];
       if (dim is num) _dim = dim.toDouble().clamp(kMinDim, kMaxDim);
