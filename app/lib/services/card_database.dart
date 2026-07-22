@@ -377,6 +377,9 @@ class AlbumCard {
   final String colors;
   final String typeLine;
 
+  /// Precio de ESTA impresión en el mercado que se esté mirando, si se sabe.
+  final double? price;
+
   const AlbumCard({
     required this.oracleId,
     required this.collectorNumber,
@@ -386,6 +389,7 @@ class AlbumCard {
     this.imageNormal,
     required this.colors,
     this.typeLine = '',
+    this.price,
   });
 
   bool get isBasicLand => typeLine.startsWith('Basic');
@@ -447,11 +451,19 @@ extension AlbumQueries on CardDatabase {
 
   /// Todas las cartas de un set, una por collector number (preferencia por
   /// la impresión en inglés), en orden de coleccionista.
-  Future<List<AlbumCard>> setCards(String setCode) async {
+  Future<List<AlbumCard>> setCards(String setCode,
+      {Market market = Market.cardmarket}) async {
     final db = await _open();
+    // el precio se pide en la columna del mercado elegido; los mercados que
+    // no publican precio por edición (Card Kingdom, Mana Pool) se quedan sin
+    // él y el álbum lo dice, en vez de enseñar euros diciendo que son dólares
+    final priceCol = market.todayColumn;
+    final priceSel = priceCol == null
+        ? 'NULL AS price'
+        : 'MIN(p.$priceCol) AS price';
     final rows = db.select('''
       SELECT p.oracle_id, p.collector_number, p.printed_name, p.image_small,
-             p.image_normal, c.name, c.colors, c.type_line,
+             p.image_normal, c.name, c.colors, c.type_line, $priceSel,
              MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref
       FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
       WHERE p.set_code = ?1
@@ -469,6 +481,7 @@ extension AlbumQueries on CardDatabase {
           imageNormal: r['image_normal'] as String?,
           colors: (r['colors'] as String?) ?? '',
           typeLine: (r['type_line'] as String?) ?? '',
+          price: (r['price'] as num?)?.toDouble(),
         )
     ];
   }
