@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
@@ -26,6 +27,13 @@ class CardDetailScreen extends StatefulWidget {
   final MarketPreference? market;
   final PriceSeriesDatabase? prices;
 
+  /// Las cartas que había AL LADO de esta en la lista de la que se abrió
+  /// (álbum, colección, carpeta). Con ellas, la ficha pasa a la siguiente y a
+  /// la anterior sin volver atrás: mirar precios de un set entero era salir y
+  /// entrar una vez por carta.
+  final List<String>? siblings;
+  final int siblingIndex;
+
   const CardDetailScreen(
       {super.key,
       required this.db,
@@ -33,7 +41,9 @@ class CardDetailScreen extends StatefulWidget {
       this.oracleId,
       this.byName,
       this.market,
-      this.prices})
+      this.prices,
+      this.siblings,
+      this.siblingIndex = 0})
       : assert(oracleId != null || byName != null);
 
   @override
@@ -52,6 +62,40 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
   /// De qué día es el precio cuando el mercado no publica el de hoy.
   String? _priceAsOf;
   String? _oracleId;
+
+  /// Por dónde vamos dentro de [CardDetailScreen.siblings].
+  late int _pos = widget.siblingIndex;
+
+  /// La carta que se está enseñando: la de la lista si hay lista.
+  String? get _showing {
+    final hermanas = widget.siblings;
+    if (hermanas == null || hermanas.isEmpty) return widget.oracleId;
+    return hermanas[_pos.clamp(0, hermanas.length - 1)];
+  }
+
+  bool get _hayLista => (widget.siblings?.length ?? 0) > 1;
+
+  bool get _puedeAnterior => _hayLista && _pos > 0;
+
+  bool get _puedeSiguiente =>
+      _hayLista && _pos < widget.siblings!.length - 1;
+
+  /// Pasa a la carta de al lado y la carga de cero (imagen, precios, gráfica).
+  void _mover(int delta) {
+    if (delta < 0 && !_puedeAnterior) return;
+    if (delta > 0 && !_puedeSiguiente) return;
+    setState(() {
+      _pos += delta;
+      _loading = true;
+      _detail = null;
+      _versions = const [];
+      _history = const [];
+      _todayPrice = null;
+      _priceAsOf = null;
+      _error = null;
+    });
+    _load();
+  }
 
   Market get _market => widget.market?.market ?? Market.cardmarket;
 
@@ -95,8 +139,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
 
   Future<void> _load() async {
     try {
-      final detail = await widget.db
-          .cardDetail(oracleId: widget.oracleId, byName: widget.byName);
+      final detail = await widget.db.cardDetail(
+          oracleId: _showing, byName: _showing == null ? widget.byName : null);
       if (detail == null) {
         if (mounted) {
           setState(() {
@@ -188,18 +232,67 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
   Widget build(BuildContext context) {
     final detail = _detail;
     return Scaffold(
-      appBar: AppBar(title: Text(detail?.name ?? 'Carta')),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : detail == null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text(_error ?? 'Carta no encontrada',
-                        textAlign: TextAlign.center),
-                  ),
-                )
-              : _content(context, detail),
+      appBar: AppBar(
+        title: Text(detail?.name ?? 'Carta'),
+        actions: [
+          if (_hayLista) ...[
+            IconButton(
+              tooltip: 'Anterior (←)',
+              icon: const Icon(Icons.chevron_left),
+              onPressed: _puedeAnterior ? () => _mover(-1) : null,
+            ),
+            Center(
+              child: Text('${_pos + 1} / ${widget.siblings!.length}',
+                  style: const TextStyle(fontSize: 12.5)),
+            ),
+            IconButton(
+              tooltip: 'Siguiente (→)',
+              icon: const Icon(Icons.chevron_right),
+              onPressed: _puedeSiguiente ? () => _mover(1) : null,
+            ),
+            const SizedBox(width: 4),
+          ],
+        ],
+      ),
+      body: Focus(
+        autofocus: true,
+        onKeyEvent: (node, event) {
+          if (!_hayLista || event is! KeyDownEvent) {
+            return KeyEventResult.ignored;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+            _mover(1);
+            return KeyEventResult.handled;
+          }
+          if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+            _mover(-1);
+            return KeyEventResult.handled;
+          }
+          return KeyEventResult.ignored;
+        },
+        child: GestureDetector(
+          // arrastrar de lado también pasa carta; el cuerpo se desplaza en
+          // vertical, así que no se pisan
+          onHorizontalDragEnd: !_hayLista
+              ? null
+              : (d) {
+                  final v = d.primaryVelocity ?? 0;
+                  if (v < -250) _mover(1);
+                  if (v > 250) _mover(-1);
+                },
+          child: _loading
+              ? const Center(child: CircularProgressIndicator())
+              : detail == null
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Text(_error ?? 'Carta no encontrada',
+                            textAlign: TextAlign.center),
+                      ),
+                    )
+                  : _content(context, detail),
+        ),
+      ),
     );
   }
 

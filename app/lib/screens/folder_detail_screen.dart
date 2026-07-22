@@ -5,6 +5,8 @@ import '../services/collection_store.dart';
 import '../services/collection_value.dart';
 import '../services/folder_store.dart';
 import '../services/folder_value.dart';
+import '../services/market_prefs.dart';
+import '../services/price_series_database.dart';
 import '../widgets/common.dart';
 import '../widgets/folder_tile.dart';
 import 'card_detail_screen.dart';
@@ -130,12 +132,19 @@ class FolderDetailScreen extends StatefulWidget {
   final FolderStore folders;
   final String folderId;
 
+  /// Opcionales: si vienen, las fichas de carta que se abran desde aquí dejan
+  /// elegir mercado (Cardmarket, TCGplayer…) como el Mercado.
+  final MarketPreference? market;
+  final PriceSeriesDatabase? prices;
+
   const FolderDetailScreen({
     super.key,
     required this.db,
     required this.collection,
     required this.folders,
     required this.folderId,
+    this.market,
+    this.prices,
   });
 
   @override
@@ -393,9 +402,17 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
                                   onDetails: () => Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (_) => CardDetailScreen(
-                                              db: widget.db,
-                                              collection: widget.collection,
-                                              oracleId: c.oracleId),
+                                            db: widget.db,
+                                            collection: widget.collection,
+                                            oracleId: c.oracleId,
+                                            market: widget.market,
+                                            prices: widget.prices,
+                                            siblings: [
+                                              for (final x in cards)
+                                                x.oracleId
+                                            ],
+                                            siblingIndex: cards.indexOf(c),
+                                          ),
                                         ),
                                       ))
                           ]),

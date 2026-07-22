@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/folder_store.dart';
+import '../services/market_prefs.dart';
+import '../services/price_series_database.dart';
 import '../widgets/common.dart';
 import 'card_detail_screen.dart';
 import 'collection_filters.dart';
@@ -16,8 +18,18 @@ class AllCardsScreen extends StatefulWidget {
   final CollectionStore collection;
   final FolderStore? folders;
 
+  /// Opcionales: si vienen, las fichas de carta que se abran desde aquí dejan
+  /// elegir mercado (Cardmarket, TCGplayer…) como el Mercado.
+  final MarketPreference? market;
+  final PriceSeriesDatabase? prices;
+
   const AllCardsScreen(
-      {super.key, required this.db, required this.collection, this.folders});
+      {super.key,
+      required this.db,
+      required this.collection,
+      this.folders,
+      this.market,
+      this.prices});
 
   @override
   State<AllCardsScreen> createState() => _AllCardsScreenState();
@@ -46,10 +58,18 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
     }
   }
 
-  void _openDetail({required String oracleId}) {
+  void _openDetail({required String oracleId,
+      List<String>? siblings, int index = 0}) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => CardDetailScreen(
-          db: widget.db, collection: widget.collection, oracleId: oracleId),
+        db: widget.db,
+        collection: widget.collection,
+        oracleId: oracleId,
+        market: widget.market,
+        prices: widget.prices,
+        siblings: siblings,
+        siblingIndex: index,
+      ),
     ));
   }
 
@@ -160,8 +180,12 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                                   name: h.printedName ?? h.name,
                                   imageUrl: h.imageNormal ?? h.imageSmall,
                                   colors: h.colors,
-                                  onDetails: () =>
-                                      _openDetail(oracleId: h.oracleId))
+                                  onDetails: () => _openDetail(
+                                      oracleId: h.oracleId,
+                                      siblings: [
+                                        for (final r in _results) r.oracleId
+                                      ],
+                                      index: _results.indexOf(h)))
                           ]),
                       leading: CardThumb(
                           url: hit.imageSmall,
@@ -209,8 +233,12 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                                   name: c.printedName ?? c.name,
                                   imageUrl: c.imageNormal ?? c.imageSmall,
                                   colors: c.colors,
-                                  onDetails: () =>
-                                      _openDetail(oracleId: c.oracleId))
+                                  onDetails: () => _openDetail(
+                                      oracleId: c.oracleId,
+                                      siblings: [
+                                        for (final o in owned) o.oracleId
+                                      ],
+                                      index: owned.indexOf(c)))
                           ]),
                       leading: CardThumb(
                           url: card.imageSmall,
