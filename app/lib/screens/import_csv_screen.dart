@@ -170,22 +170,13 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         // reimportar NO re-sella lo que ya tenías: enterraría bajo cientos
         // de cartas viejas lo que acabas de escanear
         bump: false,
+        // el precio de compra del CSV es lo único que la app no puede
+        // deducir sola: sin él no hay P&L posible. Entra en la MISMA llamada
+        // para no dar dos avisos por fila.
+        paidPerCopy: row.purchasePrice,
+        paidCurrency: row.currency,
       );
-      // el precio de compra del CSV es lo único que la app no puede deducir
-      // sola: sin él no hay P&L posible. Se apunta a la edición exacta si se
-      // sabe, y si no a la carta.
-      final pagado = row.purchasePrice;
-      if (pagado != null) {
-        widget.collection.recordPurchase(
-          base: exactPrinting
-              ? hit.printingKey
-              : 'oracle:${hit.oracleId}',
-          qty: qty,
-          perCopy: pagado,
-          currency: row.currency,
-        );
-        withPrice += qty;
-      }
+      if (row.purchasePrice != null) withPrice += qty;
       imported++;
       copies += qty;
     }

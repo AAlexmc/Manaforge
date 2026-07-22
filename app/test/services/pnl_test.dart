@@ -261,4 +261,41 @@ void main() {
       expect(store.paidForCard('o2'), isEmpty);
     });
   });
+
+  group('meter una fila del CSV avisa UNA vez', () {
+    test('añadir con precio de compra da un solo aviso', () {
+      final store = CollectionStore();
+      var avisos = 0;
+      store.addListener(() => avisos++);
+
+      store.add(
+        OwnedCard(oracleId: 'o1', name: 'Sol Ring', colors: '', qty: 1),
+        qty: 2,
+        printingKey: 'blb|72',
+        paidPerCopy: 3.5,
+        paidCurrency: 'EUR',
+      );
+
+      expect(avisos, 1); // no dos: cada aviso hace recalcular al Album
+      expect(store.purchases[purchaseKey('blb|72', 'EUR')]!.qty, 2);
+    });
+
+    test('sin edición exacta, lo pagado va a la carta', () {
+      final store = CollectionStore();
+
+      store.add(OwnedCard(oracleId: 'o1', name: 'Shock', colors: '', qty: 1),
+          qty: 1, paidPerCopy: 0.25);
+
+      expect(store.purchases[purchaseKey('oracle:o1', null)]!.perCopy, 0.25);
+    });
+
+    test('sin precio no se apunta nada', () {
+      final store = CollectionStore();
+
+      store.add(OwnedCard(oracleId: 'o1', name: 'Shock', colors: '', qty: 1),
+          qty: 1);
+
+      expect(store.hasPurchaseData, isFalse);
+    });
+  });
 }
