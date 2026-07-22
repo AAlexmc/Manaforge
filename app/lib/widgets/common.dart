@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/mf_theme.dart';
@@ -322,79 +323,224 @@ class _CurveEditorState extends State<CurveEditor> {
 }
 
 
+/// Una carta dentro del visor a pantalla completa.
+class ZoomCard {
+  final String name;
+  final String? imageUrl;
+  final String colors;
+
+  /// Abrir la ficha completa de ESTA carta (precios, legalidad). Opcional.
+  final VoidCallback? onDetails;
+
+  const ZoomCard(
+      {required this.name,
+      this.imageUrl,
+      this.colors = '',
+      this.onDetails});
+}
+
 /// Visor de carta a pantalla completa: toca una carta en cualquier parte de
 /// la app y se amplía (con zoom de pellizco/rueda). Toca fuera para cerrar.
 void showCardZoom(BuildContext context,
-    {required String name,
-    String? imageUrl,
-    String colors = '',
-    VoidCallback? onDetails}) {
+        {required String name,
+        String? imageUrl,
+        String colors = '',
+        VoidCallback? onDetails}) =>
+    showCardZoomList(context, cards: [
+      ZoomCard(
+          name: name,
+          imageUrl: imageUrl,
+          colors: colors,
+          onDetails: onDetails)
+    ], index: 0);
+
+/// Igual, pero sabiendo qué cartas hay AL LADO: se pasa a la siguiente y a la
+/// anterior arrastrando, con las flechas del teclado o con los botones de los
+/// lados. Sin esto, mirar un álbum de 274 cartas es abrir y cerrar 274 veces.
+void showCardZoomList(BuildContext context,
+    {required List<ZoomCard> cards, required int index}) {
+  if (cards.isEmpty) return;
   showDialog(
     context: context,
     barrierColor: Colors.black.withValues(alpha: 0.88),
-    builder: (context) => GestureDetector(
-      onTap: () => Navigator.of(context).pop(),
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Flexible(
-            child: InteractiveViewer(
-              maxScale: 4,
-              child: AspectRatio(
-                aspectRatio: 63 / 88,
-                child: imageUrl == null
-                    ? Container(
-                        decoration: BoxDecoration(
-                          color: (manaColors[
-                                      colors.isEmpty ? '' : colors[0]] ??
-                                  Colors.blueGrey)
-                              .withValues(alpha: 0.35),
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(20),
-                        child: Text(name,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 18)),
-                      )
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(18),
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.contain,
-                          loadingBuilder: (context, child, progress) =>
-                              progress == null
-                                  ? child
-                                  : const Center(
-                                      child: CircularProgressIndicator()),
-                          errorBuilder: (context, error, stack) => Center(
-                              child: Text(name,
-                                  textAlign: TextAlign.center)),
-                        ),
-                      ),
+    builder: (context) =>
+        _CardZoomView(cards: cards, index: index.clamp(0, cards.length - 1)),
+  );
+}
+
+class _CardZoomView extends StatefulWidget {
+  final List<ZoomCard> cards;
+  final int index;
+
+  const _CardZoomView({required this.cards, required this.index});
+
+  @override
+  State<_CardZoomView> createState() => _CardZoomViewState();
+}
+
+class _CardZoomViewState extends State<_CardZoomView> {
+  late final PageController _pages = PageController(initialPage: widget.index);
+  late int _current = widget.index;
+
+  @override
+  void dispose() {
+    _pages.dispose();
+    super.dispose();
+  }
+
+  void _go(int delta) {
+    final destino = _current + delta;
+    if (destino < 0 || destino >= widget.cards.length) return;
+    _pages.animateToPage(destino,
+        duration: const Duration(milliseconds: 220), curve: Curves.easeOut);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final varias = widget.cards.length > 1;
+    final card = widget.cards[_current];
+    return Focus(
+      autofocus: true,
+      onKeyEvent: (node, event) {
+        if (event is! KeyDownEvent) return KeyEventResult.ignored;
+        if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          _go(1);
+          return KeyEventResult.handled;
+        }
+        if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          _go(-1);
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: GestureDetector(
+        // tocar el fondo cierra; la carta y los botones no
+        onTap: () => Navigator.of(context).pop(),
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Row(
+                children: [
+                  _Arrow(
+                    icon: Icons.chevron_left,
+                    visible: varias && _current > 0,
+                    onTap: () => _go(-1),
+                  ),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _pages,
+                      // con una sola carta no hay a dónde ir: que no rebote
+                      physics: varias
+                          ? null
+                          : const NeverScrollableScrollPhysics(),
+                      onPageChanged: (i) => setState(() => _current = i),
+                      itemCount: widget.cards.length,
+                      itemBuilder: (context, i) => _ZoomImage(card: widget.cards[i]),
+                    ),
+                  ),
+                  _Arrow(
+                    icon: Icons.chevron_right,
+                    visible: varias && _current < widget.cards.length - 1,
+                    onTap: () => _go(1),
+                  ),
+                ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Text(name,
-                style: const TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w600)),
-          ),
-          if (onDetails != null)
-            TextButton.icon(
-              onPressed: () {
-                Navigator.of(context).pop();
-                onDetails();
-              },
-              icon: const Icon(Icons.info_outline, size: 18),
-              label: const Text('Ver ficha completa (precios y legalidad)'),
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(card.name,
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w600)),
             ),
-          const Text('toca fuera para cerrar',
-              style: TextStyle(fontSize: 11, color: Colors.white54)),
-        ],
+            if (varias)
+              Text('${_current + 1} / ${widget.cards.length}',
+                  style: const TextStyle(fontSize: 12, color: Colors.white70)),
+            if (card.onDetails != null)
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  card.onDetails!();
+                },
+                icon: const Icon(Icons.info_outline, size: 18),
+                label: const Text('Ver ficha completa (precios y legalidad)'),
+              ),
+            Text(
+                varias
+                    ? 'arrastra o usa ← → para pasar · toca fuera para cerrar'
+                    : 'toca fuera para cerrar',
+                style: const TextStyle(fontSize: 11, color: Colors.white54)),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
+}
+
+/// Flecha de los lados. Ocupa sitio siempre (aunque esté oculta) para que la
+/// carta no dé un salto lateral al llegar al primer o al último hueco.
+class _Arrow extends StatelessWidget {
+  final IconData icon;
+  final bool visible;
+  final VoidCallback onTap;
+
+  const _Arrow(
+      {required this.icon, required this.visible, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!visible) return const SizedBox(width: 48);
+    return SizedBox(
+      width: 48,
+      child: IconButton(
+        icon: Icon(icon, size: 34, color: Colors.white70),
+        onPressed: onTap,
+      ),
+    );
+  }
+}
+
+class _ZoomImage extends StatelessWidget {
+  final ZoomCard card;
+
+  const _ZoomImage({required this.card});
+
+  @override
+  Widget build(BuildContext context) {
+    final imageUrl = card.imageUrl;
+    return InteractiveViewer(
+      maxScale: 4,
+      child: AspectRatio(
+        aspectRatio: 63 / 88,
+        child: imageUrl == null
+            ? Container(
+                decoration: BoxDecoration(
+                  color: (manaColors[
+                              card.colors.isEmpty ? '' : card.colors[0]] ??
+                          Colors.blueGrey)
+                      .withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(20),
+                child: Text(card.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18)),
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  loadingBuilder: (context, child, progress) => progress == null
+                      ? child
+                      : const Center(child: CircularProgressIndicator()),
+                  errorBuilder: (context, error, stack) =>
+                      Center(child: Text(card.name, textAlign: TextAlign.center)),
+                ),
+              ),
+      ),
+    );
+  }
 }

@@ -381,18 +381,24 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
                   itemBuilder: (context, i) {
                     final card = cards[i];
                     return ListTile(
-                      onTap: () => showCardZoom(context,
-                          name: card.printedName ?? card.name,
-                          imageUrl: card.imageNormal ?? card.imageSmall,
-                          colors: card.colors,
-                          onDetails: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => CardDetailScreen(
-                                      db: widget.db,
-                                      collection: widget.collection,
-                                      oracleId: card.oracleId),
-                                ),
-                              )),
+                      // la carpeta entera, para pasar carta dentro del visor
+                      onTap: () => showCardZoomList(context,
+                          index: i,
+                          cards: [
+                            for (final c in cards)
+                              ZoomCard(
+                                  name: c.printedName ?? c.name,
+                                  imageUrl: c.imageNormal ?? c.imageSmall,
+                                  colors: c.colors,
+                                  onDetails: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => CardDetailScreen(
+                                              db: widget.db,
+                                              collection: widget.collection,
+                                              oracleId: c.oracleId),
+                                        ),
+                                      ))
+                          ]),
                       leading: CardThumb(
                           url: card.imageSmall,
                           colors: card.colors,

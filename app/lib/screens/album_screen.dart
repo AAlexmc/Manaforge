@@ -351,6 +351,14 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
   List<AlbumCard>? _cards;
   String? _error;
 
+  /// Búsqueda por nombre dentro del set. Un álbum de 300 cartas no se recorre
+  /// a ojo para ver si tienes UNA concreta.
+  final _searchCtrl = TextEditingController();
+  String _query = '';
+
+  /// Enseñar solo las que faltan: el uso real del álbum es "qué me queda".
+  bool _soloFaltan = false;
+
   // matriz de desaturación (escala de grises) para las cartas que faltan
   static const _greyMatrix = <double>[
     0.2126, 0.7152, 0.0722, 0, 0,
@@ -358,6 +366,12 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
     0.2126, 0.7152, 0.0722, 0, 0,
     0, 0, 0, 1, 0,
   ];
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -402,6 +416,8 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                 for (final c in cards) {
                   if (qtyOf(c) > 0) ownedHere++;
                 }
+                final visibles = filterAlbumCards(cards,
+                    query: _query, onlyMissing: _soloFaltan, qtyOf: qtyOf);
                 return Column(
                   children: [
                     Padding(
@@ -431,6 +447,58 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _searchCtrl,
+                              decoration: InputDecoration(
+                                isDense: true,
+                                prefixIcon: const Icon(Icons.search, size: 20),
+                                hintText: 'Buscar en ${widget.set.name}…',
+                                border: const OutlineInputBorder(),
+                                suffixIcon: _query.isEmpty
+                                    ? null
+                                    : IconButton(
+                                        icon: const Icon(Icons.clear, size: 18),
+                                        onPressed: () {
+                                          _searchCtrl.clear();
+                                          setState(() => _query = '');
+                                        },
+                                      ),
+                              ),
+                              onChanged: (v) => setState(() => _query = v),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          FilterChip(
+                            avatar: const Icon(Icons.bookmark_border, size: 16),
+                            label: const Text('Solo las que faltan'),
+                            selected: _soloFaltan,
+                            onSelected: (v) => setState(() => _soloFaltan = v),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (visibles.length != cards.length)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                              '${visibles.length} de ${cards.length} cartas',
+                              style: const TextStyle(fontSize: 12)),
+                        ),
+                      ),
+                    if (visibles.isEmpty)
+                      const Expanded(
+                        child: Center(
+                          child: Text('Ninguna carta con ese nombre aquí.'),
+                        ),
+                      )
+                    else
                     Expanded(
                       child: GridView.builder(
                         padding: const EdgeInsets.all(16),
@@ -441,23 +509,38 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                           crossAxisSpacing: 8,
                           mainAxisSpacing: 8,
                         ),
-                        itemCount: cards.length,
+                        itemCount: visibles.length,
                         itemBuilder: (context, i) {
-                          final card = cards[i];
+                          final card = visibles[i];
                           final qty = qtyOf(card);
                           return _AlbumCell(
                               card: card,
                               qty: qty,
                               greyMatrix: _greyMatrix,
-                              onDetails: () =>
-                                  Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => CardDetailScreen(
-                                      db: widget.db,
-                                      collection: widget.collection,
-                                      oracleId: card.oracleId),
-                                ),
-                              ));
+                              // el visor recibe TODAS las visibles: se pasa a
+                              // la de al lado sin cerrar y volver a abrir
+                              onZoom: () => showCardZoomList(context,
+                                  index: i,
+                                  cards: [
+                                    for (final c in visibles)
+                                      ZoomCard(
+                                          name: c.printedName ?? c.name,
+                                          imageUrl:
+                                              c.imageNormal ?? c.imageSmall,
+                                          colors: c.colors,
+                                          onDetails: () =>
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      CardDetailScreen(
+                                                          db: widget.db,
+                                                          collection:
+                                                              widget.collection,
+                                                          oracleId:
+                                                              c.oracleId),
+                                                ),
+                                              ))
+                                  ]));
                         },
                       ),
                     ),
@@ -469,17 +552,41 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
   }
 }
 
+/// Las cartas del álbum que hay que enseñar: por nombre (el impreso también,
+/// que es el que se ve en la carta si la tienes en otro idioma) o por número
+/// de coleccionista exacto, y opcionalmente solo las que faltan.
+///
+/// Función pura para poder testearla: la pantalla necesita la base de cartas
+/// descargada y en CI no la hay.
+List<AlbumCard> filterAlbumCards(List<AlbumCard> cards,
+    {String query = '',
+    bool onlyMissing = false,
+    required int Function(AlbumCard) qtyOf}) {
+  final q = query.trim().toLowerCase();
+  return [
+    for (final c in cards)
+      if ((q.isEmpty ||
+              c.name.toLowerCase().contains(q) ||
+              (c.printedName ?? '').toLowerCase().contains(q) ||
+              c.collectorNumber.toLowerCase() == q) &&
+          (!onlyMissing || qtyOf(c) == 0))
+        c
+  ];
+}
+
 class _AlbumCell extends StatelessWidget {
   final AlbumCard card;
   final int qty;
   final List<double> greyMatrix;
-  final VoidCallback onDetails;
+
+  /// Abrir el visor a pantalla completa POR ESTA carta.
+  final VoidCallback onZoom;
 
   const _AlbumCell(
       {required this.card,
       required this.qty,
       required this.greyMatrix,
-      required this.onDetails});
+      required this.onZoom});
 
   @override
   Widget build(BuildContext context) {
@@ -543,11 +650,7 @@ class _AlbumCell extends StatelessWidget {
           '${owned ? ' · tienes $qty' : ' · te falta'}',
       waitDuration: const Duration(milliseconds: 500),
       child: GestureDetector(
-        onTap: () => showCardZoom(context,
-            name: card.printedName ?? card.name,
-            imageUrl: card.imageNormal ?? card.imageSmall,
-            colors: card.colors,
-            onDetails: onDetails),
+        onTap: onZoom,
         child: Stack(
         fit: StackFit.expand,
         children: [
