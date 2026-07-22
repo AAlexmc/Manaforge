@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,14 @@ Directory _dataDirWith(Map<String, String> files) {
   return dir;
 }
 
+BackupManifest _manifest() => BackupManifest(
+      formatVersion: kBackupFormatVersion,
+      createdAt: DateTime.utc(2026, 7, 21),
+      appVersion: '0.1.0',
+      counts: const {'cartas': 283, 'mazos': 4},
+      stores: const ['collection.json'],
+    );
+
 void main() {
   testWidgets('la tarjeta ofrece guardar y restaurar', (tester) async {
     await tester.pumpWidget(MaterialApp(
@@ -27,7 +36,94 @@ void main() {
 
     expect(find.text('Copia de seguridad'), findsOneWidget);
     expect(find.text('Guardar copia'), findsOneWidget);
-    expect(find.text('Restaurar copia'), findsOneWidget);
+    expect(find.text('Restaurar de un archivo'), findsOneWidget);
+  });
+
+  testWidgets('restaurar no se puede hacer sin escribir CONFIRMAR',
+      (tester) async {
+    late BuildContext ctx;
+    await tester.pumpWidget(MaterialApp(
+      home: Builder(builder: (context) {
+        ctx = context;
+        return const SizedBox();
+      }),
+    ));
+
+    bool? resultado;
+    unawaited(confirmRestore(ctx, _manifest()).then((v) => resultado = v));
+    await tester.pump();
+
+    // el botón nace apagado: un clic despistado no puede borrar una colección
+    final boton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Restaurar'));
+    expect(boton.onPressed, isNull);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Restaurar'));
+    await tester.pump();
+    expect(resultado, isNull, reason: 'no debería haber restaurado nada');
+
+    // escribir otra cosa tampoco vale
+    await tester.enterText(find.byType(TextField), 'confirmar el borrado');
+    await tester.pump();
+    expect(
+        tester
+            .widget<FilledButton>(
+                find.widgetWithText(FilledButton, 'Restaurar'))
+            .onPressed,
+        isNull);
+
+    await tester.enterText(find.byType(TextField), 'CONFIRMAR');
+    await tester.pump();
+    await tester.tap(find.widgetWithText(FilledButton, 'Restaurar'));
+    await tester.pump();
+
+    expect(resultado, isTrue);
+  });
+
+  testWidgets('cancelar el diálogo de CONFIRMAR no restaura', (tester) async {
+    late BuildContext ctx;
+    await tester.pumpWidget(MaterialApp(
+      home: Builder(builder: (context) {
+        ctx = context;
+        return const SizedBox();
+      }),
+    ));
+
+    final future = confirmRestore(ctx, _manifest());
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), 'CONFIRMAR');
+    await tester.pump();
+    await tester.tap(find.text('Cancelar'));
+    await tester.pump();
+
+    expect(await future, isFalse);
+  });
+
+  testWidgets('con varias copias sale un desplegable para elegir cuál',
+      (tester) async {
+    final dir = _dataDirWith({'collection.json': '{"cards":[]}'});
+    await tester.runAsync(() async {
+      await writeBackupFile(dir,
+          prefix: 'auto', now: DateTime.utc(2026, 7, 13, 9, 15));
+      await writeBackupFile(dir,
+          prefix: 'auto', now: DateTime.utc(2026, 7, 20, 10, 30));
+    });
+
+    await tester.runAsync(() async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: BackupCard(dataDir: () async => dir, onRestored: () {}),
+        ),
+      ));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    });
+    await tester.pump();
+
+    expect(find.byType(DropdownButtonFormField<File>), findsOneWidget);
+    // sin elegir copia, el botón de restaurar está apagado
+    final boton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Restaurar la copia elegida'));
+    expect(boton.onPressed, isNull);
   });
 
   testWidgets(
@@ -80,7 +176,12 @@ void main() {
     });
     await tester.pump();
 
-    expect(find.textContaining('automática · 20/07/2026'), findsOneWidget);
+    // el desplegable dice la FECHA de cada copia: el nombre de fichero crudo
+    // no le dice nada a nadie
+    await tester.tap(find.byType(DropdownButtonFormField<File>));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('automática · 20/07/2026'), findsWidgets);
   });
 
   testWidgets('sin copias automáticas no se enseña la lista vacía',
@@ -95,6 +196,11 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    expect(find.text('Copias que he guardado yo solo'), findsNothing);
+    // sin copias no hay desplegable vacío ni botón que no lleve a ninguna
+    // parte: solo se dice que no hay nada y queda la vía del archivo
+    expect(find.byType(DropdownButtonFormField<File>), findsNothing);
+    expect(find.text('Restaurar la copia elegida'), findsNothing);
+    expect(find.textContaining('Aún no hay copias guardadas'), findsOneWidget);
+    expect(find.text('Restaurar de un archivo'), findsOneWidget);
   });
 }

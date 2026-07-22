@@ -139,7 +139,6 @@ class _HomeShellState extends State<HomeShell> {
             db: _db, prices: _prices, scanner: _scanner),
         collection: _collection,
         onReady: () => setState(() => _started = true),
-        onRestored: widget.onRestored,
       );
     }
     final screens = [
