@@ -1,0 +1,7 @@
+# Lo que genera "dart pub get" en un paquete Dart puro: no es del proyecto.
+.dart_tool/
+
+# Este paquete es una LIBRERÍA (lo consume app/ por path), y en una librería
+# el lock no manda: quien fija las versiones de verdad es app/pubspec.lock,
+# que sí va trackeado (PR #31).
+pubspec.lock
