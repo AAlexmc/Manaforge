@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import 'markets.dart';
+import 'safe_input.dart';
 
 /// Resultado de búsqueda: una carta (nivel Oracle) con su impresión visible.
 class CardHit {
@@ -96,8 +97,7 @@ class CardDatabase {
     final client = http.Client();
     IOSink? sink;
     try {
-      final request = http.Request('GET', Uri.parse(releaseUrl));
-      final response = await client.send(request);
+      final response = await secureSend(client, Uri.parse(releaseUrl));
       if (response.statusCode != 200) {
         throw HttpException(
             'No se pudo descargar la base de datos (HTTP ${response.statusCode}). '
@@ -109,6 +109,7 @@ class CardDatabase {
       await for (final chunk in response.stream) {
         sink.add(chunk);
         received += chunk.length;
+        ensureDownloadSize(received);
         yield total > 0 ? received / total : -1;
       }
       await sink.close();

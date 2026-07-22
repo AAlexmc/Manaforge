@@ -8,6 +8,7 @@ import 'package:sqlite3/sqlite3.dart';
 
 import 'markets.dart';
 import 'price_history.dart';
+import 'safe_input.dart';
 
 /// Histórico REAL de precios de Cardmarket (~90 días por carta), generado
 /// por scripts/build_price_history_db.py a partir de los datos abiertos de
@@ -82,8 +83,7 @@ class PriceSeriesDatabase {
     final client = http.Client();
     IOSink? gzSink;
     try {
-      final response =
-          await client.send(http.Request('GET', Uri.parse(releaseUrl)));
+      final response = await secureSend(client, Uri.parse(releaseUrl));
       if (response.statusCode != 200) {
         throw HttpException(
             'No se pudo descargar el histórico de precios '
@@ -96,6 +96,7 @@ class PriceSeriesDatabase {
       await for (final chunk in response.stream) {
         gzSink.add(chunk);
         received += chunk.length;
+        ensureDownloadSize(received);
         yield total > 0 ? received / total : -1;
       }
       await gzSink.close();

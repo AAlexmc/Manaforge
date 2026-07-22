@@ -196,8 +196,10 @@ void main() {
         'oracleId': 'o1',
         'name': 'Bolt',
         'printedName': 'Rayo',
-        'imageSmall': 'https://s',
-        'imageNormal': 'https://n',
+        // URLs de Scryfall de verdad: las de otro host se descartan al leer
+        // (una copia restaurada no puede hacerte pedir imágenes de un tercero)
+        'imageSmall': 'https://cards.scryfall.io/small/front/a/b/x.jpg',
+        'imageNormal': 'https://cards.scryfall.io/normal/front/a/b/x.jpg',
         'colors': 'R',
         'typeLine': 'Instant',
         'cmc': 1,

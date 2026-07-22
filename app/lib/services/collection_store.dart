@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'safe_input.dart';
+
 /// Máximo que admite DateTime.fromMillisecondsSinceEpoch: un valor mayor
 /// (fichero editado a mano, otra versión) reventaría al pintar la fila.
 const int _maxStamp = 8640000000000000;
@@ -71,8 +73,11 @@ class OwnedCard {
         oracleId: json['oracleId'] as String,
         name: json['name'] as String,
         printedName: json['printedName'] as String?,
-        imageSmall: json['imageSmall'] as String?,
-        imageNormal: json['imageNormal'] as String?,
+        // las URLs se filtran al LEER: este fichero puede venir de una copia
+        // restaurada que te haya pasado otra persona, y una URL cualquiera
+        // aquí hace que la app la pida sola al pintar el álbum
+        imageSmall: safeCardImageUrl(json['imageSmall'] as String?),
+        imageNormal: safeCardImageUrl(json['imageNormal'] as String?),
         colors: (json['colors'] as String?) ?? '',
         typeLine: (json['typeLine'] as String?) ?? '',
         cmc: (json['cmc'] as int?) ?? 0,
