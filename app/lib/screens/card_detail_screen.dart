@@ -296,6 +296,22 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     );
   }
 
+  /// "Pagaste X por N copias", una línea por divisa. Vacío si no hay ningún
+  /// precio de compra apuntado para esta carta.
+  List<String> _pagadoPorEsta(String oracleId) {
+    final collection = widget.collection;
+    if (collection == null || !collection.hasPurchaseData) return const [];
+    final out = <String>[];
+    collection.paidForCard(oracleId).forEach((divisa, dato) {
+      final unidad = dato.total / dato.qty;
+      out.add('Pagaste ${dato.total.toStringAsFixed(2)}'
+          '${divisa == null ? '' : ' $divisa'} por ${dato.qty} '
+          'copia${dato.qty == 1 ? '' : 's'} '
+          '(${unidad.toStringAsFixed(2)} cada una)');
+    });
+    return out;
+  }
+
   Widget _content(BuildContext context, CardFullDetail detail) {
     final printingQty = widget.collection?.printingQty ?? const {};
     final ownedTotal =
@@ -377,14 +393,28 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                             : null,
                         child: Padding(
                           padding: const EdgeInsets.all(14),
-                          child: Text(
-                            ownedTotal > 0
-                                ? '✓ Tienes $ownedTotal copia${ownedTotal == 1 ? '' : 's'} en tu colección'
-                                : 'No tienes esta carta (todavía).',
-                            style: TextStyle(
-                                color: ownedTotal > 0
-                                    ? MFColors.success
-                                    : null),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ownedTotal > 0
+                                    ? '✓ Tienes $ownedTotal copia${ownedTotal == 1 ? '' : 's'} en tu colección'
+                                    : 'No tienes esta carta (todavía).',
+                                style: TextStyle(
+                                    color: ownedTotal > 0
+                                        ? MFColors.success
+                                        : null),
+                              ),
+                              // lo que pagaste, si el CSV lo traía: una divisa
+                              // por línea, porque no se convierten
+                              for (final linea
+                                  in _pagadoPorEsta(detail.oracleId))
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Text(linea,
+                                      style: const TextStyle(fontSize: 12)),
+                                ),
+                            ],
                           ),
                         ),
                       ),

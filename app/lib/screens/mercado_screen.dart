@@ -7,12 +7,14 @@ import '../services/collection_value_series.dart';
 import '../services/market_prefs.dart';
 import '../services/market_prices.dart';
 import '../services/markets.dart';
+import '../services/pnl.dart';
 import '../services/price_history.dart';
 import '../services/price_series_database.dart';
 import '../services/value_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/pnl_view.dart';
 import '../widgets/market_picker.dart';
 import '../widgets/price_chart.dart';
 import 'card_detail_screen.dart';
@@ -51,6 +53,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
   final _bannerCtrl = ScrollController();
 
   double? _totalValue;
+
+  /// Lo pagado contra lo que vale hoy. null = aún sin calcular o sin
+  /// ninguna compra apuntada.
+  PnL? _pnl;
   List<ValuedCard> _top = const [];
   List<ValuePoint> _points = const [];
   Map<String, List<PricePoint>> _cardHistory = const {};
@@ -164,6 +170,18 @@ class _MercadoScreenState extends State<MercadoScreen> {
           if (c.unitPrice > 0) c.oracleId: c.unitPrice
       });
 
+      // P&L: solo si hay precios de compra apuntados. Va en la divisa
+      // canónica (Cardmarket), la misma del número grande de arriba.
+      final pnl = widget.collection.hasPurchaseData
+          ? await computePnl(
+              purchases: widget.collection.purchases,
+              totalCopies: widget.collection.totalCopies,
+              currency: Market.cardmarket.currency,
+              printingPrices: widget.db.pricesForPrintings,
+              oraclePrices: widget.db.pricesForOracles,
+            )
+          : null;
+
       final points =
           await _history.record(total, widget.collection.totalCopies);
       final curva = await _valueCurve(points);
@@ -191,6 +209,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
       if (!mounted) return;
       setState(() {
         _totalValue = total;
+        _pnl = pnl;
         _top = top;
         _points = curva;
         _cardHistory = cardHistory;
@@ -560,6 +579,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
                         '${widget.collection.totalCopies} cartas'
                         '${_approximate ? ' · valor aproximado (reimporta con "Sustituir" para precios por edición)' : ' · por tus ediciones exactas'}',
                         style: const TextStyle(fontSize: 11.5)),
+                    if (_pnl != null) ...[
+                      const Divider(height: 18),
+                      PnlView(pnl: _pnl!, market: Market.cardmarket),
+                    ],
                     if (_points.length >= 2) ...[
                       const SizedBox(height: 10),
                       SizedBox(

@@ -124,9 +124,13 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
     final at = DateTime.now();
     var imported = 0;
     var copies = 0;
+    var withPrice = 0;
     var tokensIgnored = 0;
     final unrecognized = <String>[];
-    for (final (name, scryfallId, qty, setName, foil) in rows) {
+    for (final row in rows) {
+      final name = row.name;
+      final qty = row.qty;
+      final foil = row.foil;
       // cada pocas filas se cede el turno para que se pinte un frame: es lo
       // que convierte una ventana congelada en una barra que avanza
       if (_done % 25 == 0) {
@@ -135,9 +139,9 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         setState(() {});
       }
       _done++;
-      final (hit, exactPrinting) = await _resolve(name, scryfallId);
+      final (hit, exactPrinting) = await _resolve(name, row.scryfallId);
       if (hit == null) {
-        if (looksLikeToken(name, setName)) {
+        if (looksLikeToken(name, row.setName)) {
           tokensIgnored += qty;
         } else {
           unrecognized.add(name);
@@ -167,6 +171,21 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         // de cartas viejas lo que acabas de escanear
         bump: false,
       );
+      // el precio de compra del CSV es lo único que la app no puede deducir
+      // sola: sin él no hay P&L posible. Se apunta a la edición exacta si se
+      // sabe, y si no a la carta.
+      final pagado = row.purchasePrice;
+      if (pagado != null) {
+        widget.collection.recordPurchase(
+          base: exactPrinting
+              ? hit.printingKey
+              : 'oracle:${hit.oracleId}',
+          qty: qty,
+          perCopy: pagado,
+          currency: row.currency,
+        );
+        withPrice += qty;
+      }
       imported++;
       copies += qty;
     }
@@ -176,7 +195,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         _done = 0;
         _total = 0;
         _result = ImportResult(imported, copies, unrecognized,
-            tokensIgnored: tokensIgnored);
+            tokensIgnored: tokensIgnored, withPurchasePrice: withPrice);
       });
     }
   }
@@ -276,7 +295,10 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                         'añadidas a tu colección.'
                         '${_result!.tokensIgnored == 0 ? '' : '\n• ${_result!.tokensIgnored} tokens/emblemas ignorados (no van en mazos, todo bien).'}'
                         '${_result!.unrecognized.isEmpty ? '' : '\n✗ Sin reconocer: ${_result!.unrecognized.take(8).join(", ")}'
-                            '${_result!.unrecognized.length > 8 ? '…' : ''}'}',
+                            '${_result!.unrecognized.length > 8 ? '…' : ''}'}'
+                        // decir cuántas traían precio de compra evita la duda
+                        // de "¿por qué no me sale el P&L?"
+                        '${_result!.withPurchasePrice == 0 ? '\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna "Purchase price").' : '\n• ${_result!.withPurchasePrice} copias con precio de compra: ya puedes ver el P&L en Mercado.'}',
                       ),
                       const SizedBox(height: 8),
                     ],
