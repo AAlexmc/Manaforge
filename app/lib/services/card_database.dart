@@ -458,9 +458,12 @@ extension AlbumQueries on CardDatabase {
     // no publican precio por edición (Card Kingdom, Mana Pool) se quedan sin
     // él y el álbum lo dice, en vez de enseñar euros diciendo que son dólares
     final priceCol = market.todayColumn;
+    // CAST obligatorio: los precios se guardan como TEXTO (así los da
+    // Scryfall). Sin él, sqlite devuelve un String —y la pantalla revienta—
+    // y además MIN compararía textos, donde "10.00" es menor que "9.00".
     final priceSel = priceCol == null
         ? 'NULL AS price'
-        : 'MIN(p.$priceCol) AS price';
+        : 'MIN(CAST(p.$priceCol AS REAL)) AS price';
     final rows = db.select('''
       SELECT p.oracle_id, p.collector_number, p.printed_name, p.image_small,
              p.image_normal, c.name, c.colors, c.type_line, $priceSel,
