@@ -24,6 +24,8 @@ import 'services/price_history.dart';
 import 'services/price_series_database.dart';
 import 'services/restore_reset.dart';
 import 'services/scanner_database.dart';
+import 'services/window_memory.dart';
+import 'services/window_prefs.dart';
 import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
 import 'widgets/app_background.dart';
@@ -31,7 +33,13 @@ import 'widgets/app_shortcuts.dart';
 import 'widgets/language_picker_dialog.dart';
 import 'widgets/whats_new_dialog.dart';
 
-void main() => runApp(const ManaForgeApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // la ventana se coloca ANTES de pintar nada: colocarla después es un salto
+  // en la cara. Si algo falla, abre con la de siempre (ver WindowMemory)
+  await WindowMemory(WindowPreference()).start();
+  runApp(const ManaForgeApp());
+}
 
 class ManaForgeApp extends StatefulWidget {
   /// Solo para tests: preferencias YA cargadas.
