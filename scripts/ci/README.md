@@ -1,24 +1,17 @@
-# Workflow pendiente de instalar
+# (vacío por ahora)
 
-`build-price-db.yml` construye la base de histórico de precios (MTGJSON →
-SQLite) y la publica como release `price-db-latest`. Está aquí y no en
-`.github/workflows/` porque el token de `gh` de la máquina de desarrollo no
-tiene el permiso `workflow` y GitHub rechaza el push de ficheros de workflow.
+Aquí vivía `build-price-db.yml` mientras el token de la máquina de desarrollo
+no tenía el permiso `workflow` y GitHub rechazaba el push de ficheros de
+workflow. Desde el 22-07-2026 el permiso está puesto y el workflow vive donde
+tiene que vivir: `.github/workflows/build-price-db.yml`.
 
-Conviene además añadir `ijson` al `pip install` de `.github/workflows/ci.yml`
-(hoy instala `pytest pillow`). Los tests de `build_price_history_db.py`
-funcionan sin él —los fixtures son pequeños y caen a `json.load`—, pero con
-`ijson` se ejerce el mismo camino de streaming que usa el build real.
-
-Para instalarlo:
+Si algún día vuelve a pasar (token nuevo sin el permiso):
 
 ```sh
-gh auth refresh -s workflow          # una vez, en una terminal propia
-git mv scripts/ci/build-price-db.yml .github/workflows/build-price-db.yml
-git commit -m "CI: workflow del histórico de precios" && git push
+gh auth refresh -h github.com -s workflow   # en una terminal de verdad, pide navegador
 ```
 
-Mientras tanto la release se puede publicar a mano:
+Y mientras tanto, la release del histórico se puede publicar a mano:
 
 ```sh
 curl -sfL https://mtgjson.com/api/v5/AllPrices.json.gz -o AllPrices.json.gz
@@ -26,6 +19,8 @@ curl -sfL https://mtgjson.com/api/v5/AllIdentifiers.json.gz -o AllIdentifiers.js
 gunzip AllPrices.json.gz AllIdentifiers.json.gz
 python3 scripts/build_price_history_db.py AllPrices.json AllIdentifiers.json manaforge_prices.sqlite
 gzip -9 manaforge_prices.sqlite
+sha256sum manaforge_prices.sqlite.gz | tee SHA256SUMS.txt
 gh release delete price-db-latest --yes || true
-gh release create price-db-latest manaforge_prices.sqlite.gz --title "Histórico de precios"
+gh release create price-db-latest manaforge_prices.sqlite.gz SHA256SUMS.txt \
+  --title "Histórico de precios"
 ```
