@@ -7,6 +7,7 @@ import '../services/market_prefs.dart';
 import '../services/price_series_database.dart';
 import '../services/markets.dart';
 import '../theme/mf_theme.dart';
+import '../widgets/app_shortcuts.dart';
 import '../widgets/common.dart';
 import 'album_filters.dart';
 import 'card_detail_screen.dart';
@@ -23,12 +24,20 @@ class AlbumScreen extends StatefulWidget {
   final MarketPreference? market;
   final PriceSeriesDatabase? prices;
 
+  /// Ctrl+F: si el aviso es para esta pestaña, se enfoca el buscador.
+  final SearchFocusBus? search;
+
+  /// Índice de esta pantalla en la barra, para saber si el aviso es suyo.
+  final int tabIndex;
+
   const AlbumScreen(
       {super.key,
       required this.db,
       required this.collection,
       this.market,
-      this.prices});
+      this.prices,
+      this.search,
+      this.tabIndex = -1});
 
   @override
   State<AlbumScreen> createState() => _AlbumScreenState();
@@ -56,12 +65,22 @@ class _AlbumScreenState extends State<AlbumScreen> {
     // el álbum vive como pestaña: debe reaccionar cuando la colección
     // cambia (importaciones, añadir/quitar cartas), no solo al crearse
     widget.collection.addListener(_onCollectionChanged);
+    widget.search?.addListener(_onSearchShortcut);
   }
 
   @override
   void dispose() {
     widget.collection.removeListener(_onCollectionChanged);
+    widget.search?.removeListener(_onSearchShortcut);
+    _searchFocus.dispose();
     super.dispose();
+  }
+
+  final FocusNode _searchFocus = FocusNode();
+
+  void _onSearchShortcut() {
+    if (widget.search?.target != widget.tabIndex) return;
+    _searchFocus.requestFocus();
   }
 
   void _onCollectionChanged() {
@@ -166,6 +185,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     children: [
                       Expanded(
                         child: TextField(
+                          focusNode: _searchFocus,
                           onChanged: (v) => setState(() => _query = v),
                           decoration: InputDecoration(
                             hintText: 'Busca una expansión…',

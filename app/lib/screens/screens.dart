@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' show FontFeature;
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -7,6 +8,7 @@ import '../services/app_update.dart';
 import '../services/background_prefs.dart';
 import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
+import '../widgets/app_shortcuts.dart';
 import '../widgets/background_settings.dart';
 import '../widgets/update_notice.dart';
 import 'backup_screen.dart';
@@ -163,6 +165,31 @@ class _AjustesScreenState extends State<AjustesScreen> {
                         'a internet son las bases de datos y, si lo dejas '
                         'puesto, mirar si hay versión nueva.',
                         style: TextStyle(fontSize: 11.5)),
+                    const SizedBox(height: 12),
+                    Text('Atajos de teclado',
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const SizedBox(height: 4),
+                    for (final atajo in kShortcutHelp)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 110,
+                              child: Text(atajo.$1,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontFeatures: [
+                                        FontFeature.tabularFigures()
+                                      ],
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Expanded(
+                                child: Text(atajo.$2,
+                                    style: const TextStyle(fontSize: 12))),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),

@@ -9,6 +9,7 @@ import '../services/folder_value.dart';
 import '../services/scanner_database.dart';
 import '../services/market_prefs.dart';
 import '../services/price_series_database.dart';
+import '../widgets/app_shortcuts.dart';
 import '../widgets/folder_tile.dart';
 import 'album_screen.dart';
 import 'all_cards_screen.dart';
@@ -38,6 +39,11 @@ class ColeccionScreen extends StatefulWidget {
   final MarketPreference? market;
   final PriceSeriesDatabase? prices;
 
+  /// Ctrl+F: aquí no hay buscador, se busca en "Todas las cartas". Si el
+  /// aviso es para esta pestaña, se abre esa pantalla directamente.
+  final SearchFocusBus? search;
+  final int tabIndex;
+
   const ColeccionScreen({
     super.key,
     required this.db,
@@ -47,6 +53,8 @@ class ColeccionScreen extends StatefulWidget {
     this.achievements,
     this.market,
     this.prices,
+    this.search,
+    this.tabIndex = -1,
   });
 
   @override
@@ -73,6 +81,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
     widget.folders.load();
     widget.collection.addListener(_recomputeValues);
     widget.folders.addListener(_recomputeValues);
+    widget.search?.addListener(_onSearchShortcut);
     widget.db.isReady().then((ready) {
       if (mounted) setState(() => _dbReady = ready);
       if (ready) _recomputeValues();
@@ -83,7 +92,15 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
   void dispose() {
     widget.collection.removeListener(_recomputeValues);
     widget.folders.removeListener(_recomputeValues);
+    widget.search?.removeListener(_onSearchShortcut);
     super.dispose();
+  }
+
+  /// Ctrl+F en esta pestaña: aquí no hay buscador — se busca en "Todas las
+  /// cartas", así que se abre esa, que es lo que se quería.
+  void _onSearchShortcut() {
+    if (!mounted || widget.search?.target != widget.tabIndex) return;
+    _openAllCards();
   }
 
   /// Una sola pasada para todas las carpetas: el mapa impresión -> carta se
