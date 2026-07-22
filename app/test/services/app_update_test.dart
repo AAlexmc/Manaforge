@@ -248,4 +248,40 @@ void main() {
       expect(otro.enabled, isFalse);
     });
   });
+
+  group('la última versión vista', () {
+    late Directory dir;
+
+    setUp(() => dir = Directory.systemTemp.createTempSync('mf-vista'));
+    tearDown(() => dir.deleteSync(recursive: true));
+
+    test('sin fichero de preferencias, es un primer arranque', () async {
+      final checker = AppUpdateChecker(dataDir: dir, currentVersion: '0.3.0');
+      await checker.load();
+
+      expect(checker.firstRun, isTrue);
+      expect(checker.seenVersion, isNull);
+    });
+
+    test('darlas por vistas sobrevive a cerrar la app', () async {
+      final uno = AppUpdateChecker(dataDir: dir, currentVersion: '0.3.0');
+      await uno.markNewsSeen();
+
+      final otro = AppUpdateChecker(dataDir: dir, currentVersion: '0.3.0');
+      await otro.load();
+
+      expect(otro.seenVersion, '0.3.0');
+      expect(otro.firstRun, isFalse);
+    });
+
+    test('actualizar deja la versión vista por detrás', () async {
+      final vieja = AppUpdateChecker(dataDir: dir, currentVersion: '0.2.0');
+      await vieja.markNewsSeen();
+
+      final nueva = AppUpdateChecker(dataDir: dir, currentVersion: '0.3.0');
+      await nueva.load();
+
+      expect(nueva.seenVersion, '0.2.0'); // hay novedades que contar
+    });
+  });
 }

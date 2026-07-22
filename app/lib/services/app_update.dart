@@ -171,6 +171,26 @@ class AppUpdateChecker extends ChangeNotifier {
   AppRelease? _available;
   bool _loaded = false;
 
+  /// Última versión de la app que el usuario llegó a VER (para enseñarle las
+  /// novedades cuando abre una nueva). null = nunca se guardó: o es el primer
+  /// arranque, o viene de una versión anterior a esto.
+  String? _seenVersion;
+
+  /// ¿Es el primer arranque de la app? Si `update.json` no existía, sí.
+  bool _firstRun = false;
+
+  String? get seenVersion => _seenVersion;
+
+  bool get firstRun => _firstRun;
+
+  /// Da por vistas las novedades de la versión que corre.
+  Future<void> markNewsSeen() async {
+    if (_seenVersion == currentVersion) return;
+    _seenVersion = currentVersion;
+    notifyListeners();
+    await _save();
+  }
+
   /// ¿Se mira si hay versión nueva? Apagable desde Ajustes.
   bool get enabled => _enabled;
 
@@ -191,10 +211,15 @@ class AppUpdateChecker extends ChangeNotifier {
     if (_loaded) return;
     _loaded = true;
     final file = await _file();
-    if (file == null || !await file.exists()) return;
+    if (file == null || !await file.exists()) {
+      _firstRun = true;
+      return;
+    }
     try {
       final decoded = jsonDecode(await file.readAsString());
       if (decoded is! Map<String, dynamic>) return;
+      final vista = decoded['seenVersion'];
+      if (vista is String && vista.isNotEmpty) _seenVersion = vista;
       _enabled = decoded['enabled'] is bool ? decoded['enabled'] as bool : true;
       final ms = decoded['lastCheck'];
       if (ms is int && ms > 0) {
@@ -275,6 +300,7 @@ class AppUpdateChecker extends ChangeNotifier {
             'enabled': _enabled,
             if (_lastCheck != null)
               'lastCheck': _lastCheck!.millisecondsSinceEpoch,
+            if (_seenVersion != null) 'seenVersion': _seenVersion,
           }),
           flush: true);
       await tmp.rename(file.path);
