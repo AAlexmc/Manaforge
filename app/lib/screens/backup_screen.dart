@@ -29,11 +29,15 @@ class _BackupCardState extends State<BackupCard> {
   bool _busy = false;
   String? _status;
 
-  /// Las copias automáticas que hay en la carpeta de datos. Se enseñan porque
-  /// si no, no existen para nadie: viven en `~/.local/share/...`, que no es un
-  /// sitio al que nadie vaya a navegar con un selector de ficheros justo el
-  /// día que se le ha roto la colección.
+  /// Las copias que hay en la carpeta de datos. Se enseñan porque si no, no
+  /// existen para nadie: viven en `~/.local/share/...`, que no es un sitio al
+  /// que nadie vaya a navegar con un selector de ficheros justo el día que se
+  /// le ha roto la colección.
   List<File> _autos = const [];
+
+  /// Cuál de ellas está elegida en el desplegable. Empieza SIN elegir a
+  /// propósito: restaurar borra lo de ahora, así que hay que pedirla a mano.
+  File? _elegida;
 
   @override
   void initState() {
@@ -46,7 +50,16 @@ class _BackupCardState extends State<BackupCard> {
       final dir = await widget.dataDir();
       if (dir == null) return;
       final copias = await listBackups(dir);
-      if (mounted) setState(() => _autos = copias.take(5).toList());
+      if (!mounted) return;
+      setState(() {
+        _autos = copias.take(10).toList();
+        // la elegida puede haber desaparecido (rotación): no dejar el
+        // desplegable apuntando a un fichero que ya no está
+        if (_elegida != null &&
+            !_autos.any((f) => f.path == _elegida!.path)) {
+          _elegida = null;
+        }
+      });
     } catch (_) {/* sin lista: los botones de arriba siguen funcionando */}
   }
 
@@ -98,7 +111,7 @@ class _BackupCardState extends State<BackupCard> {
     }
   }
 
-  /// Restaurar una de las copias automáticas de la lista.
+  /// Restaurar la copia elegida en el desplegable.
   Future<void> _restoreAuto(File file) async {
     setState(() {
       _busy = true;
@@ -133,6 +146,8 @@ class _BackupCardState extends State<BackupCard> {
         : '✓ Restaurado · ${manifest.summary}. Lo que tenías antes está '
             'guardado en la carpeta backups.');
     widget.onRestored();
+    // el restaurar deja una copia `pre-restore` nueva: que salga en la lista
+    unawaited(_loadAutos());
   }
 
   @override
@@ -152,46 +167,77 @@ class _BackupCardState extends State<BackupCard> {
                 'otro sitio: un disco, la nube, lo que quieras.',
                 style: TextStyle(fontSize: 12.5)),
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 10,
-              runSpacing: 8,
-              children: [
-                FilledButton.icon(
-                  onPressed: _busy ? null : _export,
-                  icon: const Icon(Icons.save_alt),
-                  label: const Text('Guardar copia'),
-                ),
-                OutlinedButton.icon(
-                  onPressed: _busy ? null : _restore,
-                  icon: const Icon(Icons.settings_backup_restore),
-                  label: const Text('Restaurar copia'),
-                ),
-              ],
+            FilledButton.icon(
+              onPressed: _busy ? null : _export,
+              icon: const Icon(Icons.save_alt),
+              label: const Text('Guardar copia'),
             ),
             if (_status != null) ...[
               const SizedBox(height: 10),
               Text(_status!, style: const TextStyle(fontSize: 12.5)),
             ],
-            if (_autos.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              const Text('Copias que he guardado yo solo',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              const SizedBox(height: 4),
-              const Text('Una cada semana, me quedo con las cinco últimas.',
-                  style: TextStyle(fontSize: 12)),
-              for (final file in _autos)
-                ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.history, size: 20),
-                  title: Text(backupLabel(file),
-                      style: const TextStyle(fontSize: 12.5)),
-                  trailing: TextButton(
-                    onPressed: _busy ? null : () => _restoreAuto(file),
-                    child: const Text('Restaurar'),
-                  ),
+            const Divider(height: 32),
+            Text('Restaurar una copia',
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 6),
+            const Text(
+                'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de '
+                'ahora por los de la copia. Elige cuál, dale al botón y '
+                'escribe CONFIRMAR: así no se restaura nada sin querer.',
+                style: TextStyle(fontSize: 12.5)),
+            const SizedBox(height: 12),
+            if (_autos.isEmpty)
+              const Text('Aún no hay copias guardadas en este ordenador.',
+                  style: TextStyle(fontSize: 12.5))
+            else ...[
+              DropdownButtonFormField<File>(
+                // la clave depende de la LISTA: si las copias cambian (una
+                // rotada, una nueva `pre-restore`), el campo se reconstruye
+                // desde cero. Sin esto se queda con un fichero que ya no está
+                // entre las opciones, y eso revienta el desplegable.
+                key: ValueKey(_autos.map((f) => f.path).join('|')),
+                initialValue: _elegida,
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  labelText: 'Copia a restaurar',
+                  border: OutlineInputBorder(),
+                  isDense: true,
                 ),
+                hint: const Text('Elige una copia'),
+                items: [
+                  for (final file in _autos)
+                    DropdownMenuItem<File>(
+                      value: file,
+                      child: Text(backupLabel(file),
+                          style: const TextStyle(fontSize: 12.5),
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                ],
+                onChanged:
+                    _busy ? null : (f) => setState(() => _elegida = f),
+              ),
+              const SizedBox(height: 10),
+              FilledButton.icon(
+                // apagado hasta que haya una copia elegida: el botón no puede
+                // hacer nada por defecto
+                onPressed: _busy || _elegida == null
+                    ? null
+                    : () => _restoreAuto(_elegida!),
+                icon: const Icon(Icons.settings_backup_restore),
+                label: const Text('Restaurar la copia elegida'),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                  'Guardo una copia automática cada semana (las cinco '
+                  'últimas) y otra justo antes de cada restaurar.',
+                  style: TextStyle(fontSize: 12)),
             ],
+            const SizedBox(height: 10),
+            OutlinedButton.icon(
+              onPressed: _busy ? null : _restore,
+              icon: const Icon(Icons.folder_open),
+              label: const Text('Restaurar de un archivo'),
+            ),
           ],
         ),
       ),
@@ -199,31 +245,68 @@ class _BackupCardState extends State<BackupCard> {
   }
 }
 
+/// La palabra que hay que escribir para restaurar. Escribirla cuesta tres
+/// segundos; restaurar sin querer cuesta la colección entera.
+const String kRestoreConfirmWord = 'CONFIRMAR';
+
 /// Pregunta antes de aplicar una copia, diciendo QUÉ trae y qué va a pasar con
-/// lo que hay ahora. Devuelve true solo si el usuario lo confirma.
+/// lo que hay ahora. Devuelve true solo si el usuario escribe [kRestoreConfirmWord]
+/// y confirma: un clic de más no puede reemplazar una colección.
 Future<bool> confirmRestore(
     BuildContext context, BackupManifest manifest) async {
   final fecha = manifest.createdAt.toLocal();
   final cuando = '${fecha.day}/${fecha.month}/${fecha.year}';
   final ok = await showDialog<bool>(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('¿Restaurar esta copia?'),
-      content: Text('Copia del $cuando · ${manifest.summary}.\n\n'
-          'Esto reemplaza tu colección, mazos, carpetas y logros de ahora '
-          'por los de esa copia. Antes de hacerlo guardo lo que tienes en la '
-          'carpeta backups, por si quieres volver.'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Cancelar'),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: const Text('Restaurar'),
-        ),
-      ],
-    ),
+    builder: (context) {
+      var escrito = '';
+      return StatefulBuilder(
+        builder: (context, setSheet) {
+          final puede =
+              escrito.trim().toUpperCase() == kRestoreConfirmWord;
+          return AlertDialog(
+            title: const Text('¿Restaurar esta copia?'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Copia del $cuando · ${manifest.summary}.\n\n'
+                    'Esto reemplaza tu colección, mazos, carpetas y logros de '
+                    'ahora por los de esa copia. Antes de hacerlo guardo lo '
+                    'que tienes en la carpeta backups, por si quieres volver.'),
+                const SizedBox(height: 16),
+                const Text('Escribe $kRestoreConfirmWord para poder seguir:',
+                    style: TextStyle(fontSize: 12.5)),
+                const SizedBox(height: 6),
+                TextField(
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    hintText: kRestoreConfirmWord,
+                  ),
+                  onChanged: (v) => setSheet(() => escrito = v),
+                  onSubmitted: (_) {
+                    if (puede) Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
+              ),
+              FilledButton(
+                onPressed:
+                    puede ? () => Navigator.of(context).pop(true) : null,
+                child: const Text('Restaurar'),
+              ),
+            ],
+          );
+        },
+      );
+    },
   );
   return ok ?? false;
 }
