@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/deck_store.dart';
@@ -116,7 +118,8 @@ class _MazosScreenState extends State<MazosScreen> {
                                     onPressed: widget.onGoToForge,
                                     icon: const Icon(Icons.auto_awesome,
                                         size: 18),
-                                    label: const Text('Ir a Forge'),
+                                    label: Text(tr(context)
+                                        .decksEmptyGoForge),
                                   ),
                               ],
                             ),

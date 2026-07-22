@@ -1,0 +1,541 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_de.dart';
+import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_ja.dart';
+import 'app_localizations_ko.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
+import 'app_localizations_zh.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
+    Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('it'),
+    Locale('ja'),
+    Locale('ko'),
+    Locale('pt'),
+    Locale('ru'),
+    Locale('zh')
+  ];
+
+  /// No description provided for @tabHome.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicio'**
+  String get tabHome;
+
+  /// No description provided for @tabCollection.
+  ///
+  /// In es, this message translates to:
+  /// **'Colección'**
+  String get tabCollection;
+
+  /// No description provided for @tabAlbum.
+  ///
+  /// In es, this message translates to:
+  /// **'Álbum'**
+  String get tabAlbum;
+
+  /// No description provided for @tabDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'Mazos'**
+  String get tabDecks;
+
+  /// No description provided for @tabForge.
+  ///
+  /// In es, this message translates to:
+  /// **'Forge'**
+  String get tabForge;
+
+  /// No description provided for @tabMarket.
+  ///
+  /// In es, this message translates to:
+  /// **'Mercado'**
+  String get tabMarket;
+
+  /// No description provided for @tabSettings.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes'**
+  String get tabSettings;
+
+  /// No description provided for @tabScan.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear'**
+  String get tabScan;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'ManaForge es gratis y con el código a la vista (licencia PolyForm Noncommercial: compártela y tócala lo que quieras, pero no se vende). Sin anuncios, sin premium, sin cuentas. Tus cartas son tuyas.'**
+  String get settingsIntro;
+
+  /// No description provided for @howItWorks.
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo funciona'**
+  String get howItWorks;
+
+  /// No description provided for @howScan.
+  ///
+  /// In es, this message translates to:
+  /// **'Pasa cartas por delante de la webcam o suelta una foto: entran solas a tu colección con su edición exacta.'**
+  String get howScan;
+
+  /// No description provided for @howCollection.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo lo que tienes, con buscador, filtros y carpetas (las carpetas son etiquetas: una carta puede estar en varias).'**
+  String get howCollection;
+
+  /// No description provided for @howAlbum.
+  ///
+  /// In es, this message translates to:
+  /// **'Una página por expansión, estilo álbum de cromos: lo que tienes a color, lo que falta apagado, con lo que costaría completarlo.'**
+  String get howAlbum;
+
+  /// No description provided for @howForge.
+  ///
+  /// In es, this message translates to:
+  /// **'Mazos completos y legales con tus cartas. O con las de una expansión que aún no tienes, diciéndote qué comprar y cuánto cuesta.'**
+  String get howForge;
+
+  /// No description provided for @howDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'Los que guardes. Si vendes una carta, el mazo lo dice en vez de fingir que la tienes.'**
+  String get howDecks;
+
+  /// No description provided for @howMarket.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuánto vale tu colección, su gráfica, tu lista de deseos con avisos de precio, y — si tu CSV traía precio de compra — cuánto ganas o pierdes.'**
+  String get howMarket;
+
+  /// No description provided for @howPrivacy.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo se calcula en tu dispositivo. Lo único que sale a internet son las bases de datos y, si lo dejas puesto, mirar si hay versión nueva.'**
+  String get howPrivacy;
+
+  /// No description provided for @shortcuts.
+  ///
+  /// In es, this message translates to:
+  /// **'Atajos de teclado'**
+  String get shortcuts;
+
+  /// No description provided for @shortcutTabs.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar de pestaña'**
+  String get shortcutTabs;
+
+  /// No description provided for @shortcutScan.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir el escáner'**
+  String get shortcutScan;
+
+  /// No description provided for @shortcutSearch.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar en la pestaña en la que estés'**
+  String get shortcutSearch;
+
+  /// No description provided for @shortcutSettings.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes'**
+  String get shortcutSettings;
+
+  /// No description provided for @shortcutClose.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar lo que tengas abierto encima'**
+  String get shortcutClose;
+
+  /// No description provided for @language.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma'**
+  String get language;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In es, this message translates to:
+  /// **'El del sistema'**
+  String get languageSystem;
+
+  /// No description provided for @languagePartial.
+  ///
+  /// In es, this message translates to:
+  /// **'La app se está traduciendo por partes: el armazón ya está en tu idioma y el resto de pantallas siguen en español de momento.'**
+  String get languagePartial;
+
+  /// No description provided for @versionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Versión de ManaForge'**
+  String get versionTitle;
+
+  /// No description provided for @versionYouHave.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienes la {version}.'**
+  String versionYouHave(String version);
+
+  /// No description provided for @versionSeeWhatsNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver qué trae'**
+  String get versionSeeWhatsNew;
+
+  /// No description provided for @versionNotifyMe.
+  ///
+  /// In es, this message translates to:
+  /// **'Avisarme de versiones nuevas'**
+  String get versionNotifyMe;
+
+  /// No description provided for @versionNotifyMeWhy.
+  ///
+  /// In es, this message translates to:
+  /// **'Pregunta una vez al día a GitHub qué versión es la última. No descarga ni instala nada.'**
+  String get versionNotifyMeWhy;
+
+  /// No description provided for @versionCheckNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar ahora'**
+  String get versionCheckNow;
+
+  /// No description provided for @versionUpToDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Estás en la última versión (o GitHub no contesta ahora mismo).'**
+  String get versionUpToDate;
+
+  /// No description provided for @versionThereIs.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay ManaForge {version}.'**
+  String versionThereIs(String version);
+
+  /// No description provided for @versionGoDownload.
+  ///
+  /// In es, this message translates to:
+  /// **'Ir a la descarga'**
+  String get versionGoDownload;
+
+  /// No description provided for @versionNotAuto.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienes la {version}. La app no se actualiza sola: te lleva a la descarga.'**
+  String versionNotAuto(String version);
+
+  /// No description provided for @versionNotNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no'**
+  String get versionNotNow;
+
+  /// No description provided for @versionSee.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver'**
+  String get versionSee;
+
+  /// No description provided for @whatsNewTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Novedades de la {version}'**
+  String whatsNewTitle(String version);
+
+  /// No description provided for @whatsNewClose.
+  ///
+  /// In es, this message translates to:
+  /// **'A jugar'**
+  String get whatsNewClose;
+
+  /// No description provided for @downloadCopyLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar enlace'**
+  String get downloadCopyLink;
+
+  /// No description provided for @downloadClose.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get downloadClose;
+
+  /// No description provided for @downloadTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargar ManaForge'**
+  String get downloadTitle;
+
+  /// No description provided for @backgroundTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Fondo de pantalla'**
+  String get backgroundTitle;
+
+  /// No description provided for @backgroundWhat.
+  ///
+  /// In es, this message translates to:
+  /// **'Pon detrás de la app la imagen que quieras. Wizards publica fondos oficiales de cada colección: bájate el que te guste y elígelo aquí. La app no se los descarga sola — ese arte tiene dueño y repartirlo no le toca.'**
+  String get backgroundWhat;
+
+  /// No description provided for @backgroundPick.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir imagen…'**
+  String get backgroundPick;
+
+  /// No description provided for @backgroundChange.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar imagen…'**
+  String get backgroundChange;
+
+  /// No description provided for @backgroundOfficial.
+  ///
+  /// In es, this message translates to:
+  /// **'Fondos oficiales de Magic'**
+  String get backgroundOfficial;
+
+  /// No description provided for @backgroundRemove.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar fondo'**
+  String get backgroundRemove;
+
+  /// No description provided for @backgroundDim.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuánto se oscurece (para que se lea el texto)'**
+  String get backgroundDim;
+
+  /// No description provided for @backgroundNotAnImage.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige una imagen (.jpg, .png o .webp) como fondo.'**
+  String get backgroundNotAnImage;
+
+  /// No description provided for @backgroundTooBig.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa imagen es demasiado grande para usarla de fondo.'**
+  String get backgroundTooBig;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Bienvenido a la forja. Mete tus cartas como quieras — o prueba Forge antes de meter ninguna.'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeScan.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear mis cartas'**
+  String get welcomeScan;
+
+  /// No description provided for @welcomeImport.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar CSV (ManaBox)'**
+  String get welcomeImport;
+
+  /// No description provided for @welcomeTryForge.
+  ///
+  /// In es, this message translates to:
+  /// **'Probar Forge sin colección'**
+  String get welcomeTryForge;
+
+  /// No description provided for @decksEmptyGoForge.
+  ///
+  /// In es, this message translates to:
+  /// **'Ir a Forge'**
+  String get decksEmptyGoForge;
+
+  /// No description provided for @yourCollection.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu colección'**
+  String get yourCollection;
+
+  /// No description provided for @cardsAndDistinct.
+  ///
+  /// In es, this message translates to:
+  /// **'{copies} cartas · {distinct} distintas'**
+  String cardsAndDistinct(int copies, int distinct);
+
+  /// No description provided for @marketArrow.
+  ///
+  /// In es, this message translates to:
+  /// **'Mercado ›'**
+  String get marketArrow;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) => <String>[
+        'de',
+        'en',
+        'es',
+        'fr',
+        'it',
+        'ja',
+        'ko',
+        'pt',
+        'ru',
+        'zh'
+      ].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'ja':
+      return AppLocalizationsJa();
+    case 'ko':
+      return AppLocalizationsKo();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
+    case 'zh':
+      return AppLocalizationsZh();
+  }
+
+  throw FlutterError(
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
+}

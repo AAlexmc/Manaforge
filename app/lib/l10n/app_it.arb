@@ -1,0 +1,102 @@
+{
+  "@@locale": "it",
+  "tabHome": "Home",
+  "tabCollection": "Collezione",
+  "tabAlbum": "Album",
+  "tabDecks": "Mazzi",
+  "tabForge": "Forge",
+  "tabMarket": "Mercato",
+  "tabSettings": "Impostazioni",
+  "tabScan": "Scansiona",
+  "settingsTitle": "Impostazioni",
+  "settingsIntro": "ManaForge è gratuita e con il codice in chiaro (licenza PolyForm Noncommercial: condividila e modificala quanto vuoi, ma non si vende). Niente pubblicità, niente premium, niente account. Le tue carte sono tue.",
+  "howItWorks": "Come funziona",
+  "howScan": "Passa le carte davanti alla webcam o trascina una foto: entrano in collezione con l'edizione esatta.",
+  "howCollection": "Tutto quello che hai, con ricerca, filtri e cartelle (le cartelle sono etichette: una carta può stare in più di una).",
+  "howAlbum": "Una pagina per espansione, come un album di figurine: quello che hai a colori, quello che manca in grigio, e quanto costerebbe completarlo.",
+  "howForge": "Mazzi completi e legali con le tue carte. Oppure con quelle di un'espansione che non hai ancora, dicendoti cosa comprare e quanto costa.",
+  "howDecks": "Quelli che salvi. Se vendi una carta, il mazzo lo dice invece di fingere che tu ce l'abbia ancora.",
+  "howMarket": "Quanto vale la tua collezione, il suo grafico, la lista dei desideri con avvisi di prezzo — e, se il CSV aveva il prezzo d'acquisto, quanto ci guadagni o ci perdi.",
+  "howPrivacy": "Tutto viene calcolato sul tuo dispositivo. Le uniche cose che vanno in rete sono i database e, se lo lasci attivo, il controllo delle nuove versioni.",
+  "shortcuts": "Scorciatoie da tastiera",
+  "shortcutTabs": "Cambiare scheda",
+  "shortcutScan": "Aprire lo scanner",
+  "shortcutSearch": "Cercare nella scheda in cui sei",
+  "shortcutSettings": "Impostazioni",
+  "shortcutClose": "Chiudere quello che hai aperto sopra",
+  "language": "Lingua",
+  "languageSystem": "Come il sistema",
+  "languagePartial": "L'app viene tradotta a tappe: l'impalcatura è già nella tua lingua, il resto delle schermate resta per ora in spagnolo.",
+  "versionTitle": "Versione di ManaForge",
+  "versionYouHave": "Hai la {version}.",
+  "versionSeeWhatsNew": "Vedi cosa porta",
+  "versionNotifyMe": "Avvisami delle nuove versioni",
+  "versionNotifyMeWhy": "Chiede una volta al giorno a GitHub qual è l'ultima versione. Non scarica né installa nulla.",
+  "versionCheckNow": "Cerca ora",
+  "versionUpToDate": "Sei all'ultima versione (o GitHub non risponde in questo momento).",
+  "versionThereIs": "È uscita ManaForge {version}.",
+  "versionGoDownload": "Vai al download",
+  "versionNotAuto": "Hai la {version}. L'app non si aggiorna da sola: ti porta al download.",
+  "versionNotNow": "Non ora",
+  "versionSee": "Vedi",
+  "whatsNewTitle": "Novità della {version}",
+  "whatsNewClose": "Si gioca",
+  "downloadCopyLink": "Copia il link",
+  "downloadClose": "Chiudi",
+  "downloadTitle": "Scarica ManaForge",
+  "backgroundTitle": "Sfondo",
+  "backgroundWhat": "Metti dietro l'app l'immagine che vuoi. Wizards pubblica sfondi ufficiali di ogni espansione: scarica quello che ti piace e scegli qui. L'app non se li scarica da sola — quell'arte ha un proprietario e distribuirla non tocca a lei.",
+  "backgroundPick": "Scegli un'immagine…",
+  "backgroundChange": "Cambia immagine…",
+  "backgroundOfficial": "Sfondi ufficiali di Magic",
+  "backgroundRemove": "Togli lo sfondo",
+  "backgroundDim": "Quanto si scurisce (perché il testo resti leggibile)",
+  "backgroundNotAnImage": "Scegli un'immagine (.jpg, .png o .webp) come sfondo.",
+  "backgroundTooBig": "Quell'immagine è troppo grande per usarla come sfondo.",
+  "welcomeTitle": "Benvenuto alla forgia. Fai entrare le tue carte come preferisci — o prova Forge prima di aggiungerne una.",
+  "welcomeScan": "Scansiona le mie carte",
+  "welcomeImport": "Importa CSV (ManaBox)",
+  "welcomeTryForge": "Prova Forge senza collezione",
+  "decksEmptyGoForge": "Vai a Forge",
+  "yourCollection": "La tua collezione",
+  "cardsAndDistinct": "{copies} carte · {distinct} diverse",
+  "marketArrow": "Mercato ›",
+  "@versionYouHave": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionThereIs": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionNotAuto": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@whatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@cardsAndDistinct": {
+    "placeholders": {
+      "copies": {
+        "type": "int"
+      },
+      "distinct": {
+        "type": "int"
+      }
+    }
+  }
+}

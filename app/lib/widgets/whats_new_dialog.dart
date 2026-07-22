@@ -7,6 +7,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/app_update.dart';
 import '../services/whats_new.dart';
 import '../theme/mf_theme.dart';
@@ -49,7 +51,9 @@ Future<void> showWhatsNewDialog(BuildContext context, VersionNews news) {
         children: [
           const Icon(Icons.auto_awesome, color: MFColors.forge),
           const SizedBox(width: 8),
-          Expanded(child: Text('Novedades de la ${news.version}')),
+          Expanded(
+              child: Text(
+                  tr(context).whatsNewTitle(news.version))),
         ],
       ),
       content: SizedBox(
@@ -82,7 +86,7 @@ Future<void> showWhatsNewDialog(BuildContext context, VersionNews news) {
       actions: [
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('A jugar'),
+          child: Text(tr(context).whatsNewClose),
         ),
       ],
     ),

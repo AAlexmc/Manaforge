@@ -1,0 +1,91 @@
+{
+  "@@locale": "en",
+
+  "tabHome": "Home",
+  "tabCollection": "Collection",
+  "tabAlbum": "Album",
+  "tabDecks": "Decks",
+  "tabForge": "Forge",
+  "tabMarket": "Market",
+  "tabSettings": "Settings",
+  "tabScan": "Scan",
+
+  "settingsTitle": "Settings",
+  "settingsIntro": "ManaForge is free and its code is out in the open (PolyForm Noncommercial licence: share it and tinker with it all you like, just don't sell it). No ads, no premium, no accounts. Your cards are yours.",
+
+  "howItWorks": "How it works",
+  "howScan": "Hold cards up to the webcam or drop in a photo: they land in your collection with the exact printing.",
+  "howCollection": "Everything you own, with search, filters and folders (folders are tags: a card can be in several).",
+  "howAlbum": "One page per set, like a sticker album: what you own in colour, what's missing greyed out, and what completing it would cost.",
+  "howForge": "Complete, legal decks from your cards. Or from a set you don't own yet, telling you what to buy and what it costs.",
+  "howDecks": "The ones you save. If you sell a card, the deck says so instead of pretending you still have it.",
+  "howMarket": "What your collection is worth, its chart, your wishlist with price alerts, and — if your CSV had purchase prices — how much you're up or down.",
+  "howPrivacy": "Everything is worked out on your device. The only things that go online are the databases and, if you leave it on, checking whether there's a new version.",
+
+  "shortcuts": "Keyboard shortcuts",
+  "shortcutTabs": "Switch tab",
+  "shortcutScan": "Open the scanner",
+  "shortcutSearch": "Search in the tab you're on",
+  "shortcutSettings": "Settings",
+  "shortcutClose": "Close whatever is open on top",
+
+  "language": "Language",
+  "languageSystem": "Match the system",
+  "languagePartial": "The app is being translated in stages: the shell is already in your language, the rest of the screens are still in Spanish for now.",
+
+  "versionTitle": "ManaForge version",
+  "versionYouHave": "You're on {version}.",
+  "@versionYouHave": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "versionSeeWhatsNew": "See what's in it",
+  "versionNotifyMe": "Tell me about new versions",
+  "versionNotifyMeWhy": "Asks GitHub once a day which version is the latest. It doesn't download or install anything.",
+  "versionCheckNow": "Check now",
+  "versionUpToDate": "You're on the latest version (or GitHub isn't answering right now).",
+  "versionThereIs": "ManaForge {version} is out.",
+  "@versionThereIs": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "versionGoDownload": "Go to the download",
+  "versionNotAuto": "You're on {version}. The app doesn't update itself: it takes you to the download.",
+  "@versionNotAuto": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "versionNotNow": "Not now",
+  "versionSee": "See",
+  "whatsNewTitle": "What's new in {version}",
+  "@whatsNewTitle": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "whatsNewClose": "Let's play",
+  "downloadCopyLink": "Copy link",
+  "downloadClose": "Close",
+  "downloadTitle": "Download ManaForge",
+
+  "backgroundTitle": "Wallpaper",
+  "backgroundWhat": "Put any image you like behind the app. Wizards publishes official wallpapers for every set: download the one you want and pick it here. The app doesn't fetch them for you — that art has an owner and handing it out isn't its place.",
+  "backgroundPick": "Choose an image…",
+  "backgroundChange": "Change image…",
+  "backgroundOfficial": "Official Magic wallpapers",
+  "backgroundRemove": "Remove wallpaper",
+  "backgroundDim": "How much it dims (so the text stays readable)",
+  "backgroundNotAnImage": "Pick an image (.jpg, .png or .webp) as the wallpaper.",
+  "backgroundTooBig": "That image is too big to use as a wallpaper.",
+
+  "welcomeTitle": "Welcome to the forge. Get your cards in however you like — or try Forge before adding any.",
+  "welcomeScan": "Scan my cards",
+  "welcomeImport": "Import CSV (ManaBox)",
+  "welcomeTryForge": "Try Forge with no collection",
+  "decksEmptyGoForge": "Go to Forge",
+
+  "yourCollection": "Your collection",
+  "cardsAndDistinct": "{copies} cards · {distinct} distinct",
+  "@cardsAndDistinct": {
+    "placeholders": {
+      "copies": { "type": "int" },
+      "distinct": { "type": "int" }
+    }
+  },
+  "marketArrow": "Market ›"
+}

@@ -1,0 +1,102 @@
+{
+  "@@locale": "ru",
+  "tabHome": "Главная",
+  "tabCollection": "Коллекция",
+  "tabAlbum": "Альбом",
+  "tabDecks": "Колоды",
+  "tabForge": "Forge",
+  "tabMarket": "Рынок",
+  "tabSettings": "Настройки",
+  "tabScan": "Сканировать",
+  "settingsTitle": "Настройки",
+  "settingsIntro": "ManaForge бесплатна, и её код открыт (лицензия PolyForm Noncommercial: делитесь и меняйте сколько угодно, но не продавайте). Без рекламы, без премиума, без аккаунтов. Ваши карты — ваши.",
+  "howItWorks": "Как это работает",
+  "howScan": "Поднесите карты к веб-камере или перетащите фото: они попадут в коллекцию с точным изданием.",
+  "howCollection": "Всё, что у вас есть: поиск, фильтры и папки (папки — это метки: карта может лежать в нескольких).",
+  "howAlbum": "По странице на выпуск, как альбом наклеек: что есть — в цвете, чего не хватает — блёклым, и во сколько обойдётся собрать.",
+  "howForge": "Полные и легальные колоды из ваших карт. Или из выпуска, которого у вас ещё нет, — с подсказкой, что купить и почём.",
+  "howDecks": "Сохранённые колоды. Если продадите карту, колода скажет об этом, а не сделает вид, что карта на месте.",
+  "howMarket": "Сколько стоит коллекция, её график, список желаний с оповещениями о цене — и, если в CSV была цена покупки, сколько вы заработали или потеряли.",
+  "howPrivacy": "Все расчёты идут на вашем устройстве. В сеть уходят только базы данных и, если оставите включённым, проверка новой версии.",
+  "shortcuts": "Горячие клавиши",
+  "shortcutTabs": "Переключить вкладку",
+  "shortcutScan": "Открыть сканер",
+  "shortcutSearch": "Искать на текущей вкладке",
+  "shortcutSettings": "Настройки",
+  "shortcutClose": "Закрыть то, что открыто сверху",
+  "language": "Язык",
+  "languageSystem": "Как в системе",
+  "languagePartial": "Приложение переводится постепенно: основа уже на вашем языке, остальные экраны пока на испанском.",
+  "versionTitle": "Версия ManaForge",
+  "versionYouHave": "У вас {version}.",
+  "versionSeeWhatsNew": "Что нового",
+  "versionNotifyMe": "Сообщать о новых версиях",
+  "versionNotifyMeWhy": "Раз в день спрашивает у GitHub, какая версия последняя. Ничего не скачивает и не устанавливает.",
+  "versionCheckNow": "Проверить сейчас",
+  "versionUpToDate": "У вас последняя версия (или GitHub сейчас не отвечает).",
+  "versionThereIs": "Вышла ManaForge {version}.",
+  "versionGoDownload": "Перейти к загрузке",
+  "versionNotAuto": "У вас {version}. Приложение не обновляется само: оно откроет страницу загрузки.",
+  "versionNotNow": "Не сейчас",
+  "versionSee": "Открыть",
+  "whatsNewTitle": "Что нового в {version}",
+  "whatsNewClose": "Играем",
+  "downloadCopyLink": "Скопировать ссылку",
+  "downloadClose": "Закрыть",
+  "downloadTitle": "Скачать ManaForge",
+  "backgroundTitle": "Фоновое изображение",
+  "backgroundWhat": "Поставьте за приложением любую картинку. Wizards публикует официальные обои к каждому выпуску: скачайте понравившиеся и выберите здесь. Приложение не скачивает их само — у этих работ есть правообладатель, и раздавать их — не его дело.",
+  "backgroundPick": "Выбрать изображение…",
+  "backgroundChange": "Сменить изображение…",
+  "backgroundOfficial": "Официальные обои Magic",
+  "backgroundRemove": "Убрать фон",
+  "backgroundDim": "Насколько затемнять (чтобы текст читался)",
+  "backgroundNotAnImage": "Выберите изображение (.jpg, .png или .webp) в качестве фона.",
+  "backgroundTooBig": "Это изображение слишком большое для фона.",
+  "welcomeTitle": "Добро пожаловать в кузницу. Добавьте карты как вам удобно — или попробуйте Forge, ещё не добавив ни одной.",
+  "welcomeScan": "Отсканировать карты",
+  "welcomeImport": "Импорт CSV (ManaBox)",
+  "welcomeTryForge": "Попробовать Forge без коллекции",
+  "decksEmptyGoForge": "Перейти в Forge",
+  "yourCollection": "Ваша коллекция",
+  "cardsAndDistinct": "{copies} карт · {distinct} уникальных",
+  "marketArrow": "Рынок ›",
+  "@versionYouHave": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionThereIs": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionNotAuto": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@whatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@cardsAndDistinct": {
+    "placeholders": {
+      "copies": {
+        "type": "int"
+      },
+      "distinct": {
+        "type": "int"
+      }
+    }
+  }
+}

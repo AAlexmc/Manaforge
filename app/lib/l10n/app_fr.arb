@@ -1,0 +1,102 @@
+{
+  "@@locale": "fr",
+  "tabHome": "Accueil",
+  "tabCollection": "Collection",
+  "tabAlbum": "Album",
+  "tabDecks": "Decks",
+  "tabForge": "Forge",
+  "tabMarket": "Marché",
+  "tabSettings": "Réglages",
+  "tabScan": "Scanner",
+  "settingsTitle": "Réglages",
+  "settingsIntro": "ManaForge est gratuite et son code est ouvert (licence PolyForm Noncommercial : partagez-la et bidouillez-la autant que vous voulez, mais elle ne se vend pas). Sans pub, sans premium, sans comptes. Vos cartes sont à vous.",
+  "howItWorks": "Comment ça marche",
+  "howScan": "Passez des cartes devant la webcam ou déposez une photo : elles entrent dans votre collection avec la bonne édition.",
+  "howCollection": "Tout ce que vous avez, avec recherche, filtres et dossiers (les dossiers sont des étiquettes : une carte peut être dans plusieurs).",
+  "howAlbum": "Une page par édition, comme un album de vignettes : ce que vous avez en couleur, ce qui manque en grisé, et ce que coûterait de la compléter.",
+  "howForge": "Des decks complets et légaux avec vos cartes. Ou avec celles d'une édition que vous n'avez pas encore, en vous disant quoi acheter et combien ça coûte.",
+  "howDecks": "Ceux que vous enregistrez. Si vous vendez une carte, le deck le dit au lieu de faire semblant que vous l'avez encore.",
+  "howMarket": "Ce que vaut votre collection, sa courbe, votre liste d'envies avec alertes de prix — et, si votre CSV avait les prix d'achat, combien vous gagnez ou perdez.",
+  "howPrivacy": "Tout est calculé sur votre appareil. Les seules choses qui passent par internet sont les bases de données et, si vous le laissez activé, la vérification d'une nouvelle version.",
+  "shortcuts": "Raccourcis clavier",
+  "shortcutTabs": "Changer d'onglet",
+  "shortcutScan": "Ouvrir le scanner",
+  "shortcutSearch": "Chercher dans l'onglet affiché",
+  "shortcutSettings": "Réglages",
+  "shortcutClose": "Fermer ce qui est ouvert par-dessus",
+  "language": "Langue",
+  "languageSystem": "Comme le système",
+  "languagePartial": "L'app est traduite par étapes : la structure est déjà dans votre langue, les autres écrans restent en espagnol pour l'instant.",
+  "versionTitle": "Version de ManaForge",
+  "versionYouHave": "Vous avez la {version}.",
+  "versionSeeWhatsNew": "Voir ce qu'elle apporte",
+  "versionNotifyMe": "Me prévenir des nouvelles versions",
+  "versionNotifyMeWhy": "Demande une fois par jour à GitHub quelle est la dernière version. Ne télécharge et n'installe rien.",
+  "versionCheckNow": "Chercher maintenant",
+  "versionUpToDate": "Vous êtes à jour (ou GitHub ne répond pas pour l'instant).",
+  "versionThereIs": "ManaForge {version} est sortie.",
+  "versionGoDownload": "Aller au téléchargement",
+  "versionNotAuto": "Vous avez la {version}. L'app ne se met pas à jour toute seule : elle vous emmène au téléchargement.",
+  "versionNotNow": "Pas maintenant",
+  "versionSee": "Voir",
+  "whatsNewTitle": "Nouveautés de la {version}",
+  "whatsNewClose": "On joue",
+  "downloadCopyLink": "Copier le lien",
+  "downloadClose": "Fermer",
+  "downloadTitle": "Télécharger ManaForge",
+  "backgroundTitle": "Fond d'écran",
+  "backgroundWhat": "Mettez l'image que vous voulez derrière l'app. Wizards publie des fonds d'écran officiels pour chaque édition : téléchargez celui qui vous plaît et choisissez-le ici. L'app ne les télécharge pas toute seule — cet art a un propriétaire, et le distribuer n'est pas son rôle.",
+  "backgroundPick": "Choisir une image…",
+  "backgroundChange": "Changer d'image…",
+  "backgroundOfficial": "Fonds d'écran officiels Magic",
+  "backgroundRemove": "Enlever le fond",
+  "backgroundDim": "Assombrissement (pour que le texte reste lisible)",
+  "backgroundNotAnImage": "Choisissez une image (.jpg, .png ou .webp) comme fond.",
+  "backgroundTooBig": "Cette image est trop grande pour servir de fond.",
+  "welcomeTitle": "Bienvenue à la forge. Faites entrer vos cartes comme vous voulez — ou essayez Forge avant d'en ajouter une seule.",
+  "welcomeScan": "Scanner mes cartes",
+  "welcomeImport": "Importer un CSV (ManaBox)",
+  "welcomeTryForge": "Essayer Forge sans collection",
+  "decksEmptyGoForge": "Aller à Forge",
+  "yourCollection": "Votre collection",
+  "cardsAndDistinct": "{copies} cartes · {distinct} différentes",
+  "marketArrow": "Marché ›",
+  "@versionYouHave": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionThereIs": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionNotAuto": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@whatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@cardsAndDistinct": {
+    "placeholders": {
+      "copies": {
+        "type": "int"
+      },
+      "distinct": {
+        "type": "int"
+      }
+    }
+  }
+}

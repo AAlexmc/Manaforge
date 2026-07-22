@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'l10n/app_localizations.dart';
+import 'l10n/t.dart';
 import 'screens/logros_screen.dart';
 import 'screens/screens.dart';
 import 'services/achievement_store.dart';
@@ -13,6 +15,7 @@ import 'services/background_prefs.dart';
 import 'services/card_database.dart';
 import 'services/certificate_store.dart';
 import 'services/collection_store.dart';
+import 'services/language_prefs.dart';
 import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
 import 'services/folder_store.dart';
@@ -25,6 +28,7 @@ import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
 import 'widgets/app_background.dart';
 import 'widgets/app_shortcuts.dart';
+import 'widgets/language_picker_dialog.dart';
 import 'widgets/whats_new_dialog.dart';
 
 void main() => runApp(const ManaForgeApp());
@@ -50,16 +54,20 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
   /// Para poder cerrar con Escape desde encima del navegador.
   final _navigator = GlobalKey<NavigatorState>();
 
+  /// En qué idioma se ve todo. Por defecto, el del sistema.
+  final _language = LanguagePreference();
+
   @override
   void initState() {
     super.initState();
     unawaited(_background.load());
+    unawaited(_language.load());
   }
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: _background,
+      listenable: Listenable.merge([_background, _language]),
       builder: (context, _) {
         // con fondo puesto, las pantallas dejan de pintar su color opaco:
         // si no, taparían la imagen entera y el fondo no se vería nunca
@@ -75,6 +83,9 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
         return MaterialApp(
           navigatorKey: _navigator,
           title: 'ManaForge',
+          locale: _language.locale, // null = el del sistema
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           debugShowCheckedModeBanner: false,
           theme: conFondo(Brightness.light),
           darkTheme: conFondo(Brightness.dark),
@@ -95,6 +106,7 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
           home: HomeShell(
             key: ValueKey(_session),
             background: _background,
+            language: _language,
             onRestored: () {
               // los dos almacenes compartidos NO se recrean con la app: si no
               // se vacían aquí, siguen con lo de antes en memoria y lo
@@ -116,8 +128,14 @@ class HomeShell extends StatefulWidget {
   /// Fondo de pantalla, para poder cambiarlo desde Ajustes.
   final BackgroundPreference background;
 
+  /// Idioma, por lo mismo.
+  final LanguagePreference language;
+
   const HomeShell(
-      {super.key, required this.onRestored, required this.background});
+      {super.key,
+      required this.onRestored,
+      required this.background,
+      required this.language});
 
   @override
   State<HomeShell> createState() => _HomeShellState();
@@ -128,45 +146,48 @@ class _HomeShellState extends State<HomeShell> {
   /// escáner y vuelve. Su sitio se saca de ESTA lista y no se escribe a mano
   /// en ningún otro lado — escribirlo a mano ya salió mal una vez (Escanear
   /// abría Mazos y Mazos abría el escáner).
-  static const List<NavigationDestination> _destinos = [
-          NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'Inicio'),
-          NavigationDestination(
-              icon: Icon(Icons.style_outlined),
-              selectedIcon: Icon(Icons.style),
-              label: 'Colección'),
-          NavigationDestination(
-              icon: Icon(Icons.auto_stories_outlined),
-              selectedIcon: Icon(Icons.auto_stories),
-              label: 'Álbum'),
-          NavigationDestination(
-              icon: Icon(Icons.qr_code_scanner, color: MFColors.manaRed),
-              selectedIcon: Icon(Icons.qr_code_scanner,
-                  color: MFColors.manaRed),
-              label: 'Escanear'),
-          NavigationDestination(
-              icon: Icon(Icons.layers_outlined),
-              selectedIcon: Icon(Icons.layers),
-              label: 'Mazos'),
-          NavigationDestination(
-              icon: ForgeTabIcon(selected: false),
-              selectedIcon: ForgeTabIcon(selected: true),
-              label: 'Forge'),
-          NavigationDestination(
-              icon: Icon(Icons.storefront_outlined),
-              selectedIcon: Icon(Icons.storefront),
-              label: 'Mercado'),
-          NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
-              label: 'Ajustes'),
-  ];
+  /// Las pestañas. Se construyen con el contexto porque sus nombres están
+  /// traducidos: una lista `const` no puede saber en qué idioma estás.
+  List<NavigationDestination> _destinos(AppLocalizations t) => [
+        NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: t.tabHome),
+        NavigationDestination(
+            icon: const Icon(Icons.style_outlined),
+            selectedIcon: const Icon(Icons.style),
+            label: t.tabCollection),
+        NavigationDestination(
+            icon: const Icon(Icons.auto_stories_outlined),
+            selectedIcon: const Icon(Icons.auto_stories),
+            label: t.tabAlbum),
+        NavigationDestination(
+            icon: const Icon(Icons.qr_code_scanner, color: MFColors.manaRed),
+            selectedIcon:
+                const Icon(Icons.qr_code_scanner, color: MFColors.manaRed),
+            label: t.tabScan),
+        NavigationDestination(
+            icon: const Icon(Icons.layers_outlined),
+            selectedIcon: const Icon(Icons.layers),
+            label: t.tabDecks),
+        const NavigationDestination(
+            icon: ForgeTabIcon(selected: false),
+            selectedIcon: ForgeTabIcon(selected: true),
+            label: 'Forge'),
+        NavigationDestination(
+            icon: const Icon(Icons.storefront_outlined),
+            selectedIcon: const Icon(Icons.storefront),
+            label: t.tabMarket),
+        NavigationDestination(
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: t.tabSettings),
+      ];
 
-  /// Dónde está "Escanear" dentro de la barra.
-  static final int _escanear =
-      _destinos.indexWhere((d) => d.label == 'Escanear');
+  /// Dónde está "Escanear" dentro de la barra. Es una POSICIÓN, no un
+  /// nombre: buscarlo por su texto se rompía en cuanto el texto cambiaba de
+  /// idioma.
+  static const int _escanear = 3;
 
   int _index = 0;
 
@@ -226,6 +247,10 @@ class _HomeShellState extends State<HomeShell> {
     // del primer frame: antes no hay ni Navigator donde enseñarlo
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _collection.load();
+      if (!mounted) return;
+      // primero el idioma (es CÓMO se lee todo lo demás), y solo la primera
+      // vez; después se cambia en Ajustes
+      await maybeAskLanguage(context, widget.language);
       if (!mounted) return;
       await maybeShowWhatsNew(context,
           checker: _updates,
@@ -334,7 +359,8 @@ class _HomeShellState extends State<HomeShell> {
           db: _db,
           onRestored: widget.onRestored,
           updates: _updates,
-          background: widget.background),
+          background: widget.background,
+          language: widget.language),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el
@@ -343,6 +369,9 @@ class _HomeShellState extends State<HomeShell> {
         pantalla < _escanear ? pantalla : pantalla + 1;
     int pantallaDeBarra(int barra) =>
         barra < _escanear ? barra : barra - 1;
+
+    final t = tr(context);
+    final destinos = _destinos(t);
 
     return CallbackShortcuts(
       bindings: mainShortcuts(
@@ -368,7 +397,7 @@ class _HomeShellState extends State<HomeShell> {
               }
               setState(() => _index = pantallaDeBarra(i));
             },
-            destinations: _destinos,
+            destinations: destinos,
           ),
         ),
       ),

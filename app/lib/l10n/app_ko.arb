@@ -1,0 +1,102 @@
+{
+  "@@locale": "ko",
+  "tabHome": "홈",
+  "tabCollection": "컬렉션",
+  "tabAlbum": "앨범",
+  "tabDecks": "덱",
+  "tabForge": "Forge",
+  "tabMarket": "마켓",
+  "tabSettings": "설정",
+  "tabScan": "스캔",
+  "settingsTitle": "설정",
+  "settingsIntro": "ManaForge는 무료이고 코드도 공개되어 있습니다(PolyForm Noncommercial 라이선스: 공유와 수정은 자유, 판매만 불가). 광고 없음, 프리미엄 없음, 계정 없음. 당신의 카드는 당신의 것입니다.",
+  "howItWorks": "사용법",
+  "howScan": "웹캠 앞에 카드를 대거나 사진을 끌어다 놓으면, 정확한 판본으로 컬렉션에 들어갑니다.",
+  "howCollection": "가진 카드 전부. 검색, 필터, 폴더 제공(폴더는 태그입니다: 한 카드가 여러 폴더에 들어갈 수 있습니다).",
+  "howAlbum": "세트마다 한 페이지, 스티커 앨범처럼. 가진 카드는 컬러로, 없는 카드는 흐리게, 완성 비용까지 보여줍니다.",
+  "howForge": "가진 카드만으로 완성된 합법 덱을 만듭니다. 아직 없는 세트로도 만들 수 있고, 무엇을 얼마에 사야 하는지 알려줍니다.",
+  "howDecks": "저장한 덱들. 카드를 팔면 가진 척하지 않고 사실대로 알려줍니다.",
+  "howMarket": "컬렉션의 가치와 추이 그래프, 가격 알림이 있는 위시리스트. CSV에 구매가가 있으면 손익도 보여줍니다.",
+  "howPrivacy": "모든 계산은 기기 안에서 이루어집니다. 인터넷으로 나가는 것은 데이터베이스 내려받기와, 켜 두었다면 새 버전 확인뿐입니다.",
+  "shortcuts": "키보드 단축키",
+  "shortcutTabs": "탭 전환",
+  "shortcutScan": "스캐너 열기",
+  "shortcutSearch": "현재 탭에서 검색",
+  "shortcutSettings": "설정",
+  "shortcutClose": "위에 열린 화면 닫기",
+  "language": "언어",
+  "languageSystem": "시스템 설정 따르기",
+  "languagePartial": "앱은 단계적으로 번역 중입니다. 기본 화면은 이미 선택한 언어로 나오고, 나머지 화면은 당분간 스페인어입니다.",
+  "versionTitle": "ManaForge 버전",
+  "versionYouHave": "현재 {version} 버전입니다.",
+  "versionSeeWhatsNew": "무엇이 바뀌었는지 보기",
+  "versionNotifyMe": "새 버전 알려주기",
+  "versionNotifyMeWhy": "하루에 한 번 GitHub에 최신 버전을 확인합니다. 내려받거나 설치하지 않습니다.",
+  "versionCheckNow": "지금 확인",
+  "versionUpToDate": "최신 버전입니다(또는 GitHub가 지금 응답하지 않습니다).",
+  "versionThereIs": "ManaForge {version}이(가) 나왔습니다.",
+  "versionGoDownload": "내려받기로 이동",
+  "versionNotAuto": "현재 {version} 버전입니다. 앱은 스스로 업데이트하지 않고, 내려받기 페이지로 안내합니다.",
+  "versionNotNow": "나중에",
+  "versionSee": "보기",
+  "whatsNewTitle": "{version}의 새로운 점",
+  "whatsNewClose": "시작하기",
+  "downloadCopyLink": "링크 복사",
+  "downloadClose": "닫기",
+  "downloadTitle": "ManaForge 내려받기",
+  "backgroundTitle": "배경 이미지",
+  "backgroundWhat": "원하는 이미지를 앱 배경으로 둘 수 있습니다. Wizards는 세트마다 공식 배경화면을 공개합니다. 마음에 드는 것을 내려받아 여기서 고르세요. 앱이 대신 내려받지는 않습니다 — 그 그림에는 주인이 있고, 배포는 앱이 할 일이 아닙니다.",
+  "backgroundPick": "이미지 고르기…",
+  "backgroundChange": "이미지 바꾸기…",
+  "backgroundOfficial": "Magic 공식 배경화면",
+  "backgroundRemove": "배경 없애기",
+  "backgroundDim": "어둡게 하는 정도(글자가 읽히도록)",
+  "backgroundNotAnImage": "배경으로 쓸 이미지(.jpg, .png, .webp)를 고르세요.",
+  "backgroundTooBig": "이 이미지는 배경으로 쓰기에 너무 큽니다.",
+  "welcomeTitle": "forge에 오신 걸 환영합니다. 원하는 방식으로 카드를 넣거나, 한 장도 없이 Forge를 먼저 써 보세요.",
+  "welcomeScan": "내 카드 스캔",
+  "welcomeImport": "CSV 가져오기(ManaBox)",
+  "welcomeTryForge": "컬렉션 없이 Forge 써보기",
+  "decksEmptyGoForge": "Forge로 가기",
+  "yourCollection": "내 컬렉션",
+  "cardsAndDistinct": "{copies}장 · {distinct}종",
+  "marketArrow": "마켓 ›",
+  "@versionYouHave": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionThereIs": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionNotAuto": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@whatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@cardsAndDistinct": {
+    "placeholders": {
+      "copies": {
+        "type": "int"
+      },
+      "distinct": {
+        "type": "int"
+      }
+    }
+  }
+}
