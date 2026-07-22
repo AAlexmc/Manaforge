@@ -118,6 +118,20 @@ class _HomeShellState extends State<HomeShell> {
       arranque */}
   }
 
+  /// Abre el escáner en vivo. Vive en la barra de abajo, no dentro de
+  /// Colección: es la acción que más se usa de toda la app.
+  void _abrirEscaner() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => LiveScanScreen(
+        db: _db,
+        collection: _collection,
+        scanner: _scanner,
+        achievements: _achievements,
+        folders: _folders,
+      ),
+    ));
+  }
+
   /// Avisa de los logros nuevos caigan donde caigan (escáner, importador,
   /// carpetas…): el aviso sale sobre la pestaña en la que estés.
   void _onAchievements() {
@@ -167,11 +181,25 @@ class _HomeShellState extends State<HomeShell> {
           market: _market),
       AjustesScreen(db: _db, onRestored: widget.onRestored),
     ];
+    // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
+    // suelto en una esquina de una sola pantalla. No es una pestaña —abre el
+    // escáner y vuelve— así que el índice de la barra no es el de la pantalla.
+    const escanear = 4;
+    int barraDePantalla(int pantalla) =>
+        pantalla < escanear ? pantalla : pantalla + 1;
+    int pantallaDeBarra(int barra) => barra < escanear ? barra : barra - 1;
+
     return Scaffold(
       body: IndexedStack(index: _index, children: screens),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
+        selectedIndex: barraDePantalla(_index),
+        onDestinationSelected: (i) {
+          if (i == escanear) {
+            _abrirEscaner();
+            return;
+          }
+          setState(() => _index = pantallaDeBarra(i));
+        },
         destinations: const [
           NavigationDestination(
               icon: Icon(Icons.home_outlined),
@@ -185,6 +213,11 @@ class _HomeShellState extends State<HomeShell> {
               icon: Icon(Icons.auto_stories_outlined),
               selectedIcon: Icon(Icons.auto_stories),
               label: 'Álbum'),
+          NavigationDestination(
+              icon: Icon(Icons.qr_code_scanner, color: MFColors.manaRed),
+              selectedIcon: Icon(Icons.qr_code_scanner,
+                  color: MFColors.manaRed),
+              label: 'Escanear'),
           NavigationDestination(
               icon: Icon(Icons.layers_outlined),
               selectedIcon: Icon(Icons.layers),
