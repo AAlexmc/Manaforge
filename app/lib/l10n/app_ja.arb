@@ -1,0 +1,102 @@
+{
+  "@@locale": "ja",
+  "tabHome": "ホーム",
+  "tabCollection": "コレクション",
+  "tabAlbum": "アルバム",
+  "tabDecks": "デッキ",
+  "tabForge": "Forge",
+  "tabMarket": "マーケット",
+  "tabSettings": "設定",
+  "tabScan": "スキャン",
+  "settingsTitle": "設定",
+  "settingsIntro": "ManaForge は無料で、ソースコードも公開されています（PolyForm Noncommercial ライセンス：共有も改変も自由、販売のみ不可）。広告なし、有料版なし、アカウント不要。あなたのカードはあなたのものです。",
+  "howItWorks": "使い方",
+  "howScan": "ウェブカメラにカードをかざすか、写真をドロップするだけ。正確なセット情報付きでコレクションに入ります。",
+  "howCollection": "所持カードの一覧。検索・絞り込み・フォルダ付き（フォルダはタグです：1枚のカードが複数に入れます）。",
+  "howAlbum": "セットごとに1ページ、シールアルバムのように。持っているカードはカラー、足りないカードは灰色で、完成にかかる金額も表示します。",
+  "howForge": "手持ちのカードだけで、完成した合法デッキを組みます。まだ持っていないセットからも組めて、何をいくらで買えばいいか教えます。",
+  "howDecks": "保存したデッキ。カードを手放すと、持っているふりをせずにその旨を表示します。",
+  "howMarket": "コレクションの価値と推移グラフ、価格通知付きのほしいものリスト。CSV に購入価格があれば損益も表示します。",
+  "howPrivacy": "計算はすべて端末内で行います。ネットに出るのはデータベースの取得と、有効にしている場合の新バージョン確認だけです。",
+  "shortcuts": "キーボードショートカット",
+  "shortcutTabs": "タブを切り替える",
+  "shortcutScan": "スキャナーを開く",
+  "shortcutSearch": "表示中のタブで検索",
+  "shortcutSettings": "設定",
+  "shortcutClose": "上に開いているものを閉じる",
+  "language": "言語",
+  "languageSystem": "システムに合わせる",
+  "languagePartial": "アプリは段階的に翻訳中です。基本部分はすでにお使いの言語で表示されますが、その他の画面は当面スペイン語のままです。",
+  "versionTitle": "ManaForge のバージョン",
+  "versionYouHave": "現在のバージョンは {version} です。",
+  "versionSeeWhatsNew": "変更点を見る",
+  "versionNotifyMe": "新しいバージョンを知らせる",
+  "versionNotifyMeWhy": "1日1回 GitHub に最新バージョンを問い合わせます。ダウンロードもインストールもしません。",
+  "versionCheckNow": "今すぐ確認",
+  "versionUpToDate": "最新バージョンです（または GitHub が応答していません）。",
+  "versionThereIs": "ManaForge {version} が公開されています。",
+  "versionGoDownload": "ダウンロードページへ",
+  "versionNotAuto": "現在は {version} です。自動更新はしません。ダウンロードページを開きます。",
+  "versionNotNow": "あとで",
+  "versionSee": "見る",
+  "whatsNewTitle": "{version} の新機能",
+  "whatsNewClose": "はじめる",
+  "downloadCopyLink": "リンクをコピー",
+  "downloadClose": "閉じる",
+  "downloadTitle": "ManaForge をダウンロード",
+  "backgroundTitle": "背景画像",
+  "backgroundWhat": "好きな画像をアプリの背景にできます。Wizards は各セットの公式壁紙を公開しています。好きなものをダウンロードして、ここで選んでください。アプリが勝手に取得することはありません — その絵には権利者がいて、配布はアプリの役目ではありません。",
+  "backgroundPick": "画像を選ぶ…",
+  "backgroundChange": "画像を変える…",
+  "backgroundOfficial": "Magic 公式壁紙",
+  "backgroundRemove": "背景を外す",
+  "backgroundDim": "暗くする度合い（文字が読めるように）",
+  "backgroundNotAnImage": "背景には画像（.jpg、.png、.webp）を選んでください。",
+  "backgroundTooBig": "この画像は背景に使うには大きすぎます。",
+  "welcomeTitle": "forge へようこそ。好きな方法でカードを取り込むか、1枚も入れずに Forge を試してみてください。",
+  "welcomeScan": "カードをスキャン",
+  "welcomeImport": "CSV を読み込む（ManaBox）",
+  "welcomeTryForge": "コレクションなしで Forge を試す",
+  "decksEmptyGoForge": "Forge へ",
+  "yourCollection": "あなたのコレクション",
+  "cardsAndDistinct": "{copies} 枚 · {distinct} 種類",
+  "marketArrow": "マーケット ›",
+  "@versionYouHave": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionThereIs": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@versionNotAuto": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@whatsNewTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "@cardsAndDistinct": {
+    "placeholders": {
+      "copies": {
+        "type": "int"
+      },
+      "distinct": {
+        "type": "int"
+      }
+    }
+  }
+}

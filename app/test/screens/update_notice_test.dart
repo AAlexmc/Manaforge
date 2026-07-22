@@ -53,7 +53,7 @@ void main() {
     await tester.pumpWidget(
         MaterialApp(home: Scaffold(body: UpdateBanner(checker: checker))));
 
-    expect(find.text('Hay ManaForge 0.3.0'), findsOneWidget);
+    expect(find.text('Hay ManaForge 0.3.0.'), findsOneWidget);
     expect(find.textContaining('no se actualiza sola'), findsOneWidget);
   });
 
@@ -65,7 +65,7 @@ void main() {
     await tester.tap(find.byTooltip('Ahora no'));
     await tester.pump();
 
-    expect(find.text('Hay ManaForge 0.3.0'), findsNothing);
+    expect(find.text('Hay ManaForge 0.3.0.'), findsNothing);
   });
 
   testWidgets('sin versión nueva no hay tira', (tester) async {
@@ -81,13 +81,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(body: UpdateSettingsCard(checker: checker))));
 
-    expect(find.textContaining('Hay ManaForge 0.3.0:'), findsOneWidget);
+    expect(find.textContaining('Hay ManaForge 0.3.0.'), findsOneWidget);
 
     await tester.tap(find.text('Avisarme de versiones nuevas'));
     await tester.pump();
 
     expect(checker.enabled, isFalse);
-    expect(find.textContaining('Hay ManaForge 0.3.0:'), findsNothing);
+    expect(find.textContaining('Hay ManaForge 0.3.0.'), findsNothing);
   });
 
   testWidgets('Ajustes: "Buscar ahora" pregunta aunque no toque todavía',

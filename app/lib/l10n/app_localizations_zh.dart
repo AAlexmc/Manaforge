@@ -1,0 +1,205 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Chinese (`zh`).
+class AppLocalizationsZh extends AppLocalizations {
+  AppLocalizationsZh([String locale = 'zh']) : super(locale);
+
+  @override
+  String get tabHome => '首页';
+
+  @override
+  String get tabCollection => '收藏';
+
+  @override
+  String get tabAlbum => '图鉴';
+
+  @override
+  String get tabDecks => '套牌';
+
+  @override
+  String get tabForge => 'Forge';
+
+  @override
+  String get tabMarket => '市场';
+
+  @override
+  String get tabSettings => '设置';
+
+  @override
+  String get tabScan => '扫描';
+
+  @override
+  String get settingsTitle => '设置';
+
+  @override
+  String get settingsIntro =>
+      'ManaForge 免费且代码公开（PolyForm Noncommercial 许可：随意分享和修改，但不可出售）。没有广告、没有会员、无需账号。你的卡就是你的。';
+
+  @override
+  String get howItWorks => '怎么用';
+
+  @override
+  String get howScan => '把卡放到摄像头前，或拖入一张照片：它们会带着准确的版本进入你的收藏。';
+
+  @override
+  String get howCollection => '你拥有的一切，带搜索、筛选和文件夹（文件夹是标签：一张卡可以同时在多个里）。';
+
+  @override
+  String get howAlbum => '每个系列一页，像贴纸册：有的显示彩色，缺的显示灰色，并算出补齐要花多少钱。';
+
+  @override
+  String get howForge => '用你的卡组出完整且合规的套牌。也可以用你还没有的系列，并告诉你要买什么、要花多少。';
+
+  @override
+  String get howDecks => '你保存的套牌。如果卖掉了某张卡，套牌会照实说，而不是假装你还有。';
+
+  @override
+  String get howMarket => '你的收藏值多少、走势图、带价格提醒的心愿单；如果 CSV 里有买入价，还会显示盈亏。';
+
+  @override
+  String get howPrivacy => '一切都在你的设备上计算。会联网的只有数据库下载，以及（如果你开着）检查是否有新版本。';
+
+  @override
+  String get shortcuts => '键盘快捷键';
+
+  @override
+  String get shortcutTabs => '切换标签页';
+
+  @override
+  String get shortcutScan => '打开扫描器';
+
+  @override
+  String get shortcutSearch => '在当前标签页搜索';
+
+  @override
+  String get shortcutSettings => '设置';
+
+  @override
+  String get shortcutClose => '关闭上层打开的内容';
+
+  @override
+  String get language => '语言';
+
+  @override
+  String get languageSystem => '跟随系统';
+
+  @override
+  String get languagePartial => '应用正在分阶段翻译：主体框架已是你的语言，其余界面暂时仍是西班牙语。';
+
+  @override
+  String get versionTitle => 'ManaForge 版本';
+
+  @override
+  String versionYouHave(String version) {
+    return '你使用的是 $version。';
+  }
+
+  @override
+  String get versionSeeWhatsNew => '看看更新了什么';
+
+  @override
+  String get versionNotifyMe => '有新版本时提醒我';
+
+  @override
+  String get versionNotifyMeWhy => '每天向 GitHub 查询一次最新版本。不会下载也不会安装任何东西。';
+
+  @override
+  String get versionCheckNow => '立即检查';
+
+  @override
+  String get versionUpToDate => '已是最新版本（或 GitHub 暂时没有响应）。';
+
+  @override
+  String versionThereIs(String version) {
+    return 'ManaForge $version 已发布。';
+  }
+
+  @override
+  String get versionGoDownload => '前往下载';
+
+  @override
+  String versionNotAuto(String version) {
+    return '你使用的是 $version。应用不会自动更新：它会带你去下载页。';
+  }
+
+  @override
+  String get versionNotNow => '以后再说';
+
+  @override
+  String get versionSee => '查看';
+
+  @override
+  String whatsNewTitle(String version) {
+    return '$version 的新内容';
+  }
+
+  @override
+  String get whatsNewClose => '开始玩';
+
+  @override
+  String get downloadCopyLink => '复制链接';
+
+  @override
+  String get downloadClose => '关闭';
+
+  @override
+  String get downloadTitle => '下载 ManaForge';
+
+  @override
+  String get backgroundTitle => '背景图';
+
+  @override
+  String get backgroundWhat =>
+      '把你喜欢的图片放到应用背后。Wizards 会为每个系列发布官方壁纸：下载你喜欢的，然后在这里选择。应用不会替你下载——那些画作有版权方，分发不是它该做的事。';
+
+  @override
+  String get backgroundPick => '选择图片…';
+
+  @override
+  String get backgroundChange => '更换图片…';
+
+  @override
+  String get backgroundOfficial => 'Magic 官方壁纸';
+
+  @override
+  String get backgroundRemove => '移除背景';
+
+  @override
+  String get backgroundDim => '变暗程度（保证文字可读）';
+
+  @override
+  String get backgroundNotAnImage => '请选择图片（.jpg、.png 或 .webp）作为背景。';
+
+  @override
+  String get backgroundTooBig => '这张图片太大，不能用作背景。';
+
+  @override
+  String get welcomeTitle => '欢迎来到熔炉。用你喜欢的方式导入卡片——或者一张都不加，先试试 Forge。';
+
+  @override
+  String get welcomeScan => '扫描我的卡';
+
+  @override
+  String get welcomeImport => '导入 CSV（ManaBox）';
+
+  @override
+  String get welcomeTryForge => '没有收藏也试试 Forge';
+
+  @override
+  String get decksEmptyGoForge => '去 Forge';
+
+  @override
+  String get yourCollection => '你的收藏';
+
+  @override
+  String cardsAndDistinct(int copies, int distinct) {
+    return '$copies 张 · $distinct 种';
+  }
+
+  @override
+  String get marketArrow => '市场 ›';
+}

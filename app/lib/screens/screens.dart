@@ -7,9 +7,13 @@ import 'package:path_provider/path_provider.dart';
 import '../services/app_update.dart';
 import '../services/background_prefs.dart';
 import '../services/card_database.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
+import '../services/language_prefs.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/app_shortcuts.dart';
 import '../widgets/background_settings.dart';
+import '../widgets/language_settings.dart';
 import '../widgets/update_notice.dart';
 import 'backup_screen.dart';
 
@@ -43,6 +47,9 @@ class AjustesScreen extends StatefulWidget {
   /// Fondo de pantalla. Opcional por lo mismo.
   final BackgroundPreference? background;
 
+  /// Idioma de la app. Opcional: sin él, no sale el selector.
+  final LanguagePreference? language;
+
   /// Los datos de disco han cambiado (se ha restaurado una copia): hay que
   /// releerlo todo.
   final VoidCallback onRestored;
@@ -52,7 +59,8 @@ class AjustesScreen extends StatefulWidget {
       required this.db,
       required this.onRestored,
       this.updates,
-      this.background});
+      this.background,
+      this.language});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -99,19 +107,21 @@ class _AjustesScreenState extends State<AjustesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Scaffold(
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            Text('Ajustes', style: Theme.of(context).textTheme.headlineMedium),
+            Text(t.settingsTitle,
+                style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 12),
-            const Text(
-                'ManaForge es gratis y con el código a la vista (licencia '
-                'PolyForm Noncommercial: compártela y tócala lo que quieras, '
-                'pero no se vende). Sin anuncios, sin premium, sin cuentas. '
-                'Tus cartas son tuyas.'),
+            Text(t.settingsIntro),
             const SizedBox(height: 20),
+            if (widget.language != null) ...[
+              LanguageSettingsCard(prefs: widget.language!),
+              const SizedBox(height: 12),
+            ],
             // qué es cada pestaña. Alguien que abre la app por primera vez
             // ve siete iconos y ninguna explicación
             Card(
@@ -120,28 +130,16 @@ class _AjustesScreenState extends State<AjustesScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Cómo funciona',
+                    Text(t.howItWorks,
                         style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
-                    for (final linea in const [
-                      ('Escanear', 'Pasa cartas por delante de la webcam o '
-                          'suelta una foto: entran solas a tu colección con '
-                          'su edición exacta.'),
-                      ('Colección', 'Todo lo que tienes, con buscador, '
-                          'filtros y carpetas (las carpetas son etiquetas: '
-                          'una carta puede estar en varias).'),
-                      ('Álbum', 'Una página por expansión, estilo álbum de '
-                          'cromos: lo que tienes a color, lo que falta '
-                          'apagado, con lo que costaría completarlo.'),
-                      ('Forge', 'Mazos completos y legales con tus cartas. '
-                          'O con las de una expansión que aún no tienes, '
-                          'diciéndote qué comprar y cuánto cuesta.'),
-                      ('Mazos', 'Los que guardes. Si vendes una carta, el '
-                          'mazo lo dice en vez de fingir que la tienes.'),
-                      ('Mercado', 'Cuánto vale tu colección, su gráfica, tu '
-                          'lista de deseos con avisos de precio, y — si tu '
-                          'CSV traía precio de compra — cuánto ganas o '
-                          'pierdes.'),
+                    for (final linea in [
+                      (t.tabScan, t.howScan),
+                      (t.tabCollection, t.howCollection),
+                      (t.tabAlbum, t.howAlbum),
+                      ('Forge', t.howForge),
+                      (t.tabDecks, t.howDecks),
+                      (t.tabMarket, t.howMarket),
                     ])
                       Padding(
                         padding: const EdgeInsets.only(bottom: 6),
@@ -160,16 +158,13 @@ class _AjustesScreenState extends State<AjustesScreen> {
                           ),
                         ),
                       ),
-                    const Text(
-                        'Todo se calcula en tu dispositivo. Lo único que sale '
-                        'a internet son las bases de datos y, si lo dejas '
-                        'puesto, mirar si hay versión nueva.',
-                        style: TextStyle(fontSize: 11.5)),
+                    Text(t.howPrivacy,
+                        style: const TextStyle(fontSize: 11.5)),
                     const SizedBox(height: 12),
-                    Text('Atajos de teclado',
+                    Text(t.shortcuts,
                         style: Theme.of(context).textTheme.titleSmall),
                     const SizedBox(height: 4),
-                    for (final atajo in kShortcutHelp)
+                    for (final atajo in shortcutHelp(t))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 2),
                         child: Row(

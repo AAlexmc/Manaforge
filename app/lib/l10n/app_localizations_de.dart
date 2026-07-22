@@ -1,0 +1,219 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for German (`de`).
+class AppLocalizationsDe extends AppLocalizations {
+  AppLocalizationsDe([String locale = 'de']) : super(locale);
+
+  @override
+  String get tabHome => 'Start';
+
+  @override
+  String get tabCollection => 'Sammlung';
+
+  @override
+  String get tabAlbum => 'Album';
+
+  @override
+  String get tabDecks => 'Decks';
+
+  @override
+  String get tabForge => 'Forge';
+
+  @override
+  String get tabMarket => 'Markt';
+
+  @override
+  String get tabSettings => 'Einstellungen';
+
+  @override
+  String get tabScan => 'Scannen';
+
+  @override
+  String get settingsTitle => 'Einstellungen';
+
+  @override
+  String get settingsIntro =>
+      'ManaForge ist kostenlos und der Code liegt offen (PolyForm-Noncommercial-Lizenz: teilen und verändern gern, verkaufen nicht). Keine Werbung, kein Premium, keine Konten. Deine Karten gehören dir.';
+
+  @override
+  String get howItWorks => 'So funktioniert es';
+
+  @override
+  String get howScan =>
+      'Halte Karten vor die Webcam oder zieh ein Foto hinein: Sie landen mit der genauen Edition in deiner Sammlung.';
+
+  @override
+  String get howCollection =>
+      'Alles, was du hast — mit Suche, Filtern und Ordnern (Ordner sind Etiketten: eine Karte kann in mehreren liegen).';
+
+  @override
+  String get howAlbum =>
+      'Eine Seite pro Edition, wie ein Sammelalbum: Vorhandenes in Farbe, Fehlendes ausgegraut, samt Kosten zum Vervollständigen.';
+
+  @override
+  String get howForge =>
+      'Vollständige, legale Decks aus deinen Karten. Oder aus einer Edition, die du noch nicht hast — inklusive was du kaufen müsstest und was es kostet.';
+
+  @override
+  String get howDecks =>
+      'Deine gespeicherten Decks. Verkaufst du eine Karte, sagt das Deck es dir, statt so zu tun, als hättest du sie noch.';
+
+  @override
+  String get howMarket =>
+      'Was deine Sammlung wert ist, ihr Verlauf, deine Wunschliste mit Preisalarm — und, wenn deine CSV Kaufpreise hatte, dein Gewinn oder Verlust.';
+
+  @override
+  String get howPrivacy =>
+      'Alles wird auf deinem Gerät berechnet. Ins Netz gehen nur die Datenbanken und, wenn du es anlässt, die Frage nach einer neuen Version.';
+
+  @override
+  String get shortcuts => 'Tastenkürzel';
+
+  @override
+  String get shortcutTabs => 'Tab wechseln';
+
+  @override
+  String get shortcutScan => 'Scanner öffnen';
+
+  @override
+  String get shortcutSearch => 'Im aktuellen Tab suchen';
+
+  @override
+  String get shortcutSettings => 'Einstellungen';
+
+  @override
+  String get shortcutClose => 'Schließen, was oben offen ist';
+
+  @override
+  String get language => 'Sprache';
+
+  @override
+  String get languageSystem => 'Wie das System';
+
+  @override
+  String get languagePartial =>
+      'Die App wird nach und nach übersetzt: das Grundgerüst ist schon in deiner Sprache, die übrigen Bildschirme bleiben vorerst auf Spanisch.';
+
+  @override
+  String get versionTitle => 'ManaForge-Version';
+
+  @override
+  String versionYouHave(String version) {
+    return 'Du hast $version.';
+  }
+
+  @override
+  String get versionSeeWhatsNew => 'Was drin ist';
+
+  @override
+  String get versionNotifyMe => 'Über neue Versionen informieren';
+
+  @override
+  String get versionNotifyMeWhy =>
+      'Fragt einmal täglich bei GitHub nach der neuesten Version. Es wird nichts heruntergeladen oder installiert.';
+
+  @override
+  String get versionCheckNow => 'Jetzt suchen';
+
+  @override
+  String get versionUpToDate =>
+      'Du bist auf der neuesten Version (oder GitHub antwortet gerade nicht).';
+
+  @override
+  String versionThereIs(String version) {
+    return 'ManaForge $version ist da.';
+  }
+
+  @override
+  String get versionGoDownload => 'Zum Download';
+
+  @override
+  String versionNotAuto(String version) {
+    return 'Du hast $version. Die App aktualisiert sich nicht selbst: sie bringt dich zum Download.';
+  }
+
+  @override
+  String get versionNotNow => 'Jetzt nicht';
+
+  @override
+  String get versionSee => 'Ansehen';
+
+  @override
+  String whatsNewTitle(String version) {
+    return 'Neu in $version';
+  }
+
+  @override
+  String get whatsNewClose => 'Los geht\'s';
+
+  @override
+  String get downloadCopyLink => 'Link kopieren';
+
+  @override
+  String get downloadClose => 'Schließen';
+
+  @override
+  String get downloadTitle => 'ManaForge herunterladen';
+
+  @override
+  String get backgroundTitle => 'Hintergrundbild';
+
+  @override
+  String get backgroundWhat =>
+      'Leg hinter die App das Bild, das du willst. Wizards veröffentlicht offizielle Hintergrundbilder zu jeder Edition: lade dir das aus, das dir gefällt, und wähle es hier. Die App holt sie nicht selbst — diese Kunst hat einen Eigentümer, und sie zu verteilen ist nicht ihre Aufgabe.';
+
+  @override
+  String get backgroundPick => 'Bild auswählen…';
+
+  @override
+  String get backgroundChange => 'Bild ändern…';
+
+  @override
+  String get backgroundOfficial => 'Offizielle Magic-Hintergrundbilder';
+
+  @override
+  String get backgroundRemove => 'Hintergrund entfernen';
+
+  @override
+  String get backgroundDim =>
+      'Wie stark es abgedunkelt wird (damit der Text lesbar bleibt)';
+
+  @override
+  String get backgroundNotAnImage =>
+      'Wähle ein Bild (.jpg, .png oder .webp) als Hintergrund.';
+
+  @override
+  String get backgroundTooBig =>
+      'Dieses Bild ist zu groß für einen Hintergrund.';
+
+  @override
+  String get welcomeTitle =>
+      'Willkommen in der Schmiede. Bring deine Karten herein, wie du magst — oder probier Forge, bevor du eine einzige hinzufügst.';
+
+  @override
+  String get welcomeScan => 'Meine Karten scannen';
+
+  @override
+  String get welcomeImport => 'CSV importieren (ManaBox)';
+
+  @override
+  String get welcomeTryForge => 'Forge ohne Sammlung ausprobieren';
+
+  @override
+  String get decksEmptyGoForge => 'Zu Forge';
+
+  @override
+  String get yourCollection => 'Deine Sammlung';
+
+  @override
+  String cardsAndDistinct(int copies, int distinct) {
+    return '$copies Karten · $distinct verschiedene';
+  }
+
+  @override
+  String get marketArrow => 'Markt ›';
+}

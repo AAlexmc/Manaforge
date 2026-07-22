@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/app_update.dart';
 import '../services/whats_new.dart';
 import '../theme/mf_theme.dart';
@@ -34,7 +36,7 @@ Future<void> openReleasePage(BuildContext context, AppRelease release) async {
   await showDialog<void>(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Descargar ManaForge'),
+      title: Text(tr(context).downloadTitle),
       content: SelectableText(release.pageUrl),
       actions: [
         TextButton(
@@ -42,11 +44,11 @@ Future<void> openReleasePage(BuildContext context, AppRelease release) async {
             Clipboard.setData(ClipboardData(text: release.pageUrl));
             Navigator.of(context).pop();
           },
-          child: const Text('Copiar enlace'),
+          child: Text(tr(context).downloadCopyLink),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cerrar'),
+          child: Text(tr(context).downloadClose),
         ),
       ],
     ),
@@ -73,6 +75,7 @@ class _UpdateBannerState extends State<UpdateBanner> {
     return ListenableBuilder(
       listenable: widget.checker,
       builder: (context, _) {
+        final t = tr(context);
         final release = widget.checker.available;
         if (release == null || _apartada) return const SizedBox.shrink();
         return Card(
@@ -87,22 +90,21 @@ class _UpdateBannerState extends State<UpdateBanner> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Hay ManaForge ${release.version}',
+                      Text(t.versionThereIs(release.version),
                           style:
                               const TextStyle(fontWeight: FontWeight.bold)),
                       Text(
-                          'Tienes la ${widget.checker.currentVersion}. La app '
-                          'no se actualiza sola: te lleva a la descarga.',
+                          t.versionNotAuto(widget.checker.currentVersion),
                           style: const TextStyle(fontSize: 11.5)),
                     ],
                   ),
                 ),
                 TextButton(
                   onPressed: () => openReleasePage(context, release),
-                  child: const Text('Ver'),
+                  child: Text(t.versionSee),
                 ),
                 IconButton(
-                  tooltip: 'Ahora no',
+                  tooltip: t.versionNotNow,
                   icon: const Icon(Icons.close, size: 18),
                   onPressed: () => setState(() => _apartada = true),
                 ),
@@ -129,6 +131,8 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
   bool _buscando = false;
   String? _resultado;
 
+  late final AppLocalizations _t = tr(context);
+
   Future<void> _buscarAhora() async {
     setState(() {
       _buscando = true;
@@ -140,8 +144,8 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
     setState(() {
       _buscando = false;
       _resultado = release == null
-          ? 'Estás en la última versión (o GitHub no contesta ahora mismo).'
-          : 'Hay ManaForge ${release.version}.';
+          ? _t.versionUpToDate
+          : _t.versionThereIs(release.version);
     });
   }
 
@@ -150,6 +154,7 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
     return ListenableBuilder(
       listenable: widget.checker,
       builder: (context, _) {
+        final t = tr(context);
         final release = widget.checker.available;
         return Card(
           child: Padding(
@@ -157,18 +162,18 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Versión de ManaForge',
+                Text(t.versionTitle,
                     style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    Text('Tienes la ${widget.checker.currentVersion}.',
+                    Text(t.versionYouHave(widget.checker.currentVersion),
                         style: const TextStyle(fontSize: 12.5)),
                     if (currentNews != null)
                       TextButton(
                         onPressed: () =>
                             showWhatsNewDialog(context, currentNews!),
-                        child: const Text('Ver qué trae'),
+                        child: Text(t.versionSeeWhatsNew),
                       ),
                   ],
                 ),
@@ -176,15 +181,13 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
                   contentPadding: EdgeInsets.zero,
                   value: widget.checker.enabled,
                   onChanged: (v) => widget.checker.setEnabled(v),
-                  title: const Text('Avisarme de versiones nuevas'),
-                  subtitle: const Text(
-                      'Pregunta una vez al día a GitHub qué versión es la '
-                      'última. No descarga ni instala nada.',
-                      style: TextStyle(fontSize: 11.5)),
+                  title: Text(t.versionNotifyMe),
+                  subtitle: Text(t.versionNotifyMeWhy,
+                      style: const TextStyle(fontSize: 11.5)),
                 ),
                 if (release != null) ...[
                   const SizedBox(height: 4),
-                  Text('Hay ManaForge ${release.version}: ${release.title}',
+                  Text('${t.versionThereIs(release.version)} ${release.title}',
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                   if (release.notes.trim().isNotEmpty)
                     Padding(
@@ -198,7 +201,7 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
                   FilledButton.icon(
                     onPressed: () => openReleasePage(context, release),
                     icon: const Icon(Icons.open_in_new, size: 18),
-                    label: const Text('Ir a la descarga'),
+                    label: Text(t.versionGoDownload),
                   ),
                 ] else ...[
                   const SizedBox(height: 4),
@@ -211,7 +214,7 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
                             child:
                                 CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.refresh, size: 18),
-                    label: const Text('Buscar ahora'),
+                    label: Text(t.versionCheckNow),
                   ),
                 ],
                 if (_resultado != null)

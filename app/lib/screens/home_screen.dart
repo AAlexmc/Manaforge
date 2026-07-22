@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/achievements_controller.dart';
 import '../services/app_update.dart';
 import '../services/certificate_store.dart';
@@ -271,9 +273,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Tu colección',
-                                        style:
-                                            TextStyle(fontSize: 13)),
+                                    Text(
+                                        tr(context)
+                                            .yourCollection,
+                                        style: const TextStyle(fontSize: 13)),
                                     const SizedBox(height: 4),
                                     Text(
                                       _value == null
@@ -296,7 +299,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               TextButton(
                                 onPressed: () => widget.onGoToTab(5),
-                                child: const Text('Mercado ›'),
+                                child: Text(
+                                    tr(context).marketArrow),
                               ),
                             ],
                           )
@@ -307,10 +311,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                  'Bienvenido a la forja. Mete tus cartas '
-                                  'como quieras — o prueba Forge antes de '
-                                  'meter ninguna.'),
+                              Text(tr(context)
+                                  .welcomeTitle),
                               const SizedBox(height: 10),
                               Wrap(
                                 spacing: 8,
@@ -320,8 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onPressed: widget.onScan,
                                     icon: const Icon(
                                         Icons.center_focus_strong, size: 18),
-                                    label: const Text(
-                                        'Escanear mis cartas'),
+                                    label: Text(tr(context)
+                                        .welcomeScan),
                                   ),
                                   OutlinedButton.icon(
                                     onPressed: () =>
@@ -335,15 +337,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     icon: const Icon(Icons.file_upload,
                                         size: 18),
-                                    label: const Text(
-                                        'Importar CSV (ManaBox)'),
+                                    label: Text(tr(context)
+                                        .welcomeImport),
                                   ),
                                   TextButton.icon(
                                     onPressed: () => widget.onGoToTab(4),
                                     icon: const Icon(Icons.auto_awesome,
                                         size: 18),
-                                    label: const Text(
-                                        'Probar Forge sin colección'),
+                                    label: Text(tr(context)
+                                        .welcomeTryForge),
                                   ),
                                 ],
                               ),

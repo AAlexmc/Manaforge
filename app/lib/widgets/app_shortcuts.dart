@@ -10,6 +10,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/app_localizations.dart';
+
 /// "Quiero buscar en la pestaña N". Cada pantalla mira si el aviso es para
 /// ella (comparando su índice) y hace lo suyo: unas enfocan su buscador,
 /// otras abren la pantalla donde se busca.
@@ -80,7 +82,16 @@ Map<ShortcutActivator, VoidCallback> escapeCloses(
           navigator.currentState?.maybePop(),
     };
 
-/// La chuleta de atajos, para enseñarla en Ajustes.
+/// La chuleta de atajos, traducida, para enseñarla en Ajustes.
+List<(String, String)> shortcutHelp(AppLocalizations t) => [
+      ('Ctrl + 1…7', t.shortcutTabs),
+      ('Ctrl + E', t.shortcutScan),
+      ('Ctrl + F', t.shortcutSearch),
+      ('Ctrl + ,', t.shortcutSettings),
+      ('Esc', t.shortcutClose),
+    ];
+
+/// La misma chuleta en español, para tests y para cuando no hay contexto.
 const List<(String, String)> kShortcutHelp = [
   ('Ctrl + 1…7', 'Cambiar de pestaña'),
   ('Ctrl + E', 'Abrir el escáner'),

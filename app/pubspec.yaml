@@ -23,6 +23,9 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.24
   url_launcher: ^6.3.2
   crypto: ^3.0.7
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -32,6 +35,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true   # traducciones (lib/l10n/*.arb -> AppLocalizations)
   fonts:
     # Cinzel: capitales romanas, la letra de los certificados. Va dentro de la
     # app (no se descarga) para que el papel salga igual sin conexión y en

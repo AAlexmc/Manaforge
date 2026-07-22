@@ -1,0 +1,7 @@
+# El idioma de casa es el español: el .arb de referencia es el suyo y de ahí
+# salen las claves. Los demás idiomas son traducciones de ese.
+arb-dir: lib/l10n
+template-arb-file: app_es.arb
+output-localization-file: app_localizations.dart
+untranslated-messages-file: lib/l10n/sin_traducir.json
+nullable-getter: false

@@ -12,6 +12,8 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/background_prefs.dart';
 import '../services/safe_input.dart';
 
@@ -52,6 +54,7 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
     return ListenableBuilder(
       listenable: widget.prefs,
       builder: (context, _) {
+        final t = tr(context);
         final prefs = widget.prefs;
         return Card(
           child: Padding(
@@ -59,15 +62,11 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Fondo de pantalla',
+                Text(t.backgroundTitle,
                     style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 6),
-                const Text(
-                    'Pon detrás de la app la imagen que quieras. Wizards '
-                    'publica fondos oficiales de cada colección: bájate el '
-                    'que te guste y elígelo aquí. La app no se los descarga '
-                    'sola — ese arte tiene dueño y repartirlo no le toca.',
-                    style: TextStyle(fontSize: 12.5)),
+                Text(t.backgroundWhat,
+                    style: const TextStyle(fontSize: 12.5)),
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
@@ -77,28 +76,28 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                       onPressed: _elegir,
                       icon: const Icon(Icons.image_outlined, size: 18),
                       label: Text(prefs.hasImage
-                          ? 'Cambiar imagen…'
-                          : 'Elegir imagen…'),
+                          ? t.backgroundChange
+                          : t.backgroundPick),
                     ),
                     OutlinedButton.icon(
                       onPressed: () => launchUrl(
                           Uri.parse(kOfficialWallpapersUrl),
                           mode: LaunchMode.externalApplication),
                       icon: const Icon(Icons.open_in_new, size: 18),
-                      label: const Text('Fondos oficiales de Magic'),
+                      label: Text(t.backgroundOfficial),
                     ),
                     if (prefs.hasImage)
                       TextButton.icon(
                         onPressed: prefs.clear,
                         icon: const Icon(Icons.close, size: 18),
-                        label: const Text('Quitar fondo'),
+                        label: Text(t.backgroundRemove),
                       ),
                   ],
                 ),
                 if (prefs.hasImage) ...[
                   const SizedBox(height: 8),
-                  const Text('Cuánto se oscurece (para que se lea el texto)',
-                      style: TextStyle(fontSize: 12)),
+                  Text(t.backgroundDim,
+                      style: const TextStyle(fontSize: 12)),
                   Slider(
                     value: prefs.dim,
                     min: kMinDim,
