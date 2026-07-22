@@ -30,7 +30,9 @@ Recognition _rec(String oracle,
 Widget _host(ScanTray tray,
         {VoidCallback? onEdit,
         void Function(TrayLine, int)? onQty,
-        String? onTableKey}) =>
+        String? onTableKey,
+        String? folderName,
+        VoidCallback? onPickFolder}) =>
     MaterialApp(
       home: Scaffold(
         body: SessionTray(
@@ -41,6 +43,8 @@ Widget _host(ScanTray tray,
           onRemove: (_) {},
           onQty: (line, delta) => onQty?.call(line, delta),
           onTableKey: onTableKey,
+          folderName: folderName,
+          onPickFolder: onPickFolder,
           onConfirm: () {},
           onClear: () {},
         ),
@@ -48,6 +52,36 @@ Widget _host(ScanTray tray,
     );
 
 void main() {
+  testWidgets('sin carpetas a mano, la bandeja no ofrece elegir carpeta',
+      (tester) async {
+    final tray = ScanTray()..add(_rec('bolt'));
+    await tester.pumpWidget(_host(tray));
+
+    expect(find.text('Sin carpeta'), findsNothing);
+  });
+
+  testWidgets('con carpetas, la bandeja dice a cuál van y deja cambiarla',
+      (tester) async {
+    final tray = ScanTray()..add(_rec('bolt'));
+    var abierto = 0;
+    await tester.pumpWidget(
+        _host(tray, onPickFolder: () => abierto++));
+
+    expect(find.text('Sin carpeta'), findsOneWidget);
+    await tester.tap(find.text('Sin carpeta'));
+    expect(abierto, 1);
+
+    // ya elegida: se dice que ADEMÁS van ahí, no que vayan ahí en vez de a la
+    // colección (una carpeta es una etiqueta, no una caja)
+    await tester.pumpWidget(_host(tray,
+        folderName: 'Caja de la tienda', onPickFolder: () {}));
+    expect(find.text('Y además a: Caja de la tienda'), findsOneWidget);
+    // el botón cuenta también la carpeta: es lo último que lees antes de
+    // pulsarlo
+    expect(find.text('Añadir 1 a la colección y a Caja de la tienda'),
+        findsOneWidget);
+  });
+
   testWidgets('bandeja vacía muestra la pista de uso', (tester) async {
     await tester.pumpWidget(_host(ScanTray()));
     expect(find.textContaining('Pasa cartas'), findsOneWidget);
