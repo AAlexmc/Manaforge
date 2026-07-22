@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'json_store_io.dart';
+
 /// Un punto de la evolución del valor de la colección.
 class ValuePoint {
   final String date; // YYYY-MM-DD
@@ -24,11 +26,17 @@ class ValuePoint {
 /// Historial local del valor de la colección: una foto por día, sin nube.
 /// Con esto el Mercado puede enseñar "+X € (+Y%)" de verdad.
 class ValueHistory {
+  /// Solo para tests: dónde guardar el JSON (por defecto, la carpeta de datos
+  /// de la app).
+  final Directory? dataDir;
+
+  ValueHistory({this.dataDir});
+
   static const _maxPoints = 365;
 
   Future<File?> _file() async {
     try {
-      final dir = await getApplicationSupportDirectory();
+      final dir = dataDir ?? await getApplicationSupportDirectory();
       return File(p.join(dir.path, 'value_history.json'));
     } catch (_) {
       return null;
@@ -45,6 +53,9 @@ class ValueHistory {
           ValuePoint.fromJson(item as Map<String, dynamic>)
       ];
     } catch (_) {
+      // ilegible: apartarlo antes de que `record()` escriba encima un
+      // historial de un solo punto y se lleve por delante el año entero
+      await setAsideBroken(file);
       return const [];
     }
   }
@@ -63,8 +74,8 @@ class ValueHistory {
     }
     final file = await _file();
     if (file != null) {
-      await file.writeAsString(
-          jsonEncode([for (final pt in history) pt.toJson()]));
+      await writeJsonFile(
+          file, jsonEncode([for (final pt in history) pt.toJson()]));
     }
     return history;
   }

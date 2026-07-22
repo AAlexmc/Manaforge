@@ -6,6 +6,8 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'json_store_io.dart';
+
 /// Un mazo guardado desde Forge. Se persiste con lo necesario para volver a
 /// abrirlo aunque la colección cambie (las cartas se releen de la DB).
 class SavedDeck {
@@ -91,6 +93,12 @@ class SavedDeck {
 /// Mazos guardados del usuario. Persistencia local en JSON, como la
 /// colección: sin cuentas, sin nube.
 class DeckStore extends ChangeNotifier {
+  /// Solo para tests: dónde guardar el JSON (por defecto, la carpeta de datos
+  /// de la app). Permite comprobar de verdad lo que acaba en disco.
+  final Directory? dataDir;
+
+  DeckStore({this.dataDir});
+
   final List<SavedDeck> _decks = [];
   bool _loaded = false;
 
@@ -98,7 +106,7 @@ class DeckStore extends ChangeNotifier {
 
   Future<File?> _file() async {
     try {
-      final dir = await getApplicationSupportDirectory();
+      final dir = dataDir ?? await getApplicationSupportDirectory();
       return File(p.join(dir.path, 'decks.json'));
     } catch (_) {
       return null; // sin plugin (tests): solo en memoria
@@ -120,15 +128,26 @@ class DeckStore extends ChangeNotifier {
         ]);
       notifyListeners();
     } catch (_) {
-      // archivo corrupto: mejor lista vacía que crash
+      // archivo corrupto: apartarlo con otro nombre y arrancar vacío. Si se
+      // dejara donde está, el primer mazo que guardes lo sobrescribe y los
+      // que hubiera dentro no existen en ningún otro sitio.
+      await setAsideBroken(file);
     }
   }
 
-  Future<void> _save() async {
+  final SaveQueue _saves = SaveQueue();
+
+  /// Espera a que la cola de guardado vacíe (tests).
+  @visibleForTesting
+  Future<void> get pendingSave => _saves.pending;
+
+  void _save() => _saves.schedule(_write);
+
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
-    await file
-        .writeAsString(jsonEncode([for (final d in _decks) d.toJson()]));
+    await writeJsonFile(
+        file, jsonEncode([for (final d in _decks) d.toJson()]));
   }
 
   void add(SavedDeck deck) {
