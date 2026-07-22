@@ -20,12 +20,14 @@ library;
 
 class TableMemory {
   /// Cuántos ticks seguidos con la mesa vacía hacen falta para olvidar lo que
-  /// había. Más de uno a propósito: un parpadeo (una mano que tapa un
-  /// momento) no puede pasar por "has quitado la carta", porque entonces la
-  /// siguiente lectura contaría una copia que no existe.
+  /// había. Uno: la puerta de presencia solo dice que la mesa está vacía con
+  /// la escena ASENTADA y la presencia por debajo de la mitad del umbral, que
+  /// ya es prueba de sobra. Pedir tres (0,9 s de mesa vacía y quieta) protegía
+  /// de un falso "carta retirada" que nunca se llegó a reproducir, y a cambio
+  /// rompía lo normal: levantar la carta y volver a ponerla deprisa no contaba.
   final int emptyTicksToForget;
 
-  TableMemory({this.emptyTicksToForget = 3});
+  TableMemory({this.emptyTicksToForget = 1});
 
   String? _onTable;
   int _empty = 0;
@@ -49,6 +51,14 @@ class TableMemory {
       _onTable = null;
       _empty = 0;
     }
+  }
+
+  /// Olvidar UNA impresión concreta, si es la que está apuntada. Para cuando
+  /// el usuario borra su ficha de la bandeja: ha dicho explícitamente que no
+  /// la quiere, así que volver a pasarla por la cámara es deliberado y tiene
+  /// que sumar. Sin esto, esa carta quedaba bloqueada para siempre.
+  void forget(String printingKey) {
+    if (_onTable == printingKey) reset();
   }
 
   /// Olvidar lo que hubiera (la sesión de escaneo empieza de cero).

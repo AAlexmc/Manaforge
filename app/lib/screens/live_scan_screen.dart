@@ -87,6 +87,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   bool _flash = false; // fogonazo visual al reconocer
   String? _lastSeenName; // pie de estado ("viendo: …")
 
+  /// Lo que se está viendo YA está apuntado en la mesa, así que no suma. Sin
+  /// decirlo, el pie ponía solo "Viendo: X" y parecía que se había colgado.
+  bool _alreadyOnTable = false;
+
   /// Por qué no se está reconociendo nada, cuando la puerta de presencia
   /// dispara pero no hay carta: sin esto los tres motivos (mesa vacía, mal
   /// encuadre, superficie lisa) decían lo mismo.
@@ -231,9 +235,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
         case PresenceEvent.cardChanged:
           await _recognizeSettled(bytes);
         case PresenceEvent.cardRemoved:
+          // la puerta solo dice esto con la escena asentada y la mesa por
+          // debajo del umbral: la carta ya NO está, olvidarla sin esperar más
+          _table.reset();
           setState(() {
             _lastSeenName = null;
             _noCardHint = null;
+            _alreadyOnTable = false;
           });
         case PresenceEvent.none:
           break;
@@ -320,9 +328,15 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     final key =
         '${rec.best.entry.oracleId}|${rec.best.entry.printingKey}';
     if (!_table.shouldCount(key)) {
-      if (mounted) setState(() => _lastSeenName = rec.best.entry.name);
+      if (mounted) {
+        setState(() {
+          _lastSeenName = rec.best.entry.name;
+          _alreadyOnTable = true;
+        });
+      }
       return;
     }
+    if (mounted) setState(() => _alreadyOnTable = false);
     await _precache(rec.candidates);
     if (!mounted) return;
     // Dudosa y en modo "con cuidado": parar y preguntar antes de añadir.
@@ -626,7 +640,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                         horizontal: 10, vertical: 6),
                     child: Text(
                       _lastSeenName != null
-                          ? 'Viendo: $_lastSeenName'
+                          ? (_alreadyOnTable
+                              ? 'Ya está en la mesa: $_lastSeenName · '
+                                  'retírala y vuelve a ponerla para sumar otra'
+                              : 'Viendo: $_lastSeenName')
                           : _noCardHint ??
                               'Pasa una carta por delante de la cámara…',
                       style: const TextStyle(
@@ -651,12 +668,29 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
           hitCache: _hitCache,
           quickMode: _quickMode,
           onEdit: _editLine,
-          onRemove: (line) => setState(() => _tray.remove(line)),
-          onQty: (line, delta) =>
-              setState(() => _tray.setQty(line, line.qty + delta)),
+          // borrar la ficha es decir "esta no la quiero": la memoria de mesa
+          // tiene que soltarla o la carta queda bloqueada hasta reiniciar
+          onRemove: (line) => setState(() {
+            _tray.remove(line);
+            _table.forget(line.key);
+            _alreadyOnTable = false;
+          }),
+          onQty: (line, delta) => setState(() {
+            final key = line.key;
+            _tray.setQty(line, line.qty + delta);
+            // bajar a 0 borra la línea: mismo trato que la X
+            if (!_tray.lines.contains(line)) {
+              _table.forget(key);
+              _alreadyOnTable = false;
+            }
+          }),
           onTableKey: _table.onTable,
           onConfirm: _confirmAll,
-          onClear: () => setState(_tray.clear),
+          onClear: () => setState(() {
+            _tray.clear();
+            _table.reset(); // bandeja vacía a propósito: nada bloqueado
+            _alreadyOnTable = false;
+          }),
         ),
       ],
     );
@@ -735,9 +769,16 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                       IconButton.filledTonal(
                         icon: const Icon(Icons.remove),
                         onPressed: () {
+                          final key = line.key;
                           setSheet(() => _tray.setQty(line, line.qty - 1));
                           setState(() {});
                           if (!_tray.lines.contains(line)) {
+                            // se ha quedado en 0: la línea desaparece, así que
+                            // la memoria de mesa tiene que soltar esa carta
+                            setState(() {
+                              _table.forget(key);
+                              _alreadyOnTable = false;
+                            });
                             Navigator.of(context).pop();
                           }
                         },

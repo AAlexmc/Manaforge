@@ -83,6 +83,52 @@ void main() {
     expect(mesa.shouldCount('sol-ring|lea|270'), isTrue);
   });
 
+  test('por defecto, verla retirada una vez basta para volver a contarla', () {
+    // la puerta de presencia solo dice "retirada" con la escena asentada y la
+    // mesa por debajo del umbral: eso YA es prueba, no hace falta esperar más
+    final mesa = TableMemory();
+    expect(mesa.shouldCount('sol-ring|lea|270'), isTrue);
+
+    mesa.sawEmpty();
+
+    expect(mesa.shouldCount('sol-ring|lea|270'), isTrue);
+  });
+
+  test('borrar la ficha de la bandeja libera esa carta al momento', () {
+    final mesa = TableMemory();
+    mesa.shouldCount('sol-ring|lea|270');
+
+    // el usuario borra la ficha con la X: ha dicho que no la quiere, así que
+    // volver a pasarla es una acción deliberada
+    mesa.forget('sol-ring|lea|270');
+
+    expect(mesa.onTable, isNull);
+    expect(mesa.shouldCount('sol-ring|lea|270'), isTrue);
+  });
+
+  test('borrar la ficha de OTRA carta no libera la que está en la mesa', () {
+    final mesa = TableMemory();
+    mesa.shouldCount('sol-ring|lea|270');
+
+    mesa.forget('mox-pearl|lea|264');
+
+    expect(mesa.onTable, 'sol-ring|lea|270');
+    expect(mesa.shouldCount('sol-ring|lea|270'), isFalse);
+  });
+
+  test(
+      'REGRESIÓN: contar → borrar ficha → retirar → volver a poner LA MISMA '
+      'vuelve a contar', () {
+    final mesa = TableMemory();
+    expect(mesa.shouldCount('shipwreck-moray|blb|72'), isTrue);
+
+    mesa.forget('shipwreck-moray|blb|72'); // X en la bandeja
+    mesa.sawEmpty(); // se retira la carta de la mesa
+
+    expect(mesa.shouldCount('shipwreck-moray|blb|72'), isTrue,
+        reason: 'quedaba bloqueada para siempre: era el fallo del PR #7');
+  });
+
   test('qué hay en la mesa se puede consultar, para poder enseñarlo', () {
     final mesa = TableMemory(emptyTicksToForget: 1);
 
