@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../services/backup.dart';
@@ -101,6 +101,9 @@ class _BackupCardState extends State<BackupCard> {
         XTypeGroup(label: 'Copia de ManaForge', extensions: ['mfbak'])
       ]);
       if (origen == null) return; // cancelado
+      // el tamaño se mira ANTES de leerlo a memoria: un fichero de fuera con
+      // extensión .mfbak puede ser cualquier cosa
+      ensureBackupFileSize(await origen.length());
       await _apply(await origen.readAsBytes(), dir);
     } on BackupError catch (e) {
       if (mounted) setState(() => _status = e.message);
@@ -120,6 +123,7 @@ class _BackupCardState extends State<BackupCard> {
     try {
       final dir = await widget.dataDir();
       if (dir == null) throw const BackupError('No encuentro tus datos.');
+      ensureBackupFileSize(await file.length());
       await _apply(await file.readAsBytes(), dir);
     } on BackupError catch (e) {
       if (mounted) setState(() => _status = e.message);
@@ -133,12 +137,17 @@ class _BackupCardState extends State<BackupCard> {
   /// El camino común de los dos: validar, preguntar y aplicar. Uno solo para
   /// que el aviso de "esto reemplaza lo de ahora" no pueda faltar en una vía.
   Future<void> _apply(Uint8List bytes, Directory dir) async {
-    // se valida ANTES de preguntar: no tiene sentido pedir confirmación de
-    // algo que no se va a poder aplicar
-    final manifest = readManifest(bytes);
+    // se lee y valida ANTES de preguntar: no tiene sentido pedir confirmación
+    // de algo que no se va a poder aplicar. Y se lee UNA vez: descomprimir es
+    // el trabajo caro, y va en otro hilo (compute) para no colgar la ventana
+    final copia = await compute(readBackup, bytes);
+    final manifest = copia.manifest;
+    final seBorra = storesToDelete(manifest, present: await presentStores(dir));
     if (!mounted) return;
-    if (!await confirmRestore(context, manifest)) return;
-    final report = await restoreBackup(bytes, dir);
+    if (!await confirmRestore(context, manifest, willDelete: seBorra)) return;
+    if (!mounted) return;
+    final report = await _conLaAppQuieta(
+        () => restoreBackup(bytes, dir, contents: copia));
     if (!mounted) return;
     setState(() => _status = report.previous == null
         ? '✓ Restaurado · ${manifest.summary}. OJO: no he podido guardar lo '
@@ -148,6 +157,39 @@ class _BackupCardState extends State<BackupCard> {
     widget.onRestored();
     // el restaurar deja una copia `pre-restore` nueva: que salga en la lista
     unawaited(_loadAutos());
+  }
+
+  /// Corre [action] con una ventana modal delante que no se puede quitar.
+  ///
+  /// Restaurar reemplaza los ficheros de los almacenes mientras la app sigue
+  /// viva: cualquier pantalla que guarde a media operación (añadir a un mazo,
+  /// abrir una carta, cruzar precios) escribiría lo VIEJO encima de lo recién
+  /// restaurado. La barrera impide tocar la app durante esos milisegundos.
+  /// No es una garantía completa —un `await` lanzado antes puede aterrizar
+  /// igual—, pero cierra la ventana de tiempo en la que se puede tocar algo.
+  Future<T> _conLaAppQuieta<T>(Future<T> Function() action) async {
+    final navigator = Navigator.of(context, rootNavigator: true);
+    unawaited(showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const PopScope(
+        canPop: false,
+        child: AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 16),
+              Expanded(child: Text('Restaurando tu copia…')),
+            ],
+          ),
+        ),
+      ),
+    ));
+    try {
+      return await action();
+    } finally {
+      if (mounted) navigator.pop();
+    }
   }
 
   @override
@@ -245,6 +287,12 @@ class _BackupCardState extends State<BackupCard> {
   }
 }
 
+/// "a, b y c" — para poder leer la lista de lo que se borra de corrido.
+String _enumerar(List<String> cosas) {
+  if (cosas.length == 1) return cosas.single;
+  return '${cosas.sublist(0, cosas.length - 1).join(', ')} y ${cosas.last}';
+}
+
 /// La palabra que hay que escribir para restaurar. Escribirla cuesta tres
 /// segundos; restaurar sin querer cuesta la colección entera.
 const String kRestoreConfirmWord = 'CONFIRMAR';
@@ -252,8 +300,8 @@ const String kRestoreConfirmWord = 'CONFIRMAR';
 /// Pregunta antes de aplicar una copia, diciendo QUÉ trae y qué va a pasar con
 /// lo que hay ahora. Devuelve true solo si el usuario escribe [kRestoreConfirmWord]
 /// y confirma: un clic de más no puede reemplazar una colección.
-Future<bool> confirmRestore(
-    BuildContext context, BackupManifest manifest) async {
+Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
+    {List<String> willDelete = const []}) async {
   final fecha = manifest.createdAt.toLocal();
   final cuando = '${fecha.day}/${fecha.month}/${fecha.year}';
   final ok = await showDialog<bool>(
@@ -274,6 +322,16 @@ Future<bool> confirmRestore(
                     'Esto reemplaza tu colección, mazos, carpetas y logros de '
                     'ahora por los de esa copia. Antes de hacerlo guardo lo '
                     'que tienes en la carpeta backups, por si quieres volver.'),
+                if (willDelete.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  // lo que la copia NO trae se BORRA, y el resumen de arriba
+                  // solo cuenta cartas, mazos, carpetas y logros: sin esto,
+                  // una copia vieja se llevaba por delante los certificados o
+                  // el historial de precios sin decirlo en ninguna parte
+                  Text('Esa copia no trae ${_enumerar(willDelete)}: al '
+                      'restaurarla, eso se borra.',
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ],
                 const SizedBox(height: 16),
                 const Text('Escribe $kRestoreConfirmWord para poder seguir:',
                     style: TextStyle(fontSize: 12.5)),
