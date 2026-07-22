@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'safe_input.dart';
+
 /// Mazos del meta para el Modo Test. Los REALES se descargan del repo
 /// (data/meta_decks.json, actualizable sin tocar la app) y se cachean 24 h;
 /// si no hay conexión, se usan los presets locales de más abajo.
@@ -67,6 +69,10 @@ class MetaDecksResult {
 
 /// Descarga los mazos del meta reales publicados en el repo, con caché de
 /// 24 h en disco y fallback a los presets locales si no hay red.
+/// Tope del JSON del meta. Son unos KB; el tope está para que una respuesta
+/// desproporcionada no se lea entera a memoria ni acabe en la caché.
+const int kMaxMetaDecksBytes = 2 * 1024 * 1024;
+
 class MetaDeckService {
   static const url =
       'https://raw.githubusercontent.com/AAlexmc/Manaforge/main/data/meta_decks.json';
@@ -94,16 +100,27 @@ class MetaDeckService {
     final cache = await _cacheFile();
     // red primero: el meta se actualiza editando el JSON del repo y debe
     // verse al momento; la caché queda como salvavidas sin conexión
+    final client = http.Client();
     try {
-      final response = await http
-          .get(Uri.parse(url))
+      // por secureSend, como el resto de lo que se baja: package:http sigue
+      // las redirecciones a donde le digan, incluido bajar a http en claro
+      final response = await secureSend(client, Uri.parse(url))
           .timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
-        final result = _parse(response.body, online: true);
-        await cache?.writeAsString(response.body);
-        return result;
+        // tope en bytes: este JSON son unos KB, y sin tope una respuesta
+        // enorme se leería entera a memoria y encima se escribiría en disco
+        final body = await readCappedBody(response, kMaxMetaDecksBytes);
+        if (body != null) {
+          final result = _parse(body, online: true);
+          // solo se cachea lo que se ha podido leer: nunca basura
+          await cache?.writeAsString(body);
+          return result;
+        }
       }
-    } catch (_) {/* sin red: fallback */}
+    } catch (_) {/* sin red: fallback */
+    } finally {
+      client.close();
+    }
     if (cache != null && await cache.exists()) {
       try {
         return _parse(await cache.readAsString(), online: true);

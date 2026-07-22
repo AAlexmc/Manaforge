@@ -25,6 +25,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'backup.dart' show kAppVersion;
+import 'safe_input.dart';
 
 /// De dónde se pregunta. Fijo a propósito: no se acepta ninguna otra.
 final Uri kReleasesApi = Uri.parse(
@@ -225,15 +226,21 @@ class AppUpdateChecker extends ChangeNotifier {
     }
     final client = clientFactory?.call() ?? http.Client();
     try {
-      final response = await client
-          .get(kReleasesApi, headers: const {
+      // por secureSend y no por client.get: package:http sigue las
+      // redirecciones a donde le digan, incluido bajar a http en claro, y sin
+      // decirlo. Es la misma regla que usan las descargas de las bases.
+      final response = await secureSend(client, kReleasesApi,
+              headers: const {
             'Accept': 'application/vnd.github+json',
             'User-Agent': 'ManaForge',
           })
           .timeout(const Duration(seconds: 10));
       if (response.statusCode != 200) return _available;
-      if (response.bodyBytes.length > kMaxReleasesBytes) return _available;
-      final release = newestAppRelease(response.body);
+      // tope en BYTES y mientras se lee, no después de tragarse el cuerpo
+      // entero en memoria
+      final body = await readCappedBody(response, kMaxReleasesBytes);
+      if (body == null) return _available;
+      final release = newestAppRelease(body);
       _lastCheck = ahora;
       _available = release != null &&
               isNewerVersion(release.version, currentVersion)

@@ -46,9 +46,16 @@ for tam in 16 32 48 64 128 256 512; do
 done
 
 # el .desktop lleva la ruta ABSOLUTA del ejecutable: la carpeta puede estar
-# en cualquier sitio (Descargas, /opt, un disco externo)
-sed "s|^Exec=.*|Exec=\"$EJECUTABLE\"|" "$AQUI/packaging/$NOMBRE.desktop" \
-  > "$APPS/$NOMBRE.desktop"
+# en cualquier sitio (Descargas, /opt, un disco externo).
+#
+# Nada de sed aquí: la ruta la elige el usuario al descomprimir y puede
+# llevar |, &, comillas o barras invertidas, que son justo los caracteres que
+# rompen (o cambian el sentido de) una sustitución.
+{
+  grep -v '^Exec=' "$AQUI/packaging/$NOMBRE.desktop"
+  # en un .desktop, \ y " dentro de un argumento entrecomillado se escapan
+  printf 'Exec="%s"\n' "$(printf '%s' "$EJECUTABLE" | sed 's/[\\"]/\\\\&/g')"
+} > "$APPS/$NOMBRE.desktop"
 chmod 644 "$APPS/$NOMBRE.desktop"
 
 # y un enlace para poder escribir "manaforge" en la terminal

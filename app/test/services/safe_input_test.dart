@@ -1,6 +1,8 @@
 /// Lo que llega de fuera se acota antes de tocar nada.
 library;
 
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -108,6 +110,43 @@ void main() {
 
       expect(card.imageSmall, isNull);
       expect(card.imageNormal, isNotNull);
+    });
+  });
+
+  group('leer un cuerpo pequeño con tope de verdad', () {
+    http.StreamedResponse _respuesta(List<List<int>> trozos) =>
+        http.StreamedResponse(Stream.fromIterable(trozos), 200);
+
+    test('un cuerpo normal se lee entero', () async {
+      final body = await readCappedBody(
+          _respuesta([utf8.encode('hola '), utf8.encode('mundo')]), 1024);
+
+      expect(body, 'hola mundo');
+    });
+
+    test('pasarse del tope devuelve null, no medio cuerpo', () async {
+      final body = await readCappedBody(_respuesta([List.filled(100, 65)]), 50);
+
+      expect(body, isNull);
+    });
+
+    test('UN trozo gigante también corta (el fallo que esto arregla)',
+        () async {
+      // `stream.take(64 * 1024)` limitaba a 64.000 TROZOS, no a 64 KB: un
+      // solo trozo de 10 MB pasaba el "tope" tan tranquilo
+      final body =
+          await readCappedBody(_respuesta([List.filled(10 * 1024 * 1024, 65)]),
+              64 * 1024);
+
+      expect(body, isNull);
+    });
+
+    test('bytes que no son UTF-8 no revientan', () async {
+      final body = await readCappedBody(_respuesta([
+        [0xC3, 0x28, 0xA0]
+      ]), 1024);
+
+      expect(body, isNotNull);
     });
   });
 }
