@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
+import 'safe_input.dart';
+
 import '../scanner/hash_index.dart';
 
 // El núcleo de matching (HashEntry, ScanMatch, HashIndex) vive en
@@ -57,8 +59,7 @@ class ScannerDatabase {
     final client = http.Client();
     IOSink? sink;
     try {
-      final request = http.Request('GET', Uri.parse(releaseUrl));
-      final response = await client.send(request);
+      final response = await secureSend(client, Uri.parse(releaseUrl));
       if (response.statusCode != 200) {
         throw HttpException(
             'No se pudo descargar la base de huellas (HTTP ${response.statusCode}). '
@@ -70,6 +71,7 @@ class ScannerDatabase {
       await for (final chunk in response.stream) {
         sink.add(chunk);
         received += chunk.length;
+        ensureDownloadSize(received);
         yield total > 0 ? received / total : -1;
       }
       await sink.close();

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/safe_input.dart';
 import '../theme/mf_theme.dart';
 
 /// Importador de colección. Tres vías, de más cómoda a menos:
@@ -36,6 +37,9 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
   /// UTF-8 primero; si no decodifica, Latin-1 (exportaciones viejas de Excel).
   Future<void> _loadFile(XFile file) async {
     try {
+      // el tamaño se mira ANTES de leerlo: soltar un vídeo por error cuelga
+      // la app leyéndolo entero a memoria y metiéndolo en el cuadro de texto
+      ensureImportFileSize(await file.length());
       final bytes = await file.readAsBytes();
       String content;
       try {
@@ -49,6 +53,10 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         _loadedFileName = file.name;
         _result = null;
       });
+    } on InputRejected catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

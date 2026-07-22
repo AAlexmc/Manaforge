@@ -489,7 +489,10 @@ Future<String?> saveCertificatePng(GlobalKey boundaryKey, String name) async {
     // esta plataforma no tiene diálogo de guardar: a Descargas
     final dir =
         await getDownloadsDirectory() ?? await getApplicationSupportDirectory();
-    final file = File(p.join(dir.path, name));
+    // basename: el nombre lo arma la app a partir del código de la edición,
+    // que sale de la base descargada. Un código con `../` dentro escaparía de
+    // Descargas y escribiría donde no toca
+    final file = File(p.join(dir.path, p.basename(name)));
     await file.writeAsBytes(bytes);
     return file.path;
   }
