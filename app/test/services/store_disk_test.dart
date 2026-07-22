@@ -133,4 +133,43 @@ void main() {
     expect(store.printingQty['kld|9'], 1); // la otra carta ni se toca
     await store.pendingSave;
   });
+
+  test('lo pagado sobrevive a cerrar la app', () async {
+    final store = CollectionStore(dataDir: dir);
+    store.add(OwnedCard(oracleId: 'o1', name: 'Sol Ring', colors: '', qty: 1),
+        qty: 2, printingKey: 'blb|72');
+    store.recordPurchase(
+        base: 'blb|72', qty: 2, perCopy: 4.25, currency: 'EUR');
+    await store.pendingSave;
+
+    final otra = CollectionStore(dataDir: dir);
+    await otra.load();
+
+    final lot = otra.purchases[purchaseKey('blb|72', 'EUR')]!;
+    expect(lot.qty, 2);
+    expect(lot.perCopy, 4.25);
+    expect(lot.currency, 'EUR');
+  });
+
+  test('una compra con un número imposible no se lleva la colección por '
+      'delante', () async {
+    final file = File('${dir.path}/collection.json');
+    file.writeAsStringSync(jsonEncode({
+      'cards': [
+        {'oracleId': 'o1', 'name': 'Sol Ring', 'colors': '', 'qty': 1}
+      ],
+      'printings': {'blb|72': 1},
+      'paid': {
+        'blb|72@EUR': {'base': 'blb|72', 'per': 'gratis', 'qty': 1},
+        'kld|5@EUR': {'base': 'kld|5', 'per': 2.0, 'qty': 3},
+      },
+    }));
+
+    final store = CollectionStore(dataDir: dir);
+    await store.load();
+
+    expect(store.totalCopies, 1); // la colección entera sigue ahí
+    expect(store.purchases.length, 1); // solo se cae la compra ilegible
+    expect(store.purchases[purchaseKey('kld|5', 'EUR')]!.perCopy, 2.0);
+  });
 }

@@ -101,6 +101,62 @@ int compareByRecent(OwnedCard a, OwnedCard b) {
   return a.name.compareTo(b.name);
 }
 
+/// Lo pagado por unas copias concretas: coste MEDIO por copia, cuántas y en
+/// qué divisa.
+///
+/// Las divisas no se mezclan ni se convierten (ver `services/markets.dart`):
+/// pagar 10 $ y 10 € no son 20 de nada. Por eso la divisa entra en la clave.
+class PurchaseLot {
+  /// Impresión exacta ("set|nº") o "oracle:<id>" si el CSV no traía edición.
+  final String base;
+
+  /// Lo pagado por UNA copia.
+  final double perCopy;
+
+  /// Cuántas copias tienen ese coste apuntado. Puede ser menos que las que
+  /// tienes: escanear no sabe lo que pagaste.
+  final int qty;
+
+  /// Divisa tal cual venía. `null` = el CSV no lo decía.
+  final String? currency;
+
+  const PurchaseLot({
+    required this.base,
+    required this.perCopy,
+    required this.qty,
+    required this.currency,
+  });
+
+  double get total => perCopy * qty;
+
+  Map<String, dynamic> toJson() => {
+        'base': base,
+        'per': perCopy,
+        'qty': qty,
+        if (currency != null) 'cur': currency,
+      };
+
+  static PurchaseLot? fromJson(Map<String, dynamic> json) {
+    final base = json['base'];
+    final per = json['per'];
+    final qty = json['qty'];
+    if (base is! String || per is! num || qty is! int) return null;
+    if (per <= 0 || qty <= 0 || !per.toDouble().isFinite) return null;
+    return PurchaseLot(
+      base: base,
+      perCopy: per.toDouble(),
+      qty: qty,
+      currency: json['cur'] is String ? json['cur'] as String : null,
+    );
+  }
+}
+
+/// Clave con la que se guarda una compra: la impresión y su divisa. Sin la
+/// divisa dentro, importar un CSV en dólares encima de uno en euros sumaría
+/// peras con manzanas.
+String purchaseKey(String base, String? currency) =>
+    '$base@${currency ?? '?'}';
+
 /// Colección del usuario. Persistencia local en JSON (sin cuentas, sin nube:
 /// tus cartas son tuyas). ChangeNotifier para que la UI reaccione.
 class CollectionStore extends ChangeNotifier {
@@ -124,6 +180,11 @@ class CollectionStore extends ChangeNotifier {
   /// A qué carta pertenece cada impresión ("set|nº" -> oracleId). Sin esto,
   /// vender una carta dejaba sus ediciones contando en el valor total.
   final Map<String, String> _printingOwner = {};
+
+  /// Lo que PAGASTE, por impresión y divisa (clave de [purchaseKey]). Se
+  /// guarda el coste MEDIO por copia: comprar la misma carta dos veces a
+  /// precios distintos deja el promedio, que es lo que un P&L necesita.
+  final Map<String, PurchaseLot> _paid = {};
   bool _loaded = false;
 
   /// ¿Sabemos qué impresiones exactas tiene el usuario? (Colecciones
@@ -156,6 +217,63 @@ class CollectionStore extends ChangeNotifier {
   Map<String, int> get qtyByOracle =>
       {for (final c in _cards.values) c.oracleId: c.qty};
 
+  /// Lo pagado, por clave de compra. Solo lectura: para cambiarlo está
+  /// [recordPurchase].
+  Map<String, PurchaseLot> get purchases => Map.unmodifiable(_paid);
+
+  /// ¿Hay algún precio de compra apuntado? Sin ninguno, el P&L no se enseña
+  /// (un "has ganado un 100 %" calculado sobre cero es mentira).
+  bool get hasPurchaseData => _paid.isNotEmpty;
+
+  /// Lo que pagaste por UNA carta, sumando todas sus ediciones y agrupado por
+  /// divisa (las divisas no se mezclan). Clave: 'EUR', 'USD'… o `null` si el
+  /// CSV no lo decía.
+  Map<String?, ({double total, int qty})> paidForCard(String oracleId) {
+    final out = <String?, ({double total, int qty})>{};
+    for (final lot in _paid.values) {
+      final mia = lot.base == 'oracle:$oracleId' ||
+          _printingOwner[lot.base] == oracleId;
+      if (!mia) continue;
+      final antes = out[lot.currency];
+      out[lot.currency] = antes == null
+          ? (total: lot.total, qty: lot.qty)
+          : (total: antes.total + lot.total, qty: antes.qty + lot.qty);
+    }
+    return out;
+  }
+
+  /// Apunta lo que pagaste por [qty] copias, a [perCopy] cada una. Si ya
+  /// había compras de esa misma impresión y divisa, el coste queda en el
+  /// PROMEDIO ponderado por copias.
+  ///
+  /// [base] es la impresión exacta ("set|nº") cuando se sabe, o
+  /// "oracle:<id>" cuando el CSV no traía el Scryfall ID.
+  void recordPurchase({
+    required String base,
+    required int qty,
+    required double perCopy,
+    String? currency,
+  }) {
+    if (qty <= 0 || perCopy <= 0 || !perCopy.isFinite) return;
+    final divisa = (currency == null || currency.trim().isEmpty)
+        ? null
+        : currency.trim().toUpperCase();
+    final key = purchaseKey(base, divisa);
+    final antes = _paid[key];
+    _paid[key] = antes == null
+        ? PurchaseLot(
+            base: base, perCopy: perCopy, qty: qty, currency: divisa)
+        : PurchaseLot(
+            base: base,
+            perCopy: (antes.perCopy * antes.qty + perCopy * qty) /
+                (antes.qty + qty),
+            qty: antes.qty + qty,
+            currency: divisa,
+          );
+    notifyListeners();
+    _save();
+  }
+
   Future<File?> _file() async {
     try {
       final dir = dataDir ?? await getApplicationSupportDirectory();
@@ -184,7 +302,9 @@ class CollectionStore extends ChangeNotifier {
       final printings = <String, int>{};
       final foils = <String, int>{};
       final owners = <String, String>{};
-      // v1: lista de cartas · v2: {cards, printings} · v3: + foils/owners
+      final paid = <String, PurchaseLot>{};
+      // v1: lista de cartas · v2: {cards, printings} · v3: + foils/owners ·
+      // v4: + paid (lo que pagaste)
       final list = decoded is List
           ? decoded
           : ((decoded as Map<String, dynamic>)['cards'] as List<dynamic>);
@@ -208,6 +328,13 @@ class CollectionStore extends ChangeNotifier {
             .forEach((k, v) {
           if (v is String) owners[k] = v;
         });
+        (decoded['paid'] as Map<String, dynamic>? ?? {}).forEach((k, v) {
+          if (v is! Map<String, dynamic>) return;
+          final lot = PurchaseLot.fromJson(v);
+          // una compra ilegible se salta: no vale tirar toda la colección
+          // por un número raro en un campo de dinero
+          if (lot != null) paid[k] = lot;
+        });
       }
       _cards
         ..clear()
@@ -221,6 +348,9 @@ class CollectionStore extends ChangeNotifier {
       _printingOwner
         ..clear()
         ..addAll(owners);
+      _paid
+        ..clear()
+        ..addAll(paid);
       ok = true;
     } catch (_) {
       // fichero ilegible: apartarlo con otro nombre y arrancar vacío, pero
@@ -270,6 +400,7 @@ class CollectionStore extends ChangeNotifier {
       'printings': _printings,
       'foils': _foils,
       'printingOwner': _printingOwner,
+      'paid': {for (final e in _paid.entries) e.key: e.value.toJson()},
     });
     final tmp = File('${file.path}.tmp');
     await tmp.writeAsString(data, flush: true);
@@ -333,6 +464,7 @@ class CollectionStore extends ChangeNotifier {
     _printings.clear();
     _foils.clear();
     _printingOwner.clear();
+    _paid.clear();
     notifyListeners();
     _save();
   }
@@ -348,9 +480,43 @@ class CollectionStore extends ChangeNotifier {
     } else {
       _cards[oracleId]?.qty = qty;
     }
+    // el orden importa: _trimPaid necesita saber de quién es cada impresión,
+    // y _trimPrintings puede borrar justo esa pista
+    _trimPaid(oracleId, qty < 0 ? 0 : qty);
     _trimPrintings(oracleId, qty < 0 ? 0 : qty);
     notifyListeners();
     _save();
+  }
+
+  /// Deja apuntadas como mucho [qty] copias compradas de [oracleId]: vender
+  /// una carta se lleva su coste. Si no, el P&L seguiría contando lo que
+  /// pagaste por algo que ya no tienes y el "has perdido X" sería falso.
+  void _trimPaid(String oracleId, int qty) {
+    final keys = [
+      for (final e in _paid.entries)
+        if (e.value.base == 'oracle:$oracleId' ||
+            _printingOwner[e.value.base] == oracleId)
+          e.key
+    ];
+    if (keys.isEmpty) return;
+    var total = keys.fold(0, (sum, k) => sum + (_paid[k]?.qty ?? 0));
+    for (final key in keys.reversed) {
+      if (total <= qty) break;
+      final lot = _paid[key];
+      if (lot == null) continue;
+      final drop = lot.qty < (total - qty) ? lot.qty : (total - qty);
+      final left = lot.qty - drop;
+      total -= drop;
+      if (left <= 0) {
+        _paid.remove(key);
+      } else {
+        _paid[key] = PurchaseLot(
+            base: lot.base,
+            perCopy: lot.perCopy, // el coste medio por copia no cambia
+            qty: left,
+            currency: lot.currency);
+      }
+    }
   }
 
   /// Deja las copias por edición de [oracleId] sumando como mucho [qty],
@@ -395,8 +561,12 @@ class ImportResult {
   /// propósito (y se cuentan para poder decírselo al usuario).
   final int tokensIgnored;
 
+  /// Copias que traían precio de compra. Se dice al terminar: si el CSV no
+  /// lo trae, el usuario tiene que saber POR QUÉ no le sale el P&L.
+  final int withPurchasePrice;
+
   const ImportResult(this.imported, this.copies, this.unrecognized,
-      {this.tokensIgnored = 0});
+      {this.tokensIgnored = 0, this.withPurchasePrice = 0});
 }
 
 /// ¿Es una ficha/emblema? ManaBox los exporta desde sets "... Tokens"
@@ -410,10 +580,37 @@ bool looksLikeToken(String name, String? setName) {
       name.toLowerCase() == 'emblem';
 }
 
+/// Una fila del CSV de ManaBox ya interpretada.
+class ManaBoxRow {
+  final String name;
+  final String? scryfallId;
+  final int qty;
+  final String? setName;
+  final bool foil;
+
+  /// Lo que pagaste por UNA copia, si el CSV lo trae. `null` = la columna no
+  /// estaba, o venía vacía, o era 0 (ManaBox escribe 0 cuando no lo sabe, y
+  /// tomarlo por "me salió gratis" convertiría cualquier carta en un chollo).
+  final double? purchasePrice;
+
+  /// Divisa de [purchasePrice] tal cual la escribe ManaBox. `null` = el CSV
+  /// no lo dice. NUNCA se convierte a otra moneda.
+  final String? currency;
+
+  const ManaBoxRow({
+    required this.name,
+    required this.scryfallId,
+    required this.qty,
+    required this.setName,
+    required this.foil,
+    this.purchasePrice,
+    this.currency,
+  });
+}
+
 /// Parsea un CSV de ManaBox: detecta separador y las columnas Name /
-/// Quantity / Scryfall ID / Set name / Foil. Devuelve filas
-/// (name, scryfallId, qty, setName, foil).
-List<(String, String?, int, String?, bool)> parseManaBoxCsv(String content) {
+/// Quantity / Scryfall ID / Set name / Foil / Purchase price (+ su divisa).
+List<ManaBoxRow> parseManaBoxCsv(String content) {
   final lines = const LineSplitter().convert(content);
   if (lines.isEmpty) return const [];
   final sep = lines.first.contains(';') ? ';' : ',';
@@ -423,6 +620,8 @@ List<(String, String?, int, String?, bool)> parseManaBoxCsv(String content) {
   int? idIdx;
   int? setIdx;
   int? foilIdx;
+  int? priceIdx;
+  int? currencyIdx;
   for (var i = 0; i < header.length; i++) {
     final h = header[i].toLowerCase().trim();
     if (h == 'name' || h == 'nombre') nameIdx = i;
@@ -432,9 +631,18 @@ List<(String, String?, int, String?, bool)> parseManaBoxCsv(String content) {
     if (h == 'scryfall id') idIdx = i;
     if (h == 'set name' || h == 'edition' || h == 'edición') setIdx = i;
     if (h == 'foil') foilIdx = i;
+    // la divisa se mira ANTES que el precio: "purchase price currency"
+    // también empieza por "purchase price"
+    if (h == 'purchase price currency' || h == 'currency' || h == 'divisa') {
+      currencyIdx = i;
+    } else if (h == 'purchase price' ||
+        h == 'precio de compra' ||
+        h == 'price bought') {
+      priceIdx = i;
+    }
   }
   if (nameIdx == null) return const [];
-  final rows = <(String, String?, int, String?, bool)>[];
+  final rows = <ManaBoxRow>[];
   for (final line in lines.skip(1)) {
     if (line.trim().isEmpty) continue;
     final cols = _splitCsvLine(line, sep);
@@ -452,10 +660,33 @@ List<(String, String?, int, String?, bool)> parseManaBoxCsv(String content) {
         ? cols[foilIdx].trim().toLowerCase()
         : 'normal';
     final foil = finish == 'foil' || finish == 'etched';
-    rows.add(
-        (name, id != null && id.isNotEmpty ? id : null, qty, setName, foil));
+    final price = priceIdx != null && cols.length > priceIdx
+        ? _parseMoney(cols[priceIdx])
+        : null;
+    final currency = currencyIdx != null && cols.length > currencyIdx
+        ? cols[currencyIdx].trim().toUpperCase()
+        : null;
+    rows.add(ManaBoxRow(
+      name: name,
+      scryfallId: id != null && id.isNotEmpty ? id : null,
+      qty: qty,
+      setName: setName,
+      foil: foil,
+      purchasePrice: price,
+      currency: currency == null || currency.isEmpty ? null : currency,
+    ));
   }
   return rows;
+}
+
+/// Dinero de un CSV: acepta coma decimal (exportes en español) y descarta lo
+/// que no sea un número positivo. 0 no es un precio: es "no lo sé".
+double? _parseMoney(String raw) {
+  final limpio = raw.trim().replaceAll(',', '.');
+  if (limpio.isEmpty) return null;
+  final value = double.tryParse(limpio);
+  if (value == null || value <= 0 || !value.isFinite) return null;
+  return value;
 }
 
 /// Split CSV respetando comillas ("Ruby, Daring Tracker").
