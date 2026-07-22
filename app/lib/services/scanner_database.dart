@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
+import 'download_check.dart';
 import 'safe_input.dart';
 
 import '../scanner/hash_index.dart';
@@ -65,15 +69,28 @@ class ScannerDatabase {
             'No se pudo descargar la base de huellas (HTTP ${response.statusCode}). '
             '¿Se ha ejecutado ya el workflow "Build scanner hash database"?');
       }
+      // ¿publica esta release su SHA-256? Las de antes de 2026-07-22
+      // no lo hacen, y en ese caso se baja igual que siempre
+      final esperada = await fetchPublishedSha256(client, releaseUrl);
       final total = response.contentLength ?? -1;
       var received = 0;
+      // la huella se calcula MIENTRAS se baja: pasar otra vez por cientos de
+      // MB al terminar sería leerlo todo dos veces
+      Digest? digest;
+      final huella = sha256.startChunkedConversion(
+          ChunkedConversionSink<Digest>.withCallback((d) => digest = d.single));
       sink = gzFile.openWrite();
       await for (final chunk in response.stream) {
         sink.add(chunk);
+        huella.add(chunk);
         received += chunk.length;
         ensureDownloadSize(received);
         yield total > 0 ? received / total : -1;
       }
+      huella.close();
+      // si la release publica huella y no cuadra, aquí se corta: nada de
+      // descomprimir ni sustituir la base buena
+      ensureSha256(expected: esperada, actual: digest!);
       await sink.close();
       sink = null;
       await gzFile.openRead().transform(gzip.decoder).pipe(tmpFile.openWrite());
