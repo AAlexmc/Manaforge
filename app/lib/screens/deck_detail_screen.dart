@@ -23,13 +23,20 @@ class DeckDetailScreen extends StatefulWidget {
   final DeckStore? decks;
   final Set<String>? ownedPrintings;
 
+  /// Cuántas copias tienes DE VERDAD de cada carta (por nombre). Va aparte
+  /// del pool porque al abrir un mazo guardado el pool se rellena con las
+  /// cartas que ya no tienes —para poder pintarlas— con la cantidad que pide
+  /// el mazo: mirar ahí diría que las tienes todas siempre.
+  final Map<String, int>? ownedByName;
+
   const DeckDetailScreen(
       {super.key,
       required this.gen,
       required this.pool,
       this.db,
       this.decks,
-      this.ownedPrintings});
+      this.ownedPrintings,
+      this.ownedByName});
 
   @override
   State<DeckDetailScreen> createState() => _DeckDetailScreenState();
@@ -58,6 +65,24 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           [..._gen.deck.cards.keys, ..._gen.deck.lands.keys]);
       if (mounted) setState(() => _prices = prices);
     } catch (_) {/* sin DB: sin precios */}
+  }
+
+  /// Copias del mazo que ya NO tienes. El mazo guarda su lista aunque vendas
+  /// una carta: aquí se dice la verdad en vez de prometer "tienes todas".
+  /// La cantidad la manda el pool, que se construye con tu colección.
+  int get _faltan {
+    var faltan = 0;
+    void mirar(Map<String, int> parte) {
+      parte.forEach((nombre, pide) {
+        final tengo =
+            widget.ownedByName?[nombre] ?? _pool[nombre]?.qty ?? 0;
+        if (tengo < pide) faltan += pide - tengo;
+      });
+    }
+
+    mirar(_gen.deck.cards);
+    mirar(_gen.deck.lands);
+    return faltan;
   }
 
   double get _deckValue {
@@ -211,8 +236,14 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             ],
           ),
           const SizedBox(height: 6),
-          const Text('✓ Tienes todas las cartas',
-              style: TextStyle(color: MFColors.success)),
+          if (_faltan == 0)
+            const Text('✓ Tienes todas las cartas',
+                style: TextStyle(color: MFColors.success))
+          else
+            Text(
+                '⚠ Te faltan $_faltan carta${_faltan == 1 ? '' : 's'} de este '
+                'mazo — siguen en la lista, no se han borrado',
+                style: const TextStyle(color: MFColors.warning)),
           if (_imagesF != null) ...[
             const SizedBox(height: 14),
             _DeckImageStrip(
