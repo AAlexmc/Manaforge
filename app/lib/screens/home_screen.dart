@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/achievements_controller.dart';
+import '../services/app_update.dart';
 import '../services/certificate_store.dart';
 import '../services/collection_value.dart';
 import '../services/deck_store.dart';
@@ -10,6 +11,7 @@ import '../services/meta_decks.dart';
 import '../services/recents_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/update_notice.dart';
 import 'card_detail_screen.dart';
 import 'deck_detail_screen.dart';
 import 'import_csv_screen.dart';
@@ -26,6 +28,10 @@ class HomeScreen extends StatefulWidget {
   final DeckStore decks;
   final AchievementsController achievements;
   final CertificateStore certificates;
+
+  /// Aviso de versión nueva. Opcional: sin él, Inicio no enseña nada.
+  final AppUpdateChecker? updates;
+
   final void Function(int tabIndex) onGoToTab;
 
   const HomeScreen({
@@ -35,6 +41,7 @@ class HomeScreen extends StatefulWidget {
     required this.decks,
     required this.achievements,
     required this.certificates,
+    this.updates,
     required this.onGoToTab,
   });
 
@@ -243,6 +250,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 const SizedBox(height: 12),
+                if (widget.updates != null) ...[
+                  UpdateBanner(checker: widget.updates!),
+                  const SizedBox(height: 4),
+                ],
                 // héroe: tu colección de un vistazo
                 Card(
                   child: Padding(
