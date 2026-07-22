@@ -7,7 +7,6 @@ library;
 
 import 'package:flutter/material.dart';
 
-import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/app_update.dart';
 import '../services/whats_new.dart';
