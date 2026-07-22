@@ -93,6 +93,9 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                       ),
                   ],
                 ),
+                // los colores solo salen con fondo puesto: sin imagen debajo
+                // no hay nada que dejar pasar y el tema de siempre ya está
+                // pensado para leerse
                 if (prefs.hasImage) ...[
                   const SizedBox(height: 8),
                   Text(t.backgroundDim,
@@ -105,12 +108,178 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     label: '${(prefs.dim * 100).round()} %',
                     onChanged: (v) => prefs.setDim(v),
                   ),
+                  const SizedBox(height: 4),
+                  Text(t.backgroundCardColor,
+                      style: const TextStyle(fontSize: 12)),
+                  const SizedBox(height: 6),
+                  _Muestras(
+                    paleta: kCardColors,
+                    elegido: prefs.cardColorId,
+                    porDefecto: t.backgroundColorDefault,
+                    onElegir: prefs.setCardColor,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(t.backgroundTextColor,
+                      style: const TextStyle(fontSize: 12)),
+                  const SizedBox(height: 6),
+                  _Muestras(
+                    paleta: kTextColors,
+                    elegido: prefs.textColorId,
+                    porDefecto: t.backgroundColorDefault,
+                    onElegir: prefs.setTextColor,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(t.backgroundCardOpacity,
+                      style: const TextStyle(fontSize: 12)),
+                  Slider(
+                    value: prefs.cardOpacity,
+                    min: kMinCardOpacity,
+                    max: kMaxCardOpacity,
+                    divisions: 13,
+                    label: '${(prefs.cardOpacity * 100).round()} %',
+                    onChanged: (v) => prefs.setCardOpacity(v),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(t.backgroundPreview,
+                      style: const TextStyle(fontSize: 12)),
+                  const SizedBox(height: 6),
+                  _Vistazo(prefs: prefs),
                 ],
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+/// Fila de círculos de color. El primero es "el de siempre" y se pinta con un
+/// aspa: elegir color es opcional y tiene que poder deshacerse.
+///
+/// Sin nombres escritos a propósito: un color se reconoce viéndolo, y poner
+/// "vino" o "piedra" obligaría a traducir ocho palabras a diez idiomas para
+/// decir lo que ya dice el círculo. El nombre va en el tooltip.
+class _Muestras extends StatelessWidget {
+  final List<NamedColor> paleta;
+  final String? elegido;
+  final String porDefecto;
+  final void Function(String?) onElegir;
+
+  const _Muestras({
+    required this.paleta,
+    required this.elegido,
+    required this.porDefecto,
+    required this.onElegir,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        _circulo(context,
+            color: null, seleccionado: elegido == null, nombre: porDefecto,
+            onTap: () => onElegir(null)),
+        for (final c in paleta)
+          _circulo(context,
+              color: c.color,
+              seleccionado: elegido == c.id,
+              nombre: c.id,
+              onTap: () => onElegir(c.id)),
+      ],
+    );
+  }
+
+  Widget _circulo(BuildContext context,
+      {required Color? color,
+      required bool seleccionado,
+      required String nombre,
+      required VoidCallback onTap}) {
+    final borde = Theme.of(context).colorScheme.onSurface;
+    return Tooltip(
+      message: nombre,
+      child: Semantics(
+        button: true,
+        selected: seleccionado,
+        label: nombre,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const CircleBorder(),
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: Border.all(
+                  color: seleccionado
+                      ? borde
+                      : borde.withValues(alpha: 0.25),
+                  width: seleccionado ? 2.5 : 1),
+            ),
+            child: color == null
+                ? Icon(Icons.close, size: 16, color: borde)
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Cómo queda una tarjeta con los colores elegidos, encima del fondo de
+/// verdad. Sin esto hay que salir de Ajustes para ver si se lee.
+class _Vistazo extends StatelessWidget {
+  final BackgroundPreference prefs;
+
+  const _Vistazo({required this.prefs});
+
+  @override
+  Widget build(BuildContext context) {
+    final tema = Theme.of(context);
+    final letra = prefs.textColor ?? tema.colorScheme.onSurface;
+    final tarjeta = (prefs.cardColor ?? tema.colorScheme.surface)
+        .withValues(alpha: prefs.cardOpacity);
+    final imagen = prefs.image;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: SizedBox(
+        height: 92,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (imagen != null)
+              Image.file(imagen,
+                  fit: BoxFit.cover,
+                  cacheWidth: 640,
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink()),
+            Container(color: Colors.black.withValues(alpha: prefs.dim)),
+            Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: tarjeta,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ManaForge',
+                        style: TextStyle(
+                            color: letra, fontWeight: FontWeight.bold)),
+                    Text('Sol Ring · 2,40 €',
+                        style: TextStyle(color: letra, fontSize: 12)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

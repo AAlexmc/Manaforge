@@ -183,6 +183,22 @@ class AppLocalizationsFr extends AppLocalizations {
       'Assombrissement (pour que le texte reste lisible)';
 
   @override
+  String get backgroundCardColor => 'Couleur des cartes';
+
+  @override
+  String get backgroundTextColor => 'Couleur du texte';
+
+  @override
+  String get backgroundCardOpacity =>
+      'À quel point les cartes masquent le fond';
+
+  @override
+  String get backgroundColorDefault => 'Celle d\'origine';
+
+  @override
+  String get backgroundPreview => 'Aperçu';
+
+  @override
   String get backgroundNotAnImage =>
       'Choisissez une image (.jpg, .png ou .webp) comme fond.';
 

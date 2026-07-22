@@ -70,6 +70,11 @@
   "backgroundOfficial": "Official Magic wallpapers",
   "backgroundRemove": "Remove wallpaper",
   "backgroundDim": "How much it dims (so the text stays readable)",
+  "backgroundCardColor": "Card colour",
+  "backgroundTextColor": "Text colour",
+  "backgroundCardOpacity": "How much cards cover the wallpaper",
+  "backgroundColorDefault": "The usual one",
+  "backgroundPreview": "How it looks",
   "backgroundNotAnImage": "Pick an image (.jpg, .png or .webp) as the wallpaper.",
   "backgroundTooBig": "That image is too big to use as a wallpaper.",
 

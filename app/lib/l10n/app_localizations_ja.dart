@@ -179,6 +179,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get backgroundDim => '暗くする度合い（文字が読めるように）';
 
   @override
+  String get backgroundCardColor => 'カードの色';
+
+  @override
+  String get backgroundTextColor => '文字の色';
+
+  @override
+  String get backgroundCardOpacity => 'カードが壁紙を隠す度合い';
+
+  @override
+  String get backgroundColorDefault => '既定の色';
+
+  @override
+  String get backgroundPreview => '表示イメージ';
+
+  @override
   String get backgroundNotAnImage => '背景には画像（.jpg、.png、.webp）を選んでください。';
 
   @override

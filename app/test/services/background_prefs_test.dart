@@ -135,6 +135,61 @@ void main() {
     expect(prefs.dim, kMinDim);
   });
 
+  test('los colores elegidos sobreviven a cerrar la app', () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.setCardColor('noche');
+    await uno.setTextColor('dorado');
+    await uno.setCardOpacity(0.5);
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+
+    expect(otro.cardColorId, 'noche');
+    expect(otro.textColorId, 'dorado');
+    expect(otro.cardColor, kCardColors.firstWhere((c) => c.id == 'noche').color);
+    expect(otro.cardOpacity, 0.5);
+  });
+
+  test('volver al color de siempre', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.setCardColor('vino');
+    await prefs.setCardColor(null);
+
+    expect(prefs.cardColorId, isNull);
+    expect(prefs.cardColor, isNull); // null = el del tema
+  });
+
+  test('un color que no está en la paleta no se acepta', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+
+    await prefs.setCardColor('fucsia');
+    await prefs.setTextColor('fucsia');
+
+    expect(prefs.cardColorId, isNull);
+    expect(prefs.textColorId, isNull);
+  });
+
+  test('un fichero manipulado no pinta un color inventado', () async {
+    File(p.join(datos.path, 'background.json')).writeAsStringSync(
+        '{"cardColor":"fucsia","textColor":"fucsia","cardOpacity":9}');
+
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.load();
+
+    expect(prefs.cardColor, isNull);
+    expect(prefs.textColor, isNull);
+    expect(prefs.cardOpacity, kMaxCardOpacity); // recortado, no un 9
+  });
+
+  test('las tarjetas no pueden quedar tan transparentes que no se lean',
+      () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+
+    await prefs.setCardOpacity(0);
+
+    expect(prefs.cardOpacity, kMinCardOpacity);
+  });
+
   test('dos load() a la vez: el segundo espera al primero', () async {
     final uno = BackgroundPreference(dataDir: datos);
     await uno.select(_imagen('fondo.png'));

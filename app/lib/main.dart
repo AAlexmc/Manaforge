@@ -79,14 +79,16 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
     return ListenableBuilder(
       listenable: Listenable.merge([_background, _language]),
       builder: (context, _) {
-        // con fondo puesto, las pantallas dejan de pintar su color opaco:
-        // si no, taparían la imagen entera y el fondo no se vería nunca
+        // con fondo puesto, las pantallas dejan de pintar su color opaco y
+        // las tarjetas y la letra pueden llevar el color que se haya elegido
+        // en Ajustes (ver `mfThemeSobreFondo`)
         ThemeData conFondo(Brightness brillo) {
           final base = mfTheme(brillo);
           return _background.hasImage
-              ? base.copyWith(
-                  scaffoldBackgroundColor: Colors.transparent,
-                  canvasColor: Colors.transparent)
+              ? mfThemeSobreFondo(base,
+                  card: _background.cardColor,
+                  text: _background.textColor,
+                  cardOpacity: _background.cardOpacity)
               : base;
         }
 

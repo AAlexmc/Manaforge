@@ -183,6 +183,22 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wie stark es abgedunkelt wird (damit der Text lesbar bleibt)';
 
   @override
+  String get backgroundCardColor => 'Farbe der Karten';
+
+  @override
+  String get backgroundTextColor => 'Farbe der Schrift';
+
+  @override
+  String get backgroundCardOpacity =>
+      'Wie stark die Karten den Hintergrund verdecken';
+
+  @override
+  String get backgroundColorDefault => 'Die übliche';
+
+  @override
+  String get backgroundPreview => 'So sieht es aus';
+
+  @override
   String get backgroundNotAnImage =>
       'Wähle ein Bild (.jpg, .png oder .webp) als Hintergrund.';
 

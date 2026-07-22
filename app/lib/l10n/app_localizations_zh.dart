@@ -172,6 +172,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get backgroundDim => '变暗程度（保证文字可读）';
 
   @override
+  String get backgroundCardColor => '卡片颜色';
+
+  @override
+  String get backgroundTextColor => '文字颜色';
+
+  @override
+  String get backgroundCardOpacity => '卡片遮挡背景的程度';
+
+  @override
+  String get backgroundColorDefault => '默认颜色';
+
+  @override
+  String get backgroundPreview => '预览效果';
+
+  @override
   String get backgroundNotAnImage => '请选择图片（.jpg、.png 或 .webp）作为背景。';
 
   @override

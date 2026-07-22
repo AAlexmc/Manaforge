@@ -182,6 +182,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backgroundDim => 'How much it dims (so the text stays readable)';
 
   @override
+  String get backgroundCardColor => 'Card colour';
+
+  @override
+  String get backgroundTextColor => 'Text colour';
+
+  @override
+  String get backgroundCardOpacity => 'How much cards cover the wallpaper';
+
+  @override
+  String get backgroundColorDefault => 'The usual one';
+
+  @override
+  String get backgroundPreview => 'How it looks';
+
+  @override
   String get backgroundNotAnImage =>
       'Pick an image (.jpg, .png or .webp) as the wallpaper.';
 
