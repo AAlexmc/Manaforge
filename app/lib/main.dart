@@ -24,6 +24,7 @@ import 'services/scanner_database.dart';
 import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
 import 'widgets/app_background.dart';
+import 'widgets/app_shortcuts.dart';
 
 void main() => runApp(const ManaForgeApp());
 
@@ -44,6 +45,9 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
   /// Fondo de pantalla elegido por el usuario. Vive aquí arriba porque tiene
   /// que pintarse DETRÁS de todas las pantallas.
   final _background = BackgroundPreference();
+
+  /// Para poder cerrar con Escape desde encima del navegador.
+  final _navigator = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -68,13 +72,25 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
         }
 
         return MaterialApp(
+          navigatorKey: _navigator,
           title: 'ManaForge',
           debugShowCheckedModeBanner: false,
           theme: conFondo(Brightness.light),
           darkTheme: conFondo(Brightness.dark),
           themeMode: ThemeMode.dark, // oscuro por defecto (decisión de diseño)
-          builder: (context, child) => AppBackground(
-              prefs: _background, child: child ?? const SizedBox.shrink()),
+          builder: (context, child) => CallbackShortcuts(
+            // Escape cierra fichas y detalles empujados con push: los
+            // diálogos ya se cierran solos, las pantallas no
+            bindings: escapeCloses(_navigator),
+            // el Focus es lo que hace que la tecla llegue: sin un nodo
+            // enfocado dentro, el atajo no se dispara nunca
+            child: Focus(
+              autofocus: true,
+              child: AppBackground(
+                  prefs: _background,
+                  child: child ?? const SizedBox.shrink()),
+            ),
+          ),
           home: HomeShell(
             key: ValueKey(_session),
             background: _background,
@@ -173,6 +189,9 @@ class _HomeShellState extends State<HomeShell> {
   /// Mira una vez al día si hay versión nueva de la app. No descarga nada:
   /// avisa y lleva a la página de descargas.
   final _updates = AppUpdateChecker();
+
+  /// Ctrl+F: aviso de "quiero buscar" para la pestaña que esté delante.
+  final _search = SearchFocusBus();
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -279,12 +298,16 @@ class _HomeShellState extends State<HomeShell> {
           folders: _folders,
           achievements: _achievements,
           market: _market,
-          prices: _prices),
+          prices: _prices,
+          search: _search,
+          tabIndex: 1),
       AlbumScreen(
           db: _db,
           collection: _collection,
           market: _market,
-          prices: _prices),
+          prices: _prices,
+          search: _search,
+          tabIndex: 2),
       MazosScreen(
           db: _db,
           collection: _collection,
@@ -311,18 +334,33 @@ class _HomeShellState extends State<HomeShell> {
     int pantallaDeBarra(int barra) =>
         barra < _escanear ? barra : barra - 1;
 
-    return Scaffold(
-      body: IndexedStack(index: _index, children: screens),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: barraDePantalla(_index),
-        onDestinationSelected: (i) {
-          if (i == _escanear) {
-            _abrirEscaner();
-            return;
-          }
-          setState(() => _index = pantallaDeBarra(i));
-        },
-        destinations: _destinos,
+    return CallbackShortcuts(
+      bindings: mainShortcuts(
+        screenCount: screens.length,
+        onTab: (i) => setState(() => _index = i),
+        onScan: _abrirEscaner,
+        // Ctrl+F no sabe cómo busca cada pantalla: avisa a la que esté
+        // delante y que se apañe (el Álbum enfoca su buscador, Colección
+        // abre "Todas las cartas", que es donde se busca de verdad)
+        onSearch: () => _search.request(_index),
+        onSettings: () => setState(() => _index = screens.length - 1),
+      ),
+      child: Focus(
+        autofocus: true,
+        child: Scaffold(
+          body: IndexedStack(index: _index, children: screens),
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: barraDePantalla(_index),
+            onDestinationSelected: (i) {
+              if (i == _escanear) {
+                _abrirEscaner();
+                return;
+              }
+              setState(() => _index = pantallaDeBarra(i));
+            },
+            destinations: _destinos,
+          ),
+        ),
       ),
     );
   }
