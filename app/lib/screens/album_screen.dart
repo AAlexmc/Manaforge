@@ -5,6 +5,7 @@ import '../services/collection_sets.dart';
 import '../services/collection_store.dart';
 import '../services/market_prefs.dart';
 import '../services/price_series_database.dart';
+import '../services/markets.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'album_filters.dart';
@@ -377,6 +378,11 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
   /// Enseñar solo las que faltan: el uso real del álbum es "qué me queda".
   bool _soloFaltan = false;
 
+  /// Contar solo la tirada base (contrato: "completo" son los números base).
+  /// El conmutador saca las variantes y promos, que en un set moderno son
+  /// decenas y nadie mete en la cuenta.
+  bool _soloBase = true;
+
   // matriz de desaturación (escala de grises) para las cartas que faltan
   static const _greyMatrix = <double>[
     0.2126, 0.7152, 0.0722, 0, 0,
@@ -388,18 +394,33 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
   @override
   void dispose() {
     _searchCtrl.dispose();
+    widget.market?.removeListener(_recargar);
     super.dispose();
+  }
+
+  /// Cambiar de mercado cambia los precios del álbum: se vuelven a pedir.
+  Future<void> _recargar() async {
+    final cards = await widget.db.setCards(widget.set.code,
+        market: widget.market?.market ?? Market.cardmarket);
+    if (mounted) setState(() => _cards = cards);
   }
 
   @override
   void initState() {
     super.initState();
-    widget.db.setCards(widget.set.code).then((cards) {
+    widget.db
+        .setCards(widget.set.code,
+            market: widget.market?.market ?? Market.cardmarket)
+        .then((cards) {
       if (mounted) setState(() => _cards = cards);
     }).catchError((e) {
       if (mounted) setState(() => _error = '$e');
     });
+    widget.market?.addListener(_recargar);
   }
+
+  String _precioTotal(MissingReport r) => formatMoney(
+      r.total, widget.market?.market ?? Market.cardmarket);
 
   /// Abre la ficha completa sabiendo qué cartas hay al lado: desde ahí se
   /// pasa a la siguiente sin volver al álbum.
@@ -447,11 +468,24 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                   return qtyByOracle[c.oracleId] ?? 0;
                 }
                 var ownedHere = 0;
+                var deLasQueCuentan = 0;
                 for (final c in cards) {
+                  if (_soloBase && !isBaseNumber(c, baseSetSize(cards))) {
+                    continue;
+                  }
+                  deLasQueCuentan++;
                   if (qtyOf(c) > 0) ownedHere++;
                 }
-                final visibles = filterAlbumCards(cards,
+                final baseSize = baseSetSize(cards);
+                final delSet = _soloBase
+                    ? [for (final c in cards) if (isBaseNumber(c, baseSize)) c]
+                    : cards;
+                final visibles = filterAlbumCards(delSet,
                     query: _query, onlyMissing: _soloFaltan, qtyOf: qtyOf);
+                final faltan = missingReport(cards,
+                    qtyOf: qtyOf,
+                    onlyBase: _soloBase,
+                    countBasicLands: byPrinting);
                 return Column(
                   children: [
                     Padding(
@@ -462,11 +496,11 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(3),
                               child: LinearProgressIndicator(
-                                value: cards.isEmpty
+                                value: deLasQueCuentan == 0
                                     ? 0
-                                    : ownedHere / cards.length,
+                                    : ownedHere / deLasQueCuentan,
                                 minHeight: 6,
-                                color: ownedHere >= cards.length
+                                color: ownedHere >= deLasQueCuentan
                                     ? MFColors.success
                                     : MFColors.manaRed,
                                 backgroundColor:
@@ -475,7 +509,7 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          Text('$ownedHere/${cards.length}',
+                          Text('$ownedHere/$deLasQueCuentan',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold)),
                         ],
@@ -513,19 +547,41 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                             selected: _soloFaltan,
                             onSelected: (v) => setState(() => _soloFaltan = v),
                           ),
+                          const SizedBox(width: 8),
+                          FilterChip(
+                            avatar: const Icon(Icons.auto_awesome_motion,
+                                size: 16),
+                            label: const Text('Con variantes'),
+                            selected: !_soloBase,
+                            onSelected: (v) => setState(() => _soloBase = !v),
+                          ),
                         ],
                       ),
                     ),
-                    if (visibles.length != cards.length)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                              '${visibles.length} de ${cards.length} cartas',
-                              style: const TextStyle(fontSize: 12)),
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                                faltan.missing == 0
+                                    ? '✓ Lo tienes entero'
+                                    : 'Te faltan ${faltan.missing} · '
+                                        '${_precioTotal(faltan)}'
+                                        '${faltan.withoutPrice > 0 ? " (${faltan.withoutPrice} sin precio)" : ""}',
+                                style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.bold,
+                                    color: faltan.missing == 0
+                                        ? MFColors.success
+                                        : null)),
+                          ),
+                          if (visibles.length != delSet.length)
+                            Text('${visibles.length} de ${delSet.length}',
+                                style: const TextStyle(fontSize: 12)),
+                        ],
                       ),
+                    ),
                     if (visibles.isEmpty)
                       const Expanded(
                         child: Center(
@@ -551,6 +607,13 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                               card: card,
                               qty: qty,
                               greyMatrix: _greyMatrix,
+                              // el precio solo se pinta en los HUECOS: en las
+                              // que ya tienes no dice nada útil y ensucia
+                              priceLabel: qty > 0 || card.price == null
+                                  ? null
+                                  : formatMoney(card.price!,
+                                      widget.market?.market ??
+                                          Market.cardmarket),
                               // el visor recibe TODAS las visibles: se pasa a
                               // la de al lado sin cerrar y volver a abrir
                               onZoom: () => showCardZoomList(context,
@@ -574,6 +637,79 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
             ),
     );
   }
+}
+
+/// Cuántas cartas tiene la TIRADA BASE del set: la serie seguida desde el 1.
+///
+/// Los sets modernos numeran las base 1..N y luego cuelgan detrás las
+/// variantes (borderless, extendidas, promos de tienda) con números sueltos
+/// muy por encima. Nadie cuenta esas para decir "tengo el set completo", así
+/// que el 100 % del álbum se mide sobre la base y las variantes se ven con un
+/// conmutador. Se calcula del propio set, sin tablas que mantener.
+int baseSetSize(List<AlbumCard> cards) {
+  final numeros = <int>{};
+  for (final c in cards) {
+    final n = int.tryParse(c.collectorNumber);
+    if (n != null && c.collectorNumber == n.toString()) numeros.add(n);
+  }
+  var size = 0;
+  while (numeros.contains(size + 1)) {
+    size++;
+  }
+  return size;
+}
+
+/// ¿Esta carta es de la tirada base? Los números con letra o estrella
+/// (`2★`, `12p`) no lo son nunca.
+bool isBaseNumber(AlbumCard card, int baseSize) {
+  final n = int.tryParse(card.collectorNumber);
+  if (n == null || card.collectorNumber != n.toString()) return false;
+  return n >= 1 && n <= baseSize;
+}
+
+/// Lo que falta para completar el álbum, y lo que costaría.
+class MissingReport {
+  /// Cartas que faltan (huecos).
+  final int missing;
+
+  /// Lo que costaría comprarlas, con el precio de las que se sabe.
+  final double total;
+
+  /// Cuántas de las que faltan no tienen precio conocido: el total es un
+  /// mínimo, no una cifra cerrada, y hay que decirlo.
+  final int withoutPrice;
+
+  const MissingReport(
+      {required this.missing,
+      required this.total,
+      required this.withoutPrice});
+}
+
+/// [countBasicLands] a false cuando la colección NO sabe de ediciones: ahí
+/// "tener un Island" no dice qué ilustración tienes, el álbum nunca las marca
+/// y contarlas como hueco sería inventarse una deuda de 20 tierras por set.
+MissingReport missingReport(List<AlbumCard> cards,
+    {required int Function(AlbumCard) qtyOf,
+    bool onlyBase = true,
+    bool countBasicLands = true}) {
+  final baseSize = baseSetSize(cards);
+  var missing = 0;
+  var total = 0.0;
+  var withoutPrice = 0;
+  for (final c in cards) {
+    if (onlyBase && !isBaseNumber(c, baseSize)) continue;
+    if (!countBasicLands && c.isBasicLand) continue;
+    if (qtyOf(c) > 0) continue;
+    missing++;
+    final price = c.price;
+    if (price == null || price <= 0) {
+      withoutPrice++;
+    } else {
+      total += price;
+    }
+  }
+  return MissingReport(
+      missing: missing, total: total, withoutPrice: withoutPrice);
 }
 
 /// Las cartas del álbum que hay que enseñar: por nombre (el impreso también,
@@ -606,11 +742,15 @@ class _AlbumCell extends StatelessWidget {
   /// Abrir el visor a pantalla completa POR ESTA carta.
   final VoidCallback onZoom;
 
+  /// Precio de la carta, solo cuando es un hueco (si la tienes, sobra).
+  final String? priceLabel;
+
   const _AlbumCell(
       {required this.card,
       required this.qty,
       required this.greyMatrix,
-      required this.onZoom});
+      required this.onZoom,
+      this.priceLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -679,6 +819,24 @@ class _AlbumCell extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           image,
+          if (!owned && priceLabel != null)
+            Positioned(
+              left: 3,
+              bottom: 3,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.75),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(priceLabel!,
+                    style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70)),
+              ),
+            ),
           if (owned)
             Positioned(
               right: 3,
