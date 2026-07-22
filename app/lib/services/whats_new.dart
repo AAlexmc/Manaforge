@@ -40,7 +40,11 @@ const List<VersionNews> kWhatsNew = [
           'vivo.',
       'Álbum: lo que te falta de cada expansión, con lo que costaría.',
       'Fondo de pantalla: pon detrás la imagen que quieras, con velo '
-          'regulable.',
+          'regulable, y elige el color de las tarjetas y de la letra para '
+          'que encima se siga leyendo.',
+      'La ventana se abre donde la dejaste, del tamaño que la dejaste.',
+      'Los logros ya no se llaman como el criterio, se llaman como el '
+          'momento: "Ahí va todo mi dinero", "Cien raras y ninguna jugable".',
       'La app avisa cuando hay versión nueva (no se actualiza sola) y '
           'comprueba la huella SHA-256 de las bases que se descarga.',
       'Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.',
