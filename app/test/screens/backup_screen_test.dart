@@ -99,6 +99,30 @@ void main() {
     expect(await future, isFalse);
   });
 
+  testWidgets('el diálogo avisa de lo que la copia NO trae y se va a borrar',
+      (tester) async {
+    late BuildContext ctx;
+    await tester.pumpWidget(MaterialApp(
+      home: Builder(builder: (context) {
+        ctx = context;
+        return const SizedBox();
+      }),
+    ));
+
+    unawaited(confirmRestore(ctx, _manifest(),
+        willDelete: const ['tus certificados', 'el historial de precios']));
+    await tester.pump();
+
+    expect(
+        find.textContaining(
+            'tus certificados y el historial de precios'),
+        findsOneWidget);
+    expect(find.textContaining('se borra'), findsOneWidget);
+
+    await tester.tap(find.text('Cancelar'));
+    await tester.pump();
+  });
+
   testWidgets('con varias copias sale un desplegable para elegir cuál',
       (tester) async {
     final dir = _dataDirWith({'collection.json': '{"cards":[]}'});

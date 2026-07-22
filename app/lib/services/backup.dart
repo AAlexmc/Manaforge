@@ -157,6 +157,35 @@ class BackupManifest {
   }
 }
 
+/// Una copia ya leída: el resumen que se le enseña al usuario y los almacenes
+/// que trae dentro. Se lee UNA vez y se pasa tal cual a [restoreBackup]:
+/// descomprimir dos veces el mismo fichero es pagar dos veces por lo mismo, y
+/// con un fichero de fuera puede ser mucho.
+class BackupContents {
+  final BackupManifest manifest;
+  final Map<String, String> stores;
+
+  const BackupContents({required this.manifest, required this.stores});
+}
+
+/// Tope de lo que puede ocupar una copia YA DESCOMPRIMIDA. Una copia de verdad
+/// son unos pocos MB (la de 283 cartas con historial no llega a 2). El tope
+/// existe porque gzip comprime mil a uno: un `.mfbak` de 10 MB hecho a mala
+/// idea se convierte en 10 GB de RAM al abrirlo. Y la tarjeta invita a
+/// guardar la copia "en la nube", así que estos ficheros circulan.
+const int kMaxBackupBytes = 200 * 1024 * 1024;
+
+/// Tope del fichero `.mfbak` en disco, antes siquiera de leerlo a memoria.
+const int kMaxBackupFileBytes = 500 * 1024 * 1024;
+
+/// Se planta antes de leer un fichero absurdo a memoria.
+void ensureBackupFileSize(int bytes) {
+  if (bytes > kMaxBackupFileBytes) {
+    throw const BackupError(
+        'Ese fichero es demasiado grande para ser una copia de ManaForge.');
+  }
+}
+
 /// Descomprime y valida la copia. Todo lo que pueda salir mal sale aquí, en
 /// forma de [BackupError], antes de que nadie escriba nada en disco.
 ///
@@ -164,18 +193,97 @@ class BackupManifest {
 /// creen los que el fichero traiga escritos: este resumen es lo único que mira
 /// el usuario antes de aceptar un borrado sin vuelta atrás, así que tiene que
 /// describir lo que realmente hay dentro.
-BackupManifest readManifest(Uint8List bytes) => _manifestOf(_decode(bytes));
+BackupContents readBackup(Uint8List bytes, {int maxBytes = kMaxBackupBytes}) {
+  final payload = _decode(bytes, maxBytes: maxBytes);
+  return BackupContents(
+      manifest: _manifestOf(payload), stores: _storesOf(payload));
+}
 
-/// Limitación conocida y asumida: un `.mfbak` manipulado a mala idea podría
-/// descomprimirse a muchos gigas y tumbar la app (bomba de descompresión). No
-/// se acota porque el fichero lo elige el propio usuario en su ordenador: es
-/// el mismo nivel de confianza que abrir cualquier otro fichero suyo.
-Map<String, dynamic> _decode(Uint8List bytes) {
+/// Solo el resumen. Sigue existiendo por comodidad; quien vaya a restaurar
+/// después debe usar [readBackup] y pasar el resultado, para no descomprimir
+/// el fichero dos veces.
+BackupManifest readManifest(Uint8List bytes) => readBackup(bytes).manifest;
+
+/// Qué almacenes se van a BORRAR al aplicar esta copia, con nombres de
+/// persona. Restaurar borra lo que la copia no trae, y el resumen solo cuenta
+/// cartas, mazos, carpetas y logros: sin esto, una copia que solo lleve la
+/// colección se lleva por delante los certificados y el historial de precios
+/// sin que en ningún sitio lo ponga.
+List<String> storesToDelete(BackupManifest manifest,
+        {required Iterable<String> present}) =>
+    [
+      for (final name in present)
+        if (kBackupStores.contains(name) && !manifest.stores.contains(name))
+          if (kBackupStoreNames[name] != null) kBackupStoreNames[name]!
+    ];
+
+/// Qué almacenes del usuario hay ahora mismo en disco (para poder decirle cuál
+/// de ellos se va a llevar por delante una copia que no los traiga).
+Future<List<String>> presentStores(Directory dataDir) async {
+  final out = <String>[];
+  for (final name in kBackupStores) {
+    if (await File(p.join(dataDir.path, name)).exists()) out.add(name);
+  }
+  return out;
+}
+
+/// Nombre humano de cada almacén, para poder decir qué se borra.
+const Map<String, String> kBackupStoreNames = {
+  'collection.json': 'tu colección',
+  'folders.json': 'tus carpetas',
+  'decks.json': 'tus mazos',
+  'achievements.json': 'tus logros',
+  'wishlist.json': 'tu lista de deseos',
+  'certificates.json': 'tus certificados',
+  'market.json': 'tu mercado preferido',
+  'recents.json': 'las cartas vistas hace poco',
+  'value_history.json': 'el historial del valor',
+  'price_history.jsonl': 'el historial de precios',
+  'price_history.json': 'el historial de precios',
+};
+
+/// Descomprime CONTANDO lo que sale: una copia manipulada que se hinche se
+/// para en cuanto pasa del tope, no cuando ya no hay RAM.
+Uint8List _gunzipCapped(Uint8List bytes, int maxBytes) {
+  final salida = BytesBuilder(copy: false);
+  final sink = gzip.decoder.startChunkedConversion(
+      _CappedSink(salida, maxBytes));
+  sink.add(bytes);
+  sink.close();
+  return salida.takeBytes();
+}
+
+class _CappedSink implements Sink<List<int>> {
+  final BytesBuilder out;
+  final int maxBytes;
+  int _total = 0;
+
+  _CappedSink(this.out, this.maxBytes);
+
+  @override
+  void add(List<int> chunk) {
+    _total += chunk.length;
+    if (_total > maxBytes) {
+      throw const BackupError(
+          'Esa copia es demasiado grande al abrirla: no parece una copia de '
+          'ManaForge de verdad.');
+    }
+    out.add(chunk);
+  }
+
+  @override
+  void close() {}
+}
+
+Map<String, dynamic> _decode(Uint8List bytes,
+    {int maxBytes = kMaxBackupBytes}) {
   const noEsCopia =
       BackupError('Ese fichero no es una copia de seguridad de ManaForge.');
   final Object? decoded;
   try {
-    decoded = jsonDecode(utf8.decode(gzip.decode(bytes)));
+    decoded = jsonDecode(utf8.decode(_gunzipCapped(bytes, maxBytes)));
+  } on BackupError {
+    rethrow; // el tope tiene su propio mensaje: no disfrazarlo de "no es copia"
   } catch (_) {
     throw noEsCopia;
   }
@@ -281,9 +389,13 @@ class RestoreReport {
 /// abrir una carta); cualquiera de esos guardados escribiría lo viejo encima
 /// de lo recién restaurado. Quien llame tiene que congelar la UI durante la
 /// operación y recargar los stores después.
+///
+/// [contents] es la copia YA leída con [readBackup]: pasándola, este fichero
+/// no se descomprime dos veces (una para enseñar el resumen y otra para
+/// aplicarlo). Si no se pasa, se lee aquí.
 Future<RestoreReport> restoreBackup(Uint8List bytes, Directory dataDir,
-    {DateTime? now}) async {
-  final stores = _storesOf(_decode(bytes));
+    {DateTime? now, BackupContents? contents}) async {
+  final stores = contents?.stores ?? readBackup(bytes).stores;
 
   await _sweepRestoreTmp(dataDir);
 
