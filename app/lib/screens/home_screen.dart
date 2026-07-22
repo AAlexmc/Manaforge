@@ -32,6 +32,10 @@ class HomeScreen extends StatefulWidget {
   /// Aviso de versión nueva. Opcional: sin él, Inicio no enseña nada.
   final AppUpdateChecker? updates;
 
+  /// Abrir el escáner. Vive en la barra de abajo, y desde el estado vacío de
+  /// Inicio hay que poder llegar sin saber eso.
+  final VoidCallback? onScan;
+
   final void Function(int tabIndex) onGoToTab;
 
   const HomeScreen({
@@ -42,6 +46,7 @@ class HomeScreen extends StatefulWidget {
     required this.achievements,
     required this.certificates,
     this.updates,
+    this.onScan,
     required this.onGoToTab,
   });
 
@@ -295,28 +300,52 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           )
+                        // primer arranque: TRES caminos, no uno. El CSV de
+                        // ManaBox lo tiene poca gente; escanear es la vía
+                        // natural, y Forge se puede probar sin tener nada
                         : Column(
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                  'Bienvenido a la forja. Importa tu '
-                                  'colección y empieza a crear mazos '
-                                  'con lo que ya tienes.'),
+                                  'Bienvenido a la forja. Mete tus cartas '
+                                  'como quieras — o prueba Forge antes de '
+                                  'meter ninguna.'),
                               const SizedBox(height: 10),
-                              FilledButton.icon(
-                                onPressed: () =>
-                                    Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => ImportCsvScreen(
-                                        db: widget.db,
-                                        collection:
-                                            widget.collection),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: [
+                                  FilledButton.icon(
+                                    onPressed: widget.onScan,
+                                    icon: const Icon(
+                                        Icons.center_focus_strong, size: 18),
+                                    label: const Text(
+                                        'Escanear mis cartas'),
                                   ),
-                                ),
-                                icon: const Icon(Icons.file_upload),
-                                label: const Text(
-                                    'Importar mi colección (CSV)'),
+                                  OutlinedButton.icon(
+                                    onPressed: () =>
+                                        Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => ImportCsvScreen(
+                                            db: widget.db,
+                                            collection:
+                                                widget.collection),
+                                      ),
+                                    ),
+                                    icon: const Icon(Icons.file_upload,
+                                        size: 18),
+                                    label: const Text(
+                                        'Importar CSV (ManaBox)'),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () => widget.onGoToTab(4),
+                                    icon: const Icon(Icons.auto_awesome,
+                                        size: 18),
+                                    label: const Text(
+                                        'Probar Forge sin colección'),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

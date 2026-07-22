@@ -270,6 +270,7 @@ class _HomeShellState extends State<HomeShell> {
           achievements: _achievements,
           certificates: _certificates,
           updates: _updates,
+          onScan: _abrirEscaner,
           onGoToTab: (i) => setState(() => _index = i)),
       ColeccionScreen(
           db: _db,
@@ -284,7 +285,11 @@ class _HomeShellState extends State<HomeShell> {
           collection: _collection,
           market: _market,
           prices: _prices),
-      MazosScreen(db: _db, collection: _collection, decks: _decks),
+      MazosScreen(
+          db: _db,
+          collection: _collection,
+          decks: _decks,
+          onGoToForge: () => setState(() => _index = 4)),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
       MercadoScreen(
           db: _db,

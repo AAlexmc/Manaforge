@@ -13,7 +13,7 @@
 <p align="center">
   <b><a href="#-forge-el-generador-de-mazos">Forge</a></b> ·
   <b><a href="#-qué-hace-hoy-v02">Funciones</a></b> ·
-  <b><a href="#-pruébala-en-2-minutos">Pruébala</a></b> ·
+  <b><a href="#-descárgala-y-ábrela">Descargar</a></b> ·
   <b><a href="#-cómo-está-hecho">Arquitectura</a></b> ·
   <b><a href="#-hoja-de-ruta">Hoja de ruta</a></b> ·
   <b><a href="#-contribuir">Contribuir</a></b>
@@ -83,20 +83,33 @@ Le das tu colección y te devuelve **mazos completos de 60 cartas**, construidos
 > [!NOTE]
 > **En el horno:** escáner de cartas con la cámara ([así funcionará por dentro](docs/reconocimiento-cartas.md)), guardar mazos, precios y valor de colección, trades, legalidades por formato e inglés.
 
-## 🚀 Pruébala en 2 minutos
+## 🚀 Descárgala y ábrela
+
+Ve a [**Releases**](https://github.com/AAlexmc/Manaforge/releases) y baja el zip de tu sistema. No hay instalador ni cuentas: descomprimes y abres.
+
+| Sistema | Qué hacer |
+|---|---|
+| **Windows** | Descomprime y abre `manaforge.exe`. La primera vez Windows avisa de que no conoce el programa: *Más información → Ejecutar de todas formas* (no está firmado; el código está aquí para que lo mires). |
+| **macOS** | Descomprime y, la primera vez, **clic derecho sobre la app → Abrir**. Con doble clic macOS no deja abrir apps sin firmar. |
+| **Linux** | Descomprime y ejecuta `./manaforge`. Para que salga en el menú de aplicaciones con su icono: `./instalar.sh` (lo deja todo en `~/.local`, sin sudo; se quita con `./instalar.sh --desinstalar`). |
+
+**Comprobar lo que has bajado**: cada release publica `SHA256SUMS.txt` con la huella de los tres zips. En Linux o macOS, `sha256sum -c SHA256SUMS.txt` (o `shasum -a 256 -c`); en Windows, `Get-FileHash ManaForge-Windows.zip`.
+
+La primera vez la app se baja **~36 MB** de datos (cartas y precios de Scryfall, histórico y huellas del escáner) y te enseña el progreso. A partir de ahí funciona sin conexión.
+
+Luego: **importa tu CSV** de ManaBox, **escanea** cartas con la webcam o una foto, o ve directo a **⚒️ Forge** y monta un mazo con las cartas de una colección concreta aunque aún no tengas ninguna.
+
+### ¿Prefieres compilarla?
 
 ```bash
-# 1. Instala Flutter (canal stable): https://docs.flutter.dev/get-started/install
-#    (en Windows necesitas además Visual Studio con "Desarrollo para el escritorio con C++")
+# Flutter, canal stable: https://docs.flutter.dev/get-started/install
+# (en Windows hace falta Visual Studio con "Desarrollo para el escritorio con C++")
 git clone https://github.com/AAlexmc/Manaforge.git
 cd Manaforge/app
-flutter create . --platforms=windows --project-name manaforge_app   # 1ª vez (en Mac: --platforms=macos)
-flutter run -d windows                                              # en Mac: -d macos
+flutter run -d linux     # o -d windows / -d macos
 ```
 
-¿Sin ganas de compilar? Pronto habrá **descargas directas** para Windows, macOS y Linux en [Releases](https://github.com/AAlexmc/Manaforge/releases) — sin instalar nada más.
-
-Dentro de la app: **descarga la base de datos** de cartas (una vez) → **importa tu colección** en CSV o busca cartas a mano → pulsa **⚒️ Forjar mis mazos**. Eso es todo.
+El envoltorio de Linux y el `pubspec.lock` están en el repo, así que se compila tal cual. Para Windows y macOS, la primera vez: `flutter create . --platforms=windows --project-name manaforge_app`.
 
 ## 🔧 Cómo está hecho
 

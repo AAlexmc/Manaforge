@@ -110,6 +110,64 @@ class _AjustesScreenState extends State<AjustesScreen> {
                 'pero no se vende). Sin anuncios, sin premium, sin cuentas. '
                 'Tus cartas son tuyas.'),
             const SizedBox(height: 20),
+            // qué es cada pestaña. Alguien que abre la app por primera vez
+            // ve siete iconos y ninguna explicación
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Cómo funciona',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    for (final linea in const [
+                      ('Escanear', 'Pasa cartas por delante de la webcam o '
+                          'suelta una foto: entran solas a tu colección con '
+                          'su edición exacta.'),
+                      ('Colección', 'Todo lo que tienes, con buscador, '
+                          'filtros y carpetas (las carpetas son etiquetas: '
+                          'una carta puede estar en varias).'),
+                      ('Álbum', 'Una página por expansión, estilo álbum de '
+                          'cromos: lo que tienes a color, lo que falta '
+                          'apagado, con lo que costaría completarlo.'),
+                      ('Forge', 'Mazos completos y legales con tus cartas. '
+                          'O con las de una expansión que aún no tienes, '
+                          'diciéndote qué comprar y cuánto cuesta.'),
+                      ('Mazos', 'Los que guardes. Si vendes una carta, el '
+                          'mazo lo dice en vez de fingir que la tienes.'),
+                      ('Mercado', 'Cuánto vale tu colección, su gráfica, tu '
+                          'lista de deseos con avisos de precio, y — si tu '
+                          'CSV traía precio de compra — cuánto ganas o '
+                          'pierdes.'),
+                    ])
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: RichText(
+                          text: TextSpan(
+                            style: DefaultTextStyle.of(context)
+                                .style
+                                .copyWith(fontSize: 12.5),
+                            children: [
+                              TextSpan(
+                                  text: '${linea.$1}: ',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                              TextSpan(text: linea.$2),
+                            ],
+                          ),
+                        ),
+                      ),
+                    const Text(
+                        'Todo se calcula en tu dispositivo. Lo único que sale '
+                        'a internet son las bases de datos y, si lo dejas '
+                        'puesto, mirar si hay versión nueva.',
+                        style: TextStyle(fontSize: 11.5)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
             if (widget.updates != null) ...[
               UpdateSettingsCard(checker: widget.updates!),
               const SizedBox(height: 12),

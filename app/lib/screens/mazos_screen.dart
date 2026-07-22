@@ -14,11 +14,16 @@ class MazosScreen extends StatefulWidget {
   final CollectionStore collection;
   final DeckStore decks;
 
+  /// Llevar a Forge. Desde la pantalla vacía hay que poder ir sin saberse la
+  /// barra de abajo de memoria.
+  final VoidCallback? onGoToForge;
+
   const MazosScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.decks});
+      required this.decks,
+      this.onGoToForge});
 
   @override
   State<MazosScreen> createState() => _MazosScreenState();
@@ -97,9 +102,25 @@ class _MazosScreenState extends State<MazosScreen> {
                   const SizedBox(height: 12),
                   Expanded(
                     child: decks.isEmpty
-                        ? const Center(
-                            child: Icon(Icons.layers_outlined,
-                                size: 64, color: Colors.white24))
+                        ? Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.layers_outlined,
+                                    size: 64, color: Colors.white24),
+                                const SizedBox(height: 12),
+                                // decir dónde está Forge no basta: desde una
+                                // pantalla vacía tiene que haber por dónde ir
+                                if (widget.onGoToForge != null)
+                                  FilledButton.icon(
+                                    onPressed: widget.onGoToForge,
+                                    icon: const Icon(Icons.auto_awesome,
+                                        size: 18),
+                                    label: const Text('Ir a Forge'),
+                                  ),
+                              ],
+                            ),
+                          )
                         : ListView.builder(
                             itemCount: decks.length,
                             itemBuilder: (context, i) {
