@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';

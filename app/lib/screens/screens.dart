@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import '../services/app_update.dart';
 import '../services/background_prefs.dart';
 import '../services/card_database.dart';
-import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/language_prefs.dart';
 import '../theme/mf_theme.dart';

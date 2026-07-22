@@ -12,7 +12,6 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/background_prefs.dart';
 import '../services/safe_input.dart';
