@@ -91,8 +91,10 @@ class _AjustesScreenState extends State<AjustesScreen> {
             Text('Ajustes', style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 12),
             const Text(
-                'ManaForge es gratis y de código abierto (MIT). Sin anuncios, '
-                'sin premium, sin cuentas. Tus cartas son tuyas.'),
+                'ManaForge es gratis y con el código a la vista (licencia '
+                'PolyForm Noncommercial: compártela y tócala lo que quieras, '
+                'pero no se vende). Sin anuncios, sin premium, sin cuentas. '
+                'Tus cartas son tuyas.'),
             const SizedBox(height: 20),
             Card(
               child: Padding(

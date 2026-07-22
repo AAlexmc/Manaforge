@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="Base de datos"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/licencia-MIT-4FB878?style=flat-square" alt="Licencia MIT"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licencia-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="Licencia PolyForm Noncommercial 1.0.0"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="Escritorio multiplataforma">
   <img src="https://img.shields.io/badge/precio-0%20%E2%82%AC%20para%20siempre-E06A50?style=flat-square" alt="Gratis para siempre">
 </p>
@@ -140,7 +140,17 @@ Los datos y las imágenes de cartas son de [Scryfall](https://scryfall.com), a q
 
 ## 📄 Licencia
 
-[MIT](LICENSE) — haz con esto lo que quieras, y si lo mejoras, comparte.
+[PolyForm Noncommercial 1.0.0](LICENSE). En cristiano:
+
+- **Puedes** usarla, copiarla, modificarla, compartirla y publicar tus versiones, con la única condición de pasar la licencia junto al código.
+- **No puedes** venderla ni usarla para ganar dinero: ni cobrar por la app o por una versión modificada, ni meterla en un producto o servicio de pago, ni usarla dentro de un negocio para su actividad comercial.
+- **Sí puedes** usarla en casa, en tu tienda de barrio para tus propias cartas… siempre que no sea para vender la app ni cobrar por ella.
+
+Uso personal, estudio, cacharreo, proyectos de aficionado y organizaciones sin ánimo de lucro: adelante, sin pedir permiso.
+
+> Antes era MIT. Las versiones publicadas bajo MIT siguen siendo MIT para siempre —eso no se puede revocar—; el cambio vale de aquí en adelante. Si necesitas un uso comercial, escribe y hablamos.
+
+Ojo: una licencia con restricción no comercial **no** es "código abierto" en el sentido de la OSI. Es *código a la vista*: puedes leerlo, tocarlo y compartirlo, pero no venderlo.
 
 <p align="center">
   <sub>Hecho con ❤️ y mucho maná por jugadores de mesa de cocina</sub><br/><br/>
