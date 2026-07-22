@@ -196,3 +196,63 @@ gh pr merge <hijo> --squash                       # ya sí, con --delete-branch
 2. **Decisiones de Ale**: las cuatro de la sección anterior siguen abiertas
    (`pubspec.lock` + `app/linux/`, `gh auth refresh -s workflow`, restaurar en
    el arranque, y cuándo sacar v0.3.0).
+
+---
+
+## Cierre de la noche (22-07): 18 PRs más
+
+`main` = **`11ff61c`**, 0 PRs abiertos, **660 tests** app + 29 engine,
+`flutter analyze --no-fatal-infos` con salida 0.
+
+### Lo que entró después de la actualización de la tarde
+
+| PR | Qué |
+|---|---|
+| #26 | **Forge por expansiones** + "incluir cartas que no tengo" ("te faltan N · X €"). Generar va en isolate: 874 cartas = 6 s, 2.805 = 21 s |
+| #27 | Importar avisa una vez por fila; `kAppVersion` = pubspec = **0.3.0**, atado con test |
+| #28 | **Aviso de versión nueva** (no instala nada). Trampa: `/releases/latest` devuelve una BASE, no la app → filtrar `app-v*` |
+| #29 | Las 4 releases publican **SHA256SUMS.txt**; `build-price-db.yml` ya instalado; `ijson` en CI |
+| #30 | La app **verifica** la huella al bajar bases (tolerante: sin huella publicada, se baja igual) |
+| #31 | Se trackean `pubspec.lock` y `app/linux/` (11 ficheros de texto; los 42 MB de `ephemeral/` no entran) |
+| #32 | **Fondo de pantalla** elegido por el usuario (los fondos de Wizards NO se descargan: es arte ajeno) |
+| #33 | **Icono y entrada de escritorio**: iconos Windows/macOS en CI, y en Linux `.desktop` + PNGs + `instalar.sh` |
+| #34 | **Auditoría**: `stream.take(N)` limitaba trozos y no bytes; dos descargas sin `secureSend`; el fondo aceptaba cualquier ruta; `sed` en `instalar.sh` |
+| #35 | **Primer uso**: tres caminos en Inicio vacío, botón en Mazos vacío, "Cómo funciona" en Ajustes, README con descarga real |
+| #37 | **Atajos de teclado** (Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Esc) |
+| #38 | **Qué hay de nuevo** al abrir una versión nueva |
+| #39 | **10 idiomas** (los oficiales de Magic) para el ARMAZÓN + diálogo de idioma al primer arranque |
+| #40 | Arreglo de `main` en rojo (ver más abajo) |
+
+### Dos meteduras de pata propias, apuntadas para no repetirlas
+
+1. **Commitear en `main` y empujar una rama vieja.** Tras mergear una rama seguí
+   trabajando sin crear otra: el commit fue a `main` local y `git push -u origin
+   <rama-vieja>` empujó la rama antigua, no el trabajo. Salió el PR #36 vacío. El
+   trabajo estaba a salvo en el commit local y se rescató en el #37.
+   **Antes de cada commit: `git branch --show-current`.**
+2. **Mergear con la CI en rojo.** `gh pr merge` no exige checks verdes (no hay
+   protección de rama) y el #39 entró rojo. Encima lo comprobé mal en local: usé
+   `grep -E "^\s+(warning|error)"` y `flutter analyze` imprime los **warnings sin
+   sangrar** — vi cero donde había seis imports sin usar.
+   **Comando de CI tal cual y mirando el código de salida:**
+   `flutter analyze --no-fatal-infos; echo $?` · y `gh pr checks <n>` antes de mergear.
+
+### Lo que queda
+
+1. **Publicar la v0.3.0**: `git tag app-v0.3.0 && git push origin app-v0.3.0`
+   (decisión de Ale). Es lo que estrena el aviso de versión, el icono, el
+   instalador y la licencia nueva.
+2. **Traducir el resto de la app**: el armazón está en 10 idiomas; quedan ~410
+   cadenas de las pantallas grandes (Colección, Álbum, Forge, Mercado, escáner).
+   Es rellenar ARBs, sin tocar lógica.
+3. **Logros con nombres con gracia** (pedido de Ale): que piquen y que se
+   reconozcan ("ahí va todo mi dinero"…).
+4. **Colores desde Ajustes**: al poner fondo, poder cambiar el color de las
+   tarjetas y de la letra.
+5. **Modo Test con más fuentes de meta**: hoy solo MTGGoldfish; añadir
+   mtga.untapped.gg y mtgdecks.net, con actualización semanal o a petición.
+   Ojo: hay que mirar términos de uso de cada sitio antes de raspar nada.
+6. **Ventana que recuerde tamaño y posición** (necesita `window_manager`; solo
+   se puede probar en Linux desde aquí).
+7. **P&L realizado** (a cuánto vendiste) y **detector con fondos cargados**
+   (aparcado: Ale dice que va bien).
