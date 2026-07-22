@@ -49,7 +49,11 @@ jobs:
           cp -r app/linux/packaging app/build/linux/x64/release/bundle/
           cp app/linux/packaging/instalar.sh app/build/linux/x64/release/bundle/
           chmod +x app/build/linux/x64/release/bundle/instalar.sh
-      - run: cd app/build/linux/x64/release && zip -qry $GITHUB_WORKSPACE/ManaForge-Linux.zip bundle
+          # la carpeta se llama "bundle" porque lo dice Flutter, no porque le
+          # sirva a nadie: quien descomprime espera una carpeta con el nombre
+          # de la app (y es lo que dicen el README y las notas de la release)
+          mv app/build/linux/x64/release/bundle app/build/linux/x64/release/ManaForge
+      - run: cd app/build/linux/x64/release && zip -qry $GITHUB_WORKSPACE/ManaForge-Linux.zip ManaForge
       - uses: actions/upload-artifact@v4
         with: { name: ManaForge-Linux, path: ManaForge-Linux.zip }
   release:
@@ -77,7 +81,7 @@ jobs:
             echo "|---|---|"
             echo "| **Windows** | Abre \`manaforge.exe\`. La primera vez: *Más información → Ejecutar de todas formas* (no está firmado). |"
             echo "| **macOS** | La primera vez, **clic derecho sobre la app → Abrir**. Con doble clic macOS no deja abrir apps sin firmar. |"
-            echo "| **Linux** | Ejecuta \`./manaforge\`. Para tenerla en el menú de aplicaciones con su icono: \`./instalar.sh\` (todo en \`~/.local\`, sin sudo; se quita con \`./instalar.sh --desinstalar\`). |"
+            echo "| **Linux** | Descomprime y, dentro de la carpeta \`ManaForge\`, ejecuta \`./manaforge\`. Para tenerla en el menú de aplicaciones con su icono: \`./instalar.sh\` (todo en \`~/.local\`, sin sudo; se quita con \`./instalar.sh --desinstalar\`). |"
             echo
             echo "La primera vez la app se baja ~36 MB de datos (cartas, precios e huellas del escáner) enseñando el progreso. Después funciona sin conexión."
             echo

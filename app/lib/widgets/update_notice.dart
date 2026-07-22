@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/app_update.dart';
 import '../services/whats_new.dart';
@@ -129,23 +128,25 @@ class UpdateSettingsCard extends StatefulWidget {
 
 class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
   bool _buscando = false;
-  String? _resultado;
 
-  late final AppLocalizations _t = tr(context);
+  /// Qué salió del último "buscar ahora". Se guarda el RESULTADO, no su
+  /// texto: el texto ya traducido se quedaba en el idioma que hubiera al
+  /// pulsar y no cambiaba al cambiar de idioma en Ajustes.
+  bool _consultado = false;
+  AppRelease? _ultimo;
 
   Future<void> _buscarAhora() async {
     setState(() {
       _buscando = true;
-      _resultado = null;
+      _consultado = false;
     });
     // a mano se pregunta SIEMPRE, aunque toque dentro de un rato
     final release = await widget.checker.checkNow();
     if (!mounted) return;
     setState(() {
       _buscando = false;
-      _resultado = release == null
-          ? _t.versionUpToDate
-          : _t.versionThereIs(release.version);
+      _consultado = true;
+      _ultimo = release;
     });
   }
 
@@ -217,10 +218,13 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
                     label: Text(t.versionCheckNow),
                   ),
                 ],
-                if (_resultado != null)
+                if (_consultado)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Text(_resultado!,
+                    child: Text(
+                        _ultimo == null
+                            ? t.versionUpToDate
+                            : t.versionThereIs(_ultimo!.version),
                         style: const TextStyle(fontSize: 12)),
                   ),
               ],

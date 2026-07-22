@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/main.dart';
+import 'package:manaforge_app/services/background_prefs.dart';
+import 'package:manaforge_app/services/language_prefs.dart';
 
 void main() {
   testWidgets('la app arranca con las 7 pestañas', (tester) async {
@@ -9,7 +11,17 @@ void main() {
     tester.platformDispatcher.localesTestValue = const [Locale('es')];
     addTearDown(tester.platformDispatcher.clearLocalesTestValue);
 
-    await tester.pumpWidget(const ManaForgeApp());
+    // las preferencias se cargan ANTES y con runAsync: piden la carpeta de
+    // datos por el canal de plataforma, y ese canal no avanza dentro del
+    // reloj falso de testWidgets (la carga se quedaría a medias para siempre)
+    final idioma = LanguagePreference();
+    final fondo = BackgroundPreference();
+    await tester.runAsync(() async {
+      await idioma.load();
+      await fondo.load();
+    });
+
+    await tester.pumpWidget(ManaForgeApp(language: idioma, background: fondo));
     await tester.pump(const Duration(milliseconds: 100));
 
     // pantalla de arranque: sin carpeta de datos (tests) no hay nada que

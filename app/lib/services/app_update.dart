@@ -25,6 +25,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'backup.dart' show kAppVersion;
+import 'json_store_io.dart';
 import 'safe_input.dart';
 
 /// De dónde se pregunta. Fijo a propósito: no se acepta ninguna otra.
@@ -169,7 +170,7 @@ class AppUpdateChecker extends ChangeNotifier {
   bool _enabled = true;
   DateTime? _lastCheck;
   AppRelease? _available;
-  bool _loaded = false;
+  Future<void>? _loading;
 
   /// Última versión de la app que el usuario llegó a VER (para enseñarle las
   /// novedades cuando abre una nueva). null = nunca se guardó: o es el primer
@@ -207,9 +208,28 @@ class AppUpdateChecker extends ChangeNotifier {
     await _save();
   }
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Mientras se lee el disco se comparte la ESPERA, no un booleano puesto de
+  /// antemano. Al arrancar hay DOS `load()` casi a la vez (el aviso de versión
+  /// y el "qué hay de nuevo"): con el `bool` marcado ANTES de leer, el segundo
+  /// volvía sin `seenVersion` ni `firstRun` y las novedades no se enseñaban en
+  /// la versión que las estrena.
+  ///
+  /// Cuando ya está leído se devuelve un futuro nuevo en vez de el de la
+  /// lectura: el de la lectura nació en la zona en la que se llamó la primera
+  /// vez, y esperarlo desde otra (el reloj falso de `testWidgets`) no vuelve.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  bool _cargado = false;
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  Future<void> _leer() async {
     final file = await _file();
     if (file == null || !await file.exists()) {
       _firstRun = true;
@@ -290,20 +310,34 @@ class AppUpdateChecker extends ChangeNotifier {
     }
   }
 
-  Future<void> _save() async {
+  /// En fila india: al arrancar, la comprobación de versión guarda su fecha y
+  /// el "qué hay de nuevo" guarda la versión vista. Sueltas, las dos escriben
+  /// el mismo `update.json.tmp` a la vez y una renombra lo que la otra está
+  /// escribiendo — se pierde una de las dos cosas. La fila nace en la primera
+  /// escritura y no en un campo — ver la explicación larga en
+  /// `language_prefs.dart`.
+  Future<void>? _fila;
+
+  Future<void> _save() {
+    final anterior = _fila;
+    final actual =
+        anterior == null ? _write() : anterior.then((_) => _write());
+    _fila = actual;
+    return actual;
+  }
+
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
     try {
-      final tmp = File('${file.path}.tmp');
-      await tmp.writeAsString(
+      await writeJsonFile(
+          file,
           jsonEncode({
             'enabled': _enabled,
             if (_lastCheck != null)
               'lastCheck': _lastCheck!.millisecondsSinceEpoch,
             if (_seenVersion != null) 'seenVersion': _seenVersion,
-          }),
-          flush: true);
-      await tmp.rename(file.path);
+          }));
     } catch (_) {
       // no poder guardar cuándo se miró no puede tumbar nada
     }
