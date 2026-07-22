@@ -192,7 +192,8 @@ class _ScanScreenState extends State<ScanScreen> {
       final index = await widget.scanner.loadIndex();
       final (matches, _) = index.bestGroupMatches(
           outcome.signatures, outcome.altSignatures,
-          lockSet: _lockSet);
+          lockSet: _lockSet,
+          ownedPrintings: widget.collection.printingQty.keys.toSet());
       final decision = decideScan(matches);
       final candidates = <_Candidate>[];
       for (final m in matches) {
@@ -265,7 +266,8 @@ class _ScanScreenState extends State<ScanScreen> {
     for (final o in outcomes) {
       final (matches, _) = index.bestGroupMatches(
           o.signatures, o.altSignatures,
-          lockSet: _lockSet);
+          lockSet: _lockSet,
+          ownedPrintings: widget.collection.printingQty.keys.toSet());
       perCard.add((matches, o.artPng));
       await _precache(matches);
     }
@@ -304,7 +306,8 @@ class _ScanScreenState extends State<ScanScreen> {
           for (final outcome in outcomes) {
             final (matches, _) = index.bestGroupMatches(
                 outcome.signatures, outcome.altSignatures,
-                lockSet: _lockSet);
+                lockSet: _lockSet,
+          ownedPrintings: widget.collection.printingQty.keys.toSet());
             perPhoto.add((matches, outcome.artPng));
             await _precache(matches);
           }

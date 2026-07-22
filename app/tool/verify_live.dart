@@ -73,7 +73,12 @@ Future<void> main(List<String> args) async {
     print('  detector: ${detected.usedFallback ? "SIN carta (encuadre "
         "entero)" : "carta encontrada"}');
     print('  mejor match: ${top == null ? "—" : "${top.distance} "
-        "${top.entry.name}"}');
+        "${top.entry.name} [${top.entry.setCode.toUpperCase()} "
+        "#${top.entry.collectorNumber}]"}');
+    for (final m in matches.skip(1)) {
+      print('    otro: ${m.distance} ${m.entry.name} '
+          '[${m.entry.setCode.toUpperCase()} #${m.entry.collectorNumber}]');
+    }
     print('  foto (decideScan):  ${decideScan(matches).confidence.name}');
     print('  vivo (decideLiveScan): ${live.confidence.name}'
         '${live.confidence == ScanConfidence.none ? "  ← NO reconoce" : ""}');
