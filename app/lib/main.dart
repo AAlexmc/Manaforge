@@ -25,6 +25,7 @@ import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
 import 'widgets/app_background.dart';
 import 'widgets/app_shortcuts.dart';
+import 'widgets/whats_new_dialog.dart';
 
 void main() => runApp(const ManaForgeApp());
 
@@ -221,6 +222,15 @@ class _HomeShellState extends State<HomeShell> {
     // ¿hay versión nueva? Como mucho una pregunta al día, en segundo plano y
     // sin ruido: si no hay red, no pasa nada
     unawaited(_updates.checkIfDue());
+    // y si el que ha cambiado es ESTE ejecutable, contar qué trae. Después
+    // del primer frame: antes no hay ni Navigator donde enseñarlo
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _collection.load();
+      if (!mounted) return;
+      await maybeShowWhatsNew(context,
+          checker: _updates,
+          hasExistingData: _collection.totalCopies > 0);
+    });
   }
 
   @override

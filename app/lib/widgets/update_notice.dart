@@ -12,7 +12,9 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../services/app_update.dart';
+import '../services/whats_new.dart';
 import '../theme/mf_theme.dart';
+import 'whats_new_dialog.dart';
 
 /// Abre la página de la release en el navegador. Si no se puede (sistema sin
 /// navegador, permisos), enseña la dirección para copiarla: quedarse en
@@ -158,8 +160,18 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
                 Text('Versión de ManaForge',
                     style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 6),
-                Text('Tienes la ${widget.checker.currentVersion}.',
-                    style: const TextStyle(fontSize: 12.5)),
+                Row(
+                  children: [
+                    Text('Tienes la ${widget.checker.currentVersion}.',
+                        style: const TextStyle(fontSize: 12.5)),
+                    if (currentNews != null)
+                      TextButton(
+                        onPressed: () =>
+                            showWhatsNewDialog(context, currentNews!),
+                        child: const Text('Ver qué trae'),
+                      ),
+                  ],
+                ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   value: widget.checker.enabled,
