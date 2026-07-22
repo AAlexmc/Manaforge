@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'json_store_io.dart';
+
 /// Una carta vista recientemente (ficha abierta).
 class RecentCard {
   final String oracleId;
@@ -36,6 +38,12 @@ class RecentCard {
 
 /// Historial de cartas visitadas (para la pantalla de Inicio). Local, 24 máx.
 class RecentsStore extends ChangeNotifier {
+  /// Solo para tests: dónde guardar el JSON (por defecto, la carpeta de datos
+  /// de la app).
+  final Directory? dataDir;
+
+  RecentsStore({this.dataDir});
+
   static const _max = 24;
   final List<RecentCard> _cards = [];
   bool _loaded = false;
@@ -44,7 +52,7 @@ class RecentsStore extends ChangeNotifier {
 
   Future<File?> _file() async {
     try {
-      final dir = await getApplicationSupportDirectory();
+      final dir = dataDir ?? await getApplicationSupportDirectory();
       return File(p.join(dir.path, 'recents.json'));
     } catch (_) {
       return null;
@@ -65,7 +73,19 @@ class RecentsStore extends ChangeNotifier {
             RecentCard.fromJson(item as Map<String, dynamic>)
         ]);
       notifyListeners();
-    } catch (_) {/* corrupto: vacío */}
+    } catch (_) {
+      // corrupto: apartarlo, no escribirle encima
+      await setAsideBroken(file);
+    }
+  }
+
+  /// Olvida lo cargado. Se llama al restaurar una copia: este store es un
+  /// singleton y NO se recrea con el resto de la app, así que sin esto seguía
+  /// con la lista de antes y volvía a escribirla en cuanto abrieras una carta.
+  void invalidate() {
+    _loaded = false;
+    _cards.clear();
+    notifyListeners();
   }
 
   void record(RecentCard card) {
@@ -78,11 +98,19 @@ class RecentsStore extends ChangeNotifier {
     _save();
   }
 
-  Future<void> _save() async {
+  final SaveQueue _saves = SaveQueue();
+
+  /// Espera a que la cola de guardado vacíe (tests).
+  @visibleForTesting
+  Future<void> get pendingSave => _saves.pending;
+
+  void _save() => _saves.schedule(_write);
+
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
-    await file.writeAsString(
-        jsonEncode([for (final c in _cards) c.toJson()]));
+    await writeJsonFile(
+        file, jsonEncode([for (final c in _cards) c.toJson()]));
   }
 }
 

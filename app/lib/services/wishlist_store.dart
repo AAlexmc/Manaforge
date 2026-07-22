@@ -12,6 +12,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'json_store_io.dart';
+
 class WishItem {
   final String oracleId;
   final String name;
@@ -60,6 +62,12 @@ class WishItem {
 }
 
 class WishlistStore extends ChangeNotifier {
+  /// Solo para tests: dónde guardar el JSON (por defecto, la carpeta de datos
+  /// de la app).
+  final Directory? dataDir;
+
+  WishlistStore({this.dataDir});
+
   final Map<String, WishItem> _items = {}; // por oracleId
   bool _loaded = false;
 
@@ -73,7 +81,7 @@ class WishlistStore extends ChangeNotifier {
 
   Future<File?> _file() async {
     try {
-      final dir = await getApplicationSupportDirectory();
+      final dir = dataDir ?? await getApplicationSupportDirectory();
       return File(p.join(dir.path, 'wishlist.json'));
     } catch (_) {
       return null; // sin plugin (tests): solo en memoria
@@ -94,15 +102,25 @@ class WishlistStore extends ChangeNotifier {
       }
       notifyListeners();
     } catch (_) {
-      // archivo corrupto: mejor wishlist vacía que crash
+      // archivo corrupto: apartarlo con otro nombre en vez de arrancar vacío
+      // y sobrescribirlo con lo primero que se añada
+      await setAsideBroken(file);
     }
   }
 
-  Future<void> _save() async {
+  final SaveQueue _saves = SaveQueue();
+
+  /// Espera a que la cola de guardado vacíe (tests).
+  @visibleForTesting
+  Future<void> get pendingSave => _saves.pending;
+
+  void _save() => _saves.schedule(_write);
+
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
-    await file
-        .writeAsString(jsonEncode([for (final i in items) i.toJson()]));
+    await writeJsonFile(
+        file, jsonEncode([for (final i in items) i.toJson()]));
   }
 
   void add(WishItem item) {

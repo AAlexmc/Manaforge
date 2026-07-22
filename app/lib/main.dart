@@ -6,16 +6,18 @@ import 'package:path_provider/path_provider.dart';
 import 'screens/logros_screen.dart';
 import 'screens/screens.dart';
 import 'services/achievement_store.dart';
-import 'services/backup.dart';
 import 'services/achievements_controller.dart';
+import 'services/backup.dart';
 import 'services/card_database.dart';
 import 'services/certificate_store.dart';
 import 'services/collection_store.dart';
 import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
 import 'services/folder_store.dart';
+import 'services/markets.dart';
 import 'services/price_history.dart';
 import 'services/price_series_database.dart';
+import 'services/restore_reset.dart';
 import 'services/scanner_database.dart';
 import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
@@ -46,7 +48,13 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
       themeMode: ThemeMode.dark, // oscuro por defecto (decisión de diseño)
       home: HomeShell(
         key: ValueKey(_session),
-        onRestored: () => setState(() => _session++),
+        onRestored: () {
+          // los dos almacenes compartidos NO se recrean con la app: si no se
+          // vacían aquí, siguen con lo de antes en memoria y lo reescriben
+          // encima de lo que se acaba de restaurar
+          resetSharedStores();
+          setState(() => _session++);
+        },
       ),
     );
   }
@@ -64,6 +72,12 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
+
+  /// El proveedor de series base que enchufa ESTA instancia, para no anular en
+  /// dispose el que haya puesto otra posterior.
+  Future<Map<String, List<PricePoint>>> Function(Iterable<String>, Market)?
+      _seriesProvider;
+
   bool _started = false; // false = pantalla de arranque (puesta al día)
   final _db = CardDatabase();
   final _collection = CollectionStore();
@@ -89,8 +103,9 @@ class _HomeShellState extends State<HomeShell> {
     super.initState();
     // el historial local se apoya en los ~90 días reales de Cardmarket que
     // trae la base descargable (si el usuario la ha traído)
-    priceHistoryStore.baseSeriesProvider =
+    _seriesProvider =
         (ids, market) => _prices.seriesFor(ids, market: market);
+    priceHistoryStore.baseSeriesProvider = _seriesProvider;
     _achievements.addListener(_onAchievements);
     // los logros necesitan lo que hay guardado antes de evaluar nada
     _progress.load().then((_) {
@@ -104,7 +119,12 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   void dispose() {
-    priceHistoryStore.baseSeriesProvider = null;
+    // solo si sigue siendo el NUESTRO: al restaurar, el HomeShell nuevo nace
+    // antes de que este muera, así que anular a ciegas dejaba la app recién
+    // reconstruida sin los 90 días de Cardmarket hasta reiniciarla
+    if (identical(priceHistoryStore.baseSeriesProvider, _seriesProvider)) {
+      priceHistoryStore.baseSeriesProvider = null;
+    }
     _achievements.removeListener(_onAchievements);
     _achievements.dispose();
     _prices.close();

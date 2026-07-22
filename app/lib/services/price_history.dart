@@ -101,6 +101,17 @@ class PriceHistoryStore {
     return result;
   }
 
+  /// Tira la caché para volver a leer el log del disco. Se llama al restaurar
+  /// una copia: este store es una instancia compartida y NO se recrea con el
+  /// resto de la app, así que seguía con el historial de antes en memoria y al
+  /// compactar reescribía el log entero con él, borrando lo restaurado. El
+  /// proveedor de series base se respeta: eso lo enchufa la app, no el disco.
+  void invalidate() {
+    _cache = null;
+    _loading = null;
+    _lines = 0;
+  }
+
   Future<File?> _file() async {
     try {
       final dir = _dir ?? await getApplicationSupportDirectory();
