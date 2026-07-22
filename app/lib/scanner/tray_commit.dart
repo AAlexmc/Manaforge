@@ -37,6 +37,18 @@ class TrayCommitResult {
   });
 }
 
+/// Etiqueta en una carpeta lo que acaba de entrar. Se llama SIEMPRE después de
+/// guardar en la colección: si la carpeta se hubiera borrado en otra pantalla,
+/// esto no hace nada y las cartas están igualmente a salvo.
+///
+/// Lo usan las dos vías de escaneo (bandeja y carta suelta) para que "y además
+/// a la carpeta" signifique exactamente lo mismo en las dos.
+void tagScanned(
+    FolderStore? folders, String? folderId, Set<String> oracleIds) {
+  if (folders == null || folderId == null || oracleIds.isEmpty) return;
+  folders.addCards(folderId, oracleIds);
+}
+
 TrayCommitResult commitTray({
   required ScanTray tray,
   required CollectionStore collection,
@@ -81,11 +93,7 @@ TrayCommitResult commitTray({
     copies += line.qty;
     oracleIds.add(hit?.oracleId ?? entry.oracleId);
   }
-  // etiquetar DESPUÉS de guardar: si la carpeta se hubiera borrado en otra
-  // pantalla, addCards no hace nada y las cartas están igualmente a salvo
-  if (folders != null && folderId != null && oracleIds.isNotEmpty) {
-    folders.addCards(folderId, oracleIds);
-  }
+  tagScanned(folders, folderId, oracleIds);
   return TrayCommitResult(
     copies: copies,
     distinct: tray.lines.where((l) => !l.unrecognized).length,
