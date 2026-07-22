@@ -41,6 +41,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete card-db-latest --yes || true
-          gh release create card-db-latest manaforge_cards.sqlite.gz \
+          sha256sum manaforge_cards.sqlite.gz | tee SHA256SUMS.txt
+          gh release create card-db-latest manaforge_cards.sqlite.gz SHA256SUMS.txt \
             --title "Base de datos de cartas ($BULK_DATE)" \
             --notes "SQLite generada del bulk Default Cards de Scryfall ($BULK_DATE). La app la descarga en el primer arranque. Datos: Scryfall. Cartas: © Wizards of the Coast (Fan Content Policy)."

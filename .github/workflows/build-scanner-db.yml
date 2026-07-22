@@ -36,6 +36,7 @@ jobs:
         run: |
           gzip -9 -f manaforge_hashes.sqlite
           gh release delete scanner-db-latest --yes || true
-          gh release create scanner-db-latest manaforge_hashes.sqlite.gz \
+          sha256sum manaforge_hashes.sqlite.gz | tee SHA256SUMS.txt
+          gh release create scanner-db-latest manaforge_hashes.sqlite.gz SHA256SUMS.txt \
             --title "Huellas del escáner ($(date +%F))" \
             --notes "dHash 128-bit del arte de cada impresión (art_crop de Scryfall). La usa el escáner por webcam. Datos: Scryfall · Cartas: © Wizards of the Coast (Fan Content Policy)."

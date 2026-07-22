@@ -48,11 +48,32 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with: { merge-multiple: true }
+      - name: Huellas SHA-256 de los binarios
+        # Los zips no van firmados: sin una huella publicada, nadie (ni tú)
+        # puede comprobar que lo que se ha bajado es lo que salió de aquí.
+        run: |
+          set -euo pipefail
+          sha256sum ManaForge-*.zip | tee SHA256SUMS.txt
       - name: Publicar release con los tres binarios
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" ManaForge-*.zip \
+          set -euo pipefail
+          {
+            echo "Descarga para tu sistema, descomprime y ejecuta. En macOS: clic derecho → Abrir la primera vez (app sin firmar). Gratis, sin cuentas, para siempre."
+            echo
+            echo "### Comprobar lo que has bajado"
+            echo
+            echo "Los binarios no van firmados, así que se publica su huella SHA-256 en \`SHA256SUMS.txt\`:"
+            echo
+            echo '```'
+            cat SHA256SUMS.txt
+            echo '```'
+            echo
+            echo "Linux/macOS: \`sha256sum -c SHA256SUMS.txt\` (o \`shasum -a 256 -c\`) en la carpeta de descargas."
+            echo "Windows: \`Get-FileHash ManaForge-Windows.zip\` y compara con la línea de arriba."
+          } > notas.md
+          gh release create "${GITHUB_REF_NAME}" ManaForge-*.zip SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --title "ManaForge ${GITHUB_REF_NAME#app-}" \
-            --notes "Descarga para tu sistema, descomprime y ejecuta. En macOS: clic derecho → Abrir la primera vez (app sin firmar). Gratis, sin cuentas, para siempre."
+            --notes-file notas.md
