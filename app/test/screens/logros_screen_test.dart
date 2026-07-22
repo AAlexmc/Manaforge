@@ -58,7 +58,7 @@ void main() {
     expect(c.unlockedCount, greaterThan(0));
     expect(c.xp, greaterThan(0));
     expect(c.progress.unlockedAt.containsKey('copias-1'), isTrue);
-    expect(find.text('La primera'), findsOneWidget);
+    expect(find.text('La primera de muchas'), findsOneWidget);
   });
 
   testWidgets('el filtro "Me faltan" esconde lo conseguido', (tester) async {
@@ -67,10 +67,10 @@ void main() {
     final c = _controller(collection);
     await _open(tester, c);
 
-    expect(find.text('La primera'), findsOneWidget);
+    expect(find.text('La primera de muchas'), findsOneWidget);
     await tester.tap(find.widgetWithText(FilterChip, 'Me faltan'));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('La primera'), findsNothing);
+    expect(find.text('La primera de muchas'), findsNothing);
   });
 
   testWidgets('los logros secretos no se chivan hasta conseguirlos',
