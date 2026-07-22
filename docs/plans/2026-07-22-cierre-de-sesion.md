@@ -144,3 +144,55 @@ forks.
   frames reales de webcam en vez de fotos de móvil.
 - `~/manaforge-spike/`: las 9 fotos de Ale y los recortes del spike (fuera del
   repo).
+
+---
+
+## Actualización de la misma tarde (22-07): todo mergeado + dos bloques más
+
+`main` = **`561f69e`**. Los 16 PRs de arriba están **mergeados**, y encima:
+
+- **#23 · Escanear por foto también a una carpeta.** El chip de carpeta pasa a
+  la pantalla de foto, la carpeta elegida en el escáner en vivo viaja con el
+  usuario, y las dos vías (lote y carta suelta) etiquetan por la misma función
+  `tagScanned()`. El lote pasa a usar `commitTray()` en vez de repetir el bucle.
+- **#24 · Precio de compra y P&L.** El importador lee `Purchase price` y
+  `Purchase price currency`; la colección guarda el coste MEDIO por copia por
+  impresión y divisa (`collection.json` v4, campo `paid`); vender se lleva su
+  coste; Mercado enseña "pagaste X · hoy valen Y · ±Z (±p %)" y la ficha dice
+  lo pagado por esa carta. **Las divisas no se convierten** y el P&L se mide
+  **solo sobre las copias que tienen precio de compra**, diciendo siempre sobre
+  cuántas está medido.
+
+Suite: **550 verdes** en la app, 29 en el engine, `flutter analyze` sin
+warnings ni errores.
+
+### Trampa nueva, y cara: no borres la rama del PADRE de un apilado
+
+`gh pr merge <padre> --delete-branch` **no retargetea al hijo: lo CIERRA**
+(y un PR cerrado no deja cambiar de base, HTTP 422). Pasó con #16. Se recuperó
+volviendo a empujar la rama borrada, reabriendo el PR y retargeteando.
+
+Protocolo bueno para apilados:
+
+```
+gh pr merge <padre> --merge                       # SIN --delete-branch
+gh api -X PATCH repos/<owner>/<repo>/pulls/<hijo> -f base=main
+gh pr merge <hijo> --squash                       # ya sí, con --delete-branch
+```
+
+### Qué queda
+
+1. **Detector con fondos cargados**: sigue pendiente y **bloqueado por
+   fixtures**. Se intentaron escenas sintéticas (carta real compuesta sobre
+   teclado y sobre papeles) y no sirven de prueba: en esas escenas se dispara
+   el detector de REJILLA y devuelve celdas falsas incluso con fondo LISO, así
+   que medirían otra cosa. Hace falta que Ale capture 3-4 fotos reales del caso
+   que falla (`~/captura-carta.sh <set>-<num>`, carta sobre el teclado y carta
+   sujeta con los dedos tapando un borde). Con esas fotos, la vía de arreglo ya
+   pensada es **emitir hipótesis** cuando `detectCard` cae al fallback de
+   imagen entera —recortes con proporción de carta a varias escalas, como
+   `altWarps`— y que decida el matching, igual que ya se hace en las celdas de
+   rejilla.
+2. **Decisiones de Ale**: las cuatro de la sección anterior siguen abiertas
+   (`pubspec.lock` + `app/linux/`, `gh auth refresh -s workflow`, restaurar en
+   el arranque, y cuándo sacar v0.3.0).
