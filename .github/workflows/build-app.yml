@@ -13,6 +13,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: stable }
       - run: cd app && flutter create . --platforms=windows --project-name manaforge_app
+      # el icono NO se genera solo: sin esto el .exe sale con el logo de Flutter
+      - run: cd app && dart run flutter_launcher_icons
       - run: cd app && flutter build windows --release
       - run: Compress-Archive -Path app/build/windows/x64/runner/Release/* -DestinationPath ManaForge-Windows.zip
         shell: pwsh
@@ -25,6 +27,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: stable }
       - run: cd app && flutter create . --platforms=macos --project-name manaforge_app
+      - run: cd app && dart run flutter_launcher_icons
       - run: cd app && flutter build macos --release
       - run: cd app/build/macos/Build/Products/Release && zip -qry $GITHUB_WORKSPACE/ManaForge-macOS.zip *.app
       - uses: actions/upload-artifact@v4
@@ -38,6 +41,14 @@ jobs:
         with: { channel: stable }
       - run: cd app && flutter create . --platforms=linux --project-name manaforge_app
       - run: cd app && flutter build linux --release
+      # Linux no mete el icono en el binario: la app se enseña en el menú con
+      # un .desktop y unos PNG. Van dentro del zip, y los instala instalar.sh
+      - name: Meter icono, .desktop e instalador en el bundle
+        run: |
+          set -euo pipefail
+          cp -r app/linux/packaging app/build/linux/x64/release/bundle/
+          cp app/linux/packaging/instalar.sh app/build/linux/x64/release/bundle/
+          chmod +x app/build/linux/x64/release/bundle/instalar.sh
       - run: cd app/build/linux/x64/release && zip -qry $GITHUB_WORKSPACE/ManaForge-Linux.zip bundle
       - uses: actions/upload-artifact@v4
         with: { name: ManaForge-Linux, path: ManaForge-Linux.zip }

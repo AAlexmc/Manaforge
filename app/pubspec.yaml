@@ -28,6 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -40,3 +41,15 @@ flutter:
     - family: Cinzel
       fonts:
         - asset: assets/fonts/Cinzel-Variable.ttf
+
+# Icono de la app para Windows y macOS. Linux no mete el icono en el binario:
+# ahí van el .desktop y los PNG de linux/packaging/ (ver instalar.sh).
+flutter_launcher_icons:
+  image_path: "assets/icon/app_icon.png"
+  windows:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    icon_size: 256
+  macos:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
