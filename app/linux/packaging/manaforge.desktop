@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=ManaForge
+GenericName=Colección de Magic
+Comment=Tu colección de Magic, el escáner de cartas y mazos hechos con lo que tienes
+Exec=manaforge
+Icon=manaforge
+Terminal=false
+Categories=Game;CardGame;
+Keywords=magic;mtg;cartas;colección;mazos;escáner;
+StartupNotify=true
+StartupWMClass=manaforge
