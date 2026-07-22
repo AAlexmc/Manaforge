@@ -1,13 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
 import '../services/card_database.dart';
+import '../services/collection_sets.dart';
 import '../services/collection_store.dart';
+import '../services/deck_shortfall.dart';
 import '../services/deck_store.dart';
+import '../services/forge_job.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/set_picker.dart';
 import 'deck_detail_screen.dart';
 import 'test_screen.dart';
 
@@ -57,12 +62,91 @@ class _ForgeScreenState extends State<ForgeScreen> {
   Map<String, fe.Card>? _pool;
   String? _cantReason;
 
+  /// Expansiones elegidas (códigos de set). Vacío = sin filtro.
+  final Set<String> _selSets = {};
+  List<SetInfo>? _sets;
+  Map<String, int> _ownedBySet = const {};
+  bool _loadingSets = false;
+
+  /// "Incluir cartas que no tengo": el pool deja de ser tu colección y pasa
+  /// a ser TODO lo impreso en las expansiones elegidas. El mazo dice luego
+  /// cuántas te faltan y cuánto costarían.
+  bool _includeMissing = false;
+
+  /// Cuántas copias te faltan de cada propuesta y lo que costarían, por
+  /// índice de propuesta. Vacío mientras no se sepa.
+  List<({int copies, double cost})>? _shortfalls;
+
+  /// Copias que tienes DE VERDAD por nombre, congeladas al forjar: el pool
+  /// del modo "cartas que no tengo" dice 4 de todo y mentiría.
+  Map<String, int> _ownedByName = const {};
+
+  /// Cuántas cartas tiene el pool que se está forjando: con muchas
+  /// expansiones el motor tarda segundos y hay que decirlo.
+  int? _poolSize;
+
+  /// El teaser (menos de 30 cartas) no puede ser un muro: con "cartas que no
+  /// tengo" se puede forjar sin colección. Este flag abre el selector igual.
+  bool _forceSelector = false;
+
   @override
   void initState() {
     super.initState();
     widget.db.supportsYearFilter().then((v) {
       if (mounted) setState(() => _yearSupported = v);
     });
+    // las expansiones NO se cargan aquí: Forge es una pestaña y se construye
+    // al arrancar la app (IndexedStack). Listar los ~790 sets cuesta ~90 ms
+    // de hilo de ventana que nadie ha pedido todavía; se cargan al abrir el
+    // selector.
+  }
+
+  /// Las expansiones de la base, y cuántas casillas tienes de cada una (lo
+  /// mismo que cuenta el Álbum: una sola fuente de verdad).
+  Future<void> _loadSets() async {
+    if (_loadingSets) return;
+    _loadingSets = true;
+    try {
+      final sets = await widget.db.sets();
+      final owned = await ownedCardsBySet(widget.db, widget.collection);
+      if (!mounted) return;
+      setState(() {
+        _sets = sets;
+        _ownedBySet = owned;
+      });
+    } catch (_) {
+      // sin base de cartas descargada no hay expansiones que elegir; el
+      // resto de Forge sigue funcionando igual
+    } finally {
+      _loadingSets = false;
+    }
+  }
+
+  Future<void> _pickSets() async {
+    if (_sets == null) await _loadSets();
+    if (!mounted) return;
+    final sets = _sets;
+    if (sets == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Necesito la base de cartas para listar las '
+              'expansiones: Ajustes → descargar la base.')));
+      return;
+    }
+    final elegidas = await showSetPickerSheet(context,
+        sets: sets, selected: _selSets, owned: _ownedBySet);
+    if (elegidas == null || !mounted) return; // cerrado sin tocar nada
+    setState(() {
+      _selSets
+        ..clear()
+        ..addAll(elegidas);
+    });
+  }
+
+  /// Nombre corto de una expansión para los chips.
+  String _setLabel(String code) {
+    final match = _sets?.where((s) => s.code == code);
+    final name = (match == null || match.isEmpty) ? null : match.first.name;
+    return name ?? code.toUpperCase();
   }
 
   @override
@@ -83,12 +167,20 @@ class _ForgeScreenState extends State<ForgeScreen> {
     return y != null && y >= 1993 && y <= 2100 ? y : null;
   }
 
+  /// ¿Se puede forjar ahora mismo? En modo "cartas que no tengo" hace falta
+  /// al menos una expansión: sin filtro serían las ~30.000 cartas de Magic,
+  /// que no es un pool sino un catálogo.
+  bool get _canForge => !_includeMissing || _selSets.isNotEmpty;
+
   Future<void> _forge() async {
+    if (!_canForge) return;
     setState(() {
       _forging = true;
       _messageIndex = 0;
       _proposals = null;
+      _shortfalls = null;
       _cantReason = null;
+      _poolSize = null;
     });
     _messageTimer =
         Timer.periodic(const Duration(milliseconds: 700), (_) {
@@ -97,7 +189,13 @@ class _ForgeScreenState extends State<ForgeScreen> {
       }
     });
     try {
-      final pool = await widget.db.buildPool(widget.collection.qtyByOracle,
+      // de dónde salen las cartas:
+      //  · modo normal → tu colección, acotada a las expansiones elegidas
+      //  · "cartas que no tengo" → todo lo impreso en esas expansiones
+      final base = _includeMissing
+          ? await widget.db.oraclesInSets(_selSets)
+          : widget.collection.qtyByOracleInSets(_selSets);
+      final pool = await widget.db.buildPool(base,
           assumeBasics: _assumeBasics,
           basicsQty: _format == 'commander' ? 40 : 25,
           minPriceEur: _parsePrice(_minPriceCtrl),
@@ -105,33 +203,45 @@ class _ForgeScreenState extends State<ForgeScreen> {
           yearMin: _parseYear(_yearFromCtrl),
           yearMax: _parseYear(_yearToCtrl),
           format: _format == 'casual' ? null : _format);
-      // pequeña pausa para que la animación cuente su historia
+      if (mounted) setState(() => _poolSize = pool.length);
+      // el trabajo pesado va en otro isolate: con 10 expansiones son ~21 s y
+      // en el hilo de la ventana la app se queda colgada
+      final trabajo = compute(
+          runForgeJob,
+          ForgeJob(
+            pool: pool,
+            allowedColors: _selColors.isEmpty ? null : _selColors.join(),
+            archetype: _selArchetype,
+            commander: _format == 'commander',
+          ));
+      // la pausa corre EN PARALELO al trabajo: es para que la animación
+      // cuente su historia, no para hacer esperar de más
       await Future.delayed(const Duration(milliseconds: 2200));
-      final proposals = _format == 'commander'
-          ? fe.generateCommanderProposals(pool)
-          : fe.generateProposals(pool,
-              allowedColors:
-                  _selColors.isEmpty ? null : _selColors.join(),
-              archetypeOverride: _selArchetype);
+      final proposals = await trabajo;
+      // copias con las que se CUENTA: las tuyas de verdad y, si el
+      // interruptor de básicas está puesto, las básicas sueltas que se dan
+      // por supuestas. Es la misma cuenta que verá el detalle del mazo, para
+      // que la tarjeta y el detalle no digan cosas distintas.
+      final ownedByName = widget.collection.qtyByName;
+      if (_assumeBasics) {
+        for (final card in pool.values) {
+          if (!card.types.contains('Basic')) continue;
+          final tengo = ownedByName[card.name] ?? 0;
+          if (card.qty > tengo) ownedByName[card.name] = card.qty;
+        }
+      }
+      final shortfalls = await _shortfallsFor(proposals, ownedByName);
       _messageTimer?.cancel();
       if (!mounted) return;
       setState(() {
         _forging = false;
         _pool = pool;
+        _ownedByName = ownedByName;
         if (proposals.isEmpty) {
-          _cantReason = _format == 'commander'
-              ? 'No me sale un Commander legal: hacen falta un comandante '
-                  'legendario y ~62 cartas DISTINTAS dentro de su identidad '
-                  '(es singleton), más básicas suficientes. Prueba otro '
-                  'formato o amplía la colección.'
-              : 'Con las cartas actuales no me sale ningún mazo completo '
-                  '${_format == 'casual' ? 'de 60' : 'LEGAL en $_format'} '
-                  'que cumpla mis reglas (tierras suficientes, curva sana y '
-                  'solo cartas tuyas). Añade más cartas — sobre todo de tus '
-                  'colores principales — y vuelve a intentarlo. Antes que '
-                  'darte un mazo defectuoso, prefiero avisarte.';
+          _cantReason = _sinMazoReason();
         } else {
           _proposals = proposals;
+          _shortfalls = shortfalls;
         }
       });
     } catch (e) {
@@ -145,6 +255,53 @@ class _ForgeScreenState extends State<ForgeScreen> {
     }
   }
 
+  String _sinMazoReason() {
+    final donde = _selSets.isEmpty
+        ? ''
+        : ' en ${_selSets.length == 1 ? 'esa expansión' : 'esas '
+            '${_selSets.length} expansiones'}';
+    if (_format == 'commander') {
+      return 'No me sale un Commander legal$donde: hacen falta un comandante '
+          'legendario y ~62 cartas DISTINTAS dentro de su identidad (es '
+          'singleton), más básicas suficientes. Prueba otro formato, otras '
+          'expansiones o amplía la colección.';
+    }
+    return 'Con las cartas de este pool no me sale ningún mazo completo '
+        '${_format == 'casual' ? 'de 60' : 'LEGAL en $_format'} que cumpla '
+        'mis reglas (tierras suficientes y curva sana)$donde. '
+        '${_includeMissing ? 'Prueba con más expansiones o quita filtros.' : 'Añade más cartas — sobre todo de tus colores principales — o marca "incluir cartas que no tengo".'} '
+        'Antes que darte un mazo defectuoso, prefiero avisarte.';
+  }
+
+  /// Cuántas copias te faltan de cada propuesta y cuánto costarían. Se mide
+  /// contra las copias REALES, no contra el pool (en modo "cartas que no
+  /// tengo" el pool dice 4 de todo).
+  Future<List<({int copies, double cost})>> _shortfallsFor(
+      List<fe.GeneratedDeck> proposals,
+      Map<String, int> ownedByName) async {
+    if (proposals.isEmpty) return const [];
+    final faltantes = <String>{};
+    final porMazo = <Map<String, int>>[];
+    for (final gen in proposals) {
+      final falta = missingCards(gen.deck, ownedByName);
+      porMazo.add(falta);
+      faltantes.addAll(falta.keys);
+    }
+    var precios = const <String, double>{};
+    if (faltantes.isNotEmpty) {
+      try {
+        precios = await widget.db.pricesForNames(faltantes);
+      } catch (_) {/* sin precios: se dice el número, no el dinero */}
+    }
+    return [
+      for (final falta in porMazo)
+        (
+          copies: falta.values.fold(0, (a, b) => a + b),
+          cost: missingCost(falta, precios),
+        )
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,7 +312,9 @@ class _ForgeScreenState extends State<ForgeScreen> {
             final total = widget.collection.totalCopies;
             if (_forging) return _buildForging();
             if (_proposals != null) return _buildResults();
-            if (total < _minCardsForForge) return _buildTeaser(total);
+            if (total < _minCardsForForge && !_forceSelector) {
+              return _buildTeaser(total);
+            }
             return _buildSelector();
           },
         ),
@@ -203,6 +362,18 @@ class _ForgeScreenState extends State<ForgeScreen> {
                     color: MFColors.forge,
                     backgroundColor: MFColors.forge.withValues(alpha: 0.15),
                   ),
+                ),
+                const SizedBox(height: 20),
+                // el teaser no puede ser un muro: sin colección todavía se
+                // puede forjar con cartas que no tienes, para saber qué pedir
+                OutlinedButton.icon(
+                  onPressed: () => setState(() {
+                    _forceSelector = true;
+                    _includeMissing = true;
+                  }),
+                  icon: const Icon(Icons.shopping_bag_outlined, size: 18),
+                  label:
+                      const Text('Hacer un mazo con cartas que no tengo'),
                 ),
               ],
             ),
@@ -270,7 +441,74 @@ class _ForgeScreenState extends State<ForgeScreen> {
               style: const TextStyle(fontSize: 11.5),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
+          Text('¿De dónde salen las cartas?',
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              ActionChip(
+                visualDensity: VisualDensity.compact,
+                avatar: const Icon(Icons.collections_bookmark_outlined,
+                    size: 18),
+                label: Text(_selSets.isEmpty
+                    ? 'Elegir expansiones'
+                    : 'Cambiar expansiones'),
+                onPressed: _pickSets,
+              ),
+              for (final code in _selSets)
+                InputChip(
+                  visualDensity: VisualDensity.compact,
+                  label: Text(_setLabel(code)),
+                  onDeleted: () => setState(() => _selSets.remove(code)),
+                ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              _selSets.isEmpty
+                  ? (_includeMissing
+                      ? 'Elige al menos una expansión: sin filtro serían las '
+                          '~30.000 cartas de Magic.'
+                      : 'Sin elegir expansiones, Forge usa toda tu colección.')
+                  : (_includeMissing
+                      ? 'Cartas de ${_selSets.length} expansión'
+                          '${_selSets.length == 1 ? '' : 'es'}, tengas o no.'
+                      : 'Solo tus cartas de ${_selSets.length} expansión'
+                          '${_selSets.length == 1 ? '' : 'es'} — no toda la '
+                          'colección.'),
+              style: TextStyle(
+                  fontSize: 11.5,
+                  color: _canForge ? null : MFColors.warning),
+            ),
+          ),
+          if (!widget.collection.hasPrintingData &&
+              widget.collection.totalCopies > 0 &&
+              !_includeMissing)
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                'Tu colección no guarda la edición de cada carta, así que '
+                'filtrar por expansión dejaría fuera casi todo. Reimporta '
+                'tu CSV con "Sustituir" y vuelve.',
+                style: TextStyle(fontSize: 11.5, color: MFColors.warning),
+              ),
+            ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: _includeMissing,
+            onChanged: (v) => setState(() => _includeMissing = v),
+            title: const Text('Incluir cartas que no tengo'),
+            subtitle: const Text(
+                'Forge deja de limitarse a tu colección y usa TODO lo '
+                'impreso en esas expansiones; luego te dice cuántas cartas '
+                'te faltan y cuánto costarían.'),
+          ),
+          const SizedBox(height: 8),
           Text('A tu gusto (opcional)',
               style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
@@ -354,9 +592,12 @@ class _ForgeScreenState extends State<ForgeScreen> {
           Card(
             child: Padding(
               padding: const EdgeInsets.all(12),
-              child: Text(
-                  'Forge solo usa tus ${widget.collection.totalCopies} cartas. '
-                  'Nunca inventa copias que no tienes.'),
+              child: Text(_includeMissing
+                  ? 'Este mazo puede llevar cartas que NO tienes: cada '
+                      'propuesta dice cuántas te faltan y lo que costarían '
+                      '(precio de Cardmarket).'
+                  : 'Forge solo usa tus ${widget.collection.totalCopies} '
+                      'cartas. Nunca inventa copias que no tienes.'),
             ),
           ),
           const SizedBox(height: 20),
@@ -376,9 +617,11 @@ class _ForgeScreenState extends State<ForgeScreen> {
               backgroundColor: MFColors.forge,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: _forge,
+            onPressed: _canForge ? _forge : null,
             icon: const Icon(Icons.auto_awesome),
-            label: const Text('Forjar mis mazos'),
+            label: Text(_includeMissing
+                ? 'Forjar mazos (con lo que me falte)'
+                : 'Forjar mis mazos'),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
@@ -435,6 +678,14 @@ class _ForgeScreenState extends State<ForgeScreen> {
           const SizedBox(height: 8),
           const Text('Todo se calcula en tu dispositivo, sin internet',
               style: TextStyle(fontSize: 12)),
+          if ((_poolSize ?? 0) > 1200) ...[
+            const SizedBox(height: 6),
+            Text(
+                'Estás forjando con $_poolSize cartas: esto tarda unos '
+                'segundos. La ventana sigue viva.',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12)),
+          ],
         ],
       ),
     );
@@ -461,9 +712,11 @@ class _ForgeScreenState extends State<ForgeScreen> {
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text('Hechos solo con tus cartas · desliza para comparar'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(_includeMissing
+              ? 'Con cartas que aún no tienes · desliza para comparar'
+              : 'Hechos solo con tus cartas · desliza para comparar'),
         ),
         const SizedBox(height: 12),
         Expanded(
@@ -477,7 +730,11 @@ class _ForgeScreenState extends State<ForgeScreen> {
                 db: widget.db,
                 decks: widget.decks,
                 ownedPrintings:
-                    widget.collection.printingQty.keys.toSet()),
+                    widget.collection.printingQty.keys.toSet(),
+                ownedByName: _ownedByName,
+                shortfall: _shortfalls == null || i >= _shortfalls!.length
+                    ? null
+                    : _shortfalls![i]),
           ),
         ),
         const SizedBox(height: 12),
@@ -493,12 +750,21 @@ class _ProposalCard extends StatelessWidget {
   final DeckStore decks;
   final Set<String> ownedPrintings;
 
+  /// Copias reales por nombre: el pool del modo "cartas que no tengo" dice 4
+  /// de todo, así que preguntarle a él cuántas tienes siempre diría "todas".
+  final Map<String, int> ownedByName;
+
+  /// Lo que falta para poder jugarlo, ya calculado. `null` = aún sin saber.
+  final ({int copies, double cost})? shortfall;
+
   const _ProposalCard(
       {required this.gen,
       required this.pool,
       required this.db,
       required this.decks,
-      required this.ownedPrintings});
+      required this.ownedPrintings,
+      required this.ownedByName,
+      this.shortfall});
 
   @override
   Widget build(BuildContext context) {
@@ -547,8 +813,16 @@ class _ProposalCard extends StatelessWidget {
                 child: Text('"${fe.tagline(gen)}"',
                     style: const TextStyle(fontStyle: FontStyle.italic)),
               ),
-              const Text('✓ Tienes todas las cartas',
-                  style: TextStyle(color: MFColors.success, fontSize: 12)),
+              if ((shortfall?.copies ?? 0) == 0)
+                const Text('✓ Tienes todas las cartas',
+                    style: TextStyle(color: MFColors.success, fontSize: 12))
+              else
+                Text(
+                    'Te faltan ${shortfall!.copies} carta'
+                    '${shortfall!.copies == 1 ? '' : 's'}'
+                    '${shortfall!.cost > 0 ? ' · ${shortfall!.cost.toStringAsFixed(2)} €' : ''}',
+                    style: const TextStyle(
+                        color: MFColors.warning, fontSize: 12)),
               const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
@@ -560,7 +834,8 @@ class _ProposalCard extends StatelessWidget {
                             pool: pool,
                             db: db,
                             decks: decks,
-                            ownedPrintings: ownedPrintings)),
+                            ownedPrintings: ownedPrintings,
+                            ownedByName: ownedByName)),
                   ),
                   child: const Text('Ver mazo completo'),
                 ),

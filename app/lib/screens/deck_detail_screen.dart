@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
 import '../services/card_database.dart';
+import '../services/deck_shortfall.dart';
 import '../services/deck_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
@@ -70,20 +71,14 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   /// Copias del mazo que ya NO tienes. El mazo guarda su lista aunque vendas
   /// una carta: aquí se dice la verdad en vez de prometer "tienes todas".
   /// La cantidad la manda el pool, que se construye con tu colección.
-  int get _faltan {
-    var faltan = 0;
-    void mirar(Map<String, int> parte) {
-      parte.forEach((nombre, pide) {
-        final tengo =
-            widget.ownedByName?[nombre] ?? _pool[nombre]?.qty ?? 0;
-        if (tengo < pide) faltan += pide - tengo;
-      });
-    }
+  int get _faltan => missingCopies(_gen.deck, _tengoPorNombre);
 
-    mirar(_gen.deck.cards);
-    mirar(_gen.deck.lands);
-    return faltan;
-  }
+  /// Las copias con las que se cuenta. Si quien abrió el mazo no las pasa
+  /// (mazo guardado que se abre desde Mazos), se cae al pool, que en ese
+  /// caso está construido con la colección.
+  Map<String, int> get _tengoPorNombre =>
+      widget.ownedByName ??
+      {for (final e in _pool.entries) e.key: e.value.qty};
 
   double get _deckValue {
     var total = 0.0;

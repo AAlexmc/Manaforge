@@ -210,6 +210,39 @@ class CardDatabase {
     return _hitFromRow(rows.first);
   }
 
+  /// Todas las cartas impresas en esas expansiones, TENGAS O NO, listas para
+  /// [buildPool]: {oracleId: copias}. Es el pool del modo "incluir cartas que
+  /// no tengo".
+  ///
+  /// [copies] son las copias que se supone que puedes conseguir de cada una
+  /// (4, el máximo de una lista de 60 cartas). Las básicas no se limitan
+  /// aquí: de eso ya se encarga [buildPool] con `assumeBasics`.
+  ///
+  /// Sin expansiones no devuelve nada: "todas las cartas de Magic" son ~30.000
+  /// y no es un pool, es un catálogo.
+  Future<Map<String, int>> oraclesInSets(Set<String> setCodes,
+      {int copies = 4}) async {
+    if (setCodes.isEmpty) return const {};
+    final db = await _open();
+    final out = <String, int>{};
+    final codes = [for (final c in setCodes) c.toLowerCase()];
+    const chunkSize = 400;
+    for (var i = 0; i < codes.length; i += chunkSize) {
+      final chunk = codes.sublist(
+          i, i + chunkSize > codes.length ? codes.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT DISTINCT oracle_id FROM printings '
+        'WHERE LOWER(set_code) IN ($marks)',
+        chunk,
+      );
+      for (final r in rows) {
+        out[r['oracle_id'] as String] = copies;
+      }
+    }
+    return out;
+  }
+
   /// Construye el pool del motor Forge para las cartas poseídas
   /// {oracleId: qty}; añade básicas "de cortesía" si se pide (jugador casual
   /// con básicas sueltas de mazos de inicio).
