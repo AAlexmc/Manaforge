@@ -13,7 +13,6 @@ import 'all_cards_screen.dart';
 import 'folder_detail_screen.dart';
 import 'folder_pick_screen.dart';
 import 'import_csv_screen.dart';
-import 'live_scan_screen.dart';
 
 // El orden y los filtros viven en collection_filters.dart; se re-exportan
 // porque media app (y sus tests) los importaban desde aquí.
@@ -215,22 +214,6 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _dbReady == true
-          ? FloatingActionButton.extended(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => LiveScanScreen(
-                      db: widget.db,
-                      collection: widget.collection,
-                      scanner: widget.scanner,
-                      achievements: widget.achievements,
-                      folders: widget.folders),
-                ),
-              ),
-              icon: const Icon(Icons.qr_code_scanner),
-              label: const Text('Escanear'),
-            )
-          : null,
       body: SafeArea(
         child: _dbReady == null
             ? const Center(child: CircularProgressIndicator())

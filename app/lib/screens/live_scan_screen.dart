@@ -68,7 +68,16 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   bool _starting = true;
 
   Timer? _timer;
-  bool _busy = false; // hay una captura en proceso
+
+  /// Hay una MUESTRA de presencia en marcha (miniatura barata).
+  bool _sampling = false;
+
+  /// Hay un RECONOCIMIENTO pesado en marcha. Va aparte de la muestra a
+  /// propósito: mientras se reconoce (hasta ~1 s con reintentos) la puerta de
+  /// presencia tiene que seguir mirando. Cuando compartían bandera, quitar la
+  /// carta justo en ese hueco no lo veía nadie, la mesa nunca constaba vacía y
+  /// la carta se quedaba clavada en "ya está en la mesa" para siempre.
+  bool _recognizing = false;
 
   /// El pipeline pesado NO corre cada tick: la puerta de presencia mira
   /// miniaturas baratas y solo dispara el reconocimiento cuando pones una
@@ -227,12 +236,12 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   Future<void> _tick() async {
     final camera = _camera;
     final linux = _linuxCam;
-    if (_busy) return;
+    if (_sampling) return;
     if (linux == null &&
         (camera == null || !camera.value.isInitialized)) {
       return;
     }
-    _busy = true;
+    _sampling = true;
     try {
       final bytes = await _captureBytes();
       if (bytes == null || !mounted) return; // aún sin frame
@@ -245,7 +254,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       switch (event) {
         case PresenceEvent.cardPlaced:
         case PresenceEvent.cardChanged:
-          await _recognizeSettled(bytes);
+          // el reconocimiento NO bloquea el muestreo: se lanza y el tick
+          // siguiente vuelve a mirar la mesa
+          if (!_recognizing) {
+            _recognizing = true;
+            unawaited(_recognizeSettled(bytes)
+                .whenComplete(() => _recognizing = false));
+          }
         case PresenceEvent.cardRemoved:
           // la puerta solo dice esto con la escena asentada y la mesa por
           // debajo del umbral: la carta ya NO está, olvidarla sin esperar más
@@ -261,7 +276,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     } catch (_) {
       // captura fallida (cámara ocupada, foto corrupta): al siguiente tick
     } finally {
-      _busy = false;
+      _sampling = false;
     }
   }
 
@@ -646,7 +661,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                       _lastSeenName != null
                           ? (_alreadyOnTable
                               ? 'Ya está en la mesa: $_lastSeenName · '
-                                  'retírala y vuelve a ponerla para sumar otra'
+                                  'retírala y vuelve a ponerla, o toca '
+                                  '"+1 igual"'
                               : 'Viendo: $_lastSeenName')
                           : _noCardHint ??
                               'Pasa una carta por delante de la cámara…',
