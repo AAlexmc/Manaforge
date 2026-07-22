@@ -217,6 +217,44 @@ class CollectionStore extends ChangeNotifier {
   Map<String, int> get qtyByOracle =>
       {for (final c in _cards.values) c.oracleId: c.qty};
 
+  /// Copias por carta contando SOLO las impresiones de esas expansiones. Es
+  /// lo que necesita Forge para "haz el mazo con lo que tengo de ESTOS
+  /// álbumes", en vez de con toda la colección.
+  ///
+  /// Necesita saber de quién es cada impresión ([backfillPrintingOwners]).
+  /// Una impresión sin dueño conocido no se cuenta: mejor quedarse corto que
+  /// meter en el mazo una carta de otra expansión.
+  Map<String, int> qtyByOracleInSets(Set<String> setCodes) {
+    if (setCodes.isEmpty) return qtyByOracle;
+    final codigos = {for (final c in setCodes) c.toLowerCase()};
+    final out = <String, int>{};
+    _printings.forEach((key, qty) {
+      if (qty <= 0) return;
+      final set = key.split('|').first.toLowerCase();
+      if (!codigos.contains(set)) return;
+      final oracleId = _printingOwner[key];
+      if (oracleId == null) return;
+      out[oracleId] = (out[oracleId] ?? 0) + qty;
+    });
+    // nunca más copias de las que tienes de verdad: si el mapa de dueños
+    // está desfasado, la colección manda
+    out.forEach((oracleId, qty) {
+      final real = _cards[oracleId]?.qty;
+      if (real != null && qty > real) out[oracleId] = real;
+    });
+    return out;
+  }
+
+  /// Copias por NOMBRE de carta. Lo usa el detalle del mazo para decir
+  /// cuántas te faltan de verdad.
+  Map<String, int> get qtyByName {
+    final out = <String, int>{};
+    for (final c in _cards.values) {
+      out[c.name] = (out[c.name] ?? 0) + c.qty;
+    }
+    return out;
+  }
+
   /// Lo pagado, por clave de compra. Solo lectura: para cambiarlo está
   /// [recordPurchase].
   Map<String, PurchaseLot> get purchases => Map.unmodifiable(_paid);
