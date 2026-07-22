@@ -10,12 +10,15 @@ import '../scanner/card_detector.dart';
 import '../scanner/dhash.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
+import '../scanner/tray_commit.dart';
 import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/folder_store.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/folder_target.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/set_lock.dart';
 import '../widgets/tray_list.dart';
@@ -36,12 +39,23 @@ class ScanScreen extends StatefulWidget {
   /// igual que el escáner en vivo.
   final AchievementsController? achievements;
 
+  /// Opcional: si está, se puede elegir carpeta para lo que entre. La carpeta
+  /// es una ETIQUETA: las cartas van a la colección igual. Sin carpetas a
+  /// mano, el selector no se enseña.
+  final FolderStore? folders;
+
+  /// Carpeta ya elegida al llegar aquí (viniendo del escáner en vivo, para no
+  /// tener que volver a elegirla).
+  final String? initialFolderId;
+
   const ScanScreen(
       {super.key,
       required this.db,
       required this.collection,
       required this.scanner,
-      this.achievements});
+      this.achievements,
+      this.folders,
+      this.initialFolderId});
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -146,6 +160,7 @@ class _ScanScreenState extends State<ScanScreen> {
   ScanConfidence _confidence = ScanConfidence.none;
   bool _showAll = false; // en un match claro, desplegar todas las opciones
   String? _lockSet; // set bloqueado (escanear una caja); null = todas
+  String? _folderId; // carpeta que ADEMÁS se etiqueta; null = ninguna
 
   // Escaneo por lotes: varias fotos de golpe → bandeja para revisar y añadir.
   ScanTray? _batch;
@@ -156,6 +171,28 @@ class _ScanScreenState extends State<ScanScreen> {
 
   static const _typeGroup = XTypeGroup(
       label: 'Fotos', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp']);
+
+  @override
+  void initState() {
+    super.initState();
+    _folderId = widget.initialFolderId;
+  }
+
+  /// La carpeta elegida, si sigue existiendo (se puede borrar desde otra
+  /// pantalla mientras escaneas).
+  CardFolder? get _folder =>
+      _folderId == null ? null : widget.folders?.byId(_folderId!);
+
+  Future<void> _pickFolder() async {
+    final folders = widget.folders;
+    if (folders == null) return;
+    await folders.load();
+    if (!mounted) return;
+    final elegida = await showFolderTargetSheet(context,
+        folders: folders, selectedId: _folderId);
+    if (elegida == null || !mounted) return; // cerrado sin elegir
+    setState(() => _folderId = elegida.id);
+  }
 
   Future<void> _pickPhotos() async {
     final files = await openFiles(acceptedTypeGroups: const [_typeGroup]);
@@ -337,25 +374,27 @@ class _ScanScreenState extends State<ScanScreen> {
   void _confirmBatch() {
     final tray = _batch;
     if (tray == null) return;
-    var added = 0;
-    final at = DateTime.now(); // el lote entero entra "a la vez"
-    for (final line in tray.lines) {
-      // sin reconocer = no se sabe qué carta es: no se añade nada
-      if (line.unrecognized) continue;
-      _addOwned(line.chosen.entry, _hitCache[line.chosen.entry.scryfallId],
-          line.qty, at: at);
-      added += line.qty;
-    }
-    final clean = tray.lines.every((l) => !l.unrecognized && !l.needsReview);
-    final distinct = tray.lines.where((l) => !l.unrecognized).length;
-    widget.achievements
-        ?.recordScan(copies: added, distinct: distinct, perfect: clean);
+    final carpeta = _folder;
+    // misma función que el escáner en vivo: una sola forma de meter bandeja
+    final result = commitTray(
+      tray: tray,
+      collection: widget.collection,
+      hitCache: _hitCache,
+      folders: widget.folders,
+      folderId: carpeta?.id,
+    );
+    final added = result.copies;
+    widget.achievements?.recordScan(
+        copies: added, distinct: result.distinct, perfect: result.clean);
     setState(() {
       _sessionCount += added;
       _batch = null;
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('✓ $added carta${added == 1 ? '' : 's'} a la colección'),
+      content: Text(carpeta == null
+          ? '✓ $added carta${added == 1 ? '' : 's'} a la colección'
+          : '✓ $added carta${added == 1 ? '' : 's'} a la colección, '
+              'y a "${carpeta.name}"'),
       duration: const Duration(milliseconds: 1400),
     ));
   }
@@ -365,6 +404,9 @@ class _ScanScreenState extends State<ScanScreen> {
     final c = _candidates[_selected];
     final entry = c.match.entry;
     _addOwned(entry, c.hit, 1);
+    // misma regla que la bandeja: etiquetar DESPUÉS de guardar
+    final carpeta = _folder;
+    tagScanned(widget.folders, carpeta?.id, {c.hit?.oracleId ?? entry.oracleId});
     widget.achievements?.recordScan(copies: 1, distinct: 1);
     setState(() {
       _sessionCount++;
@@ -375,7 +417,8 @@ class _ScanScreenState extends State<ScanScreen> {
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('✓ ${entry.name} '
-          '(${entry.setCode.toUpperCase()} #${entry.collectorNumber})'),
+          '(${entry.setCode.toUpperCase()} #${entry.collectorNumber})'
+          '${carpeta == null ? '' : ', y a "${carpeta.name}"'}'),
       duration: const Duration(milliseconds: 1200),
     ));
   }
@@ -386,6 +429,32 @@ class _ScanScreenState extends State<ScanScreen> {
       appBar: AppBar(
         title: const Text('Escanear'),
         actions: [
+          if (widget.folders != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: Center(
+                // escucha a las carpetas: si la elegida se borra en otra
+                // pantalla, el chip no puede seguir enseñándola
+                child: ListenableBuilder(
+                  listenable: widget.folders!,
+                  builder: (context, _) {
+                    final carpeta = _folder;
+                    return ActionChip(
+                      visualDensity: VisualDensity.compact,
+                      avatar: Icon(
+                          carpeta == null
+                              ? Icons.folder_off_outlined
+                              : Icons.folder,
+                          size: 18),
+                      label: Text(carpeta == null
+                          ? 'Sin carpeta'
+                          : 'Y además a: ${carpeta.name}'),
+                      onPressed: _pickFolder,
+                    );
+                  },
+                ),
+              ),
+            ),
           SetLockChip(lock: _lockSet, onTap: _editLock),
           if (_sessionCount > 0)
             Padding(
