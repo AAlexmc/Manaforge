@@ -123,4 +123,39 @@ void main() {
     expect(c.progress.unlockedAt.containsKey('escaneadas-1'), isTrue);
     expect(c.progress.unlockedAt.containsKey('foto-9'), isTrue);
   });
+
+  testWidgets('el aviso de logro se va solo y sustituye al que hubiera',
+      (tester) async {
+    final c = _controller(CollectionStore());
+    await tester.runAsync(() async {
+      c.recordScan(copies: 9, distinct: 9, perfect: true);
+      await c.refresh();
+    });
+
+    late BuildContext ctx;
+    await tester.pumpWidget(MaterialApp(
+      home: Builder(builder: (context) {
+        ctx = context;
+        return const Scaffold(body: SizedBox());
+      }),
+    ));
+
+    // ya hay un aviso en pantalla (p. ej. el de "N cartas a la colección")
+    ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
+        duration: Duration(seconds: 30), content: Text('lo de antes')));
+    await tester.pump();
+    expect(find.text('lo de antes'), findsOneWidget);
+
+    showAchievementToasts(ctx, c);
+    await tester.pumpAndSettle();
+
+    // sustituye: no se queda el viejo debajo esperando su turno
+    expect(find.text('lo de antes'), findsNothing);
+    expect(find.textContaining('¡Logro!'), findsOneWidget);
+
+    // y al poco rato se va solo, sin tocar nada
+    await tester.pump(kAchievementToast + const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(find.byType(SnackBar), findsNothing);
+  });
 }

@@ -383,6 +383,10 @@ void showLevelUpDialog(
 }
 
 /// Aviso de logro nuevo. Se llama tras cada refresco desde cualquier pantalla.
+/// Cuánto se queda en pantalla el aviso de logro. Corto a propósito: es una
+/// palmadita en la espalda, no algo que haya que leer entero.
+const Duration kAchievementToast = Duration(seconds: 3);
+
 void showAchievementToasts(
     BuildContext context, AchievementsController achievements) {
   final fresh = achievements.takeCelebrations();
@@ -390,8 +394,17 @@ void showAchievementToasts(
   final messenger = ScaffoldMessenger.of(context);
   final first = fresh.first;
   final more = fresh.length - 1;
+  // el aviso SUSTITUYE al que hubiera, no se pone en la cola detrás: escaneando
+  // saltan varios logros seguidos y encolados se quedaban un buen rato en
+  // pantalla, uno detrás de otro, tapando la barra de abajo
+  messenger.hideCurrentSnackBar();
   messenger.showSnackBar(SnackBar(
-    duration: const Duration(seconds: 4),
+    duration: kAchievementToast,
+    // OJO: `persist` vale `action != null` por defecto, así que un aviso CON
+    // botón se queda en pantalla para siempre hasta que lo tocas. Es lo que
+    // hacía que la enhorabuena por un logro se quedara tapando la barra de
+    // abajo. Se dice que no a mano.
+    persist: false,
     backgroundColor: tierColor(first.tier),
     content: Text(
       '🏆 ¡Logro! ${first.title}'
