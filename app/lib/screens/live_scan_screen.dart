@@ -11,12 +11,15 @@ import '../scanner/presence_gate.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
 import '../scanner/table_memory.dart';
+import '../scanner/tray_commit.dart';
 import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
+import '../services/folder_store.dart';
 import '../services/linux_camera.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
+import '../widgets/folder_target.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/session_tray.dart';
 import '../widgets/set_lock.dart';
@@ -42,12 +45,17 @@ class LiveScanScreen extends StatefulWidget {
   /// Opcional: si está, el escaneo cuenta para los logros.
   final AchievementsController? achievements;
 
+  /// Opcional: si están, se puede elegir carpeta para lo escaneado. Las cartas
+  /// entran en la colección igual; la carpeta es una etiqueta de más.
+  final FolderStore? folders;
+
   const LiveScanScreen(
       {super.key,
       required this.db,
       required this.collection,
       required this.scanner,
-      this.achievements});
+      this.achievements,
+      this.folders});
 
   @override
   State<LiveScanScreen> createState() => _LiveScanScreenState();
@@ -106,6 +114,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
 
   /// Set bloqueado (escanear una caja entera); null = buscar en todas.
   String? _lockSet;
+
+  /// Carpeta a la que etiquetar lo de esta tanda; null = ninguna. Se mantiene
+  /// entre tandas: si estás vaciando una caja entera, la eliges una vez.
+  String? _folderId;
 
   /// Cuánto esperar antes de reintentar el reconocimiento: lo justo para que
   /// la cámara haya entregado un frame nuevo.
@@ -388,59 +400,47 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   }
 
   void _confirmAll() {
-    var added = 0;
-    final at = DateTime.now(); // toda la bandeja entra "a la vez"
-    for (final line in _tray.lines) {
-      final entry = line.chosen.entry;
-      final hit = _hitCache[entry.scryfallId];
-      if (hit != null) {
-        widget.collection.add(
-          OwnedCard(
-            oracleId: hit.oracleId,
-            name: hit.name,
-            printedName: hit.printedName,
-            imageSmall: hit.imageSmall,
-            imageNormal: hit.imageNormal,
-            colors: hit.colors,
-            typeLine: hit.typeLine,
-            cmc: hit.cmc,
-            power: hit.power,
-            toughness: hit.toughness,
-            qty: line.qty,
-          ),
-          qty: line.qty,
-          printingKey: entry.printingKey,
-          at: at,
-        );
-      } else {
-        widget.collection.add(
-          OwnedCard(
-              oracleId: entry.oracleId,
-              name: entry.name,
-              colors: '',
-              qty: line.qty),
-          qty: line.qty,
-          printingKey: entry.printingKey,
-          at: at,
-        );
-      }
-      added += line.qty;
-    }
-    // para los logros: copias añadidas, cartas distintas y si la tanda salió
-    // limpia (ninguna línea sin reconocer ni pendiente de revisar)
-    final clean = _tray.lines.every((l) => !l.unrecognized && !l.needsReview);
-    final distinct = _tray.lines.where((l) => !l.unrecognized).length;
-    widget.achievements
-        ?.recordScan(copies: added, distinct: distinct, perfect: clean);
+    final carpeta = _folder;
+    final result = commitTray(
+      tray: _tray,
+      collection: widget.collection,
+      hitCache: _hitCache,
+      folders: widget.folders,
+      folderId: carpeta?.id,
+    );
+    widget.achievements?.recordScan(
+        copies: result.copies,
+        distinct: result.distinct,
+        perfect: result.clean);
     setState(() {
-      _sessionCount += added;
+      _sessionCount += result.copies;
       _tray.clear();
       _lastAdded = null;
     });
+    final n = result.copies;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('✓ $added carta${added == 1 ? '' : 's'} a la colección'),
+      content: Text(carpeta == null
+          ? '✓ $n carta${n == 1 ? '' : 's'} a la colección'
+          : '✓ $n carta${n == 1 ? '' : 's'} a la colección, '
+              'y a "${carpeta.name}"'),
       duration: const Duration(milliseconds: 1400),
     ));
+  }
+
+  /// La carpeta elegida, si sigue existiendo (se puede borrar desde otra
+  /// pantalla mientras escaneas).
+  CardFolder? get _folder =>
+      _folderId == null ? null : widget.folders?.byId(_folderId!);
+
+  Future<void> _pickFolder() async {
+    final folders = widget.folders;
+    if (folders == null) return;
+    await folders.load();
+    if (!mounted) return;
+    final elegida = await showFolderTargetSheet(context,
+        folders: folders, selectedId: _folderId);
+    if (elegida == null || !mounted) return; // cerrado sin elegir
+    setState(() => _folderId = elegida.id);
   }
 
   @override
@@ -685,6 +685,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
             }
           }),
           onTableKey: _table.onTable,
+          folderName: _folder?.name,
+          onPickFolder: widget.folders == null ? null : _pickFolder,
           onConfirm: _confirmAll,
           onClear: () => setState(() {
             _tray.clear();

@@ -27,6 +27,14 @@ class SessionTray extends StatelessWidget {
   /// La impresión que está ahora mismo sobre la mesa, para marcarla. Que se
   /// vea que está ahí y que no va a sumar sola.
   final String? onTableKey;
+
+  /// Carpeta a la que se van a etiquetar estas cartas, si hay alguna elegida.
+  /// No es un destino alternativo: van a la colección igual.
+  final String? folderName;
+
+  /// Abrir el selector de carpeta. Si es null, no se enseña (la pantalla no
+  /// tiene carpetas a mano).
+  final VoidCallback? onPickFolder;
   final VoidCallback onConfirm;
   final VoidCallback onClear;
 
@@ -39,6 +47,8 @@ class SessionTray extends StatelessWidget {
     required this.onRemove,
     required this.onQty,
     this.onTableKey,
+    this.folderName,
+    this.onPickFolder,
     required this.onConfirm,
     required this.onClear,
   });
@@ -73,6 +83,24 @@ class SessionTray extends StatelessWidget {
             itemBuilder: (context, i) => _tile(lines[i]),
           ),
         ),
+        if (onPickFolder != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: ActionChip(
+                avatar: Icon(
+                    folderName == null
+                        ? Icons.folder_off_outlined
+                        : Icons.folder,
+                    size: 18),
+                label: Text(folderName == null
+                    ? 'Sin carpeta'
+                    : 'Y además a: $folderName'),
+                onPressed: onPickFolder,
+              ),
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
           child: Row(
