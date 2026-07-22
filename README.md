@@ -91,7 +91,7 @@ Ve a [**Releases**](https://github.com/AAlexmc/Manaforge/releases) y baja el zip
 |---|---|
 | **Windows** | Descomprime y abre `manaforge.exe`. La primera vez Windows avisa de que no conoce el programa: *Más información → Ejecutar de todas formas* (no está firmado; el código está aquí para que lo mires). |
 | **macOS** | Descomprime y, la primera vez, **clic derecho sobre la app → Abrir**. Con doble clic macOS no deja abrir apps sin firmar. |
-| **Linux** | Descomprime y ejecuta `./manaforge`. Para que salga en el menú de aplicaciones con su icono: `./instalar.sh` (lo deja todo en `~/.local`, sin sudo; se quita con `./instalar.sh --desinstalar`). |
+| **Linux** | Descomprime y, dentro de la carpeta `ManaForge`, ejecuta `./manaforge`. Para que salga en el menú de aplicaciones con su icono: `./instalar.sh` (lo deja todo en `~/.local`, sin sudo; se quita con `./instalar.sh --desinstalar`). |
 
 **Comprobar lo que has bajado**: cada release publica `SHA256SUMS.txt` con la huella de los tres zips. En Linux o macOS, `sha256sum -c SHA256SUMS.txt` (o `shasum -a 256 -c`); en Windows, `Get-FileHash ManaForge-Windows.zip`.
 

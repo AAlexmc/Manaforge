@@ -6,6 +6,7 @@
 /// app se comparase con la base de precios.
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -282,6 +283,35 @@ void main() {
       await nueva.load();
 
       expect(nueva.seenVersion, '0.2.0'); // hay novedades que contar
+    });
+
+    test('dos load() a la vez: el segundo no se cuela con todo vacío',
+        () async {
+      // regresión: al arrancar hay DOS load() casi juntos (el aviso de
+      // versión y el "qué hay de nuevo"). Con un `bool` puesto antes de leer
+      // el disco, el segundo volvía sin `seenVersion` y las novedades no se
+      // enseñaban en la versión que las estrena
+      final uno = AppUpdateChecker(dataDir: dir, currentVersion: '0.2.0');
+      await uno.markNewsSeen();
+
+      final otro = AppUpdateChecker(dataDir: dir, currentVersion: '0.3.0');
+      unawaited(otro.load()); // el del aviso de versión, aún leyendo
+      await otro.load(); // el del "qué hay de nuevo"
+
+      expect(otro.seenVersion, '0.2.0');
+      expect(otro.firstRun, isFalse);
+    });
+
+    test('apuntar la versión vista y apagar el aviso a la vez: no se pisan',
+        () async {
+      final uno = AppUpdateChecker(dataDir: dir, currentVersion: '0.3.0');
+      await Future.wait([uno.markNewsSeen(), uno.setEnabled(false)]);
+
+      final otro = AppUpdateChecker(dataDir: dir, currentVersion: '0.3.0');
+      await otro.load();
+
+      expect(otro.seenVersion, '0.3.0');
+      expect(otro.enabled, isFalse);
     });
   });
 }

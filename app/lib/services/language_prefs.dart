@@ -18,6 +18,8 @@ import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'json_store_io.dart';
+
 /// Un idioma que se puede elegir, con su nombre EN SU PROPIO idioma: quien
 /// busca "日本語" no está leyendo "japonés".
 class AppLanguage {
@@ -49,7 +51,7 @@ class LanguagePreference extends ChangeNotifier {
   LanguagePreference({this.dataDir});
 
   Locale? _locale;
-  bool _loaded = false;
+  Future<void>? _loading;
 
   /// ¿Se le ha preguntado ya al usuario en qué idioma quiere la app? Se
   /// pregunta UNA vez, al primer arranque; después se cambia en Ajustes.
@@ -62,9 +64,28 @@ class LanguagePreference extends ChangeNotifier {
 
   String? get code => _locale?.languageCode;
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Mientras se lee el disco se comparte la ESPERA, no un booleano puesto de
+  /// antemano: con el `bool` marcado ANTES de leer, un segundo `load()`
+  /// mientras el primero sigue leyendo volvía enseguida y con todo vacío —
+  /// aquí eso era `asked == false` y volver a preguntar el idioma en cada
+  /// arranque.
+  ///
+  /// Cuando ya está leído se devuelve un futuro nuevo en vez de el de la
+  /// lectura: el de la lectura nació en la zona de quien llamó primero, y
+  /// esperarlo desde otra (el reloj falso de `testWidgets`) no vuelve.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  bool _cargado = false;
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  Future<void> _leer() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
@@ -111,18 +132,36 @@ class LanguagePreference extends ChangeNotifier {
     }
   }
 
-  Future<void> _save() async {
+  /// Los guardados van en fila india: al primer arranque `select()` y
+  /// `markAsked()` caen casi a la vez, y dos escrituras sueltas sobre el mismo
+  /// `.tmp` se entrelazan (una renombra lo que la otra está escribiendo).
+  ///
+  /// La fila NO arranca con un `Future.value()` guardado en un campo, que es
+  /// como la hacen los almacenes viejos: ese futuro nace al construir el
+  /// objeto, o sea en la zona del reloj falso de `testWidgets`, y esperarlo
+  /// desde `runAsync` no vuelve nunca (la zona falsa no corre sus microtareas
+  /// mientras `runAsync` está dentro). Aquí la fila nace en la primera
+  /// escritura, en la zona de quien la pide.
+  Future<void>? _fila;
+
+  Future<void> _save() {
+    final anterior = _fila;
+    final actual =
+        anterior == null ? _write() : anterior.then((_) => _write());
+    _fila = actual;
+    return actual;
+  }
+
+  Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
     try {
-      final tmp = File('${file.path}.tmp');
-      await tmp.writeAsString(
+      await writeJsonFile(
+          file,
           jsonEncode({
             if (_locale != null) 'language': _locale!.languageCode,
             'asked': _asked,
-          }),
-          flush: true);
-      await tmp.rename(file.path);
+          }));
     } catch (_) {
       // no poder guardar el idioma no puede tumbar la app
     }

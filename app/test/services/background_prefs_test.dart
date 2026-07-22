@@ -5,6 +5,7 @@
 /// se mueve o se borra, el fondo tiene que seguir estando.
 library;
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -132,5 +133,33 @@ void main() {
 
     await prefs.setDim(-3);
     expect(prefs.dim, kMinDim);
+  });
+
+  test('dos load() a la vez: el segundo espera al primero', () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.select(_imagen('fondo.png'));
+    await uno.setDim(0.4);
+
+    final otro = BackgroundPreference(dataDir: datos);
+    unawaited(otro.load()); // el de main(), aún leyendo el disco
+    await otro.load(); // el de Ajustes, que da por hecho que ya está
+
+    expect(otro.hasImage, isTrue);
+    expect(otro.dim, 0.4);
+  });
+
+  test('arrastrar el velo escribe en cola y el último valor es el que queda',
+      () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    // como arrastrar el mando: un setDim por frame, todos sin esperar
+    for (final v in [0.3, 0.4, 0.5, 0.6, 0.7]) {
+      unawaited(prefs.setDim(v));
+    }
+    await prefs.setDim(0.8);
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+
+    expect(otro.dim, 0.8);
   });
 }

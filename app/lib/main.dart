@@ -34,7 +34,15 @@ import 'widgets/whats_new_dialog.dart';
 void main() => runApp(const ManaForgeApp());
 
 class ManaForgeApp extends StatefulWidget {
-  const ManaForgeApp({super.key});
+  /// Solo para tests: preferencias YA cargadas.
+  ///
+  /// El reloj falso de `testWidgets` no hace avanzar el canal de plataforma
+  /// (`path_provider`), así que una carga que empiece DENTRO del test no
+  /// termina nunca. El test las carga antes con `runAsync` y las pasa hechas.
+  final BackgroundPreference? background;
+  final LanguagePreference? language;
+
+  const ManaForgeApp({super.key, this.background, this.language});
 
   @override
   State<ManaForgeApp> createState() => _ManaForgeAppState();
@@ -49,13 +57,15 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
 
   /// Fondo de pantalla elegido por el usuario. Vive aquí arriba porque tiene
   /// que pintarse DETRÁS de todas las pantallas.
-  final _background = BackgroundPreference();
+  late final BackgroundPreference _background =
+      widget.background ?? BackgroundPreference();
 
   /// Para poder cerrar con Escape desde encima del navegador.
   final _navigator = GlobalKey<NavigatorState>();
 
   /// En qué idioma se ve todo. Por defecto, el del sistema.
-  final _language = LanguagePreference();
+  late final LanguagePreference _language =
+      widget.language ?? LanguagePreference();
 
   @override
   void initState() {

@@ -5,6 +5,7 @@
 /// no existe.
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -71,6 +72,36 @@ void main() {
     await prefs.load();
 
     expect(prefs.locale, isNull);
+  });
+
+  test('dos load() a la vez: el segundo espera al primero, no vuelve vacío',
+      () async {
+    // regresión: con un `bool _loaded` puesto ANTES de leer el disco, el
+    // segundo load() volvía enseguida con `asked == false` y el diálogo de
+    // idioma salía otra vez en un arranque en el que ya se había contestado
+    File('${dir.path}/language.json')
+        .writeAsStringSync(jsonEncode({'language': 'ja', 'asked': true}));
+
+    final prefs = LanguagePreference(dataDir: dir);
+    unawaited(prefs.load()); // el de main(), todavía leyendo el disco
+    await prefs.load(); // el del diálogo, que da por hecho que ya está
+
+    expect(prefs.asked, isTrue);
+    expect(prefs.code, 'ja');
+  });
+
+  test('guardar dos veces seguidas no pierde ninguna de las dos cosas',
+      () async {
+    // regresión: `select()` y `markAsked()` caen juntos al primer arranque y
+    // escribían el mismo `.tmp` a la vez
+    final prefs = LanguagePreference(dataDir: dir);
+    await Future.wait([prefs.select('fr'), prefs.markAsked()]);
+
+    final otro = LanguagePreference(dataDir: dir);
+    await otro.load();
+
+    expect(otro.code, 'fr');
+    expect(otro.asked, isTrue);
   });
 
   test('los idiomas son los oficiales de Magic, sin repetidos', () {

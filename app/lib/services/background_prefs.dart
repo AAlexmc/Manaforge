@@ -16,6 +16,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'json_store_io.dart';
 import 'safe_input.dart';
 
 /// Página oficial de fondos de pantalla de Magic.
@@ -45,7 +46,7 @@ class BackgroundPreference extends ChangeNotifier {
 
   File? _image;
   double _dim = kDefaultDim;
-  bool _loaded = false;
+  Future<void>? _loading;
 
   /// La imagen de fondo, si hay una y sigue existiendo.
   File? get image => _image;
@@ -55,9 +56,23 @@ class BackgroundPreference extends ChangeNotifier {
   /// Cuánto se oscurece (0..1).
   double get dim => _dim;
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Mientras se lee el disco se comparte la ESPERA, no un booleano puesto de
+  /// antemano (que hacía que un segundo `load()` simultáneo volviese sin
+  /// fondo). Ya leído, se devuelve un futuro nuevo — ver la explicación larga
+  /// en `language_prefs.dart`.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  bool _cargado = false;
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  Future<void> _leer() async {
     final file = await _prefsFile();
     if (file == null || !await file.exists()) return;
     try {
@@ -160,18 +175,30 @@ class BackgroundPreference extends ChangeNotifier {
     return dir == null ? null : File(p.join(dir.path, 'background.json'));
   }
 
-  Future<void> _save() async {
+  /// En fila india: arrastrar el mando del velo dispara un `setDim()` por
+  /// frame, y sin fila son decenas de escrituras a la vez sobre el mismo
+  /// `.tmp`. La fila nace en la primera escritura y no en un campo — ver la
+  /// explicación larga en `language_prefs.dart`.
+  Future<void>? _fila;
+
+  Future<void> _save() {
+    final anterior = _fila;
+    final actual =
+        anterior == null ? _write() : anterior.then((_) => _write());
+    _fila = actual;
+    return actual;
+  }
+
+  Future<void> _write() async {
     final file = await _prefsFile();
     if (file == null) return;
     try {
-      final tmp = File('${file.path}.tmp');
-      await tmp.writeAsString(
+      await writeJsonFile(
+          file,
           jsonEncode({
             if (_image != null) 'image': _image!.path,
             'dim': _dim,
-          }),
-          flush: true);
-      await tmp.rename(file.path);
+          }));
     } catch (_) {
       // no poder guardar la preferencia no puede tumbar la app
     }
