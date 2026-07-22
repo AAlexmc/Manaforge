@@ -5,6 +5,7 @@ import '../services/collection_store.dart';
 import '../services/folder_store.dart';
 import '../services/market_prefs.dart';
 import '../services/price_series_database.dart';
+import '../services/collection_cascade.dart';
 import '../widgets/common.dart';
 import 'card_detail_screen.dart';
 import 'collection_filters.dart';
@@ -71,6 +72,42 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
         siblingIndex: index,
       ),
     ));
+  }
+
+  /// "Ya no tengo esta carta": la saca de la colección Y de todas las
+  /// carpetas. Los mazos la conservan marcada — vender una carta no puede
+  /// deshacerte un mazo.
+  Future<void> _confirmarQueYaNoLaTienes(OwnedCard card) async {
+    final folders = widget.folders;
+    final enCarpetas = folders?.foldersContaining(card.oracleId) ?? 0;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('¿Ya no tienes ${card.printedName ?? card.name}?'),
+        content: Text([
+          'Sale de tu colección y su hueco del álbum vuelve a estar vacío.',
+          if (enCarpetas > 0)
+            'También sale de ${enCarpetas == 1 ? "la carpeta en la que está" : "las $enCarpetas carpetas en las que está"}.',
+          'Los mazos NO la pierden: se queda en la lista y el mazo te avisa '
+              'de que te falta.',
+        ].join('\n\n')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Ya no la tengo'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    forgetCard(
+        collection: widget.collection,
+        folders: folders,
+        oracleId: card.oracleId);
   }
 
   void _add(CardHit hit) {
@@ -251,8 +288,13 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.remove_circle_outline),
-                            onPressed: () => widget.collection
-                                .setQty(card.oracleId, card.qty - 1),
+                            // bajar de 1 a 0 es "ya no tengo esta carta": eso
+                            // se pregunta y arrastra las carpetas, no se hace
+                            // en silencio con un toque de más
+                            onPressed: () => card.qty > 1
+                                ? widget.collection
+                                    .setQty(card.oracleId, card.qty - 1)
+                                : _confirmarQueYaNoLaTienes(card),
                           ),
                           Text('${card.qty}',
                               style: const TextStyle(

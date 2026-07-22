@@ -272,6 +272,22 @@ class FolderStore extends ChangeNotifier {
   void removeMissing(String id, Set<String> ownedOracleIds) =>
       _update(id, (f) => f.copyWith(cardIds: f.presentIn(ownedOracleIds)));
 
+  /// Saca una carta de TODAS las carpetas. Se llama al dejar de tener la
+  /// carta: una carpeta con cartas que ya no existen es una carpeta que
+  /// miente. Quitar de UNA carpeta es otra cosa (toggleCard) y no toca esto.
+  void removeCardEverywhere(String oracleId) {
+    var changed = false;
+    for (var i = 0; i < _folders.length; i++) {
+      final f = _folders[i];
+      if (!f.cardIds.contains(oracleId)) continue;
+      _folders[i] = f.copyWith(cardIds: {...f.cardIds}..remove(oracleId));
+      changed = true;
+    }
+    if (!changed) return;
+    notifyListeners();
+    _save();
+  }
+
   void remove(String id) {
     final before = _folders.length;
     _folders.removeWhere((f) => f.id == id);

@@ -39,6 +39,9 @@ class _MazosScreenState extends State<MazosScreen> {
     try {
       // pool = colección actual + las cartas del mazo (por si ya no las tienes)
       final pool = await widget.db.buildPool(widget.collection.qtyByOracle);
+      // lo que tienes DE VERDAD, antes de rellenar el pool con las cartas que
+      // ya no tienes (esas entran con la cantidad que pide el mazo)
+      final propias = {for (final e in pool.entries) e.key: e.value.qty};
       final extra = await widget.db
           .poolByNames({...saved.cards, ...saved.lands});
       extra.forEach((k, v) => pool.putIfAbsent(k, () => v));
@@ -50,6 +53,7 @@ class _MazosScreenState extends State<MazosScreen> {
           db: widget.db,
           decks: widget.decks,
           ownedPrintings: widget.collection.printingQty.keys.toSet(),
+          ownedByName: propias,
         ),
       ));
     } catch (e) {
