@@ -150,12 +150,19 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                   itemBuilder: (context, i) {
                     final hit = _results[i];
                     return ListTile(
-                      onTap: () => showCardZoom(context,
-                          name: hit.printedName ?? hit.name,
-                          imageUrl: hit.imageNormal ?? hit.imageSmall,
-                          colors: hit.colors,
-                          onDetails: () =>
-                              _openDetail(oracleId: hit.oracleId)),
+                      // se pasa la LISTA entera: dentro del visor se pasa a
+                      // la siguiente sin cerrar
+                      onTap: () => showCardZoomList(context,
+                          index: i,
+                          cards: [
+                            for (final h in _results)
+                              ZoomCard(
+                                  name: h.printedName ?? h.name,
+                                  imageUrl: h.imageNormal ?? h.imageSmall,
+                                  colors: h.colors,
+                                  onDetails: () =>
+                                      _openDetail(oracleId: h.oracleId))
+                          ]),
                       leading: CardThumb(
                           url: hit.imageSmall,
                           colors: hit.colors,
@@ -194,12 +201,17 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                   itemBuilder: (context, i) {
                     final card = owned[i];
                     return ListTile(
-                      onTap: () => showCardZoom(context,
-                          name: card.printedName ?? card.name,
-                          imageUrl: card.imageNormal ?? card.imageSmall,
-                          colors: card.colors,
-                          onDetails: () =>
-                              _openDetail(oracleId: card.oracleId)),
+                      onTap: () => showCardZoomList(context,
+                          index: i,
+                          cards: [
+                            for (final c in owned)
+                              ZoomCard(
+                                  name: c.printedName ?? c.name,
+                                  imageUrl: c.imageNormal ?? c.imageSmall,
+                                  colors: c.colors,
+                                  onDetails: () =>
+                                      _openDetail(oracleId: c.oracleId))
+                          ]),
                       leading: CardThumb(
                           url: card.imageSmall,
                           colors: card.colors,
