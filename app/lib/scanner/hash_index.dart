@@ -8,6 +8,7 @@ library;
 import 'dart:typed_data';
 
 import 'dhash.dart';
+import 'digital_sets.dart';
 
 /// Una impresión de la base de huellas (una fila de art_hashes).
 class HashEntry {
@@ -59,7 +60,8 @@ class HashIndex {
   /// (printingKey exacta). Si [lockSet] no es null, SOLO se consideran las
   /// impresiones de ese set (bloqueo de edición para escanear una caja: es el
   /// truco con el que ManaBox clava el printing exacto de un precon/sobre).
-  List<ScanMatch> topMatches(List<DHashPair> sigs, {int k = 3, String? lockSet}) {
+  List<ScanMatch> topMatches(List<DHashPair> sigs,
+      {int k = 3, String? lockSet, Set<String> ownedPrintings = const {}}) {
     if (sigs.isEmpty) return const [];
     final lock = lockSet?.toLowerCase();
     // Fase 1: barrido completo solo con la firma CENTRAL (artSignatures
@@ -74,6 +76,7 @@ class HashIndex {
       final d = hamming64(center.h, _hashH[i]) +
           hamming64(center.v, _hashV[i]);
       d0[i] = d;
+      if (isDigitalOnlySet(_entries[i].setCode)) continue; // no existe en papel
       if (lock == null || _entries[i].setCode.toLowerCase() == lock) {
         histogram[d]++;
       }
@@ -92,6 +95,9 @@ class HashIndex {
     for (var i = 0; i < _entries.length; i++) {
       if (d0[i] > cutoff) continue;
       final e = _entries[i];
+      // el escáner mira cartón: una edición de Arena o de Magic Online no
+      // puede ser la carta que hay sobre la mesa, por bien que case su arte
+      if (isDigitalOnlySet(e.setCode)) continue;
       if (lock != null && e.setCode.toLowerCase() != lock) continue;
       final hh = _hashH[i];
       final vv = _hashV[i];
@@ -101,7 +107,10 @@ class HashIndex {
         if (di < d) d = di;
       }
       final current = bestByOracle[e.oracleId];
-      if (current == null || d < current.distance) {
+      if (current == null ||
+          d < current.distance ||
+          (d == current.distance &&
+              _ganaElDesempate(e, current.entry, ownedPrintings))) {
         bestByOracle[e.oracleId] = ScanMatch(e, d);
       }
     }
@@ -110,6 +119,33 @@ class HashIndex {
     return all.take(k).toList();
   }
 
+  /// Dos ediciones con el MISMO arte hashean igual: el empate es exacto y la
+  /// ilustración no puede deshacerlo. Antes ganaba la que estuviera antes en
+  /// la base —o sea, al azar—, y por eso un Aether Revolt entraba como
+  /// Kaladesh Remastered. Se desempata por lo que sí se sabe:
+  ///  1. la edición que el usuario YA tiene (lo más probable con diferencia);
+  ///  2. la de número de coleccionista normal: The List numera "AER-191" y
+  ///     los promos "2023-6" o "113p", y esas son las raras;
+  ///  3. el código de edición por orden alfabético, que no dice nada pero
+  ///     hace que la respuesta no dependa de cómo se generó la base.
+  static bool _ganaElDesempate(
+      HashEntry candidata, HashEntry actual, Set<String> ownedPrintings) {
+    final tieneCandidata = ownedPrintings.contains(candidata.printingKey);
+    final tieneActual = ownedPrintings.contains(actual.printingKey);
+    if (tieneCandidata != tieneActual) return tieneCandidata;
+
+    final normalCandidata = _numeroNormal(candidata.collectorNumber);
+    final normalActual = _numeroNormal(actual.collectorNumber);
+    if (normalCandidata != normalActual) return normalCandidata;
+
+    return candidata.setCode.compareTo(actual.setCode) < 0;
+  }
+
+  /// Un número de coleccionista a secas (123), sin letras ni guiones.
+  static bool _numeroNormal(String collectorNumber) =>
+      collectorNumber.isNotEmpty &&
+      RegExp(r'^[0-9]+$').hasMatch(collectorNumber);
+
   /// Matching con HIPÓTESIS de posición: el grupo [primary] manda salvo
   /// que algún grupo de [alts] mejore su top-1 en ≥3 bits (histéresis:
   /// probar N grupos sesga el mínimo hacia abajo y sin margen un falso
@@ -117,13 +153,15 @@ class HashIndex {
   /// ganadores y el índice del grupo elegido (-1 = primario).
   (List<ScanMatch>, int) bestGroupMatches(
       List<DHashPair> primary, List<List<DHashPair>> alts,
-      {String? lockSet}) {
-    var matches = topMatches(primary, lockSet: lockSet);
+      {String? lockSet, Set<String> ownedPrintings = const {}}) {
+    var matches = topMatches(primary,
+        lockSet: lockSet, ownedPrintings: ownedPrintings);
     var chosen = -1;
     if (alts.isEmpty) return (matches, chosen);
     var best = matches.isEmpty ? 999 : matches.first.distance;
     for (var i = 0; i < alts.length; i++) {
-      final m = topMatches(alts[i], lockSet: lockSet);
+      final m = topMatches(alts[i],
+          lockSet: lockSet, ownedPrintings: ownedPrintings);
       if (m.isEmpty) continue;
       if (m.first.distance <= best - 3) {
         best = m.first.distance;

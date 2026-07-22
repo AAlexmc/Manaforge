@@ -253,7 +253,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       if (!mounted) return;
       if (outcome == null) continue;
       final matches =
-          index.topMatches(outcome.signatures, lockSet: _lockSet);
+          index.topMatches(outcome.signatures,
+              lockSet: _lockSet,
+              // desempate: entre dos ediciones con el mismo arte gana la que
+              // ya tienes, que es lo más probable con diferencia
+              ownedPrintings: widget.collection.printingQty.keys.toSet());
       // usedFallback = el detector no encontró carta y hasheó el encuadre
       // entero: eso es la mesa, no una carta (ver decideLiveScan)
       final decision = decideLiveScan(matches,
