@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_sets.dart';
 import '../services/collection_store.dart';
+import '../services/market_prefs.dart';
+import '../services/price_series_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'album_filters.dart';
@@ -15,7 +17,17 @@ class AlbumScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
 
-  const AlbumScreen({super.key, required this.db, required this.collection});
+  /// Opcionales: si vienen, las fichas de carta que se abran desde aquí dejan
+  /// elegir mercado (Cardmarket, TCGplayer…) como el Mercado.
+  final MarketPreference? market;
+  final PriceSeriesDatabase? prices;
+
+  const AlbumScreen(
+      {super.key,
+      required this.db,
+      required this.collection,
+      this.market,
+      this.prices});
 
   @override
   State<AlbumScreen> createState() => _AlbumScreenState();
@@ -316,6 +328,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       db: widget.db,
                                       collection: widget.collection,
                                       set: s,
+                                      market: widget.market,
+                                      prices: widget.prices,
                                     ),
                                   ),
                                 ),
@@ -336,12 +350,16 @@ class AlbumSetScreen extends StatefulWidget {
   final CardDatabase db;
   final CollectionStore collection;
   final SetInfo set;
+  final MarketPreference? market;
+  final PriceSeriesDatabase? prices;
 
   const AlbumSetScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.set});
+      required this.set,
+      this.market,
+      this.prices});
 
   @override
   State<AlbumSetScreen> createState() => _AlbumSetScreenState();
@@ -381,6 +399,22 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
     }).catchError((e) {
       if (mounted) setState(() => _error = '$e');
     });
+  }
+
+  /// Abre la ficha completa sabiendo qué cartas hay al lado: desde ahí se
+  /// pasa a la siguiente sin volver al álbum.
+  void _abrirFicha(List<AlbumCard> visibles, int index) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => CardDetailScreen(
+        db: widget.db,
+        collection: widget.collection,
+        oracleId: visibles[index].oracleId,
+        market: widget.market,
+        prices: widget.prices,
+        siblings: [for (final c in visibles) c.oracleId],
+        siblingIndex: index,
+      ),
+    ));
   }
 
   @override
@@ -528,18 +562,8 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                                           imageUrl:
                                               c.imageNormal ?? c.imageSmall,
                                           colors: c.colors,
-                                          onDetails: () =>
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      CardDetailScreen(
-                                                          db: widget.db,
-                                                          collection:
-                                                              widget.collection,
-                                                          oracleId:
-                                                              c.oracleId),
-                                                ),
-                                              ))
+                                          onDetails: () => _abrirFicha(
+                                              visibles, visibles.indexOf(c)))
                                   ]));
                         },
                       ),

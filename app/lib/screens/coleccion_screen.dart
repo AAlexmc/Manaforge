@@ -7,6 +7,8 @@ import '../services/collection_value.dart';
 import '../services/folder_store.dart';
 import '../services/folder_value.dart';
 import '../services/scanner_database.dart';
+import '../services/market_prefs.dart';
+import '../services/price_series_database.dart';
 import '../widgets/folder_tile.dart';
 import 'album_screen.dart';
 import 'all_cards_screen.dart';
@@ -32,6 +34,11 @@ class ColeccionScreen extends StatefulWidget {
   /// Opcional: si está, escanear y crear carpetas cuentan para los logros.
   final AchievementsController? achievements;
 
+  /// Opcionales: si vienen, las fichas de carta abiertas desde la colección
+  /// dejan elegir mercado, como el Mercado.
+  final MarketPreference? market;
+  final PriceSeriesDatabase? prices;
+
   const ColeccionScreen({
     super.key,
     required this.db,
@@ -39,6 +46,8 @@ class ColeccionScreen extends StatefulWidget {
     required this.scanner,
     required this.folders,
     this.achievements,
+    this.market,
+    this.prices,
   });
 
   @override
@@ -199,6 +208,8 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
         collection: widget.collection,
         folders: widget.folders,
         folderId: folder.id,
+        market: widget.market,
+        prices: widget.prices,
       ),
     ));
   }
@@ -208,7 +219,9 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
       builder: (_) => AllCardsScreen(
           db: widget.db,
           collection: widget.collection,
-          folders: widget.folders),
+          folders: widget.folders,
+          market: widget.market,
+          prices: widget.prices),
     ));
   }
 

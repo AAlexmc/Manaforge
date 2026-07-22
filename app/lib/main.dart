@@ -155,8 +155,14 @@ class _HomeShellState extends State<HomeShell> {
           collection: _collection,
           scanner: _scanner,
           folders: _folders,
-          achievements: _achievements),
-      AlbumScreen(db: _db, collection: _collection),
+          achievements: _achievements,
+          market: _market,
+          prices: _prices),
+      AlbumScreen(
+          db: _db,
+          collection: _collection,
+          market: _market,
+          prices: _prices),
       MazosScreen(db: _db, collection: _collection, decks: _decks),
       ForgeScreen(db: _db, collection: _collection, decks: _decks),
       MercadoScreen(
