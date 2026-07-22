@@ -71,7 +71,15 @@ jobs:
         run: |
           set -euo pipefail
           {
-            echo "Descarga para tu sistema, descomprime y ejecuta. En macOS: clic derecho → Abrir la primera vez (app sin firmar). Gratis, sin cuentas, para siempre."
+            echo "Gratis, sin cuentas, sin anuncios. Descarga el zip de tu sistema, descomprime y abre."
+            echo
+            echo "| Sistema | Qué hacer |"
+            echo "|---|---|"
+            echo "| **Windows** | Abre \`manaforge.exe\`. La primera vez: *Más información → Ejecutar de todas formas* (no está firmado). |"
+            echo "| **macOS** | La primera vez, **clic derecho sobre la app → Abrir**. Con doble clic macOS no deja abrir apps sin firmar. |"
+            echo "| **Linux** | Ejecuta \`./manaforge\`. Para tenerla en el menú de aplicaciones con su icono: \`./instalar.sh\` (todo en \`~/.local\`, sin sudo; se quita con \`./instalar.sh --desinstalar\`). |"
+            echo
+            echo "La primera vez la app se baja ~36 MB de datos (cartas, precios e huellas del escáner) enseñando el progreso. Después funciona sin conexión."
             echo
             echo "### Comprobar lo que has bajado"
             echo
