@@ -63,6 +63,50 @@ class HomeShell extends StatefulWidget {
 }
 
 class _HomeShellState extends State<HomeShell> {
+  /// La barra de abajo, en orden. "Escanear" NO es una pestaña: abre el
+  /// escáner y vuelve. Su sitio se saca de ESTA lista y no se escribe a mano
+  /// en ningún otro lado — escribirlo a mano ya salió mal una vez (Escanear
+  /// abría Mazos y Mazos abría el escáner).
+  static const List<NavigationDestination> _destinos = [
+          NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Inicio'),
+          NavigationDestination(
+              icon: Icon(Icons.style_outlined),
+              selectedIcon: Icon(Icons.style),
+              label: 'Colección'),
+          NavigationDestination(
+              icon: Icon(Icons.auto_stories_outlined),
+              selectedIcon: Icon(Icons.auto_stories),
+              label: 'Álbum'),
+          NavigationDestination(
+              icon: Icon(Icons.qr_code_scanner, color: MFColors.manaRed),
+              selectedIcon: Icon(Icons.qr_code_scanner,
+                  color: MFColors.manaRed),
+              label: 'Escanear'),
+          NavigationDestination(
+              icon: Icon(Icons.layers_outlined),
+              selectedIcon: Icon(Icons.layers),
+              label: 'Mazos'),
+          NavigationDestination(
+              icon: ForgeTabIcon(selected: false),
+              selectedIcon: ForgeTabIcon(selected: true),
+              label: 'Forge'),
+          NavigationDestination(
+              icon: Icon(Icons.storefront_outlined),
+              selectedIcon: Icon(Icons.storefront),
+              label: 'Mercado'),
+          NavigationDestination(
+              icon: Icon(Icons.settings_outlined),
+              selectedIcon: Icon(Icons.settings),
+              label: 'Ajustes'),
+  ];
+
+  /// Dónde está "Escanear" dentro de la barra.
+  static final int _escanear =
+      _destinos.indexWhere((d) => d.label == 'Escanear');
+
   int _index = 0;
   bool _started = false; // false = pantalla de arranque (puesta al día)
   final _db = CardDatabase();
@@ -184,57 +228,23 @@ class _HomeShellState extends State<HomeShell> {
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el
     // escáner y vuelve— así que el índice de la barra no es el de la pantalla.
-    const escanear = 4;
     int barraDePantalla(int pantalla) =>
-        pantalla < escanear ? pantalla : pantalla + 1;
-    int pantallaDeBarra(int barra) => barra < escanear ? barra : barra - 1;
+        pantalla < _escanear ? pantalla : pantalla + 1;
+    int pantallaDeBarra(int barra) =>
+        barra < _escanear ? barra : barra - 1;
 
     return Scaffold(
       body: IndexedStack(index: _index, children: screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: barraDePantalla(_index),
         onDestinationSelected: (i) {
-          if (i == escanear) {
+          if (i == _escanear) {
             _abrirEscaner();
             return;
           }
           setState(() => _index = pantallaDeBarra(i));
         },
-        destinations: const [
-          NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'Inicio'),
-          NavigationDestination(
-              icon: Icon(Icons.style_outlined),
-              selectedIcon: Icon(Icons.style),
-              label: 'Colección'),
-          NavigationDestination(
-              icon: Icon(Icons.auto_stories_outlined),
-              selectedIcon: Icon(Icons.auto_stories),
-              label: 'Álbum'),
-          NavigationDestination(
-              icon: Icon(Icons.qr_code_scanner, color: MFColors.manaRed),
-              selectedIcon: Icon(Icons.qr_code_scanner,
-                  color: MFColors.manaRed),
-              label: 'Escanear'),
-          NavigationDestination(
-              icon: Icon(Icons.layers_outlined),
-              selectedIcon: Icon(Icons.layers),
-              label: 'Mazos'),
-          NavigationDestination(
-              icon: ForgeTabIcon(selected: false),
-              selectedIcon: ForgeTabIcon(selected: true),
-              label: 'Forge'),
-          NavigationDestination(
-              icon: Icon(Icons.storefront_outlined),
-              selectedIcon: Icon(Icons.storefront),
-              label: 'Mercado'),
-          NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
-              label: 'Ajustes'),
-        ],
+        destinations: _destinos,
       ),
     );
   }
