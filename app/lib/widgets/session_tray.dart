@@ -109,7 +109,13 @@ class SessionTray extends StatelessWidget {
                 child: FilledButton.icon(
                   onPressed: onConfirm,
                   icon: const Icon(Icons.playlist_add_check),
-                  label: Text('Añadir ${tray.totalQty} a la colección'),
+                  // el botón dice TODO lo que va a pasar al pulsarlo,
+                  // incluida la carpeta: es la última pantalla antes de
+                  // tocarlo y no se puede quedar a medias de contarlo
+                  label: Text(folderName == null
+                      ? 'Añadir ${tray.totalQty} a la colección'
+                      : 'Añadir ${tray.totalQty} a la colección '
+                          'y a $folderName'),
                 ),
               ),
               const SizedBox(width: 10),

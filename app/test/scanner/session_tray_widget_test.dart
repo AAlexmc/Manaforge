@@ -76,7 +76,10 @@ void main() {
     await tester.pumpWidget(_host(tray,
         folderName: 'Caja de la tienda', onPickFolder: () {}));
     expect(find.text('Y además a: Caja de la tienda'), findsOneWidget);
-    expect(find.textContaining('a la colección'), findsOneWidget);
+    // el botón cuenta también la carpeta: es lo último que lees antes de
+    // pulsarlo
+    expect(find.text('Añadir 1 a la colección y a Caja de la tienda'),
+        findsOneWidget);
   });
 
   testWidgets('bandeja vacía muestra la pista de uso', (tester) async {
