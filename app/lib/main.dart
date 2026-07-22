@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'screens/logros_screen.dart';
 import 'screens/screens.dart';
 import 'services/achievement_store.dart';
+import 'services/app_update.dart';
 import 'services/achievements_controller.dart';
 import 'services/backup.dart';
 import 'services/card_database.dart';
@@ -133,6 +134,10 @@ class _HomeShellState extends State<HomeShell> {
   final _market = MarketPreference();
   final _progress = AchievementStore();
   final _certificates = CertificateStore();
+
+  /// Mira una vez al día si hay versión nueva de la app. No descarga nada:
+  /// avisa y lleva a la página de descargas.
+  final _updates = AppUpdateChecker();
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -159,6 +164,9 @@ class _HomeShellState extends State<HomeShell> {
     // permisos), la app arranca igual — una copia que no sale no es motivo
     // para no dejarte entrar
     unawaited(_autoBackup());
+    // ¿hay versión nueva? Como mucho una pregunta al día, en segundo plano y
+    // sin ruido: si no hay red, no pasa nada
+    unawaited(_updates.checkIfDue());
   }
 
   @override
@@ -226,6 +234,7 @@ class _HomeShellState extends State<HomeShell> {
           decks: _decks,
           achievements: _achievements,
           certificates: _certificates,
+          updates: _updates,
           onGoToTab: (i) => setState(() => _index = i)),
       ColeccionScreen(
           db: _db,
@@ -248,7 +257,8 @@ class _HomeShellState extends State<HomeShell> {
           wishlist: _wishlist,
           prices: _prices,
           market: _market),
-      AjustesScreen(db: _db, onRestored: widget.onRestored),
+      AjustesScreen(
+          db: _db, onRestored: widget.onRestored, updates: _updates),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el

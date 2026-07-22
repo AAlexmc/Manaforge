@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../services/app_update.dart';
 import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
+import '../widgets/update_notice.dart';
 import 'backup_screen.dart';
 
 export 'album_screen.dart';
@@ -31,12 +33,18 @@ export 'startup_screen.dart';
 class AjustesScreen extends StatefulWidget {
   final CardDatabase db;
 
+  /// Aviso de versión nueva. Opcional: sin él, la tarjeta no sale.
+  final AppUpdateChecker? updates;
+
   /// Los datos de disco han cambiado (se ha restaurado una copia): hay que
   /// releerlo todo.
   final VoidCallback onRestored;
 
   const AjustesScreen(
-      {super.key, required this.db, required this.onRestored});
+      {super.key,
+      required this.db,
+      required this.onRestored,
+      this.updates});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -96,6 +104,10 @@ class _AjustesScreenState extends State<AjustesScreen> {
                 'pero no se vende). Sin anuncios, sin premium, sin cuentas. '
                 'Tus cartas son tuyas.'),
             const SizedBox(height: 20),
+            if (widget.updates != null) ...[
+              UpdateSettingsCard(checker: widget.updates!),
+              const SizedBox(height: 12),
+            ],
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
