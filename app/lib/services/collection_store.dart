@@ -292,7 +292,20 @@ class CollectionStore extends ChangeNotifier {
     required double perCopy,
     String? currency,
   }) {
-    if (qty <= 0 || perCopy <= 0 || !perCopy.isFinite) return;
+    if (!_recordPurchase(base, qty, perCopy, currency)) return;
+    notifyListeners();
+    _save();
+  }
+
+  /// La cuenta, sin avisar a nadie. Aparte para que importar un CSV no dé
+  /// DOS avisos por fila (uno al añadir la carta y otro al apuntar lo
+  /// pagado): cada aviso hace que el Álbum recalcule sus casillas contra la
+  /// base, y con 300 filas eso se nota.
+  ///
+  /// Devuelve si ha cambiado algo.
+  bool _recordPurchase(
+      String base, int qty, double perCopy, String? currency) {
+    if (qty <= 0 || perCopy <= 0 || !perCopy.isFinite) return false;
     final divisa = (currency == null || currency.trim().isEmpty)
         ? null
         : currency.trim().toUpperCase();
@@ -308,8 +321,7 @@ class CollectionStore extends ChangeNotifier {
             qty: antes.qty + qty,
             currency: divisa,
           );
-    notifyListeners();
-    _save();
+    return true;
   }
 
   Future<File?> _file() async {
@@ -455,12 +467,17 @@ class CollectionStore extends ChangeNotifier {
   /// bajo 300 cartas viejas, y esa información no se recupera).
   ///
   /// [foil] marca que ESAS copias son foil (lo sabe el CSV de ManaBox).
+  /// [paidPerCopy] apunta de paso lo que pagaste por ESTAS copias (lo trae
+  /// el CSV de ManaBox). Va aquí, y no en una llamada aparte, para que meter
+  /// una fila del CSV sea UN solo aviso a la interfaz.
   void add(OwnedCard card,
       {int qty = 1,
       String? printingKey,
       DateTime? at,
       bool bump = true,
-      bool foil = false}) {
+      bool foil = false,
+      double? paidPerCopy,
+      String? paidCurrency}) {
     final stamp = (at ?? DateTime.now()).millisecondsSinceEpoch;
     final existing = _cards[card.oracleId];
     if (existing != null) {
@@ -475,6 +492,15 @@ class CollectionStore extends ChangeNotifier {
       _printings[printingKey] = (_printings[printingKey] ?? 0) + qty;
       _printingOwner[printingKey] = card.oracleId;
       if (foil) _foils[printingKey] = (_foils[printingKey] ?? 0) + qty;
+    }
+    if (paidPerCopy != null) {
+      _recordPurchase(
+          printingKey != null && printingKey.isNotEmpty
+              ? printingKey
+              : 'oracle:${card.oracleId}',
+          qty,
+          paidPerCopy,
+          paidCurrency);
     }
     notifyListeners();
     _save();

@@ -22,8 +22,14 @@ import 'package:path/path.dart' as p;
 const int kBackupFormatVersion = 1;
 
 /// Versión de la app que se guarda en el manifiesto, solo informativa.
-/// Mantener a la par de `version:` en `pubspec.yaml`.
-const String kAppVersion = '0.1.0';
+/// Versión de la app. Va aquí porque el manifiesto de la copia la escribe,
+/// y de aquí la leerá también el aviso de "hay versión nueva".
+///
+/// Tiene que coincidir con `version:` de `pubspec.yaml` y con la etiqueta
+/// `app-vX.Y.Z` de la release. Lo vigila un test: se quedó en 0.1.0 mientras
+/// la release publicada era la v0.2.0, y una app que no sabe qué versión es
+/// no puede avisar de que hay otra más nueva.
+const String kAppVersion = '0.3.0';
 
 /// Los almacenes del usuario, y solo esos. La lista es también la lista blanca
 /// al restaurar: cualquier otro nombre dentro de una copia se ignora (un
