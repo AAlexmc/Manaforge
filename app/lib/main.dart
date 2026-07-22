@@ -9,6 +9,7 @@ import 'services/achievement_store.dart';
 import 'services/app_update.dart';
 import 'services/achievements_controller.dart';
 import 'services/backup.dart';
+import 'services/background_prefs.dart';
 import 'services/card_database.dart';
 import 'services/certificate_store.dart';
 import 'services/collection_store.dart';
@@ -22,6 +23,7 @@ import 'services/restore_reset.dart';
 import 'services/scanner_database.dart';
 import 'services/wishlist_store.dart';
 import 'theme/mf_theme.dart';
+import 'widgets/app_background.dart';
 
 void main() => runApp(const ManaForgeApp());
 
@@ -39,24 +41,53 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
   /// un `reload()` en cada uno de los diez.
   int _session = 0;
 
+  /// Fondo de pantalla elegido por el usuario. Vive aquí arriba porque tiene
+  /// que pintarse DETRÁS de todas las pantallas.
+  final _background = BackgroundPreference();
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_background.load());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ManaForge',
-      debugShowCheckedModeBanner: false,
-      theme: mfTheme(Brightness.light),
-      darkTheme: mfTheme(Brightness.dark),
-      themeMode: ThemeMode.dark, // oscuro por defecto (decisión de diseño)
-      home: HomeShell(
-        key: ValueKey(_session),
-        onRestored: () {
-          // los dos almacenes compartidos NO se recrean con la app: si no se
-          // vacían aquí, siguen con lo de antes en memoria y lo reescriben
-          // encima de lo que se acaba de restaurar
-          resetSharedStores();
-          setState(() => _session++);
-        },
-      ),
+    return ListenableBuilder(
+      listenable: _background,
+      builder: (context, _) {
+        // con fondo puesto, las pantallas dejan de pintar su color opaco:
+        // si no, taparían la imagen entera y el fondo no se vería nunca
+        ThemeData conFondo(Brightness brillo) {
+          final base = mfTheme(brillo);
+          return _background.hasImage
+              ? base.copyWith(
+                  scaffoldBackgroundColor: Colors.transparent,
+                  canvasColor: Colors.transparent)
+              : base;
+        }
+
+        return MaterialApp(
+          title: 'ManaForge',
+          debugShowCheckedModeBanner: false,
+          theme: conFondo(Brightness.light),
+          darkTheme: conFondo(Brightness.dark),
+          themeMode: ThemeMode.dark, // oscuro por defecto (decisión de diseño)
+          builder: (context, child) => AppBackground(
+              prefs: _background, child: child ?? const SizedBox.shrink()),
+          home: HomeShell(
+            key: ValueKey(_session),
+            background: _background,
+            onRestored: () {
+              // los dos almacenes compartidos NO se recrean con la app: si no
+              // se vacían aquí, siguen con lo de antes en memoria y lo
+              // reescriben encima de lo que se acaba de restaurar
+              resetSharedStores();
+              setState(() => _session++);
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -65,7 +96,11 @@ class HomeShell extends StatefulWidget {
   /// Se ha restaurado una copia: la app entera vuelve a empezar.
   final VoidCallback onRestored;
 
-  const HomeShell({super.key, required this.onRestored});
+  /// Fondo de pantalla, para poder cambiarlo desde Ajustes.
+  final BackgroundPreference background;
+
+  const HomeShell(
+      {super.key, required this.onRestored, required this.background});
 
   @override
   State<HomeShell> createState() => _HomeShellState();
@@ -258,7 +293,10 @@ class _HomeShellState extends State<HomeShell> {
           prices: _prices,
           market: _market),
       AjustesScreen(
-          db: _db, onRestored: widget.onRestored, updates: _updates),
+          db: _db,
+          onRestored: widget.onRestored,
+          updates: _updates,
+          background: widget.background),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el

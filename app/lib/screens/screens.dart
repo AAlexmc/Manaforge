@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../services/app_update.dart';
+import '../services/background_prefs.dart';
 import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
+import '../widgets/background_settings.dart';
 import '../widgets/update_notice.dart';
 import 'backup_screen.dart';
 
@@ -36,6 +38,9 @@ class AjustesScreen extends StatefulWidget {
   /// Aviso de versión nueva. Opcional: sin él, la tarjeta no sale.
   final AppUpdateChecker? updates;
 
+  /// Fondo de pantalla. Opcional por lo mismo.
+  final BackgroundPreference? background;
+
   /// Los datos de disco han cambiado (se ha restaurado una copia): hay que
   /// releerlo todo.
   final VoidCallback onRestored;
@@ -44,7 +49,8 @@ class AjustesScreen extends StatefulWidget {
       {super.key,
       required this.db,
       required this.onRestored,
-      this.updates});
+      this.updates,
+      this.background});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -106,6 +112,10 @@ class _AjustesScreenState extends State<AjustesScreen> {
             const SizedBox(height: 20),
             if (widget.updates != null) ...[
               UpdateSettingsCard(checker: widget.updates!),
+              const SizedBox(height: 12),
+            ],
+            if (widget.background != null) ...[
+              BackgroundSettingsCard(prefs: widget.background!),
               const SizedBox(height: 12),
             ],
             Card(
