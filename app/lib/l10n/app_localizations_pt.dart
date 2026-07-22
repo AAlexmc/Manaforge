@@ -183,6 +183,21 @@ class AppLocalizationsPt extends AppLocalizations {
       'Quanto escurece (para o texto continuar legível)';
 
   @override
+  String get backgroundCardColor => 'Cor dos cartões';
+
+  @override
+  String get backgroundTextColor => 'Cor da letra';
+
+  @override
+  String get backgroundCardOpacity => 'O quanto os cartões tapam o fundo';
+
+  @override
+  String get backgroundColorDefault => 'A de sempre';
+
+  @override
+  String get backgroundPreview => 'Como fica';
+
+  @override
   String get backgroundNotAnImage =>
       'Escolha uma imagem (.jpg, .png ou .webp) como papel de parede.';
 

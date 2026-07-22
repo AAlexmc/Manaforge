@@ -183,6 +183,21 @@ class AppLocalizationsIt extends AppLocalizations {
       'Quanto si scurisce (perché il testo resti leggibile)';
 
   @override
+  String get backgroundCardColor => 'Colore delle schede';
+
+  @override
+  String get backgroundTextColor => 'Colore del testo';
+
+  @override
+  String get backgroundCardOpacity => 'Quanto le schede coprono lo sfondo';
+
+  @override
+  String get backgroundColorDefault => 'Quello di sempre';
+
+  @override
+  String get backgroundPreview => 'Come si vede';
+
+  @override
   String get backgroundNotAnImage =>
       'Scegli un\'immagine (.jpg, .png o .webp) come sfondo.';
 

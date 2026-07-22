@@ -11,6 +11,7 @@ library;
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' show Color;
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
@@ -37,6 +38,51 @@ const double kMinDim = 0.2;
 const double kMaxDim = 0.92;
 const double kDefaultDim = 0.72;
 
+/// Un color de la paleta, con un nombre corto que es lo que se guarda en el
+/// JSON. Se guarda el NOMBRE y no el número: así un fichero manipulado no
+/// puede meter un color cualquiera (ni dejar la letra del mismo color que la
+/// tarjeta), y la paleta se puede retocar sin romper lo guardado.
+class NamedColor {
+  final String id;
+  final Color color;
+
+  const NamedColor(this.id, this.color);
+}
+
+/// Colores de las tarjetas cuando hay fondo puesto. El primero es "el de
+/// siempre" y no se guarda.
+const List<NamedColor> kCardColors = [
+  NamedColor('piedra', Color(0xFF2A2723)),
+  NamedColor('negro', Color(0xFF0E0D0B)),
+  NamedColor('hueso', Color(0xFFF2EFE9)),
+  NamedColor('noche', Color(0xFF14243A)),
+  NamedColor('bosque', Color(0xFF122A1E)),
+  NamedColor('vino', Color(0xFF2E1216)),
+  NamedColor('forja', Color(0xFF241833)),
+];
+
+/// Colores de la letra cuando hay fondo puesto.
+const List<NamedColor> kTextColors = [
+  NamedColor('hueso', Color(0xFFF2EFE9)),
+  NamedColor('blanco', Color(0xFFFFFFFF)),
+  NamedColor('tinta', Color(0xFF1C1A16)),
+  NamedColor('dorado', Color(0xFFE0CC8A)),
+];
+
+/// Cuánto tapan las tarjetas al fondo. Con 1 el fondo solo se ve por los
+/// huecos; por debajo de 0,35 no se lee lo que hay dentro.
+const double kMinCardOpacity = 0.35;
+const double kMaxCardOpacity = 1;
+const double kDefaultCardOpacity = 0.88;
+
+Color? _colorDe(List<NamedColor> paleta, String? id) {
+  if (id == null) return null;
+  for (final c in paleta) {
+    if (c.id == id) return c.color;
+  }
+  return null; // un nombre que no está en la paleta es "el de siempre"
+}
+
 /// Fondo elegido, persistido en `background.json`.
 class BackgroundPreference extends ChangeNotifier {
   /// Solo para tests: dónde viven el JSON y la copia de la imagen.
@@ -46,6 +92,9 @@ class BackgroundPreference extends ChangeNotifier {
 
   File? _image;
   double _dim = kDefaultDim;
+  String? _cardColorId;
+  String? _textColorId;
+  double _cardOpacity = kDefaultCardOpacity;
   Future<void>? _loading;
 
   /// La imagen de fondo, si hay una y sigue existiendo.
@@ -55,6 +104,20 @@ class BackgroundPreference extends ChangeNotifier {
 
   /// Cuánto se oscurece (0..1).
   double get dim => _dim;
+
+  /// Nombre del color elegido, o null = el de siempre.
+  String? get cardColorId => _cardColorId;
+
+  String? get textColorId => _textColorId;
+
+  /// Color de las tarjetas, null = el del tema.
+  Color? get cardColor => _colorDe(kCardColors, _cardColorId);
+
+  /// Color de la letra, null = el del tema.
+  Color? get textColor => _colorDe(kTextColors, _textColorId);
+
+  /// Cuánto tapan las tarjetas al fondo (0..1).
+  double get cardOpacity => _cardOpacity;
 
   /// Mientras se lee el disco se comparte la ESPERA, no un booleano puesto de
   /// antemano (que hacía que un segundo `load()` simultáneo volviese sin
@@ -95,6 +158,20 @@ class BackgroundPreference extends ChangeNotifier {
       }
       final dim = decoded['dim'];
       if (dim is num) _dim = dim.toDouble().clamp(kMinDim, kMaxDim);
+      // los colores se guardan por NOMBRE y solo valen si están en la paleta
+      final card = decoded['cardColor'];
+      if (card is String && kCardColors.any((c) => c.id == card)) {
+        _cardColorId = card;
+      }
+      final text = decoded['textColor'];
+      if (text is String && kTextColors.any((c) => c.id == text)) {
+        _textColorId = text;
+      }
+      final opacidad = decoded['cardOpacity'];
+      if (opacidad is num) {
+        _cardOpacity =
+            opacidad.toDouble().clamp(kMinCardOpacity, kMaxCardOpacity);
+      }
       notifyListeners();
     } catch (_) {
       // fichero raro: sin fondo, que es como estaba antes de esto
@@ -162,6 +239,32 @@ class BackgroundPreference extends ChangeNotifier {
     await _save();
   }
 
+  /// [id] null = el color de siempre. Un nombre que no esté en la paleta se
+  /// ignora (no se guarda un color que luego no se sabría pintar).
+  Future<void> setCardColor(String? id) async {
+    if (id != null && !kCardColors.any((c) => c.id == id)) return;
+    if (id == _cardColorId) return;
+    _cardColorId = id;
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> setTextColor(String? id) async {
+    if (id != null && !kTextColors.any((c) => c.id == id)) return;
+    if (id == _textColorId) return;
+    _textColorId = id;
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> setCardOpacity(double value) async {
+    final nuevo = value.clamp(kMinCardOpacity, kMaxCardOpacity);
+    if (nuevo == _cardOpacity) return;
+    _cardOpacity = nuevo;
+    notifyListeners();
+    await _save();
+  }
+
   Future<Directory?> _dir() async {
     try {
       return dataDir ?? await getApplicationSupportDirectory();
@@ -198,6 +301,9 @@ class BackgroundPreference extends ChangeNotifier {
           jsonEncode({
             if (_image != null) 'image': _image!.path,
             'dim': _dim,
+            if (_cardColorId != null) 'cardColor': _cardColorId,
+            if (_textColorId != null) 'textColor': _textColorId,
+            'cardOpacity': _cardOpacity,
           }));
     } catch (_) {
       // no poder guardar la preferencia no puede tumbar la app

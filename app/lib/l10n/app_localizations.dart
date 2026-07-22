@@ -420,6 +420,36 @@ abstract class AppLocalizations {
   /// **'Cuánto se oscurece (para que se lea el texto)'**
   String get backgroundDim;
 
+  /// No description provided for @backgroundCardColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Color de las tarjetas'**
+  String get backgroundCardColor;
+
+  /// No description provided for @backgroundTextColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Color de la letra'**
+  String get backgroundTextColor;
+
+  /// No description provided for @backgroundCardOpacity.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuánto tapan las tarjetas al fondo'**
+  String get backgroundCardOpacity;
+
+  /// No description provided for @backgroundColorDefault.
+  ///
+  /// In es, this message translates to:
+  /// **'El de siempre'**
+  String get backgroundColorDefault;
+
+  /// No description provided for @backgroundPreview.
+  ///
+  /// In es, this message translates to:
+  /// **'Así se ve'**
+  String get backgroundPreview;
+
   /// No description provided for @backgroundNotAnImage.
   ///
   /// In es, this message translates to:

@@ -182,6 +182,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get backgroundDim => 'Cuánto se oscurece (para que se lea el texto)';
 
   @override
+  String get backgroundCardColor => 'Color de las tarjetas';
+
+  @override
+  String get backgroundTextColor => 'Color de la letra';
+
+  @override
+  String get backgroundCardOpacity => 'Cuánto tapan las tarjetas al fondo';
+
+  @override
+  String get backgroundColorDefault => 'El de siempre';
+
+  @override
+  String get backgroundPreview => 'Así se ve';
+
+  @override
   String get backgroundNotAnImage =>
       'Elige una imagen (.jpg, .png o .webp) como fondo.';
 

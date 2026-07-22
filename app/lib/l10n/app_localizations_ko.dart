@@ -179,6 +179,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get backgroundDim => '어둡게 하는 정도(글자가 읽히도록)';
 
   @override
+  String get backgroundCardColor => '카드 색';
+
+  @override
+  String get backgroundTextColor => '글자 색';
+
+  @override
+  String get backgroundCardOpacity => '카드가 배경을 가리는 정도';
+
+  @override
+  String get backgroundColorDefault => '기본 색';
+
+  @override
+  String get backgroundPreview => '미리 보기';
+
+  @override
   String get backgroundNotAnImage => '배경으로 쓸 이미지(.jpg, .png, .webp)를 고르세요.';
 
   @override

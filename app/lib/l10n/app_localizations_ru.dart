@@ -182,6 +182,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get backgroundDim => 'Насколько затемнять (чтобы текст читался)';
 
   @override
+  String get backgroundCardColor => 'Цвет карточек';
+
+  @override
+  String get backgroundTextColor => 'Цвет текста';
+
+  @override
+  String get backgroundCardOpacity => 'Насколько карточки закрывают фон';
+
+  @override
+  String get backgroundColorDefault => 'Обычный';
+
+  @override
+  String get backgroundPreview => 'Как это выглядит';
+
+  @override
   String get backgroundNotAnImage =>
       'Выберите изображение (.jpg, .png или .webp) в качестве фона.';
 

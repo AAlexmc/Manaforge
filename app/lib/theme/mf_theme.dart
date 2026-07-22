@@ -30,6 +30,43 @@ class MFColors {
   static const warning = Color(0xFFD9B24A); // "faltan N cartas"
 }
 
+/// El tema cuando hay un fondo de pantalla puesto.
+///
+/// Tres cosas, y las tres tienen que ver con que se vea la imagen:
+///  - las pantallas dejan de pintar su color opaco (si no, taparían el fondo
+///    entero y no se vería nunca);
+///  - las tarjetas pueden llevar el color que elija el usuario y dejar pasar
+///    algo de fondo ([cardOpacity]);
+///  - la letra también, porque encima de una imagen clara la letra de siempre
+///    puede no leerse.
+///
+/// [card] y [text] null = los del tema de siempre.
+ThemeData mfThemeSobreFondo(ThemeData base,
+    {Color? card, Color? text, double cardOpacity = 1}) {
+  final fondoTarjeta = (card ?? base.colorScheme.surface)
+      .withValues(alpha: cardOpacity.clamp(0, 1));
+  var tema = base.copyWith(
+    scaffoldBackgroundColor: Colors.transparent,
+    canvasColor: Colors.transparent,
+    // el color va en el tema de las tarjetas y NO en `colorScheme.surface`:
+    // por surface pasan también los diálogos y los menús, y esos tienen que
+    // seguir siendo opacos (un diálogo translúcido no se lee)
+    cardTheme: base.cardTheme.copyWith(color: fondoTarjeta),
+  );
+  if (card != null) {
+    tema = tema.copyWith(
+        colorScheme: tema.colorScheme.copyWith(surface: card));
+  }
+  if (text != null) {
+    tema = tema.copyWith(
+      colorScheme: tema.colorScheme.copyWith(onSurface: text),
+      textTheme: tema.textTheme.apply(bodyColor: text, displayColor: text),
+      iconTheme: tema.iconTheme.copyWith(color: text),
+    );
+  }
+  return tema;
+}
+
 ThemeData mfTheme(Brightness brightness) {
   final dark = brightness == Brightness.dark;
   final scheme = ColorScheme(
