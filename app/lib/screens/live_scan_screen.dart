@@ -49,13 +49,22 @@ class LiveScanScreen extends StatefulWidget {
   /// entran en la colección igual; la carpeta es una etiqueta de más.
   final FolderStore? folders;
 
+  /// Keys del tour para los mandos de arriba. Solo las pone la pantalla que
+  /// abre el TOUR (dos GlobalKey iguales montadas a la vez revientan).
+  final Key? setKey;
+  final Key? modoKey;
+  final Key? fotoKey;
+
   const LiveScanScreen(
       {super.key,
       required this.db,
       required this.collection,
       required this.scanner,
       this.achievements,
-      this.folders});
+      this.folders,
+      this.setKey,
+      this.modoKey,
+      this.fotoKey});
 
   @override
   State<LiveScanScreen> createState() => _LiveScanScreenState();
@@ -476,7 +485,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       appBar: AppBar(
         title: const Text('Escanear en vivo'),
         actions: [
-          SetLockChip(lock: _lockSet, onTap: _editLock),
+          KeyedSubtree(
+            key: widget.setKey,
+            child: SetLockChip(lock: _lockSet, onTap: _editLock),
+          ),
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -485,13 +497,16 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                     ? 'Rápido: las cartas claras entran solas; las dudosas, '
                         'marcadas para revisar.'
                     : 'Con cuidado: las dudosas se paran y te preguntan cuál es.',
-                child: FilterChip(
-                  avatar: Icon(_quickMode ? Icons.bolt : Icons.verified_user,
-                      size: 16),
-                  label: Text(_quickMode ? 'Rápido' : 'Con cuidado'),
-                  selected: _quickMode,
-                  visualDensity: VisualDensity.compact,
-                  onSelected: (v) => setState(() => _quickMode = v),
+                child: KeyedSubtree(
+                  key: widget.modoKey,
+                  child: FilterChip(
+                    avatar: Icon(_quickMode ? Icons.bolt : Icons.verified_user,
+                        size: 16),
+                    label: Text(_quickMode ? 'Rápido' : 'Con cuidado'),
+                    selected: _quickMode,
+                    visualDensity: VisualDensity.compact,
+                    onSelected: (v) => setState(() => _quickMode = v),
+                  ),
                 ),
               ),
             ),
@@ -506,6 +521,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
               ),
             ),
           IconButton(
+            key: widget.fotoKey,
             tooltip: 'Escanear una foto suelta',
             icon: const Icon(Icons.photo_library_outlined),
             onPressed: () => Navigator.of(context).pushReplacement(

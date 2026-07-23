@@ -236,5 +236,14 @@
   "acEmptyHint": "Search for your first card above, or go back and import your ManaBox CSV.",
 
   "onbHowItWorksBody": "A summary of what each tab does, plus the keyboard shortcuts. If you get lost, start here.",
-  "onbVersionBody": "Which version you're on, what's in it, and whether the app should check once a day for a new one. It never updates itself."
+  "onbVersionBody": "Which version you're on, what's in it, and whether the app should check once a day for a new one. It never updates itself.",
+
+  "onbScanSetTitle": "Set: all",
+  "onbScanSetBody": "If you're opening packs from ONE set, lock it here: the scanner stops hesitating between the ten reprints of the same card.",
+  "onbScanModeTitle": "Fast or careful",
+  "onbScanModeBody": "In \"Fast\", clear cards go in on their own and the doubtful ones get flagged for review. In \"Careful\" it stops and asks you which one it is.",
+  "onbScanPhotoTitle": "Scan a photo",
+  "onbScanPhotoBody": "No camera, or your cards already photographed? Drop a photo here — several cards in one shot is fine — and it pulls them out just the same.",
+
+  "tourScanName": "The scanner"
 }

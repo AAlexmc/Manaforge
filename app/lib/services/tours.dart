@@ -10,6 +10,9 @@ class TourKeys {
   final homeNivel = GlobalKey();
   final logrosNivel = GlobalKey();
   final logrosCertificados = GlobalKey();
+  final escanerSet = GlobalKey();
+  final escanerModo = GlobalKey();
+  final escanerFoto = GlobalKey();
   final coleccionTodas = GlobalKey();
   final coleccionCarpetas = GlobalKey();
   final albumMias = GlobalKey();
@@ -40,9 +43,12 @@ class TourKeys {
 /// —que es quien tiene las keys y sabe cambiar de pestaña— le pasa aquí los
 /// pasos ya construidos y qué hacer en cada caso.
 class TourRequest {
-  /// Identidad del tour: cambiarla reinicia el recorrido desde el paso 1.
-  final String id;
-  final List<TourStep> steps;
+  /// El tour y las keys, NO los pasos ya construidos: los pasos se hacen en
+  /// cada build con el idioma de ESE momento, así cambiar de idioma con un
+  /// tour abierto cambia también sus burbujas (antes se quedaban congeladas
+  /// en el idioma que hubiera al lanzarlo).
+  final Tour tour;
+  final TourKeys keys;
 
   /// Cuántos destinos tiene la barra de abajo (foco por fracción del ancho).
   final int navItemCount;
@@ -52,8 +58,8 @@ class TourRequest {
   final VoidCallback onDone;
 
   const TourRequest({
-    required this.id,
-    required this.steps,
+    required this.tour,
+    required this.keys,
     required this.navItemCount,
     required this.onGoToScreen,
     required this.onPush,
@@ -141,6 +147,29 @@ List<TourStep> _pasosLogros(AppLocalizations t, TourKeys k) => [
           push: TourPush.certificados,
           title: t.onbCertificatesTitle,
           body: t.onbCertificatesBody),
+    ];
+
+// El escáner tampoco es pestaña: se empuja. Primero se enseña su botón en la
+// barra y luego se entra a ver los mandos de arriba. Entrar ENCIENDE la
+// cámara, igual que si lo abriera el usuario.
+List<TourStep> _pasosEscaner(AppLocalizations t, TourKeys k) => [
+      TourStep(
+          navBarIndex: _barScan, title: t.onbScanTitle, body: t.onbScanBody),
+      TourStep(
+          push: TourPush.escaner,
+          targetKey: k.escanerSet,
+          title: t.onbScanSetTitle,
+          body: t.onbScanSetBody),
+      TourStep(
+          push: TourPush.escaner,
+          targetKey: k.escanerModo,
+          title: t.onbScanModeTitle,
+          body: t.onbScanModeBody),
+      TourStep(
+          push: TourPush.escaner,
+          targetKey: k.escanerFoto,
+          title: t.onbScanPhotoTitle,
+          body: t.onbScanPhotoBody),
     ];
 
 List<TourStep> _pasosColeccion(AppLocalizations t, TourKeys k) => [
@@ -308,8 +337,7 @@ final List<Tour> kTours = [
       ..._pasosColeccion(t, k),
       _pasoBarra(t, _barAlbum, t.tabAlbum),
       ..._pasosAlbum(t, k),
-      TourStep(
-          navBarIndex: _barScan, title: t.onbScanTitle, body: t.onbScanBody),
+      ..._pasosEscaner(t, k),
       _pasoBarra(t, _barForge, t.tabForge),
       ..._pasosForge(t, k),
       _pasoBarra(t, _barMazos, t.tabDecks),
@@ -330,6 +358,11 @@ final List<Tour> kTours = [
     id: 'progress',
     name: (t) => t.tourProgressName,
     build: _pasosLogros,
+  ),
+  Tour(
+    id: 'scan',
+    name: (t) => t.tourScanName,
+    build: _pasosEscaner,
   ),
   Tour(
     id: 'collection',

@@ -588,4 +588,28 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get onbVersionBody =>
       'Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.';
+
+  @override
+  String get onbScanSetTitle => 'Set: todas';
+
+  @override
+  String get onbScanSetBody =>
+      'Si estás abriendo sobres de UNA expansión, fíjala aquí: el escáner deja de dudar entre las diez reimpresiones de la misma carta.';
+
+  @override
+  String get onbScanModeTitle => 'Rápido o con cuidado';
+
+  @override
+  String get onbScanModeBody =>
+      'En «Rápido» las cartas claras entran solas y las dudosas quedan marcadas para revisar. En «Con cuidado» se para y te pregunta cuál es.';
+
+  @override
+  String get onbScanPhotoTitle => 'Escanear una foto';
+
+  @override
+  String get onbScanPhotoBody =>
+      '¿Sin cámara, o con las cartas ya fotografiadas? Aquí sueltas una foto —con varias cartas si quieres— y las saca igual.';
+
+  @override
+  String get tourScanName => 'El escáner';
 }
