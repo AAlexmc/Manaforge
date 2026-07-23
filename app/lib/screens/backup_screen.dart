@@ -5,6 +5,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../services/backup.dart';
 
 /// Tarjeta de copia de seguridad, reutilizable: va en Ajustes y en la pantalla
@@ -288,9 +289,9 @@ class _BackupCardState extends State<BackupCard> {
 }
 
 /// "a, b y c" — para poder leer la lista de lo que se borra de corrido.
-String _enumerar(List<String> cosas) {
+String _enumerar(BuildContext context, List<String> cosas) {
   if (cosas.length == 1) return cosas.single;
-  return '${cosas.sublist(0, cosas.length - 1).join(', ')} y ${cosas.last}';
+  return '${cosas.sublist(0, cosas.length - 1).join(', ')}${tr(context).bkAnd}${cosas.last}';
 }
 
 /// La palabra que hay que escribir para restaurar. Escribirla cuesta tres
@@ -302,6 +303,7 @@ const String kRestoreConfirmWord = 'CONFIRMAR';
 /// y confirma: un clic de más no puede reemplazar una colección.
 Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
     {List<String> willDelete = const []}) async {
+  final t = tr(context);
   final fecha = manifest.createdAt.toLocal();
   final cuando = '${fecha.day}/${fecha.month}/${fecha.year}';
   final ok = await showDialog<bool>(
@@ -313,28 +315,25 @@ Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
           final puede =
               escrito.trim().toUpperCase() == kRestoreConfirmWord;
           return AlertDialog(
-            title: const Text('¿Restaurar esta copia?'),
+            title: Text(t.bkConfirmTitle),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Copia del $cuando · ${manifest.summary}.\n\n'
-                    'Esto reemplaza tu colección, mazos, carpetas y logros de '
-                    'ahora por los de esa copia. Antes de hacerlo guardo lo '
-                    'que tienes en la carpeta backups, por si quieres volver.'),
+                Text('${t.bkOfDate(cuando, manifest.summary)}\n\n'
+                    '${t.bkConfirmBody}'),
                 if (willDelete.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   // lo que la copia NO trae se BORRA, y el resumen de arriba
                   // solo cuenta cartas, mazos, carpetas y logros: sin esto,
                   // una copia vieja se llevaba por delante los certificados o
                   // el historial de precios sin decirlo en ninguna parte
-                  Text('Esa copia no trae ${_enumerar(willDelete)}: al '
-                      'restaurarla, eso se borra.',
+                  Text(t.bkWillDelete(_enumerar(context, willDelete)),
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
                 const SizedBox(height: 16),
-                const Text('Escribe $kRestoreConfirmWord para poder seguir:',
-                    style: TextStyle(fontSize: 12.5)),
+                Text(t.bkTypeToConfirm(kRestoreConfirmWord),
+                    style: const TextStyle(fontSize: 12.5)),
                 const SizedBox(height: 6),
                 TextField(
                   autofocus: true,

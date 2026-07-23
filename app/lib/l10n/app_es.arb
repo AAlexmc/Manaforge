@@ -535,5 +535,82 @@
     "placeholders": { "precio": { "type": "String" } }
   },
 
-  "wlNothingYet": "Aún no tienes cartas en la wishlist."
+  "wlNothingYet": "Aún no tienes cartas en la wishlist.",
+
+  "stDbUpdated": "✓ Base de datos actualizada",
+  "stUpdateFailed": "No se pudo actualizar: {error}",
+  "@stUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "stCardDb": "Base de datos de cartas",
+  "stCardDbWhy": "Vuelve a descargarla para tener cartas nuevas, precios frescos y las funciones que piden datos recientes (como el filtro por año en Forge).",
+  "stDownloadDbAgain": "Volver a descargar la base de datos",
+  "stAppearance": "Apariencia",
+  "stData": "Datos",
+  "stTheApp": "La app",
+  "stCredits": "Datos e imágenes de cartas por Scryfall. Magic: The Gathering es propiedad de Wizards of the Coast; proyecto de fans al amparo de su Fan Content Policy.",
+  "stEditHome": "Editar inicio",
+  "stEditHomeSub": "Elige qué secciones se ven y en qué orden",
+  "ehLevel": "Tu nivel",
+  "ehShortcuts": "Accesos rápidos",
+  "ehSummary": "Resumen de la colección",
+  "ehRecent": "Vistas recientemente",
+  "ehDecks": "Tus mazos",
+  "ehMeta": "El meta ahora",
+  "ehNewSets": "Expansiones nuevas",
+  "ehGems": "Tus joyas",
+  "ehHelp": "Arrastra para ordenar y usa el interruptor para elegir qué ves en Inicio. Una sección encendida solo sale si tiene algo que enseñar.",
+  "ehSection": "Sección",
+  "bkNoData": "No encuentro tus datos.",
+  "bkSaved": "✓ Copia guardada · {resumen}",
+  "@bkSaved": {
+    "placeholders": { "resumen": { "type": "String" } }
+  },
+  "bkSaveFailed": "No he podido guardarla: {error}",
+  "@bkSaveFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "bkFileName": "Copia de ManaForge",
+  "bkRestoreFailed": "No he podido restaurarla: {error}",
+  "@bkRestoreFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "bkRestoredNoPrevious": "✓ Restaurado · {resumen}. OJO: no he podido guardar lo que tenías antes ({error}).",
+  "@bkRestoredNoPrevious": {
+    "placeholders": { "resumen": { "type": "String" }, "error": { "type": "String" } }
+  },
+  "bkRestored": "✓ Restaurado · {resumen}. Lo que tenías antes está guardado en la carpeta backups.",
+  "@bkRestored": {
+    "placeholders": { "resumen": { "type": "String" } }
+  },
+  "bkRestoring": "Restaurando tu copia…",
+  "bkTitle": "Copia de seguridad",
+  "bkWhy": "Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.",
+  "bkSave": "Guardar copia",
+  "bkRestoreTitle": "Restaurar una copia",
+  "bkRestoreWarning": "Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.",
+  "bkNoBackups": "Aún no hay copias guardadas en este ordenador.",
+  "bkWhich": "Copia a restaurar",
+  "bkPickOne": "Elige una copia",
+  "bkRestorePicked": "Restaurar la copia elegida",
+  "bkAutoNote": "Guardo una copia automática cada semana (las cinco últimas) y otra justo antes de cada restaurar.",
+  "bkFromFile": "Restaurar de un archivo",
+  "bkConfirmTitle": "¿Restaurar esta copia?",
+  "bkConfirmBody": "Esto reemplaza tu colección, mazos, carpetas y logros de ahora por los de esa copia. Antes de hacerlo guardo lo que tienes en la carpeta backups, por si quieres volver.",
+  "bkWillDelete": "Esa copia no trae {cosas}: al restaurarla, eso se borra.",
+  "@bkWillDelete": {
+    "placeholders": { "cosas": { "type": "String" } }
+  },
+  "bkTypeToConfirm": "Escribe {palabra} para poder seguir:",
+  "@bkTypeToConfirm": {
+    "placeholders": { "palabra": { "type": "String" } }
+  },
+  "bkAnd": " y ",
+
+  "ehReset": "Restablecer",
+
+  "bkOfDate": "Copia del {cuando} · {resumen}.",
+  "@bkOfDate": {
+    "placeholders": { "cuando": { "type": "String" }, "resumen": { "type": "String" } }
+  }
 }

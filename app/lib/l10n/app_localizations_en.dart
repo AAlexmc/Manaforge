@@ -1264,4 +1264,170 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wlNothingYet => 'Nothing on your wishlist yet.';
+
+  @override
+  String get stDbUpdated => '✓ Database updated';
+
+  @override
+  String stUpdateFailed(String error) {
+    return 'Couldn\'t update: $error';
+  }
+
+  @override
+  String get stCardDb => 'Card database';
+
+  @override
+  String get stCardDbWhy =>
+      'Download it again for new cards, fresh prices and the features that need recent data (like Forge\'s year filter).';
+
+  @override
+  String get stDownloadDbAgain => 'Download the database again';
+
+  @override
+  String get stAppearance => 'Look';
+
+  @override
+  String get stData => 'Data';
+
+  @override
+  String get stTheApp => 'The app';
+
+  @override
+  String get stCredits =>
+      'Card data and images by Scryfall. Magic: The Gathering is owned by Wizards of the Coast; a fan project under their Fan Content Policy.';
+
+  @override
+  String get stEditHome => 'Edit Home';
+
+  @override
+  String get stEditHomeSub => 'Pick which sections show and in what order';
+
+  @override
+  String get ehLevel => 'Your level';
+
+  @override
+  String get ehShortcuts => 'Quick actions';
+
+  @override
+  String get ehSummary => 'Collection summary';
+
+  @override
+  String get ehRecent => 'Recently viewed';
+
+  @override
+  String get ehDecks => 'Your decks';
+
+  @override
+  String get ehMeta => 'The meta right now';
+
+  @override
+  String get ehNewSets => 'New sets';
+
+  @override
+  String get ehGems => 'Your gems';
+
+  @override
+  String get ehHelp =>
+      'Drag to reorder and use the switch to pick what you see on Home. A section that\'s on only shows up if it has something to show.';
+
+  @override
+  String get ehSection => 'Section';
+
+  @override
+  String get bkNoData => 'I can\'t find your data.';
+
+  @override
+  String bkSaved(String resumen) {
+    return '✓ Backup saved · $resumen';
+  }
+
+  @override
+  String bkSaveFailed(String error) {
+    return 'I couldn\'t save it: $error';
+  }
+
+  @override
+  String get bkFileName => 'ManaForge backup';
+
+  @override
+  String bkRestoreFailed(String error) {
+    return 'I couldn\'t restore it: $error';
+  }
+
+  @override
+  String bkRestoredNoPrevious(String resumen, String error) {
+    return '✓ Restored · $resumen. HEADS UP: I couldn\'t save what you had before ($error).';
+  }
+
+  @override
+  String bkRestored(String resumen) {
+    return '✓ Restored · $resumen. What you had before is saved in the backups folder.';
+  }
+
+  @override
+  String get bkRestoring => 'Restoring your backup…';
+
+  @override
+  String get bkTitle => 'Backup';
+
+  @override
+  String get bkWhy =>
+      'Your cards, decks, folders and achievements live only on this computer. Save a copy now and then and keep it somewhere else: a drive, the cloud, whatever you like.';
+
+  @override
+  String get bkSave => 'Save a backup';
+
+  @override
+  String get bkRestoreTitle => 'Restore a backup';
+
+  @override
+  String get bkRestoreWarning =>
+      'Restoring REPLACES your current cards, decks, folders and achievements with the ones in the backup. Pick which, hit the button and type CONFIRM: that way nothing is restored by accident.';
+
+  @override
+  String get bkNoBackups => 'No backups saved on this computer yet.';
+
+  @override
+  String get bkWhich => 'Backup to restore';
+
+  @override
+  String get bkPickOne => 'Pick a backup';
+
+  @override
+  String get bkRestorePicked => 'Restore the chosen backup';
+
+  @override
+  String get bkAutoNote =>
+      'I save an automatic backup every week (the last five) and another right before each restore.';
+
+  @override
+  String get bkFromFile => 'Restore from a file';
+
+  @override
+  String get bkConfirmTitle => 'Restore this backup?';
+
+  @override
+  String get bkConfirmBody =>
+      'This replaces your current collection, decks, folders and achievements with the ones in that backup. Before doing it I save what you have in the backups folder, in case you want to come back.';
+
+  @override
+  String bkWillDelete(String cosas) {
+    return 'That backup doesn\'t include $cosas: restoring it wipes that.';
+  }
+
+  @override
+  String bkTypeToConfirm(String palabra) {
+    return 'Type $palabra to carry on:';
+  }
+
+  @override
+  String get bkAnd => ' and ';
+
+  @override
+  String get ehReset => 'Reset';
+
+  @override
+  String bkOfDate(String cuando, String resumen) {
+    return 'Backup from $cuando · $resumen.';
+  }
 }

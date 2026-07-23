@@ -131,14 +131,14 @@ class _AjustesScreenState extends State<AjustesScreen> {
       if (mounted) {
         setState(() {
           _progress = null;
-          _status = '✓ Base de datos actualizada';
+          _status = tr(context).stDbUpdated;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _progress = null;
-          _status = 'No se pudo actualizar: $e';
+          _status = tr(context).stUpdateFailed('$e');
         });
       }
     }
@@ -168,7 +168,7 @@ class _AjustesScreenState extends State<AjustesScreen> {
             // Apariencia: fondo y qué se ve en Inicio. Abierta de salida
             // porque es lo que la gente viene a tocar.
             _Seccion(
-              titulo: 'Apariencia',
+              titulo: t.stAppearance,
               icono: Icons.palette_outlined,
               initiallyExpanded: true,
               children: [
@@ -185,7 +185,7 @@ class _AjustesScreenState extends State<AjustesScreen> {
             const SizedBox(height: 8),
             // Datos: la base de cartas y las copias de seguridad.
             _Seccion(
-              titulo: 'Datos',
+              titulo: t.stData,
               icono: Icons.storage_outlined,
               controller: widget.datosController,
               cabeceraKey: widget.datosKey,
@@ -198,26 +198,22 @@ class _AjustesScreenState extends State<AjustesScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Base de datos de cartas',
-                              style: Theme.of(context).textTheme.titleMedium),
+                          Text(t.stCardDb,
+                            style: Theme.of(context).textTheme.titleMedium),
                           const SizedBox(height: 6),
-                          const Text(
-                              'Vuelve a descargarla para tener cartas nuevas, '
-                              'precios frescos y las funciones que piden datos '
-                              'recientes (como el filtro por año en Forge).',
-                              style: TextStyle(fontSize: 12.5)),
+                          Text(t.stCardDbWhy,
+                            style: const TextStyle(fontSize: 12.5)),
                           const SizedBox(height: 12),
                           if (_progress != null) ...[
                             LinearProgressIndicator(value: _progress),
                             const SizedBox(height: 6),
-                            Text(
-                                'Descargando… ${((_progress ?? 0) * 100).toStringAsFixed(0)} %'),
+                            Text(t.colDownloading(
+                              ((_progress ?? 0) * 100).toStringAsFixed(0))),
                           ] else
                             FilledButton.icon(
                               onPressed: _redownload,
                               icon: const Icon(Icons.refresh),
-                              label: const Text(
-                                  'Volver a descargar la base de datos'),
+                              label: Text(t.stDownloadDbAgain),
                             ),
                           if (_status != null)
                             Padding(
@@ -239,7 +235,7 @@ class _AjustesScreenState extends State<AjustesScreen> {
             const SizedBox(height: 8),
             // La app: cómo funciona, versión y créditos.
             _Seccion(
-              titulo: 'La app',
+              titulo: t.stTheApp,
               icono: Icons.info_outline,
               controller: widget.laAppController,
               cabeceraKey: widget.laAppKey,
@@ -320,14 +316,11 @@ class _AjustesScreenState extends State<AjustesScreen> {
                     key: widget.versionKey,
                     child: UpdateSettingsCard(checker: widget.updates!),
                   ),
-                const Card(
+                Card(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                        'Datos e imágenes de cartas por Scryfall. Magic: The '
-                        'Gathering es propiedad de Wizards of the Coast; '
-                        'proyecto de fans al amparo de su Fan Content Policy.',
-                        style: TextStyle(fontSize: 12)),
+                    padding: const EdgeInsets.all(16),
+                    child: Text(t.stCredits,
+                        style: const TextStyle(fontSize: 12)),
                   ),
                 ),
               ],
@@ -408,8 +401,8 @@ class _EditarInicioTile extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: const Icon(Icons.tune),
-        title: const Text('Editar inicio'),
-        subtitle: const Text('Elige qué secciones se ven y en qué orden'),
+        title: Text(tr(context).stEditHome),
+        subtitle: Text(tr(context).stEditHomeSub),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(

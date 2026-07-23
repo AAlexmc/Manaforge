@@ -531,5 +531,82 @@
     "placeholders": { "precio": { "type": "String" } }
   },
 
-  "wlNothingYet": "Nothing on your wishlist yet."
+  "wlNothingYet": "Nothing on your wishlist yet.",
+
+  "stDbUpdated": "✓ Database updated",
+  "stUpdateFailed": "Couldn't update: {error}",
+  "@stUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "stCardDb": "Card database",
+  "stCardDbWhy": "Download it again for new cards, fresh prices and the features that need recent data (like Forge's year filter).",
+  "stDownloadDbAgain": "Download the database again",
+  "stAppearance": "Look",
+  "stData": "Data",
+  "stTheApp": "The app",
+  "stCredits": "Card data and images by Scryfall. Magic: The Gathering is owned by Wizards of the Coast; a fan project under their Fan Content Policy.",
+  "stEditHome": "Edit Home",
+  "stEditHomeSub": "Pick which sections show and in what order",
+  "ehLevel": "Your level",
+  "ehShortcuts": "Quick actions",
+  "ehSummary": "Collection summary",
+  "ehRecent": "Recently viewed",
+  "ehDecks": "Your decks",
+  "ehMeta": "The meta right now",
+  "ehNewSets": "New sets",
+  "ehGems": "Your gems",
+  "ehHelp": "Drag to reorder and use the switch to pick what you see on Home. A section that's on only shows up if it has something to show.",
+  "ehSection": "Section",
+  "bkNoData": "I can't find your data.",
+  "bkSaved": "✓ Backup saved · {resumen}",
+  "@bkSaved": {
+    "placeholders": { "resumen": { "type": "String" } }
+  },
+  "bkSaveFailed": "I couldn't save it: {error}",
+  "@bkSaveFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "bkFileName": "ManaForge backup",
+  "bkRestoreFailed": "I couldn't restore it: {error}",
+  "@bkRestoreFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "bkRestoredNoPrevious": "✓ Restored · {resumen}. HEADS UP: I couldn't save what you had before ({error}).",
+  "@bkRestoredNoPrevious": {
+    "placeholders": { "resumen": { "type": "String" }, "error": { "type": "String" } }
+  },
+  "bkRestored": "✓ Restored · {resumen}. What you had before is saved in the backups folder.",
+  "@bkRestored": {
+    "placeholders": { "resumen": { "type": "String" } }
+  },
+  "bkRestoring": "Restoring your backup…",
+  "bkTitle": "Backup",
+  "bkWhy": "Your cards, decks, folders and achievements live only on this computer. Save a copy now and then and keep it somewhere else: a drive, the cloud, whatever you like.",
+  "bkSave": "Save a backup",
+  "bkRestoreTitle": "Restore a backup",
+  "bkRestoreWarning": "Restoring REPLACES your current cards, decks, folders and achievements with the ones in the backup. Pick which, hit the button and type CONFIRM: that way nothing is restored by accident.",
+  "bkNoBackups": "No backups saved on this computer yet.",
+  "bkWhich": "Backup to restore",
+  "bkPickOne": "Pick a backup",
+  "bkRestorePicked": "Restore the chosen backup",
+  "bkAutoNote": "I save an automatic backup every week (the last five) and another right before each restore.",
+  "bkFromFile": "Restore from a file",
+  "bkConfirmTitle": "Restore this backup?",
+  "bkConfirmBody": "This replaces your current collection, decks, folders and achievements with the ones in that backup. Before doing it I save what you have in the backups folder, in case you want to come back.",
+  "bkWillDelete": "That backup doesn't include {cosas}: restoring it wipes that.",
+  "@bkWillDelete": {
+    "placeholders": { "cosas": { "type": "String" } }
+  },
+  "bkTypeToConfirm": "Type {palabra} to carry on:",
+  "@bkTypeToConfirm": {
+    "placeholders": { "palabra": { "type": "String" } }
+  },
+  "bkAnd": " and ",
+
+  "ehReset": "Reset",
+
+  "bkOfDate": "Backup from {cuando} · {resumen}.",
+  "@bkOfDate": {
+    "placeholders": { "cuando": { "type": "String" }, "resumen": { "type": "String" } }
+  }
 }
