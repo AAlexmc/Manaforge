@@ -14,12 +14,29 @@ library;
 
 import 'dart:io';
 
+/// Contador de temporales. Que cada escritura use el SUYO: con un `.tmp` fijo,
+/// dos guardados a la vez sobre el mismo fichero acababan con el segundo
+/// renombrando algo que el primero ya se había llevado — el
+/// `PathNotFoundException` que reventaba el Mercado al apuntar el valor del
+/// día dos veces seguidas.
+int _tmpSeq = 0;
+
 /// Escribe [data] de forma que el contenido anterior nunca se pierde a
 /// medias: primero un temporal, después un `rename` atómico.
 Future<void> writeJsonFile(File file, String data) async {
-  final tmp = File('${file.path}.tmp');
-  await tmp.writeAsString(data, flush: true);
-  await tmp.rename(file.path);
+  final tmp = File('${file.path}.${_tmpSeq++}.tmp');
+  try {
+    // primer arranque: la carpeta de datos puede no existir todavía
+    await file.parent.create(recursive: true);
+    await tmp.writeAsString(data, flush: true);
+    await tmp.rename(file.path);
+  } catch (_) {
+    // que un fallo no deje el temporal tirado en la carpeta del usuario
+    try {
+      if (tmp.existsSync()) await tmp.delete();
+    } catch (_) {/* ni eso: no hay más que hacer */}
+    rethrow;
+  }
 }
 
 /// Aparta un fichero que no se ha podido leer, con la extensión `.roto`. NO
