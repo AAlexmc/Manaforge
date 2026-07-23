@@ -440,5 +440,96 @@
   },
   "fgSeeDeck": "See the full deck",
 
-  "fgReforge": "Forge again"
+  "fgReforge": "Forge again",
+
+  "mkAlertOne": "🔔 {carta} is at {precio} (your target: {objetivo})!",
+  "@mkAlertOne": {
+    "placeholders": { "carta": { "type": "String" }, "precio": { "type": "String" }, "objetivo": { "type": "String" } }
+  },
+  "mkAlertMany": "🔔 {n} cards on your wishlist have dropped to their target price!",
+  "@mkAlertMany": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mkTellMeWhenDrops": "Tell me when it drops",
+  "mkTargetPrice": "Target price",
+  "mkNow": "Now: {precio}",
+  "@mkNow": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "mkUpdated": "✓ Prices and cards updated",
+  "mkUpdateFailed": "Couldn't update: {error}",
+  "@mkUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "mkHistoryReady": "✓ Price history ready: the charts now show the last few months",
+  "mkHistoryFailed": "Couldn't fetch the history (the one you had is untouched): {error}",
+  "@mkHistoryFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "mkHistoryLocal": "Price history: only what ManaForge notes down daily on your machine. Fetch the real last ~90 days from Cardmarket (≈4 MB).",
+  "mkHistoryReal": "Real Cardmarket history from {desde} to {hasta}, and from there on what ManaForge notes down.",
+  "@mkHistoryReal": {
+    "placeholders": { "desde": { "type": "String" }, "hasta": { "type": "String" } }
+  },
+  "mkFetchHistory": "Fetch history",
+  "mkCollectionValue": "What your collection is worth · Cardmarket",
+  "mkCardsCount": "{n} cards",
+  "@mkCardsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mkApproxSuffix": " · rough value",
+  "mkBulkPrices": "Cardmarket prices from {fecha} (Scryfall)",
+  "@mkBulkPrices": {
+    "placeholders": { "fecha": { "type": "String" } }
+  },
+  "mkNoData": "Market with no data: download the database in Collection. ({error})",
+  "@mkNoData": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "mkSetsHeader": "SETS ({n})",
+  "@mkSetsHeader": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mkPrevious": "Previous",
+  "mkNext": "Next",
+  "mkSearchHint": "Look up the price of any card…",
+  "mkRemoveFromWishlist": "Remove from the wishlist",
+  "mkAddToWishlist": "To the wishlist: tell me when it drops",
+  "mkYourWishlist": "YOUR WISHLIST",
+  "mkTargetAtMost": "target ≤ {precio}",
+  "@mkTargetAtMost": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "mkAtPrice": "at your price!",
+  "mkChangeTarget": "Change the target price",
+  "mkTopCards": "YOUR MOST VALUABLE CARDS",
+  "mkImportToSeeValue": "Import your collection to see what it's worth.",
+  "mkSetCards": " · {n} cards",
+  "@mkSetCards": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "wlEmpty": "Find them in Market and tap the bookmark so it tells you when they drop to your price.",
+  "wlAtPriceCount": "{n, plural, =1{🔔 1 card on your wishlist is at your target price or below.} other{🔔 {n} cards on your wishlist are at your target price or below.}}",
+  "@wlAtPriceCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mpMtgoTix": "MTGO prices in tix (digital cards)",
+  "mpNoDataYet": "No data yet: update the price history in Market",
+  "mpMtgoNote": "MTGO prices in tix: those are digital cards, no good for valuing your paper collection. Home, folders and achievements stay on Cardmarket (€).",
+  "mpMarketNote": "{mercado} prices in {moneda}. Home, folders and achievements keep valuing in Cardmarket (€): currencies are never converted.",
+  "@mpMarketNote": {
+    "placeholders": { "mercado": { "type": "String" }, "moneda": { "type": "String" } }
+  },
+
+  "mkUpdate": "Update",
+
+  "mkApproxValue": " · approximate value (re-import with \"Replace\" for per-printing prices)",
+  "mkExactPrintings": " · by your exact printings",
+
+  "mkNowSuffix": " · now {precio}",
+  "@mkNowSuffix": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+
+  "wlNothingYet": "Nothing on your wishlist yet."
 }

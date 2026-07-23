@@ -1099,4 +1099,169 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fgReforge => 'Forge again';
+
+  @override
+  String mkAlertOne(String carta, String precio, String objetivo) {
+    return '🔔 $carta is at $precio (your target: $objetivo)!';
+  }
+
+  @override
+  String mkAlertMany(int n) {
+    return '🔔 $n cards on your wishlist have dropped to their target price!';
+  }
+
+  @override
+  String get mkTellMeWhenDrops => 'Tell me when it drops';
+
+  @override
+  String get mkTargetPrice => 'Target price';
+
+  @override
+  String mkNow(String precio) {
+    return 'Now: $precio';
+  }
+
+  @override
+  String get mkUpdated => '✓ Prices and cards updated';
+
+  @override
+  String mkUpdateFailed(String error) {
+    return 'Couldn\'t update: $error';
+  }
+
+  @override
+  String get mkHistoryReady =>
+      '✓ Price history ready: the charts now show the last few months';
+
+  @override
+  String mkHistoryFailed(String error) {
+    return 'Couldn\'t fetch the history (the one you had is untouched): $error';
+  }
+
+  @override
+  String get mkHistoryLocal =>
+      'Price history: only what ManaForge notes down daily on your machine. Fetch the real last ~90 days from Cardmarket (≈4 MB).';
+
+  @override
+  String mkHistoryReal(String desde, String hasta) {
+    return 'Real Cardmarket history from $desde to $hasta, and from there on what ManaForge notes down.';
+  }
+
+  @override
+  String get mkFetchHistory => 'Fetch history';
+
+  @override
+  String get mkCollectionValue => 'What your collection is worth · Cardmarket';
+
+  @override
+  String mkCardsCount(int n) {
+    return '$n cards';
+  }
+
+  @override
+  String get mkApproxSuffix => ' · rough value';
+
+  @override
+  String mkBulkPrices(String fecha) {
+    return 'Cardmarket prices from $fecha (Scryfall)';
+  }
+
+  @override
+  String mkNoData(String error) {
+    return 'Market with no data: download the database in Collection. ($error)';
+  }
+
+  @override
+  String mkSetsHeader(int n) {
+    return 'SETS ($n)';
+  }
+
+  @override
+  String get mkPrevious => 'Previous';
+
+  @override
+  String get mkNext => 'Next';
+
+  @override
+  String get mkSearchHint => 'Look up the price of any card…';
+
+  @override
+  String get mkRemoveFromWishlist => 'Remove from the wishlist';
+
+  @override
+  String get mkAddToWishlist => 'To the wishlist: tell me when it drops';
+
+  @override
+  String get mkYourWishlist => 'YOUR WISHLIST';
+
+  @override
+  String mkTargetAtMost(String precio) {
+    return 'target ≤ $precio';
+  }
+
+  @override
+  String get mkAtPrice => 'at your price!';
+
+  @override
+  String get mkChangeTarget => 'Change the target price';
+
+  @override
+  String get mkTopCards => 'YOUR MOST VALUABLE CARDS';
+
+  @override
+  String get mkImportToSeeValue =>
+      'Import your collection to see what it\'s worth.';
+
+  @override
+  String mkSetCards(int n) {
+    return ' · $n cards';
+  }
+
+  @override
+  String get wlEmpty =>
+      'Find them in Market and tap the bookmark so it tells you when they drop to your price.';
+
+  @override
+  String wlAtPriceCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '🔔 $n cards on your wishlist are at your target price or below.',
+      one: '🔔 1 card on your wishlist is at your target price or below.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mpMtgoTix => 'MTGO prices in tix (digital cards)';
+
+  @override
+  String get mpNoDataYet => 'No data yet: update the price history in Market';
+
+  @override
+  String get mpMtgoNote =>
+      'MTGO prices in tix: those are digital cards, no good for valuing your paper collection. Home, folders and achievements stay on Cardmarket (€).';
+
+  @override
+  String mpMarketNote(String mercado, String moneda) {
+    return '$mercado prices in $moneda. Home, folders and achievements keep valuing in Cardmarket (€): currencies are never converted.';
+  }
+
+  @override
+  String get mkUpdate => 'Update';
+
+  @override
+  String get mkApproxValue =>
+      ' · approximate value (re-import with \"Replace\" for per-printing prices)';
+
+  @override
+  String get mkExactPrintings => ' · by your exact printings';
+
+  @override
+  String mkNowSuffix(String precio) {
+    return ' · now $precio';
+  }
+
+  @override
+  String get wlNothingYet => 'Nothing on your wishlist yet.';
 }

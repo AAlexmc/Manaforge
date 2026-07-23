@@ -444,5 +444,96 @@
   },
   "fgSeeDeck": "Ver mazo completo",
 
-  "fgReforge": "Reforjar"
+  "fgReforge": "Reforjar",
+
+  "mkAlertOne": "🔔 ¡{carta} está a {precio} (tu objetivo: {objetivo})!",
+  "@mkAlertOne": {
+    "placeholders": { "carta": { "type": "String" }, "precio": { "type": "String" }, "objetivo": { "type": "String" } }
+  },
+  "mkAlertMany": "🔔 ¡{n} cartas de tu wishlist han caído a su precio objetivo!",
+  "@mkAlertMany": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mkTellMeWhenDrops": "Avísame cuando baje",
+  "mkTargetPrice": "Precio objetivo",
+  "mkNow": "Ahora: {precio}",
+  "@mkNow": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "mkUpdated": "✓ Precios y cartas actualizados",
+  "mkUpdateFailed": "No pude actualizar: {error}",
+  "@mkUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "mkHistoryReady": "✓ Histórico de precios listo: las gráficas ya enseñan los últimos meses",
+  "mkHistoryFailed": "No pude traer el histórico (el que ya tenías sigue intacto): {error}",
+  "@mkHistoryFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "mkHistoryLocal": "Histórico de precios: solo el que ManaForge apunta a diario en tu equipo. Tráete los últimos ~90 días reales de Cardmarket (≈4 MB).",
+  "mkHistoryReal": "Histórico real de Cardmarket del {desde} al {hasta}, y desde ahí lo que apunta ManaForge.",
+  "@mkHistoryReal": {
+    "placeholders": { "desde": { "type": "String" }, "hasta": { "type": "String" } }
+  },
+  "mkFetchHistory": "Traer histórico",
+  "mkCollectionValue": "Valor de tu colección · Cardmarket",
+  "mkCardsCount": "{n} cartas",
+  "@mkCardsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mkApproxSuffix": " · valor orientativo",
+  "mkBulkPrices": "Precios Cardmarket del {fecha} (Scryfall)",
+  "@mkBulkPrices": {
+    "placeholders": { "fecha": { "type": "String" } }
+  },
+  "mkNoData": "Mercado sin datos: descarga la base de datos en Colección. ({error})",
+  "@mkNoData": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "mkSetsHeader": "EXPANSIONES ({n})",
+  "@mkSetsHeader": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mkPrevious": "Anteriores",
+  "mkNext": "Siguientes",
+  "mkSearchHint": "Busca el precio de cualquier carta…",
+  "mkRemoveFromWishlist": "Quitar de la wishlist",
+  "mkAddToWishlist": "A la wishlist: avísame cuando baje",
+  "mkYourWishlist": "TU WISHLIST",
+  "mkTargetAtMost": "objetivo ≤ {precio}",
+  "@mkTargetAtMost": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "mkAtPrice": "¡a precio!",
+  "mkChangeTarget": "Cambiar precio objetivo",
+  "mkTopCards": "TUS CARTAS MÁS VALIOSAS",
+  "mkImportToSeeValue": "Importa tu colección para ver su valor.",
+  "mkSetCards": " · {n} cartas",
+  "@mkSetCards": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "wlEmpty": "Búscalas en Mercado y toca el marcador para que te avise cuando bajen a tu precio.",
+  "wlAtPriceCount": "{n, plural, =1{🔔 1 carta de tu wishlist está a tu precio objetivo o por debajo.} other{🔔 {n} cartas de tu wishlist están a tu precio objetivo o por debajo.}}",
+  "@wlAtPriceCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "mpMtgoTix": "Precios de MTGO en tix (cartas digitales)",
+  "mpNoDataYet": "Sin datos todavía: actualiza el histórico de precios en Mercado",
+  "mpMtgoNote": "Precios de MTGO en tix: son cartas digitales, no valen para tasar tu colección de papel. Inicio, carpetas y logros siguen en Cardmarket (€).",
+  "mpMarketNote": "Precios de {mercado} en {moneda}. Inicio, carpetas y logros siguen valorando en Cardmarket (€): las divisas no se convierten.",
+  "@mpMarketNote": {
+    "placeholders": { "mercado": { "type": "String" }, "moneda": { "type": "String" } }
+  },
+
+  "mkUpdate": "Actualizar",
+
+  "mkApproxValue": " · valor aproximado (reimporta con \"Sustituir\" para precios por edición)",
+  "mkExactPrintings": " · por tus ediciones exactas",
+
+  "mkNowSuffix": " · ahora {precio}",
+  "@mkNowSuffix": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+
+  "wlNothingYet": "Aún no tienes cartas en la wishlist."
 }
