@@ -177,5 +177,64 @@
   "onbCardDbTitle": "Card database",
   "onbCardDbBody": "Download it again for new cards, fresh prices and anything that needs recent data, like Forge's year filter.",
   "onbAboutTitle": "The app",
-  "onbAboutBody": "What each tab does, the keyboard shortcuts, the version and the licence."
+  "onbAboutBody": "What each tab does, the keyboard shortcuts, the version and the licence.",
+
+  "colStartHere": "Your collection starts here",
+  "colNeedDb": "First I need the database with every Magic card (it downloads once and after that everything works offline).",
+  "colDownloading": "Downloading… {pct}%",
+  "@colDownloading": {
+    "placeholders": { "pct": { "type": "String" } }
+  },
+  "colDownloadDb": "Download the card database",
+  "colScryfall": "Data and images by Scryfall · No accounts, no payments: everything stays on your device.",
+  "colAlbumTooltip": "Album by set",
+  "colImportTooltip": "Import a ManaBox CSV",
+  "colValueLine": "{copies} cards · {distinct} distinct{valor}",
+  "@colValueLine": {
+    "placeholders": { "copies": { "type": "int" }, "distinct": { "type": "int" }, "valor": { "type": "String" } }
+  },
+  "colAllCards": "All cards",
+  "colAllCardsSub": "{distinct} distinct · search, filter and sort",
+  "@colAllCardsSub": {
+    "placeholders": { "distinct": { "type": "int" } }
+  },
+  "colFolders": "Folders",
+  "colNewFolder": "New",
+  "colNoFolders": "You don't have any folders yet. They group whatever you like: \"Aetherdrift rares\", \"to sell\", \"the box upstairs\"… A card can be in several.",
+  "colCreateFirstFolder": "Create your first folder",
+  "colEmptyTitle": "Your collection starts here",
+  "colEmptyBody": "Scan your cards with the camera or import a ManaBox CSV. They'll show up here and in the album.",
+  "colImportShort": "Import CSV",
+
+  "acForgetTitle": "You no longer have {carta}?",
+  "@acForgetTitle": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "acForgetBody": "It leaves your collection and its album slot goes empty again.",
+  "acForgetFolders": "{n, plural, =1{It also leaves the folder it's in.} other{It also leaves the {n} folders it's in.}}",
+  "@acForgetFolders": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "acForgetDecks": "Decks do NOT lose it: it stays in the list and the deck tells you it's missing.",
+  "acCancel": "Cancel",
+  "acForgetConfirm": "I no longer have it",
+  "acAddedOn": "added {cuando}",
+  "@acAddedOn": {
+    "placeholders": { "cuando": { "type": "String" } }
+  },
+  "acInFolders": "{n, plural, =1{in 1 folder} other{in {n} folders}}",
+  "@acInFolders": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "acSearchHint": "Search for a card (Spanish or English)…",
+  "acFilteredCount": "{visibles} of {total} cards",
+  "@acFilteredCount": {
+    "placeholders": { "visibles": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "acMissingFilterData": " · some older cards have no filter data: re-import your CSV with \"Replace\" on",
+  "acNoneMatch": "No card matches these filters.",
+  "acEmptyHint": "Search for your first card above, or go back and import your ManaBox CSV.",
+
+  "onbHowItWorksBody": "A summary of what each tab does, plus the keyboard shortcuts. If you get lost, start here.",
+  "onbVersionBody": "Which version you're on, what's in it, and whether the app should check once a day for a new one. It never updates itself."
 }

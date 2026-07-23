@@ -28,6 +28,8 @@ class TourKeys {
   final ajustesBaseDatos = GlobalKey();
   final ajustesCopia = GlobalKey();
   final ajustesLaApp = GlobalKey();
+  final ajustesComoFunciona = GlobalKey();
+  final ajustesVersion = GlobalKey();
 }
 
 /// Lo que HomeShell le pide a la app para enseñar un tour.
@@ -250,6 +252,18 @@ List<TourStep> _pasosAjustes(AppLocalizations t, TourKeys k) => [
           targetKey: k.ajustesLaApp,
           title: t.onbAboutTitle,
           body: t.onbAboutBody),
+      TourStep(
+          goToScreen: _ajustes,
+          prepare: TourPrep.ajustesLaApp,
+          targetKey: k.ajustesComoFunciona,
+          title: t.howItWorks,
+          body: t.onbHowItWorksBody),
+      TourStep(
+          goToScreen: _ajustes,
+          prepare: TourPrep.ajustesLaApp,
+          targetKey: k.ajustesVersion,
+          title: t.versionTitle,
+          body: t.onbVersionBody),
     ];
 
 /// El catálogo de tours. El primero ('welcome') es el del primer arranque.

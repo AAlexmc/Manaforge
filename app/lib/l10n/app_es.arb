@@ -181,5 +181,64 @@
   "onbCardDbTitle": "Base de datos de cartas",
   "onbCardDbBody": "Vuelve a descargarla para tener cartas nuevas, precios frescos y lo que pide datos recientes, como el filtro por año de Forge.",
   "onbAboutTitle": "La app",
-  "onbAboutBody": "Qué hace cada pestaña, los atajos de teclado, la versión y la licencia."
+  "onbAboutBody": "Qué hace cada pestaña, los atajos de teclado, la versión y la licencia.",
+
+  "colStartHere": "Tu colección empieza aquí",
+  "colNeedDb": "Primero necesito la base de datos con todas las cartas de Magic (se descarga una vez y luego todo funciona sin internet).",
+  "colDownloading": "Descargando… {pct} %",
+  "@colDownloading": {
+    "placeholders": { "pct": { "type": "String" } }
+  },
+  "colDownloadDb": "Descargar base de datos de cartas",
+  "colScryfall": "Datos e imágenes por Scryfall · Sin cuentas, sin pagos: todo queda en tu dispositivo.",
+  "colAlbumTooltip": "Álbum por expansiones",
+  "colImportTooltip": "Importar CSV de ManaBox",
+  "colValueLine": "{copies} cartas · {distinct} distintas{valor}",
+  "@colValueLine": {
+    "placeholders": { "copies": { "type": "int" }, "distinct": { "type": "int" }, "valor": { "type": "String" } }
+  },
+  "colAllCards": "Todas las cartas",
+  "colAllCardsSub": "{distinct} distintas · buscar, filtrar y ordenar",
+  "@colAllCardsSub": {
+    "placeholders": { "distinct": { "type": "int" } }
+  },
+  "colFolders": "Carpetas",
+  "colNewFolder": "Nueva",
+  "colNoFolders": "Aún no tienes carpetas. Sirven para agrupar lo que quieras: \"rares de Aetherdrift\", \"para vender\", \"la caja de arriba\"… Una carta puede estar en varias.",
+  "colCreateFirstFolder": "Crear la primera carpeta",
+  "colEmptyTitle": "Aquí empieza tu colección",
+  "colEmptyBody": "Escanea tus cartas con la cámara o importa un CSV de ManaBox. Aparecerán aquí y en el álbum.",
+  "colImportShort": "Importar CSV",
+
+  "acForgetTitle": "¿Ya no tienes {carta}?",
+  "@acForgetTitle": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "acForgetBody": "Sale de tu colección y su hueco del álbum vuelve a estar vacío.",
+  "acForgetFolders": "{n, plural, =1{También sale de la carpeta en la que está.} other{También sale de las {n} carpetas en las que está.}}",
+  "@acForgetFolders": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "acForgetDecks": "Los mazos NO la pierden: se queda en la lista y el mazo te avisa de que te falta.",
+  "acCancel": "Cancelar",
+  "acForgetConfirm": "Ya no la tengo",
+  "acAddedOn": "añadida {cuando}",
+  "@acAddedOn": {
+    "placeholders": { "cuando": { "type": "String" } }
+  },
+  "acInFolders": "{n, plural, =1{en 1 carpeta} other{en {n} carpetas}}",
+  "@acInFolders": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "acSearchHint": "Busca una carta (español o inglés)…",
+  "acFilteredCount": "{visibles} de {total} cartas",
+  "@acFilteredCount": {
+    "placeholders": { "visibles": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "acMissingFilterData": " · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con \"Sustituir\" activado",
+  "acNoneMatch": "Ninguna carta pasa estos filtros.",
+  "acEmptyHint": "Busca tu primera carta arriba, o vuelve atrás e importa tu CSV de ManaBox.",
+
+  "onbHowItWorksBody": "El resumen de qué hace cada pestaña y los atajos de teclado. Si te pierdes, empieza por aquí.",
+  "onbVersionBody": "Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola."
 }

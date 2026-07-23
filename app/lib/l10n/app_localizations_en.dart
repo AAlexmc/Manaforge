@@ -488,4 +488,138 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onbAboutBody =>
       'What each tab does, the keyboard shortcuts, the version and the licence.';
+
+  @override
+  String get colStartHere => 'Your collection starts here';
+
+  @override
+  String get colNeedDb =>
+      'First I need the database with every Magic card (it downloads once and after that everything works offline).';
+
+  @override
+  String colDownloading(String pct) {
+    return 'Downloading… $pct%';
+  }
+
+  @override
+  String get colDownloadDb => 'Download the card database';
+
+  @override
+  String get colScryfall =>
+      'Data and images by Scryfall · No accounts, no payments: everything stays on your device.';
+
+  @override
+  String get colAlbumTooltip => 'Album by set';
+
+  @override
+  String get colImportTooltip => 'Import a ManaBox CSV';
+
+  @override
+  String colValueLine(int copies, int distinct, String valor) {
+    return '$copies cards · $distinct distinct$valor';
+  }
+
+  @override
+  String get colAllCards => 'All cards';
+
+  @override
+  String colAllCardsSub(int distinct) {
+    return '$distinct distinct · search, filter and sort';
+  }
+
+  @override
+  String get colFolders => 'Folders';
+
+  @override
+  String get colNewFolder => 'New';
+
+  @override
+  String get colNoFolders =>
+      'You don\'t have any folders yet. They group whatever you like: \"Aetherdrift rares\", \"to sell\", \"the box upstairs\"… A card can be in several.';
+
+  @override
+  String get colCreateFirstFolder => 'Create your first folder';
+
+  @override
+  String get colEmptyTitle => 'Your collection starts here';
+
+  @override
+  String get colEmptyBody =>
+      'Scan your cards with the camera or import a ManaBox CSV. They\'ll show up here and in the album.';
+
+  @override
+  String get colImportShort => 'Import CSV';
+
+  @override
+  String acForgetTitle(String carta) {
+    return 'You no longer have $carta?';
+  }
+
+  @override
+  String get acForgetBody =>
+      'It leaves your collection and its album slot goes empty again.';
+
+  @override
+  String acForgetFolders(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'It also leaves the $n folders it\'s in.',
+      one: 'It also leaves the folder it\'s in.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get acForgetDecks =>
+      'Decks do NOT lose it: it stays in the list and the deck tells you it\'s missing.';
+
+  @override
+  String get acCancel => 'Cancel';
+
+  @override
+  String get acForgetConfirm => 'I no longer have it';
+
+  @override
+  String acAddedOn(String cuando) {
+    return 'added $cuando';
+  }
+
+  @override
+  String acInFolders(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n folders',
+      one: 'in 1 folder',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get acSearchHint => 'Search for a card (Spanish or English)…';
+
+  @override
+  String acFilteredCount(int visibles, int total) {
+    return '$visibles of $total cards';
+  }
+
+  @override
+  String get acMissingFilterData =>
+      ' · some older cards have no filter data: re-import your CSV with \"Replace\" on';
+
+  @override
+  String get acNoneMatch => 'No card matches these filters.';
+
+  @override
+  String get acEmptyHint =>
+      'Search for your first card above, or go back and import your ManaBox CSV.';
+
+  @override
+  String get onbHowItWorksBody =>
+      'A summary of what each tab does, plus the keyboard shortcuts. If you get lost, start here.';
+
+  @override
+  String get onbVersionBody =>
+      'Which version you\'re on, what\'s in it, and whether the app should check once a day for a new one. It never updates itself.';
 }

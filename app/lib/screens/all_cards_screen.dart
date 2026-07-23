@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/folder_store.dart';
@@ -78,27 +79,26 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
   /// carpetas. Los mazos la conservan marcada — vender una carta no puede
   /// deshacerte un mazo.
   Future<void> _confirmarQueYaNoLaTienes(OwnedCard card) async {
+    final t = tr(context);
     final folders = widget.folders;
     final enCarpetas = folders?.foldersContaining(card.oracleId) ?? 0;
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('¿Ya no tienes ${card.printedName ?? card.name}?'),
+        title: Text(t.acForgetTitle(card.printedName ?? card.name)),
         content: Text([
-          'Sale de tu colección y su hueco del álbum vuelve a estar vacío.',
-          if (enCarpetas > 0)
-            'También sale de ${enCarpetas == 1 ? "la carpeta en la que está" : "las $enCarpetas carpetas en las que está"}.',
-          'Los mazos NO la pierden: se queda en la lista y el mazo te avisa '
-              'de que te falta.',
+          t.acForgetBody,
+          if (enCarpetas > 0) t.acForgetFolders(enCarpetas),
+          t.acForgetDecks,
         ].join('\n\n')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancelar'),
+            child: Text(t.acCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Ya no la tengo'),
+            child: Text(t.acForgetConfirm),
           ),
         ],
       ),
@@ -138,19 +138,20 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
     // sin fecha (colección anterior a esta versión) no se dice nada: ya lo
     // cuenta la posición, y "añadida sin fecha" en 300 filas es ruido
     if (_sort == CollectionSort.recent && card.addedAt != null) {
-      parts.add('añadida ${addedLabel(card.addedAt)}');
+      parts.add(tr(context).acAddedOn(addedLabel(card.addedAt)));
     }
     final inFolders = widget.folders?.foldersContaining(card.oracleId) ?? 0;
     if (inFolders > 0) {
-      parts.add(inFolders == 1 ? 'en 1 carpeta' : 'en $inFolders carpetas');
+      parts.add(tr(context).acInFolders(inFolders));
     }
     return parts.join(' · ');
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Todas las cartas')),
+      appBar: AppBar(title: Text(t.colAllCards)),
       body: ListenableBuilder(
         listenable: Listenable.merge([widget.collection, widget.folders]),
         builder: (context, _) {
@@ -166,14 +167,14 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${widget.collection.totalCopies} cartas · '
-                          '${widget.collection.distinctCards} distintas'),
+                      Text(t.colValueLine(widget.collection.totalCopies,
+                          widget.collection.distinctCards, '')),
                       const SizedBox(height: 12),
                       TextField(
                         controller: _searchCtrl,
                         onChanged: _search,
                         decoration: InputDecoration(
-                          hintText: 'Busca una carta (español o inglés)…',
+                          hintText: t.acSearchHint,
                           prefixIcon: const Icon(Icons.search),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14)),
@@ -192,8 +193,8 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '${owned.length} de ${allOwned.length} cartas'
-                            '${missingData ? ' · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con "Sustituir" activado' : ''}',
+                            t.acFilteredCount(owned.length, allOwned.length) +
+                                (missingData ? t.acMissingFilterData : ''),
                             style: const TextStyle(fontSize: 11.5),
                           ),
                         ),
@@ -247,10 +248,7 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(32),
                       child: Text(
-                        _filters.any
-                            ? 'Ninguna carta pasa estos filtros.'
-                            : 'Busca tu primera carta arriba, o vuelve atrás e '
-                                'importa tu CSV de ManaBox.',
+                        _filters.any ? t.acNoneMatch : t.acEmptyHint,
                         textAlign: TextAlign.center,
                       ),
                     ),
