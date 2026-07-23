@@ -651,4 +651,209 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tourScanName => 'El escáner';
+
+  @override
+  String get albNeedDb =>
+      'El álbum necesita la base de datos de cartas (descárgala en Colección).';
+
+  @override
+  String get albRetry => 'Reintentar';
+
+  @override
+  String get albApproxMode =>
+      'Álbum en modo aproximado: aún no sé qué EDICIÓN exacta tienes de cada carta. Reimporta tu CSV con \"Sustituir mi colección actual\" activado y el álbum se afinará por ilustraciones.';
+
+  @override
+  String get albSearchSet => 'Busca una expansión…';
+
+  @override
+  String get albOnlyMine => 'Con cartas mías';
+
+  @override
+  String get albSortProgress => 'Más completadas';
+
+  @override
+  String get albSortNewest => 'Más nuevas';
+
+  @override
+  String get albSortOldest => 'Más antiguas';
+
+  @override
+  String get albSortName => 'Por nombre';
+
+  @override
+  String get albYearAll => 'Año: todos';
+
+  @override
+  String get albLetterAll => 'Todas';
+
+  @override
+  String get albNoSets => 'Ninguna expansión coincide con el filtro.';
+
+  @override
+  String albSetProgress(int owned, int total) {
+    return '$owned/$total cartas';
+  }
+
+  @override
+  String get albComplete => ' · ✓ ¡completa!';
+
+  @override
+  String albLoadError(String error) {
+    return 'No pude cargar el set: $error';
+  }
+
+  @override
+  String albSearchIn(String set) {
+    return 'Buscar en $set…';
+  }
+
+  @override
+  String get albOnlyMissing => 'Solo las que faltan';
+
+  @override
+  String get albWithVariants => 'Con variantes';
+
+  @override
+  String get albYouHaveItAll => '✓ Lo tienes entero';
+
+  @override
+  String albMissingCount(int n) {
+    return 'Te faltan $n · ';
+  }
+
+  @override
+  String albWithoutPrice(int n) {
+    return ' ($n sin precio)';
+  }
+
+  @override
+  String albVisibleOf(int visibles, int total) {
+    return '$visibles de $total';
+  }
+
+  @override
+  String get albNoCardsNamed => 'Ninguna carta con ese nombre aquí.';
+
+  @override
+  String get fdNewFolder => 'Nueva carpeta';
+
+  @override
+  String get fdEditFolder => 'Editar carpeta';
+
+  @override
+  String get fdName => 'Nombre';
+
+  @override
+  String get fdNameHint => 'Rares de Aetherdrift, Para vender…';
+
+  @override
+  String get fdColor => 'Color';
+
+  @override
+  String get fdIcon => 'Icono';
+
+  @override
+  String get fdCreate => 'Crear';
+
+  @override
+  String get fdSave => 'Guardar';
+
+  @override
+  String get fdDefaultName => 'Carpeta';
+
+  @override
+  String fdDeleteTitle(String nombre) {
+    return '¿Borrar \"$nombre\"?';
+  }
+
+  @override
+  String get fdDeleteBody =>
+      'Se borra solo la carpeta: las cartas siguen en tu colección.';
+
+  @override
+  String get fdDelete => 'Borrar';
+
+  @override
+  String get fdGone => 'Esta carpeta ya no existe.';
+
+  @override
+  String get fdEditTooltip => 'Editar nombre, color e icono';
+
+  @override
+  String get fdDeleteTooltip => 'Borrar carpeta';
+
+  @override
+  String get fdAddRemove => 'Añadir o quitar';
+
+  @override
+  String fdCounts(int distintas, int copias) {
+    return '$distintas cartas distintas · $copias copias';
+  }
+
+  @override
+  String fdPassFilter(int n) {
+    return ' · $n pasan el filtro';
+  }
+
+  @override
+  String get fdRoughValue => ' · valor orientativo';
+
+  @override
+  String fdMissing(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          '$n cartas ya no están en tu colección (siguen apuntadas por si vuelven).',
+      one: '1 carta ya no está en tu colección (sigue apuntada por si vuelve).',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fdRemoveThem => 'Quitarlas';
+
+  @override
+  String get fdNoneMatch => 'Ninguna carta de la carpeta pasa estos filtros.';
+
+  @override
+  String get fdEmpty =>
+      'Carpeta vacía. Dale a \"Añadir o quitar\" y marca las cartas que quieres meter.';
+
+  @override
+  String fdCopies(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n copias',
+      one: '1 copia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fdRemoveFromFolder => 'Quitar de la carpeta';
+
+  @override
+  String get fpPickCards => 'Elige las cartas';
+
+  @override
+  String fpSaveCount(int n) {
+    return 'Guardar ($n)';
+  }
+
+  @override
+  String get fpFilterByName => 'Filtra por nombre…';
+
+  @override
+  String fpVisibleCards(int n) {
+    return '$n cartas a la vista';
+  }
+
+  @override
+  String get fpSelectAll => 'Marcar todas';
+
+  @override
+  String get fpNoneMatch => 'Ninguna carta pasa estos filtros.';
 }

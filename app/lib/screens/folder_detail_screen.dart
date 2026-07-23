@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
@@ -21,6 +23,7 @@ Future<FolderLook?> showFolderEditor(
   BuildContext context, {
   CardFolder? folder,
 }) {
+  final t = tr(context);
   final ctrl = TextEditingController(text: folder?.name ?? '');
   var color = folder?.colorValue ?? kDefaultFolderColor;
   var icon = folder?.icon ?? 'folder';
@@ -37,7 +40,7 @@ Future<FolderLook?> showFolderEditor(
     context: context,
     builder: (context) => StatefulBuilder(
       builder: (context, setState) => AlertDialog(
-        title: Text(folder == null ? 'Nueva carpeta' : 'Editar carpeta'),
+        title: Text(folder == null ? t.fdNewFolder : t.fdEditFolder),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -47,13 +50,13 @@ Future<FolderLook?> showFolderEditor(
                 controller: ctrl,
                 autofocus: true,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre',
-                  hintText: 'Rares de Aetherdrift, Para vender…',
+                decoration: InputDecoration(
+                  labelText: t.fdName,
+                  hintText: t.fdNameHint,
                 ),
               ),
               const SizedBox(height: 16),
-              const Text('Color', style: TextStyle(fontSize: 12.5)),
+              Text(t.fdColor, style: const TextStyle(fontSize: 12.5)),
               const SizedBox(height: 6),
               Wrap(
                 spacing: 8,
@@ -79,7 +82,7 @@ Future<FolderLook?> showFolderEditor(
                 ],
               ),
               const SizedBox(height: 16),
-              const Text('Icono', style: TextStyle(fontSize: 12.5)),
+              Text(t.fdIcon, style: const TextStyle(fontSize: 12.5)),
               const SizedBox(height: 6),
               Wrap(
                 spacing: 6,
@@ -105,18 +108,18 @@ Future<FolderLook?> showFolderEditor(
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
+            child: Text(t.acCancel),
           ),
           FilledButton(
             onPressed: () {
               final name = ctrl.text.trim();
               Navigator.of(context).pop((
-                name: name.isEmpty ? 'Carpeta' : name,
+                name: name.isEmpty ? t.fdDefaultName : name,
                 colorValue: color,
                 icon: icon,
               ));
             },
-            child: Text(folder == null ? 'Crear' : 'Guardar'),
+            child: Text(folder == null ? t.fdCreate : t.fdSave),
           ),
         ],
       ),
@@ -231,19 +234,19 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
   }
 
   Future<void> _confirmDelete(CardFolder folder) async {
+    final t = tr(context);
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('¿Borrar "${folder.name}"?'),
-        content: const Text(
-            'Se borra solo la carpeta: las cartas siguen en tu colección.'),
+        title: Text(t.fdDeleteTitle(folder.name)),
+        content: Text(t.fdDeleteBody),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar')),
+              child: Text(t.acCancel)),
           FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Borrar')),
+              child: Text(t.fdDelete)),
         ],
       ),
     );
@@ -254,6 +257,7 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return ListenableBuilder(
       listenable: Listenable.merge([widget.folders, widget.collection]),
       builder: (context, _) {
@@ -262,7 +266,7 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
           // borrada desde otra pantalla: no dejar un esqueleto a medias
           return Scaffold(
             appBar: AppBar(),
-            body: const Center(child: Text('Esta carpeta ya no existe.')),
+            body: Center(child: Text(t.fdGone)),
           );
         }
         final owned = {for (final c in widget.collection.cards) c.oracleId};
@@ -291,12 +295,12 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
             ),
             actions: [
               IconButton(
-                tooltip: 'Editar nombre, color e icono',
+                tooltip: t.fdEditTooltip,
                 icon: const Icon(Icons.edit_outlined),
                 onPressed: () => _editLook(folder),
               ),
               IconButton(
-                tooltip: 'Borrar carpeta',
+                tooltip: t.fdDeleteTooltip,
                 icon: const Icon(Icons.delete_outline),
                 onPressed: () => _confirmDelete(folder),
               ),
@@ -305,7 +309,7 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _editCards(folder),
             icon: const Icon(Icons.playlist_add),
-            label: const Text('Añadir o quitar'),
+            label: Text(t.fdAddRemove),
           ),
           body: CustomScrollView(
             slivers: [
@@ -329,9 +333,13 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
                       Text(
                         // cuentas de lo que TIENES en la carpeta, sin filtrar:
                         // el valor de arriba también es sin filtrar
-                        '$present cartas distintas · $copies copias'
-                        '${cards.length != present ? ' · ${cards.length} pasan el filtro' : ''}'
-                        '${_valuation?.approximate == true ? ' · valor orientativo' : ''}',
+                        t.fdCounts(present, copies) +
+                            (cards.length != present
+                                ? t.fdPassFilter(cards.length)
+                                : '') +
+                            (_valuation?.approximate == true
+                                ? t.fdRoughValue
+                                : ''),
                         style: const TextStyle(fontSize: 12),
                       ),
                       if (missing.isNotEmpty)
@@ -341,16 +349,14 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  '${missing.length} '
-                                  '${missing.length == 1 ? 'carta ya no está' : 'cartas ya no están'} '
-                                  'en tu colección (siguen apuntadas por si vuelven).',
+                                  t.fdMissing(missing.length),
                                   style: const TextStyle(fontSize: 11.5),
                                 ),
                               ),
                               TextButton(
                                 onPressed: () => widget.folders
                                     .removeMissing(folder.id, owned),
-                                child: const Text('Quitarlas'),
+                                child: Text(t.fdRemoveThem),
                               ),
                             ],
                           ),
@@ -375,10 +381,7 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(32),
                       child: Text(
-                        _filters.any
-                            ? 'Ninguna carta de la carpeta pasa estos filtros.'
-                            : 'Carpeta vacía. Dale a "Añadir o quitar" y marca '
-                                'las cartas que quieres meter.',
+                        _filters.any ? t.fdNoneMatch : t.fdEmpty,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -421,11 +424,12 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
                           colors: card.colors,
                           name: card.name),
                       title: Text(card.printedName ?? card.name),
-                      subtitle: Text('${card.qty} '
-                          '${card.qty == 1 ? 'copia' : 'copias'}'
-                          '${card.typeLine.isEmpty ? '' : ' · ${card.typeLine}'}'),
+                      subtitle: Text(t.fdCopies(card.qty) +
+                          (card.typeLine.isEmpty
+                              ? ''
+                              : ' · ${card.typeLine}')),
                       trailing: IconButton(
-                        tooltip: 'Quitar de la carpeta',
+                        tooltip: t.fdRemoveFromFolder,
                         icon: const Icon(Icons.remove_circle_outline),
                         onPressed: () =>
                             widget.folders.toggleCard(folder.id, card.oracleId),

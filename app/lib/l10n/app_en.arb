@@ -245,5 +245,100 @@
   "onbScanPhotoTitle": "Scan a photo",
   "onbScanPhotoBody": "No camera, or your cards already photographed? Drop a photo here — several cards in one shot is fine — and it pulls them out just the same.",
 
-  "tourScanName": "The scanner"
+  "tourScanName": "The scanner",
+
+  "albNeedDb": "The album needs the card database (download it in Collection).",
+  "albRetry": "Try again",
+  "albApproxMode": "Album in rough mode: I don't know yet which exact PRINTING you own of each card. Re-import your CSV with \"Replace my current collection\" on and the album will sharpen up by artwork.",
+  "albSearchSet": "Search for a set…",
+  "albOnlyMine": "With cards of mine",
+  "albSortProgress": "Most complete",
+  "albSortNewest": "Newest",
+  "albSortOldest": "Oldest",
+  "albSortName": "By name",
+  "albYearAll": "Year: all",
+  "albLetterAll": "All",
+  "albNoSets": "No set matches the filter.",
+  "albSetProgress": "{owned}/{total} cards",
+  "@albSetProgress": {
+    "placeholders": { "owned": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "albComplete": " · ✓ complete!",
+  "albLoadError": "Couldn't load the set: {error}",
+  "@albLoadError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "albSearchIn": "Search in {set}…",
+  "@albSearchIn": {
+    "placeholders": { "set": { "type": "String" } }
+  },
+  "albOnlyMissing": "Only the missing ones",
+  "albWithVariants": "With variants",
+  "albYouHaveItAll": "✓ You have it all",
+  "albMissingCount": "You're missing {n} · ",
+  "@albMissingCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "albWithoutPrice": " ({n} without a price)",
+  "@albWithoutPrice": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "albVisibleOf": "{visibles} of {total}",
+  "@albVisibleOf": {
+    "placeholders": { "visibles": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "albNoCardsNamed": "No card by that name here.",
+
+  "fdNewFolder": "New folder",
+  "fdEditFolder": "Edit folder",
+  "fdName": "Name",
+  "fdNameHint": "Aetherdrift rares, To sell…",
+  "fdColor": "Colour",
+  "fdIcon": "Icon",
+  "fdCreate": "Create",
+  "fdSave": "Save",
+  "fdDefaultName": "Folder",
+  "fdDeleteTitle": "Delete \"{nombre}\"?",
+  "@fdDeleteTitle": {
+    "placeholders": { "nombre": { "type": "String" } }
+  },
+  "fdDeleteBody": "Only the folder goes: the cards stay in your collection.",
+  "fdDelete": "Delete",
+  "fdGone": "This folder is gone.",
+  "fdEditTooltip": "Edit name, colour and icon",
+  "fdDeleteTooltip": "Delete folder",
+  "fdAddRemove": "Add or remove",
+  "fdCounts": "{distintas} distinct cards · {copias} copies",
+  "@fdCounts": {
+    "placeholders": { "distintas": { "type": "int" }, "copias": { "type": "int" } }
+  },
+  "fdPassFilter": " · {n} match the filter",
+  "@fdPassFilter": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fdRoughValue": " · rough value",
+  "fdMissing": "{n, plural, =1{1 card is no longer in your collection (it stays listed in case it comes back).} other{{n} cards are no longer in your collection (they stay listed in case they come back).}}",
+  "@fdMissing": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fdRemoveThem": "Remove them",
+  "fdNoneMatch": "No card in this folder matches these filters.",
+  "fdEmpty": "Empty folder. Hit \"Add or remove\" and tick the cards you want in it.",
+  "fdCopies": "{n, plural, =1{1 copy} other{{n} copies}}",
+  "@fdCopies": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fdRemoveFromFolder": "Remove from the folder",
+  "fpPickCards": "Pick the cards",
+  "fpSaveCount": "Save ({n})",
+  "@fpSaveCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fpFilterByName": "Filter by name…",
+  "fpVisibleCards": "{n} cards in view",
+  "@fpVisibleCards": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fpSelectAll": "Select all",
+  "fpNoneMatch": "No card matches these filters."
 }
