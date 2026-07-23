@@ -123,15 +123,19 @@ class _AjustesScreenState extends State<AjustesScreen> {
             const SizedBox(height: 8),
             Text(t.settingsIntro),
             const SizedBox(height: 16),
-            // Apariencia: idioma, fondo y qué se ve en Inicio. Abierta de
-            // salida porque es lo que la gente viene a tocar.
+            // el idioma va suelto y el primero: es lo primero que querría
+            // cambiar alguien que abrió la app en un idioma que no es el suyo
+            if (widget.language != null) ...[
+              LanguageSettingsCard(prefs: widget.language!),
+              const SizedBox(height: 8),
+            ],
+            // Apariencia: fondo y qué se ve en Inicio. Abierta de salida
+            // porque es lo que la gente viene a tocar.
             _Seccion(
               titulo: 'Apariencia',
               icono: Icons.palette_outlined,
               initiallyExpanded: true,
               children: [
-                if (widget.language != null)
-                  LanguageSettingsCard(prefs: widget.language!),
                 if (widget.background != null)
                   BackgroundSettingsCard(prefs: widget.background!),
                 if (widget.homeLayout != null)

@@ -5,6 +5,7 @@ import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/certificate_store.dart';
 import '../services/collection_store.dart';
+import '../theme/mf_theme.dart';
 import 'certificados_screen.dart';
 
 /// Color de cada rareza de logro (bronce, plata, oro, mítico).
@@ -216,7 +217,9 @@ class _LogrosScreenState extends State<LogrosScreen> {
   }
 
   Widget _levelBadge(BuildContext context, int level) {
-    final color = Theme.of(context).colorScheme.primary;
+    // el mismo morado que la tarjeta de nivel de Inicio: es el mismo dato en
+    // dos sitios y tiene que verse igual (antes aquí salía rojo)
+    const color = MFColors.forge;
     return Container(
       width: 58,
       height: 58,
@@ -227,8 +230,7 @@ class _LogrosScreenState extends State<LogrosScreen> {
         border: Border.all(color: color, width: 2),
       ),
       child: Text('$level',
-          style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
     );
   }
 
