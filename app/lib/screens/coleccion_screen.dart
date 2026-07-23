@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
@@ -265,36 +266,34 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
 
   /// Estado inicial: hay que descargar la base de datos de cartas.
   Widget _buildNeedsDb() {
+    final t = tr(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Colección',
+          Text(t.tabCollection,
               style: Theme.of(context).textTheme.headlineMedium),
           const Spacer(),
-          Text('Tu colección empieza aquí',
+          Text(t.colStartHere,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          const Text(
-            'Primero necesito la base de datos con todas las cartas de Magic '
-            '(se descarga una vez y luego todo funciona sin internet).',
-            textAlign: TextAlign.center,
-          ),
+          Text(t.colNeedDb, textAlign: TextAlign.center),
           const SizedBox(height: 20),
           if (_downloadProgress != null) ...[
             LinearProgressIndicator(value: _downloadProgress),
             const SizedBox(height: 8),
             Text(
-              'Descargando… ${((_downloadProgress ?? 0) * 100).toStringAsFixed(0)} %',
+              t.colDownloading(
+                  ((_downloadProgress ?? 0) * 100).toStringAsFixed(0)),
               textAlign: TextAlign.center,
             ),
           ] else
             FilledButton.icon(
               onPressed: _download,
               icon: const Icon(Icons.download),
-              label: const Text('Descargar base de datos de cartas'),
+              label: Text(t.colDownloadDb),
             ),
           if (_error != null)
             Padding(
@@ -305,10 +304,10 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                       TextStyle(color: Theme.of(context).colorScheme.error)),
             ),
           const Spacer(),
-          const Text(
-            'Datos e imágenes por Scryfall · Sin cuentas, sin pagos: todo queda en tu dispositivo.',
+          Text(
+            t.colScryfall,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 11),
+            style: const TextStyle(fontSize: 11),
           ),
         ],
       ),
@@ -317,6 +316,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
 
   /// Portada: cabecera, "Todas las cartas" y la rejilla de carpetas.
   Widget _buildHome() {
+    final t = tr(context);
     return ListenableBuilder(
       listenable: Listenable.merge([widget.collection, widget.folders]),
       builder: (context, _) {
@@ -333,13 +333,13 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text('Colección',
+                          child: Text(t.tabCollection,
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineMedium),
                         ),
                         IconButton(
-                          tooltip: 'Álbum por expansiones',
+                          tooltip: t.colAlbumTooltip,
                           icon: const Icon(Icons.auto_stories_outlined),
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -350,7 +350,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                           ),
                         ),
                         IconButton(
-                          tooltip: 'Importar CSV de ManaBox',
+                          tooltip: t.colImportTooltip,
                           icon: const Icon(Icons.file_upload_outlined),
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -362,9 +362,14 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                         ),
                       ],
                     ),
-                    Text('${widget.collection.totalCopies} cartas · '
-                        '${widget.collection.distinctCards} distintas'
-                        '${_total == null ? '' : ' · ${_total!.approximate ? '~' : ''}${_total!.total.toStringAsFixed(2)} €'}'),
+                    Text(t.colValueLine(
+                      widget.collection.totalCopies,
+                      widget.collection.distinctCards,
+                      _total == null
+                          ? ''
+                          : ' · ${_total!.approximate ? '~' : ''}'
+                              '${_total!.total.toStringAsFixed(2)} €',
+                    )),
                     if (widget.collection.totalCopies == 0) ...[
                       const SizedBox(height: 14),
                       _ColeccionVaciaCta(
@@ -385,10 +390,9 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                         child: ListTile(
                           onTap: _openAllCards,
                           leading: const Icon(Icons.style_outlined),
-                          title: const Text('Todas las cartas'),
-                          subtitle: Text(
-                              '${widget.collection.distinctCards} distintas · '
-                              'buscar, filtrar y ordenar'),
+                          title: Text(t.colAllCards),
+                          subtitle: Text(t.colAllCardsSub(
+                              widget.collection.distinctCards)),
                           trailing: const Icon(Icons.chevron_right),
                         ),
                       ),
@@ -399,7 +403,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Text('Carpetas',
+                            child: Text(t.colFolders,
                                 style:
                                     Theme.of(context).textTheme.titleMedium),
                           ),
@@ -407,7 +411,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                             onPressed: _newFolder,
                             icon: const Icon(Icons.create_new_folder_outlined,
                                 size: 18),
-                            label: const Text('Nueva'),
+                            label: Text(t.colNewFolder),
                           ),
                         ],
                       ),
@@ -422,18 +426,16 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
                   child: Column(
                     children: [
-                      const Text(
-                        'Aún no tienes carpetas. Sirven para agrupar lo que '
-                        'quieras: "rares de Aetherdrift", "para vender", "la '
-                        'caja de arriba"… Una carta puede estar en varias.',
+                      Text(
+                        t.colNoFolders,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 12.5),
+                        style: const TextStyle(fontSize: 12.5),
                       ),
                       const SizedBox(height: 12),
                       FilledButton.icon(
                         onPressed: _newFolder,
                         icon: const Icon(Icons.create_new_folder_outlined),
-                        label: const Text('Crear la primera carpeta'),
+                        label: Text(t.colCreateFirstFolder),
                       ),
                     ],
                   ),
@@ -483,19 +485,19 @@ class _ColeccionVaciaCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Aquí empieza tu colección',
+            Text(t.colEmptyTitle,
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
-            const Text(
-              'Escanea tus cartas con la cámara o importa un CSV de ManaBox. '
-              'Aparecerán aquí y en el álbum.',
-              style: TextStyle(fontSize: 12.5),
+            Text(
+              t.colEmptyBody,
+              style: const TextStyle(fontSize: 12.5),
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -506,12 +508,12 @@ class _ColeccionVaciaCta extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: onScan,
                     icon: const Icon(Icons.qr_code_scanner, size: 18),
-                    label: const Text('Escanear mis cartas'),
+                    label: Text(t.welcomeScan),
                   ),
                 OutlinedButton.icon(
                   onPressed: onImport,
                   icon: const Icon(Icons.file_upload_outlined, size: 18),
-                  label: const Text('Importar CSV'),
+                  label: Text(t.colImportShort),
                 ),
               ],
             ),

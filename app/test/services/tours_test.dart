@@ -129,13 +129,15 @@ void main() {
     final ajustes = kTours.firstWhere((t) => t.id == 'settings');
     final pasos = ajustes.build(t, TourKeys());
     // barra → idioma → aspecto → editar inicio → Datos → base de cartas →
-    // copia de seguridad → La app
+    // copia de seguridad → La app → cómo funciona → versión
     expect(pasos.first.navBarIndex, isNotNull);
-    expect(pasos.length, 8);
+    expect(pasos.length, 10);
     expect(pasos.map((s) => s.prepare).toList().sublist(4), [
       TourPrep.ajustesDatos,
       TourPrep.ajustesDatos,
       TourPrep.ajustesDatos,
+      TourPrep.ajustesLaApp,
+      TourPrep.ajustesLaApp,
       TourPrep.ajustesLaApp,
     ]);
     expect(pasos.last.targetKey, isNotNull);

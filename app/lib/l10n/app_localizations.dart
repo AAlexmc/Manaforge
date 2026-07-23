@@ -953,6 +953,198 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Qué hace cada pestaña, los atajos de teclado, la versión y la licencia.'**
   String get onbAboutBody;
+
+  /// No description provided for @colStartHere.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu colección empieza aquí'**
+  String get colStartHere;
+
+  /// No description provided for @colNeedDb.
+  ///
+  /// In es, this message translates to:
+  /// **'Primero necesito la base de datos con todas las cartas de Magic (se descarga una vez y luego todo funciona sin internet).'**
+  String get colNeedDb;
+
+  /// No description provided for @colDownloading.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargando… {pct} %'**
+  String colDownloading(String pct);
+
+  /// No description provided for @colDownloadDb.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargar base de datos de cartas'**
+  String get colDownloadDb;
+
+  /// No description provided for @colScryfall.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos e imágenes por Scryfall · Sin cuentas, sin pagos: todo queda en tu dispositivo.'**
+  String get colScryfall;
+
+  /// No description provided for @colAlbumTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Álbum por expansiones'**
+  String get colAlbumTooltip;
+
+  /// No description provided for @colImportTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar CSV de ManaBox'**
+  String get colImportTooltip;
+
+  /// No description provided for @colValueLine.
+  ///
+  /// In es, this message translates to:
+  /// **'{copies} cartas · {distinct} distintas{valor}'**
+  String colValueLine(int copies, int distinct, String valor);
+
+  /// No description provided for @colAllCards.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas las cartas'**
+  String get colAllCards;
+
+  /// No description provided for @colAllCardsSub.
+  ///
+  /// In es, this message translates to:
+  /// **'{distinct} distintas · buscar, filtrar y ordenar'**
+  String colAllCardsSub(int distinct);
+
+  /// No description provided for @colFolders.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpetas'**
+  String get colFolders;
+
+  /// No description provided for @colNewFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva'**
+  String get colNewFolder;
+
+  /// No description provided for @colNoFolders.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no tienes carpetas. Sirven para agrupar lo que quieras: \"rares de Aetherdrift\", \"para vender\", \"la caja de arriba\"… Una carta puede estar en varias.'**
+  String get colNoFolders;
+
+  /// No description provided for @colCreateFirstFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear la primera carpeta'**
+  String get colCreateFirstFolder;
+
+  /// No description provided for @colEmptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí empieza tu colección'**
+  String get colEmptyTitle;
+
+  /// No description provided for @colEmptyBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanea tus cartas con la cámara o importa un CSV de ManaBox. Aparecerán aquí y en el álbum.'**
+  String get colEmptyBody;
+
+  /// No description provided for @colImportShort.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar CSV'**
+  String get colImportShort;
+
+  /// No description provided for @acForgetTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Ya no tienes {carta}?'**
+  String acForgetTitle(String carta);
+
+  /// No description provided for @acForgetBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Sale de tu colección y su hueco del álbum vuelve a estar vacío.'**
+  String get acForgetBody;
+
+  /// No description provided for @acForgetFolders.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{También sale de la carpeta en la que está.} other{También sale de las {n} carpetas en las que está.}}'**
+  String acForgetFolders(int n);
+
+  /// No description provided for @acForgetDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'Los mazos NO la pierden: se queda en la lista y el mazo te avisa de que te falta.'**
+  String get acForgetDecks;
+
+  /// No description provided for @acCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get acCancel;
+
+  /// No description provided for @acForgetConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya no la tengo'**
+  String get acForgetConfirm;
+
+  /// No description provided for @acAddedOn.
+  ///
+  /// In es, this message translates to:
+  /// **'añadida {cuando}'**
+  String acAddedOn(String cuando);
+
+  /// No description provided for @acInFolders.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{en 1 carpeta} other{en {n} carpetas}}'**
+  String acInFolders(int n);
+
+  /// No description provided for @acSearchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca una carta (español o inglés)…'**
+  String get acSearchHint;
+
+  /// No description provided for @acFilteredCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{visibles} de {total} cartas'**
+  String acFilteredCount(int visibles, int total);
+
+  /// No description provided for @acMissingFilterData.
+  ///
+  /// In es, this message translates to:
+  /// **' · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con \"Sustituir\" activado'**
+  String get acMissingFilterData;
+
+  /// No description provided for @acNoneMatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna carta pasa estos filtros.'**
+  String get acNoneMatch;
+
+  /// No description provided for @acEmptyHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca tu primera carta arriba, o vuelve atrás e importa tu CSV de ManaBox.'**
+  String get acEmptyHint;
+
+  /// No description provided for @onbHowItWorksBody.
+  ///
+  /// In es, this message translates to:
+  /// **'El resumen de qué hace cada pestaña y los atajos de teclado. Si te pierdes, empieza por aquí.'**
+  String get onbHowItWorksBody;
+
+  /// No description provided for @onbVersionBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.'**
+  String get onbVersionBody;
 }
 
 class _AppLocalizationsDelegate

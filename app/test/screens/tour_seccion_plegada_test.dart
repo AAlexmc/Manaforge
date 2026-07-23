@@ -74,6 +74,13 @@ void main() {
     await tester.tap(find.text('Siguiente'));
     await _pumps(tester, veces: 14);
     expect(find.text('Cómo funciona'), findsWidgets);
+
+    // 9 cómo funciona · 10 versión (el final del recorrido)
+    await tester.tap(find.text('Siguiente'));
+    await _pumps(tester, veces: 12);
+    await tester.tap(find.text('Siguiente'));
+    await _pumps(tester, veces: 12);
+    expect(find.text('Versión de ManaForge'), findsWidgets);
     expect(find.text('Entendido'), findsOneWidget); // último paso
   });
 }

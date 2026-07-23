@@ -77,6 +77,10 @@ class AjustesScreen extends StatefulWidget {
   final Key? laAppKey;
   final ExpansibleController? laAppController;
 
+  /// Las dos últimas paradas del tour, dentro de "La app".
+  final Key? comoFuncionaKey;
+  final Key? versionKey;
+
   const AjustesScreen(
       {super.key,
       required this.db,
@@ -93,7 +97,9 @@ class AjustesScreen extends StatefulWidget {
       this.datosKey,
       this.baseDatosKey,
       this.laAppKey,
-      this.laAppController});
+      this.laAppController,
+      this.comoFuncionaKey,
+      this.versionKey});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -240,7 +246,9 @@ class _AjustesScreenState extends State<AjustesScreen> {
               children: [
                 // qué es cada pestaña. Alguien que abre la app por primera vez
                 // ve varios iconos y ninguna explicación
-                Card(
+                KeyedSubtree(
+                  key: widget.comoFuncionaKey,
+                  child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -305,9 +313,13 @@ class _AjustesScreenState extends State<AjustesScreen> {
                       ],
                     ),
                   ),
+                  ),
                 ),
                 if (widget.updates != null)
-                  UpdateSettingsCard(checker: widget.updates!),
+                  KeyedSubtree(
+                    key: widget.versionKey,
+                    child: UpdateSettingsCard(checker: widget.updates!),
+                  ),
                 const Card(
                   child: Padding(
                     padding: EdgeInsets.all(16),
