@@ -19,6 +19,7 @@ import 'services/language_prefs.dart';
 import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
 import 'services/folder_store.dart';
+import 'services/home_layout_prefs.dart';
 import 'services/markets.dart';
 import 'services/price_history.dart';
 import 'services/price_series_database.dart';
@@ -228,6 +229,11 @@ class _HomeShellState extends State<HomeShell> {
   final _progress = AchievementStore();
   final _certificates = CertificateStore();
 
+  /// Qué se ve en Inicio y en qué orden. Lo comparten Inicio (que lo pinta) y
+  /// Ajustes (que abre el editor): el mismo objeto, para que editar desde un
+  /// sitio se vea en el otro.
+  final _homeLayout = HomeLayoutPreference();
+
   /// Mira una vez al día si hay versión nueva de la app. No descarga nada:
   /// avisa y lleva a la página de descargas.
   final _updates = AppUpdateChecker();
@@ -263,6 +269,9 @@ class _HomeShellState extends State<HomeShell> {
     // ¿hay versión nueva? Como mucho una pregunta al día, en segundo plano y
     // sin ruido: si no hay red, no pasa nada
     unawaited(_updates.checkIfDue());
+    // qué se ve en Inicio: se lee del disco en segundo plano; hasta que llega,
+    // el layout por defecto (todo, en orden) ya está puesto
+    unawaited(_homeLayout.load());
     // y si el que ha cambiado es ESTE ejecutable, contar qué trae. Después
     // del primer frame: antes no hay ni Navigator donde enseñarlo
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -344,6 +353,7 @@ class _HomeShellState extends State<HomeShell> {
           achievements: _achievements,
           certificates: _certificates,
           updates: _updates,
+          layout: _homeLayout,
           onScan: _abrirEscaner,
           onGoToTab: (i) => setState(() => _index = i)),
       ColeccionScreen(
@@ -380,7 +390,8 @@ class _HomeShellState extends State<HomeShell> {
           onRestored: widget.onRestored,
           updates: _updates,
           background: widget.background,
-          language: widget.language),
+          language: widget.language,
+          homeLayout: _homeLayout),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el
