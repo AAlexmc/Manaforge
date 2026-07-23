@@ -7,6 +7,8 @@ import '../widgets/tour_overlay.dart';
 /// pasan a las pantallas que los tienen, para poder medir su rectángulo.
 class TourKeys {
   final editarInicio = GlobalKey();
+  final ajustesIdioma = GlobalKey();
+  final ajustesFondo = GlobalKey();
 }
 
 /// Un tour con nombre, para el menú de guías ("?").
@@ -21,6 +23,7 @@ class Tour {
 // Índices de PANTALLA (el IndexedStack de main): Home 0, Colección 1, Álbum 2,
 // Forge 3, Mazos 4, Mercado 5, Ajustes 6. "Escanear" NO es pantalla: se empuja.
 const int _home = 0;
+const int _ajustes = 6;
 
 // Índices en la BARRA de abajo (para señalar un destino por fracción):
 // Inicio 0, Colección 1, Álbum 2, Escanear 3, Forge 4, Mazos 5, Mercado 6,
@@ -68,6 +71,22 @@ final List<Tour> kTours = [
           targetKey: k.editarInicio,
           title: t.onbEditHomeTitle,
           body: t.onbEditHomeBody),
+    ],
+  ),
+  Tour(
+    id: 'settings',
+    name: (t) => t.tourSettingsName,
+    build: (t, k) => [
+      TourStep(
+          goToScreen: _ajustes,
+          targetKey: k.ajustesIdioma,
+          title: t.onbLangTitle,
+          body: t.onbLangBody),
+      TourStep(
+          goToScreen: _ajustes,
+          targetKey: k.ajustesFondo,
+          title: t.onbLookTitle,
+          body: t.onbLookBody),
     ],
   ),
 ];

@@ -87,12 +87,20 @@ class _TourOverlayState extends State<TourOverlay> {
     });
   }
 
-  void _medir() {
+  Future<void> _medir() async {
     final step = widget.steps[_i];
     final key = step.targetKey;
     if (key == null) return;
-    final ctx = key.currentContext;
+    var ctx = key.currentContext;
     if (ctx == null) return;
+    // si el botón está en una lista con scroll (Ajustes, Forge…), llevarlo a
+    // la vista antes de medir; si no hay scroll, es un no-op
+    await Scrollable.ensureVisible(ctx,
+        duration: const Duration(milliseconds: 250), alignment: 0.35);
+    if (!mounted) return;
+    // context fresco tras el scroll (el de antes cruzó un await)
+    ctx = key.currentContext;
+    if (ctx == null || !ctx.mounted) return;
     final box = ctx.findRenderObject();
     if (box is! RenderBox || !box.hasSize) return;
     final pos = box.localToGlobal(Offset.zero);

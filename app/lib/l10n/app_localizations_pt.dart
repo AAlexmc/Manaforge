@@ -332,4 +332,20 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get onbEditHomeBody =>
       'Este botão permite escolher quais seções aparecem no início e em que ordem.';
+
+  @override
+  String get onbLangTitle => 'Idioma';
+
+  @override
+  String get onbLangBody => 'Mude aqui o idioma de todo o app.';
+
+  @override
+  String get onbLookTitle => 'Aparência';
+
+  @override
+  String get onbLookBody =>
+      'Coloque um papel de parede e escolha as cores de cartas, texto, abas e ícones.';
+
+  @override
+  String get tourSettingsName => 'Personalizar o app';
 }

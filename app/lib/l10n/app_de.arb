@@ -134,5 +134,11 @@
   "tourWelcomeName": "Kurze Tour",
   "tourHomeName": "Der Startbildschirm",
   "onbEditHomeTitle": "Startseite anpassen",
-  "onbEditHomeBody": "Mit diesem Knopf wählst du, welche Bereiche auf der Startseite erscheinen und in welcher Reihenfolge."
+  "onbEditHomeBody": "Mit diesem Knopf wählst du, welche Bereiche auf der Startseite erscheinen und in welcher Reihenfolge.",
+
+  "onbLangTitle": "Sprache",
+  "onbLangBody": "Ändere hier die Sprache der ganzen App.",
+  "onbLookTitle": "Aussehen",
+  "onbLookBody": "Lege ein Hintergrundbild fest und wähle die Farben von Karten, Text, Tabs und Symbolen.",
+  "tourSettingsName": "App anpassen"
 }

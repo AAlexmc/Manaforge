@@ -314,4 +314,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onbEditHomeBody => '用这个按钮选择主页显示哪些板块以及顺序。';
+
+  @override
+  String get onbLangTitle => '语言';
+
+  @override
+  String get onbLangBody => '在这里更改整个应用的语言。';
+
+  @override
+  String get onbLookTitle => '外观';
+
+  @override
+  String get onbLookBody => '设置壁纸并选择卡片、文字、标签和图标的颜色。';
+
+  @override
+  String get tourSettingsName => '自定义应用';
 }

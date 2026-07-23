@@ -134,5 +134,11 @@
   "tourWelcomeName": "Giro veloce",
   "tourHomeName": "La schermata iniziale",
   "onbEditHomeTitle": "Personalizza la home",
-  "onbEditHomeBody": "Con questo pulsante scegli quali sezioni compaiono nella home e in che ordine."
+  "onbEditHomeBody": "Con questo pulsante scegli quali sezioni compaiono nella home e in che ordine.",
+
+  "onbLangTitle": "Lingua",
+  "onbLangBody": "Cambia qui la lingua di tutta l'app.",
+  "onbLookTitle": "Aspetto",
+  "onbLookBody": "Metti uno sfondo e scegli i colori di carte, testo, schede e icone.",
+  "tourSettingsName": "Personalizza l'app"
 }

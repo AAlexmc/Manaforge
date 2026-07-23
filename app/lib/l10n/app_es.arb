@@ -127,5 +127,11 @@
   "tourWelcomeName": "Vuelta rápida",
   "tourHomeName": "La pantalla de inicio",
   "onbEditHomeTitle": "Personaliza tu inicio",
-  "onbEditHomeBody": "Con este botón eliges qué secciones se ven en Inicio y en qué orden."
+  "onbEditHomeBody": "Con este botón eliges qué secciones se ven en Inicio y en qué orden.",
+
+  "onbLangTitle": "Idioma",
+  "onbLangBody": "Cambia aquí el idioma de toda la app.",
+  "onbLookTitle": "Aspecto",
+  "onbLookBody": "Pon un fondo de pantalla y elige los colores de las tarjetas, la letra, las pestañas y los iconos.",
+  "tourSettingsName": "Personalizar la app"
 }

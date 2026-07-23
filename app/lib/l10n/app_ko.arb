@@ -134,5 +134,11 @@
   "tourWelcomeName": "빠른 둘러보기",
   "tourHomeName": "홈 화면",
   "onbEditHomeTitle": "홈 화면 맞춤",
-  "onbEditHomeBody": "이 버튼으로 홈에 표시할 섹션과 순서를 고를 수 있어요."
+  "onbEditHomeBody": "이 버튼으로 홈에 표시할 섹션과 순서를 고를 수 있어요.",
+
+  "onbLangTitle": "언어",
+  "onbLangBody": "여기서 앱 전체 언어를 바꿔요.",
+  "onbLookTitle": "모양",
+  "onbLookBody": "배경을 설정하고 카드·글자·탭·아이콘 색을 골라요.",
+  "tourSettingsName": "앱 맞춤 설정"
 }

@@ -89,4 +89,43 @@ void main() {
     expect(find.text('Botón'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('lleva a la vista un botón que está fuera de pantalla (scroll)',
+      (tester) async {
+    final k = GlobalKey();
+    await tester.pumpWidget(appDePrueba(
+      home: Scaffold(
+        body: Stack(
+          children: [
+            // Column (no ListView perezoso) para que el objetivo, aun fuera de
+            // pantalla, esté montado y se pueda llevar a la vista
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (int i = 0; i < 40; i++)
+                    SizedBox(height: 60, child: Text('fila $i')),
+                  Container(
+                      key: k,
+                      height: 40,
+                      color: Colors.red,
+                      child: const Text('objetivo')),
+                ],
+              ),
+            ),
+            TourOverlay(
+              steps: [TourStep(targetKey: k, title: 'Abajo', body: 'x')],
+              navItemCount: 8,
+              onDone: () {},
+            ),
+          ],
+        ),
+      ),
+    ));
+    await tester.pump(); // postFrame: mide y dispara ensureVisible
+    await tester.pumpAndSettle(); // termina el scroll animado
+
+    expect(find.text('Abajo'), findsOneWidget);
+    expect(find.text('objetivo'), findsOneWidget); // se hizo scroll hasta él
+    expect(tester.takeException(), isNull);
+  });
 }

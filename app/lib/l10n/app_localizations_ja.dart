@@ -322,4 +322,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get onbEditHomeBody => 'このボタンでホームに表示するセクションと順番を選べます。';
+
+  @override
+  String get onbLangTitle => '言語';
+
+  @override
+  String get onbLangBody => 'ここでアプリ全体の言語を変えられます。';
+
+  @override
+  String get onbLookTitle => '見た目';
+
+  @override
+  String get onbLookBody => '壁紙を設定し、カード・文字・タブ・アイコンの色を選べます。';
+
+  @override
+  String get tourSettingsName => 'アプリをカスタマイズ';
 }

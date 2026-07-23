@@ -123,5 +123,11 @@
   "tourWelcomeName": "Quick tour",
   "tourHomeName": "The home screen",
   "onbEditHomeTitle": "Customize your home",
-  "onbEditHomeBody": "This button lets you pick which sections show on Home and in what order."
+  "onbEditHomeBody": "This button lets you pick which sections show on Home and in what order.",
+
+  "onbLangTitle": "Language",
+  "onbLangBody": "Change the whole app's language here.",
+  "onbLookTitle": "Look",
+  "onbLookBody": "Set a wallpaper and pick the colors of cards, text, tabs and icons.",
+  "tourSettingsName": "Customize the app"
 }

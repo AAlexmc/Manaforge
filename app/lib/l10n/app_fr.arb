@@ -134,5 +134,11 @@
   "tourWelcomeName": "Tour rapide",
   "tourHomeName": "L'écran d'accueil",
   "onbEditHomeTitle": "Personnalise ton accueil",
-  "onbEditHomeBody": "Ce bouton te laisse choisir quelles sections apparaissent sur l'accueil et dans quel ordre."
+  "onbEditHomeBody": "Ce bouton te laisse choisir quelles sections apparaissent sur l'accueil et dans quel ordre.",
+
+  "onbLangTitle": "Langue",
+  "onbLangBody": "Change ici la langue de toute l'app.",
+  "onbLookTitle": "Apparence",
+  "onbLookBody": "Mets un fond d'écran et choisis les couleurs des cartes, du texte, des onglets et des icônes.",
+  "tourSettingsName": "Personnaliser l'app"
 }

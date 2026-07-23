@@ -134,5 +134,11 @@
   "tourWelcomeName": "クイックツアー",
   "tourHomeName": "ホーム画面",
   "onbEditHomeTitle": "ホームをカスタマイズ",
-  "onbEditHomeBody": "このボタンでホームに表示するセクションと順番を選べます。"
+  "onbEditHomeBody": "このボタンでホームに表示するセクションと順番を選べます。",
+
+  "onbLangTitle": "言語",
+  "onbLangBody": "ここでアプリ全体の言語を変えられます。",
+  "onbLookTitle": "見た目",
+  "onbLookBody": "壁紙を設定し、カード・文字・タブ・アイコンの色を選べます。",
+  "tourSettingsName": "アプリをカスタマイズ"
 }

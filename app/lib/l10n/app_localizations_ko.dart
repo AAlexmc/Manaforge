@@ -322,4 +322,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get onbEditHomeBody => '이 버튼으로 홈에 표시할 섹션과 순서를 고를 수 있어요.';
+
+  @override
+  String get onbLangTitle => '언어';
+
+  @override
+  String get onbLangBody => '여기서 앱 전체 언어를 바꿔요.';
+
+  @override
+  String get onbLookTitle => '모양';
+
+  @override
+  String get onbLookBody => '배경을 설정하고 카드·글자·탭·아이콘 색을 골라요.';
+
+  @override
+  String get tourSettingsName => '앱 맞춤 설정';
 }

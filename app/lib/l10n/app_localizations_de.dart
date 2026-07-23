@@ -334,4 +334,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get onbEditHomeBody =>
       'Mit diesem Knopf wählst du, welche Bereiche auf der Startseite erscheinen und in welcher Reihenfolge.';
+
+  @override
+  String get onbLangTitle => 'Sprache';
+
+  @override
+  String get onbLangBody => 'Ändere hier die Sprache der ganzen App.';
+
+  @override
+  String get onbLookTitle => 'Aussehen';
+
+  @override
+  String get onbLookBody =>
+      'Lege ein Hintergrundbild fest und wähle die Farben von Karten, Text, Tabs und Symbolen.';
+
+  @override
+  String get tourSettingsName => 'App anpassen';
 }
