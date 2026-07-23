@@ -11,8 +11,9 @@ import 'package:manaforge_app/services/folder_store.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
 
 /// isReady() de verdad hace IO y en flutter test no se resuelve nunca. Este
-/// doble dice "base lista"; con la colección vacía la portada no consulta
-/// precios, así que no toca el disco.
+/// doble dice "base lista". El recálculo de valor de la portada sí intenta
+/// abrir la base, pero al no existir en el test el error se traga en el
+/// `catch` de _computeValuesOnce, así que la portada se pinta sin precios.
 class _BaseLista extends CardDatabase {
   @override
   Future<bool> isReady() async => true;
@@ -54,5 +55,24 @@ void main() {
 
     expect(find.text('Escanear mis cartas'), findsNothing);
     expect(find.text('Importar CSV'), findsOneWidget);
+  });
+
+  testWidgets('con cartas la portada NO enseña el CTA de colección vacía',
+      (tester) async {
+    final collection = CollectionStore()
+      ..add(OwnedCard(oracleId: 'x', name: 'Shivan Dragon', colors: 'R', qty: 1));
+    await tester.pumpWidget(MaterialApp(
+      home: ColeccionScreen(
+        db: _BaseLista(),
+        collection: collection,
+        folders: FolderStore(),
+        scanner: ScannerDatabase(),
+        onScan: () {},
+      ),
+    ));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('Aquí empieza tu colección'), findsNothing);
+    expect(find.text('Escanear mis cartas'), findsNothing);
   });
 }
