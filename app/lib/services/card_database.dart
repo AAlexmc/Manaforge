@@ -1041,6 +1041,30 @@ extension SetMarketQueries on CardDatabase {
       for (final r in imgs)
         r['set_code'] as String: r['image_normal'] as String?
     };
+    // Fallback: los sets nuevos aún sin precio de Cardmarket no salían en la
+    // pasada de arriba (exige price_eur). Para no dejar la carátula gris,
+    // cogemos una carta representativa: la de rareza más alta con imagen.
+    // El truco de columna suelta de SQLite (MIN() único → la fila del mínimo)
+    // deja `image_normal` en la carta con el mejor `rk`.
+    final sinImagen = [
+      for (final b in banners)
+        if (imageBySet[b.code] == null) b.code
+    ];
+    if (sinImagen.isNotEmpty) {
+      final fmarks = List.filled(sinImagen.length, '?').join(',');
+      final fb = db.select(
+        'SELECT set_code, image_normal, MIN('
+        "CASE rarity WHEN 'mythic' THEN 0 WHEN 'rare' THEN 1 "
+        "WHEN 'uncommon' THEN 2 WHEN 'common' THEN 3 ELSE 4 END) AS rk "
+        'FROM printings WHERE set_code IN ($fmarks) '
+        'AND image_normal IS NOT NULL '
+        'GROUP BY set_code',
+        sinImagen,
+      );
+      for (final r in fb) {
+        imageBySet[r['set_code'] as String] = r['image_normal'] as String?;
+      }
+    }
     return [
       for (final b in banners)
         SetBanner(
