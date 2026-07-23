@@ -351,4 +351,93 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tourSettingsName => 'Personnaliser l\'app';
+
+  @override
+  String get tourFullName => 'Tour complet de l\'app';
+
+  @override
+  String get tourCollectionName => 'Ta collection et les dossiers';
+
+  @override
+  String get tourForgeName => 'Forger un deck';
+
+  @override
+  String get tourMarketName => 'Marché, wishlist et alertes';
+
+  @override
+  String get onbAllCardsTitle => 'Toutes les cartes';
+
+  @override
+  String get onbAllCardsBody =>
+      'Toute ta collection : chercher, filtrer et trier.';
+
+  @override
+  String get onbFoldersTitle => 'Dossiers';
+
+  @override
+  String get onbFoldersBody =>
+      'Les dossiers sont des étiquettes : regroupe ce que tu veux, une carte peut être dans plusieurs. « Nouveau » crée le premier.';
+
+  @override
+  String get onbAlbumMineTitle => 'L\'album par extensions';
+
+  @override
+  String get onbAlbumMineBody =>
+      'Chaque extension avec ses cases. Ce filtre n\'affiche que les extensions où tu as déjà des cartes.';
+
+  @override
+  String get onbForgeBasicsTitle => 'Terrains de base';
+
+  @override
+  String get onbForgeBasicsBody =>
+      'Si tu as des terrains de base qui traînent, laisse activé : Forge compte dessus. Désactive pour n\'utiliser que ceux de ta collection.';
+
+  @override
+  String get onbForgeSetsTitle => 'Extensions';
+
+  @override
+  String get onbForgeSetsBody =>
+      'Limite d\'où viennent les cartes. Sans sélection, Forge utilise toute ta collection.';
+
+  @override
+  String get onbForgeMissingTitle => 'Cartes que tu n\'as pas';
+
+  @override
+  String get onbForgeMissingBody =>
+      'Activé, Forge propose aussi des cartes qui te manquent, et te dit combien et à quel prix.';
+
+  @override
+  String get onbForgeGoTitle => 'Forger';
+
+  @override
+  String get onbForgeGoBody =>
+      'Ce bouton fabrique les decks. Avec beaucoup d\'extensions, ça prend quelques secondes.';
+
+  @override
+  String get onbForgeTestTitle => 'Mode Test';
+
+  @override
+  String get onbForgeTestBody =>
+      'Confronte ton deck à un deck du meta et vois ce qu\'il lui manque pour gagner.';
+
+  @override
+  String get onbMarketPickTitle => 'Choisir le marché';
+
+  @override
+  String get onbMarketPickBody =>
+      'Cardmarket ou TCGplayer : ça change le prix de chaque carte et sa courbe.';
+
+  @override
+  String get onbWishlistTitle => 'Wishlist';
+
+  @override
+  String get onbWishlistBody =>
+      'Les cartes que tu veux. Le compteur passe au vert quand l\'une atteint ton prix.';
+
+  @override
+  String get onbPriceAlertTitle => 'Alerte de prix';
+
+  @override
+  String get onbPriceAlertBody =>
+      'Cherche une carte, touche le marque-page pour l\'ajouter à la wishlist et fixe un prix cible : l\'app te prévient quand il baisse.';
 }

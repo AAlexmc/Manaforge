@@ -329,4 +329,82 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tourSettingsName => '自定义应用';
+
+  @override
+  String get tourFullName => '完整应用导览';
+
+  @override
+  String get tourCollectionName => '你的收藏与文件夹';
+
+  @override
+  String get tourForgeName => '打造一副套牌';
+
+  @override
+  String get tourMarketName => '市场、心愿单与提醒';
+
+  @override
+  String get onbAllCardsTitle => '全部卡牌';
+
+  @override
+  String get onbAllCardsBody => '你的整个收藏：搜索、筛选和排序。';
+
+  @override
+  String get onbFoldersTitle => '文件夹';
+
+  @override
+  String get onbFoldersBody => '文件夹就是标签：想怎么分组都行，一张牌可以同时在多个文件夹里。点“新建”创建第一个。';
+
+  @override
+  String get onbAlbumMineTitle => '按系列查看的卡册';
+
+  @override
+  String get onbAlbumMineBody => '每个系列都有自己的格子。这个筛选只显示你已有卡牌的系列。';
+
+  @override
+  String get onbForgeBasicsTitle => '基本地';
+
+  @override
+  String get onbForgeBasicsBody => '如果家里有零散的基本地，保持开启，Forge 会算上它们。关掉则只用收藏里的。';
+
+  @override
+  String get onbForgeSetsTitle => '系列';
+
+  @override
+  String get onbForgeSetsBody => '限定卡牌的来源。不选任何系列时，Forge 会用你的全部收藏。';
+
+  @override
+  String get onbForgeMissingTitle => '我没有的卡';
+
+  @override
+  String get onbForgeMissingBody => '开启后 Forge 也会推荐你缺的卡，并告诉你缺几张、要花多少钱。';
+
+  @override
+  String get onbForgeGoTitle => '开始打造';
+
+  @override
+  String get onbForgeGoBody => '这个按钮生成套牌。系列很多时需要几秒钟。';
+
+  @override
+  String get onbForgeTestTitle => '测试模式';
+
+  @override
+  String get onbForgeTestBody => '让你的套牌对上环境套牌，看看还差什么才能赢。';
+
+  @override
+  String get onbMarketPickTitle => '选择市场';
+
+  @override
+  String get onbMarketPickBody => 'Cardmarket 或 TCGplayer：会改变每张牌的价格和走势图。';
+
+  @override
+  String get onbWishlistTitle => '心愿单';
+
+  @override
+  String get onbWishlistBody => '你想要的牌。有牌降到你的目标价时，计数会变绿。';
+
+  @override
+  String get onbPriceAlertTitle => '价格提醒';
+
+  @override
+  String get onbPriceAlertBody => '搜索一张牌，点书签图标加入心愿单并设定目标价：降价时应用会通知你。';
 }

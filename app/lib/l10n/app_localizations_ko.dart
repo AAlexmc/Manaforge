@@ -337,4 +337,85 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get tourSettingsName => '앱 맞춤 설정';
+
+  @override
+  String get tourFullName => '앱 전체 둘러보기';
+
+  @override
+  String get tourCollectionName => '내 컬렉션과 폴더';
+
+  @override
+  String get tourForgeName => '덱 만들기';
+
+  @override
+  String get tourMarketName => '마켓, 위시리스트, 알림';
+
+  @override
+  String get onbAllCardsTitle => '모든 카드';
+
+  @override
+  String get onbAllCardsBody => '컬렉션 전체를 검색하고 필터링하고 정렬합니다.';
+
+  @override
+  String get onbFoldersTitle => '폴더';
+
+  @override
+  String get onbFoldersBody =>
+      '폴더는 태그입니다. 원하는 대로 묶을 수 있고 한 카드가 여러 폴더에 들어갈 수 있습니다. \'새로\'로 첫 폴더를 만듭니다.';
+
+  @override
+  String get onbAlbumMineTitle => '세트별 앨범';
+
+  @override
+  String get onbAlbumMineBody => '세트마다 빈칸이 있습니다. 이 필터는 이미 카드를 가진 세트만 보여 줍니다.';
+
+  @override
+  String get onbForgeBasicsTitle => '기본 대지';
+
+  @override
+  String get onbForgeBasicsBody =>
+      '집에 낱장 기본 대지가 있다면 켜 두세요. Forge가 그것까지 계산합니다. 끄면 컬렉션에 있는 것만 씁니다.';
+
+  @override
+  String get onbForgeSetsTitle => '세트';
+
+  @override
+  String get onbForgeSetsBody => '카드가 어디서 나올지 좁힙니다. 아무것도 고르지 않으면 컬렉션 전체를 씁니다.';
+
+  @override
+  String get onbForgeMissingTitle => '없는 카드';
+
+  @override
+  String get onbForgeMissingBody => '켜면 없는 카드까지 제안하고, 몇 장이 필요한지와 비용을 알려 줍니다.';
+
+  @override
+  String get onbForgeGoTitle => '만들기';
+
+  @override
+  String get onbForgeGoBody => '이 버튼이 덱을 만듭니다. 세트가 많으면 몇 초 걸립니다.';
+
+  @override
+  String get onbForgeTestTitle => '테스트 모드';
+
+  @override
+  String get onbForgeTestBody => '메타 덱과 붙여 보고 이기려면 무엇이 부족한지 확인합니다.';
+
+  @override
+  String get onbMarketPickTitle => '마켓 선택';
+
+  @override
+  String get onbMarketPickBody => 'Cardmarket 또는 TCGplayer. 카드 가격과 그래프가 바뀝니다.';
+
+  @override
+  String get onbWishlistTitle => '위시리스트';
+
+  @override
+  String get onbWishlistBody => '원하는 카드 목록. 목표 가격에 닿으면 카운터가 초록색이 됩니다.';
+
+  @override
+  String get onbPriceAlertTitle => '가격 알림';
+
+  @override
+  String get onbPriceAlertBody =>
+      '카드를 검색해 북마크로 위시리스트에 넣고 목표 가격을 정하면, 가격이 내려갈 때 알려 줍니다.';
 }

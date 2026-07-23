@@ -348,4 +348,93 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tourSettingsName => 'Настроить приложение';
+
+  @override
+  String get tourFullName => 'Полный тур по приложению';
+
+  @override
+  String get tourCollectionName => 'Твоя коллекция и папки';
+
+  @override
+  String get tourForgeName => 'Собрать колоду';
+
+  @override
+  String get tourMarketName => 'Рынок, вишлист и оповещения';
+
+  @override
+  String get onbAllCardsTitle => 'Все карты';
+
+  @override
+  String get onbAllCardsBody =>
+      'Вся твоя коллекция: поиск, фильтры и сортировка.';
+
+  @override
+  String get onbFoldersTitle => 'Папки';
+
+  @override
+  String get onbFoldersBody =>
+      'Папки — это метки: группируй как хочешь, карта может быть сразу в нескольких. Кнопка «Новая» создаёт первую.';
+
+  @override
+  String get onbAlbumMineTitle => 'Альбом по изданиям';
+
+  @override
+  String get onbAlbumMineBody =>
+      'Каждое издание со своими ячейками. Этот фильтр показывает только издания, где у тебя уже есть карты.';
+
+  @override
+  String get onbForgeBasicsTitle => 'Базовые земли';
+
+  @override
+  String get onbForgeBasicsBody =>
+      'Если дома есть россыпь базовых земель, оставь включённым: Forge будет на них рассчитывать. Выключи — возьмёт только из коллекции.';
+
+  @override
+  String get onbForgeSetsTitle => 'Издания';
+
+  @override
+  String get onbForgeSetsBody =>
+      'Ограничь, откуда берутся карты. Без выбора Forge использует всю коллекцию.';
+
+  @override
+  String get onbForgeMissingTitle => 'Карты, которых нет';
+
+  @override
+  String get onbForgeMissingBody =>
+      'С этим Forge предлагает и недостающие карты, показывая, сколько их и сколько они стоят.';
+
+  @override
+  String get onbForgeGoTitle => 'Собрать';
+
+  @override
+  String get onbForgeGoBody =>
+      'Эта кнопка строит колоды. С большим числом изданий уходит несколько секунд.';
+
+  @override
+  String get onbForgeTestTitle => 'Режим теста';
+
+  @override
+  String get onbForgeTestBody =>
+      'Сравни свою колоду с метовой и узнай, чего ей не хватает для победы.';
+
+  @override
+  String get onbMarketPickTitle => 'Выбор рынка';
+
+  @override
+  String get onbMarketPickBody =>
+      'Cardmarket или TCGplayer: меняет цену каждой карты и её график.';
+
+  @override
+  String get onbWishlistTitle => 'Вишлист';
+
+  @override
+  String get onbWishlistBody =>
+      'Карты, которые ты хочешь. Счётчик зеленеет, когда какая-то доходит до твоей цены.';
+
+  @override
+  String get onbPriceAlertTitle => 'Оповещение о цене';
+
+  @override
+  String get onbPriceAlertBody =>
+      'Найди карту, нажми на закладку, чтобы добавить её в вишлист, и задай целевую цену: приложение сообщит, когда она упадёт.';
 }

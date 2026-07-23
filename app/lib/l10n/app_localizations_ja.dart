@@ -337,4 +337,85 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tourSettingsName => 'アプリをカスタマイズ';
+
+  @override
+  String get tourFullName => 'アプリの全体ツアー';
+
+  @override
+  String get tourCollectionName => 'コレクションとフォルダ';
+
+  @override
+  String get tourForgeName => 'デッキを鍛える';
+
+  @override
+  String get tourMarketName => 'マーケット・ウィッシュリスト・通知';
+
+  @override
+  String get onbAllCardsTitle => 'すべてのカード';
+
+  @override
+  String get onbAllCardsBody => 'コレクション全体を検索・絞り込み・並べ替えできます。';
+
+  @override
+  String get onbFoldersTitle => 'フォルダ';
+
+  @override
+  String get onbFoldersBody =>
+      'フォルダはタグです。好きなようにまとめられ、1枚のカードが複数に入れます。「新規」で最初の1つを作れます。';
+
+  @override
+  String get onbAlbumMineTitle => 'セット別アルバム';
+
+  @override
+  String get onbAlbumMineBody => '各セットの枠が並びます。このフィルタで、すでにカードを持っているセットだけを表示します。';
+
+  @override
+  String get onbForgeBasicsTitle => '基本土地';
+
+  @override
+  String get onbForgeBasicsBody =>
+      '手元に基本土地があるならオンのままに。Forge がそれを前提にします。オフならコレクション内のものだけ使います。';
+
+  @override
+  String get onbForgeSetsTitle => 'セット';
+
+  @override
+  String get onbForgeSetsBody => 'カードの出どころを絞ります。何も選ばなければコレクション全体を使います。';
+
+  @override
+  String get onbForgeMissingTitle => '持っていないカード';
+
+  @override
+  String get onbForgeMissingBody => 'オンにすると足りないカードも提案し、何枚・いくらかかるかを教えます。';
+
+  @override
+  String get onbForgeGoTitle => '鍛える';
+
+  @override
+  String get onbForgeGoBody => 'このボタンでデッキを作ります。セットが多いと数秒かかります。';
+
+  @override
+  String get onbForgeTestTitle => 'テストモード';
+
+  @override
+  String get onbForgeTestBody => 'メタデッキと戦わせて、勝つには何が足りないかを見ます。';
+
+  @override
+  String get onbMarketPickTitle => 'マーケットを選ぶ';
+
+  @override
+  String get onbMarketPickBody => 'Cardmarket か TCGplayer か。各カードの価格とグラフが変わります。';
+
+  @override
+  String get onbWishlistTitle => 'ウィッシュリスト';
+
+  @override
+  String get onbWishlistBody => '欲しいカードの一覧。目標価格に届くとカウンターが緑になります。';
+
+  @override
+  String get onbPriceAlertTitle => '価格アラート';
+
+  @override
+  String get onbPriceAlertBody =>
+      'カードを検索してしおりアイコンでウィッシュリストに入れ、目標価格を設定すると、下がったときに知らせます。';
 }

@@ -30,6 +30,9 @@ class AlbumScreen extends StatefulWidget {
   /// Índice de esta pantalla en la barra, para saber si el aviso es suyo.
   final int tabIndex;
 
+  /// Key para que un tour pueda señalar el filtro "Con cartas mías".
+  final Key? miasKey;
+
   const AlbumScreen(
       {super.key,
       required this.db,
@@ -37,7 +40,8 @@ class AlbumScreen extends StatefulWidget {
       this.market,
       this.prices,
       this.search,
-      this.tabIndex = -1});
+      this.tabIndex = -1,
+      this.miasKey});
 
   @override
   State<AlbumScreen> createState() => _AlbumScreenState();
@@ -197,10 +201,13 @@ class _AlbumScreenState extends State<AlbumScreen> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      FilterChip(
-                        selected: _onlyMine,
-                        label: const Text('Con cartas mías'),
-                        onSelected: (v) => setState(() => _onlyMine = v),
+                      KeyedSubtree(
+                        key: widget.miasKey,
+                        child: FilterChip(
+                          selected: _onlyMine,
+                          label: const Text('Con cartas mías'),
+                          onSelected: (v) => setState(() => _onlyMine = v),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       DropdownButtonHideUnderline(

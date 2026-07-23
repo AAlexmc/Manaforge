@@ -350,4 +350,93 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tourSettingsName => 'App anpassen';
+
+  @override
+  String get tourFullName => 'Komplette Tour durch die App';
+
+  @override
+  String get tourCollectionName => 'Deine Sammlung und die Ordner';
+
+  @override
+  String get tourForgeName => 'Ein Deck schmieden';
+
+  @override
+  String get tourMarketName => 'Markt, Wunschliste und Alarme';
+
+  @override
+  String get onbAllCardsTitle => 'Alle Karten';
+
+  @override
+  String get onbAllCardsBody =>
+      'Deine ganze Sammlung: suchen, filtern und sortieren.';
+
+  @override
+  String get onbFoldersTitle => 'Ordner';
+
+  @override
+  String get onbFoldersBody =>
+      'Ordner sind Etiketten: gruppiere, was du willst — eine Karte kann in mehreren liegen. Mit „Neu\" legst du den ersten an.';
+
+  @override
+  String get onbAlbumMineTitle => 'Das Album nach Editionen';
+
+  @override
+  String get onbAlbumMineBody =>
+      'Jede Edition mit ihren Plätzen. Dieser Filter zeigt nur Editionen, von denen du schon Karten hast.';
+
+  @override
+  String get onbForgeBasicsTitle => 'Standardländer';
+
+  @override
+  String get onbForgeBasicsBody =>
+      'Wenn du lose Standardländer zu Hause hast, lass das an: Forge rechnet mit ihnen. Aus heißt: nur die aus deiner Sammlung.';
+
+  @override
+  String get onbForgeSetsTitle => 'Editionen';
+
+  @override
+  String get onbForgeSetsBody =>
+      'Grenze ein, woher die Karten kommen. Ohne Auswahl nutzt Forge deine ganze Sammlung.';
+
+  @override
+  String get onbForgeMissingTitle => 'Karten, die dir fehlen';
+
+  @override
+  String get onbForgeMissingBody =>
+      'Damit schlägt Forge auch fehlende Karten vor und sagt dir, wie viele es sind und was sie kosten würden.';
+
+  @override
+  String get onbForgeGoTitle => 'Schmieden';
+
+  @override
+  String get onbForgeGoBody =>
+      'Dieser Knopf baut die Decks. Mit vielen Editionen dauert es ein paar Sekunden.';
+
+  @override
+  String get onbForgeTestTitle => 'Testmodus';
+
+  @override
+  String get onbForgeTestBody =>
+      'Miss dein Deck an einem Meta-Deck und sieh, was ihm zum Sieg fehlt.';
+
+  @override
+  String get onbMarketPickTitle => 'Markt wählen';
+
+  @override
+  String get onbMarketPickBody =>
+      'Cardmarket oder TCGplayer: das ändert jeden Preis und die Kurve.';
+
+  @override
+  String get onbWishlistTitle => 'Wunschliste';
+
+  @override
+  String get onbWishlistBody =>
+      'Die Karten, die du willst. Der Zähler wird grün, sobald eine deinen Preis erreicht.';
+
+  @override
+  String get onbPriceAlertTitle => 'Preisalarm';
+
+  @override
+  String get onbPriceAlertBody =>
+      'Suche eine Karte, tippe auf das Lesezeichen für die Wunschliste und setze einen Zielpreis: die App meldet sich, wenn er fällt.';
 }
