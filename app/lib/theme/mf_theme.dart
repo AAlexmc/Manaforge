@@ -42,7 +42,11 @@ class MFColors {
 ///
 /// [card] y [text] null = los del tema de siempre.
 ThemeData mfThemeSobreFondo(ThemeData base,
-    {Color? card, Color? text, double cardOpacity = 1}) {
+    {Color? card,
+    Color? text,
+    Color? chip,
+    Color? icon,
+    double cardOpacity = 1}) {
   final fondoTarjeta = (card ?? base.colorScheme.surface)
       .withValues(alpha: cardOpacity.clamp(0, 1));
   var tema = base.copyWith(
@@ -62,6 +66,30 @@ ThemeData mfThemeSobreFondo(ThemeData base,
       colorScheme: tema.colorScheme.copyWith(onSurface: text),
       textTheme: tema.textTheme.apply(bodyColor: text, displayColor: text),
       iconTheme: tema.iconTheme.copyWith(color: text),
+    );
+  }
+  // las pestañas (chips): el color elegido tiñe la seleccionada y su borde
+  if (chip != null) {
+    tema = tema.copyWith(
+      chipTheme: tema.chipTheme.copyWith(
+        selectedColor: chip,
+        side: BorderSide(color: chip.withValues(alpha: 0.7)),
+        checkmarkColor:
+            ThemeData.estimateBrightnessForColor(chip) == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+      ),
+    );
+  }
+  // los iconos. Va DESPUÉS de la letra para que gane sobre el iconTheme que
+  // pone el color de letra. Los iconos de marca (Forge, Escanear) llevan su
+  // color a mano en el widget, así que no los toca.
+  if (icon != null) {
+    tema = tema.copyWith(
+      iconTheme: tema.iconTheme.copyWith(color: icon),
+      navigationBarTheme: tema.navigationBarTheme.copyWith(
+        iconTheme: WidgetStatePropertyAll(IconThemeData(color: icon)),
+      ),
     );
   }
   return tema;

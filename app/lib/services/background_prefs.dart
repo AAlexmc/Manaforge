@@ -118,6 +118,10 @@ class BackgroundPreference extends ChangeNotifier {
   // uno puesto, el `_...ColorId` se deja en null y viceversa.
   Color? _cardCustom;
   Color? _textCustom;
+  // color de las pestañas (chips) y de los iconos: solo a medida, null = el
+  // del tema.
+  Color? _chipColor;
+  Color? _iconColor;
   double _cardOpacity = kDefaultCardOpacity;
   Future<void>? _loading;
 
@@ -149,6 +153,13 @@ class BackgroundPreference extends ChangeNotifier {
   bool get cardIsCustom => _cardCustom != null;
 
   bool get textIsCustom => _textCustom != null;
+
+  /// Color de las pestañas (chips), null = el del tema.
+  Color? get chipColor => _chipColor;
+
+  /// Color de los iconos, null = el del tema. No toca los iconos de marca
+  /// (Forge morado, Escanear rojo): esos llevan su color puesto a mano.
+  Color? get iconColor => _iconColor;
 
   /// Cuánto tapan las tarjetas al fondo (0..1).
   double get cardOpacity => _cardOpacity;
@@ -218,6 +229,10 @@ class BackgroundPreference extends ChangeNotifier {
           _textColorId = null;
         }
       }
+      final chipHex = decoded['chipColorHex'];
+      if (chipHex is String) _chipColor = _parseHex(chipHex);
+      final iconHex = decoded['iconColorHex'];
+      if (iconHex is String) _iconColor = _parseHex(iconHex);
       final opacidad = decoded['cardOpacity'];
       if (opacidad is num) {
         _cardOpacity =
@@ -327,6 +342,22 @@ class BackgroundPreference extends ChangeNotifier {
     await _save();
   }
 
+  /// Color de las pestañas (chips). null = el del tema.
+  Future<void> setChipColor(Color? color) async {
+    if (_chipColor == color) return;
+    _chipColor = color;
+    notifyListeners();
+    await _save();
+  }
+
+  /// Color de los iconos. null = el del tema.
+  Future<void> setIconColor(Color? color) async {
+    if (_iconColor == color) return;
+    _iconColor = color;
+    notifyListeners();
+    await _save();
+  }
+
   Future<void> setCardOpacity(double value) async {
     final nuevo = value.clamp(kMinCardOpacity, kMaxCardOpacity);
     if (nuevo == _cardOpacity) return;
@@ -375,6 +406,8 @@ class BackgroundPreference extends ChangeNotifier {
             if (_textColorId != null) 'textColor': _textColorId,
             if (_cardCustom != null) 'cardColorHex': _hex(_cardCustom!),
             if (_textCustom != null) 'textColorHex': _hex(_textCustom!),
+            if (_chipColor != null) 'chipColorHex': _hex(_chipColor!),
+            if (_iconColor != null) 'iconColorHex': _hex(_iconColor!),
             'cardOpacity': _cardOpacity,
           }));
     } catch (_) {

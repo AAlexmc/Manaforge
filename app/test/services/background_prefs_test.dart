@@ -231,6 +231,29 @@ void main() {
     expect(prefs.cardIsCustom, isFalse);
   });
 
+  test('el color de las pestañas y el de los iconos se guardan', () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.setChipColor(const Color(0xFF4FB878));
+    await uno.setIconColor(const Color(0xFFE0CC8A));
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+
+    expect(otro.chipColor, const Color(0xFF4FB878));
+    expect(otro.iconColor, const Color(0xFFE0CC8A));
+  });
+
+  test('volver al color del tema (null) en pestañas/iconos', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.setChipColor(const Color(0xFF123456));
+    await prefs.setIconColor(const Color(0xFF654321));
+    await prefs.setChipColor(null);
+    await prefs.setIconColor(null);
+
+    expect(prefs.chipColor, isNull);
+    expect(prefs.iconColor, isNull);
+  });
+
   test('las tarjetas no pueden quedar tan transparentes que no se lean',
       () async {
     final prefs = BackgroundPreference(dataDir: datos);

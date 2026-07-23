@@ -97,6 +97,8 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
               ? mfThemeSobreFondo(base,
                   card: _background.cardColor,
                   text: _background.textColor,
+                  chip: _background.chipColor,
+                  icon: _background.iconColor,
                   cardOpacity: _background.cardOpacity)
               : base;
         }
