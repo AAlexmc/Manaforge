@@ -392,8 +392,12 @@ class _Vistazo extends StatelessWidget {
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
     final letra = prefs.textColor ?? tema.colorScheme.onSurface;
-    final tarjeta = (prefs.cardColor ?? tema.colorScheme.surface)
-        .withValues(alpha: prefs.cardOpacity);
+    final cardOpaco = prefs.cardColor ?? tema.colorScheme.surface;
+    final tarjeta = cardOpaco.withValues(alpha: prefs.cardOpacity);
+    // muestras de pestaña e icono: si no se han elegido, los del tema. El
+    // icono se ajusta para leerse sobre la tarjeta, igual que hace el tema.
+    final chip = prefs.chipColor ?? tema.colorScheme.primary;
+    final icono = legibleOn(cardOpaco, prefs.iconColor ?? letra);
     final imagen = prefs.image;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -425,6 +429,31 @@ class _Vistazo extends StatelessWidget {
                             color: letra, fontWeight: FontWeight.bold)),
                     Text('Sol Ring · 2,40 €',
                         style: TextStyle(color: letra, fontSize: 12)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        // una pestaña de muestra, con su color
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: chip,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text('Rojo',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: ThemeData.estimateBrightnessForColor(
+                                              chip) ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black)),
+                        ),
+                        const Spacer(),
+                        // un icono de muestra, con su color
+                        Icon(Icons.star_rounded, size: 20, color: icono),
+                      ],
+                    ),
                   ],
                 ),
               ),

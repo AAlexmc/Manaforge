@@ -63,6 +63,11 @@ void main() {
     expect(find.text('Color de las pestañas'), findsOneWidget);
     expect(find.text('Color de los iconos'), findsOneWidget);
 
+    // el vistazo enseña una muestra de pestaña (con texto) y de icono, para
+    // ver el color de pestañas/iconos sin salir de Ajustes
+    expect(find.text('Rojo'), findsOneWidget);
+    expect(find.byIcon(Icons.star_rounded), findsOneWidget);
+
     // el círculo del color 'vino' de las tarjetas
     await tester.tap(find.bySemanticsLabel('vino'));
     await tester.pump();
