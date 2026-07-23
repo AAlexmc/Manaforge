@@ -21,12 +21,15 @@ void main() {
     }
   });
 
-  test('cada paso con targetKey también cambia de pantalla (invariante)', () {
+  test('cada paso con targetKey trae su pantalla (invariante)', () {
+    // o cambia de pestaña (goToScreen) o abre la pantalla empujada donde vive
+    // el botón (push). Sin eso se mediría el botón de una pantalla que está
+    // detrás y el foco caería en el sitio equivocado.
     final keys = TourKeys();
     for (final tour in kTours) {
       for (final step in tour.build(t, keys)) {
         if (step.targetKey != null) {
-          expect(step.goToScreen, isNotNull,
+          expect(step.goToScreen != null || step.push != null, isTrue,
               reason: 'tour "${tour.id}": un paso señala un botón pero no '
                   'trae su pantalla al frente');
         }
@@ -45,7 +48,20 @@ void main() {
 
   test('están los tours por tema de Colección, Forge y Mercado', () {
     final ids = kTours.map((t) => t.id).toSet();
-    expect(ids, containsAll(['collection', 'forge', 'market', 'settings']));
+    expect(ids,
+        containsAll(['collection', 'forge', 'market', 'settings', 'scan']));
+  });
+
+  test('el tour del escáner entra dentro y señala los mandos de arriba', () {
+    final scan = kTours.firstWhere((t) => t.id == 'scan');
+    final pasos = scan.build(t, TourKeys());
+    expect(pasos.first.navBarIndex, isNotNull); // primero, su botón
+    expect(pasos.first.push, isNull);
+    for (final paso in pasos.skip(1)) {
+      expect(paso.push, TourPush.escaner);
+      expect(paso.targetKey, isNotNull);
+    }
+    expect(pasos, hasLength(4)); // barra + set + modo + foto
   });
 
   test('el gran tour pasa por TODAS las pestañas', () {
@@ -71,14 +87,14 @@ void main() {
     }
   });
 
-  test('el gran tour abre Logros y Certificados', () {
+  test('el gran tour abre TODAS las pantallas empujadas', () {
     final full = kTours.firstWhere((t) => t.id == 'full');
     final empujadas = full
         .build(t, TourKeys())
         .map((s) => s.push)
         .whereType<TourPush>()
         .toSet();
-    expect(empujadas, {TourPush.logros, TourPush.certificados});
+    expect(empujadas, TourPush.values.toSet());
   });
 
   test('antes de abrir una pantalla, el tour enseña el botón que la abre', () {

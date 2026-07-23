@@ -156,8 +156,11 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
                         Positioned.fill(
                           child: TourOverlay(
                             // key por tour: al cambiar de tour, empieza del 1
-                            key: ValueKey(tour.id),
-                            steps: tour.steps,
+                            key: ValueKey(tour.tour.id),
+                            // los pasos se construyen AQUÍ, con el idioma de
+                            // ahora: cambiarlo a media guía cambia las
+                            // burbujas sin salir del paso en el que estás
+                            steps: tour.tour.build(tr(context), tour.keys),
                             navItemCount: tour.navItemCount,
                             onGoToScreen: tour.onGoToScreen,
                             onPush: tour.onPush,
@@ -438,11 +441,10 @@ class _HomeShellState extends State<HomeShell> {
   /// lo que necesita: los pasos ya construidos con las keys de esta pantalla y
   /// qué hacer al cambiar de pestaña, al abrir una pantalla o al terminar.
   void _lanzarTour(Tour tour) {
-    final t = tr(context);
     widget.tour.value = TourRequest(
-      id: tour.id,
-      steps: tour.build(t, _tourKeys),
-      navItemCount: _destinos(t).length,
+      tour: tour,
+      keys: _tourKeys,
+      navItemCount: _destinos(tr(context)).length,
       onGoToScreen: (s) {
         if (mounted) setState(() => _index = s);
       },
@@ -503,6 +505,17 @@ class _HomeShellState extends State<HomeShell> {
             certificadosKey: _tourKeys.logrosCertificados),
         TourPush.certificados => CertificadosScreen(
             db: _db, collection: _collection, certificates: _certificates),
+        // entrar aquí ENCIENDE la cámara, igual que si lo abriera el usuario:
+        // el tour enseña los mandos de arriba sobre el escáner de verdad
+        TourPush.escaner => LiveScanScreen(
+            db: _db,
+            collection: _collection,
+            scanner: _scanner,
+            achievements: _achievements,
+            folders: _folders,
+            setKey: _tourKeys.escanerSet,
+            modoKey: _tourKeys.escanerModo,
+            fotoKey: _tourKeys.escanerFoto),
       },
     );
     _rutaTour = ruta;

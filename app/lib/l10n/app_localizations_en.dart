@@ -622,4 +622,28 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onbVersionBody =>
       'Which version you\'re on, what\'s in it, and whether the app should check once a day for a new one. It never updates itself.';
+
+  @override
+  String get onbScanSetTitle => 'Set: all';
+
+  @override
+  String get onbScanSetBody =>
+      'If you\'re opening packs from ONE set, lock it here: the scanner stops hesitating between the ten reprints of the same card.';
+
+  @override
+  String get onbScanModeTitle => 'Fast or careful';
+
+  @override
+  String get onbScanModeBody =>
+      'In \"Fast\", clear cards go in on their own and the doubtful ones get flagged for review. In \"Careful\" it stops and asks you which one it is.';
+
+  @override
+  String get onbScanPhotoTitle => 'Scan a photo';
+
+  @override
+  String get onbScanPhotoBody =>
+      'No camera, or your cards already photographed? Drop a photo here — several cards in one shot is fine — and it pulls them out just the same.';
+
+  @override
+  String get tourScanName => 'The scanner';
 }

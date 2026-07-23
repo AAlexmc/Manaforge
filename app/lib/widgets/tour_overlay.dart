@@ -5,7 +5,7 @@ import '../theme/mf_theme.dart';
 
 /// Pantallas que NO son pestaña: se abren encima (Navigator.push). El tour
 /// las abre él mismo y las cierra al pasar de paso.
-enum TourPush { logros, certificados }
+enum TourPush { logros, certificados, escaner }
 
 /// Cosas que hay que hacer ANTES de poder señalar algo: desplegar una sección
 /// plegada de Ajustes (plegada, lo de dentro no se puede medir).
