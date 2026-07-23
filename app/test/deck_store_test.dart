@@ -44,4 +44,50 @@ void main() {
     store.remove(store.decks.first.id);
     expect(store.decks, isEmpty);
   });
+
+  test('restore vuelve a meter el mazo en su sitio y no lo duplica', () {
+    SavedDeck mk(String id) => SavedDeck(
+          id: id,
+          name: 'Mazo $id',
+          colors: 'W',
+          archetype: 'aggro',
+          theme: 'x',
+          score: 1.0,
+          cards: const {'A': 4},
+          lands: const {'Plains': 20},
+          savedAt: '2026-07-01T00:00:00.000',
+        );
+    final store = DeckStore();
+    final a = mk('a'), b = mk('b'), c = mk('c');
+    // add inserta arriba: [c] -> [b,c] -> [a,b,c]
+    store..add(c)..add(b)..add(a);
+    final idxB = store.decks.indexWhere((d) => d.id == 'b'); // 1
+
+    store.remove('b');
+    expect(store.decks.map((d) => d.id), ['a', 'c']);
+
+    store.restore(b, idxB);
+    expect(store.decks.map((d) => d.id), ['a', 'b', 'c'],
+        reason: 'vuelve exactamente a su hueco');
+
+    // doble deshacer no duplica
+    store.restore(b, idxB);
+    expect(store.decks.where((d) => d.id == 'b').length, 1);
+  });
+
+  test('restore con índice fuera de rango lo acota', () {
+    final store = DeckStore();
+    const a = SavedDeck(
+        id: 'a',
+        name: 'A',
+        colors: 'W',
+        archetype: 'aggro',
+        theme: 'x',
+        score: 1.0,
+        cards: {'A': 4},
+        lands: {'Plains': 20},
+        savedAt: '2026-07-01T00:00:00.000');
+    store.restore(a, 999);
+    expect(store.decks.single.id, 'a');
+  });
 }
