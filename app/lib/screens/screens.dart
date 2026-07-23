@@ -62,6 +62,12 @@ class AjustesScreen extends StatefulWidget {
   final Key? idiomaKey;
   final Key? fondoKey;
 
+  /// La copia de seguridad vive dentro de la sección "Datos", que nace
+  /// plegada: el tour necesita la key para señalarla y el mando para abrir la
+  /// sección antes (plegada, la tarjeta ni siquiera tiene sitio en pantalla).
+  final Key? copiaKey;
+  final ExpansibleController? datosController;
+
   const AjustesScreen(
       {super.key,
       required this.db,
@@ -71,7 +77,9 @@ class AjustesScreen extends StatefulWidget {
       this.language,
       this.homeLayout,
       this.idiomaKey,
-      this.fondoKey});
+      this.fondoKey,
+      this.copiaKey,
+      this.datosController});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -157,6 +165,7 @@ class _AjustesScreenState extends State<AjustesScreen> {
             _Seccion(
               titulo: 'Datos',
               icono: Icons.storage_outlined,
+              controller: widget.datosController,
               children: [
                 Card(
                   child: Padding(
@@ -194,7 +203,11 @@ class _AjustesScreenState extends State<AjustesScreen> {
                     ),
                   ),
                 ),
-                BackupCard(dataDir: _dataDir, onRestored: widget.onRestored),
+                KeyedSubtree(
+                  key: widget.copiaKey,
+                  child: BackupCard(
+                      dataDir: _dataDir, onRestored: widget.onRestored),
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -300,11 +313,16 @@ class _Seccion extends StatelessWidget {
   final bool initiallyExpanded;
   final List<Widget> children;
 
+  /// Si viene, se puede abrir desde fuera: lo usa el tour para desplegar la
+  /// sección antes de señalar algo de dentro.
+  final ExpansibleController? controller;
+
   const _Seccion({
     required this.titulo,
     required this.icono,
     required this.children,
     this.initiallyExpanded = false,
+    this.controller,
   });
 
   @override
@@ -314,6 +332,7 @@ class _Seccion extends StatelessWidget {
       // las secciones se leen como bloques y no como una tabla
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
+        controller: controller,
         leading: Icon(icono),
         title: Text(titulo,
             style: Theme.of(context)

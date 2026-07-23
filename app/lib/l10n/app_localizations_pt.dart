@@ -454,4 +454,11 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get onbCertificatesBody =>
       'Os marcos grandes viram um diploma que podes guardar em PDF ou mostrar. Estão dentro das Conquistas.';
+
+  @override
+  String get onbBackupTitle => 'Cópia de segurança';
+
+  @override
+  String get onbBackupBody =>
+      'Guarda a tua coleção, baralhos e pastas num ficheiro e recupera-os se mudares de computador. Há também uma cópia automática todas as semanas.';
 }

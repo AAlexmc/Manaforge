@@ -455,4 +455,11 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get onbCertificatesBody =>
       'I traguardi grossi diventano un diploma che puoi salvare in PDF o mostrare. Stanno dentro Obiettivi.';
+
+  @override
+  String get onbBackupTitle => 'Copia di sicurezza';
+
+  @override
+  String get onbBackupBody =>
+      'Salva collezione, mazzi e cartelle in un file e recuperali se cambi computer. In più ogni settimana si fa una copia da sola.';
 }

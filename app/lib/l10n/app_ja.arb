@@ -173,5 +173,8 @@
   "onbAchievementsTitle": "実績とレベル",
   "onbAchievementsBody": "スキャン・整理・デッキ作りで上がるレベルと、もらえるバッジです。ホームのレベルカードから開きます。",
   "onbCertificatesTitle": "証明書",
-  "onbCertificatesBody": "大きな節目は賞状になり、PDF で保存したり見せたりできます。実績の中にあります。"
+  "onbCertificatesBody": "大きな節目は賞状になり、PDF で保存したり見せたりできます。実績の中にあります。",
+
+  "onbBackupTitle": "バックアップ",
+  "onbBackupBody": "コレクション・デッキ・フォルダをファイルに保存し、パソコンを替えても戻せます。さらに毎週、自動でもバックアップされます。"
 }

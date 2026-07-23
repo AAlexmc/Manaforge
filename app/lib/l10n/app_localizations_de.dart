@@ -456,4 +456,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get onbCertificatesBody =>
       'Die großen Meilensteine gibt es als Urkunde, die du als PDF sichern oder herzeigen kannst. Sie stecken in den Erfolgen.';
+
+  @override
+  String get onbBackupTitle => 'Sicherung';
+
+  @override
+  String get onbBackupBody =>
+      'Sichere Sammlung, Decks und Ordner in einer Datei und hol sie zurück, wenn du den Rechner wechselst. Einmal pro Woche wird zusätzlich automatisch gesichert.';
 }

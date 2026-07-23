@@ -893,6 +893,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Los hitos gordos salen en un diploma que puedes guardar en PDF o enseñar. Están dentro de Logros.'**
   String get onbCertificatesBody;
+
+  /// No description provided for @onbBackupTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Copia de seguridad'**
+  String get onbBackupTitle;
+
+  /// No description provided for @onbBackupBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Guarda tu colección, mazos y carpetas en un archivo, y recupéralos si cambias de ordenador. Además se hace una copia sola cada semana.'**
+  String get onbBackupBody;
 }
 
 class _AppLocalizationsDelegate

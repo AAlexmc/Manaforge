@@ -434,4 +434,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get onbCertificatesBody => '大きな節目は賞状になり、PDF で保存したり見せたりできます。実績の中にあります。';
+
+  @override
+  String get onbBackupTitle => 'バックアップ';
+
+  @override
+  String get onbBackupBody =>
+      'コレクション・デッキ・フォルダをファイルに保存し、パソコンを替えても戻せます。さらに毎週、自動でもバックアップされます。';
 }

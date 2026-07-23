@@ -435,4 +435,11 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get onbCertificatesBody =>
       '큰 이정표는 상장으로 나옵니다. PDF로 저장하거나 자랑할 수 있고, 업적 안에 있습니다.';
+
+  @override
+  String get onbBackupTitle => '백업';
+
+  @override
+  String get onbBackupBody =>
+      '컬렉션, 덱, 폴더를 파일로 저장하고 컴퓨터를 바꿔도 되살릴 수 있습니다. 매주 자동 백업도 됩니다.';
 }

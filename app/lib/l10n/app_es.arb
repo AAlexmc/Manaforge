@@ -166,5 +166,8 @@
   "onbAchievementsTitle": "Logros y nivel",
   "onbAchievementsBody": "Tu nivel y las medallas que vas ganando por escanear, ordenar y forjar. Se abre desde la tarjeta de nivel de Inicio.",
   "onbCertificatesTitle": "Certificados",
-  "onbCertificatesBody": "Los hitos gordos salen en un diploma que puedes guardar en PDF o enseñar. Están dentro de Logros."
+  "onbCertificatesBody": "Los hitos gordos salen en un diploma que puedes guardar en PDF o enseñar. Están dentro de Logros.",
+
+  "onbBackupTitle": "Copia de seguridad",
+  "onbBackupBody": "Guarda tu colección, mazos y carpetas en un archivo, y recupéralos si cambias de ordenador. Además se hace una copia sola cada semana."
 }
