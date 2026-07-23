@@ -1865,6 +1865,252 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Reforjar'**
   String get fgReforge;
+
+  /// No description provided for @mkAlertOne.
+  ///
+  /// In es, this message translates to:
+  /// **'🔔 ¡{carta} está a {precio} (tu objetivo: {objetivo})!'**
+  String mkAlertOne(String carta, String precio, String objetivo);
+
+  /// No description provided for @mkAlertMany.
+  ///
+  /// In es, this message translates to:
+  /// **'🔔 ¡{n} cartas de tu wishlist han caído a su precio objetivo!'**
+  String mkAlertMany(int n);
+
+  /// No description provided for @mkTellMeWhenDrops.
+  ///
+  /// In es, this message translates to:
+  /// **'Avísame cuando baje'**
+  String get mkTellMeWhenDrops;
+
+  /// No description provided for @mkTargetPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio objetivo'**
+  String get mkTargetPrice;
+
+  /// No description provided for @mkNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora: {precio}'**
+  String mkNow(String precio);
+
+  /// No description provided for @mkUpdated.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Precios y cartas actualizados'**
+  String get mkUpdated;
+
+  /// No description provided for @mkUpdateFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude actualizar: {error}'**
+  String mkUpdateFailed(String error);
+
+  /// No description provided for @mkHistoryReady.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Histórico de precios listo: las gráficas ya enseñan los últimos meses'**
+  String get mkHistoryReady;
+
+  /// No description provided for @mkHistoryFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude traer el histórico (el que ya tenías sigue intacto): {error}'**
+  String mkHistoryFailed(String error);
+
+  /// No description provided for @mkHistoryLocal.
+  ///
+  /// In es, this message translates to:
+  /// **'Histórico de precios: solo el que ManaForge apunta a diario en tu equipo. Tráete los últimos ~90 días reales de Cardmarket (≈4 MB).'**
+  String get mkHistoryLocal;
+
+  /// No description provided for @mkHistoryReal.
+  ///
+  /// In es, this message translates to:
+  /// **'Histórico real de Cardmarket del {desde} al {hasta}, y desde ahí lo que apunta ManaForge.'**
+  String mkHistoryReal(String desde, String hasta);
+
+  /// No description provided for @mkFetchHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'Traer histórico'**
+  String get mkFetchHistory;
+
+  /// No description provided for @mkCollectionValue.
+  ///
+  /// In es, this message translates to:
+  /// **'Valor de tu colección · Cardmarket'**
+  String get mkCollectionValue;
+
+  /// No description provided for @mkCardsCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} cartas'**
+  String mkCardsCount(int n);
+
+  /// No description provided for @mkApproxSuffix.
+  ///
+  /// In es, this message translates to:
+  /// **' · valor orientativo'**
+  String get mkApproxSuffix;
+
+  /// No description provided for @mkBulkPrices.
+  ///
+  /// In es, this message translates to:
+  /// **'Precios Cardmarket del {fecha} (Scryfall)'**
+  String mkBulkPrices(String fecha);
+
+  /// No description provided for @mkNoData.
+  ///
+  /// In es, this message translates to:
+  /// **'Mercado sin datos: descarga la base de datos en Colección. ({error})'**
+  String mkNoData(String error);
+
+  /// No description provided for @mkSetsHeader.
+  ///
+  /// In es, this message translates to:
+  /// **'EXPANSIONES ({n})'**
+  String mkSetsHeader(int n);
+
+  /// No description provided for @mkPrevious.
+  ///
+  /// In es, this message translates to:
+  /// **'Anteriores'**
+  String get mkPrevious;
+
+  /// No description provided for @mkNext.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguientes'**
+  String get mkNext;
+
+  /// No description provided for @mkSearchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca el precio de cualquier carta…'**
+  String get mkSearchHint;
+
+  /// No description provided for @mkRemoveFromWishlist.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar de la wishlist'**
+  String get mkRemoveFromWishlist;
+
+  /// No description provided for @mkAddToWishlist.
+  ///
+  /// In es, this message translates to:
+  /// **'A la wishlist: avísame cuando baje'**
+  String get mkAddToWishlist;
+
+  /// No description provided for @mkYourWishlist.
+  ///
+  /// In es, this message translates to:
+  /// **'TU WISHLIST'**
+  String get mkYourWishlist;
+
+  /// No description provided for @mkTargetAtMost.
+  ///
+  /// In es, this message translates to:
+  /// **'objetivo ≤ {precio}'**
+  String mkTargetAtMost(String precio);
+
+  /// No description provided for @mkAtPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'¡a precio!'**
+  String get mkAtPrice;
+
+  /// No description provided for @mkChangeTarget.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar precio objetivo'**
+  String get mkChangeTarget;
+
+  /// No description provided for @mkTopCards.
+  ///
+  /// In es, this message translates to:
+  /// **'TUS CARTAS MÁS VALIOSAS'**
+  String get mkTopCards;
+
+  /// No description provided for @mkImportToSeeValue.
+  ///
+  /// In es, this message translates to:
+  /// **'Importa tu colección para ver su valor.'**
+  String get mkImportToSeeValue;
+
+  /// No description provided for @mkSetCards.
+  ///
+  /// In es, this message translates to:
+  /// **' · {n} cartas'**
+  String mkSetCards(int n);
+
+  /// No description provided for @wlEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Búscalas en Mercado y toca el marcador para que te avise cuando bajen a tu precio.'**
+  String get wlEmpty;
+
+  /// No description provided for @wlAtPriceCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{🔔 1 carta de tu wishlist está a tu precio objetivo o por debajo.} other{🔔 {n} cartas de tu wishlist están a tu precio objetivo o por debajo.}}'**
+  String wlAtPriceCount(int n);
+
+  /// No description provided for @mpMtgoTix.
+  ///
+  /// In es, this message translates to:
+  /// **'Precios de MTGO en tix (cartas digitales)'**
+  String get mpMtgoTix;
+
+  /// No description provided for @mpNoDataYet.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin datos todavía: actualiza el histórico de precios en Mercado'**
+  String get mpNoDataYet;
+
+  /// No description provided for @mpMtgoNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Precios de MTGO en tix: son cartas digitales, no valen para tasar tu colección de papel. Inicio, carpetas y logros siguen en Cardmarket (€).'**
+  String get mpMtgoNote;
+
+  /// No description provided for @mpMarketNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Precios de {mercado} en {moneda}. Inicio, carpetas y logros siguen valorando en Cardmarket (€): las divisas no se convierten.'**
+  String mpMarketNote(String mercado, String moneda);
+
+  /// No description provided for @mkUpdate.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar'**
+  String get mkUpdate;
+
+  /// No description provided for @mkApproxValue.
+  ///
+  /// In es, this message translates to:
+  /// **' · valor aproximado (reimporta con \"Sustituir\" para precios por edición)'**
+  String get mkApproxValue;
+
+  /// No description provided for @mkExactPrintings.
+  ///
+  /// In es, this message translates to:
+  /// **' · por tus ediciones exactas'**
+  String get mkExactPrintings;
+
+  /// No description provided for @mkNowSuffix.
+  ///
+  /// In es, this message translates to:
+  /// **' · ahora {precio}'**
+  String mkNowSuffix(String precio);
+
+  /// No description provided for @wlNothingYet.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no tienes cartas en la wishlist.'**
+  String get wlNothingYet;
 }
 
 class _AppLocalizationsDelegate

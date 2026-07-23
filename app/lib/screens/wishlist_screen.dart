@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 import '../services/price_history.dart';
 import '../services/wishlist_store.dart';
@@ -58,6 +60,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     final wishlist = widget.wishlist;
     final db = widget.db;
     return Scaffold(
@@ -67,18 +70,16 @@ class _WishlistScreenState extends State<WishlistScreen> {
         builder: (context, _) {
           final items = wishlist.items;
           if (items.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.bookmark_border, size: 56),
-                    SizedBox(height: 12),
+                    const Icon(Icons.bookmark_border, size: 56),
+                    const SizedBox(height: 12),
                     Text(
-                      'Aún no tienes cartas en la wishlist.\n'
-                      'Búscalas en Mercado y toca el marcador para que te '
-                      'avise cuando bajen a tu precio.',
+                      '${t.wlNothingYet}\n${t.wlEmpty}',
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -99,9 +100,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    '🔔 $atPrice carta${atPrice == 1 ? '' : 's'} de tu '
-                    'wishlist ${atPrice == 1 ? 'está' : 'están'} a tu precio '
-                    'objetivo o por debajo.',
+                    t.wlAtPriceCount(atPrice),
                     style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         color: MFColors.success),
@@ -124,8 +123,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         name: item.name),
                     title: Text(item.printedName ?? item.name),
                     subtitle: Text(
-                      'objetivo ≤ ${_euro(item.targetPrice)}'
-                      '${item.lastPrice != null ? '  ·  ahora ${_euro(item.lastPrice!)}' : ''}',
+                      t.mkTargetAtMost(_euro(item.targetPrice)) +
+                          (item.lastPrice != null
+                              ? t.mkNowSuffix(_euro(item.lastPrice!))
+                              : ''),
                       style: TextStyle(
                           color: item.inRange ? MFColors.success : null,
                           fontWeight:
@@ -144,12 +145,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 color: MFColors.success, size: 20),
                           ),
                         IconButton(
-                          tooltip: 'Cambiar precio objetivo',
+                          tooltip: t.mkChangeTarget,
                           icon: const Icon(Icons.edit_outlined, size: 20),
                           onPressed: () => widget.onEditTarget(item),
                         ),
                         IconButton(
-                          tooltip: 'Quitar de la wishlist',
+                          tooltip: t.mkRemoveFromWishlist,
                           icon: const Icon(Icons.delete_outline, size: 20),
                           onPressed: () => wishlist.remove(item.oracleId),
                         ),

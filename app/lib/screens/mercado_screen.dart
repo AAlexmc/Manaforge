@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
@@ -134,12 +136,13 @@ class _MercadoScreenState extends State<MercadoScreen> {
       // historial no debe cargarse la alerta de precio objetivo
       _recordPrices(prices);
       if (hits.isEmpty || !mounted) return;
+      final t = tr(context);
       final msg = hits.length == 1
-          ? '🔔 ¡${hits.first.printedName ?? hits.first.name} está a '
-              '${_euro(hits.first.lastPrice!)} '
-              '(tu objetivo: ${_euro(hits.first.targetPrice)})!'
-          : '🔔 ¡${hits.length} cartas de tu wishlist han caído a su '
-              'precio objetivo!';
+          ? t.mkAlertOne(
+              hits.first.printedName ?? hits.first.name,
+              _euro(hits.first.lastPrice!),
+              _euro(hits.first.targetPrice))
+          : t.mkAlertMany(hits.length);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(msg),
         duration: const Duration(seconds: 5),
@@ -297,13 +300,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
     if (target != null) widget.wishlist.setTarget(item.oracleId, target);
   }
 
-  Future<double?> _askTargetPrice(String name, double? current) {
+    Future<double?> _askTargetPrice(String name, double? current) {
+    final t = tr(context);
     final ctrl = TextEditingController(
         text: current?.toStringAsFixed(2) ?? '');
     return showDialog<double>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Avísame cuando baje'),
+        title: Text(t.mkTellMeWhenDrops),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,10 +321,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                labelText: 'Precio objetivo',
+                labelText: t.mkTargetPrice,
                 suffixText: '€',
                 helperText:
-                    current != null ? 'Ahora: ${_euro(current)}' : null,
+                    current != null ? t.mkNow(_euro(current)) : null,
                 border: const OutlineInputBorder(),
               ),
               onSubmitted: (v) => Navigator.of(context)
@@ -360,15 +364,15 @@ class _MercadoScreenState extends State<MercadoScreen> {
         setState(() => _updateProgress = null);
         await _load();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('✓ Precios y cartas actualizados')));
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(tr(context).mkUpdated)));
         }
       }
     } catch (e) {
       if (mounted) {
         setState(() => _updateProgress = null);
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No pude actualizar: $e')));
+            SnackBar(content: Text(tr(context).mkUpdateFailed('$e'))));
       }
     }
   }
@@ -393,9 +397,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
       await _load();
       if (mounted) {
         setState(() => _historyDownloading = false);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('✓ Histórico de precios listo: las gráficas ya '
-                'enseñan los últimos meses')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(tr(context).mkHistoryReady)));
       }
     } catch (e) {
       if (mounted) {
@@ -403,27 +406,24 @@ class _MercadoScreenState extends State<MercadoScreen> {
           _historyDownloading = false;
           _historyProgress = null;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No pude traer el histórico '
-                '(el que ya tenías sigue intacto): $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(tr(context).mkHistoryFailed('$e'))));
       }
     } finally {
       _historyDownloading = false;
     }
   }
 
-  Widget _historyRow() {
+    Widget _historyRow() {
+    final t = tr(context);
     final covered = _historyCovered;
     return Row(
       children: [
         Expanded(
           child: Text(
             covered == null
-                ? 'Histórico de precios: solo el que ManaForge apunta a '
-                    'diario en tu equipo. Tráete los últimos ~90 días '
-                    'reales de Cardmarket (≈4 MB).'
-                : 'Histórico real de Cardmarket del ${covered.$1} al '
-                    '${covered.$2}, y desde ahí lo que apunta ManaForge.',
+                ? t.mkHistoryLocal
+                : t.mkHistoryReal(covered.$1, covered.$2),
             style: const TextStyle(fontSize: 11.5),
           ),
         ),
@@ -436,7 +436,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
           TextButton.icon(
             onPressed: _downloadHistory,
             icon: const Icon(Icons.timeline, size: 16),
-            label: Text(covered == null ? 'Traer histórico' : 'Actualizar'),
+            label: Text(covered == null ? t.mkFetchHistory : t.mkUpdate),
           ),
       ],
     );
@@ -523,7 +523,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     final delta = _delta();
     return Scaffold(
       body: SafeArea(
@@ -566,8 +567,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Valor de tu colección · Cardmarket',
-                        style: TextStyle(fontSize: 13)),
+                    Text(t.mkCollectionValue,
+                        style: const TextStyle(fontSize: 13)),
                     const SizedBox(height: 4),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -598,8 +599,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
                       ],
                     ),
                     Text(
-                        '${widget.collection.totalCopies} cartas'
-                        '${_approximate ? ' · valor aproximado (reimporta con "Sustituir" para precios por edición)' : ' · por tus ediciones exactas'}',
+                        t.mkCardsCount(widget.collection.totalCopies) +
+                            (_approximate
+                                ? t.mkApproxValue
+                                : t.mkExactPrintings),
                         style: const TextStyle(fontSize: 11.5)),
                     if (_pnl != null) ...[
                       const Divider(height: 18),
@@ -616,9 +619,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
-                              'Precios Cardmarket del '
-                              '${_bulkDate ?? '…'} (Scryfall)',
+                          child: Text(t.mkBulkPrices(_bulkDate ?? '…'),
                               style: const TextStyle(fontSize: 11.5)),
                         ),
                         if (_updateProgress != null)
@@ -631,7 +632,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
                           TextButton.icon(
                             onPressed: _updateDb,
                             icon: const Icon(Icons.refresh, size: 16),
-                            label: const Text('Actualizar'),
+                            label: Text(t.mkUpdate),
                           ),
                       ],
                     ),
@@ -643,15 +644,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
             if (_error != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
-                child: Text('Mercado sin datos: descarga la base de '
-                    'datos en Colección. ($_error)'),
+                child: Text(t.mkNoData('$_error')),
               ),
             if (_banners.isNotEmpty) ...[
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
-                    child: Text('EXPANSIONES (${_banners.length})',
+                    child: Text(t.mkSetsHeader(_banners.length),
                         style: Theme.of(context)
                             .textTheme
                             .labelLarge
@@ -659,13 +659,13 @@ class _MercadoScreenState extends State<MercadoScreen> {
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    tooltip: 'Anteriores',
+                    tooltip: t.mkPrevious,
                     icon: const Icon(Icons.chevron_left),
                     onPressed: () => _scrollBanners(-600),
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
-                    tooltip: 'Siguientes',
+                    tooltip: t.mkNext,
                     icon: const Icon(Icons.chevron_right),
                     onPressed: () => _scrollBanners(600),
                   ),
@@ -707,7 +707,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
                 controller: _searchCtrl,
                 onChanged: _search,
                 decoration: InputDecoration(
-                  hintText: 'Busca el precio de cualquier carta…',
+                  hintText: t.mkSearchHint,
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14)),
@@ -732,8 +732,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
                     children: [
                       IconButton(
                         tooltip: widget.wishlist.contains(hit.oracleId)
-                            ? 'Quitar de la wishlist'
-                            : 'A la wishlist: avísame cuando baje',
+                            ? t.mkRemoveFromWishlist
+                            : t.mkAddToWishlist,
                         icon: Icon(
                           widget.wishlist.contains(hit.oracleId)
                               ? Icons.bookmark
@@ -752,7 +752,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
             ] else ...[
               if (widget.wishlist.items.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                Text('TU WISHLIST',
+                Text(t.mkYourWishlist,
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge
@@ -767,9 +767,13 @@ class _MercadoScreenState extends State<MercadoScreen> {
                         colors: item.colors,
                         name: item.name),
                     title: Text(item.printedName ?? item.name),
-                    subtitle: Text(
-                        'objetivo ≤ ${_euro(item.targetPrice)}'
-                        '${_priceOf(item.oracleId, fallbackEur: item.lastPrice) != null ? ' · ahora ${_priceOf(item.oracleId, fallbackEur: item.lastPrice)}' : ''}'),
+                    subtitle: Text(t.mkTargetAtMost(_euro(item.targetPrice)) +
+                        (_priceOf(item.oracleId,
+                                    fallbackEur: item.lastPrice) !=
+                                null
+                            ? t.mkNowSuffix(_priceOf(item.oracleId,
+                                fallbackEur: item.lastPrice)!)
+                            : '')),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -785,19 +789,19 @@ class _MercadoScreenState extends State<MercadoScreen> {
                                   MFColors.success.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text('¡a precio!',
-                                style: TextStyle(
+                            child: Text(t.mkAtPrice,
+                                style: const TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
                                     color: MFColors.success)),
                           ),
                         IconButton(
-                          tooltip: 'Cambiar precio objetivo',
+                          tooltip: t.mkChangeTarget,
                           icon: const Icon(Icons.edit_outlined, size: 18),
                           onPressed: () => _editWish(item),
                         ),
                         IconButton(
-                          tooltip: 'Quitar de la wishlist',
+                          tooltip: t.mkRemoveFromWishlist,
                           icon: const Icon(Icons.delete_outline, size: 18),
                           onPressed: () =>
                               widget.wishlist.remove(item.oracleId),
@@ -807,16 +811,16 @@ class _MercadoScreenState extends State<MercadoScreen> {
                   ),
               ],
               const SizedBox(height: 16),
-              Text('TUS CARTAS MÁS VALIOSAS',
+              Text(t.mkTopCards,
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge
                       ?.copyWith(letterSpacing: 1)),
               const SizedBox(height: 6),
               if (_top.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text('Importa tu colección para ver su valor.'),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Text(t.mkImportToSeeValue),
                 ),
               for (final card in _top)
                 ListTile(
@@ -970,7 +974,7 @@ class SetBannerTile extends StatelessWidget {
                       Text(
                         '${set.code.toUpperCase()}'
                         '${set.year.isEmpty ? '' : ' · ${set.year}'}'
-                        ' · ${set.total} cartas',
+                        '${tr(context).mkSetCards(set.total)}',
                         style: const TextStyle(
                             fontSize: 10.5, color: Colors.white70),
                       ),

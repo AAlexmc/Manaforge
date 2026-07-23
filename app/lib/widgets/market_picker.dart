@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/market_prefs.dart';
 import '../services/markets.dart';
 
@@ -40,10 +42,9 @@ class MarketPicker extends StatelessWidget {
                         : null,
                     tooltip: _usable(market)
                         ? (market.digital
-                            ? 'Precios de MTGO en tix (cartas digitales)'
+                            ? tr(context).mpMtgoTix
                             : null)
-                        : 'Sin datos todavía: actualiza el histórico de '
-                            'precios en Mercado',
+                        : tr(context).mpNoDataYet,
                   ),
                 ),
             ],
@@ -67,12 +68,8 @@ class MarketNote extends StatelessWidget {
       padding: const EdgeInsets.only(top: 4),
       child: Text(
         market.digital
-            ? 'Precios de MTGO en tix: son cartas digitales, no valen para '
-                'tasar tu colección de papel. Inicio, carpetas y logros '
-                'siguen en Cardmarket (€).'
-            : 'Precios de ${market.label} en ${market.currency}. Inicio, '
-                'carpetas y logros siguen valorando en Cardmarket (€): las '
-                'divisas no se convierten.',
+            ? tr(context).mpMtgoNote
+            : tr(context).mpMarketNote(market.label, market.currency),
         style: const TextStyle(fontSize: 11.5),
       ),
     );
