@@ -1231,4 +1231,170 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wlNothingYet => 'Aún no tienes cartas en la wishlist.';
+
+  @override
+  String get stDbUpdated => '✓ Base de datos actualizada';
+
+  @override
+  String stUpdateFailed(String error) {
+    return 'No se pudo actualizar: $error';
+  }
+
+  @override
+  String get stCardDb => 'Base de datos de cartas';
+
+  @override
+  String get stCardDbWhy =>
+      'Vuelve a descargarla para tener cartas nuevas, precios frescos y las funciones que piden datos recientes (como el filtro por año en Forge).';
+
+  @override
+  String get stDownloadDbAgain => 'Volver a descargar la base de datos';
+
+  @override
+  String get stAppearance => 'Apariencia';
+
+  @override
+  String get stData => 'Datos';
+
+  @override
+  String get stTheApp => 'La app';
+
+  @override
+  String get stCredits =>
+      'Datos e imágenes de cartas por Scryfall. Magic: The Gathering es propiedad de Wizards of the Coast; proyecto de fans al amparo de su Fan Content Policy.';
+
+  @override
+  String get stEditHome => 'Editar inicio';
+
+  @override
+  String get stEditHomeSub => 'Elige qué secciones se ven y en qué orden';
+
+  @override
+  String get ehLevel => 'Tu nivel';
+
+  @override
+  String get ehShortcuts => 'Accesos rápidos';
+
+  @override
+  String get ehSummary => 'Resumen de la colección';
+
+  @override
+  String get ehRecent => 'Vistas recientemente';
+
+  @override
+  String get ehDecks => 'Tus mazos';
+
+  @override
+  String get ehMeta => 'El meta ahora';
+
+  @override
+  String get ehNewSets => 'Expansiones nuevas';
+
+  @override
+  String get ehGems => 'Tus joyas';
+
+  @override
+  String get ehHelp =>
+      'Arrastra para ordenar y usa el interruptor para elegir qué ves en Inicio. Una sección encendida solo sale si tiene algo que enseñar.';
+
+  @override
+  String get ehSection => 'Sección';
+
+  @override
+  String get bkNoData => 'No encuentro tus datos.';
+
+  @override
+  String bkSaved(String resumen) {
+    return '✓ Copia guardada · $resumen';
+  }
+
+  @override
+  String bkSaveFailed(String error) {
+    return 'No he podido guardarla: $error';
+  }
+
+  @override
+  String get bkFileName => 'Copia de ManaForge';
+
+  @override
+  String bkRestoreFailed(String error) {
+    return 'No he podido restaurarla: $error';
+  }
+
+  @override
+  String bkRestoredNoPrevious(String resumen, String error) {
+    return '✓ Restaurado · $resumen. OJO: no he podido guardar lo que tenías antes ($error).';
+  }
+
+  @override
+  String bkRestored(String resumen) {
+    return '✓ Restaurado · $resumen. Lo que tenías antes está guardado en la carpeta backups.';
+  }
+
+  @override
+  String get bkRestoring => 'Restaurando tu copia…';
+
+  @override
+  String get bkTitle => 'Copia de seguridad';
+
+  @override
+  String get bkWhy =>
+      'Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.';
+
+  @override
+  String get bkSave => 'Guardar copia';
+
+  @override
+  String get bkRestoreTitle => 'Restaurar una copia';
+
+  @override
+  String get bkRestoreWarning =>
+      'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.';
+
+  @override
+  String get bkNoBackups => 'Aún no hay copias guardadas en este ordenador.';
+
+  @override
+  String get bkWhich => 'Copia a restaurar';
+
+  @override
+  String get bkPickOne => 'Elige una copia';
+
+  @override
+  String get bkRestorePicked => 'Restaurar la copia elegida';
+
+  @override
+  String get bkAutoNote =>
+      'Guardo una copia automática cada semana (las cinco últimas) y otra justo antes de cada restaurar.';
+
+  @override
+  String get bkFromFile => 'Restaurar de un archivo';
+
+  @override
+  String get bkConfirmTitle => '¿Restaurar esta copia?';
+
+  @override
+  String get bkConfirmBody =>
+      'Esto reemplaza tu colección, mazos, carpetas y logros de ahora por los de esa copia. Antes de hacerlo guardo lo que tienes en la carpeta backups, por si quieres volver.';
+
+  @override
+  String bkWillDelete(String cosas) {
+    return 'Esa copia no trae $cosas: al restaurarla, eso se borra.';
+  }
+
+  @override
+  String bkTypeToConfirm(String palabra) {
+    return 'Escribe $palabra para poder seguir:';
+  }
+
+  @override
+  String get bkAnd => ' y ';
+
+  @override
+  String get ehReset => 'Restablecer';
+
+  @override
+  String bkOfDate(String cuando, String resumen) {
+    return 'Copia del $cuando · $resumen.';
+  }
 }

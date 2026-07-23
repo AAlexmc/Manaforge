@@ -2111,6 +2111,288 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Aún no tienes cartas en la wishlist.'**
   String get wlNothingYet;
+
+  /// No description provided for @stDbUpdated.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Base de datos actualizada'**
+  String get stDbUpdated;
+
+  /// No description provided for @stUpdateFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo actualizar: {error}'**
+  String stUpdateFailed(String error);
+
+  /// No description provided for @stCardDb.
+  ///
+  /// In es, this message translates to:
+  /// **'Base de datos de cartas'**
+  String get stCardDb;
+
+  /// No description provided for @stCardDbWhy.
+  ///
+  /// In es, this message translates to:
+  /// **'Vuelve a descargarla para tener cartas nuevas, precios frescos y las funciones que piden datos recientes (como el filtro por año en Forge).'**
+  String get stCardDbWhy;
+
+  /// No description provided for @stDownloadDbAgain.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a descargar la base de datos'**
+  String get stDownloadDbAgain;
+
+  /// No description provided for @stAppearance.
+  ///
+  /// In es, this message translates to:
+  /// **'Apariencia'**
+  String get stAppearance;
+
+  /// No description provided for @stData.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos'**
+  String get stData;
+
+  /// No description provided for @stTheApp.
+  ///
+  /// In es, this message translates to:
+  /// **'La app'**
+  String get stTheApp;
+
+  /// No description provided for @stCredits.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos e imágenes de cartas por Scryfall. Magic: The Gathering es propiedad de Wizards of the Coast; proyecto de fans al amparo de su Fan Content Policy.'**
+  String get stCredits;
+
+  /// No description provided for @stEditHome.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar inicio'**
+  String get stEditHome;
+
+  /// No description provided for @stEditHomeSub.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige qué secciones se ven y en qué orden'**
+  String get stEditHomeSub;
+
+  /// No description provided for @ehLevel.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu nivel'**
+  String get ehLevel;
+
+  /// No description provided for @ehShortcuts.
+  ///
+  /// In es, this message translates to:
+  /// **'Accesos rápidos'**
+  String get ehShortcuts;
+
+  /// No description provided for @ehSummary.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen de la colección'**
+  String get ehSummary;
+
+  /// No description provided for @ehRecent.
+  ///
+  /// In es, this message translates to:
+  /// **'Vistas recientemente'**
+  String get ehRecent;
+
+  /// No description provided for @ehDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus mazos'**
+  String get ehDecks;
+
+  /// No description provided for @ehMeta.
+  ///
+  /// In es, this message translates to:
+  /// **'El meta ahora'**
+  String get ehMeta;
+
+  /// No description provided for @ehNewSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Expansiones nuevas'**
+  String get ehNewSets;
+
+  /// No description provided for @ehGems.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus joyas'**
+  String get ehGems;
+
+  /// No description provided for @ehHelp.
+  ///
+  /// In es, this message translates to:
+  /// **'Arrastra para ordenar y usa el interruptor para elegir qué ves en Inicio. Una sección encendida solo sale si tiene algo que enseñar.'**
+  String get ehHelp;
+
+  /// No description provided for @ehSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Sección'**
+  String get ehSection;
+
+  /// No description provided for @bkNoData.
+  ///
+  /// In es, this message translates to:
+  /// **'No encuentro tus datos.'**
+  String get bkNoData;
+
+  /// No description provided for @bkSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Copia guardada · {resumen}'**
+  String bkSaved(String resumen);
+
+  /// No description provided for @bkSaveFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No he podido guardarla: {error}'**
+  String bkSaveFailed(String error);
+
+  /// No description provided for @bkFileName.
+  ///
+  /// In es, this message translates to:
+  /// **'Copia de ManaForge'**
+  String get bkFileName;
+
+  /// No description provided for @bkRestoreFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No he podido restaurarla: {error}'**
+  String bkRestoreFailed(String error);
+
+  /// No description provided for @bkRestoredNoPrevious.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Restaurado · {resumen}. OJO: no he podido guardar lo que tenías antes ({error}).'**
+  String bkRestoredNoPrevious(String resumen, String error);
+
+  /// No description provided for @bkRestored.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Restaurado · {resumen}. Lo que tenías antes está guardado en la carpeta backups.'**
+  String bkRestored(String resumen);
+
+  /// No description provided for @bkRestoring.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurando tu copia…'**
+  String get bkRestoring;
+
+  /// No description provided for @bkTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Copia de seguridad'**
+  String get bkTitle;
+
+  /// No description provided for @bkWhy.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.'**
+  String get bkWhy;
+
+  /// No description provided for @bkSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar copia'**
+  String get bkSave;
+
+  /// No description provided for @bkRestoreTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar una copia'**
+  String get bkRestoreTitle;
+
+  /// No description provided for @bkRestoreWarning.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.'**
+  String get bkRestoreWarning;
+
+  /// No description provided for @bkNoBackups.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay copias guardadas en este ordenador.'**
+  String get bkNoBackups;
+
+  /// No description provided for @bkWhich.
+  ///
+  /// In es, this message translates to:
+  /// **'Copia a restaurar'**
+  String get bkWhich;
+
+  /// No description provided for @bkPickOne.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige una copia'**
+  String get bkPickOne;
+
+  /// No description provided for @bkRestorePicked.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar la copia elegida'**
+  String get bkRestorePicked;
+
+  /// No description provided for @bkAutoNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardo una copia automática cada semana (las cinco últimas) y otra justo antes de cada restaurar.'**
+  String get bkAutoNote;
+
+  /// No description provided for @bkFromFile.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar de un archivo'**
+  String get bkFromFile;
+
+  /// No description provided for @bkConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Restaurar esta copia?'**
+  String get bkConfirmTitle;
+
+  /// No description provided for @bkConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto reemplaza tu colección, mazos, carpetas y logros de ahora por los de esa copia. Antes de hacerlo guardo lo que tienes en la carpeta backups, por si quieres volver.'**
+  String get bkConfirmBody;
+
+  /// No description provided for @bkWillDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa copia no trae {cosas}: al restaurarla, eso se borra.'**
+  String bkWillDelete(String cosas);
+
+  /// No description provided for @bkTypeToConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe {palabra} para poder seguir:'**
+  String bkTypeToConfirm(String palabra);
+
+  /// No description provided for @bkAnd.
+  ///
+  /// In es, this message translates to:
+  /// **' y '**
+  String get bkAnd;
+
+  /// No description provided for @ehReset.
+  ///
+  /// In es, this message translates to:
+  /// **'Restablecer'**
+  String get ehReset;
+
+  /// No description provided for @bkOfDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Copia del {cuando} · {resumen}.'**
+  String bkOfDate(String cuando, String resumen);
 }
 
 class _AppLocalizationsDelegate

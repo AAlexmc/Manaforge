@@ -8,6 +8,9 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
+
 import '../services/home_layout_prefs.dart';
 
 /// Nombre e icono de cada sección, para pintarla en el editor. Las claves son
@@ -19,16 +22,18 @@ class _Meta {
   const _Meta(this.titulo, this.icono);
 }
 
-const Map<String, _Meta> _meta = {
-  'nivel': _Meta('Tu nivel', Icons.emoji_events_outlined),
-  'accesos': _Meta('Accesos rápidos', Icons.bolt),
-  'resumen': _Meta('Resumen de la colección', Icons.grid_view),
-  'recientes': _Meta('Vistas recientemente', Icons.history),
-  'mazos': _Meta('Tus mazos', Icons.layers_outlined),
-  'meta': _Meta('El meta ahora', Icons.trending_up),
-  'expansiones': _Meta('Expansiones nuevas', Icons.new_releases_outlined),
-  'joyas': _Meta('Tus joyas', Icons.diamond_outlined),
-};
+// el mapa se construye con el idioma de ahora: una constante no puede
+// traducirse
+Map<String, _Meta> _meta(AppLocalizations t) => {
+      'nivel': _Meta(t.ehLevel, Icons.emoji_events_outlined),
+      'accesos': _Meta(t.ehShortcuts, Icons.bolt),
+      'resumen': _Meta(t.ehSummary, Icons.grid_view),
+      'recientes': _Meta(t.ehRecent, Icons.history),
+      'mazos': _Meta(t.ehDecks, Icons.layers_outlined),
+      'meta': _Meta(t.ehMeta, Icons.trending_up),
+      'expansiones': _Meta(t.ehNewSets, Icons.new_releases_outlined),
+      'joyas': _Meta(t.ehGems, Icons.diamond_outlined),
+    };
 
 class EditarInicioScreen extends StatelessWidget {
   final HomeLayoutPreference layout;
@@ -36,15 +41,16 @@ class EditarInicioScreen extends StatelessWidget {
   const EditarInicioScreen({super.key, required this.layout});
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar inicio'),
+        title: Text(t.stEditHome),
         actions: [
           TextButton.icon(
             onPressed: layout.restablecer,
             icon: const Icon(Icons.restart_alt),
-            label: const Text('Restablecer'),
+            label: Text(t.ehReset),
           ),
         ],
       ),
@@ -55,13 +61,11 @@ class EditarInicioScreen extends StatelessWidget {
             final secciones = layout.todas;
             return Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
                   child: Text(
-                    'Arrastra para ordenar y usa el interruptor para elegir '
-                    'qué ves en Inicio. Una sección encendida solo sale si '
-                    'tiene algo que enseñar.',
-                    style: TextStyle(fontSize: 12.5),
+                    t.ehHelp,
+                    style: const TextStyle(fontSize: 12.5),
                   ),
                 ),
                 Expanded(
@@ -77,8 +81,8 @@ class EditarInicioScreen extends StatelessWidget {
                     },
                     itemBuilder: (context, i) {
                       final s = secciones[i];
-                      final m = _meta[s.id] ??
-                          const _Meta('Sección', Icons.widgets_outlined);
+                      final m = _meta(t)[s.id] ??
+                          _Meta(t.ehSection, Icons.widgets_outlined);
                       return Card(
                         key: ValueKey(s.id),
                         margin: const EdgeInsets.symmetric(vertical: 4),
