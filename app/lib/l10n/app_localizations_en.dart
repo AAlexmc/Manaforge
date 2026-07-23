@@ -852,4 +852,251 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fpNoneMatch => 'No card matches these filters.';
+
+  @override
+  String get fgMsgReading => 'Reading your collection…';
+
+  @override
+  String get fgMsgCurve => 'Working out the mana curve…';
+
+  @override
+  String get fgMsgLands => 'Dealing out lands…';
+
+  @override
+  String get fgMsgSynergy => 'Looking for synergies…';
+
+  @override
+  String get fgMsgPlan => 'Writing your game plan…';
+
+  @override
+  String get fgNeedDbForSets =>
+      'I need the card database to list the sets: Settings → download the database.';
+
+  @override
+  String fgDbError(String error) {
+    return 'Couldn\'t read the card database: $error';
+  }
+
+  @override
+  String fgInThoseSets(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: ' in those $n sets',
+      one: ' in that set',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fgNoCommander(String donde) {
+    return 'I can\'t put together a legal Commander deck$donde: it needs a legendary commander and ~62 DIFFERENT cards inside its colour identity (it\'s singleton), plus enough basics. Try another format, other sets, or grow your collection.';
+  }
+
+  @override
+  String fgNoDeck(String formato, String donde, String consejo) {
+    return 'With the cards in this pool I can\'t finish a $formato deck that meets my rules (enough lands and a healthy curve)$donde. $consejo Rather than hand you a broken deck, I\'d rather tell you.';
+  }
+
+  @override
+  String get fgOf60 => '60-card';
+
+  @override
+  String fgLegalIn(String formato) {
+    return 'LEGAL in $formato';
+  }
+
+  @override
+  String get fgTipMoreSets => 'Try more sets or drop some filters.';
+
+  @override
+  String get fgTipMoreCards =>
+      'Add more cards — especially in your main colours — or tick \"include cards I don\'t own\".';
+
+  @override
+  String get fgPitch =>
+      'Complete, playable decks from the cards you already own. Without buying anything.';
+
+  @override
+  String get fgTeaserCount => 'cards for your first deck';
+
+  @override
+  String get fgTeaserMissing => 'Build a deck with cards I don\'t own';
+
+  @override
+  String get fgBasics => 'I have loose basic lands';
+
+  @override
+  String get fgBasicsSub =>
+      'Almost everyone has basics from starter decks; turn it off to use ONLY the basics in your collection.';
+
+  @override
+  String get fgFormat => 'Game format';
+
+  @override
+  String get fgCasual60 => 'Casual 60';
+
+  @override
+  String get fgCommanderNote =>
+      '100 cards · singleton · a legendary commander from your collection · colour identity respected.';
+
+  @override
+  String get fgCasualNote =>
+      '60 cards, no legality restrictions: anything goes.';
+
+  @override
+  String fgFormatNote(String formato) {
+    return '60 cards using ONLY your cards that are legal in $formato.';
+  }
+
+  @override
+  String get fgWhereFrom => 'Where do the cards come from?';
+
+  @override
+  String get fgPickSets => 'Pick sets';
+
+  @override
+  String get fgChangeSets => 'Change sets';
+
+  @override
+  String get fgNeedOneSet =>
+      'Pick at least one set: with no filter it\'d be all ~30,000 Magic cards.';
+
+  @override
+  String get fgNoSetsNote =>
+      'With no sets picked, Forge uses your whole collection.';
+
+  @override
+  String fgFromSetsAny(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Cards from $n sets, whether you own them or not.',
+      one: 'Cards from 1 set, whether you own them or not.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fgFromSetsMine(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Only your cards from $n sets — not the whole collection.',
+      one: 'Only your cards from 1 set — not the whole collection.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fgNoPrintingData =>
+      'Your collection doesn\'t record each card\'s printing, so filtering by set would leave almost everything out. Re-import your CSV with \"Replace\" and come back.';
+
+  @override
+  String get fgIncludeMissing => 'Include cards I don\'t own';
+
+  @override
+  String get fgIncludeMissingSub =>
+      'Forge stops limiting itself to your collection and uses EVERYTHING printed in those sets; afterwards it tells you how many cards you\'re missing and what they\'d cost.';
+
+  @override
+  String get fgYourTaste => 'Your call (optional)';
+
+  @override
+  String get fgArchetypeAuto => 'Archetype: auto';
+
+  @override
+  String get fgPricePerCard => 'Price per card:';
+
+  @override
+  String get fgMin => 'min €';
+
+  @override
+  String get fgMax => 'max €';
+
+  @override
+  String get fgCardYear => 'Card year:';
+
+  @override
+  String get fgFrom => 'from';
+
+  @override
+  String get fgTo => 'to';
+
+  @override
+  String get fgYearNeedsDb =>
+      'The year filter needs an up-to-date database: Settings → Download the database again.';
+
+  @override
+  String get fgNoColorsNote =>
+      'With no colours picked, Forge tries every combination.';
+
+  @override
+  String fgColorsNote(String colores) {
+    return 'Only $colores decks (and their combinations).';
+  }
+
+  @override
+  String get fgMissingNote =>
+      'This deck may include cards you do NOT own: each proposal says how many you\'re missing and what they\'d cost (Cardmarket price).';
+
+  @override
+  String fgOnlyYoursNote(int n) {
+    return 'Forge only uses your $n cards. It never invents copies you don\'t have.';
+  }
+
+  @override
+  String get fgForgeMissing => 'Forge decks (with what I\'m missing)';
+
+  @override
+  String get fgForgeMine => 'Forge my decks';
+
+  @override
+  String get fgTestMode => 'Test mode: beat a meta deck';
+
+  @override
+  String get fgOffline => 'Everything is worked out on your device, offline';
+
+  @override
+  String fgForgingWith(int n) {
+    return 'You\'re forging with $n cards: this takes a few seconds. The window is still alive.';
+  }
+
+  @override
+  String fgDecksReady(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n decks ready to play',
+      one: '1 deck ready to play',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fgSwipeMissing =>
+      'With cards you don\'t own yet · swipe to compare';
+
+  @override
+  String get fgSwipeMine => 'Made only from your cards · swipe to compare';
+
+  @override
+  String get fgHaveAll => '✓ You have every card';
+
+  @override
+  String fgShortfall(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'You\'re missing $n cards',
+      one: 'You\'re missing 1 card',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fgSeeDeck => 'See the full deck';
+
+  @override
+  String get fgReforge => 'Forge again';
 }

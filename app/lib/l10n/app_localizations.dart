@@ -1511,6 +1511,360 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ninguna carta pasa estos filtros.'**
   String get fpNoneMatch;
+
+  /// No description provided for @fgMsgReading.
+  ///
+  /// In es, this message translates to:
+  /// **'Leyendo tu colección…'**
+  String get fgMsgReading;
+
+  /// No description provided for @fgMsgCurve.
+  ///
+  /// In es, this message translates to:
+  /// **'Calculando la curva de maná…'**
+  String get fgMsgCurve;
+
+  /// No description provided for @fgMsgLands.
+  ///
+  /// In es, this message translates to:
+  /// **'Repartiendo tierras…'**
+  String get fgMsgLands;
+
+  /// No description provided for @fgMsgSynergy.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando sinergias…'**
+  String get fgMsgSynergy;
+
+  /// No description provided for @fgMsgPlan.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribiendo tu plan de juego…'**
+  String get fgMsgPlan;
+
+  /// No description provided for @fgNeedDbForSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesito la base de cartas para listar las expansiones: Ajustes → descargar la base.'**
+  String get fgNeedDbForSets;
+
+  /// No description provided for @fgDbError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude leer la base de datos de cartas: {error}'**
+  String fgDbError(String error);
+
+  /// No description provided for @fgInThoseSets.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{ en esa expansión} other{ en esas {n} expansiones}}'**
+  String fgInThoseSets(int n);
+
+  /// No description provided for @fgNoCommander.
+  ///
+  /// In es, this message translates to:
+  /// **'No me sale un Commander legal{donde}: hacen falta un comandante legendario y ~62 cartas DISTINTAS dentro de su identidad (es singleton), más básicas suficientes. Prueba otro formato, otras expansiones o amplía la colección.'**
+  String fgNoCommander(String donde);
+
+  /// No description provided for @fgNoDeck.
+  ///
+  /// In es, this message translates to:
+  /// **'Con las cartas de este pool no me sale ningún mazo completo {formato} que cumpla mis reglas (tierras suficientes y curva sana){donde}. {consejo} Antes que darte un mazo defectuoso, prefiero avisarte.'**
+  String fgNoDeck(String formato, String donde, String consejo);
+
+  /// No description provided for @fgOf60.
+  ///
+  /// In es, this message translates to:
+  /// **'de 60'**
+  String get fgOf60;
+
+  /// No description provided for @fgLegalIn.
+  ///
+  /// In es, this message translates to:
+  /// **'LEGAL en {formato}'**
+  String fgLegalIn(String formato);
+
+  /// No description provided for @fgTipMoreSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Prueba con más expansiones o quita filtros.'**
+  String get fgTipMoreSets;
+
+  /// No description provided for @fgTipMoreCards.
+  ///
+  /// In es, this message translates to:
+  /// **'Añade más cartas — sobre todo de tus colores principales — o marca \"incluir cartas que no tengo\".'**
+  String get fgTipMoreCards;
+
+  /// No description provided for @fgPitch.
+  ///
+  /// In es, this message translates to:
+  /// **'Mazos completos y jugables con las cartas que ya tienes. Sin comprar nada.'**
+  String get fgPitch;
+
+  /// No description provided for @fgTeaserCount.
+  ///
+  /// In es, this message translates to:
+  /// **'cartas para tu primer mazo'**
+  String get fgTeaserCount;
+
+  /// No description provided for @fgTeaserMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Hacer un mazo con cartas que no tengo'**
+  String get fgTeaserMissing;
+
+  /// No description provided for @fgBasics.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuento con tierras básicas sueltas'**
+  String get fgBasics;
+
+  /// No description provided for @fgBasicsSub.
+  ///
+  /// In es, this message translates to:
+  /// **'Casi todo el mundo tiene básicas de mazos de inicio; desactívalo para usar SOLO las básicas de tu colección.'**
+  String get fgBasicsSub;
+
+  /// No description provided for @fgFormat.
+  ///
+  /// In es, this message translates to:
+  /// **'Formato de juego'**
+  String get fgFormat;
+
+  /// No description provided for @fgCasual60.
+  ///
+  /// In es, this message translates to:
+  /// **'Casual 60'**
+  String get fgCasual60;
+
+  /// No description provided for @fgCommanderNote.
+  ///
+  /// In es, this message translates to:
+  /// **'100 cartas · singleton · comandante legendario de tu colección · identidad de color respetada.'**
+  String get fgCommanderNote;
+
+  /// No description provided for @fgCasualNote.
+  ///
+  /// In es, this message translates to:
+  /// **'60 cartas, sin restricción de legalidad: todo vale.'**
+  String get fgCasualNote;
+
+  /// No description provided for @fgFormatNote.
+  ///
+  /// In es, this message translates to:
+  /// **'60 cartas usando SOLO tus cartas legales en {formato}.'**
+  String fgFormatNote(String formato);
+
+  /// No description provided for @fgWhereFrom.
+  ///
+  /// In es, this message translates to:
+  /// **'¿De dónde salen las cartas?'**
+  String get fgWhereFrom;
+
+  /// No description provided for @fgPickSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir expansiones'**
+  String get fgPickSets;
+
+  /// No description provided for @fgChangeSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar expansiones'**
+  String get fgChangeSets;
+
+  /// No description provided for @fgNeedOneSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige al menos una expansión: sin filtro serían las ~30.000 cartas de Magic.'**
+  String get fgNeedOneSet;
+
+  /// No description provided for @fgNoSetsNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin elegir expansiones, Forge usa toda tu colección.'**
+  String get fgNoSetsNote;
+
+  /// No description provided for @fgFromSetsAny.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Cartas de 1 expansión, tengas o no.} other{Cartas de {n} expansiones, tengas o no.}}'**
+  String fgFromSetsAny(int n);
+
+  /// No description provided for @fgFromSetsMine.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Solo tus cartas de 1 expansión — no toda la colección.} other{Solo tus cartas de {n} expansiones — no toda la colección.}}'**
+  String fgFromSetsMine(int n);
+
+  /// No description provided for @fgNoPrintingData.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu colección no guarda la edición de cada carta, así que filtrar por expansión dejaría fuera casi todo. Reimporta tu CSV con \"Sustituir\" y vuelve.'**
+  String get fgNoPrintingData;
+
+  /// No description provided for @fgIncludeMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Incluir cartas que no tengo'**
+  String get fgIncludeMissing;
+
+  /// No description provided for @fgIncludeMissingSub.
+  ///
+  /// In es, this message translates to:
+  /// **'Forge deja de limitarse a tu colección y usa TODO lo impreso en esas expansiones; luego te dice cuántas cartas te faltan y cuánto costarían.'**
+  String get fgIncludeMissingSub;
+
+  /// No description provided for @fgYourTaste.
+  ///
+  /// In es, this message translates to:
+  /// **'A tu gusto (opcional)'**
+  String get fgYourTaste;
+
+  /// No description provided for @fgArchetypeAuto.
+  ///
+  /// In es, this message translates to:
+  /// **'Arquetipo: auto'**
+  String get fgArchetypeAuto;
+
+  /// No description provided for @fgPricePerCard.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio por carta:'**
+  String get fgPricePerCard;
+
+  /// No description provided for @fgMin.
+  ///
+  /// In es, this message translates to:
+  /// **'mín €'**
+  String get fgMin;
+
+  /// No description provided for @fgMax.
+  ///
+  /// In es, this message translates to:
+  /// **'máx €'**
+  String get fgMax;
+
+  /// No description provided for @fgCardYear.
+  ///
+  /// In es, this message translates to:
+  /// **'Año de la carta:'**
+  String get fgCardYear;
+
+  /// No description provided for @fgFrom.
+  ///
+  /// In es, this message translates to:
+  /// **'desde'**
+  String get fgFrom;
+
+  /// No description provided for @fgTo.
+  ///
+  /// In es, this message translates to:
+  /// **'hasta'**
+  String get fgTo;
+
+  /// No description provided for @fgYearNeedsDb.
+  ///
+  /// In es, this message translates to:
+  /// **'El filtro por año necesita la base de datos actualizada: Ajustes → Volver a descargar la base de datos.'**
+  String get fgYearNeedsDb;
+
+  /// No description provided for @fgNoColorsNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin elegir colores, Forge prueba todas las combinaciones.'**
+  String get fgNoColorsNote;
+
+  /// No description provided for @fgColorsNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo mazos {colores} (y sus combinaciones).'**
+  String fgColorsNote(String colores);
+
+  /// No description provided for @fgMissingNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Este mazo puede llevar cartas que NO tienes: cada propuesta dice cuántas te faltan y lo que costarían (precio de Cardmarket).'**
+  String get fgMissingNote;
+
+  /// No description provided for @fgOnlyYoursNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Forge solo usa tus {n} cartas. Nunca inventa copias que no tienes.'**
+  String fgOnlyYoursNote(int n);
+
+  /// No description provided for @fgForgeMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Forjar mazos (con lo que me falte)'**
+  String get fgForgeMissing;
+
+  /// No description provided for @fgForgeMine.
+  ///
+  /// In es, this message translates to:
+  /// **'Forjar mis mazos'**
+  String get fgForgeMine;
+
+  /// No description provided for @fgTestMode.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo Test: vence a un mazo del meta'**
+  String get fgTestMode;
+
+  /// No description provided for @fgOffline.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo se calcula en tu dispositivo, sin internet'**
+  String get fgOffline;
+
+  /// No description provided for @fgForgingWith.
+  ///
+  /// In es, this message translates to:
+  /// **'Estás forjando con {n} cartas: esto tarda unos segundos. La ventana sigue viva.'**
+  String fgForgingWith(int n);
+
+  /// No description provided for @fgDecksReady.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 mazo listo para jugar} other{{n} mazos listos para jugar}}'**
+  String fgDecksReady(int n);
+
+  /// No description provided for @fgSwipeMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Con cartas que aún no tienes · desliza para comparar'**
+  String get fgSwipeMissing;
+
+  /// No description provided for @fgSwipeMine.
+  ///
+  /// In es, this message translates to:
+  /// **'Hechos solo con tus cartas · desliza para comparar'**
+  String get fgSwipeMine;
+
+  /// No description provided for @fgHaveAll.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Tienes todas las cartas'**
+  String get fgHaveAll;
+
+  /// No description provided for @fgShortfall.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Te falta 1 carta} other{Te faltan {n} cartas}}'**
+  String fgShortfall(int n);
+
+  /// No description provided for @fgSeeDeck.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mazo completo'**
+  String get fgSeeDeck;
+
+  /// No description provided for @fgReforge.
+  ///
+  /// In es, this message translates to:
+  /// **'Reforjar'**
+  String get fgReforge;
 }
 
 class _AppLocalizationsDelegate
