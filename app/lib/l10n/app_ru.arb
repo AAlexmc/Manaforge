@@ -127,5 +127,12 @@
   "onbDecksBody": "Колоды, сохранённые из Forge, появляются здесь.",
   "onbSkip": "Пропустить",
   "onbNext": "Далее",
-  "onbGotIt": "Понятно"
+  "onbGotIt": "Понятно",
+  "onbBack": "Назад",
+
+  "tourMenuTitle": "Гиды",
+  "tourWelcomeName": "Быстрый тур",
+  "tourHomeName": "Главный экран",
+  "onbEditHomeTitle": "Настрой главный экран",
+  "onbEditHomeBody": "Эта кнопка позволяет выбрать, какие разделы показывать на главном экране и в каком порядке."
 }

@@ -304,4 +304,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get onbGotIt => '확인';
+
+  @override
+  String get onbBack => '뒤로';
+
+  @override
+  String get tourMenuTitle => '가이드';
+
+  @override
+  String get tourWelcomeName => '빠른 둘러보기';
+
+  @override
+  String get tourHomeName => '홈 화면';
+
+  @override
+  String get onbEditHomeTitle => '홈 화면 맞춤';
+
+  @override
+  String get onbEditHomeBody => '이 버튼으로 홈에 표시할 섹션과 순서를 고를 수 있어요.';
 }

@@ -296,4 +296,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onbGotIt => '知道了';
+
+  @override
+  String get onbBack => '上一步';
+
+  @override
+  String get tourMenuTitle => '指南';
+
+  @override
+  String get tourWelcomeName => '快速导览';
+
+  @override
+  String get tourHomeName => '主屏幕';
+
+  @override
+  String get onbEditHomeTitle => '自定义主页';
+
+  @override
+  String get onbEditHomeBody => '用这个按钮选择主页显示哪些板块以及顺序。';
 }

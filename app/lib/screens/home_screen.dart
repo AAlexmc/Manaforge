@@ -46,6 +46,12 @@ class HomeScreen extends StatefulWidget {
 
   final void Function(int tabIndex) onGoToTab;
 
+  /// Key del botón "Editar inicio", para que un tour pueda señalarlo.
+  final Key? editarInicioKey;
+
+  /// Abrir el menú de guías (el botón "?"). Si es null, no sale el botón.
+  final VoidCallback? onHelp;
+
   const HomeScreen({
     super.key,
     required this.db,
@@ -57,6 +63,8 @@ class HomeScreen extends StatefulWidget {
     this.layout,
     this.onScan,
     required this.onGoToTab,
+    this.editarInicioKey,
+    this.onHelp,
   });
 
   @override
@@ -591,7 +599,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         style:
                             Theme.of(context).textTheme.headlineMedium),
                     const Spacer(),
+                    if (widget.onHelp != null)
+                      IconButton(
+                        tooltip: tr(context).tourMenuTitle,
+                        icon: const Icon(Icons.help_outline),
+                        onPressed: widget.onHelp,
+                      ),
                     IconButton(
+                      key: widget.editarInicioKey,
                       tooltip: 'Editar inicio',
                       icon: const Icon(Icons.tune),
                       onPressed: _abrirEditor,

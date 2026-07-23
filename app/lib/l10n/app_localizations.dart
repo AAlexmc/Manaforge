@@ -641,6 +641,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Entendido'**
   String get onbGotIt;
+
+  /// No description provided for @onbBack.
+  ///
+  /// In es, this message translates to:
+  /// **'Atrás'**
+  String get onbBack;
+
+  /// No description provided for @tourMenuTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Guías'**
+  String get tourMenuTitle;
+
+  /// No description provided for @tourWelcomeName.
+  ///
+  /// In es, this message translates to:
+  /// **'Vuelta rápida'**
+  String get tourWelcomeName;
+
+  /// No description provided for @tourHomeName.
+  ///
+  /// In es, this message translates to:
+  /// **'La pantalla de inicio'**
+  String get tourHomeName;
+
+  /// No description provided for @onbEditHomeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Personaliza tu inicio'**
+  String get onbEditHomeTitle;
+
+  /// No description provided for @onbEditHomeBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Con este botón eliges qué secciones se ven en Inicio y en qué orden.'**
+  String get onbEditHomeBody;
 }
 
 class _AppLocalizationsDelegate

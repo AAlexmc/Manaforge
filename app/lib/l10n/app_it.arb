@@ -127,5 +127,12 @@
   "onbDecksBody": "I mazzi salvati da Forge compaiono qui.",
   "onbSkip": "Salta",
   "onbNext": "Avanti",
-  "onbGotIt": "Ho capito"
+  "onbGotIt": "Ho capito",
+  "onbBack": "Indietro",
+
+  "tourMenuTitle": "Guide",
+  "tourWelcomeName": "Giro veloce",
+  "tourHomeName": "La schermata iniziale",
+  "onbEditHomeTitle": "Personalizza la home",
+  "onbEditHomeBody": "Con questo pulsante scegli quali sezioni compaiono nella home e in che ordine."
 }

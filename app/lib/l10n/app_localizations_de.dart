@@ -315,4 +315,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onbGotIt => 'Verstanden';
+
+  @override
+  String get onbBack => 'Zurück';
+
+  @override
+  String get tourMenuTitle => 'Anleitungen';
+
+  @override
+  String get tourWelcomeName => 'Kurze Tour';
+
+  @override
+  String get tourHomeName => 'Der Startbildschirm';
+
+  @override
+  String get onbEditHomeTitle => 'Startseite anpassen';
+
+  @override
+  String get onbEditHomeBody =>
+      'Mit diesem Knopf wählst du, welche Bereiche auf der Startseite erscheinen und in welcher Reihenfolge.';
 }

@@ -116,5 +116,12 @@
   "onbDecksBody": "Decks you save from Forge show up here.",
   "onbSkip": "Skip",
   "onbNext": "Next",
-  "onbGotIt": "Got it"
+  "onbGotIt": "Got it",
+  "onbBack": "Back",
+
+  "tourMenuTitle": "Guides",
+  "tourWelcomeName": "Quick tour",
+  "tourHomeName": "The home screen",
+  "onbEditHomeTitle": "Customize your home",
+  "onbEditHomeBody": "This button lets you pick which sections show on Home and in what order."
 }

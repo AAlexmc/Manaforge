@@ -313,4 +313,23 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onbGotIt => 'Понятно';
+
+  @override
+  String get onbBack => 'Назад';
+
+  @override
+  String get tourMenuTitle => 'Гиды';
+
+  @override
+  String get tourWelcomeName => 'Быстрый тур';
+
+  @override
+  String get tourHomeName => 'Главный экран';
+
+  @override
+  String get onbEditHomeTitle => 'Настрой главный экран';
+
+  @override
+  String get onbEditHomeBody =>
+      'Эта кнопка позволяет выбрать, какие разделы показывать на главном экране и в каком порядке.';
 }

@@ -20,6 +20,7 @@ import 'services/language_prefs.dart';
 import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
 import 'services/onboarding_prefs.dart';
+import 'services/tours.dart';
 import 'services/folder_store.dart';
 import 'services/home_layout_prefs.dart';
 import 'services/markets.dart';
@@ -34,7 +35,7 @@ import 'theme/mf_theme.dart';
 import 'widgets/app_background.dart';
 import 'widgets/app_shortcuts.dart';
 import 'widgets/language_picker_dialog.dart';
-import 'widgets/onboarding_coachmarks.dart';
+import 'widgets/tour_overlay.dart';
 import 'widgets/whats_new_dialog.dart';
 
 Future<void> main() async {
@@ -252,6 +253,12 @@ class _HomeShellState extends State<HomeShell> {
 
   /// Si ya se vio el tour de bienvenida (las burbujas sobre la barra).
   final _onboarding = OnboardingPreference();
+
+  /// GlobalKeys de los botones que los tours señalan.
+  final _tourKeys = TourKeys();
+
+  /// El tour que se está enseñando ahora (null = ninguno).
+  Tour? _activeTour;
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -300,7 +307,9 @@ class _HomeShellState extends State<HomeShell> {
       // y el tour de bienvenida, DESPUÉS de idioma y novedades para no
       // amontonar cosas encima. Solo la primera vez.
       await _onboarding.load();
-      if (mounted) setState(() {});
+      if (mounted && !_onboarding.seen) {
+        setState(() => _activeTour = kTours.first);
+      }
     });
   }
 
@@ -339,6 +348,35 @@ class _HomeShellState extends State<HomeShell> {
     ));
   }
 
+  /// El menú de guías (botón "?" de Inicio): elige un tour y lo lanza.
+  Future<void> _menuTours() async {
+    final t = tr(context);
+    final elegido = await showModalBottomSheet<Tour>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(t.tourMenuTitle,
+                  style: Theme.of(ctx).textTheme.titleMedium),
+            ),
+            for (final tour in kTours)
+              ListTile(
+                leading: const Icon(Icons.play_circle_outline),
+                title: Text(tour.name(t)),
+                onTap: () => Navigator.of(ctx).pop(tour),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (elegido != null && mounted) {
+      setState(() => _activeTour = elegido);
+    }
+  }
+
   /// Avisa de los logros nuevos caigan donde caigan (escáner, importador,
   /// carpetas…): el aviso sale sobre la pestaña en la que estés.
   void _onAchievements() {
@@ -372,7 +410,9 @@ class _HomeShellState extends State<HomeShell> {
           updates: _updates,
           layout: _homeLayout,
           onScan: _abrirEscaner,
-          onGoToTab: (i) => setState(() => _index = i)),
+          onGoToTab: (i) => setState(() => _index = i),
+          editarInicioKey: _tourKeys.editarInicio,
+          onHelp: _menuTours),
       ColeccionScreen(
           db: _db,
           collection: _collection,
@@ -421,19 +461,6 @@ class _HomeShellState extends State<HomeShell> {
 
     final t = tr(context);
     final destinos = _destinos(t);
-    // el tour de bienvenida, la primera vez: burbujas sobre la barra. Los
-    // índices son POSICIONES en la barra (0 = Inicio): colección, escanear,
-    // forge, mazos.
-    final mostrarTour = _onboarding.cargado && !_onboarding.seen;
-    final tour = [
-      CoachStep(
-          barIndex: 1,
-          title: t.onbCollectionTitle,
-          body: t.onbCollectionBody),
-      CoachStep(barIndex: 3, title: t.onbScanTitle, body: t.onbScanBody),
-      CoachStep(barIndex: 4, title: t.onbForgeTitle, body: t.onbForgeBody),
-      CoachStep(barIndex: 5, title: t.onbDecksTitle, body: t.onbDecksBody),
-    ];
 
     return CallbackShortcuts(
       bindings: mainShortcuts(
@@ -464,14 +491,17 @@ class _HomeShellState extends State<HomeShell> {
                 destinations: destinos,
               ),
             ),
-            if (mostrarTour)
+            if (_activeTour != null)
               Positioned.fill(
-                child: OnboardingCoachmarks(
-                  steps: tour,
-                  itemCount: destinos.length,
+                child: TourOverlay(
+                  // key por tour: al cambiar de tour, empieza desde el paso 0
+                  key: ValueKey(_activeTour!.id),
+                  steps: _activeTour!.build(t, _tourKeys),
+                  navItemCount: destinos.length,
+                  onGoToScreen: (s) => setState(() => _index = s),
                   onDone: () {
                     _onboarding.markSeen();
-                    setState(() {});
+                    setState(() => _activeTour = null);
                   },
                 ),
               ),

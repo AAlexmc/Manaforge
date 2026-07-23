@@ -312,4 +312,23 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onbGotIt => 'Entendido';
+
+  @override
+  String get onbBack => 'Atrás';
+
+  @override
+  String get tourMenuTitle => 'Guías';
+
+  @override
+  String get tourWelcomeName => 'Vuelta rápida';
+
+  @override
+  String get tourHomeName => 'La pantalla de inicio';
+
+  @override
+  String get onbEditHomeTitle => 'Personaliza tu inicio';
+
+  @override
+  String get onbEditHomeBody =>
+      'Con este botón eliges qué secciones se ven en Inicio y en qué orden.';
 }

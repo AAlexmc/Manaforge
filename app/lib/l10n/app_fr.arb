@@ -127,5 +127,12 @@
   "onbDecksBody": "Les decks enregistrés depuis Forge apparaissent ici.",
   "onbSkip": "Passer",
   "onbNext": "Suivant",
-  "onbGotIt": "Compris"
+  "onbGotIt": "Compris",
+  "onbBack": "Retour",
+
+  "tourMenuTitle": "Guides",
+  "tourWelcomeName": "Tour rapide",
+  "tourHomeName": "L'écran d'accueil",
+  "onbEditHomeTitle": "Personnalise ton accueil",
+  "onbEditHomeBody": "Ce bouton te laisse choisir quelles sections apparaissent sur l'accueil et dans quel ordre."
 }
