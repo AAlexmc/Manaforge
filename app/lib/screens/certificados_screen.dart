@@ -5,9 +5,12 @@ import 'dart:ui' as ui;
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/certificate_store.dart';
 import '../services/certificates.dart';
@@ -16,6 +19,31 @@ import '../services/collection_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import 'first_card_pick_screen.dart';
+
+// El papel se pinta en el idioma de la app: el certificado solo guarda datos
+// (qué clase es, la fecha ISO, el nombre propio de la expansión) y aquí se le
+// pone el texto que toca.
+String _certHeading(AppLocalizations t, EarnedCertificate c) =>
+    c.kind == CertificateKind.welcome
+        ? t.certHeadingWelcome
+        : t.certHeadingSetComplete;
+
+String _certSubtitle(AppLocalizations t, EarnedCertificate c) =>
+    c.kind == CertificateKind.welcome
+        ? t.certSubtitleWelcome
+        : t.certSubtitleSetComplete;
+
+String _certTitle(AppLocalizations t, EarnedCertificate c) =>
+    c.kind == CertificateKind.welcome ? t.certWelcomeTitle : c.title;
+
+/// La fecha del papel en el idioma de la app ('21 de julio de 2026', 'July 21,
+/// 2026'…). Si el ISO viene roto, se enseña tal cual.
+String _certFecha(BuildContext context, String iso) {
+  final d = DateTime.tryParse(iso);
+  if (d == null) return iso;
+  return DateFormat.yMMMMd(Localizations.localeOf(context).toString())
+      .format(d);
+}
 
 /// Certificados: por completar una expansión entera te llevas un papel con
 /// tu nombre, la fecha y un código, y te lo puedes descargar en PNG.
@@ -152,18 +180,19 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
             itemCount: certs.length,
             itemBuilder: (context, i) {
               final cert = certs[i];
+              final t = tr(context);
               return Card(
                 clipBehavior: Clip.antiAlias,
                 child: ListTile(
                   leading: const Icon(Icons.workspace_premium,
                       color: MFColors.forge, size: 32),
-                  title: Text(cert.title,
+                  title: Text(_certTitle(t, cert),
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(cert.cards > 0
-                      ? '${cert.subtitle} · ${cert.cards} cartas · '
-                          '${prettyDate(cert.earnedAt)}\n${cert.code}'
-                      : '${cert.subtitle} · ${prettyDate(cert.earnedAt)}\n'
-                          '${cert.code}'),
+                      ? '${_certSubtitle(t, cert)} · ${t.certCards(cert.cards)} · '
+                          '${_certFecha(context, cert.earnedAt)}\n${cert.code}'
+                      : '${_certSubtitle(t, cert)} · '
+                          '${_certFecha(context, cert.earnedAt)}\n${cert.code}'),
                   isThreeLine: true,
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => Navigator.of(context).push(
@@ -327,6 +356,8 @@ class CertificateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
+    final titulo = _certTitle(t, certificate);
     const ink = Color(0xFF1A1526);
     const gold = Color(0xFFC9A227);
     // Cinzel son capitales romanas: es la letra de los diplomas de toda la
@@ -337,7 +368,7 @@ class CertificateCard extends StatelessWidget {
     const negrita = [FontVariation('wght', 700)];
     const normal = [FontVariation('wght', 400)];
     // un título largo (el de bienvenida) no puede desbordar el papel
-    final tituloGrande = certificate.title.length <= 22;
+    final tituloGrande = titulo.length <= 22;
     return Container(
       width: 420,
       padding: const EdgeInsets.all(10),
@@ -367,7 +398,7 @@ class CertificateCard extends StatelessWidget {
                     fontSize: 13,
                     letterSpacing: 6)),
             const SizedBox(height: 18),
-            Text(certificate.heading,
+            Text(_certHeading(t, certificate),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                     color: ink,
@@ -377,7 +408,7 @@ class CertificateCard extends StatelessWidget {
                     letterSpacing: 2.2)),
             const SizedBox(height: 16),
             Text(
-              certificate.title,
+              titulo,
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: ink,
@@ -392,8 +423,9 @@ class CertificateCard extends StatelessWidget {
                 // el de bienvenida no va de cantidad: enseñar "0 cartas"
                 // sería absurdo
                 certificate.cards > 0
-                    ? '${certificate.subtitle} · ${certificate.cards} cartas'
-                    : certificate.subtitle,
+                    ? '${_certSubtitle(t, certificate)} · '
+                        '${t.certCards(certificate.cards)}'
+                    : _certSubtitle(t, certificate),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: ink, fontSize: 12)),
             if (_memoria != null) ...[
@@ -410,7 +442,7 @@ class CertificateCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Text('Empecé con ${_memoria!.name}',
+              Text(t.certStartedWith(_memoria!.name),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: ink,
@@ -424,8 +456,8 @@ class CertificateCard extends StatelessWidget {
             const SizedBox(height: 18),
             Text(
               ownerName.isEmpty
-                  ? 'Coleccionista de ManaForge'
-                  : 'Otorgado a $ownerName',
+                  ? t.certCollectorAnon
+                  : t.certAwardedTo(ownerName),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: ink,
@@ -437,7 +469,7 @@ class CertificateCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text('el ${prettyDate(certificate.earnedAt)}',
+            Text(t.certOnDate(_certFecha(context, certificate.earnedAt)),
                 style: const TextStyle(color: ink, fontSize: 12)),
             const SizedBox(height: 22),
             Row(

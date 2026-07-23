@@ -225,4 +225,47 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get marketArrow => 'マーケット ›';
+
+  @override
+  String get certHeadingSetComplete => 'コレクション完成証明書';
+
+  @override
+  String get certSubtitleSetComplete => 'セット完成';
+
+  @override
+  String get certHeadingWelcome => 'ようこそ証明書';
+
+  @override
+  String get certWelcomeTitle => 'Magicの世界へようこそ';
+
+  @override
+  String get certSubtitleWelcome => 'はじめの1枚';
+
+  @override
+  String certCards(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count枚',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String certStartedWith(String name) {
+    return '$nameから始めました';
+  }
+
+  @override
+  String get certCollectorAnon => 'ManaForge コレクター';
+
+  @override
+  String certAwardedTo(String name) {
+    return '$name に授与';
+  }
+
+  @override
+  String certOnDate(String date) {
+    return '$date';
+  }
 }

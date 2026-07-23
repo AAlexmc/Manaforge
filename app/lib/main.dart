@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'l10n/app_localizations.dart';
@@ -36,6 +37,10 @@ import 'widgets/whats_new_dialog.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // datos de fechas para todos los idiomas: los certificados escriben la fecha
+  // en el idioma de la app (intl DateFormat) y sin esto reventaría en un
+  // idioma cuyos símbolos no estén cargados
+  await initializeDateFormatting();
   // la ventana se coloca ANTES de pintar nada: colocarla después es un salto
   // en la cara. Si algo falla, abre con la de siempre (ver WindowMemory)
   await WindowMemory(WindowPreference()).start();

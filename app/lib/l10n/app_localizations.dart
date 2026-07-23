@@ -509,6 +509,66 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Mercado ›'**
   String get marketArrow;
+
+  /// No description provided for @certHeadingSetComplete.
+  ///
+  /// In es, this message translates to:
+  /// **'CERTIFICADO DE COLECCIÓN COMPLETA'**
+  String get certHeadingSetComplete;
+
+  /// No description provided for @certSubtitleSetComplete.
+  ///
+  /// In es, this message translates to:
+  /// **'Expansión completa'**
+  String get certSubtitleSetComplete;
+
+  /// No description provided for @certHeadingWelcome.
+  ///
+  /// In es, this message translates to:
+  /// **'CERTIFICADO DE BIENVENIDA'**
+  String get certHeadingWelcome;
+
+  /// No description provided for @certWelcomeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Bienvenido al mundo de Magic'**
+  String get certWelcomeTitle;
+
+  /// No description provided for @certSubtitleWelcome.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu primera carta'**
+  String get certSubtitleWelcome;
+
+  /// No description provided for @certCards.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 carta} other{{count} cartas}}'**
+  String certCards(int count);
+
+  /// No description provided for @certStartedWith.
+  ///
+  /// In es, this message translates to:
+  /// **'Empecé con {name}'**
+  String certStartedWith(String name);
+
+  /// No description provided for @certCollectorAnon.
+  ///
+  /// In es, this message translates to:
+  /// **'Coleccionista de ManaForge'**
+  String get certCollectorAnon;
+
+  /// No description provided for @certAwardedTo.
+  ///
+  /// In es, this message translates to:
+  /// **'Otorgado a {name}'**
+  String certAwardedTo(String name);
+
+  /// No description provided for @certOnDate.
+  ///
+  /// In es, this message translates to:
+  /// **'el {date}'**
+  String certOnDate(String date);
 }
 
 class _AppLocalizationsDelegate

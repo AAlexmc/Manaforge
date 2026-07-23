@@ -225,4 +225,47 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get marketArrow => '마켓 ›';
+
+  @override
+  String get certHeadingSetComplete => '컬렉션 완성 증명서';
+
+  @override
+  String get certSubtitleSetComplete => '세트 완성';
+
+  @override
+  String get certHeadingWelcome => '환영 증명서';
+
+  @override
+  String get certWelcomeTitle => 'Magic의 세계에 오신 것을 환영합니다';
+
+  @override
+  String get certSubtitleWelcome => '당신의 첫 카드';
+
+  @override
+  String certCards(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count장',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String certStartedWith(String name) {
+    return '$name(으)로 시작했습니다';
+  }
+
+  @override
+  String get certCollectorAnon => 'ManaForge 컬렉터';
+
+  @override
+  String certAwardedTo(String name) {
+    return '$name에게 수여';
+  }
+
+  @override
+  String certOnDate(String date) {
+    return '$date';
+  }
 }

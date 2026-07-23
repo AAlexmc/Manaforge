@@ -103,5 +103,16 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "certHeadingSetComplete": "CERTIFICADO DE COLEÇÃO COMPLETA",
+  "certSubtitleSetComplete": "Coleção completa",
+  "certHeadingWelcome": "CERTIFICADO DE BOAS-VINDAS",
+  "certWelcomeTitle": "Bem-vindo ao mundo de Magic",
+  "certSubtitleWelcome": "Sua primeira carta",
+  "certCards": "{count, plural, =1{1 carta} other{{count} cartas}}",
+  "certStartedWith": "Comecei com {name}",
+  "certCollectorAnon": "Colecionador ManaForge",
+  "certAwardedTo": "Concedido a {name}",
+  "certOnDate": "em {date}"
 }

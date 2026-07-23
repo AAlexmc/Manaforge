@@ -103,5 +103,16 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "certHeadingSetComplete": "コレクション完成証明書",
+  "certSubtitleSetComplete": "セット完成",
+  "certHeadingWelcome": "ようこそ証明書",
+  "certWelcomeTitle": "Magicの世界へようこそ",
+  "certSubtitleWelcome": "はじめの1枚",
+  "certCards": "{count, plural, other{{count}枚}}",
+  "certStartedWith": "{name}から始めました",
+  "certCollectorAnon": "ManaForge コレクター",
+  "certAwardedTo": "{name} に授与",
+  "certOnDate": "{date}"
 }

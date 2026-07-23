@@ -92,5 +92,16 @@
       "distinct": { "type": "int" }
     }
   },
-  "marketArrow": "Market ›"
+  "marketArrow": "Market ›",
+
+  "certHeadingSetComplete": "COMPLETE COLLECTION CERTIFICATE",
+  "certSubtitleSetComplete": "Complete set",
+  "certHeadingWelcome": "WELCOME CERTIFICATE",
+  "certWelcomeTitle": "Welcome to the world of Magic",
+  "certSubtitleWelcome": "Your first card",
+  "certCards": "{count, plural, =1{1 card} other{{count} cards}}",
+  "certStartedWith": "I started with {name}",
+  "certCollectorAnon": "ManaForge collector",
+  "certAwardedTo": "Awarded to {name}",
+  "certOnDate": "on {date}"
 }

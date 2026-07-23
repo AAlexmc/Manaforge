@@ -92,5 +92,20 @@
       "distinct": { "type": "int" }
     }
   },
-  "marketArrow": "Mercado ›"
+  "marketArrow": "Mercado ›",
+
+  "certHeadingSetComplete": "CERTIFICADO DE COLECCIÓN COMPLETA",
+  "certSubtitleSetComplete": "Expansión completa",
+  "certHeadingWelcome": "CERTIFICADO DE BIENVENIDA",
+  "certWelcomeTitle": "Bienvenido al mundo de Magic",
+  "certSubtitleWelcome": "Tu primera carta",
+  "certCards": "{count, plural, =1{1 carta} other{{count} cartas}}",
+  "@certCards": {"placeholders": {"count": {"type": "int"}}},
+  "certStartedWith": "Empecé con {name}",
+  "@certStartedWith": {"placeholders": {"name": {"type": "String"}}},
+  "certCollectorAnon": "Coleccionista de ManaForge",
+  "certAwardedTo": "Otorgado a {name}",
+  "@certAwardedTo": {"placeholders": {"name": {"type": "String"}}},
+  "certOnDate": "el {date}",
+  "@certOnDate": {"placeholders": {"date": {"type": "String"}}}
 }
