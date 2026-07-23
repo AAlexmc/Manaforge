@@ -40,12 +40,20 @@ class LogrosScreen extends StatefulWidget {
   final CollectionStore? collection;
   final CertificateStore? certificates;
 
+  /// Keys del tour: la tarjeta de nivel y el botón que lleva a Certificados.
+  /// Solo las pone la pantalla que abre el TOUR, nunca la que abre el
+  /// usuario: dos LogrosScreen con la misma GlobalKey a la vez reventaría.
+  final Key? nivelKey;
+  final Key? certificadosKey;
+
   const LogrosScreen({
     super.key,
     required this.achievements,
     this.db,
     this.collection,
     this.certificates,
+    this.nivelKey,
+    this.certificadosKey,
   });
 
   @override
@@ -112,6 +120,7 @@ class _LogrosScreenState extends State<LogrosScreen> {
               widget.collection != null &&
               widget.certificates != null)
             IconButton(
+              key: widget.certificadosKey,
               tooltip: 'Certificados',
               icon: const Icon(Icons.workspace_premium_outlined),
               onPressed: () => Navigator.of(context).push(
@@ -141,7 +150,9 @@ class _LogrosScreenState extends State<LogrosScreen> {
           }
           return CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(child: _levelCard(context, c)),
+              SliverToBoxAdapter(
+                  child: KeyedSubtree(
+                      key: widget.nivelKey, child: _levelCard(context, c))),
               SliverToBoxAdapter(child: _filters(context)),
               if (states.isEmpty)
                 const SliverToBoxAdapter(

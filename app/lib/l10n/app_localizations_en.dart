@@ -444,7 +444,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onbAchievementsBody =>
-      'Your level and the badges you earn by scanning, tidying and forging. It opens from the level card on Home.';
+      'Your level and everything you\'ve earned so far. It goes up as you scan, tidy and forge.';
 
   @override
   String get onbCertificatesTitle => 'Certificates';
@@ -459,4 +459,33 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'Save your collection, decks and folders to a file, and get them back if you switch computers. There\'s also an automatic weekly backup.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'Tap here to open $pantalla.';
+  }
+
+  @override
+  String get onbAchievementsName => 'Achievements';
+
+  @override
+  String get onbDataSectionTitle => 'Data';
+
+  @override
+  String get onbDataSectionBody =>
+      'Everything the app stores lives here: the card database and your backups.';
+
+  @override
+  String get onbCardDbTitle => 'Card database';
+
+  @override
+  String get onbCardDbBody =>
+      'Download it again for new cards, fresh prices and anything that needs recent data, like Forge\'s year filter.';
+
+  @override
+  String get onbAboutTitle => 'The app';
+
+  @override
+  String get onbAboutBody =>
+      'What each tab does, the keyboard shortcuts, the version and the licence.';
 }

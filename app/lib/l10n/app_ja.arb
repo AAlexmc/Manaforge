@@ -171,10 +171,22 @@
 
   "tourProgressName": "実績と証明書",
   "onbAchievementsTitle": "実績とレベル",
-  "onbAchievementsBody": "スキャン・整理・デッキ作りで上がるレベルと、もらえるバッジです。ホームのレベルカードから開きます。",
+  "onbAchievementsBody": "あなたのレベルと、これまでに得たもの。スキャン・整理・デッキ作りで上がります。",
   "onbCertificatesTitle": "証明書",
   "onbCertificatesBody": "大きな節目は賞状になり、PDF で保存したり見せたりできます。実績の中にあります。",
 
   "onbBackupTitle": "バックアップ",
-  "onbBackupBody": "コレクション・デッキ・フォルダをファイルに保存し、パソコンを替えても戻せます。さらに毎週、自動でもバックアップされます。"
+  "onbBackupBody": "コレクション・デッキ・フォルダをファイルに保存し、パソコンを替えても戻せます。さらに毎週、自動でもバックアップされます。",
+
+  "onbTapHere": "ここを押すと{pantalla}が開きます。",
+  "@onbTapHere": {
+    "placeholders": { "pantalla": { "type": "String" } }
+  },
+  "onbAchievementsName": "実績",
+  "onbDataSectionTitle": "データ",
+  "onbDataSectionBody": "アプリが保存するものはすべてここです。カードのデータベースとバックアップ。",
+  "onbCardDbTitle": "カードのデータベース",
+  "onbCardDbBody": "新しいカード、最新の価格、Forge の年フィルタなど新しいデータが要るものは、ここで再ダウンロードします。",
+  "onbAboutTitle": "アプリについて",
+  "onbAboutBody": "各タブの役割、キーボードショートカット、バージョン、ライセンス。"
 }

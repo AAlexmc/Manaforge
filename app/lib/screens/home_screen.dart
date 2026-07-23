@@ -52,6 +52,10 @@ class HomeScreen extends StatefulWidget {
   /// Abrir el menú de guías (el botón "?"). Si es null, no sale el botón.
   final VoidCallback? onHelp;
 
+  /// Key de la tarjeta de nivel: es la puerta a Logros y el tour la señala
+  /// antes de abrirla.
+  final Key? nivelKey;
+
   const HomeScreen({
     super.key,
     required this.db,
@@ -65,6 +69,7 @@ class HomeScreen extends StatefulWidget {
     required this.onGoToTab,
     this.editarInicioKey,
     this.onHelp,
+    this.nivelKey,
   });
 
   @override
@@ -260,7 +265,10 @@ class _HomeScreenState extends State<HomeScreen> {
       List<RecentCard> recents, List<SavedDeck> decks, bool hasCollection) {
     switch (id) {
       case 'nivel':
-        return [const SizedBox(height: 12), _levelCard(context)];
+        return [
+          const SizedBox(height: 12),
+          KeyedSubtree(key: widget.nivelKey, child: _levelCard(context)),
+        ];
       case 'accesos':
         return [const SizedBox(height: 12), _accesos(context)];
       case 'resumen':

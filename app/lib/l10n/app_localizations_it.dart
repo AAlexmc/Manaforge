@@ -447,7 +447,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get onbAchievementsBody =>
-      'Il tuo livello e le medaglie che guadagni scansionando, ordinando e forgiando. Si apre dalla scheda del livello in Inizio.';
+      'Il tuo livello e tutto quello che hai guadagnato. Sale scansionando, ordinando e forgiando.';
 
   @override
   String get onbCertificatesTitle => 'Certificati';
@@ -462,4 +462,33 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'Salva collezione, mazzi e cartelle in un file e recuperali se cambi computer. In più ogni settimana si fa una copia da sola.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'Tocca qui per aprire $pantalla.';
+  }
+
+  @override
+  String get onbAchievementsName => 'Obiettivi';
+
+  @override
+  String get onbDataSectionTitle => 'Dati';
+
+  @override
+  String get onbDataSectionBody =>
+      'Qui sta tutto quello che l\'app conserva: la base di carte e le tue copie di sicurezza.';
+
+  @override
+  String get onbCardDbTitle => 'Base di dati delle carte';
+
+  @override
+  String get onbCardDbBody =>
+      'Riscaricala per avere carte nuove, prezzi freschi e quello che chiede dati recenti, come il filtro per anno di Forge.';
+
+  @override
+  String get onbAboutTitle => 'L\'app';
+
+  @override
+  String get onbAboutBody =>
+      'Cosa fa ogni scheda, le scorciatoie da tastiera, la versione e la licenza.';
 }

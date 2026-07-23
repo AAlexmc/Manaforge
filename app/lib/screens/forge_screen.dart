@@ -522,6 +522,9 @@ class _ForgeScreenState extends State<ForgeScreen> {
                   style: TextStyle(fontSize: 11.5, color: MFColors.warning),
                 ),
               ),
+            // aire por arriba: sin él, el foco del tour (que engorda el rect 8
+            // px) se comía media línea del texto de las expansiones
+            const SizedBox(height: 10),
             KeyedSubtree(
               key: widget.queNoTengoKey,
               child: SwitchListTile(

@@ -171,10 +171,22 @@
 
   "tourProgressName": "Succès et certificats",
   "onbAchievementsTitle": "Succès et niveau",
-  "onbAchievementsBody": "Ton niveau et les médailles gagnées en scannant, rangeant et forgeant. Ça s'ouvre depuis la carte de niveau de l'accueil.",
+  "onbAchievementsBody": "Ton niveau et tout ce que tu as gagné. Il monte en scannant, en rangeant et en forgeant.",
   "onbCertificatesTitle": "Certificats",
   "onbCertificatesBody": "Les gros jalons donnent un diplôme que tu peux enregistrer en PDF ou montrer. Ils sont dans les succès.",
 
   "onbBackupTitle": "Sauvegarde",
-  "onbBackupBody": "Enregistre ta collection, tes decks et tes dossiers dans un fichier, et récupère-les si tu changes d'ordinateur. Une sauvegarde automatique se fait aussi chaque semaine."
+  "onbBackupBody": "Enregistre ta collection, tes decks et tes dossiers dans un fichier, et récupère-les si tu changes d'ordinateur. Une sauvegarde automatique se fait aussi chaque semaine.",
+
+  "onbTapHere": "Touche ici pour ouvrir {pantalla}.",
+  "@onbTapHere": {
+    "placeholders": { "pantalla": { "type": "String" } }
+  },
+  "onbAchievementsName": "Succès",
+  "onbDataSectionTitle": "Données",
+  "onbDataSectionBody": "Tout ce que l'app garde est ici : la base de cartes et tes sauvegardes.",
+  "onbCardDbTitle": "Base de cartes",
+  "onbCardDbBody": "Retélécharge-la pour avoir les nouvelles cartes, des prix frais et ce qui demande des données récentes, comme le filtre par année de Forge.",
+  "onbAboutTitle": "L'app",
+  "onbAboutBody": "Ce que fait chaque onglet, les raccourcis clavier, la version et la licence."
 }

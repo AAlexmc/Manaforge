@@ -449,7 +449,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onbAchievementsBody =>
-      'Ton niveau et les médailles gagnées en scannant, rangeant et forgeant. Ça s\'ouvre depuis la carte de niveau de l\'accueil.';
+      'Ton niveau et tout ce que tu as gagné. Il monte en scannant, en rangeant et en forgeant.';
 
   @override
   String get onbCertificatesTitle => 'Certificats';
@@ -464,4 +464,33 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'Enregistre ta collection, tes decks et tes dossiers dans un fichier, et récupère-les si tu changes d\'ordinateur. Une sauvegarde automatique se fait aussi chaque semaine.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'Touche ici pour ouvrir $pantalla.';
+  }
+
+  @override
+  String get onbAchievementsName => 'Succès';
+
+  @override
+  String get onbDataSectionTitle => 'Données';
+
+  @override
+  String get onbDataSectionBody =>
+      'Tout ce que l\'app garde est ici : la base de cartes et tes sauvegardes.';
+
+  @override
+  String get onbCardDbTitle => 'Base de cartes';
+
+  @override
+  String get onbCardDbBody =>
+      'Retélécharge-la pour avoir les nouvelles cartes, des prix frais et ce qui demande des données récentes, comme le filtre par année de Forge.';
+
+  @override
+  String get onbAboutTitle => 'L\'app';
+
+  @override
+  String get onbAboutBody =>
+      'Ce que fait chaque onglet, les raccourcis clavier, la version et la licence.';
 }

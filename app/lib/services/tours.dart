@@ -7,6 +7,9 @@ import '../widgets/tour_overlay.dart';
 /// pasan a las pantallas que los tienen, para poder medir su rectángulo.
 class TourKeys {
   final editarInicio = GlobalKey();
+  final homeNivel = GlobalKey();
+  final logrosNivel = GlobalKey();
+  final logrosCertificados = GlobalKey();
   final coleccionTodas = GlobalKey();
   final coleccionCarpetas = GlobalKey();
   final albumMias = GlobalKey();
@@ -20,7 +23,11 @@ class TourKeys {
   final mercadoBuscar = GlobalKey();
   final ajustesIdioma = GlobalKey();
   final ajustesFondo = GlobalKey();
+  final ajustesEditarInicio = GlobalKey();
+  final ajustesDatos = GlobalKey();
+  final ajustesBaseDatos = GlobalKey();
   final ajustesCopia = GlobalKey();
+  final ajustesLaApp = GlobalKey();
 }
 
 /// Lo que HomeShell le pide a la app para enseñar un tour.
@@ -76,13 +83,27 @@ const int _ajustes = 6;
 // Inicio 0, Colección 1, Álbum 2, Escanear 3, Forge 4, Mazos 5, Mercado 6,
 // Ajustes 7.
 const int _barColeccion = 1;
+const int _barAlbum = 2;
 const int _barScan = 3;
 const int _barForge = 4;
 const int _barMazos = 5;
+const int _barMercado = 6;
+const int _barAjustes = 7;
 
 // Los pasos de cada pantalla, en funciones sueltas: el gran tour y el tour por
 // tema enseñan EXACTAMENTE los mismos, así arreglar un texto o mover una diana
 // vale para los dos y no se van separando con el tiempo.
+//
+// REGLA (pedida por Ale): primero se SEÑALA el botón que lleva a un sitio y se
+// dice que hay que pulsarlo, y solo en el paso siguiente se abre. Nada de
+// aparecer ya dentro de una pantalla sin haber enseñado por dónde se llega.
+
+/// "Pulsa aquí para abrir X" sobre el destino X de la barra de abajo.
+TourStep _pasoBarra(AppLocalizations t, int barra, String nombre) => TourStep(
+      navBarIndex: barra,
+      title: nombre,
+      body: t.onbTapHere(nombre),
+    );
 
 List<TourStep> _pasosInicio(AppLocalizations t, TourKeys k) => [
       TourStep(
@@ -92,15 +113,27 @@ List<TourStep> _pasosInicio(AppLocalizations t, TourKeys k) => [
           body: t.onbEditHomeBody),
     ];
 
-// Logros y Certificados NO son pestañas: se empujan desde Inicio. El tour las
-// abre él (push) y la burbuja va centrada: dentro de una pantalla empujada
-// todavía no se señalan botones sueltos.
+// Logros y Certificados NO son pestañas: se empujan. Se enseña primero la
+// puerta (la tarjeta de nivel de Inicio, el botón de Certificados dentro de
+// Logros) y después se abre.
 List<TourStep> _pasosLogros(AppLocalizations t, TourKeys k) => [
       TourStep(
           goToScreen: _home,
+          targetKey: k.homeNivel,
+          title: t.onbAchievementsName,
+          body: t.onbTapHere(t.onbAchievementsName)),
+      TourStep(
+          goToScreen: _home,
           push: TourPush.logros,
+          targetKey: k.logrosNivel,
           title: t.onbAchievementsTitle,
           body: t.onbAchievementsBody),
+      TourStep(
+          goToScreen: _home,
+          push: TourPush.logros,
+          targetKey: k.logrosCertificados,
+          title: t.onbCertificatesTitle,
+          body: t.onbTapHere(t.onbCertificatesTitle)),
       TourStep(
           goToScreen: _home,
           push: TourPush.certificados,
@@ -186,14 +219,37 @@ List<TourStep> _pasosAjustes(AppLocalizations t, TourKeys k) => [
           targetKey: k.ajustesFondo,
           title: t.onbLookTitle,
           body: t.onbLookBody),
-      // la copia vive en la sección "Datos", que nace plegada: el paso la
-      // despliega (prepare) y solo entonces se puede medir la tarjeta
+      TourStep(
+          goToScreen: _ajustes,
+          targetKey: k.ajustesEditarInicio,
+          title: t.onbEditHomeTitle,
+          body: t.onbEditHomeBody),
+      // "Datos" y "La app" nacen plegadas: el paso las despliega (prepare) y
+      // solo entonces se puede medir lo que hay dentro
+      TourStep(
+          goToScreen: _ajustes,
+          prepare: TourPrep.ajustesDatos,
+          targetKey: k.ajustesDatos,
+          title: t.onbDataSectionTitle,
+          body: t.onbDataSectionBody),
+      TourStep(
+          goToScreen: _ajustes,
+          prepare: TourPrep.ajustesDatos,
+          targetKey: k.ajustesBaseDatos,
+          title: t.onbCardDbTitle,
+          body: t.onbCardDbBody),
       TourStep(
           goToScreen: _ajustes,
           prepare: TourPrep.ajustesDatos,
           targetKey: k.ajustesCopia,
           title: t.onbBackupTitle,
           body: t.onbBackupBody),
+      TourStep(
+          goToScreen: _ajustes,
+          prepare: TourPrep.ajustesLaApp,
+          targetKey: k.ajustesLaApp,
+          title: t.onbAboutTitle,
+          body: t.onbAboutBody),
     ];
 
 /// El catálogo de tours. El primero ('welcome') es el del primer arranque.
@@ -225,23 +281,29 @@ final List<Tour> kTours = [
           body: t.onbDecksBody),
     ],
   ),
-  // La vuelta completa: recorre las pantallas en el orden de la barra y va
-  // señalando botón a botón. Escanear se señala EN la barra (no es pestaña: se
-  // empuja, y el tour todavía no sabe conducir pantallas empujadas).
+  // La vuelta completa: antes de cada pantalla, el botón que la abre. Escanear
+  // se queda en "mira este botón": abrirlo encendería la cámara en mitad del
+  // tour.
   Tour(
     id: 'full',
     name: (t) => t.tourFullName,
     build: (t, k) => [
       ..._pasosInicio(t, k),
       ..._pasosLogros(t, k),
+      _pasoBarra(t, _barColeccion, t.tabCollection),
       ..._pasosColeccion(t, k),
+      _pasoBarra(t, _barAlbum, t.tabAlbum),
       ..._pasosAlbum(t, k),
       TourStep(
           navBarIndex: _barScan, title: t.onbScanTitle, body: t.onbScanBody),
+      _pasoBarra(t, _barForge, t.tabForge),
       ..._pasosForge(t, k),
+      _pasoBarra(t, _barMazos, t.tabDecks),
       TourStep(
           goToScreen: _mazos, title: t.onbDecksTitle, body: t.onbDecksBody),
+      _pasoBarra(t, _barMercado, t.tabMarket),
       ..._pasosMercado(t, k),
+      _pasoBarra(t, _barAjustes, t.tabSettings),
       ..._pasosAjustes(t, k),
     ],
   ),
@@ -258,21 +320,35 @@ final List<Tour> kTours = [
   Tour(
     id: 'collection',
     name: (t) => t.tourCollectionName,
-    build: (t, k) => [..._pasosColeccion(t, k), ..._pasosAlbum(t, k)],
+    build: (t, k) => [
+      _pasoBarra(t, _barColeccion, t.tabCollection),
+      ..._pasosColeccion(t, k),
+      _pasoBarra(t, _barAlbum, t.tabAlbum),
+      ..._pasosAlbum(t, k),
+    ],
   ),
   Tour(
     id: 'forge',
     name: (t) => t.tourForgeName,
-    build: _pasosForge,
+    build: (t, k) => [
+      _pasoBarra(t, _barForge, t.tabForge),
+      ..._pasosForge(t, k),
+    ],
   ),
   Tour(
     id: 'market',
     name: (t) => t.tourMarketName,
-    build: _pasosMercado,
+    build: (t, k) => [
+      _pasoBarra(t, _barMercado, t.tabMarket),
+      ..._pasosMercado(t, k),
+    ],
   ),
   Tour(
     id: 'settings',
     name: (t) => t.tourSettingsName,
-    build: _pasosAjustes,
+    build: (t, k) => [
+      _pasoBarra(t, _barAjustes, t.tabSettings),
+      ..._pasosAjustes(t, k),
+    ],
   ),
 ];

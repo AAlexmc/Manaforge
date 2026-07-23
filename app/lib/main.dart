@@ -308,9 +308,10 @@ class _HomeShellState extends State<HomeShell> {
   Route<void>? _rutaTour;
   TourPush? _rutaTourCual;
 
-  /// Mando de la sección "Datos" de Ajustes (nace plegada): el tour la abre
-  /// antes de señalar la copia de seguridad, que vive dentro.
+  /// Mandos de las secciones plegadas de Ajustes: el tour las abre antes de
+  /// señalar lo que vive dentro (la base de cartas, la copia, los créditos).
   final _seccionDatos = ExpansibleController();
+  final _seccionLaApp = ExpansibleController();
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -458,19 +459,21 @@ class _HomeShellState extends State<HomeShell> {
   /// Deja listo lo que pide el paso antes de que el tour mida su diana.
   Future<void> _prepararPaso(TourPrep? prep) async {
     if (prep == null) return;
-    switch (prep) {
-      case TourPrep.ajustesDatos:
-        try {
-          if (!_seccionDatos.isExpanded) _seccionDatos.expand();
-        } catch (_) {
-          // la sección aún no está construida (lista perezosa): el paso sale
-          // sin diana, que es mejor que reventar
-          return;
-        }
-        // la sección se abre con animación: medir antes daría un rectángulo
-        // a medio crecer
-        await Future<void>.delayed(const Duration(milliseconds: 350));
+    final seccion = switch (prep) {
+      TourPrep.ajustesDatos => _seccionDatos,
+      TourPrep.ajustesLaApp => _seccionLaApp,
+    };
+    try {
+      if (seccion.isExpanded) return; // ya abierta: ni animación que esperar
+      seccion.expand();
+    } catch (_) {
+      // la sección aún no está construida (lista perezosa): el paso sale sin
+      // diana, que es mejor que reventar
+      return;
     }
+    // la sección se abre con animación: medir antes daría un rectángulo a
+    // medio crecer
+    await Future<void>.delayed(const Duration(milliseconds: 350));
   }
 
   /// Abre la pantalla empujada que pide el paso, o cierra la que hubiera
@@ -488,11 +491,16 @@ class _HomeShellState extends State<HomeShell> {
     if (cual == null) return;
     final ruta = MaterialPageRoute<void>(
       builder: (_) => switch (cual) {
+        // las keys SOLO van en la pantalla que abre el tour: la que abre el
+        // usuario desde Inicio no las lleva, y así nunca hay dos GlobalKey
+        // iguales montadas a la vez
         TourPush.logros => LogrosScreen(
             achievements: _achievements,
             db: _db,
             collection: _collection,
-            certificates: _certificates),
+            certificates: _certificates,
+            nivelKey: _tourKeys.logrosNivel,
+            certificadosKey: _tourKeys.logrosCertificados),
         TourPush.certificados => CertificadosScreen(
             db: _db, collection: _collection, certificates: _certificates),
       },
@@ -545,6 +553,7 @@ class _HomeShellState extends State<HomeShell> {
           onScan: _abrirEscaner,
           onGoToTab: (i) => setState(() => _index = i),
           editarInicioKey: _tourKeys.editarInicio,
+          nivelKey: _tourKeys.homeNivel,
           onHelp: _menuTours),
       ColeccionScreen(
           db: _db,
@@ -600,7 +609,12 @@ class _HomeShellState extends State<HomeShell> {
           idiomaKey: _tourKeys.ajustesIdioma,
           fondoKey: _tourKeys.ajustesFondo,
           copiaKey: _tourKeys.ajustesCopia,
-          datosController: _seccionDatos),
+          datosController: _seccionDatos,
+          editarInicioKey: _tourKeys.ajustesEditarInicio,
+          datosKey: _tourKeys.ajustesDatos,
+          baseDatosKey: _tourKeys.ajustesBaseDatos,
+          laAppKey: _tourKeys.ajustesLaApp,
+          laAppController: _seccionLaApp),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el

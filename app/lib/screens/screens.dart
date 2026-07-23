@@ -68,6 +68,15 @@ class AjustesScreen extends StatefulWidget {
   final Key? copiaKey;
   final ExpansibleController? datosController;
 
+  /// El resto de paradas del tour por Ajustes: "Editar inicio", la cabecera de
+  /// "Datos", la tarjeta de la base de cartas y la sección "La app" (con su
+  /// mando para desplegarla).
+  final Key? editarInicioKey;
+  final Key? datosKey;
+  final Key? baseDatosKey;
+  final Key? laAppKey;
+  final ExpansibleController? laAppController;
+
   const AjustesScreen(
       {super.key,
       required this.db,
@@ -79,7 +88,12 @@ class AjustesScreen extends StatefulWidget {
       this.idiomaKey,
       this.fondoKey,
       this.copiaKey,
-      this.datosController});
+      this.datosController,
+      this.editarInicioKey,
+      this.datosKey,
+      this.baseDatosKey,
+      this.laAppKey,
+      this.laAppController});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -157,7 +171,9 @@ class _AjustesScreenState extends State<AjustesScreen> {
                       key: widget.fondoKey,
                       child: BackgroundSettingsCard(prefs: widget.background!)),
                 if (widget.homeLayout != null)
-                  _EditarInicioTile(layout: widget.homeLayout!),
+                  KeyedSubtree(
+                      key: widget.editarInicioKey,
+                      child: _EditarInicioTile(layout: widget.homeLayout!)),
               ],
             ),
             const SizedBox(height: 8),
@@ -166,40 +182,44 @@ class _AjustesScreenState extends State<AjustesScreen> {
               titulo: 'Datos',
               icono: Icons.storage_outlined,
               controller: widget.datosController,
+              cabeceraKey: widget.datosKey,
               children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Base de datos de cartas',
-                            style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(height: 6),
-                        const Text(
-                            'Vuelve a descargarla para tener cartas nuevas, '
-                            'precios frescos y las funciones que piden datos '
-                            'recientes (como el filtro por año en Forge).',
-                            style: TextStyle(fontSize: 12.5)),
-                        const SizedBox(height: 12),
-                        if (_progress != null) ...[
-                          LinearProgressIndicator(value: _progress),
+                KeyedSubtree(
+                  key: widget.baseDatosKey,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Base de datos de cartas',
+                              style: Theme.of(context).textTheme.titleMedium),
                           const SizedBox(height: 6),
-                          Text(
-                              'Descargando… ${((_progress ?? 0) * 100).toStringAsFixed(0)} %'),
-                        ] else
-                          FilledButton.icon(
-                            onPressed: _redownload,
-                            icon: const Icon(Icons.refresh),
-                            label: const Text(
-                                'Volver a descargar la base de datos'),
-                          ),
-                        if (_status != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(_status!),
-                          ),
-                      ],
+                          const Text(
+                              'Vuelve a descargarla para tener cartas nuevas, '
+                              'precios frescos y las funciones que piden datos '
+                              'recientes (como el filtro por año en Forge).',
+                              style: TextStyle(fontSize: 12.5)),
+                          const SizedBox(height: 12),
+                          if (_progress != null) ...[
+                            LinearProgressIndicator(value: _progress),
+                            const SizedBox(height: 6),
+                            Text(
+                                'Descargando… ${((_progress ?? 0) * 100).toStringAsFixed(0)} %'),
+                          ] else
+                            FilledButton.icon(
+                              onPressed: _redownload,
+                              icon: const Icon(Icons.refresh),
+                              label: const Text(
+                                  'Volver a descargar la base de datos'),
+                            ),
+                          if (_status != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(_status!),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -215,6 +235,8 @@ class _AjustesScreenState extends State<AjustesScreen> {
             _Seccion(
               titulo: 'La app',
               icono: Icons.info_outline,
+              controller: widget.laAppController,
+              cabeceraKey: widget.laAppKey,
               children: [
                 // qué es cada pestaña. Alguien que abre la app por primera vez
                 // ve varios iconos y ninguna explicación
@@ -317,12 +339,17 @@ class _Seccion extends StatelessWidget {
   /// sección antes de señalar algo de dentro.
   final ExpansibleController? controller;
 
+  /// Para que un tour pueda señalar la CABECERA de la sección (y no todo lo
+  /// que hay dentro, que abierta ocupa media pantalla).
+  final Key? cabeceraKey;
+
   const _Seccion({
     required this.titulo,
     required this.icono,
     required this.children,
     this.initiallyExpanded = false,
     this.controller,
+    this.cabeceraKey,
   });
 
   @override
@@ -334,11 +361,14 @@ class _Seccion extends StatelessWidget {
       child: ExpansionTile(
         controller: controller,
         leading: Icon(icono),
-        title: Text(titulo,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        title: KeyedSubtree(
+          key: cabeceraKey,
+          child: Text(titulo,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
+        ),
         initiallyExpanded: initiallyExpanded,
         tilePadding: const EdgeInsets.symmetric(horizontal: 4),
         childrenPadding: const EdgeInsets.only(bottom: 4),

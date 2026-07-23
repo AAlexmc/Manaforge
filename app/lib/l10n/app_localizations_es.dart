@@ -445,7 +445,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onbAchievementsBody =>
-      'Tu nivel y las medallas que vas ganando por escanear, ordenar y forjar. Se abre desde la tarjeta de nivel de Inicio.';
+      'Tu nivel y lo que llevas ganado. Sube escaneando, ordenando y forjando.';
 
   @override
   String get onbCertificatesTitle => 'Certificados';
@@ -460,4 +460,33 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'Guarda tu colección, mazos y carpetas en un archivo, y recupéralos si cambias de ordenador. Además se hace una copia sola cada semana.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'Pulsa aquí para abrir $pantalla.';
+  }
+
+  @override
+  String get onbAchievementsName => 'Logros';
+
+  @override
+  String get onbDataSectionTitle => 'Datos';
+
+  @override
+  String get onbDataSectionBody =>
+      'Aquí vive todo lo que la app guarda: la base de cartas y tus copias de seguridad.';
+
+  @override
+  String get onbCardDbTitle => 'Base de datos de cartas';
+
+  @override
+  String get onbCardDbBody =>
+      'Vuelve a descargarla para tener cartas nuevas, precios frescos y lo que pide datos recientes, como el filtro por año de Forge.';
+
+  @override
+  String get onbAboutTitle => 'La app';
+
+  @override
+  String get onbAboutBody =>
+      'Qué hace cada pestaña, los atajos de teclado, la versión y la licencia.';
 }

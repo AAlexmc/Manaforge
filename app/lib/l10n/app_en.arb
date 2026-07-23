@@ -160,10 +160,22 @@
 
   "tourProgressName": "Achievements and certificates",
   "onbAchievementsTitle": "Achievements and level",
-  "onbAchievementsBody": "Your level and the badges you earn by scanning, tidying and forging. It opens from the level card on Home.",
+  "onbAchievementsBody": "Your level and everything you've earned so far. It goes up as you scan, tidy and forge.",
   "onbCertificatesTitle": "Certificates",
   "onbCertificatesBody": "The big milestones come as a diploma you can save as a PDF or show off. They live inside Achievements.",
 
   "onbBackupTitle": "Backup",
-  "onbBackupBody": "Save your collection, decks and folders to a file, and get them back if you switch computers. There's also an automatic weekly backup."
+  "onbBackupBody": "Save your collection, decks and folders to a file, and get them back if you switch computers. There's also an automatic weekly backup.",
+
+  "onbTapHere": "Tap here to open {pantalla}.",
+  "@onbTapHere": {
+    "placeholders": { "pantalla": { "type": "String" } }
+  },
+  "onbAchievementsName": "Achievements",
+  "onbDataSectionTitle": "Data",
+  "onbDataSectionBody": "Everything the app stores lives here: the card database and your backups.",
+  "onbCardDbTitle": "Card database",
+  "onbCardDbBody": "Download it again for new cards, fresh prices and anything that needs recent data, like Forge's year filter.",
+  "onbAboutTitle": "The app",
+  "onbAboutBody": "What each tab does, the keyboard shortcuts, the version and the licence."
 }
