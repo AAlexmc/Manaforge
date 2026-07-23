@@ -340,5 +340,105 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "fpSelectAll": "Select all",
-  "fpNoneMatch": "No card matches these filters."
+  "fpNoneMatch": "No card matches these filters.",
+
+  "fgMsgReading": "Reading your collection…",
+  "fgMsgCurve": "Working out the mana curve…",
+  "fgMsgLands": "Dealing out lands…",
+  "fgMsgSynergy": "Looking for synergies…",
+  "fgMsgPlan": "Writing your game plan…",
+  "fgNeedDbForSets": "I need the card database to list the sets: Settings → download the database.",
+  "fgDbError": "Couldn't read the card database: {error}",
+  "@fgDbError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "fgInThoseSets": "{n, plural, =1{ in that set} other{ in those {n} sets}}",
+  "@fgInThoseSets": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgNoCommander": "I can't put together a legal Commander deck{donde}: it needs a legendary commander and ~62 DIFFERENT cards inside its colour identity (it's singleton), plus enough basics. Try another format, other sets, or grow your collection.",
+  "@fgNoCommander": {
+    "placeholders": { "donde": { "type": "String" } }
+  },
+  "fgNoDeck": "With the cards in this pool I can't finish a {formato} deck that meets my rules (enough lands and a healthy curve){donde}. {consejo} Rather than hand you a broken deck, I'd rather tell you.",
+  "@fgNoDeck": {
+    "placeholders": { "formato": { "type": "String" }, "donde": { "type": "String" }, "consejo": { "type": "String" } }
+  },
+  "fgOf60": "60-card",
+  "fgLegalIn": "LEGAL in {formato}",
+  "@fgLegalIn": {
+    "placeholders": { "formato": { "type": "String" } }
+  },
+  "fgTipMoreSets": "Try more sets or drop some filters.",
+  "fgTipMoreCards": "Add more cards — especially in your main colours — or tick \"include cards I don't own\".",
+  "fgPitch": "Complete, playable decks from the cards you already own. Without buying anything.",
+  "fgTeaserCount": "cards for your first deck",
+  "fgTeaserMissing": "Build a deck with cards I don't own",
+  "fgBasics": "I have loose basic lands",
+  "fgBasicsSub": "Almost everyone has basics from starter decks; turn it off to use ONLY the basics in your collection.",
+  "fgFormat": "Game format",
+  "fgCasual60": "Casual 60",
+  "fgCommanderNote": "100 cards · singleton · a legendary commander from your collection · colour identity respected.",
+  "fgCasualNote": "60 cards, no legality restrictions: anything goes.",
+  "fgFormatNote": "60 cards using ONLY your cards that are legal in {formato}.",
+  "@fgFormatNote": {
+    "placeholders": { "formato": { "type": "String" } }
+  },
+  "fgWhereFrom": "Where do the cards come from?",
+  "fgPickSets": "Pick sets",
+  "fgChangeSets": "Change sets",
+  "fgNeedOneSet": "Pick at least one set: with no filter it'd be all ~30,000 Magic cards.",
+  "fgNoSetsNote": "With no sets picked, Forge uses your whole collection.",
+  "fgFromSetsAny": "{n, plural, =1{Cards from 1 set, whether you own them or not.} other{Cards from {n} sets, whether you own them or not.}}",
+  "@fgFromSetsAny": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgFromSetsMine": "{n, plural, =1{Only your cards from 1 set — not the whole collection.} other{Only your cards from {n} sets — not the whole collection.}}",
+  "@fgFromSetsMine": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgNoPrintingData": "Your collection doesn't record each card's printing, so filtering by set would leave almost everything out. Re-import your CSV with \"Replace\" and come back.",
+  "fgIncludeMissing": "Include cards I don't own",
+  "fgIncludeMissingSub": "Forge stops limiting itself to your collection and uses EVERYTHING printed in those sets; afterwards it tells you how many cards you're missing and what they'd cost.",
+  "fgYourTaste": "Your call (optional)",
+  "fgArchetypeAuto": "Archetype: auto",
+  "fgPricePerCard": "Price per card:",
+  "fgMin": "min €",
+  "fgMax": "max €",
+  "fgCardYear": "Card year:",
+  "fgFrom": "from",
+  "fgTo": "to",
+  "fgYearNeedsDb": "The year filter needs an up-to-date database: Settings → Download the database again.",
+  "fgNoColorsNote": "With no colours picked, Forge tries every combination.",
+  "fgColorsNote": "Only {colores} decks (and their combinations).",
+  "@fgColorsNote": {
+    "placeholders": { "colores": { "type": "String" } }
+  },
+  "fgMissingNote": "This deck may include cards you do NOT own: each proposal says how many you're missing and what they'd cost (Cardmarket price).",
+  "fgOnlyYoursNote": "Forge only uses your {n} cards. It never invents copies you don't have.",
+  "@fgOnlyYoursNote": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgForgeMissing": "Forge decks (with what I'm missing)",
+  "fgForgeMine": "Forge my decks",
+  "fgTestMode": "Test mode: beat a meta deck",
+  "fgOffline": "Everything is worked out on your device, offline",
+  "fgForgingWith": "You're forging with {n} cards: this takes a few seconds. The window is still alive.",
+  "@fgForgingWith": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgDecksReady": "{n, plural, =1{1 deck ready to play} other{{n} decks ready to play}}",
+  "@fgDecksReady": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgSwipeMissing": "With cards you don't own yet · swipe to compare",
+  "fgSwipeMine": "Made only from your cards · swipe to compare",
+  "fgHaveAll": "✓ You have every card",
+  "fgShortfall": "{n, plural, =1{You're missing 1 card} other{You're missing {n} cards}}",
+  "@fgShortfall": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgSeeDeck": "See the full deck",
+
+  "fgReforge": "Forge again"
 }

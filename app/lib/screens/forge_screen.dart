@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/collection_sets.dart';
 import '../services/collection_store.dart';
@@ -18,13 +20,13 @@ import 'test_screen.dart';
 
 const _minCardsForForge = 30;
 
-const _forgeMessages = [
-  'Leyendo tu colección…',
-  'Calculando la curva de maná…',
-  'Repartiendo tierras…',
-  'Buscando sinergias…',
-  'Escribiendo tu plan de juego…',
-];
+List<String> _forgeMessages(AppLocalizations t) => [
+      t.fgMsgReading,
+      t.fgMsgCurve,
+      t.fgMsgLands,
+      t.fgMsgSynergy,
+      t.fgMsgPlan,
+    ];
 
 /// Forge: el diferenciador. Estados: teaser (<30 cartas), selector, forjando
 /// (mensajes rotatorios), resultados (carrusel) y "Forge no puede" con motivo.
@@ -139,9 +141,8 @@ class _ForgeScreenState extends State<ForgeScreen> {
     if (!mounted) return;
     final sets = _sets;
     if (sets == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Necesito la base de cartas para listar las '
-              'expansiones: Ajustes → descargar la base.')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(tr(context).fgNeedDbForSets)));
       return;
     }
     final elegidas = await showSetPickerSheet(context,
@@ -196,7 +197,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
     });
     _messageTimer =
         Timer.periodic(const Duration(milliseconds: 700), (_) {
-      if (mounted && _messageIndex < _forgeMessages.length - 1) {
+      if (mounted && _messageIndex < 4) {
         setState(() => _messageIndex++);
       }
     });
@@ -261,28 +262,21 @@ class _ForgeScreenState extends State<ForgeScreen> {
       if (mounted) {
         setState(() {
           _forging = false;
-          _cantReason = 'No pude leer la base de datos de cartas: $e';
+          _cantReason = tr(context).fgDbError('$e');
         });
       }
     }
   }
 
   String _sinMazoReason() {
-    final donde = _selSets.isEmpty
-        ? ''
-        : ' en ${_selSets.length == 1 ? 'esa expansión' : 'esas '
-            '${_selSets.length} expansiones'}';
-    if (_format == 'commander') {
-      return 'No me sale un Commander legal$donde: hacen falta un comandante '
-          'legendario y ~62 cartas DISTINTAS dentro de su identidad (es '
-          'singleton), más básicas suficientes. Prueba otro formato, otras '
-          'expansiones o amplía la colección.';
-    }
-    return 'Con las cartas de este pool no me sale ningún mazo completo '
-        '${_format == 'casual' ? 'de 60' : 'LEGAL en $_format'} que cumpla '
-        'mis reglas (tierras suficientes y curva sana)$donde. '
-        '${_includeMissing ? 'Prueba con más expansiones o quita filtros.' : 'Añade más cartas — sobre todo de tus colores principales — o marca "incluir cartas que no tengo".'} '
-        'Antes que darte un mazo defectuoso, prefiero avisarte.';
+    final t = tr(context);
+    final donde = _selSets.isEmpty ? '' : t.fgInThoseSets(_selSets.length);
+    if (_format == 'commander') return t.fgNoCommander(donde);
+    return t.fgNoDeck(
+      _format == 'casual' ? t.fgOf60 : t.fgLegalIn(_format),
+      donde,
+      _includeMissing ? t.fgTipMoreSets : t.fgTipMoreCards,
+    );
   }
 
   /// Cuántas copias te faltan de cada propuesta y cuánto costarían. Se mide
@@ -344,6 +338,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
 
   /// Teaser con contador: anticipación, no candado.
   Widget _buildTeaser(int total) {
+    final t = tr(context);
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -351,9 +346,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
         children: [
           _header(),
           const SizedBox(height: 8),
-          const Text(
-              'Mazos completos y jugables con las cartas que ya tienes. '
-              'Sin comprar nada.'),
+          Text(t.fgPitch),
           const Spacer(),
           Center(
             child: Column(
@@ -364,8 +357,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                         .displayMedium
                         ?.copyWith(color: MFColors.forge)),
                 const SizedBox(height: 8),
-                const Text('cartas para tu primer mazo',
-                    textAlign: TextAlign.center),
+                Text(t.fgTeaserCount, textAlign: TextAlign.center),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: 220,
@@ -384,8 +376,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                     _includeMissing = true;
                   }),
                   icon: const Icon(Icons.shopping_bag_outlined, size: 18),
-                  label:
-                      const Text('Hacer un mazo con cartas que no tengo'),
+                  label: Text(t.fgTeaserMissing),
                 ),
               ],
             ),
@@ -397,6 +388,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
   }
 
   Widget _buildSelector() {
+    final t = tr(context);
     return Padding(
       padding: const EdgeInsets.all(20),
       // Column dentro de un scroll, y no ListView: la lista perezosa no
@@ -561,21 +553,23 @@ class _ForgeScreenState extends State<ForgeScreen> {
                 DropdownButtonHideUnderline(
                   child: DropdownButton<String?>(
                     value: _selArchetype,
-                    hint: const Text('Arquetipo: auto',
-                        style: TextStyle(fontSize: 12.5)),
+                    hint: Text(t.fgArchetypeAuto,
+                        style: const TextStyle(fontSize: 12.5)),
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall
                         ?.copyWith(fontSize: 12.5),
                     borderRadius: BorderRadius.circular(10),
-                    items: const [
+                    items: [
                       DropdownMenuItem(
-                          value: null, child: Text('Arquetipo: auto')),
-                      DropdownMenuItem(value: 'aggro', child: Text('Aggro')),
-                      DropdownMenuItem(value: 'tempo', child: Text('Tempo')),
-                      DropdownMenuItem(
+                          value: null, child: Text(t.fgArchetypeAuto)),
+                      const DropdownMenuItem(
+                          value: 'aggro', child: Text('Aggro')),
+                      const DropdownMenuItem(
+                          value: 'tempo', child: Text('Tempo')),
+                      const DropdownMenuItem(
                           value: 'midrange', child: Text('Midrange')),
-                      DropdownMenuItem(
+                      const DropdownMenuItem(
                           value: 'control', child: Text('Control')),
                     ],
                     onChanged: (v) => setState(() => _selArchetype = v),
@@ -589,33 +583,32 @@ class _ForgeScreenState extends State<ForgeScreen> {
               runSpacing: 8,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                const Text('Precio por carta:',
-                    style: TextStyle(fontSize: 12.5)),
-                _numField(_minPriceCtrl, 'mín €'),
+                Text(t.fgPricePerCard,
+                    style: const TextStyle(fontSize: 12.5)),
+                _numField(_minPriceCtrl, t.fgMin),
                 const Text('—', style: TextStyle(fontSize: 12.5)),
-                _numField(_maxPriceCtrl, 'máx €'),
+                _numField(_maxPriceCtrl, t.fgMax),
                 const SizedBox(width: 12),
-                const Text('Año de la carta:',
-                    style: TextStyle(fontSize: 12.5)),
-                _numField(_yearFromCtrl, 'desde', enabled: _yearSupported),
+                Text(t.fgCardYear, style: const TextStyle(fontSize: 12.5)),
+                _numField(_yearFromCtrl, t.fgFrom, enabled: _yearSupported),
                 const Text('—', style: TextStyle(fontSize: 12.5)),
-                _numField(_yearToCtrl, 'hasta', enabled: _yearSupported),
+                _numField(_yearToCtrl, t.fgTo, enabled: _yearSupported),
               ],
             ),
             if (!_yearSupported)
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  'El filtro por año necesita la base de datos actualizada: '
-                  'Ajustes → Volver a descargar la base de datos.',
-                  style: TextStyle(fontSize: 11.5, color: MFColors.warning),
+                  t.fgYearNeedsDb,
+                  style: const TextStyle(
+                      fontSize: 11.5, color: MFColors.warning),
                 ),
               ),
             const SizedBox(height: 8),
             Text(
               _selColors.isEmpty
-                  ? 'Sin elegir colores, Forge prueba todas las combinaciones.'
-                  : 'Solo mazos ${_selColors.join("")} (y sus combinaciones).',
+                  ? t.fgNoColorsNote
+                  : t.fgColorsNote(_selColors.join()),
               style: const TextStyle(fontSize: 11.5),
             ),
             const SizedBox(height: 8),
@@ -623,11 +616,8 @@ class _ForgeScreenState extends State<ForgeScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Text(_includeMissing
-                    ? 'Este mazo puede llevar cartas que NO tienes: cada '
-                        'propuesta dice cuántas te faltan y lo que costarían '
-                        '(precio de Cardmarket).'
-                    : 'Forge solo usa tus ${widget.collection.totalCopies} '
-                        'cartas. Nunca inventa copias que no tienes.'),
+                    ? t.fgMissingNote
+                    : t.fgOnlyYoursNote(widget.collection.totalCopies)),
               ),
             ),
             const SizedBox(height: 20),
@@ -651,9 +641,8 @@ class _ForgeScreenState extends State<ForgeScreen> {
                 ),
                 onPressed: _canForge ? _forge : null,
                 icon: const Icon(Icons.auto_awesome),
-                label: Text(_includeMissing
-                    ? 'Forjar mazos (con lo que me falte)'
-                    : 'Forjar mis mazos'),
+                label: Text(
+                    _includeMissing ? t.fgForgeMissing : t.fgForgeMine),
               ),
             ),
             const SizedBox(height: 8),
@@ -669,7 +658,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
                   ),
                 ),
                 icon: const Icon(Icons.sports_kabaddi, size: 18),
-                label: const Text('Modo Test: vence a un mazo del meta'),
+                label: Text(t.fgTestMode),
               ),
             ),
           ],
@@ -700,6 +689,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
   }
 
   Widget _buildForging() {
+    final t = tr(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -710,16 +700,13 @@ class _ForgeScreenState extends State<ForgeScreen> {
             child: CircularProgressIndicator(color: MFColors.forge),
           ),
           const SizedBox(height: 24),
-          Text(_forgeMessages[_messageIndex],
+          Text(_forgeMessages(t)[_messageIndex],
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          const Text('Todo se calcula en tu dispositivo, sin internet',
-              style: TextStyle(fontSize: 12)),
+          Text(t.fgOffline, style: const TextStyle(fontSize: 12)),
           if ((_poolSize ?? 0) > 1200) ...[
             const SizedBox(height: 6),
-            Text(
-                'Estás forjando con $_poolSize cartas: esto tarda unos '
-                'segundos. La ventana sigue viva.',
+            Text(t.fgForgingWith(_poolSize ?? 0),
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12)),
           ],
@@ -729,6 +716,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
   }
 
   Widget _buildResults() {
+    final t = tr(context);
     final proposals = _proposals!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -738,22 +726,21 @@ class _ForgeScreenState extends State<ForgeScreen> {
           child: Row(
             children: [
               Expanded(
-                child: Text('${proposals.length} mazos listos para jugar',
+                child: Text(t.fgDecksReady(proposals.length),
                     style: Theme.of(context).textTheme.headlineSmall),
               ),
               TextButton.icon(
                 onPressed: _forge,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Reforjar'),
+                label: Text(t.fgReforge),
               ),
             ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(_includeMissing
-              ? 'Con cartas que aún no tienes · desliza para comparar'
-              : 'Hechos solo con tus cartas · desliza para comparar'),
+          child: Text(
+              _includeMissing ? t.fgSwipeMissing : t.fgSwipeMine),
         ),
         const SizedBox(height: 12),
         Expanded(
@@ -851,13 +838,15 @@ class _ProposalCard extends StatelessWidget {
                     style: const TextStyle(fontStyle: FontStyle.italic)),
               ),
               if ((shortfall?.copies ?? 0) == 0)
-                const Text('✓ Tienes todas las cartas',
-                    style: TextStyle(color: MFColors.success, fontSize: 12))
+                Text(tr(context).fgHaveAll,
+                    style: const TextStyle(
+                        color: MFColors.success, fontSize: 12))
               else
                 Text(
-                    'Te faltan ${shortfall!.copies} carta'
-                    '${shortfall!.copies == 1 ? '' : 's'}'
-                    '${shortfall!.cost > 0 ? ' · ${shortfall!.cost.toStringAsFixed(2)} €' : ''}',
+                    tr(context).fgShortfall(shortfall!.copies) +
+                        (shortfall!.cost > 0
+                            ? ' · ${shortfall!.cost.toStringAsFixed(2)} €'
+                            : ''),
                     style: const TextStyle(
                         color: MFColors.warning, fontSize: 12)),
               const SizedBox(height: 8),
@@ -874,7 +863,7 @@ class _ProposalCard extends StatelessWidget {
                             ownedPrintings: ownedPrintings,
                             ownedByName: ownedByName)),
                   ),
-                  child: const Text('Ver mazo completo'),
+                  child: Text(tr(context).fgSeeDeck),
                 ),
               ),
             ],

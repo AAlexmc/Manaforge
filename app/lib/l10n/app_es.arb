@@ -344,5 +344,105 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "fpSelectAll": "Marcar todas",
-  "fpNoneMatch": "Ninguna carta pasa estos filtros."
+  "fpNoneMatch": "Ninguna carta pasa estos filtros.",
+
+  "fgMsgReading": "Leyendo tu colección…",
+  "fgMsgCurve": "Calculando la curva de maná…",
+  "fgMsgLands": "Repartiendo tierras…",
+  "fgMsgSynergy": "Buscando sinergias…",
+  "fgMsgPlan": "Escribiendo tu plan de juego…",
+  "fgNeedDbForSets": "Necesito la base de cartas para listar las expansiones: Ajustes → descargar la base.",
+  "fgDbError": "No pude leer la base de datos de cartas: {error}",
+  "@fgDbError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "fgInThoseSets": "{n, plural, =1{ en esa expansión} other{ en esas {n} expansiones}}",
+  "@fgInThoseSets": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgNoCommander": "No me sale un Commander legal{donde}: hacen falta un comandante legendario y ~62 cartas DISTINTAS dentro de su identidad (es singleton), más básicas suficientes. Prueba otro formato, otras expansiones o amplía la colección.",
+  "@fgNoCommander": {
+    "placeholders": { "donde": { "type": "String" } }
+  },
+  "fgNoDeck": "Con las cartas de este pool no me sale ningún mazo completo {formato} que cumpla mis reglas (tierras suficientes y curva sana){donde}. {consejo} Antes que darte un mazo defectuoso, prefiero avisarte.",
+  "@fgNoDeck": {
+    "placeholders": { "formato": { "type": "String" }, "donde": { "type": "String" }, "consejo": { "type": "String" } }
+  },
+  "fgOf60": "de 60",
+  "fgLegalIn": "LEGAL en {formato}",
+  "@fgLegalIn": {
+    "placeholders": { "formato": { "type": "String" } }
+  },
+  "fgTipMoreSets": "Prueba con más expansiones o quita filtros.",
+  "fgTipMoreCards": "Añade más cartas — sobre todo de tus colores principales — o marca \"incluir cartas que no tengo\".",
+  "fgPitch": "Mazos completos y jugables con las cartas que ya tienes. Sin comprar nada.",
+  "fgTeaserCount": "cartas para tu primer mazo",
+  "fgTeaserMissing": "Hacer un mazo con cartas que no tengo",
+  "fgBasics": "Cuento con tierras básicas sueltas",
+  "fgBasicsSub": "Casi todo el mundo tiene básicas de mazos de inicio; desactívalo para usar SOLO las básicas de tu colección.",
+  "fgFormat": "Formato de juego",
+  "fgCasual60": "Casual 60",
+  "fgCommanderNote": "100 cartas · singleton · comandante legendario de tu colección · identidad de color respetada.",
+  "fgCasualNote": "60 cartas, sin restricción de legalidad: todo vale.",
+  "fgFormatNote": "60 cartas usando SOLO tus cartas legales en {formato}.",
+  "@fgFormatNote": {
+    "placeholders": { "formato": { "type": "String" } }
+  },
+  "fgWhereFrom": "¿De dónde salen las cartas?",
+  "fgPickSets": "Elegir expansiones",
+  "fgChangeSets": "Cambiar expansiones",
+  "fgNeedOneSet": "Elige al menos una expansión: sin filtro serían las ~30.000 cartas de Magic.",
+  "fgNoSetsNote": "Sin elegir expansiones, Forge usa toda tu colección.",
+  "fgFromSetsAny": "{n, plural, =1{Cartas de 1 expansión, tengas o no.} other{Cartas de {n} expansiones, tengas o no.}}",
+  "@fgFromSetsAny": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgFromSetsMine": "{n, plural, =1{Solo tus cartas de 1 expansión — no toda la colección.} other{Solo tus cartas de {n} expansiones — no toda la colección.}}",
+  "@fgFromSetsMine": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgNoPrintingData": "Tu colección no guarda la edición de cada carta, así que filtrar por expansión dejaría fuera casi todo. Reimporta tu CSV con \"Sustituir\" y vuelve.",
+  "fgIncludeMissing": "Incluir cartas que no tengo",
+  "fgIncludeMissingSub": "Forge deja de limitarse a tu colección y usa TODO lo impreso en esas expansiones; luego te dice cuántas cartas te faltan y cuánto costarían.",
+  "fgYourTaste": "A tu gusto (opcional)",
+  "fgArchetypeAuto": "Arquetipo: auto",
+  "fgPricePerCard": "Precio por carta:",
+  "fgMin": "mín €",
+  "fgMax": "máx €",
+  "fgCardYear": "Año de la carta:",
+  "fgFrom": "desde",
+  "fgTo": "hasta",
+  "fgYearNeedsDb": "El filtro por año necesita la base de datos actualizada: Ajustes → Volver a descargar la base de datos.",
+  "fgNoColorsNote": "Sin elegir colores, Forge prueba todas las combinaciones.",
+  "fgColorsNote": "Solo mazos {colores} (y sus combinaciones).",
+  "@fgColorsNote": {
+    "placeholders": { "colores": { "type": "String" } }
+  },
+  "fgMissingNote": "Este mazo puede llevar cartas que NO tienes: cada propuesta dice cuántas te faltan y lo que costarían (precio de Cardmarket).",
+  "fgOnlyYoursNote": "Forge solo usa tus {n} cartas. Nunca inventa copias que no tienes.",
+  "@fgOnlyYoursNote": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgForgeMissing": "Forjar mazos (con lo que me falte)",
+  "fgForgeMine": "Forjar mis mazos",
+  "fgTestMode": "Modo Test: vence a un mazo del meta",
+  "fgOffline": "Todo se calcula en tu dispositivo, sin internet",
+  "fgForgingWith": "Estás forjando con {n} cartas: esto tarda unos segundos. La ventana sigue viva.",
+  "@fgForgingWith": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgDecksReady": "{n, plural, =1{1 mazo listo para jugar} other{{n} mazos listos para jugar}}",
+  "@fgDecksReady": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgSwipeMissing": "Con cartas que aún no tienes · desliza para comparar",
+  "fgSwipeMine": "Hechos solo con tus cartas · desliza para comparar",
+  "fgHaveAll": "✓ Tienes todas las cartas",
+  "fgShortfall": "{n, plural, =1{Te falta 1 carta} other{Te faltan {n} cartas}}",
+  "@fgShortfall": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fgSeeDeck": "Ver mazo completo",
+
+  "fgReforge": "Reforjar"
 }

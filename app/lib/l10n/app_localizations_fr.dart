@@ -856,4 +856,252 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get fpNoneMatch => 'Ninguna carta pasa estos filtros.';
+
+  @override
+  String get fgMsgReading => 'Leyendo tu colección…';
+
+  @override
+  String get fgMsgCurve => 'Calculando la curva de maná…';
+
+  @override
+  String get fgMsgLands => 'Repartiendo tierras…';
+
+  @override
+  String get fgMsgSynergy => 'Buscando sinergias…';
+
+  @override
+  String get fgMsgPlan => 'Escribiendo tu plan de juego…';
+
+  @override
+  String get fgNeedDbForSets =>
+      'Necesito la base de cartas para listar las expansiones: Ajustes → descargar la base.';
+
+  @override
+  String fgDbError(String error) {
+    return 'No pude leer la base de datos de cartas: $error';
+  }
+
+  @override
+  String fgInThoseSets(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: ' en esas $n expansiones',
+      one: ' en esa expansión',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fgNoCommander(String donde) {
+    return 'No me sale un Commander legal$donde: hacen falta un comandante legendario y ~62 cartas DISTINTAS dentro de su identidad (es singleton), más básicas suficientes. Prueba otro formato, otras expansiones o amplía la colección.';
+  }
+
+  @override
+  String fgNoDeck(String formato, String donde, String consejo) {
+    return 'Con las cartas de este pool no me sale ningún mazo completo $formato que cumpla mis reglas (tierras suficientes y curva sana)$donde. $consejo Antes que darte un mazo defectuoso, prefiero avisarte.';
+  }
+
+  @override
+  String get fgOf60 => 'de 60';
+
+  @override
+  String fgLegalIn(String formato) {
+    return 'LEGAL en $formato';
+  }
+
+  @override
+  String get fgTipMoreSets => 'Prueba con más expansiones o quita filtros.';
+
+  @override
+  String get fgTipMoreCards =>
+      'Añade más cartas — sobre todo de tus colores principales — o marca \"incluir cartas que no tengo\".';
+
+  @override
+  String get fgPitch =>
+      'Mazos completos y jugables con las cartas que ya tienes. Sin comprar nada.';
+
+  @override
+  String get fgTeaserCount => 'cartas para tu primer mazo';
+
+  @override
+  String get fgTeaserMissing => 'Hacer un mazo con cartas que no tengo';
+
+  @override
+  String get fgBasics => 'Cuento con tierras básicas sueltas';
+
+  @override
+  String get fgBasicsSub =>
+      'Casi todo el mundo tiene básicas de mazos de inicio; desactívalo para usar SOLO las básicas de tu colección.';
+
+  @override
+  String get fgFormat => 'Formato de juego';
+
+  @override
+  String get fgCasual60 => 'Casual 60';
+
+  @override
+  String get fgCommanderNote =>
+      '100 cartas · singleton · comandante legendario de tu colección · identidad de color respetada.';
+
+  @override
+  String get fgCasualNote =>
+      '60 cartas, sin restricción de legalidad: todo vale.';
+
+  @override
+  String fgFormatNote(String formato) {
+    return '60 cartas usando SOLO tus cartas legales en $formato.';
+  }
+
+  @override
+  String get fgWhereFrom => '¿De dónde salen las cartas?';
+
+  @override
+  String get fgPickSets => 'Elegir expansiones';
+
+  @override
+  String get fgChangeSets => 'Cambiar expansiones';
+
+  @override
+  String get fgNeedOneSet =>
+      'Elige al menos una expansión: sin filtro serían las ~30.000 cartas de Magic.';
+
+  @override
+  String get fgNoSetsNote =>
+      'Sin elegir expansiones, Forge usa toda tu colección.';
+
+  @override
+  String fgFromSetsAny(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Cartas de $n expansiones, tengas o no.',
+      one: 'Cartas de 1 expansión, tengas o no.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fgFromSetsMine(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Solo tus cartas de $n expansiones — no toda la colección.',
+      one: 'Solo tus cartas de 1 expansión — no toda la colección.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fgNoPrintingData =>
+      'Tu colección no guarda la edición de cada carta, así que filtrar por expansión dejaría fuera casi todo. Reimporta tu CSV con \"Sustituir\" y vuelve.';
+
+  @override
+  String get fgIncludeMissing => 'Incluir cartas que no tengo';
+
+  @override
+  String get fgIncludeMissingSub =>
+      'Forge deja de limitarse a tu colección y usa TODO lo impreso en esas expansiones; luego te dice cuántas cartas te faltan y cuánto costarían.';
+
+  @override
+  String get fgYourTaste => 'A tu gusto (opcional)';
+
+  @override
+  String get fgArchetypeAuto => 'Arquetipo: auto';
+
+  @override
+  String get fgPricePerCard => 'Precio por carta:';
+
+  @override
+  String get fgMin => 'mín €';
+
+  @override
+  String get fgMax => 'máx €';
+
+  @override
+  String get fgCardYear => 'Año de la carta:';
+
+  @override
+  String get fgFrom => 'desde';
+
+  @override
+  String get fgTo => 'hasta';
+
+  @override
+  String get fgYearNeedsDb =>
+      'El filtro por año necesita la base de datos actualizada: Ajustes → Volver a descargar la base de datos.';
+
+  @override
+  String get fgNoColorsNote =>
+      'Sin elegir colores, Forge prueba todas las combinaciones.';
+
+  @override
+  String fgColorsNote(String colores) {
+    return 'Solo mazos $colores (y sus combinaciones).';
+  }
+
+  @override
+  String get fgMissingNote =>
+      'Este mazo puede llevar cartas que NO tienes: cada propuesta dice cuántas te faltan y lo que costarían (precio de Cardmarket).';
+
+  @override
+  String fgOnlyYoursNote(int n) {
+    return 'Forge solo usa tus $n cartas. Nunca inventa copias que no tienes.';
+  }
+
+  @override
+  String get fgForgeMissing => 'Forjar mazos (con lo que me falte)';
+
+  @override
+  String get fgForgeMine => 'Forjar mis mazos';
+
+  @override
+  String get fgTestMode => 'Modo Test: vence a un mazo del meta';
+
+  @override
+  String get fgOffline => 'Todo se calcula en tu dispositivo, sin internet';
+
+  @override
+  String fgForgingWith(int n) {
+    return 'Estás forjando con $n cartas: esto tarda unos segundos. La ventana sigue viva.';
+  }
+
+  @override
+  String fgDecksReady(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n mazos listos para jugar',
+      one: '1 mazo listo para jugar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fgSwipeMissing =>
+      'Con cartas que aún no tienes · desliza para comparar';
+
+  @override
+  String get fgSwipeMine =>
+      'Hechos solo con tus cartas · desliza para comparar';
+
+  @override
+  String get fgHaveAll => '✓ Tienes todas las cartas';
+
+  @override
+  String fgShortfall(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Te faltan $n cartas',
+      one: 'Te falta 1 carta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fgSeeDeck => 'Ver mazo completo';
+
+  @override
+  String get fgReforge => 'Reforjar';
 }
