@@ -173,7 +173,7 @@ void main() {
       name: 'Shivan Dragon',
       image: 'https://cards/shivan.jpg',
     ));
-    await Future<void>.delayed(const Duration(milliseconds: 60));
+    await store.pendingSave; // esperar el guardado real, no un delay a ojo
 
     final otra = CertificateStore(dataDir: dir);
     await otra.load();
@@ -191,7 +191,7 @@ void main() {
         const FirstCard(oracleId: 'abc', name: 'Shivan Dragon'));
 
     store.setFirstCard(null);
-    await Future<void>.delayed(const Duration(milliseconds: 60));
+    await store.pendingSave; // esperar el guardado real, no un delay a ojo
 
     final otra = CertificateStore(dataDir: dir);
     await otra.load();

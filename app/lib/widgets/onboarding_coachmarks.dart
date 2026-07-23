@@ -64,9 +64,13 @@ class _OnboardingCoachmarksState extends State<OnboardingCoachmarks> {
       builder: (context, constraints) {
         final w = constraints.maxWidth;
         final h = constraints.maxHeight;
+        // la barra crece con el inset de abajo (gestos / home indicator) y
+        // pone sus iconos ENCIMA de él: hay que descontarlo o el foco cae
+        // demasiado bajo en móviles con navegación por gestos
+        final inset = MediaQuery.viewPaddingOf(context).bottom;
         final foco = Offset(
           (step.barIndex + 0.5) / widget.itemCount * w,
-          h - widget.navBarHeight / 2,
+          h - inset - widget.navBarHeight / 2,
         );
         const radio = 38.0;
 
@@ -103,7 +107,7 @@ class _OnboardingCoachmarksState extends State<OnboardingCoachmarks> {
               Positioned(
                 left: 20,
                 right: 20,
-                bottom: widget.navBarHeight + 24,
+                bottom: widget.navBarHeight + inset + 24,
                 child: _Burbuja(
                   title: step.title,
                   body: step.body,
@@ -160,18 +164,24 @@ class _Burbuja extends StatelessWidget {
             const SizedBox(height: 6),
             Text(body, style: const TextStyle(fontSize: 13.5, height: 1.3)),
             const SizedBox(height: 4),
-            Row(
-              children: [
-                Text('$paso / $total',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                const Spacer(),
-                if (!ultimo)
-                  TextButton(onPressed: onSaltar, child: Text(t.onbSkip)),
-                FilledButton(
-                  onPressed: onSiguiente,
-                  child: Text(ultimo ? t.onbGotIt : t.onbNext),
-                ),
-              ],
+            // Wrap (no Row) para que con idiomas de botones largos y pantallas
+            // estrechas los botones bajen de línea en vez de desbordar
+            Align(
+              alignment: Alignment.centerRight,
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 4,
+                children: [
+                  Text('$paso / $total',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  if (!ultimo)
+                    TextButton(onPressed: onSaltar, child: Text(t.onbSkip)),
+                  FilledButton(
+                    onPressed: onSiguiente,
+                    child: Text(ultimo ? t.onbGotIt : t.onbNext),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
