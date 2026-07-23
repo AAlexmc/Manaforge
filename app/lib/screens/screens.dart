@@ -8,6 +8,7 @@ import '../services/app_update.dart';
 import '../services/background_prefs.dart';
 import '../services/card_database.dart';
 import '../l10n/t.dart';
+import '../services/home_layout_prefs.dart';
 import '../services/language_prefs.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/app_shortcuts.dart';
@@ -15,6 +16,7 @@ import '../widgets/background_settings.dart';
 import '../widgets/language_settings.dart';
 import '../widgets/update_notice.dart';
 import 'backup_screen.dart';
+import 'editar_inicio_screen.dart';
 
 export 'album_screen.dart';
 export 'backup_screen.dart';
@@ -49,6 +51,9 @@ class AjustesScreen extends StatefulWidget {
   /// Idioma de la app. Opcional: sin él, no sale el selector.
   final LanguagePreference? language;
 
+  /// Layout de Inicio. Opcional: sin él, no sale "Editar inicio".
+  final HomeLayoutPreference? homeLayout;
+
   /// Los datos de disco han cambiado (se ha restaurado una copia): hay que
   /// releerlo todo.
   final VoidCallback onRestored;
@@ -59,7 +64,8 @@ class AjustesScreen extends StatefulWidget {
       required this.onRestored,
       this.updates,
       this.background,
-      this.language});
+      this.language,
+      this.homeLayout});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -114,134 +120,225 @@ class _AjustesScreenState extends State<AjustesScreen> {
           children: [
             Text(t.settingsTitle,
                 style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Text(t.settingsIntro),
-            const SizedBox(height: 20),
-            if (widget.language != null) ...[
-              LanguageSettingsCard(prefs: widget.language!),
-              const SizedBox(height: 12),
-            ],
-            // qué es cada pestaña. Alguien que abre la app por primera vez
-            // ve siete iconos y ninguna explicación
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(t.howItWorks,
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    for (final linea in [
-                      (t.tabScan, t.howScan),
-                      (t.tabCollection, t.howCollection),
-                      (t.tabAlbum, t.howAlbum),
-                      ('Forge', t.howForge),
-                      (t.tabDecks, t.howDecks),
-                      (t.tabMarket, t.howMarket),
-                    ])
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context)
-                                .style
-                                .copyWith(fontSize: 12.5),
-                            children: [
-                              TextSpan(
-                                  text: '${linea.$1}: ',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
-                              TextSpan(text: linea.$2),
-                            ],
+            const SizedBox(height: 16),
+            // Apariencia: idioma, fondo y qué se ve en Inicio. Abierta de
+            // salida porque es lo que la gente viene a tocar.
+            _Seccion(
+              titulo: 'Apariencia',
+              icono: Icons.palette_outlined,
+              initiallyExpanded: true,
+              children: [
+                if (widget.language != null)
+                  LanguageSettingsCard(prefs: widget.language!),
+                if (widget.background != null)
+                  BackgroundSettingsCard(prefs: widget.background!),
+                if (widget.homeLayout != null)
+                  _EditarInicioTile(layout: widget.homeLayout!),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Datos: la base de cartas y las copias de seguridad.
+            _Seccion(
+              titulo: 'Datos',
+              icono: Icons.storage_outlined,
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Base de datos de cartas',
+                            style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(height: 6),
+                        const Text(
+                            'Vuelve a descargarla para tener cartas nuevas, '
+                            'precios frescos y las funciones que piden datos '
+                            'recientes (como el filtro por año en Forge).',
+                            style: TextStyle(fontSize: 12.5)),
+                        const SizedBox(height: 12),
+                        if (_progress != null) ...[
+                          LinearProgressIndicator(value: _progress),
+                          const SizedBox(height: 6),
+                          Text(
+                              'Descargando… ${((_progress ?? 0) * 100).toStringAsFixed(0)} %'),
+                        ] else
+                          FilledButton.icon(
+                            onPressed: _redownload,
+                            icon: const Icon(Icons.refresh),
+                            label: const Text(
+                                'Volver a descargar la base de datos'),
                           ),
-                        ),
-                      ),
-                    Text(t.howPrivacy,
-                        style: const TextStyle(fontSize: 11.5)),
-                    const SizedBox(height: 12),
-                    Text(t.shortcuts,
-                        style: Theme.of(context).textTheme.titleSmall),
-                    const SizedBox(height: 4),
-                    for (final atajo in shortcutHelp(t))
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 2),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 110,
-                              child: Text(atajo.$1,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontFeatures: [
-                                        FontFeature.tabularFigures()
-                                      ],
-                                      fontWeight: FontWeight.bold)),
+                        if (_status != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(_status!),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                BackupCard(dataDir: _dataDir, onRestored: widget.onRestored),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // La app: cómo funciona, versión y créditos.
+            _Seccion(
+              titulo: 'La app',
+              icono: Icons.info_outline,
+              children: [
+                // qué es cada pestaña. Alguien que abre la app por primera vez
+                // ve varios iconos y ninguna explicación
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(t.howItWorks,
+                            style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(height: 8),
+                        for (final linea in [
+                          (t.tabScan, t.howScan),
+                          (t.tabCollection, t.howCollection),
+                          (t.tabAlbum, t.howAlbum),
+                          ('Forge', t.howForge),
+                          (t.tabDecks, t.howDecks),
+                          (t.tabMarket, t.howMarket),
+                        ])
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 6),
+                            child: RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context)
+                                    .style
+                                    .copyWith(fontSize: 12.5),
+                                children: [
+                                  TextSpan(
+                                      text: '${linea.$1}: ',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(text: linea.$2),
+                                ],
+                              ),
                             ),
-                            Expanded(
-                                child: Text(atajo.$2,
-                                    style: const TextStyle(fontSize: 12))),
-                          ],
-                        ),
-                      ),
-                  ],
+                          ),
+                        Text(t.howPrivacy,
+                            style: const TextStyle(fontSize: 11.5)),
+                        const SizedBox(height: 12),
+                        Text(t.shortcuts,
+                            style: Theme.of(context).textTheme.titleSmall),
+                        const SizedBox(height: 4),
+                        for (final atajo in shortcutHelp(t))
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 110,
+                                  child: Text(atajo.$1,
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontFeatures: [
+                                            FontFeature.tabularFigures()
+                                          ],
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                Expanded(
+                                    child: Text(atajo.$2,
+                                        style:
+                                            const TextStyle(fontSize: 12))),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            if (widget.updates != null) ...[
-              UpdateSettingsCard(checker: widget.updates!),
-              const SizedBox(height: 12),
-            ],
-            if (widget.background != null) ...[
-              BackgroundSettingsCard(prefs: widget.background!),
-              const SizedBox(height: 12),
-            ],
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Base de datos de cartas',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 6),
-                    const Text(
-                        'Vuelve a descargarla para tener cartas nuevas, '
-                        'precios frescos y las funciones que piden datos '
-                        'recientes (como el filtro por año en Forge).',
-                        style: TextStyle(fontSize: 12.5)),
-                    const SizedBox(height: 12),
-                    if (_progress != null) ...[
-                      LinearProgressIndicator(value: _progress),
-                      const SizedBox(height: 6),
-                      Text(
-                          'Descargando… ${((_progress ?? 0) * 100).toStringAsFixed(0)} %'),
-                    ] else
-                      FilledButton.icon(
-                        onPressed: _redownload,
-                        icon: const Icon(Icons.refresh),
-                        label:
-                            const Text('Volver a descargar la base de datos'),
-                      ),
-                    if (_status != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(_status!),
-                      ),
-                  ],
+                if (widget.updates != null)
+                  UpdateSettingsCard(checker: widget.updates!),
+                const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                        'Datos e imágenes de cartas por Scryfall. Magic: The '
+                        'Gathering es propiedad de Wizards of the Coast; '
+                        'proyecto de fans al amparo de su Fan Content Policy.',
+                        style: TextStyle(fontSize: 12)),
+                  ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 16),
-            BackupCard(dataDir: _dataDir, onRestored: widget.onRestored),
-            const SizedBox(height: 16),
-            const Text(
-                'Datos e imágenes de cartas por Scryfall. Magic: The Gathering '
-                'es propiedad de Wizards of the Coast; proyecto de fans al '
-                'amparo de su Fan Content Policy.',
-                style: TextStyle(fontSize: 12)),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Una sección plegable de Ajustes: un título que se abre y enseña sus
+/// tarjetas. Agrupar lo que antes era una lista larga y plana.
+class _Seccion extends StatelessWidget {
+  final String titulo;
+  final IconData icono;
+  final bool initiallyExpanded;
+  final List<Widget> children;
+
+  const _Seccion({
+    required this.titulo,
+    required this.icono,
+    required this.children,
+    this.initiallyExpanded = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      // el ExpansionTile pinta dos líneas divisorias por defecto; sin ellas
+      // las secciones se leen como bloques y no como una tabla
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        leading: Icon(icono),
+        title: Text(titulo,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold)),
+        initiallyExpanded: initiallyExpanded,
+        tilePadding: const EdgeInsets.symmetric(horizontal: 4),
+        childrenPadding: const EdgeInsets.only(bottom: 4),
+        expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            if (i > 0) const SizedBox(height: 8),
+            children[i],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// La entrada a "Editar inicio" desde Ajustes → Apariencia. El editor de
+/// verdad vive en su propia pantalla (`EditarInicioScreen`).
+class _EditarInicioTile extends StatelessWidget {
+  final HomeLayoutPreference layout;
+
+  const _EditarInicioTile({required this.layout});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.tune),
+        title: const Text('Editar inicio'),
+        subtitle: const Text('Elige qué secciones se ven y en qué orden'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (_) => EditarInicioScreen(layout: layout)),
         ),
       ),
     );
