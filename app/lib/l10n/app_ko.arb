@@ -127,5 +127,12 @@
   "onbDecksBody": "Forge에서 저장한 덱이 여기에 나와요.",
   "onbSkip": "건너뛰기",
   "onbNext": "다음",
-  "onbGotIt": "확인"
+  "onbGotIt": "확인",
+  "onbBack": "뒤로",
+
+  "tourMenuTitle": "가이드",
+  "tourWelcomeName": "빠른 둘러보기",
+  "tourHomeName": "홈 화면",
+  "onbEditHomeTitle": "홈 화면 맞춤",
+  "onbEditHomeBody": "이 버튼으로 홈에 표시할 섹션과 순서를 고를 수 있어요."
 }

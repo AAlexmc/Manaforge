@@ -127,5 +127,12 @@
   "onbDecksBody": "Aus Forge gespeicherte Decks erscheinen hier.",
   "onbSkip": "Überspringen",
   "onbNext": "Weiter",
-  "onbGotIt": "Verstanden"
+  "onbGotIt": "Verstanden",
+  "onbBack": "Zurück",
+
+  "tourMenuTitle": "Anleitungen",
+  "tourWelcomeName": "Kurze Tour",
+  "tourHomeName": "Der Startbildschirm",
+  "onbEditHomeTitle": "Startseite anpassen",
+  "onbEditHomeBody": "Mit diesem Knopf wählst du, welche Bereiche auf der Startseite erscheinen und in welcher Reihenfolge."
 }

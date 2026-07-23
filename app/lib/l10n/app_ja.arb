@@ -127,5 +127,12 @@
   "onbDecksBody": "Forgeで保存したデッキがここに表示されます。",
   "onbSkip": "スキップ",
   "onbNext": "次へ",
-  "onbGotIt": "OK"
+  "onbGotIt": "OK",
+  "onbBack": "戻る",
+
+  "tourMenuTitle": "ガイド",
+  "tourWelcomeName": "クイックツアー",
+  "tourHomeName": "ホーム画面",
+  "onbEditHomeTitle": "ホームをカスタマイズ",
+  "onbEditHomeBody": "このボタンでホームに表示するセクションと順番を選べます。"
 }

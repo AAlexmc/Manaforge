@@ -127,5 +127,12 @@
   "onbDecksBody": "Os decks salvos no Forge aparecem aqui.",
   "onbSkip": "Pular",
   "onbNext": "Próximo",
-  "onbGotIt": "Entendi"
+  "onbGotIt": "Entendi",
+  "onbBack": "Voltar",
+
+  "tourMenuTitle": "Guias",
+  "tourWelcomeName": "Tour rápido",
+  "tourHomeName": "A tela inicial",
+  "onbEditHomeTitle": "Personalize seu início",
+  "onbEditHomeBody": "Este botão permite escolher quais seções aparecem no início e em que ordem."
 }

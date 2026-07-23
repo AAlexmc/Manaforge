@@ -127,5 +127,12 @@
   "onbDecksBody": "在 Forge 保存的套牌会显示在这里。",
   "onbSkip": "跳过",
   "onbNext": "下一步",
-  "onbGotIt": "知道了"
+  "onbGotIt": "知道了",
+  "onbBack": "上一步",
+
+  "tourMenuTitle": "指南",
+  "tourWelcomeName": "快速导览",
+  "tourHomeName": "主屏幕",
+  "onbEditHomeTitle": "自定义主页",
+  "onbEditHomeBody": "用这个按钮选择主页显示哪些板块以及顺序。"
 }

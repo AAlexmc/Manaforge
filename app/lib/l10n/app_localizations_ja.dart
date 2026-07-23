@@ -304,4 +304,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get onbGotIt => 'OK';
+
+  @override
+  String get onbBack => '戻る';
+
+  @override
+  String get tourMenuTitle => 'ガイド';
+
+  @override
+  String get tourWelcomeName => 'クイックツアー';
+
+  @override
+  String get tourHomeName => 'ホーム画面';
+
+  @override
+  String get onbEditHomeTitle => 'ホームをカスタマイズ';
+
+  @override
+  String get onbEditHomeBody => 'このボタンでホームに表示するセクションと順番を選べます。';
 }
