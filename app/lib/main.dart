@@ -187,14 +187,14 @@ class _HomeShellState extends State<HomeShell> {
             selectedIcon:
                 const Icon(Icons.qr_code_scanner, color: MFColors.manaRed),
             label: t.tabScan),
-        NavigationDestination(
-            icon: const Icon(Icons.layers_outlined),
-            selectedIcon: const Icon(Icons.layers),
-            label: t.tabDecks),
         const NavigationDestination(
             icon: ForgeTabIcon(selected: false),
             selectedIcon: ForgeTabIcon(selected: true),
             label: 'Forge'),
+        NavigationDestination(
+            icon: const Icon(Icons.layers_outlined),
+            selectedIcon: const Icon(Icons.layers),
+            label: t.tabDecks),
         NavigationDestination(
             icon: const Icon(Icons.storefront_outlined),
             selectedIcon: const Icon(Icons.storefront),
@@ -373,12 +373,12 @@ class _HomeShellState extends State<HomeShell> {
           prices: _prices,
           search: _search,
           tabIndex: 2),
+      ForgeScreen(db: _db, collection: _collection, decks: _decks),
       MazosScreen(
           db: _db,
           collection: _collection,
           decks: _decks,
-          onGoToForge: () => setState(() => _index = 4)),
-      ForgeScreen(db: _db, collection: _collection, decks: _decks),
+          onGoToForge: () => setState(() => _index = 3)),
       MercadoScreen(
           db: _db,
           collection: _collection,

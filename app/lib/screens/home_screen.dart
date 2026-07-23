@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ));
     } catch (_) {
-      widget.onGoToTab(3); // sin DB: a la pestaña Mazos con su mensaje
+      widget.onGoToTab(4); // sin DB: a la pestaña Mazos con su mensaje
     }
   }
 
@@ -279,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           FilledButton.icon(
             style: FilledButton.styleFrom(backgroundColor: MFColors.forge),
-            onPressed: () => widget.onGoToTab(4),
+            onPressed: () => widget.onGoToTab(3),
             icon: const Icon(Icons.auto_awesome, size: 18),
             label: const Text('Forjar mazos'),
           ),
@@ -683,7 +683,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .welcomeImport),
                                   ),
                                   TextButton.icon(
-                                    onPressed: () => widget.onGoToTab(4),
+                                    onPressed: () => widget.onGoToTab(3),
                                     icon: const Icon(Icons.auto_awesome,
                                         size: 18),
                                     label: Text(tr(context)
