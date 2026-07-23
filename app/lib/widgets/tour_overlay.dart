@@ -13,6 +13,12 @@ import '../theme/mf_theme.dart';
 ///  - nada: la burbuja va centrada.
 class TourStep {
   final int? goToScreen;
+
+  /// Botón a señalar. INVARIANTE: si se pone [targetKey], hay que poner también
+  /// [goToScreen] con la pantalla donde vive ese botón. El IndexedStack de main
+  /// mantiene TODAS las pantallas montadas (aunque no se pinten), así que sin
+  /// traer la pantalla al frente se mediría el botón de una pantalla de fondo y
+  /// el foco caería en el sitio equivocado.
   final GlobalKey? targetKey;
   final int? navBarIndex;
   final String title;
@@ -62,10 +68,10 @@ class _TourOverlayState extends State<TourOverlay> {
   @override
   void initState() {
     super.initState();
-    _entrarEnPaso(_i, primeraVez: true);
+    _entrarEnPaso(_i);
   }
 
-  void _entrarEnPaso(int i, {bool primeraVez = false}) {
+  void _entrarEnPaso(int i) {
     final step = widget.steps[i];
     _targetRect = null;
     // TODO en el siguiente frame: cambiar de pantalla (onGoToScreen hace
@@ -149,8 +155,12 @@ class _TourOverlayState extends State<TourOverlay> {
           return Stack(
             children: [
               Positioned.fill(
-                child: GestureDetector(
-                  onTap: () {},
+                // AbsorbPointer: el scrim se come TODOS los gestos —tap y
+                // arrastre— para que durante el tour no se pueda tocar ni hacer
+                // scroll en la app de debajo (si se pudiera, el foco medido
+                // quedaría desalineado). La burbuja va por encima en el Stack,
+                // así que sigue siendo interactiva.
+                child: AbsorbPointer(
                   child: CustomPaint(
                     painter: _FocoPainter(foco: foco),
                   ),
