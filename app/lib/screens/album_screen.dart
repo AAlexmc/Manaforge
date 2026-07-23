@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 import '../services/collection_sets.dart';
 import '../services/collection_store.dart';
@@ -125,6 +127,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     final sets = _sets;
     final visible = sets == null
         ? const <SetInfo>[]
@@ -136,7 +139,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
             owned: _owned,
             sort: _sort);
     return Scaffold(
-      appBar: AppBar(title: const Text('Álbum')),
+      appBar: AppBar(title: Text(t.tabAlbum)),
       body: sets == null
           ? Center(
               child: _error == null
@@ -146,10 +149,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
-                              'El álbum necesita la base de datos de cartas '
-                              '(descárgala en Colección).',
-                              textAlign: TextAlign.center),
+                          Text(t.albNeedDb, textAlign: TextAlign.center),
                           const SizedBox(height: 12),
                           OutlinedButton.icon(
                             onPressed: () {
@@ -157,7 +157,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               _load();
                             },
                             icon: const Icon(Icons.refresh, size: 18),
-                            label: const Text('Reintentar'),
+                            label: Text(t.albRetry),
                           ),
                         ],
                       ),
@@ -175,12 +175,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       color: MFColors.warning.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      'Álbum en modo aproximado: aún no sé qué EDICIÓN exacta '
-                      'tienes de cada carta. Reimporta tu CSV con "Sustituir '
-                      'mi colección actual" activado y el álbum se afinará '
-                      'por ilustraciones.',
-                      style: TextStyle(fontSize: 12),
+                    child: Text(
+                      t.albApproxMode,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 Padding(
@@ -192,7 +189,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           focusNode: _searchFocus,
                           onChanged: (v) => setState(() => _query = v),
                           decoration: InputDecoration(
-                            hintText: 'Busca una expansión…',
+                            hintText: t.albSearchSet,
                             prefixIcon: const Icon(Icons.search),
                             isDense: true,
                             border: OutlineInputBorder(
@@ -205,7 +202,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                         key: widget.miasKey,
                         child: FilterChip(
                           selected: _onlyMine,
-                          label: const Text('Con cartas mías'),
+                          label: Text(t.albOnlyMine),
                           onSelected: (v) => setState(() => _onlyMine = v),
                         ),
                       ),
@@ -218,19 +215,17 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               .bodySmall
                               ?.copyWith(fontSize: 12.5),
                           borderRadius: BorderRadius.circular(10),
-                          items: const [
+                          items: [
                             DropdownMenuItem(
                                 value: 'progreso',
-                                child: Text('Más completadas')),
+                                child: Text(t.albSortProgress)),
                             DropdownMenuItem(
-                                value: 'fecha',
-                                child: Text('Más nuevas')),
+                                value: 'fecha', child: Text(t.albSortNewest)),
                             DropdownMenuItem(
                                 value: 'antiguas',
-                                child: Text('Más antiguas')),
+                                child: Text(t.albSortOldest)),
                             DropdownMenuItem(
-                                value: 'nombre',
-                                child: Text('Por nombre')),
+                                value: 'nombre', child: Text(t.albSortName)),
                           ],
                           onChanged: (v) => setState(
                               () => _sort = v ?? 'progreso'),
@@ -253,8 +248,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               ?.copyWith(fontSize: 12.5),
                           borderRadius: BorderRadius.circular(10),
                           items: [
-                            const DropdownMenuItem<String?>(
-                                value: null, child: Text('Año: todos')),
+                            DropdownMenuItem<String?>(
+                                value: null, child: Text(t.albYearAll)),
                             for (final y in availableYears(sets))
                               DropdownMenuItem<String?>(
                                   value: y, child: Text(y)),
@@ -272,7 +267,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 6),
                                 child: ChoiceChip(
-                                  label: const Text('Todas'),
+                                  label: Text(t.albLetterAll),
                                   selected: _letter == null,
                                   visualDensity: VisualDensity.compact,
                                   onSelected: (_) =>
@@ -299,8 +294,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 ),
                 Expanded(
                   child: visible.isEmpty
-                      ? const Center(
-                          child: Text('Ninguna expansión coincide con el filtro.'))
+                      ? Center(child: Text(t.albNoSets))
                       : ListView.builder(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                           itemCount: visible.length,
@@ -334,9 +328,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        '$owned/${s.total} cartas'
-                                        '${s.year.isEmpty ? '' : ' · ${s.year}'}'
-                                        '${complete ? ' · ✓ ¡completa!' : ''}',
+                                        t.albSetProgress(owned, s.total) +
+                                            (s.year.isEmpty
+                                                ? ''
+                                                : ' · ${s.year}') +
+                                            (complete ? t.albComplete : ''),
                                         style: TextStyle(
                                             fontSize: 11.5,
                                             color: complete
@@ -467,6 +463,7 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     final cards = _cards;
     return Scaffold(
       appBar: AppBar(
@@ -475,7 +472,7 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
           ? Center(
               child: _error == null
                   ? const CircularProgressIndicator()
-                  : Text('No pude cargar el set: $_error'),
+                  : Text(t.albLoadError('$_error')),
             )
           : ListenableBuilder(
               listenable: widget.collection,
@@ -552,7 +549,7 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                               decoration: InputDecoration(
                                 isDense: true,
                                 prefixIcon: const Icon(Icons.search, size: 20),
-                                hintText: 'Buscar en ${widget.set.name}…',
+                                hintText: t.albSearchIn(widget.set.name),
                                 border: const OutlineInputBorder(),
                                 suffixIcon: _query.isEmpty
                                     ? null
@@ -570,7 +567,7 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                           const SizedBox(width: 10),
                           FilterChip(
                             avatar: const Icon(Icons.bookmark_border, size: 16),
-                            label: const Text('Solo las que faltan'),
+                            label: Text(t.albOnlyMissing),
                             selected: _soloFaltan,
                             onSelected: (v) => setState(() => _soloFaltan = v),
                           ),
@@ -578,7 +575,7 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                           FilterChip(
                             avatar: const Icon(Icons.auto_awesome_motion,
                                 size: 16),
-                            label: const Text('Con variantes'),
+                            label: Text(t.albWithVariants),
                             selected: !_soloBase,
                             onSelected: (v) => setState(() => _soloBase = !v),
                           ),
@@ -592,10 +589,13 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                           Expanded(
                             child: Text(
                                 faltan.missing == 0
-                                    ? '✓ Lo tienes entero'
-                                    : 'Te faltan ${faltan.missing} · '
-                                        '${_precioTotal(faltan)}'
-                                        '${faltan.withoutPrice > 0 ? " (${faltan.withoutPrice} sin precio)" : ""}',
+                                    ? t.albYouHaveItAll
+                                    : t.albMissingCount(faltan.missing) +
+                                        _precioTotal(faltan) +
+                                        (faltan.withoutPrice > 0
+                                            ? t.albWithoutPrice(
+                                                faltan.withoutPrice)
+                                            : ''),
                                 style: TextStyle(
                                     fontSize: 12.5,
                                     fontWeight: FontWeight.bold,
@@ -604,16 +604,16 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                                         : null)),
                           ),
                           if (visibles.length != delSet.length)
-                            Text('${visibles.length} de ${delSet.length}',
+                            Text(
+                                t.albVisibleOf(
+                                    visibles.length, delSet.length),
                                 style: const TextStyle(fontSize: 12)),
                         ],
                       ),
                     ),
                     if (visibles.isEmpty)
-                      const Expanded(
-                        child: Center(
-                          child: Text('Ninguna carta con ese nombre aquí.'),
-                        ),
+                      Expanded(
+                        child: Center(child: Text(t.albNoCardsNamed)),
                       )
                     else
                     Expanded(

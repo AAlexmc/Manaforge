@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/collection_store.dart';
 import '../widgets/common.dart';
 import 'collection_filters.dart';
@@ -10,13 +12,14 @@ import 'collection_filters.dart';
 class FolderPickScreen extends StatefulWidget {
   final CollectionStore collection;
   final Set<String> initial;
-  final String title;
+  /// Si no viene, "Elige las cartas" en el idioma de la app.
+  final String? title;
 
   const FolderPickScreen({
     super.key,
     required this.collection,
     this.initial = const {},
-    this.title = 'Elige las cartas',
+    this.title,
   });
 
   @override
@@ -51,14 +54,15 @@ class _FolderPickScreenState extends State<FolderPickScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     final visible = _visible;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title ?? t.fpPickCards),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(_picked),
-            child: Text('Guardar (${_picked.length})'),
+            child: Text(t.fpSaveCount(_picked.length)),
           ),
         ],
       ),
@@ -92,7 +96,7 @@ class _FolderPickScreenState extends State<FolderPickScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text('${visible.length} cartas a la vista',
+                    Text(t.fpVisibleCards(visible.length),
                         style: const TextStyle(fontSize: 11.5)),
                     const Spacer(),
                     TextButton(
@@ -100,7 +104,7 @@ class _FolderPickScreenState extends State<FolderPickScreen> {
                           ? null
                           : () => setState(() => _picked
                               .addAll(visible.map((c) => c.oracleId))),
-                      child: const Text('Marcar todas'),
+                      child: Text(t.fpSelectAll),
                     ),
                     TextButton(
                       onPressed: _picked.isEmpty
@@ -117,11 +121,11 @@ class _FolderPickScreenState extends State<FolderPickScreen> {
           const Divider(height: 1),
           Expanded(
             child: visible.isEmpty
-                ? const Center(
+                ? Center(
                     child: Padding(
-                      padding: EdgeInsets.all(32),
+                      padding: const EdgeInsets.all(32),
                       child: Text(
-                        'Ninguna carta pasa estos filtros.',
+                        t.fpNoneMatch,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -143,8 +147,10 @@ class _FolderPickScreenState extends State<FolderPickScreen> {
                             name: card.name),
                         title: Text(card.printedName ?? card.name),
                         subtitle: Text(
-                            '${card.qty} ${card.qty == 1 ? 'copia' : 'copias'}'
-                            '${card.typeLine.isEmpty ? '' : ' · ${card.typeLine}'}',
+                            t.fdCopies(card.qty) +
+                                (card.typeLine.isEmpty
+                                    ? ''
+                                    : ' · ${card.typeLine}'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis),
                       );

@@ -1187,6 +1187,330 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'El escáner'**
   String get tourScanName;
+
+  /// No description provided for @albNeedDb.
+  ///
+  /// In es, this message translates to:
+  /// **'El álbum necesita la base de datos de cartas (descárgala en Colección).'**
+  String get albNeedDb;
+
+  /// No description provided for @albRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get albRetry;
+
+  /// No description provided for @albApproxMode.
+  ///
+  /// In es, this message translates to:
+  /// **'Álbum en modo aproximado: aún no sé qué EDICIÓN exacta tienes de cada carta. Reimporta tu CSV con \"Sustituir mi colección actual\" activado y el álbum se afinará por ilustraciones.'**
+  String get albApproxMode;
+
+  /// No description provided for @albSearchSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca una expansión…'**
+  String get albSearchSet;
+
+  /// No description provided for @albOnlyMine.
+  ///
+  /// In es, this message translates to:
+  /// **'Con cartas mías'**
+  String get albOnlyMine;
+
+  /// No description provided for @albSortProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'Más completadas'**
+  String get albSortProgress;
+
+  /// No description provided for @albSortNewest.
+  ///
+  /// In es, this message translates to:
+  /// **'Más nuevas'**
+  String get albSortNewest;
+
+  /// No description provided for @albSortOldest.
+  ///
+  /// In es, this message translates to:
+  /// **'Más antiguas'**
+  String get albSortOldest;
+
+  /// No description provided for @albSortName.
+  ///
+  /// In es, this message translates to:
+  /// **'Por nombre'**
+  String get albSortName;
+
+  /// No description provided for @albYearAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Año: todos'**
+  String get albYearAll;
+
+  /// No description provided for @albLetterAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas'**
+  String get albLetterAll;
+
+  /// No description provided for @albNoSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna expansión coincide con el filtro.'**
+  String get albNoSets;
+
+  /// No description provided for @albSetProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'{owned}/{total} cartas'**
+  String albSetProgress(int owned, int total);
+
+  /// No description provided for @albComplete.
+  ///
+  /// In es, this message translates to:
+  /// **' · ✓ ¡completa!'**
+  String get albComplete;
+
+  /// No description provided for @albLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude cargar el set: {error}'**
+  String albLoadError(String error);
+
+  /// No description provided for @albSearchIn.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar en {set}…'**
+  String albSearchIn(String set);
+
+  /// No description provided for @albOnlyMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo las que faltan'**
+  String get albOnlyMissing;
+
+  /// No description provided for @albWithVariants.
+  ///
+  /// In es, this message translates to:
+  /// **'Con variantes'**
+  String get albWithVariants;
+
+  /// No description provided for @albYouHaveItAll.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Lo tienes entero'**
+  String get albYouHaveItAll;
+
+  /// No description provided for @albMissingCount.
+  ///
+  /// In es, this message translates to:
+  /// **'Te faltan {n} · '**
+  String albMissingCount(int n);
+
+  /// No description provided for @albWithoutPrice.
+  ///
+  /// In es, this message translates to:
+  /// **' ({n} sin precio)'**
+  String albWithoutPrice(int n);
+
+  /// No description provided for @albVisibleOf.
+  ///
+  /// In es, this message translates to:
+  /// **'{visibles} de {total}'**
+  String albVisibleOf(int visibles, int total);
+
+  /// No description provided for @albNoCardsNamed.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna carta con ese nombre aquí.'**
+  String get albNoCardsNamed;
+
+  /// No description provided for @fdNewFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva carpeta'**
+  String get fdNewFolder;
+
+  /// No description provided for @fdEditFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar carpeta'**
+  String get fdEditFolder;
+
+  /// No description provided for @fdName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get fdName;
+
+  /// No description provided for @fdNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Rares de Aetherdrift, Para vender…'**
+  String get fdNameHint;
+
+  /// No description provided for @fdColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Color'**
+  String get fdColor;
+
+  /// No description provided for @fdIcon.
+  ///
+  /// In es, this message translates to:
+  /// **'Icono'**
+  String get fdIcon;
+
+  /// No description provided for @fdCreate.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear'**
+  String get fdCreate;
+
+  /// No description provided for @fdSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get fdSave;
+
+  /// No description provided for @fdDefaultName.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpeta'**
+  String get fdDefaultName;
+
+  /// No description provided for @fdDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Borrar \"{nombre}\"?'**
+  String fdDeleteTitle(String nombre);
+
+  /// No description provided for @fdDeleteBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se borra solo la carpeta: las cartas siguen en tu colección.'**
+  String get fdDeleteBody;
+
+  /// No description provided for @fdDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar'**
+  String get fdDelete;
+
+  /// No description provided for @fdGone.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta carpeta ya no existe.'**
+  String get fdGone;
+
+  /// No description provided for @fdEditTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar nombre, color e icono'**
+  String get fdEditTooltip;
+
+  /// No description provided for @fdDeleteTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar carpeta'**
+  String get fdDeleteTooltip;
+
+  /// No description provided for @fdAddRemove.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir o quitar'**
+  String get fdAddRemove;
+
+  /// No description provided for @fdCounts.
+  ///
+  /// In es, this message translates to:
+  /// **'{distintas} cartas distintas · {copias} copias'**
+  String fdCounts(int distintas, int copias);
+
+  /// No description provided for @fdPassFilter.
+  ///
+  /// In es, this message translates to:
+  /// **' · {n} pasan el filtro'**
+  String fdPassFilter(int n);
+
+  /// No description provided for @fdRoughValue.
+  ///
+  /// In es, this message translates to:
+  /// **' · valor orientativo'**
+  String get fdRoughValue;
+
+  /// No description provided for @fdMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 carta ya no está en tu colección (sigue apuntada por si vuelve).} other{{n} cartas ya no están en tu colección (siguen apuntadas por si vuelven).}}'**
+  String fdMissing(int n);
+
+  /// No description provided for @fdRemoveThem.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitarlas'**
+  String get fdRemoveThem;
+
+  /// No description provided for @fdNoneMatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna carta de la carpeta pasa estos filtros.'**
+  String get fdNoneMatch;
+
+  /// No description provided for @fdEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpeta vacía. Dale a \"Añadir o quitar\" y marca las cartas que quieres meter.'**
+  String get fdEmpty;
+
+  /// No description provided for @fdCopies.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 copia} other{{n} copias}}'**
+  String fdCopies(int n);
+
+  /// No description provided for @fdRemoveFromFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar de la carpeta'**
+  String get fdRemoveFromFolder;
+
+  /// No description provided for @fpPickCards.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige las cartas'**
+  String get fpPickCards;
+
+  /// No description provided for @fpSaveCount.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar ({n})'**
+  String fpSaveCount(int n);
+
+  /// No description provided for @fpFilterByName.
+  ///
+  /// In es, this message translates to:
+  /// **'Filtra por nombre…'**
+  String get fpFilterByName;
+
+  /// No description provided for @fpVisibleCards.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} cartas a la vista'**
+  String fpVisibleCards(int n);
+
+  /// No description provided for @fpSelectAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar todas'**
+  String get fpSelectAll;
+
+  /// No description provided for @fpNoneMatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna carta pasa estos filtros.'**
+  String get fpNoneMatch;
 }
 
 class _AppLocalizationsDelegate

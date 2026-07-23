@@ -249,5 +249,100 @@
   "onbScanPhotoTitle": "Escanear una foto",
   "onbScanPhotoBody": "¿Sin cámara, o con las cartas ya fotografiadas? Aquí sueltas una foto —con varias cartas si quieres— y las saca igual.",
 
-  "tourScanName": "El escáner"
+  "tourScanName": "El escáner",
+
+  "albNeedDb": "El álbum necesita la base de datos de cartas (descárgala en Colección).",
+  "albRetry": "Reintentar",
+  "albApproxMode": "Álbum en modo aproximado: aún no sé qué EDICIÓN exacta tienes de cada carta. Reimporta tu CSV con \"Sustituir mi colección actual\" activado y el álbum se afinará por ilustraciones.",
+  "albSearchSet": "Busca una expansión…",
+  "albOnlyMine": "Con cartas mías",
+  "albSortProgress": "Más completadas",
+  "albSortNewest": "Más nuevas",
+  "albSortOldest": "Más antiguas",
+  "albSortName": "Por nombre",
+  "albYearAll": "Año: todos",
+  "albLetterAll": "Todas",
+  "albNoSets": "Ninguna expansión coincide con el filtro.",
+  "albSetProgress": "{owned}/{total} cartas",
+  "@albSetProgress": {
+    "placeholders": { "owned": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "albComplete": " · ✓ ¡completa!",
+  "albLoadError": "No pude cargar el set: {error}",
+  "@albLoadError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "albSearchIn": "Buscar en {set}…",
+  "@albSearchIn": {
+    "placeholders": { "set": { "type": "String" } }
+  },
+  "albOnlyMissing": "Solo las que faltan",
+  "albWithVariants": "Con variantes",
+  "albYouHaveItAll": "✓ Lo tienes entero",
+  "albMissingCount": "Te faltan {n} · ",
+  "@albMissingCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "albWithoutPrice": " ({n} sin precio)",
+  "@albWithoutPrice": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "albVisibleOf": "{visibles} de {total}",
+  "@albVisibleOf": {
+    "placeholders": { "visibles": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "albNoCardsNamed": "Ninguna carta con ese nombre aquí.",
+
+  "fdNewFolder": "Nueva carpeta",
+  "fdEditFolder": "Editar carpeta",
+  "fdName": "Nombre",
+  "fdNameHint": "Rares de Aetherdrift, Para vender…",
+  "fdColor": "Color",
+  "fdIcon": "Icono",
+  "fdCreate": "Crear",
+  "fdSave": "Guardar",
+  "fdDefaultName": "Carpeta",
+  "fdDeleteTitle": "¿Borrar \"{nombre}\"?",
+  "@fdDeleteTitle": {
+    "placeholders": { "nombre": { "type": "String" } }
+  },
+  "fdDeleteBody": "Se borra solo la carpeta: las cartas siguen en tu colección.",
+  "fdDelete": "Borrar",
+  "fdGone": "Esta carpeta ya no existe.",
+  "fdEditTooltip": "Editar nombre, color e icono",
+  "fdDeleteTooltip": "Borrar carpeta",
+  "fdAddRemove": "Añadir o quitar",
+  "fdCounts": "{distintas} cartas distintas · {copias} copias",
+  "@fdCounts": {
+    "placeholders": { "distintas": { "type": "int" }, "copias": { "type": "int" } }
+  },
+  "fdPassFilter": " · {n} pasan el filtro",
+  "@fdPassFilter": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fdRoughValue": " · valor orientativo",
+  "fdMissing": "{n, plural, =1{1 carta ya no está en tu colección (sigue apuntada por si vuelve).} other{{n} cartas ya no están en tu colección (siguen apuntadas por si vuelven).}}",
+  "@fdMissing": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fdRemoveThem": "Quitarlas",
+  "fdNoneMatch": "Ninguna carta de la carpeta pasa estos filtros.",
+  "fdEmpty": "Carpeta vacía. Dale a \"Añadir o quitar\" y marca las cartas que quieres meter.",
+  "fdCopies": "{n, plural, =1{1 copia} other{{n} copias}}",
+  "@fdCopies": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fdRemoveFromFolder": "Quitar de la carpeta",
+  "fpPickCards": "Elige las cartas",
+  "fpSaveCount": "Guardar ({n})",
+  "@fpSaveCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fpFilterByName": "Filtra por nombre…",
+  "fpVisibleCards": "{n} cartas a la vista",
+  "@fpVisibleCards": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "fpSelectAll": "Marcar todas",
+  "fpNoneMatch": "Ninguna carta pasa estos filtros."
 }
