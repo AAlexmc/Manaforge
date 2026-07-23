@@ -161,4 +161,14 @@ class DeckStore extends ChangeNotifier {
     notifyListeners();
     _save();
   }
+
+  /// Vuelve a meter un mazo borrado en su sitio, para deshacer. Si la lista
+  /// cambió y el índice se sale, lo acota; si ya existe ese id (doble
+  /// deshacer, o se regeneró) no lo duplica.
+  void restore(SavedDeck deck, int at) {
+    if (_decks.any((d) => d.id == deck.id)) return;
+    _decks.insert(at.clamp(0, _decks.length), deck);
+    notifyListeners();
+    _save();
+  }
 }
