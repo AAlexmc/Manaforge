@@ -7,33 +7,36 @@ library;
 /// empezaste.
 const String kWelcomeCertificateId = 'bienvenida';
 
-/// Encabezado por defecto: el certificado clásico, por completar una
-/// expansión.
-const String kCertificateHeading = 'CERTIFICADO DE COLECCIÓN COMPLETA';
+/// De qué clase es el certificado. Los textos del papel (encabezado, subtítulo
+/// y, en el de bienvenida, el título) se ponen en la pantalla en el idioma de
+/// la app; aquí solo viaja el DATO de qué clase es, no el texto.
+enum CertificateKind { welcome, setComplete }
 
-/// Un certificado ganado.
+/// Un certificado ganado. Solo datos, sin texto de interfaz: el papel se pinta
+/// en la pantalla con las traducciones del idioma elegido.
 class EarnedCertificate {
   /// 'set:aer' — identifica lo que se ha completado.
   final String id;
-  final String title; // 'Aether Revolt'
-  final String subtitle; // 'Expansión completa'
+
+  /// Nombre propio que sale grande en el papel (la expansión, p. ej. 'Aether
+  /// Revolt'). Vacío en el de bienvenida: su título es traducible y lo pone la
+  /// pantalla.
+  final String title;
 
   /// Casillas de la colección completada. A 0 cuando el certificado no va de
   /// cantidad (el de bienvenida), y entonces el papel no la enseña.
   final int cards;
   final String earnedAt; // 'YYYY-MM-DD'
 
-  /// La línea pequeña de arriba del papel. Se puede cambiar porque no todos
-  /// los certificados son "de colección completa".
-  final String heading;
+  /// Qué clase de certificado es (decide encabezado y subtítulo en pantalla).
+  final CertificateKind kind;
 
   const EarnedCertificate({
     required this.id,
     required this.title,
-    required this.subtitle,
     required this.cards,
     required this.earnedAt,
-    this.heading = kCertificateHeading,
+    this.kind = CertificateKind.setComplete,
   });
 
   /// Código corto e irrepetible del certificado: mismo logro + misma fecha =
@@ -43,10 +46,9 @@ class EarnedCertificate {
   EarnedCertificate withDate(String date) => EarnedCertificate(
         id: id,
         title: title,
-        subtitle: subtitle,
         cards: cards,
         earnedAt: date,
-        heading: heading,
+        kind: kind,
       );
 }
 
@@ -77,9 +79,9 @@ List<EarnedCertificate> certificatesForSets({
     out.add(EarnedCertificate(
       id: 'set:$code',
       title: setNames[code] ?? code.toUpperCase(),
-      subtitle: 'Expansión completa',
       cards: total,
       earnedAt: today,
+      kind: CertificateKind.setComplete,
     ));
   });
   out.sort((a, b) => b.cards.compareTo(a.cards));
@@ -90,30 +92,6 @@ List<EarnedCertificate> certificatesForSets({
 String certificateDay(DateTime when) {
   two(int n) => n < 10 ? '0$n' : '$n';
   return '${when.year}-${two(when.month)}-${two(when.day)}';
-}
-
-/// '21 de julio de 2026' para el papel.
-String prettyDate(String isoDay) {
-  const months = [
-    'enero',
-    'febrero',
-    'marzo',
-    'abril',
-    'mayo',
-    'junio',
-    'julio',
-    'agosto',
-    'septiembre',
-    'octubre',
-    'noviembre',
-    'diciembre',
-  ];
-  final parts = isoDay.split('-');
-  if (parts.length != 3) return isoDay;
-  final month = int.tryParse(parts[1]) ?? 0;
-  if (month < 1 || month > 12) return isoDay;
-  final day = int.tryParse(parts[2]) ?? 0;
-  return '$day de ${months[month - 1]} de ${parts[0]}';
 }
 
 /// El primer certificado de todos: por tener una carta. Existe para que
@@ -129,12 +107,13 @@ EarnedCertificate? welcomeCertificate({
   if (copies < 1) return null;
   return EarnedCertificate(
     id: kWelcomeCertificateId,
-    title: 'Bienvenido al mundo de Magic',
-    subtitle: 'Tu primera carta',
+    // el título ('Bienvenido al mundo de Magic') es traducible: lo pone la
+    // pantalla según el idioma. Aquí no hay nombre propio que enseñar.
+    title: '',
     // no va de cantidad: da igual si es una carta o si son mil
     cards: 0,
     earnedAt: today,
-    heading: 'CERTIFICADO DE BIENVENIDA',
+    kind: CertificateKind.welcome,
   );
 }
 

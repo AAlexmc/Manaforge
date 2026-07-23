@@ -103,5 +103,17 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "certHeadingSetComplete": "СЕРТИФИКАТ О ПОЛНОЙ КОЛЛЕКЦИИ",
+  "certSubtitleSetComplete": "Выпуск собран полностью",
+  "certHeadingWelcome": "ПРИВЕТСТВЕННЫЙ СЕРТИФИКАТ",
+  "certWelcomeTitle": "Добро пожаловать в мир Magic",
+  "certSubtitleWelcome": "Твоя первая карта",
+  "certCards": "{count, plural, one{{count} карта} few{{count} карты} many{{count} карт} other{{count} карты}}",
+  "certStartedWith": "Я начал с {name}",
+  "certCollectorAnon": "Коллекционер ManaForge",
+  "certAwardedTo": "Вручается {name}",
+  "certOnDate": "{date}",
+  "certDataBy": "Данные от Scryfall"
 }

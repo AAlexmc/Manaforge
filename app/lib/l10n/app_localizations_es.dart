@@ -230,4 +230,51 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get marketArrow => 'Mercado ›';
+
+  @override
+  String get certHeadingSetComplete => 'CERTIFICADO DE COLECCIÓN COMPLETA';
+
+  @override
+  String get certSubtitleSetComplete => 'Expansión completa';
+
+  @override
+  String get certHeadingWelcome => 'CERTIFICADO DE BIENVENIDA';
+
+  @override
+  String get certWelcomeTitle => 'Bienvenido al mundo de Magic';
+
+  @override
+  String get certSubtitleWelcome => 'Tu primera carta';
+
+  @override
+  String certCards(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cartas',
+      one: '1 carta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String certStartedWith(String name) {
+    return 'Empecé con $name';
+  }
+
+  @override
+  String get certCollectorAnon => 'Coleccionista de ManaForge';
+
+  @override
+  String certAwardedTo(String name) {
+    return 'Otorgado a $name';
+  }
+
+  @override
+  String certOnDate(String date) {
+    return 'el $date';
+  }
+
+  @override
+  String get certDataBy => 'Datos por Scryfall';
 }

@@ -103,5 +103,17 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "certHeadingSetComplete": "CERTIFICATO DI COLLEZIONE COMPLETA",
+  "certSubtitleSetComplete": "Espansione completa",
+  "certHeadingWelcome": "CERTIFICATO DI BENVENUTO",
+  "certWelcomeTitle": "Benvenuto nel mondo di Magic",
+  "certSubtitleWelcome": "La tua prima carta",
+  "certCards": "{count, plural, =1{1 carta} other{{count} carte}}",
+  "certStartedWith": "Ho iniziato con {name}",
+  "certCollectorAnon": "Collezionista ManaForge",
+  "certAwardedTo": "Assegnato a {name}",
+  "certOnDate": "il {date}",
+  "certDataBy": "Dati da Scryfall"
 }

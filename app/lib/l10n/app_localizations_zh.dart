@@ -217,4 +217,50 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get marketArrow => '市场 ›';
+
+  @override
+  String get certHeadingSetComplete => '完整收藏证书';
+
+  @override
+  String get certSubtitleSetComplete => '系列已集齐';
+
+  @override
+  String get certHeadingWelcome => '欢迎证书';
+
+  @override
+  String get certWelcomeTitle => '欢迎来到万智牌的世界';
+
+  @override
+  String get certSubtitleWelcome => '你的第一张牌';
+
+  @override
+  String certCards(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 张',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String certStartedWith(String name) {
+    return '我从 $name 开始';
+  }
+
+  @override
+  String get certCollectorAnon => 'ManaForge 收藏家';
+
+  @override
+  String certAwardedTo(String name) {
+    return '授予 $name';
+  }
+
+  @override
+  String certOnDate(String date) {
+    return '$date';
+  }
+
+  @override
+  String get certDataBy => '数据来自 Scryfall';
 }

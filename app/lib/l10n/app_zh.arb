@@ -103,5 +103,17 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "certHeadingSetComplete": "完整收藏证书",
+  "certSubtitleSetComplete": "系列已集齐",
+  "certHeadingWelcome": "欢迎证书",
+  "certWelcomeTitle": "欢迎来到万智牌的世界",
+  "certSubtitleWelcome": "你的第一张牌",
+  "certCards": "{count, plural, other{{count} 张}}",
+  "certStartedWith": "我从 {name} 开始",
+  "certCollectorAnon": "ManaForge 收藏家",
+  "certAwardedTo": "授予 {name}",
+  "certOnDate": "{date}",
+  "certDataBy": "数据来自 Scryfall"
 }

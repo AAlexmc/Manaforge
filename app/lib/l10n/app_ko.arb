@@ -103,5 +103,17 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "certHeadingSetComplete": "컬렉션 완성 증명서",
+  "certSubtitleSetComplete": "세트 완성",
+  "certHeadingWelcome": "환영 증명서",
+  "certWelcomeTitle": "Magic의 세계에 오신 것을 환영합니다",
+  "certSubtitleWelcome": "당신의 첫 카드",
+  "certCards": "{count, plural, other{{count}장}}",
+  "certStartedWith": "{name}(으)로 시작했습니다",
+  "certCollectorAnon": "ManaForge 컬렉터",
+  "certAwardedTo": "{name}에게 수여",
+  "certOnDate": "{date}",
+  "certDataBy": "데이터 제공: Scryfall"
 }

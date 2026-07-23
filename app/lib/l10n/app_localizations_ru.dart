@@ -229,4 +229,53 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get marketArrow => 'Рынок ›';
+
+  @override
+  String get certHeadingSetComplete => 'СЕРТИФИКАТ О ПОЛНОЙ КОЛЛЕКЦИИ';
+
+  @override
+  String get certSubtitleSetComplete => 'Выпуск собран полностью';
+
+  @override
+  String get certHeadingWelcome => 'ПРИВЕТСТВЕННЫЙ СЕРТИФИКАТ';
+
+  @override
+  String get certWelcomeTitle => 'Добро пожаловать в мир Magic';
+
+  @override
+  String get certSubtitleWelcome => 'Твоя первая карта';
+
+  @override
+  String certCards(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count карты',
+      many: '$count карт',
+      few: '$count карты',
+      one: '$count карта',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String certStartedWith(String name) {
+    return 'Я начал с $name';
+  }
+
+  @override
+  String get certCollectorAnon => 'Коллекционер ManaForge';
+
+  @override
+  String certAwardedTo(String name) {
+    return 'Вручается $name';
+  }
+
+  @override
+  String certOnDate(String date) {
+    return '$date';
+  }
+
+  @override
+  String get certDataBy => 'Данные от Scryfall';
 }

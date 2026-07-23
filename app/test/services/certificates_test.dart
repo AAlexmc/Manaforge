@@ -46,9 +46,17 @@ void main() {
     expect(certificateCode('set:aer', '2026-07-21'), startsWith('MF-'));
   });
 
-  test('la fecha se escribe en cristiano', () {
-    expect(prettyDate('2026-07-21'), '21 de julio de 2026');
-    expect(prettyDate('roto'), 'roto');
+  test('cada certificado sabe de qué clase es (el texto lo pone la pantalla)',
+      () {
+    final sets = certificatesForSets(
+      ownedBySet: owned,
+      setTotals: totals,
+      setNames: names,
+      today: '2026-07-21',
+    );
+    expect(sets.first.kind, CertificateKind.setComplete);
+    final bienvenida = welcomeCertificate(copies: 1, today: '2026-07-21');
+    expect(bienvenida!.kind, CertificateKind.welcome);
   });
 
   test('la fecha del certificado se sella la PRIMERA vez y no se re-sella',
@@ -57,7 +65,6 @@ void main() {
     const cert = EarnedCertificate(
         id: 'set:aer',
         title: 'Aether Revolt',
-        subtitle: 'Expansión completa',
         cards: 194,
         earnedAt: '2026-01-05');
     store.sync([cert]);
@@ -76,7 +83,6 @@ void main() {
       EarnedCertificate(
           id: 'set:aer',
           title: 'Aether Revolt',
-          subtitle: 'Expansión completa',
           cards: 194,
           earnedAt: '2026-01-05')
     ]);
@@ -99,8 +105,10 @@ void main() {
 
     expect(cert, isNotNull);
     expect(cert!.id, 'bienvenida');
-    expect(cert.title, 'Bienvenido al mundo de Magic');
-    expect(cert.heading, 'CERTIFICADO DE BIENVENIDA');
+    // el título traducible ('Bienvenido al mundo de Magic') lo pone la
+    // pantalla: el dato solo dice que es el de bienvenida
+    expect(cert.title, '');
+    expect(cert.kind, CertificateKind.welcome);
     expect(cert.earnedAt, '2026-07-21');
   });
 
@@ -111,17 +119,17 @@ void main() {
     expect(cert!.cards, 0);
   });
 
-  test('guardar la fecha real del certificado conserva su encabezado', () {
+  test('guardar la fecha real del certificado conserva su clase', () {
     final cert = welcomeCertificate(copies: 1, today: '2026-07-21')!;
 
     final antiguo = cert.withDate('2026-01-05');
 
-    expect(antiguo.heading, 'CERTIFICADO DE BIENVENIDA');
+    expect(antiguo.kind, CertificateKind.welcome);
     expect(antiguo.earnedAt, '2026-01-05');
     expect(antiguo.code, certificateCode('bienvenida', '2026-01-05'));
   });
 
-  test('los de expansión mantienen su encabezado de siempre', () {
+  test('los de expansión son de clase setComplete', () {
     final certs = certificatesForSets(
       ownedBySet: owned,
       setTotals: totals,
@@ -129,7 +137,7 @@ void main() {
       today: '2026-07-21',
     );
 
-    expect(certs.first.heading, 'CERTIFICADO DE COLECCIÓN COMPLETA');
+    expect(certs.first.kind, CertificateKind.setComplete);
   });
 
   test('la bienvenida va la primera aunque los de expansión tengan más cartas',
