@@ -59,6 +59,9 @@ void main() {
 
     expect(find.text('Color de las tarjetas'), findsOneWidget);
     expect(find.text('Color de la letra'), findsOneWidget);
+    // los dos nuevos: pestañas e iconos
+    expect(find.text('Color de las pestañas'), findsOneWidget);
+    expect(find.text('Color de los iconos'), findsOneWidget);
 
     // el círculo del color 'vino' de las tarjetas
     await tester.tap(find.bySemanticsLabel('vino'));

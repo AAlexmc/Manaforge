@@ -66,7 +66,7 @@ void main() {
     expect(escaneado, 1); // el escáner está en la barra de abajo: hay atajo
 
     await tester.tap(find.text('Probar Forge sin colección'));
-    expect(pestana, 4); // Forge
+    expect(pestana, 3); // Forge (ahora antes que Mazos en la barra)
   });
 
   testWidgets('Mazos vacío tiene por dónde salir', (tester) async {

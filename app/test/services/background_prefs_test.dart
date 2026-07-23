@@ -7,6 +7,7 @@ library;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui' show Color;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/background_prefs.dart';
@@ -179,6 +180,78 @@ void main() {
     expect(prefs.cardColor, isNull);
     expect(prefs.textColor, isNull);
     expect(prefs.cardOpacity, kMaxCardOpacity); // recortado, no un 9
+  });
+
+  test('un color a medida (del selector) se guarda y vuelve', () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.setCardColorCustom(const Color(0xFF59F7FF)); // el sky blue
+    await uno.setTextColorCustom(const Color(0xFF102030));
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+
+    expect(otro.cardIsCustom, isTrue);
+    expect(otro.cardColor, const Color(0xFF59F7FF));
+    expect(otro.textColor, const Color(0xFF102030));
+    expect(otro.cardColorId, isNull); // un color a medida no es un preset
+  });
+
+  test('elegir un preset descarta el color a medida, y al revés', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.setCardColorCustom(const Color(0xFF123456));
+    expect(prefs.cardIsCustom, isTrue);
+
+    await prefs.setCardColor('noche'); // un preset manda fuera al a medida
+    expect(prefs.cardIsCustom, isFalse);
+    expect(prefs.cardColorId, 'noche');
+
+    await prefs.setCardColorCustom(const Color(0xFFAABBCC)); // y al revés
+    expect(prefs.cardColorId, isNull);
+    expect(prefs.cardColor, const Color(0xFFAABBCC));
+  });
+
+  test('un hex inválido en el fichero se ignora', () async {
+    File(p.join(datos.path, 'background.json')).writeAsStringSync(
+        '{"cardColorHex":"no-es-hex","textColorHex":"#ZZZZZZ"}');
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.load();
+
+    expect(prefs.cardColor, isNull);
+    expect(prefs.textColor, isNull);
+    expect(prefs.cardIsCustom, isFalse);
+  });
+
+  test('un hex con signo no se cuela como color', () async {
+    File(p.join(datos.path, 'background.json'))
+        .writeAsStringSync('{"cardColorHex":"-FFFFFFF"}');
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.load();
+
+    expect(prefs.cardColor, isNull);
+    expect(prefs.cardIsCustom, isFalse);
+  });
+
+  test('el color de las pestañas y el de los iconos se guardan', () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.setChipColor(const Color(0xFF4FB878));
+    await uno.setIconColor(const Color(0xFFE0CC8A));
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+
+    expect(otro.chipColor, const Color(0xFF4FB878));
+    expect(otro.iconColor, const Color(0xFFE0CC8A));
+  });
+
+  test('volver al color del tema (null) en pestañas/iconos', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.setChipColor(const Color(0xFF123456));
+    await prefs.setIconColor(const Color(0xFF654321));
+    await prefs.setChipColor(null);
+    await prefs.setIconColor(null);
+
+    expect(prefs.chipColor, isNull);
+    expect(prefs.iconColor, isNull);
   });
 
   test('las tarjetas no pueden quedar tan transparentes que no se lean',

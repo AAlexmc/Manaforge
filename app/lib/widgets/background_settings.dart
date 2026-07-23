@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/t.dart';
@@ -117,6 +118,9 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     elegido: prefs.cardColorId,
                     porDefecto: t.backgroundColorDefault,
                     onElegir: prefs.setCardColor,
+                    custom: prefs.cardCustomColor,
+                    customActivo: prefs.cardIsCustom,
+                    onCustom: prefs.setCardColorCustom,
                   ),
                   const SizedBox(height: 12),
                   Text(t.backgroundTextColor,
@@ -127,6 +131,35 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     elegido: prefs.textColorId,
                     porDefecto: t.backgroundColorDefault,
                     onElegir: prefs.setTextColor,
+                    custom: prefs.textCustomColor,
+                    customActivo: prefs.textIsCustom,
+                    onCustom: prefs.setTextColorCustom,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text('Color de las pestañas',
+                      style: TextStyle(fontSize: 12)),
+                  const SizedBox(height: 6),
+                  _Muestras(
+                    paleta: const [],
+                    elegido: null,
+                    porDefecto: t.backgroundColorDefault,
+                    onElegir: (_) => prefs.setChipColor(null),
+                    custom: prefs.chipColor,
+                    customActivo: prefs.chipColor != null,
+                    onCustom: prefs.setChipColor,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text('Color de los iconos',
+                      style: TextStyle(fontSize: 12)),
+                  const SizedBox(height: 6),
+                  _Muestras(
+                    paleta: const [],
+                    elegido: null,
+                    porDefecto: t.backgroundColorDefault,
+                    onElegir: (_) => prefs.setIconColor(null),
+                    custom: prefs.iconColor,
+                    customActivo: prefs.iconColor != null,
+                    onCustom: prefs.setIconColor,
                   ),
                   const SizedBox(height: 12),
                   Text(t.backgroundCardOpacity,
@@ -166,28 +199,45 @@ class _Muestras extends StatelessWidget {
   final String porDefecto;
   final void Function(String?) onElegir;
 
+  /// El color a medida puesto (o null), si está activo, y cómo cambiarlo.
+  final Color? custom;
+  final bool customActivo;
+  final void Function(Color) onCustom;
+
   const _Muestras({
     required this.paleta,
     required this.elegido,
     required this.porDefecto,
     required this.onElegir,
+    required this.custom,
+    required this.customActivo,
+    required this.onCustom,
   });
 
   @override
   Widget build(BuildContext context) {
+    // "el de siempre" solo está elegido si NO hay preset NI color a medida
+    final sinElegir = elegido == null && !customActivo;
     return Wrap(
       spacing: 8,
       runSpacing: 8,
       children: [
         _circulo(context,
-            color: null, seleccionado: elegido == null, nombre: porDefecto,
+            color: null, seleccionado: sinElegir, nombre: porDefecto,
             onTap: () => onElegir(null)),
         for (final c in paleta)
           _circulo(context,
               color: c.color,
-              seleccionado: elegido == c.id,
+              seleccionado: !customActivo && elegido == c.id,
               nombre: c.id,
               onTap: () => onElegir(c.id)),
+        _CirculoCustom(
+          color: custom,
+          activo: customActivo,
+          onTap: () => _elegirColor(
+              context, custom ?? (paleta.isEmpty ? Colors.grey : paleta.first.color),
+              onCustom),
+        ),
       ],
     );
   }
@@ -227,6 +277,91 @@ class _Muestras extends StatelessWidget {
       ),
     );
   }
+}
+
+/// El círculo del color a medida. Si hay uno puesto, se pinta con él; si no,
+/// con un arcoíris que dice "aquí eliges el que quieras".
+class _CirculoCustom extends StatelessWidget {
+  final Color? color;
+  final bool activo;
+  final VoidCallback onTap;
+
+  const _CirculoCustom(
+      {required this.color, required this.activo, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final borde = Theme.of(context).colorScheme.onSurface;
+    return Tooltip(
+      message: 'A medida',
+      child: Semantics(
+        button: true,
+        selected: activo,
+        label: 'Elegir un color a medida',
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const CircleBorder(),
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: activo ? color : null,
+              shape: BoxShape.circle,
+              gradient: activo
+                  ? null
+                  : const SweepGradient(colors: [
+                      Color(0xFFFF0000),
+                      Color(0xFFFFFF00),
+                      Color(0xFF00FF00),
+                      Color(0xFF00FFFF),
+                      Color(0xFF0000FF),
+                      Color(0xFFFF00FF),
+                      Color(0xFFFF0000),
+                    ]),
+              border: Border.all(
+                  color: activo ? borde : borde.withValues(alpha: 0.25),
+                  width: activo ? 2.5 : 1),
+            ),
+            child: activo
+                ? null
+                : const Icon(Icons.colorize, size: 15, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Abre el selector de color (área HSV + tono + RGB/hex). Si se confirma,
+/// devuelve el color por [onOk].
+Future<void> _elegirColor(
+    BuildContext context, Color inicial, void Function(Color) onOk) async {
+  var sel = inicial;
+  final ok = await showDialog<bool>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Color a medida'),
+      content: SingleChildScrollView(
+        child: ColorPicker(
+          pickerColor: inicial,
+          onColorChanged: (c) => sel = c,
+          enableAlpha: false, // la transparencia de las tarjetas va aparte
+          hexInputBar: true,
+          labelTypes: const [ColorLabelType.rgb, ColorLabelType.hex],
+          pickerAreaHeightPercent: 0.7,
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancelar')),
+        FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Usar este')),
+      ],
+    ),
+  );
+  if (ok == true) onOk(sel);
 }
 
 /// Cómo queda una tarjeta con los colores elegidos, encima del fondo de
