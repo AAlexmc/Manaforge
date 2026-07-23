@@ -448,7 +448,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onbAchievementsBody =>
-      'Dein Level und die Abzeichen fürs Scannen, Sortieren und Schmieden. Öffnet sich über die Level-Karte auf der Startseite.';
+      'Dein Level und alles, was du bisher verdient hast. Es steigt beim Scannen, Sortieren und Schmieden.';
 
   @override
   String get onbCertificatesTitle => 'Zertifikate';
@@ -463,4 +463,33 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'Sichere Sammlung, Decks und Ordner in einer Datei und hol sie zurück, wenn du den Rechner wechselst. Einmal pro Woche wird zusätzlich automatisch gesichert.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'Tippe hier, um $pantalla zu öffnen.';
+  }
+
+  @override
+  String get onbAchievementsName => 'Erfolge';
+
+  @override
+  String get onbDataSectionTitle => 'Daten';
+
+  @override
+  String get onbDataSectionBody =>
+      'Hier liegt alles, was die App speichert: die Kartendatenbank und deine Sicherungen.';
+
+  @override
+  String get onbCardDbTitle => 'Kartendatenbank';
+
+  @override
+  String get onbCardDbBody =>
+      'Lade sie neu für neue Karten, frische Preise und alles, was aktuelle Daten braucht — etwa den Jahresfilter von Forge.';
+
+  @override
+  String get onbAboutTitle => 'Die App';
+
+  @override
+  String get onbAboutBody =>
+      'Was jeder Tab macht, die Tastenkürzel, die Version und die Lizenz.';
 }

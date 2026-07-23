@@ -171,10 +171,22 @@
 
   "tourProgressName": "Obiettivi e certificati",
   "onbAchievementsTitle": "Obiettivi e livello",
-  "onbAchievementsBody": "Il tuo livello e le medaglie che guadagni scansionando, ordinando e forgiando. Si apre dalla scheda del livello in Inizio.",
+  "onbAchievementsBody": "Il tuo livello e tutto quello che hai guadagnato. Sale scansionando, ordinando e forgiando.",
   "onbCertificatesTitle": "Certificati",
   "onbCertificatesBody": "I traguardi grossi diventano un diploma che puoi salvare in PDF o mostrare. Stanno dentro Obiettivi.",
 
   "onbBackupTitle": "Copia di sicurezza",
-  "onbBackupBody": "Salva collezione, mazzi e cartelle in un file e recuperali se cambi computer. In più ogni settimana si fa una copia da sola."
+  "onbBackupBody": "Salva collezione, mazzi e cartelle in un file e recuperali se cambi computer. In più ogni settimana si fa una copia da sola.",
+
+  "onbTapHere": "Tocca qui per aprire {pantalla}.",
+  "@onbTapHere": {
+    "placeholders": { "pantalla": { "type": "String" } }
+  },
+  "onbAchievementsName": "Obiettivi",
+  "onbDataSectionTitle": "Dati",
+  "onbDataSectionBody": "Qui sta tutto quello che l'app conserva: la base di carte e le tue copie di sicurezza.",
+  "onbCardDbTitle": "Base di dati delle carte",
+  "onbCardDbBody": "Riscaricala per avere carte nuove, prezzi freschi e quello che chiede dati recenti, come il filtro per anno di Forge.",
+  "onbAboutTitle": "L'app",
+  "onbAboutBody": "Cosa fa ogni scheda, le scorciatoie da tastiera, la versione e la licenza."
 }

@@ -415,7 +415,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onbAchievementsTitle => '成就与等级';
 
   @override
-  String get onbAchievementsBody => '你的等级，以及扫描、整理和打造套牌获得的徽章。从主页的等级卡片进入。';
+  String get onbAchievementsBody => '你的等级和已经拿到的一切。扫描、整理和打造套牌都会让它上升。';
 
   @override
   String get onbCertificatesTitle => '证书';
@@ -428,4 +428,30 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onbBackupBody => '把收藏、套牌和文件夹保存成文件，换电脑时可以恢复。另外每周还会自动备份一次。';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return '点这里打开$pantalla。';
+  }
+
+  @override
+  String get onbAchievementsName => '成就';
+
+  @override
+  String get onbDataSectionTitle => '数据';
+
+  @override
+  String get onbDataSectionBody => '应用保存的东西都在这里：卡牌数据库和你的备份。';
+
+  @override
+  String get onbCardDbTitle => '卡牌数据库';
+
+  @override
+  String get onbCardDbBody => '重新下载可以获得新卡、最新价格，以及需要新数据的功能，比如 Forge 的年份筛选。';
+
+  @override
+  String get onbAboutTitle => '关于应用';
+
+  @override
+  String get onbAboutBody => '每个标签页的作用、键盘快捷键、版本和许可证。';
 }

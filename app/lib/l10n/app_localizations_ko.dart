@@ -426,8 +426,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get onbAchievementsTitle => '업적과 레벨';
 
   @override
-  String get onbAchievementsBody =>
-      '스캔하고 정리하고 덱을 만들며 오르는 레벨과 받은 배지입니다. 홈의 레벨 카드에서 열립니다.';
+  String get onbAchievementsBody => '내 레벨과 지금까지 얻은 것들. 스캔하고 정리하고 덱을 만들면 올라갑니다.';
 
   @override
   String get onbCertificatesTitle => '인증서';
@@ -442,4 +441,31 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get onbBackupBody =>
       '컬렉션, 덱, 폴더를 파일로 저장하고 컴퓨터를 바꿔도 되살릴 수 있습니다. 매주 자동 백업도 됩니다.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return '여기를 누르면 $pantalla이(가) 열립니다.';
+  }
+
+  @override
+  String get onbAchievementsName => '업적';
+
+  @override
+  String get onbDataSectionTitle => '데이터';
+
+  @override
+  String get onbDataSectionBody => '앱이 저장하는 것은 모두 여기에 있습니다. 카드 데이터베이스와 백업.';
+
+  @override
+  String get onbCardDbTitle => '카드 데이터베이스';
+
+  @override
+  String get onbCardDbBody =>
+      '새 카드와 최신 가격, Forge의 연도 필터처럼 최신 데이터가 필요한 기능을 위해 다시 내려받습니다.';
+
+  @override
+  String get onbAboutTitle => '앱 정보';
+
+  @override
+  String get onbAboutBody => '각 탭이 하는 일, 키보드 단축키, 버전과 라이선스.';
 }

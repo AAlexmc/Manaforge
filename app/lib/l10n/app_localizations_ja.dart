@@ -426,8 +426,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onbAchievementsTitle => '実績とレベル';
 
   @override
-  String get onbAchievementsBody =>
-      'スキャン・整理・デッキ作りで上がるレベルと、もらえるバッジです。ホームのレベルカードから開きます。';
+  String get onbAchievementsBody => 'あなたのレベルと、これまでに得たもの。スキャン・整理・デッキ作りで上がります。';
 
   @override
   String get onbCertificatesTitle => '証明書';
@@ -441,4 +440,31 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'コレクション・デッキ・フォルダをファイルに保存し、パソコンを替えても戻せます。さらに毎週、自動でもバックアップされます。';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'ここを押すと$pantallaが開きます。';
+  }
+
+  @override
+  String get onbAchievementsName => '実績';
+
+  @override
+  String get onbDataSectionTitle => 'データ';
+
+  @override
+  String get onbDataSectionBody => 'アプリが保存するものはすべてここです。カードのデータベースとバックアップ。';
+
+  @override
+  String get onbCardDbTitle => 'カードのデータベース';
+
+  @override
+  String get onbCardDbBody =>
+      '新しいカード、最新の価格、Forge の年フィルタなど新しいデータが要るものは、ここで再ダウンロードします。';
+
+  @override
+  String get onbAboutTitle => 'アプリについて';
+
+  @override
+  String get onbAboutBody => '各タブの役割、キーボードショートカット、バージョン、ライセンス。';
 }

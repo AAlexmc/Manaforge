@@ -171,10 +171,22 @@
 
   "tourProgressName": "업적과 인증서",
   "onbAchievementsTitle": "업적과 레벨",
-  "onbAchievementsBody": "스캔하고 정리하고 덱을 만들며 오르는 레벨과 받은 배지입니다. 홈의 레벨 카드에서 열립니다.",
+  "onbAchievementsBody": "내 레벨과 지금까지 얻은 것들. 스캔하고 정리하고 덱을 만들면 올라갑니다.",
   "onbCertificatesTitle": "인증서",
   "onbCertificatesBody": "큰 이정표는 상장으로 나옵니다. PDF로 저장하거나 자랑할 수 있고, 업적 안에 있습니다.",
 
   "onbBackupTitle": "백업",
-  "onbBackupBody": "컬렉션, 덱, 폴더를 파일로 저장하고 컴퓨터를 바꿔도 되살릴 수 있습니다. 매주 자동 백업도 됩니다."
+  "onbBackupBody": "컬렉션, 덱, 폴더를 파일로 저장하고 컴퓨터를 바꿔도 되살릴 수 있습니다. 매주 자동 백업도 됩니다.",
+
+  "onbTapHere": "여기를 누르면 {pantalla}이(가) 열립니다.",
+  "@onbTapHere": {
+    "placeholders": { "pantalla": { "type": "String" } }
+  },
+  "onbAchievementsName": "업적",
+  "onbDataSectionTitle": "데이터",
+  "onbDataSectionBody": "앱이 저장하는 것은 모두 여기에 있습니다. 카드 데이터베이스와 백업.",
+  "onbCardDbTitle": "카드 데이터베이스",
+  "onbCardDbBody": "새 카드와 최신 가격, Forge의 연도 필터처럼 최신 데이터가 필요한 기능을 위해 다시 내려받습니다.",
+  "onbAboutTitle": "앱 정보",
+  "onbAboutBody": "각 탭이 하는 일, 키보드 단축키, 버전과 라이선스."
 }

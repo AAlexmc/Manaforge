@@ -171,10 +171,22 @@
 
   "tourProgressName": "Conquistas e certificados",
   "onbAchievementsTitle": "Conquistas e nível",
-  "onbAchievementsBody": "O teu nível e as medalhas que ganhas a digitalizar, arrumar e forjar. Abre-se pelo cartão de nível do Início.",
+  "onbAchievementsBody": "O teu nível e tudo o que já ganhaste. Sobe a digitalizar, a arrumar e a forjar.",
   "onbCertificatesTitle": "Certificados",
   "onbCertificatesBody": "Os marcos grandes viram um diploma que podes guardar em PDF ou mostrar. Estão dentro das Conquistas.",
 
   "onbBackupTitle": "Cópia de segurança",
-  "onbBackupBody": "Guarda a tua coleção, baralhos e pastas num ficheiro e recupera-os se mudares de computador. Há também uma cópia automática todas as semanas."
+  "onbBackupBody": "Guarda a tua coleção, baralhos e pastas num ficheiro e recupera-os se mudares de computador. Há também uma cópia automática todas as semanas.",
+
+  "onbTapHere": "Toca aqui para abrir {pantalla}.",
+  "@onbTapHere": {
+    "placeholders": { "pantalla": { "type": "String" } }
+  },
+  "onbAchievementsName": "Conquistas",
+  "onbDataSectionTitle": "Dados",
+  "onbDataSectionBody": "Aqui vive tudo o que a app guarda: a base de cartas e as tuas cópias de segurança.",
+  "onbCardDbTitle": "Base de dados de cartas",
+  "onbCardDbBody": "Volta a descarregá-la para teres cartas novas, preços frescos e o que precisa de dados recentes, como o filtro por ano do Forge.",
+  "onbAboutTitle": "A app",
+  "onbAboutBody": "O que faz cada separador, os atalhos de teclado, a versão e a licença."
 }

@@ -7,9 +7,9 @@ import '../theme/mf_theme.dart';
 /// las abre él mismo y las cierra al pasar de paso.
 enum TourPush { logros, certificados }
 
-/// Cosas que hay que hacer ANTES de poder señalar algo: hoy, desplegar una
-/// sección plegada de Ajustes (plegada, lo de dentro no se puede medir).
-enum TourPrep { ajustesDatos }
+/// Cosas que hay que hacer ANTES de poder señalar algo: desplegar una sección
+/// plegada de Ajustes (plegada, lo de dentro no se puede medir).
+enum TourPrep { ajustesDatos, ajustesLaApp }
 
 /// Un paso de un tour guiado.
 ///
@@ -25,10 +25,12 @@ class TourStep {
 
   /// Pantalla empujada que este paso enseña. Los pasos que no la piden
   /// CIERRAN la que hubiera abierto un paso anterior, así que ir y volver por
-  /// el tour no deja pantallas apiladas.
+  /// el tour no deja pantallas apiladas. Repetir la misma en dos pasos
+  /// seguidos la deja abierta (no parpadea).
   ///
-  /// De momento no se puede señalar un botón dentro de una pantalla empujada
-  /// (la burbuja va centrada): [targetKey] y [push] no se combinan.
+  /// Se puede combinar con [targetKey] para señalar un botón DE DENTRO de esa
+  /// pantalla: el tour se pinta por encima del Navigator, así que la mide sin
+  /// problema.
   final TourPush? push;
 
   /// Qué hay que dejar preparado antes de medir la diana de este paso.

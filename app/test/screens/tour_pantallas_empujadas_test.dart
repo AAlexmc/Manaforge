@@ -61,48 +61,61 @@ Future<void> _lanzarTour(WidgetTester tester, String nombre) async {
   }
 }
 
+Future<void> _siguiente(WidgetTester tester) async {
+  await tester.tap(find.text('Siguiente'));
+  for (var i = 0; i < 10; i++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+}
+
 void main() {
-  testWidgets('el tour abre Logros y se ve POR ENCIMA de ella',
+  testWidgets('primero enseña la puerta y solo después abre Logros',
       (tester) async {
     await _arrancar(tester);
     await _lanzarTour(tester, 'Logros y certificados');
 
-    // la pantalla empujada está abierta…
-    expect(find.text('Logros'), findsWidgets);
-    // …y la burbuja del tour se ve encima, con sus botones
-    expect(find.text('Logros y nivel'), findsOneWidget);
+    // paso 1: sigue en Inicio, señalando la tarjeta de nivel
+    expect(find.text('Logros'), findsWidgets); // el botón, en Inicio
+    expect(find.textContaining('Pulsa aquí'), findsOneWidget);
+
+    await _siguiente(tester);
+
+    // paso 2: ya dentro de Logros (su botón de Certificados solo está ahí), y
+    // la burbuja se ve ENCIMA de ella
+    expect(find.byIcon(Icons.workspace_premium_outlined), findsOneWidget);
+    expect(find.textContaining('Tu nivel'), findsOneWidget);
     expect(find.text('Siguiente'), findsOneWidget);
   });
 
-  testWidgets('siguiente cierra Logros y abre Certificados (no se apilan)',
+  testWidgets('dentro de Logros señala el botón antes de abrir Certificados',
       (tester) async {
     await _arrancar(tester);
     await _lanzarTour(tester, 'Logros y certificados');
+    await _siguiente(tester); // Logros abierta
 
-    // si la burbuja estuviera DEBAJO de la pantalla empujada, este toque no
-    // llegaría al botón y el tour no avanzaría
-    await tester.tap(find.text('Siguiente'));
-    for (var i = 0; i < 8; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
+    // paso 3: sigue en Logros, señalando su botón de Certificados. Si la
+    // burbuja estuviera DEBAJO de la pantalla empujada, el toque no llegaría
+    await _siguiente(tester);
+    expect(find.byIcon(Icons.workspace_premium_outlined), findsOneWidget);
+    expect(find.textContaining('Pulsa aquí'), findsOneWidget);
 
+    // paso 4: Certificados, y la de antes cerrada (no se apilan)
+    await _siguiente(tester);
     expect(find.text('Certificados'), findsWidgets);
-    expect(find.textContaining('diploma'), findsOneWidget); // la burbuja
-    // la de antes se ha cerrado: no quedan dos pantallas apiladas
-    expect(find.text('Logros y nivel'), findsNothing);
+    expect(find.textContaining('diploma'), findsOneWidget);
+    expect(find.byIcon(Icons.workspace_premium_outlined), findsNothing);
   });
 
   testWidgets('al terminar, el tour cierra la pantalla que abrió',
       (tester) async {
     await _arrancar(tester);
     await _lanzarTour(tester, 'Logros y certificados');
+    await _siguiente(tester);
+    await _siguiente(tester);
+    await _siguiente(tester); // último paso: Certificados
 
-    await tester.tap(find.text('Siguiente')); // paso 2: Certificados
-    for (var i = 0; i < 8; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
-    await tester.tap(find.text('Entendido')); // último paso: termina
-    for (var i = 0; i < 8; i++) {
+    await tester.tap(find.text('Entendido'));
+    for (var i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
 

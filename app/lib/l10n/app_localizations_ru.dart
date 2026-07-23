@@ -446,7 +446,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onbAchievementsBody =>
-      'Твой уровень и значки за сканирование, наведение порядка и сборку колод. Открывается с карточки уровня на главной.';
+      'Твой уровень и всё, что уже заработано. Он растёт от сканирования, порядка и сборки колод.';
 
   @override
   String get onbCertificatesTitle => 'Сертификаты';
@@ -461,4 +461,33 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'Сохрани коллекцию, колоды и папки в файл и верни их, если сменишь компьютер. Раз в неделю копия делается сама.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'Нажми сюда, чтобы открыть: $pantalla.';
+  }
+
+  @override
+  String get onbAchievementsName => 'Достижения';
+
+  @override
+  String get onbDataSectionTitle => 'Данные';
+
+  @override
+  String get onbDataSectionBody =>
+      'Здесь всё, что приложение хранит: база карт и твои резервные копии.';
+
+  @override
+  String get onbCardDbTitle => 'База карт';
+
+  @override
+  String get onbCardDbBody =>
+      'Скачай её заново ради новых карт, свежих цен и того, что требует свежих данных — например фильтра по году в Forge.';
+
+  @override
+  String get onbAboutTitle => 'О приложении';
+
+  @override
+  String get onbAboutBody =>
+      'Что делает каждая вкладка, горячие клавиши, версия и лицензия.';
 }

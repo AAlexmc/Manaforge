@@ -81,19 +81,36 @@ void main() {
     expect(empujadas, {TourPush.logros, TourPush.certificados});
   });
 
-  test('un paso que abre una pantalla empujada no señala botones', () {
-    // dentro de una pantalla empujada todavía no hay dianas: la burbuja va
-    // centrada. Señalar una key de HomeShell desde ahí mediría un botón que
-    // está TAPADO por la pantalla nueva.
-    for (final tour in kTours) {
-      for (final step in tour.build(t, TourKeys())) {
-        if (step.push != null) {
-          expect(step.targetKey, isNull,
-              reason: 'tour "${tour.id}": un paso abre una pantalla y además '
-                  'señala un botón');
-        }
+  test('antes de abrir una pantalla, el tour enseña el botón que la abre', () {
+    // la regla que pidió Ale: nunca aparecer ya dentro de una pantalla. El
+    // paso que cambia de pestaña va SIEMPRE detrás de uno que señala su
+    // destino en la barra.
+    final full = kTours.firstWhere((t) => t.id == 'full');
+    final pasos = full.build(t, TourKeys());
+    int? anterior;
+    for (var i = 0; i < pasos.length; i++) {
+      final destino = pasos[i].goToScreen;
+      if (destino == null || destino == anterior) continue;
+      if (anterior != null) {
+        expect(pasos[i - 1].navBarIndex, isNotNull,
+            reason: 'el paso ${i + 1} salta a la pantalla $destino sin '
+                'enseñar antes su botón en la barra');
       }
+      anterior = destino;
     }
+  });
+
+  test('el tour enseña la puerta de las pantallas empujadas', () {
+    // Logros y Certificados se abren desde un botón: hay que señalarlo antes
+    final progreso = kTours.firstWhere((t) => t.id == 'progress');
+    final pasos = progreso.build(t, TourKeys());
+    expect(pasos.first.push, isNull); // el primero enseña la tarjeta de nivel
+    expect(pasos.first.targetKey, isNotNull);
+    expect(pasos[1].push, TourPush.logros);
+    // y dentro de Logros se señala el botón de Certificados antes de abrirlos
+    expect(pasos[2].push, TourPush.logros);
+    expect(pasos[2].targetKey, isNotNull);
+    expect(pasos[3].push, TourPush.certificados);
   });
 
   test('un paso que despliega una sección trae antes su pantalla', () {
@@ -108,10 +125,19 @@ void main() {
     }
   });
 
-  test('el tour de Ajustes acaba en la copia de seguridad', () {
+  test('el tour de Ajustes recorre las paradas en orden', () {
     final ajustes = kTours.firstWhere((t) => t.id == 'settings');
     final pasos = ajustes.build(t, TourKeys());
-    expect(pasos.last.prepare, TourPrep.ajustesDatos);
+    // barra → idioma → aspecto → editar inicio → Datos → base de cartas →
+    // copia de seguridad → La app
+    expect(pasos.first.navBarIndex, isNotNull);
+    expect(pasos.length, 8);
+    expect(pasos.map((s) => s.prepare).toList().sublist(4), [
+      TourPrep.ajustesDatos,
+      TourPrep.ajustesDatos,
+      TourPrep.ajustesDatos,
+      TourPrep.ajustesLaApp,
+    ]);
     expect(pasos.last.targetKey, isNotNull);
   });
 

@@ -446,7 +446,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get onbAchievementsBody =>
-      'O teu nível e as medalhas que ganhas a digitalizar, arrumar e forjar. Abre-se pelo cartão de nível do Início.';
+      'O teu nível e tudo o que já ganhaste. Sobe a digitalizar, a arrumar e a forjar.';
 
   @override
   String get onbCertificatesTitle => 'Certificados';
@@ -461,4 +461,33 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get onbBackupBody =>
       'Guarda a tua coleção, baralhos e pastas num ficheiro e recupera-os se mudares de computador. Há também uma cópia automática todas as semanas.';
+
+  @override
+  String onbTapHere(String pantalla) {
+    return 'Toca aqui para abrir $pantalla.';
+  }
+
+  @override
+  String get onbAchievementsName => 'Conquistas';
+
+  @override
+  String get onbDataSectionTitle => 'Dados';
+
+  @override
+  String get onbDataSectionBody =>
+      'Aqui vive tudo o que a app guarda: a base de cartas e as tuas cópias de segurança.';
+
+  @override
+  String get onbCardDbTitle => 'Base de dados de cartas';
+
+  @override
+  String get onbCardDbBody =>
+      'Volta a descarregá-la para teres cartas novas, preços frescos e o que precisa de dados recentes, como o filtro por ano do Forge.';
+
+  @override
+  String get onbAboutTitle => 'A app';
+
+  @override
+  String get onbAboutBody =>
+      'O que faz cada separador, os atalhos de teclado, a versão e a licença.';
 }

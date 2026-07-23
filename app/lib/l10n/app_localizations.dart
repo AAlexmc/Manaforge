@@ -879,7 +879,7 @@ abstract class AppLocalizations {
   /// No description provided for @onbAchievementsBody.
   ///
   /// In es, this message translates to:
-  /// **'Tu nivel y las medallas que vas ganando por escanear, ordenar y forjar. Se abre desde la tarjeta de nivel de Inicio.'**
+  /// **'Tu nivel y lo que llevas ganado. Sube escaneando, ordenando y forjando.'**
   String get onbAchievementsBody;
 
   /// No description provided for @onbCertificatesTitle.
@@ -905,6 +905,54 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guarda tu colección, mazos y carpetas en un archivo, y recupéralos si cambias de ordenador. Además se hace una copia sola cada semana.'**
   String get onbBackupBody;
+
+  /// No description provided for @onbTapHere.
+  ///
+  /// In es, this message translates to:
+  /// **'Pulsa aquí para abrir {pantalla}.'**
+  String onbTapHere(String pantalla);
+
+  /// No description provided for @onbAchievementsName.
+  ///
+  /// In es, this message translates to:
+  /// **'Logros'**
+  String get onbAchievementsName;
+
+  /// No description provided for @onbDataSectionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos'**
+  String get onbDataSectionTitle;
+
+  /// No description provided for @onbDataSectionBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí vive todo lo que la app guarda: la base de cartas y tus copias de seguridad.'**
+  String get onbDataSectionBody;
+
+  /// No description provided for @onbCardDbTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Base de datos de cartas'**
+  String get onbCardDbTitle;
+
+  /// No description provided for @onbCardDbBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Vuelve a descargarla para tener cartas nuevas, precios frescos y lo que pide datos recientes, como el filtro por año de Forge.'**
+  String get onbCardDbBody;
+
+  /// No description provided for @onbAboutTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'La app'**
+  String get onbAboutTitle;
+
+  /// No description provided for @onbAboutBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Qué hace cada pestaña, los atajos de teclado, la versión y la licencia.'**
+  String get onbAboutBody;
 }
 
 class _AppLocalizationsDelegate

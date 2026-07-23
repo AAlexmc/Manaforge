@@ -51,15 +51,29 @@ void main() {
     await tester.tap(find.text('Personalizar la app'));
     await _pumps(tester);
 
-    // paso 1 (idioma): la sección "Datos" sigue plegada
+    // paso 1: enseña el botón de Ajustes en la barra; "Datos" sigue plegada
+    expect(find.textContaining('Pulsa aquí'), findsOneWidget);
     expect(find.text('Guardar copia'), findsNothing);
 
-    await tester.tap(find.text('Siguiente')); // paso 2: aspecto
-    await _pumps(tester);
-    await tester.tap(find.text('Siguiente')); // paso 3: copia de seguridad
-    await _pumps(tester, veces: 14); // + la animación de la sección
+    // 2 idioma · 3 aspecto · 4 editar inicio · 5 Datos (despliega)
+    for (var i = 0; i < 4; i++) {
+      await tester.tap(find.text('Siguiente'));
+      await _pumps(tester, veces: 14); // + la animación de la sección
+    }
+    expect(find.text('Base de datos de cartas'), findsWidgets); // desplegada
 
+    // 6 base de cartas · 7 copia de seguridad
+    for (var i = 0; i < 2; i++) {
+      await tester.tap(find.text('Siguiente'));
+      await _pumps(tester, veces: 12);
+    }
     expect(find.text('Copia de seguridad'), findsWidgets); // burbuja y tarjeta
-    expect(find.text('Guardar copia'), findsOneWidget); // se desplegó
+    expect(find.text('Guardar copia'), findsOneWidget);
+
+    // 8 La app: la última sección también se despliega sola
+    await tester.tap(find.text('Siguiente'));
+    await _pumps(tester, veces: 14);
+    expect(find.text('Cómo funciona'), findsWidgets);
+    expect(find.text('Entendido'), findsOneWidget); // último paso
   });
 }

@@ -164,10 +164,22 @@
 
   "tourProgressName": "Logros y certificados",
   "onbAchievementsTitle": "Logros y nivel",
-  "onbAchievementsBody": "Tu nivel y las medallas que vas ganando por escanear, ordenar y forjar. Se abre desde la tarjeta de nivel de Inicio.",
+  "onbAchievementsBody": "Tu nivel y lo que llevas ganado. Sube escaneando, ordenando y forjando.",
   "onbCertificatesTitle": "Certificados",
   "onbCertificatesBody": "Los hitos gordos salen en un diploma que puedes guardar en PDF o enseñar. Están dentro de Logros.",
 
   "onbBackupTitle": "Copia de seguridad",
-  "onbBackupBody": "Guarda tu colección, mazos y carpetas en un archivo, y recupéralos si cambias de ordenador. Además se hace una copia sola cada semana."
+  "onbBackupBody": "Guarda tu colección, mazos y carpetas en un archivo, y recupéralos si cambias de ordenador. Además se hace una copia sola cada semana.",
+
+  "onbTapHere": "Pulsa aquí para abrir {pantalla}.",
+  "@onbTapHere": {
+    "placeholders": { "pantalla": { "type": "String" } }
+  },
+  "onbAchievementsName": "Logros",
+  "onbDataSectionTitle": "Datos",
+  "onbDataSectionBody": "Aquí vive todo lo que la app guarda: la base de cartas y tus copias de seguridad.",
+  "onbCardDbTitle": "Base de datos de cartas",
+  "onbCardDbBody": "Vuelve a descargarla para tener cartas nuevas, precios frescos y lo que pide datos recientes, como el filtro por año de Forge.",
+  "onbAboutTitle": "La app",
+  "onbAboutBody": "Qué hace cada pestaña, los atajos de teclado, la versión y la licencia."
 }
