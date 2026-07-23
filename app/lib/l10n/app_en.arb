@@ -162,5 +162,8 @@
   "onbAchievementsTitle": "Achievements and level",
   "onbAchievementsBody": "Your level and the badges you earn by scanning, tidying and forging. It opens from the level card on Home.",
   "onbCertificatesTitle": "Certificates",
-  "onbCertificatesBody": "The big milestones come as a diploma you can save as a PDF or show off. They live inside Achievements."
+  "onbCertificatesBody": "The big milestones come as a diploma you can save as a PDF or show off. They live inside Achievements.",
+
+  "onbBackupTitle": "Backup",
+  "onbBackupBody": "Save your collection, decks and folders to a file, and get them back if you switch computers. There's also an automatic weekly backup."
 }

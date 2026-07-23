@@ -7,6 +7,10 @@ import '../theme/mf_theme.dart';
 /// las abre él mismo y las cierra al pasar de paso.
 enum TourPush { logros, certificados }
 
+/// Cosas que hay que hacer ANTES de poder señalar algo: hoy, desplegar una
+/// sección plegada de Ajustes (plegada, lo de dentro no se puede medir).
+enum TourPrep { ajustesDatos }
+
 /// Un paso de un tour guiado.
 ///
 /// Puede, antes de enseñarse, cambiar de pestaña ([goToScreen], índice de
@@ -27,6 +31,9 @@ class TourStep {
   /// (la burbuja va centrada): [targetKey] y [push] no se combinan.
   final TourPush? push;
 
+  /// Qué hay que dejar preparado antes de medir la diana de este paso.
+  final TourPrep? prepare;
+
   /// Botón a señalar. INVARIANTE: si se pone [targetKey], hay que poner también
   /// [goToScreen] con la pantalla donde vive ese botón. El IndexedStack de main
   /// mantiene TODAS las pantallas montadas (aunque no se pinten), así que sin
@@ -40,6 +47,7 @@ class TourStep {
   const TourStep({
     this.goToScreen,
     this.push,
+    this.prepare,
     this.targetKey,
     this.navBarIndex,
     required this.title,
@@ -62,6 +70,10 @@ class TourOverlay extends StatefulWidget {
   /// Abrir (o cerrar, con null) la pantalla empujada que pide el paso.
   final void Function(TourPush? push)? onPush;
 
+  /// Dejar listo lo que pide el paso (desplegar una sección). Se espera a que
+  /// termine —la sección se abre con animación— antes de medir la diana.
+  final Future<void> Function(TourPrep? prep)? onPrepare;
+
   /// Al terminar o saltar.
   final VoidCallback onDone;
 
@@ -72,6 +84,7 @@ class TourOverlay extends StatefulWidget {
     required this.onDone,
     this.onGoToScreen,
     this.onPush,
+    this.onPrepare,
     this.navBarHeight = 80,
   });
 
@@ -104,7 +117,16 @@ class _TourOverlayState extends State<TourOverlay> {
       // siempre, también con null: un paso sin pantalla empujada cierra la
       // que hubiera abierto el paso anterior
       widget.onPush?.call(step.push);
-      WidgetsBinding.instance.addPostFrameCallback((_) => _medir());
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // lo que el paso necesite tener abierto ANTES de medir (una sección
+        // plegada no tiene ni sitio en pantalla). Se espera a la animación.
+        final preparar = widget.onPrepare;
+        if (preparar != null) {
+          await preparar(step.prepare);
+          if (!mounted || _i != i) return; // ya se ha ido a otro paso
+        }
+        _medir();
+      });
     });
   }
 

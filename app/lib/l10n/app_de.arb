@@ -173,5 +173,8 @@
   "onbAchievementsTitle": "Erfolge und Level",
   "onbAchievementsBody": "Dein Level und die Abzeichen fürs Scannen, Sortieren und Schmieden. Öffnet sich über die Level-Karte auf der Startseite.",
   "onbCertificatesTitle": "Zertifikate",
-  "onbCertificatesBody": "Die großen Meilensteine gibt es als Urkunde, die du als PDF sichern oder herzeigen kannst. Sie stecken in den Erfolgen."
+  "onbCertificatesBody": "Die großen Meilensteine gibt es als Urkunde, die du als PDF sichern oder herzeigen kannst. Sie stecken in den Erfolgen.",
+
+  "onbBackupTitle": "Sicherung",
+  "onbBackupBody": "Sichere Sammlung, Decks und Ordner in einer Datei und hol sie zurück, wenn du den Rechner wechselst. Einmal pro Woche wird zusätzlich automatisch gesichert."
 }

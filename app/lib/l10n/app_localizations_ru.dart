@@ -454,4 +454,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get onbCertificatesBody =>
       'За крупные вехи выдаётся диплом: можно сохранить в PDF или показать. Они внутри достижений.';
+
+  @override
+  String get onbBackupTitle => 'Резервная копия';
+
+  @override
+  String get onbBackupBody =>
+      'Сохрани коллекцию, колоды и папки в файл и верни их, если сменишь компьютер. Раз в неделю копия делается сама.';
 }

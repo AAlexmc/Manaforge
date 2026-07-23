@@ -96,6 +96,25 @@ void main() {
     }
   });
 
+  test('un paso que despliega una sección trae antes su pantalla', () {
+    for (final tour in kTours) {
+      for (final step in tour.build(t, TourKeys())) {
+        if (step.prepare != null) {
+          expect(step.goToScreen, isNotNull,
+              reason: 'tour "${tour.id}": despliega una sección de una '
+                  'pantalla que no ha traído al frente');
+        }
+      }
+    }
+  });
+
+  test('el tour de Ajustes acaba en la copia de seguridad', () {
+    final ajustes = kTours.firstWhere((t) => t.id == 'settings');
+    final pasos = ajustes.build(t, TourKeys());
+    expect(pasos.last.prepare, TourPrep.ajustesDatos);
+    expect(pasos.last.targetKey, isNotNull);
+  });
+
   test('ningún paso señala dos sitios a la vez', () {
     for (final tour in kTours) {
       for (final step in tour.build(t, TourKeys())) {

@@ -452,4 +452,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onbCertificatesBody =>
       'The big milestones come as a diploma you can save as a PDF or show off. They live inside Achievements.';
+
+  @override
+  String get onbBackupTitle => 'Backup';
+
+  @override
+  String get onbBackupBody =>
+      'Save your collection, decks and folders to a file, and get them back if you switch computers. There\'s also an automatic weekly backup.';
 }

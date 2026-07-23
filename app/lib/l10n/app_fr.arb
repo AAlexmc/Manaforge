@@ -173,5 +173,8 @@
   "onbAchievementsTitle": "Succès et niveau",
   "onbAchievementsBody": "Ton niveau et les médailles gagnées en scannant, rangeant et forgeant. Ça s'ouvre depuis la carte de niveau de l'accueil.",
   "onbCertificatesTitle": "Certificats",
-  "onbCertificatesBody": "Les gros jalons donnent un diplôme que tu peux enregistrer en PDF ou montrer. Ils sont dans les succès."
+  "onbCertificatesBody": "Les gros jalons donnent un diplôme que tu peux enregistrer en PDF ou montrer. Ils sont dans les succès.",
+
+  "onbBackupTitle": "Sauvegarde",
+  "onbBackupBody": "Enregistre ta collection, tes decks et tes dossiers dans un fichier, et récupère-les si tu changes d'ordinateur. Une sauvegarde automatique se fait aussi chaque semaine."
 }

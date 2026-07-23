@@ -173,5 +173,8 @@
   "onbAchievementsTitle": "Conquistas e nível",
   "onbAchievementsBody": "O teu nível e as medalhas que ganhas a digitalizar, arrumar e forjar. Abre-se pelo cartão de nível do Início.",
   "onbCertificatesTitle": "Certificados",
-  "onbCertificatesBody": "Os marcos grandes viram um diploma que podes guardar em PDF ou mostrar. Estão dentro das Conquistas."
+  "onbCertificatesBody": "Os marcos grandes viram um diploma que podes guardar em PDF ou mostrar. Estão dentro das Conquistas.",
+
+  "onbBackupTitle": "Cópia de segurança",
+  "onbBackupBody": "Guarda a tua coleção, baralhos e pastas num ficheiro e recupera-os se mudares de computador. Há também uma cópia automática todas as semanas."
 }

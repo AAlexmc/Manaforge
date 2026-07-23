@@ -161,6 +161,7 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
                             navItemCount: tour.navItemCount,
                             onGoToScreen: tour.onGoToScreen,
                             onPush: tour.onPush,
+                            onPrepare: tour.onPrepare,
                             onDone: tour.onDone,
                           ),
                         ),
@@ -306,6 +307,10 @@ class _HomeShellState extends State<HomeShell> {
   /// cuál es, para cerrarla al pasar de paso y no apilar pantallas.
   Route<void>? _rutaTour;
   TourPush? _rutaTourCual;
+
+  /// Mando de la sección "Datos" de Ajustes (nace plegada): el tour la abre
+  /// antes de señalar la copia de seguridad, que vive dentro.
+  final _seccionDatos = ExpansibleController();
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -441,12 +446,31 @@ class _HomeShellState extends State<HomeShell> {
         if (mounted) setState(() => _index = s);
       },
       onPush: _rutaDelTour,
+      onPrepare: _prepararPaso,
       onDone: () {
         _rutaDelTour(null);
         _onboarding.markSeen();
         widget.tour.value = null;
       },
     );
+  }
+
+  /// Deja listo lo que pide el paso antes de que el tour mida su diana.
+  Future<void> _prepararPaso(TourPrep? prep) async {
+    if (prep == null) return;
+    switch (prep) {
+      case TourPrep.ajustesDatos:
+        try {
+          if (!_seccionDatos.isExpanded) _seccionDatos.expand();
+        } catch (_) {
+          // la sección aún no está construida (lista perezosa): el paso sale
+          // sin diana, que es mejor que reventar
+          return;
+        }
+        // la sección se abre con animación: medir antes daría un rectángulo
+        // a medio crecer
+        await Future<void>.delayed(const Duration(milliseconds: 350));
+    }
   }
 
   /// Abre la pantalla empujada que pide el paso, o cierra la que hubiera
@@ -574,7 +598,9 @@ class _HomeShellState extends State<HomeShell> {
           language: widget.language,
           homeLayout: _homeLayout,
           idiomaKey: _tourKeys.ajustesIdioma,
-          fondoKey: _tourKeys.ajustesFondo),
+          fondoKey: _tourKeys.ajustesFondo,
+          copiaKey: _tourKeys.ajustesCopia,
+          datosController: _seccionDatos),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el

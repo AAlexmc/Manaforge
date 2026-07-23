@@ -20,6 +20,7 @@ class TourKeys {
   final mercadoBuscar = GlobalKey();
   final ajustesIdioma = GlobalKey();
   final ajustesFondo = GlobalKey();
+  final ajustesCopia = GlobalKey();
 }
 
 /// Lo que HomeShell le pide a la app para enseñar un tour.
@@ -38,6 +39,7 @@ class TourRequest {
   final int navItemCount;
   final void Function(int screen) onGoToScreen;
   final void Function(TourPush? push) onPush;
+  final Future<void> Function(TourPrep? prep) onPrepare;
   final VoidCallback onDone;
 
   const TourRequest({
@@ -46,6 +48,7 @@ class TourRequest {
     required this.navItemCount,
     required this.onGoToScreen,
     required this.onPush,
+    required this.onPrepare,
     required this.onDone,
   });
 }
@@ -183,6 +186,14 @@ List<TourStep> _pasosAjustes(AppLocalizations t, TourKeys k) => [
           targetKey: k.ajustesFondo,
           title: t.onbLookTitle,
           body: t.onbLookBody),
+      // la copia vive en la sección "Datos", que nace plegada: el paso la
+      // despliega (prepare) y solo entonces se puede medir la tarjeta
+      TourStep(
+          goToScreen: _ajustes,
+          prepare: TourPrep.ajustesDatos,
+          targetKey: k.ajustesCopia,
+          title: t.onbBackupTitle,
+          body: t.onbBackupBody),
     ];
 
 /// El catálogo de tours. El primero ('welcome') es el del primer arranque.

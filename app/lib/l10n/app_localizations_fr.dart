@@ -457,4 +457,11 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get onbCertificatesBody =>
       'Les gros jalons donnent un diplôme que tu peux enregistrer en PDF ou montrer. Ils sont dans les succès.';
+
+  @override
+  String get onbBackupTitle => 'Sauvegarde';
+
+  @override
+  String get onbBackupBody =>
+      'Enregistre ta collection, tes decks et tes dossiers dans un fichier, et récupère-les si tu changes d\'ordinateur. Une sauvegarde automatique se fait aussi chaque semaine.';
 }

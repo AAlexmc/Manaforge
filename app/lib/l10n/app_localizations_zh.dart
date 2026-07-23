@@ -422,4 +422,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onbCertificatesBody => '重要里程碑会生成一张证书，可以存成 PDF 或拿去炫耀。它们在成就里面。';
+
+  @override
+  String get onbBackupTitle => '备份';
+
+  @override
+  String get onbBackupBody => '把收藏、套牌和文件夹保存成文件，换电脑时可以恢复。另外每周还会自动备份一次。';
 }
