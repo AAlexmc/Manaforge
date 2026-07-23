@@ -22,6 +22,34 @@ class TourKeys {
   final ajustesFondo = GlobalKey();
 }
 
+/// Lo que HomeShell le pide a la app para enseñar un tour.
+///
+/// El overlay NO puede vivir en el Stack de HomeShell: una pantalla empujada
+/// (Logros, Certificados) se pinta por encima de él y taparía el tour. Lo
+/// pinta `MaterialApp.builder`, que envuelve al Navigator entero, y HomeShell
+/// —que es quien tiene las keys y sabe cambiar de pestaña— le pasa aquí los
+/// pasos ya construidos y qué hacer en cada caso.
+class TourRequest {
+  /// Identidad del tour: cambiarla reinicia el recorrido desde el paso 1.
+  final String id;
+  final List<TourStep> steps;
+
+  /// Cuántos destinos tiene la barra de abajo (foco por fracción del ancho).
+  final int navItemCount;
+  final void Function(int screen) onGoToScreen;
+  final void Function(TourPush? push) onPush;
+  final VoidCallback onDone;
+
+  const TourRequest({
+    required this.id,
+    required this.steps,
+    required this.navItemCount,
+    required this.onGoToScreen,
+    required this.onPush,
+    required this.onDone,
+  });
+}
+
 /// Un tour con nombre, para el menú de guías ("?").
 class Tour {
   final String id;
@@ -59,6 +87,22 @@ List<TourStep> _pasosInicio(AppLocalizations t, TourKeys k) => [
           targetKey: k.editarInicio,
           title: t.onbEditHomeTitle,
           body: t.onbEditHomeBody),
+    ];
+
+// Logros y Certificados NO son pestañas: se empujan desde Inicio. El tour las
+// abre él (push) y la burbuja va centrada: dentro de una pantalla empujada
+// todavía no se señalan botones sueltos.
+List<TourStep> _pasosLogros(AppLocalizations t, TourKeys k) => [
+      TourStep(
+          goToScreen: _home,
+          push: TourPush.logros,
+          title: t.onbAchievementsTitle,
+          body: t.onbAchievementsBody),
+      TourStep(
+          goToScreen: _home,
+          push: TourPush.certificados,
+          title: t.onbCertificatesTitle,
+          body: t.onbCertificatesBody),
     ];
 
 List<TourStep> _pasosColeccion(AppLocalizations t, TourKeys k) => [
@@ -178,6 +222,7 @@ final List<Tour> kTours = [
     name: (t) => t.tourFullName,
     build: (t, k) => [
       ..._pasosInicio(t, k),
+      ..._pasosLogros(t, k),
       ..._pasosColeccion(t, k),
       ..._pasosAlbum(t, k),
       TourStep(
@@ -193,6 +238,11 @@ final List<Tour> kTours = [
     id: 'home',
     name: (t) => t.tourHomeName,
     build: _pasosInicio,
+  ),
+  Tour(
+    id: 'progress',
+    name: (t) => t.tourProgressName,
+    build: _pasosLogros,
   ),
   Tour(
     id: 'collection',

@@ -63,6 +63,32 @@ void main() {
     expect(find.text('Forge'), findsOneWidget);
   });
 
+  testWidgets('avisa de la pantalla que hay que abrir, y de cerrarla al salir',
+      (tester) async {
+    final pedidas = <TourPush?>[];
+    await tester.pumpWidget(appDePrueba(
+      home: Scaffold(
+        body: TourOverlay(
+          steps: const [
+            TourStep(push: TourPush.logros, title: 'Logros', body: 'a'),
+            TourStep(title: 'Otra cosa', body: 'b'),
+          ],
+          navItemCount: 8,
+          onPush: pedidas.add,
+          onDone: () {},
+        ),
+      ),
+    ));
+    await tester.pump();
+    expect(pedidas, [TourPush.logros]);
+
+    await tester.tap(find.text('Siguiente'));
+    await tester.pump();
+    await tester.pump();
+    // el paso que no pide pantalla CIERRA la de antes (null), no la deja
+    expect(pedidas, [TourPush.logros, null]);
+  });
+
   testWidgets('señala un botón por GlobalKey sin reventar', (tester) async {
     final k = GlobalKey();
     await tester.pumpWidget(appDePrueba(

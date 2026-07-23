@@ -167,5 +167,11 @@
   "onbWishlistTitle": "위시리스트",
   "onbWishlistBody": "원하는 카드 목록. 목표 가격에 닿으면 카운터가 초록색이 됩니다.",
   "onbPriceAlertTitle": "가격 알림",
-  "onbPriceAlertBody": "카드를 검색해 북마크로 위시리스트에 넣고 목표 가격을 정하면, 가격이 내려갈 때 알려 줍니다."
+  "onbPriceAlertBody": "카드를 검색해 북마크로 위시리스트에 넣고 목표 가격을 정하면, 가격이 내려갈 때 알려 줍니다.",
+
+  "tourProgressName": "업적과 인증서",
+  "onbAchievementsTitle": "업적과 레벨",
+  "onbAchievementsBody": "스캔하고 정리하고 덱을 만들며 오르는 레벨과 받은 배지입니다. 홈의 레벨 카드에서 열립니다.",
+  "onbCertificatesTitle": "인증서",
+  "onbCertificatesBody": "큰 이정표는 상장으로 나옵니다. PDF로 저장하거나 자랑할 수 있고, 업적 안에 있습니다."
 }

@@ -437,4 +437,21 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'Найди карту, нажми на закладку, чтобы добавить её в вишлист, и задай целевую цену: приложение сообщит, когда она упадёт.';
+
+  @override
+  String get tourProgressName => 'Достижения и сертификаты';
+
+  @override
+  String get onbAchievementsTitle => 'Достижения и уровень';
+
+  @override
+  String get onbAchievementsBody =>
+      'Твой уровень и значки за сканирование, наведение порядка и сборку колод. Открывается с карточки уровня на главной.';
+
+  @override
+  String get onbCertificatesTitle => 'Сертификаты';
+
+  @override
+  String get onbCertificatesBody =>
+      'За крупные вехи выдаётся диплом: можно сохранить в PDF или показать. Они внутри достижений.';
 }

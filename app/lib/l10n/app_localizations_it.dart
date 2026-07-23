@@ -438,4 +438,21 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'Cerca una carta, tocca il segnalibro per metterla in wishlist e imposta un prezzo obiettivo: l\'app ti avvisa quando scende.';
+
+  @override
+  String get tourProgressName => 'Obiettivi e certificati';
+
+  @override
+  String get onbAchievementsTitle => 'Obiettivi e livello';
+
+  @override
+  String get onbAchievementsBody =>
+      'Il tuo livello e le medaglie che guadagni scansionando, ordinando e forgiando. Si apre dalla scheda del livello in Inizio.';
+
+  @override
+  String get onbCertificatesTitle => 'Certificati';
+
+  @override
+  String get onbCertificatesBody =>
+      'I traguardi grossi diventano un diploma che puoi salvare in PDF o mostrare. Stanno dentro Obiettivi.';
 }

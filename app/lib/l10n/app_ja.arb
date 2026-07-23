@@ -167,5 +167,11 @@
   "onbWishlistTitle": "ウィッシュリスト",
   "onbWishlistBody": "欲しいカードの一覧。目標価格に届くとカウンターが緑になります。",
   "onbPriceAlertTitle": "価格アラート",
-  "onbPriceAlertBody": "カードを検索してしおりアイコンでウィッシュリストに入れ、目標価格を設定すると、下がったときに知らせます。"
+  "onbPriceAlertBody": "カードを検索してしおりアイコンでウィッシュリストに入れ、目標価格を設定すると、下がったときに知らせます。",
+
+  "tourProgressName": "実績と証明書",
+  "onbAchievementsTitle": "実績とレベル",
+  "onbAchievementsBody": "スキャン・整理・デッキ作りで上がるレベルと、もらえるバッジです。ホームのレベルカードから開きます。",
+  "onbCertificatesTitle": "証明書",
+  "onbCertificatesBody": "大きな節目は賞状になり、PDF で保存したり見せたりできます。実績の中にあります。"
 }

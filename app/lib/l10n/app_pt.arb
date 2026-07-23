@@ -167,5 +167,11 @@
   "onbWishlistTitle": "Wishlist",
   "onbWishlistBody": "As cartas que queres. O contador fica verde quando alguma chega ao teu preço.",
   "onbPriceAlertTitle": "Alerta de preço",
-  "onbPriceAlertBody": "Procura uma carta, toca no marcador para a pôr na wishlist e define um preço-alvo: a app avisa-te quando descer."
+  "onbPriceAlertBody": "Procura uma carta, toca no marcador para a pôr na wishlist e define um preço-alvo: a app avisa-te quando descer.",
+
+  "tourProgressName": "Conquistas e certificados",
+  "onbAchievementsTitle": "Conquistas e nível",
+  "onbAchievementsBody": "O teu nível e as medalhas que ganhas a digitalizar, arrumar e forjar. Abre-se pelo cartão de nível do Início.",
+  "onbCertificatesTitle": "Certificados",
+  "onbCertificatesBody": "Os marcos grandes viram um diploma que podes guardar em PDF ou mostrar. Estão dentro das Conquistas."
 }

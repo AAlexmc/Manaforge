@@ -437,4 +437,21 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'Procura uma carta, toca no marcador para a pôr na wishlist e define um preço-alvo: a app avisa-te quando descer.';
+
+  @override
+  String get tourProgressName => 'Conquistas e certificados';
+
+  @override
+  String get onbAchievementsTitle => 'Conquistas e nível';
+
+  @override
+  String get onbAchievementsBody =>
+      'O teu nível e as medalhas que ganhas a digitalizar, arrumar e forjar. Abre-se pelo cartão de nível do Início.';
+
+  @override
+  String get onbCertificatesTitle => 'Certificados';
+
+  @override
+  String get onbCertificatesBody =>
+      'Os marcos grandes viram um diploma que podes guardar em PDF ou mostrar. Estão dentro das Conquistas.';
 }

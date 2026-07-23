@@ -167,5 +167,11 @@
   "onbWishlistTitle": "Wishlist",
   "onbWishlistBody": "Les cartes que tu veux. Le compteur passe au vert quand l'une atteint ton prix.",
   "onbPriceAlertTitle": "Alerte de prix",
-  "onbPriceAlertBody": "Cherche une carte, touche le marque-page pour l'ajouter à la wishlist et fixe un prix cible : l'app te prévient quand il baisse."
+  "onbPriceAlertBody": "Cherche une carte, touche le marque-page pour l'ajouter à la wishlist et fixe un prix cible : l'app te prévient quand il baisse.",
+
+  "tourProgressName": "Succès et certificats",
+  "onbAchievementsTitle": "Succès et niveau",
+  "onbAchievementsBody": "Ton niveau et les médailles gagnées en scannant, rangeant et forgeant. Ça s'ouvre depuis la carte de niveau de l'accueil.",
+  "onbCertificatesTitle": "Certificats",
+  "onbCertificatesBody": "Les gros jalons donnent un diplôme que tu peux enregistrer en PDF ou montrer. Ils sont dans les succès."
 }

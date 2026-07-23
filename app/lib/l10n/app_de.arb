@@ -167,5 +167,11 @@
   "onbWishlistTitle": "Wunschliste",
   "onbWishlistBody": "Die Karten, die du willst. Der Zähler wird grün, sobald eine deinen Preis erreicht.",
   "onbPriceAlertTitle": "Preisalarm",
-  "onbPriceAlertBody": "Suche eine Karte, tippe auf das Lesezeichen für die Wunschliste und setze einen Zielpreis: die App meldet sich, wenn er fällt."
+  "onbPriceAlertBody": "Suche eine Karte, tippe auf das Lesezeichen für die Wunschliste und setze einen Zielpreis: die App meldet sich, wenn er fällt.",
+
+  "tourProgressName": "Erfolge und Zertifikate",
+  "onbAchievementsTitle": "Erfolge und Level",
+  "onbAchievementsBody": "Dein Level und die Abzeichen fürs Scannen, Sortieren und Schmieden. Öffnet sich über die Level-Karte auf der Startseite.",
+  "onbCertificatesTitle": "Zertifikate",
+  "onbCertificatesBody": "Die großen Meilensteine gibt es als Urkunde, die du als PDF sichern oder herzeigen kannst. Sie stecken in den Erfolgen."
 }

@@ -435,4 +435,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'Search a card, tap the bookmark to add it to your wishlist and set a target price: the app tells you when it drops.';
+
+  @override
+  String get tourProgressName => 'Achievements and certificates';
+
+  @override
+  String get onbAchievementsTitle => 'Achievements and level';
+
+  @override
+  String get onbAchievementsBody =>
+      'Your level and the badges you earn by scanning, tidying and forging. It opens from the level card on Home.';
+
+  @override
+  String get onbCertificatesTitle => 'Certificates';
+
+  @override
+  String get onbCertificatesBody =>
+      'The big milestones come as a diploma you can save as a PDF or show off. They live inside Achievements.';
 }

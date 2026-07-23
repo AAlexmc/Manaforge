@@ -533,6 +533,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
           // (la wishlist de abajo puede ser larga), pero los mandos que
           // señala el tour —selector, wishlist y buscador— se montan aunque
           // queden fuera de la vista, que es lo que hace falta para medirlos.
+          // (`scrollCacheExtent`, el relevo moderno, no compila con el SDK
+          // que usan los tests: "Couldn't find constructor
+          // ScrollCacheExtent.pixels". Cuando compile, cambiarlo)
+          // ignore: deprecated_member_use
           cacheExtent: 1200,
           children: [
             Row(

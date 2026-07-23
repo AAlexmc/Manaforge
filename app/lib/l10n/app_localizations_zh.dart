@@ -407,4 +407,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onbPriceAlertBody => '搜索一张牌，点书签图标加入心愿单并设定目标价：降价时应用会通知你。';
+
+  @override
+  String get tourProgressName => '成就与证书';
+
+  @override
+  String get onbAchievementsTitle => '成就与等级';
+
+  @override
+  String get onbAchievementsBody => '你的等级，以及扫描、整理和打造套牌获得的徽章。从主页的等级卡片进入。';
+
+  @override
+  String get onbCertificatesTitle => '证书';
+
+  @override
+  String get onbCertificatesBody => '重要里程碑会生成一张证书，可以存成 PDF 或拿去炫耀。它们在成就里面。';
 }

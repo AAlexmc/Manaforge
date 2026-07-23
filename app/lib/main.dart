@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'l10n/app_localizations.dart';
 import 'l10n/t.dart';
+import 'screens/certificados_screen.dart';
 import 'screens/logros_screen.dart';
 import 'screens/screens.dart';
 import 'services/achievement_store.dart';
@@ -84,6 +85,18 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
   late final LanguagePreference _language =
       widget.language ?? LanguagePreference();
 
+  /// El tour que se está enseñando, si hay. Vive AQUÍ ARRIBA y no en
+  /// HomeShell porque se pinta en el `builder` del MaterialApp, que envuelve
+  /// al Navigator entero: así el tour tapa y explica también las pantallas
+  /// empujadas (Logros, Certificados), que se dibujan encima de HomeShell.
+  final ValueNotifier<TourRequest?> _tour = ValueNotifier(null);
+
+  @override
+  void dispose() {
+    _tour.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -130,19 +143,46 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
             child: Focus(
               autofocus: true,
               child: AppBackground(
-                  prefs: _background,
-                  child: child ?? const SizedBox.shrink()),
+                prefs: _background,
+                child: ValueListenableBuilder<TourRequest?>(
+                  valueListenable: _tour,
+                  // el Navigator entero entra como `child`: no se reconstruye
+                  // porque empiece o termine un tour
+                  child: child ?? const SizedBox.shrink(),
+                  builder: (context, tour, navegador) => Stack(
+                    children: [
+                      navegador!,
+                      if (tour != null)
+                        Positioned.fill(
+                          child: TourOverlay(
+                            // key por tour: al cambiar de tour, empieza del 1
+                            key: ValueKey(tour.id),
+                            steps: tour.steps,
+                            navItemCount: tour.navItemCount,
+                            onGoToScreen: tour.onGoToScreen,
+                            onPush: tour.onPush,
+                            onDone: tour.onDone,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
           home: HomeShell(
             key: ValueKey(_session),
             background: _background,
             language: _language,
+            tour: _tour,
             onRestored: () {
               // los dos almacenes compartidos NO se recrean con la app: si no
               // se vacían aquí, siguen con lo de antes en memoria y lo
               // reescriben encima de lo que se acaba de restaurar
               resetSharedStores();
+              // y si había un tour, se cae con el HomeShell que lo lanzó: sus
+              // botones apuntarían a una pantalla que ya no existe
+              _tour.value = null;
               setState(() => _session++);
             },
           ),
@@ -162,11 +202,16 @@ class HomeShell extends StatefulWidget {
   /// Idioma, por lo mismo.
   final LanguagePreference language;
 
+  /// Dónde se deja el tour que hay que enseñar. Lo pinta el `builder` del
+  /// MaterialApp, por encima del Navigator (ver `_ManaForgeAppState._tour`).
+  final ValueNotifier<TourRequest?> tour;
+
   const HomeShell(
       {super.key,
       required this.onRestored,
       required this.background,
-      required this.language});
+      required this.language,
+      required this.tour});
 
   @override
   State<HomeShell> createState() => _HomeShellState();
@@ -257,8 +302,10 @@ class _HomeShellState extends State<HomeShell> {
   /// GlobalKeys de los botones que los tours señalan.
   final _tourKeys = TourKeys();
 
-  /// El tour que se está enseñando ahora (null = ninguno).
-  Tour? _activeTour;
+  /// La pantalla empujada que ha abierto el tour (Logros, Certificados) y
+  /// cuál es, para cerrarla al pasar de paso y no apilar pantallas.
+  Route<void>? _rutaTour;
+  TourPush? _rutaTourCual;
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -308,7 +355,7 @@ class _HomeShellState extends State<HomeShell> {
       // amontonar cosas encima. Solo la primera vez.
       await _onboarding.load();
       if (mounted && !_onboarding.seen) {
-        setState(() => _activeTour = kTours.first);
+        _lanzarTour(kTours.first);
       }
     });
   }
@@ -354,8 +401,12 @@ class _HomeShellState extends State<HomeShell> {
     final elegido = await showModalBottomSheet<Tour>(
       context: context,
       builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        // lista con scroll y no Column: la hoja no puede pasar de 9/16 de la
+        // pantalla, y con cada tour nuevo la lista crece — en una ventana
+        // pequeña los últimos quedaban FUERA, dibujados donde no se pueden
+        // ni ver ni tocar
+        child: ListView(
+          shrinkWrap: true,
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
@@ -373,8 +424,66 @@ class _HomeShellState extends State<HomeShell> {
       ),
     );
     if (elegido != null && mounted) {
-      setState(() => _activeTour = elegido);
+      _lanzarTour(elegido);
     }
+  }
+
+  /// Deja el tour donde lo pinta la app (por encima del Navigator) con todo
+  /// lo que necesita: los pasos ya construidos con las keys de esta pantalla y
+  /// qué hacer al cambiar de pestaña, al abrir una pantalla o al terminar.
+  void _lanzarTour(Tour tour) {
+    final t = tr(context);
+    widget.tour.value = TourRequest(
+      id: tour.id,
+      steps: tour.build(t, _tourKeys),
+      navItemCount: _destinos(t).length,
+      onGoToScreen: (s) {
+        if (mounted) setState(() => _index = s);
+      },
+      onPush: _rutaDelTour,
+      onDone: () {
+        _rutaDelTour(null);
+        _onboarding.markSeen();
+        widget.tour.value = null;
+      },
+    );
+  }
+
+  /// Abre la pantalla empujada que pide el paso, o cierra la que hubiera
+  /// (null). Las pantallas empujadas no son pestañas: el IndexedStack no las
+  /// tiene, así que el tour las abre y las cierra él.
+  void _rutaDelTour(TourPush? cual) {
+    if (!mounted || cual == _rutaTourCual) return;
+    final nav = Navigator.of(context);
+    final abierta = _rutaTour;
+    _rutaTour = null;
+    _rutaTourCual = null;
+    // sin animación de vuelta: el tour ya está pintado encima y el usuario
+    // no ha pedido "atrás", solo ha pasado de paso
+    if (abierta != null) nav.removeRoute(abierta);
+    if (cual == null) return;
+    final ruta = MaterialPageRoute<void>(
+      builder: (_) => switch (cual) {
+        TourPush.logros => LogrosScreen(
+            achievements: _achievements,
+            db: _db,
+            collection: _collection,
+            certificates: _certificates),
+        TourPush.certificados => CertificadosScreen(
+            db: _db, collection: _collection, certificates: _certificates),
+      },
+    );
+    _rutaTour = ruta;
+    _rutaTourCual = cual;
+    // si la cierra el usuario (Escape, atrás), que no quede apuntada: cerrarla
+    // otra vez reventaría
+    ruta.popped.whenComplete(() {
+      if (identical(_rutaTour, ruta)) {
+        _rutaTour = null;
+        _rutaTourCual = null;
+      }
+    });
+    nav.push(ruta);
   }
 
   /// Avisa de los logros nuevos caigan donde caigan (escáner, importador,
@@ -491,37 +600,21 @@ class _HomeShellState extends State<HomeShell> {
       ),
       child: Focus(
         autofocus: true,
-        child: Stack(
-          children: [
-            Scaffold(
-              body: IndexedStack(index: _index, children: screens),
-              bottomNavigationBar: NavigationBar(
-                selectedIndex: barraDePantalla(_index),
-                onDestinationSelected: (i) {
-                  if (i == _escanear) {
-                    _abrirEscaner();
-                    return;
-                  }
-                  setState(() => _index = pantallaDeBarra(i));
-                },
-                destinations: destinos,
-              ),
-            ),
-            if (_activeTour != null)
-              Positioned.fill(
-                child: TourOverlay(
-                  // key por tour: al cambiar de tour, empieza desde el paso 0
-                  key: ValueKey(_activeTour!.id),
-                  steps: _activeTour!.build(t, _tourKeys),
-                  navItemCount: destinos.length,
-                  onGoToScreen: (s) => setState(() => _index = s),
-                  onDone: () {
-                    _onboarding.markSeen();
-                    setState(() => _activeTour = null);
-                  },
-                ),
-              ),
-          ],
+        // el tour NO se pinta aquí: lo pinta el builder del MaterialApp, por
+        // encima del Navigator, para que tape también lo que se empuja
+        child: Scaffold(
+          body: IndexedStack(index: _index, children: screens),
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: barraDePantalla(_index),
+            onDestinationSelected: (i) {
+              if (i == _escanear) {
+                _abrirEscaner();
+                return;
+              }
+              setState(() => _index = pantallaDeBarra(i));
+            },
+            destinations: destinos,
+          ),
         ),
       ),
     );

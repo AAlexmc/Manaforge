@@ -3,16 +3,29 @@ import 'package:flutter/material.dart';
 import '../l10n/t.dart';
 import '../theme/mf_theme.dart';
 
+/// Pantallas que NO son pestaña: se abren encima (Navigator.push). El tour
+/// las abre él mismo y las cierra al pasar de paso.
+enum TourPush { logros, certificados }
+
 /// Un paso de un tour guiado.
 ///
 /// Puede, antes de enseñarse, cambiar de pestaña ([goToScreen], índice de
-/// PANTALLA) y luego señalar algo:
+/// PANTALLA), abrir una pantalla de las que se empujan ([push]) y luego
+/// señalar algo:
 ///  - un botón concreto por [targetKey] (foco sobre su rectángulo real), o
 ///  - un destino de la barra de abajo por [navBarIndex] (foco por fracción del
 ///    ancho, sin depender de la geometría interna de la barra), o
 ///  - nada: la burbuja va centrada.
 class TourStep {
   final int? goToScreen;
+
+  /// Pantalla empujada que este paso enseña. Los pasos que no la piden
+  /// CIERRAN la que hubiera abierto un paso anterior, así que ir y volver por
+  /// el tour no deja pantallas apiladas.
+  ///
+  /// De momento no se puede señalar un botón dentro de una pantalla empujada
+  /// (la burbuja va centrada): [targetKey] y [push] no se combinan.
+  final TourPush? push;
 
   /// Botón a señalar. INVARIANTE: si se pone [targetKey], hay que poner también
   /// [goToScreen] con la pantalla donde vive ese botón. El IndexedStack de main
@@ -26,6 +39,7 @@ class TourStep {
 
   const TourStep({
     this.goToScreen,
+    this.push,
     this.targetKey,
     this.navBarIndex,
     required this.title,
@@ -45,6 +59,9 @@ class TourOverlay extends StatefulWidget {
   /// Cambiar de pestaña (índice de PANTALLA) cuando un paso lo pide.
   final void Function(int screen)? onGoToScreen;
 
+  /// Abrir (o cerrar, con null) la pantalla empujada que pide el paso.
+  final void Function(TourPush? push)? onPush;
+
   /// Al terminar o saltar.
   final VoidCallback onDone;
 
@@ -54,6 +71,7 @@ class TourOverlay extends StatefulWidget {
     required this.navItemCount,
     required this.onDone,
     this.onGoToScreen,
+    this.onPush,
     this.navBarHeight = 80,
   });
 
@@ -83,6 +101,9 @@ class _TourOverlayState extends State<TourOverlay> {
       if (step.goToScreen != null) {
         widget.onGoToScreen?.call(step.goToScreen!);
       }
+      // siempre, también con null: un paso sin pantalla empujada cierra la
+      // que hubiera abierto el paso anterior
+      widget.onPush?.call(step.push);
       WidgetsBinding.instance.addPostFrameCallback((_) => _medir());
     });
   }

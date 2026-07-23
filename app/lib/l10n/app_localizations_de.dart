@@ -439,4 +439,21 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'Suche eine Karte, tippe auf das Lesezeichen für die Wunschliste und setze einen Zielpreis: die App meldet sich, wenn er fällt.';
+
+  @override
+  String get tourProgressName => 'Erfolge und Zertifikate';
+
+  @override
+  String get onbAchievementsTitle => 'Erfolge und Level';
+
+  @override
+  String get onbAchievementsBody =>
+      'Dein Level und die Abzeichen fürs Scannen, Sortieren und Schmieden. Öffnet sich über die Level-Karte auf der Startseite.';
+
+  @override
+  String get onbCertificatesTitle => 'Zertifikate';
+
+  @override
+  String get onbCertificatesBody =>
+      'Die großen Meilensteine gibt es als Urkunde, die du als PDF sichern oder herzeigen kannst. Sie stecken in den Erfolgen.';
 }
