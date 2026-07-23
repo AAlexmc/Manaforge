@@ -278,4 +278,39 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get certDataBy => 'Dados por Scryfall';
+
+  @override
+  String get onbCollectionTitle => 'Sua coleção';
+
+  @override
+  String get onbCollectionBody =>
+      'Todas as suas cartas ficam aqui, em pastas e por coleção.';
+
+  @override
+  String get onbScanTitle => 'Escanear cartas';
+
+  @override
+  String get onbScanBody => 'Adicione cartas novas com a câmera ou uma foto.';
+
+  @override
+  String get onbForgeTitle => 'Forjar decks';
+
+  @override
+  String get onbForgeBody =>
+      'Monte decks completos com as cartas que você já tem.';
+
+  @override
+  String get onbDecksTitle => 'Seus decks';
+
+  @override
+  String get onbDecksBody => 'Os decks salvos no Forge aparecem aqui.';
+
+  @override
+  String get onbSkip => 'Pular';
+
+  @override
+  String get onbNext => 'Próximo';
+
+  @override
+  String get onbGotIt => 'Entendi';
 }

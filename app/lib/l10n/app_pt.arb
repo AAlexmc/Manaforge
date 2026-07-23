@@ -115,5 +115,17 @@
   "certCollectorAnon": "Colecionador ManaForge",
   "certAwardedTo": "Concedido a {name}",
   "certOnDate": "em {date}",
-  "certDataBy": "Dados por Scryfall"
+  "certDataBy": "Dados por Scryfall",
+
+  "onbCollectionTitle": "Sua coleção",
+  "onbCollectionBody": "Todas as suas cartas ficam aqui, em pastas e por coleção.",
+  "onbScanTitle": "Escanear cartas",
+  "onbScanBody": "Adicione cartas novas com a câmera ou uma foto.",
+  "onbForgeTitle": "Forjar decks",
+  "onbForgeBody": "Monte decks completos com as cartas que você já tem.",
+  "onbDecksTitle": "Seus decks",
+  "onbDecksBody": "Os decks salvos no Forge aparecem aqui.",
+  "onbSkip": "Pular",
+  "onbNext": "Próximo",
+  "onbGotIt": "Entendi"
 }

@@ -115,5 +115,17 @@
   "certCollectorAnon": "ManaForge 收藏家",
   "certAwardedTo": "授予 {name}",
   "certOnDate": "{date}",
-  "certDataBy": "数据来自 Scryfall"
+  "certDataBy": "数据来自 Scryfall",
+
+  "onbCollectionTitle": "你的收藏",
+  "onbCollectionBody": "所有卡牌都在这里，按文件夹和系列整理。",
+  "onbScanTitle": "扫描卡牌",
+  "onbScanBody": "用相机或照片添加新卡牌。",
+  "onbForgeTitle": "构筑套牌",
+  "onbForgeBody": "用你已有的卡牌生成完整套牌。",
+  "onbDecksTitle": "你的套牌",
+  "onbDecksBody": "在 Forge 保存的套牌会显示在这里。",
+  "onbSkip": "跳过",
+  "onbNext": "下一步",
+  "onbGotIt": "知道了"
 }

@@ -115,5 +115,17 @@
   "certCollectorAnon": "ManaForge-Sammler",
   "certAwardedTo": "Verliehen an {name}",
   "certOnDate": "am {date}",
-  "certDataBy": "Daten von Scryfall"
+  "certDataBy": "Daten von Scryfall",
+
+  "onbCollectionTitle": "Deine Sammlung",
+  "onbCollectionBody": "Hier liegen alle deine Karten, in Ordnern und nach Set.",
+  "onbScanTitle": "Karten scannen",
+  "onbScanBody": "Füge neue Karten mit der Kamera oder einem Foto hinzu.",
+  "onbForgeTitle": "Decks schmieden",
+  "onbForgeBody": "Baue komplette Decks aus deinen vorhandenen Karten.",
+  "onbDecksTitle": "Deine Decks",
+  "onbDecksBody": "Aus Forge gespeicherte Decks erscheinen hier.",
+  "onbSkip": "Überspringen",
+  "onbNext": "Weiter",
+  "onbGotIt": "Verstanden"
 }

@@ -108,5 +108,17 @@
   "@certAwardedTo": {"placeholders": {"name": {"type": "String"}}},
   "certOnDate": "el {date}",
   "@certOnDate": {"placeholders": {"date": {"type": "String"}}},
-  "certDataBy": "Datos por Scryfall"
+  "certDataBy": "Datos por Scryfall",
+
+  "onbCollectionTitle": "Tu colección",
+  "onbCollectionBody": "Aquí viven todas tus cartas, en carpetas y por expansiones.",
+  "onbScanTitle": "Escanea cartas",
+  "onbScanBody": "Añade cartas nuevas con la cámara o una foto.",
+  "onbForgeTitle": "Forja mazos",
+  "onbForgeBody": "Genera mazos completos con las cartas que ya tienes.",
+  "onbDecksTitle": "Tus mazos",
+  "onbDecksBody": "Los mazos que guardes desde Forge aparecen aquí.",
+  "onbSkip": "Saltar",
+  "onbNext": "Siguiente",
+  "onbGotIt": "Entendido"
 }

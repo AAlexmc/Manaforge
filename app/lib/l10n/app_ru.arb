@@ -115,5 +115,17 @@
   "certCollectorAnon": "Коллекционер ManaForge",
   "certAwardedTo": "Вручается {name}",
   "certOnDate": "{date}",
-  "certDataBy": "Данные от Scryfall"
+  "certDataBy": "Данные от Scryfall",
+
+  "onbCollectionTitle": "Твоя коллекция",
+  "onbCollectionBody": "Здесь все твои карты — по папкам и выпускам.",
+  "onbScanTitle": "Сканируй карты",
+  "onbScanBody": "Добавляй новые карты камерой или по фото.",
+  "onbForgeTitle": "Куй колоды",
+  "onbForgeBody": "Собирай полные колоды из карт, которые у тебя есть.",
+  "onbDecksTitle": "Твои колоды",
+  "onbDecksBody": "Колоды, сохранённые из Forge, появляются здесь.",
+  "onbSkip": "Пропустить",
+  "onbNext": "Далее",
+  "onbGotIt": "Понятно"
 }

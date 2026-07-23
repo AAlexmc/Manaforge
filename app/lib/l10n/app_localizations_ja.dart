@@ -271,4 +271,37 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get certDataBy => 'データ提供: Scryfall';
+
+  @override
+  String get onbCollectionTitle => 'あなたのコレクション';
+
+  @override
+  String get onbCollectionBody => 'すべてのカードがここに。フォルダ別・セット別に並びます。';
+
+  @override
+  String get onbScanTitle => 'カードをスキャン';
+
+  @override
+  String get onbScanBody => 'カメラや写真で新しいカードを追加。';
+
+  @override
+  String get onbForgeTitle => 'デッキを組む';
+
+  @override
+  String get onbForgeBody => '手持ちのカードだけで完成デッキを生成。';
+
+  @override
+  String get onbDecksTitle => 'あなたのデッキ';
+
+  @override
+  String get onbDecksBody => 'Forgeで保存したデッキがここに表示されます。';
+
+  @override
+  String get onbSkip => 'スキップ';
+
+  @override
+  String get onbNext => '次へ';
+
+  @override
+  String get onbGotIt => 'OK';
 }

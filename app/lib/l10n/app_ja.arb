@@ -115,5 +115,17 @@
   "certCollectorAnon": "ManaForge コレクター",
   "certAwardedTo": "{name} に授与",
   "certOnDate": "{date}",
-  "certDataBy": "データ提供: Scryfall"
+  "certDataBy": "データ提供: Scryfall",
+
+  "onbCollectionTitle": "あなたのコレクション",
+  "onbCollectionBody": "すべてのカードがここに。フォルダ別・セット別に並びます。",
+  "onbScanTitle": "カードをスキャン",
+  "onbScanBody": "カメラや写真で新しいカードを追加。",
+  "onbForgeTitle": "デッキを組む",
+  "onbForgeBody": "手持ちのカードだけで完成デッキを生成。",
+  "onbDecksTitle": "あなたのデッキ",
+  "onbDecksBody": "Forgeで保存したデッキがここに表示されます。",
+  "onbSkip": "スキップ",
+  "onbNext": "次へ",
+  "onbGotIt": "OK"
 }

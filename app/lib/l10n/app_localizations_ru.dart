@@ -278,4 +278,39 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get certDataBy => 'Данные от Scryfall';
+
+  @override
+  String get onbCollectionTitle => 'Твоя коллекция';
+
+  @override
+  String get onbCollectionBody =>
+      'Здесь все твои карты — по папкам и выпускам.';
+
+  @override
+  String get onbScanTitle => 'Сканируй карты';
+
+  @override
+  String get onbScanBody => 'Добавляй новые карты камерой или по фото.';
+
+  @override
+  String get onbForgeTitle => 'Куй колоды';
+
+  @override
+  String get onbForgeBody =>
+      'Собирай полные колоды из карт, которые у тебя есть.';
+
+  @override
+  String get onbDecksTitle => 'Твои колоды';
+
+  @override
+  String get onbDecksBody => 'Колоды, сохранённые из Forge, появляются здесь.';
+
+  @override
+  String get onbSkip => 'Пропустить';
+
+  @override
+  String get onbNext => 'Далее';
+
+  @override
+  String get onbGotIt => 'Понятно';
 }

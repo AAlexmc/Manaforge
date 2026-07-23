@@ -115,5 +115,17 @@
   "certCollectorAnon": "Collezionista ManaForge",
   "certAwardedTo": "Assegnato a {name}",
   "certOnDate": "il {date}",
-  "certDataBy": "Dati da Scryfall"
+  "certDataBy": "Dati da Scryfall",
+
+  "onbCollectionTitle": "La tua collezione",
+  "onbCollectionBody": "Qui vivono tutte le tue carte, in cartelle e per espansione.",
+  "onbScanTitle": "Scansiona carte",
+  "onbScanBody": "Aggiungi nuove carte con la fotocamera o una foto.",
+  "onbForgeTitle": "Forgia mazzi",
+  "onbForgeBody": "Crea mazzi completi con le carte che già possiedi.",
+  "onbDecksTitle": "I tuoi mazzi",
+  "onbDecksBody": "I mazzi salvati da Forge compaiono qui.",
+  "onbSkip": "Salta",
+  "onbNext": "Avanti",
+  "onbGotIt": "Ho capito"
 }

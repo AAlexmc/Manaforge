@@ -19,6 +19,7 @@ import 'services/collection_store.dart';
 import 'services/language_prefs.dart';
 import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
+import 'services/onboarding_prefs.dart';
 import 'services/folder_store.dart';
 import 'services/home_layout_prefs.dart';
 import 'services/markets.dart';
@@ -33,6 +34,7 @@ import 'theme/mf_theme.dart';
 import 'widgets/app_background.dart';
 import 'widgets/app_shortcuts.dart';
 import 'widgets/language_picker_dialog.dart';
+import 'widgets/onboarding_coachmarks.dart';
 import 'widgets/whats_new_dialog.dart';
 
 Future<void> main() async {
@@ -247,6 +249,9 @@ class _HomeShellState extends State<HomeShell> {
 
   /// Ctrl+F: aviso de "quiero buscar" para la pestaña que esté delante.
   final _search = SearchFocusBus();
+
+  /// Si ya se vio el tour de bienvenida (las burbujas sobre la barra).
+  final _onboarding = OnboardingPreference();
   late final AchievementsController _achievements = AchievementsController(
     db: _db,
     collection: _collection,
@@ -291,6 +296,11 @@ class _HomeShellState extends State<HomeShell> {
       await maybeShowWhatsNew(context,
           checker: _updates,
           hasExistingData: _collection.totalCopies > 0);
+      if (!mounted) return;
+      // y el tour de bienvenida, DESPUÉS de idioma y novedades para no
+      // amontonar cosas encima. Solo la primera vez.
+      await _onboarding.load();
+      if (mounted) setState(() {});
     });
   }
 
@@ -411,6 +421,19 @@ class _HomeShellState extends State<HomeShell> {
 
     final t = tr(context);
     final destinos = _destinos(t);
+    // el tour de bienvenida, la primera vez: burbujas sobre la barra. Los
+    // índices son POSICIONES en la barra (0 = Inicio): colección, escanear,
+    // forge, mazos.
+    final mostrarTour = _onboarding.cargado && !_onboarding.seen;
+    final tour = [
+      CoachStep(
+          barIndex: 1,
+          title: t.onbCollectionTitle,
+          body: t.onbCollectionBody),
+      CoachStep(barIndex: 3, title: t.onbScanTitle, body: t.onbScanBody),
+      CoachStep(barIndex: 4, title: t.onbForgeTitle, body: t.onbForgeBody),
+      CoachStep(barIndex: 5, title: t.onbDecksTitle, body: t.onbDecksBody),
+    ];
 
     return CallbackShortcuts(
       bindings: mainShortcuts(
@@ -425,19 +448,34 @@ class _HomeShellState extends State<HomeShell> {
       ),
       child: Focus(
         autofocus: true,
-        child: Scaffold(
-          body: IndexedStack(index: _index, children: screens),
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: barraDePantalla(_index),
-            onDestinationSelected: (i) {
-              if (i == _escanear) {
-                _abrirEscaner();
-                return;
-              }
-              setState(() => _index = pantallaDeBarra(i));
-            },
-            destinations: destinos,
-          ),
+        child: Stack(
+          children: [
+            Scaffold(
+              body: IndexedStack(index: _index, children: screens),
+              bottomNavigationBar: NavigationBar(
+                selectedIndex: barraDePantalla(_index),
+                onDestinationSelected: (i) {
+                  if (i == _escanear) {
+                    _abrirEscaner();
+                    return;
+                  }
+                  setState(() => _index = pantallaDeBarra(i));
+                },
+                destinations: destinos,
+              ),
+            ),
+            if (mostrarTour)
+              Positioned.fill(
+                child: OnboardingCoachmarks(
+                  steps: tour,
+                  itemCount: destinos.length,
+                  onDone: () {
+                    _onboarding.markSeen();
+                    setState(() {});
+                  },
+                ),
+              ),
+          ],
         ),
       ),
     );
