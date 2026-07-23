@@ -233,7 +233,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get certSubtitleSetComplete => 'セット完成';
 
   @override
-  String get certHeadingWelcome => 'ようこそ証明書';
+  String get certHeadingWelcome => '歓迎証明書';
 
   @override
   String get certWelcomeTitle => 'Magicの世界へようこそ';
@@ -268,4 +268,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String certOnDate(String date) {
     return '$date';
   }
+
+  @override
+  String get certDataBy => 'データ提供: Scryfall';
 }

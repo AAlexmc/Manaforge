@@ -260,4 +260,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String certOnDate(String date) {
     return '$date';
   }
+
+  @override
+  String get certDataBy => '数据来自 Scryfall';
 }

@@ -268,4 +268,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String certOnDate(String date) {
     return '$date';
   }
+
+  @override
+  String get certDataBy => '데이터 제공: Scryfall';
 }

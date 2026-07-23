@@ -114,5 +114,6 @@
   "certStartedWith": "{name}(으)로 시작했습니다",
   "certCollectorAnon": "ManaForge 컬렉터",
   "certAwardedTo": "{name}에게 수여",
-  "certOnDate": "{date}"
+  "certOnDate": "{date}",
+  "certDataBy": "데이터 제공: Scryfall"
 }

@@ -114,5 +114,6 @@
   "certStartedWith": "我从 {name} 开始",
   "certCollectorAnon": "ManaForge 收藏家",
   "certAwardedTo": "授予 {name}",
-  "certOnDate": "{date}"
+  "certOnDate": "{date}",
+  "certDataBy": "数据来自 Scryfall"
 }

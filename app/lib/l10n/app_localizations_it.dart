@@ -275,4 +275,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String certOnDate(String date) {
     return 'il $date';
   }
+
+  @override
+  String get certDataBy => 'Dati da Scryfall';
 }

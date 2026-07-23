@@ -569,6 +569,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'el {date}'**
   String certOnDate(String date);
+
+  /// No description provided for @certDataBy.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos por Scryfall'**
+  String get certDataBy;
 }
 
 class _AppLocalizationsDelegate

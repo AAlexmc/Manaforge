@@ -107,5 +107,6 @@
   "certAwardedTo": "Otorgado a {name}",
   "@certAwardedTo": {"placeholders": {"name": {"type": "String"}}},
   "certOnDate": "el {date}",
-  "@certOnDate": {"placeholders": {"date": {"type": "String"}}}
+  "@certOnDate": {"placeholders": {"date": {"type": "String"}}},
+  "certDataBy": "Datos por Scryfall"
 }

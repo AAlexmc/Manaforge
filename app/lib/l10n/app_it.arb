@@ -114,5 +114,6 @@
   "certStartedWith": "Ho iniziato con {name}",
   "certCollectorAnon": "Collezionista ManaForge",
   "certAwardedTo": "Assegnato a {name}",
-  "certOnDate": "il {date}"
+  "certOnDate": "il {date}",
+  "certDataBy": "Dati da Scryfall"
 }
