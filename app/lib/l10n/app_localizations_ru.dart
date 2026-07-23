@@ -332,4 +332,20 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get onbEditHomeBody =>
       'Эта кнопка позволяет выбрать, какие разделы показывать на главном экране и в каком порядке.';
+
+  @override
+  String get onbLangTitle => 'Язык';
+
+  @override
+  String get onbLangBody => 'Смени здесь язык всего приложения.';
+
+  @override
+  String get onbLookTitle => 'Вид';
+
+  @override
+  String get onbLookBody =>
+      'Поставь обои и выбери цвета карточек, текста, вкладок и значков.';
+
+  @override
+  String get tourSettingsName => 'Настроить приложение';
 }

@@ -449,7 +449,9 @@ class _HomeShellState extends State<HomeShell> {
           updates: _updates,
           background: widget.background,
           language: widget.language,
-          homeLayout: _homeLayout),
+          homeLayout: _homeLayout,
+          idiomaKey: _tourKeys.ajustesIdioma,
+          fondoKey: _tourKeys.ajustesFondo),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el

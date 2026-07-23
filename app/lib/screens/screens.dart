@@ -58,6 +58,10 @@ class AjustesScreen extends StatefulWidget {
   /// releerlo todo.
   final VoidCallback onRestored;
 
+  /// Keys para que un tour pueda señalar la tarjeta de idioma y la de fondo.
+  final Key? idiomaKey;
+  final Key? fondoKey;
+
   const AjustesScreen(
       {super.key,
       required this.db,
@@ -65,7 +69,9 @@ class AjustesScreen extends StatefulWidget {
       this.updates,
       this.background,
       this.language,
-      this.homeLayout});
+      this.homeLayout,
+      this.idiomaKey,
+      this.fondoKey});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -126,7 +132,9 @@ class _AjustesScreenState extends State<AjustesScreen> {
             // el idioma va suelto y el primero: es lo primero que querría
             // cambiar alguien que abrió la app en un idioma que no es el suyo
             if (widget.language != null) ...[
-              LanguageSettingsCard(prefs: widget.language!),
+              KeyedSubtree(
+                  key: widget.idiomaKey,
+                  child: LanguageSettingsCard(prefs: widget.language!)),
               const SizedBox(height: 8),
             ],
             // Apariencia: fondo y qué se ve en Inicio. Abierta de salida
@@ -137,7 +145,9 @@ class _AjustesScreenState extends State<AjustesScreen> {
               initiallyExpanded: true,
               children: [
                 if (widget.background != null)
-                  BackgroundSettingsCard(prefs: widget.background!),
+                  KeyedSubtree(
+                      key: widget.fondoKey,
+                      child: BackgroundSettingsCard(prefs: widget.background!)),
                 if (widget.homeLayout != null)
                   _EditarInicioTile(layout: widget.homeLayout!),
               ],

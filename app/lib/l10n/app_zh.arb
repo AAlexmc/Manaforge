@@ -134,5 +134,11 @@
   "tourWelcomeName": "快速导览",
   "tourHomeName": "主屏幕",
   "onbEditHomeTitle": "自定义主页",
-  "onbEditHomeBody": "用这个按钮选择主页显示哪些板块以及顺序。"
+  "onbEditHomeBody": "用这个按钮选择主页显示哪些板块以及顺序。",
+
+  "onbLangTitle": "语言",
+  "onbLangBody": "在这里更改整个应用的语言。",
+  "onbLookTitle": "外观",
+  "onbLookBody": "设置壁纸并选择卡片、文字、标签和图标的颜色。",
+  "tourSettingsName": "自定义应用"
 }

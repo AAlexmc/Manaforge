@@ -677,6 +677,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Con este botón eliges qué secciones se ven en Inicio y en qué orden.'**
   String get onbEditHomeBody;
+
+  /// No description provided for @onbLangTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma'**
+  String get onbLangTitle;
+
+  /// No description provided for @onbLangBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambia aquí el idioma de toda la app.'**
+  String get onbLangBody;
+
+  /// No description provided for @onbLookTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Aspecto'**
+  String get onbLookTitle;
+
+  /// No description provided for @onbLookBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Pon un fondo de pantalla y elige los colores de las tarjetas, la letra, las pestañas y los iconos.'**
+  String get onbLookBody;
+
+  /// No description provided for @tourSettingsName.
+  ///
+  /// In es, this message translates to:
+  /// **'Personalizar la app'**
+  String get tourSettingsName;
 }
 
 class _AppLocalizationsDelegate

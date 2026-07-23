@@ -134,5 +134,11 @@
   "tourWelcomeName": "Tour rápido",
   "tourHomeName": "A tela inicial",
   "onbEditHomeTitle": "Personalize seu início",
-  "onbEditHomeBody": "Este botão permite escolher quais seções aparecem no início e em que ordem."
+  "onbEditHomeBody": "Este botão permite escolher quais seções aparecem no início e em que ordem.",
+
+  "onbLangTitle": "Idioma",
+  "onbLangBody": "Mude aqui o idioma de todo o app.",
+  "onbLookTitle": "Aparência",
+  "onbLookBody": "Coloque um papel de parede e escolha as cores de cartas, texto, abas e ícones.",
+  "tourSettingsName": "Personalizar o app"
 }
