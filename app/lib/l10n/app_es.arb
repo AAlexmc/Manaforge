@@ -160,5 +160,11 @@
   "onbWishlistTitle": "Wishlist",
   "onbWishlistBody": "Las cartas que quieres. El contador se pone verde cuando alguna llega a tu precio.",
   "onbPriceAlertTitle": "Alerta de precio",
-  "onbPriceAlertBody": "Busca una carta, dale al marcador para meterla en la wishlist y ponle un precio objetivo: la app te avisa cuando baje."
+  "onbPriceAlertBody": "Busca una carta, dale al marcador para meterla en la wishlist y ponle un precio objetivo: la app te avisa cuando baje.",
+
+  "tourProgressName": "Logros y certificados",
+  "onbAchievementsTitle": "Logros y nivel",
+  "onbAchievementsBody": "Tu nivel y las medallas que vas ganando por escanear, ordenar y forjar. Se abre desde la tarjeta de nivel de Inicio.",
+  "onbCertificatesTitle": "Certificados",
+  "onbCertificatesBody": "Los hitos gordos salen en un diploma que puedes guardar en PDF o enseñar. Están dentro de Logros."
 }

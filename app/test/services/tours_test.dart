@@ -7,6 +7,7 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations_es.dart';
 import 'package:manaforge_app/services/tours.dart';
+import 'package:manaforge_app/widgets/tour_overlay.dart';
 
 void main() {
   final t = AppLocalizationsEs();
@@ -67,6 +68,31 @@ void main() {
       expect(s, greaterThanOrEqualTo(anterior),
           reason: 'el recorrido vuelve atrás: $anterior → $s');
       anterior = s;
+    }
+  });
+
+  test('el gran tour abre Logros y Certificados', () {
+    final full = kTours.firstWhere((t) => t.id == 'full');
+    final empujadas = full
+        .build(t, TourKeys())
+        .map((s) => s.push)
+        .whereType<TourPush>()
+        .toSet();
+    expect(empujadas, {TourPush.logros, TourPush.certificados});
+  });
+
+  test('un paso que abre una pantalla empujada no señala botones', () {
+    // dentro de una pantalla empujada todavía no hay dianas: la burbuja va
+    // centrada. Señalar una key de HomeShell desde ahí mediría un botón que
+    // está TAPADO por la pantalla nueva.
+    for (final tour in kTours) {
+      for (final step in tour.build(t, TourKeys())) {
+        if (step.push != null) {
+          expect(step.targetKey, isNull,
+              reason: 'tour "${tour.id}": un paso abre una pantalla y además '
+                  'señala un botón');
+        }
+      }
     }
   });
 

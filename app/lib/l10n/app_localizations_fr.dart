@@ -440,4 +440,21 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'Cherche une carte, touche le marque-page pour l\'ajouter à la wishlist et fixe un prix cible : l\'app te prévient quand il baisse.';
+
+  @override
+  String get tourProgressName => 'Succès et certificats';
+
+  @override
+  String get onbAchievementsTitle => 'Succès et niveau';
+
+  @override
+  String get onbAchievementsBody =>
+      'Ton niveau et les médailles gagnées en scannant, rangeant et forgeant. Ça s\'ouvre depuis la carte de niveau de l\'accueil.';
+
+  @override
+  String get onbCertificatesTitle => 'Certificats';
+
+  @override
+  String get onbCertificatesBody =>
+      'Les gros jalons donnent un diplôme que tu peux enregistrer en PDF ou montrer. Ils sont dans les succès.';
 }

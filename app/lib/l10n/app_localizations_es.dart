@@ -436,4 +436,21 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'Busca una carta, dale al marcador para meterla en la wishlist y ponle un precio objetivo: la app te avisa cuando baje.';
+
+  @override
+  String get tourProgressName => 'Logros y certificados';
+
+  @override
+  String get onbAchievementsTitle => 'Logros y nivel';
+
+  @override
+  String get onbAchievementsBody =>
+      'Tu nivel y las medallas que vas ganando por escanear, ordenar y forjar. Se abre desde la tarjeta de nivel de Inicio.';
+
+  @override
+  String get onbCertificatesTitle => 'Certificados';
+
+  @override
+  String get onbCertificatesBody =>
+      'Los hitos gordos salen en un diploma que puedes guardar en PDF o enseñar. Están dentro de Logros.';
 }

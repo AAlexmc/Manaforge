@@ -418,4 +418,20 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       'カードを検索してしおりアイコンでウィッシュリストに入れ、目標価格を設定すると、下がったときに知らせます。';
+
+  @override
+  String get tourProgressName => '実績と証明書';
+
+  @override
+  String get onbAchievementsTitle => '実績とレベル';
+
+  @override
+  String get onbAchievementsBody =>
+      'スキャン・整理・デッキ作りで上がるレベルと、もらえるバッジです。ホームのレベルカードから開きます。';
+
+  @override
+  String get onbCertificatesTitle => '証明書';
+
+  @override
+  String get onbCertificatesBody => '大きな節目は賞状になり、PDF で保存したり見せたりできます。実績の中にあります。';
 }

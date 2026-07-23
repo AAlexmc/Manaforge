@@ -167,5 +167,11 @@
   "onbWishlistTitle": "Wishlist",
   "onbWishlistBody": "Le carte che vuoi. Il contatore diventa verde quando una arriva al tuo prezzo.",
   "onbPriceAlertTitle": "Avviso di prezzo",
-  "onbPriceAlertBody": "Cerca una carta, tocca il segnalibro per metterla in wishlist e imposta un prezzo obiettivo: l'app ti avvisa quando scende."
+  "onbPriceAlertBody": "Cerca una carta, tocca il segnalibro per metterla in wishlist e imposta un prezzo obiettivo: l'app ti avvisa quando scende.",
+
+  "tourProgressName": "Obiettivi e certificati",
+  "onbAchievementsTitle": "Obiettivi e livello",
+  "onbAchievementsBody": "Il tuo livello e le medaglie che guadagni scansionando, ordinando e forgiando. Si apre dalla scheda del livello in Inizio.",
+  "onbCertificatesTitle": "Certificati",
+  "onbCertificatesBody": "I traguardi grossi diventano un diploma che puoi salvare in PDF o mostrare. Stanno dentro Obiettivi."
 }

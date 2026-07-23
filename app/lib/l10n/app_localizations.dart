@@ -863,6 +863,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Busca una carta, dale al marcador para meterla en la wishlist y ponle un precio objetivo: la app te avisa cuando baje.'**
   String get onbPriceAlertBody;
+
+  /// No description provided for @tourProgressName.
+  ///
+  /// In es, this message translates to:
+  /// **'Logros y certificados'**
+  String get tourProgressName;
+
+  /// No description provided for @onbAchievementsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Logros y nivel'**
+  String get onbAchievementsTitle;
+
+  /// No description provided for @onbAchievementsBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu nivel y las medallas que vas ganando por escanear, ordenar y forjar. Se abre desde la tarjeta de nivel de Inicio.'**
+  String get onbAchievementsBody;
+
+  /// No description provided for @onbCertificatesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Certificados'**
+  String get onbCertificatesTitle;
+
+  /// No description provided for @onbCertificatesBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Los hitos gordos salen en un diploma que puedes guardar en PDF o enseñar. Están dentro de Logros.'**
+  String get onbCertificatesBody;
 }
 
 class _AppLocalizationsDelegate

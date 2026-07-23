@@ -418,4 +418,21 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get onbPriceAlertBody =>
       '카드를 검색해 북마크로 위시리스트에 넣고 목표 가격을 정하면, 가격이 내려갈 때 알려 줍니다.';
+
+  @override
+  String get tourProgressName => '업적과 인증서';
+
+  @override
+  String get onbAchievementsTitle => '업적과 레벨';
+
+  @override
+  String get onbAchievementsBody =>
+      '스캔하고 정리하고 덱을 만들며 오르는 레벨과 받은 배지입니다. 홈의 레벨 카드에서 열립니다.';
+
+  @override
+  String get onbCertificatesTitle => '인증서';
+
+  @override
+  String get onbCertificatesBody =>
+      '큰 이정표는 상장으로 나옵니다. PDF로 저장하거나 자랑할 수 있고, 업적 안에 있습니다.';
 }
