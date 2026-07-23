@@ -575,6 +575,72 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Datos por Scryfall'**
   String get certDataBy;
+
+  /// No description provided for @onbCollectionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu colección'**
+  String get onbCollectionTitle;
+
+  /// No description provided for @onbCollectionBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí viven todas tus cartas, en carpetas y por expansiones.'**
+  String get onbCollectionBody;
+
+  /// No description provided for @onbScanTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanea cartas'**
+  String get onbScanTitle;
+
+  /// No description provided for @onbScanBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Añade cartas nuevas con la cámara o una foto.'**
+  String get onbScanBody;
+
+  /// No description provided for @onbForgeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Forja mazos'**
+  String get onbForgeTitle;
+
+  /// No description provided for @onbForgeBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Genera mazos completos con las cartas que ya tienes.'**
+  String get onbForgeBody;
+
+  /// No description provided for @onbDecksTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus mazos'**
+  String get onbDecksTitle;
+
+  /// No description provided for @onbDecksBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Los mazos que guardes desde Forge aparecen aquí.'**
+  String get onbDecksBody;
+
+  /// No description provided for @onbSkip.
+  ///
+  /// In es, this message translates to:
+  /// **'Saltar'**
+  String get onbSkip;
+
+  /// No description provided for @onbNext.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente'**
+  String get onbNext;
+
+  /// No description provided for @onbGotIt.
+  ///
+  /// In es, this message translates to:
+  /// **'Entendido'**
+  String get onbGotIt;
 }
 
 class _AppLocalizationsDelegate

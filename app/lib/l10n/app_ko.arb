@@ -115,5 +115,17 @@
   "certCollectorAnon": "ManaForge 컬렉터",
   "certAwardedTo": "{name}에게 수여",
   "certOnDate": "{date}",
-  "certDataBy": "데이터 제공: Scryfall"
+  "certDataBy": "데이터 제공: Scryfall",
+
+  "onbCollectionTitle": "내 컬렉션",
+  "onbCollectionBody": "모든 카드가 여기 있어요. 폴더별·세트별로 정리돼요.",
+  "onbScanTitle": "카드 스캔",
+  "onbScanBody": "카메라나 사진으로 새 카드를 추가하세요.",
+  "onbForgeTitle": "덱 만들기",
+  "onbForgeBody": "가진 카드만으로 완성된 덱을 생성해요.",
+  "onbDecksTitle": "내 덱",
+  "onbDecksBody": "Forge에서 저장한 덱이 여기에 나와요.",
+  "onbSkip": "건너뛰기",
+  "onbNext": "다음",
+  "onbGotIt": "확인"
 }

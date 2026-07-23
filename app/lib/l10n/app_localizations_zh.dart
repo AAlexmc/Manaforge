@@ -263,4 +263,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get certDataBy => '数据来自 Scryfall';
+
+  @override
+  String get onbCollectionTitle => '你的收藏';
+
+  @override
+  String get onbCollectionBody => '所有卡牌都在这里，按文件夹和系列整理。';
+
+  @override
+  String get onbScanTitle => '扫描卡牌';
+
+  @override
+  String get onbScanBody => '用相机或照片添加新卡牌。';
+
+  @override
+  String get onbForgeTitle => '构筑套牌';
+
+  @override
+  String get onbForgeBody => '用你已有的卡牌生成完整套牌。';
+
+  @override
+  String get onbDecksTitle => '你的套牌';
+
+  @override
+  String get onbDecksBody => '在 Forge 保存的套牌会显示在这里。';
+
+  @override
+  String get onbSkip => '跳过';
+
+  @override
+  String get onbNext => '下一步';
+
+  @override
+  String get onbGotIt => '知道了';
 }

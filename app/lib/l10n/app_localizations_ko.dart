@@ -271,4 +271,37 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get certDataBy => '데이터 제공: Scryfall';
+
+  @override
+  String get onbCollectionTitle => '내 컬렉션';
+
+  @override
+  String get onbCollectionBody => '모든 카드가 여기 있어요. 폴더별·세트별로 정리돼요.';
+
+  @override
+  String get onbScanTitle => '카드 스캔';
+
+  @override
+  String get onbScanBody => '카메라나 사진으로 새 카드를 추가하세요.';
+
+  @override
+  String get onbForgeTitle => '덱 만들기';
+
+  @override
+  String get onbForgeBody => '가진 카드만으로 완성된 덱을 생성해요.';
+
+  @override
+  String get onbDecksTitle => '내 덱';
+
+  @override
+  String get onbDecksBody => 'Forge에서 저장한 덱이 여기에 나와요.';
+
+  @override
+  String get onbSkip => '건너뛰기';
+
+  @override
+  String get onbNext => '다음';
+
+  @override
+  String get onbGotIt => '확인';
 }

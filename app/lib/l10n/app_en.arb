@@ -104,5 +104,17 @@
   "certCollectorAnon": "ManaForge collector",
   "certAwardedTo": "Awarded to {name}",
   "certOnDate": "on {date}",
-  "certDataBy": "Data by Scryfall"
+  "certDataBy": "Data by Scryfall",
+
+  "onbCollectionTitle": "Your collection",
+  "onbCollectionBody": "All your cards live here, in folders and by set.",
+  "onbScanTitle": "Scan cards",
+  "onbScanBody": "Add new cards with the camera or a photo.",
+  "onbForgeTitle": "Forge decks",
+  "onbForgeBody": "Build complete decks from the cards you already own.",
+  "onbDecksTitle": "Your decks",
+  "onbDecksBody": "Decks you save from Forge show up here.",
+  "onbSkip": "Skip",
+  "onbNext": "Next",
+  "onbGotIt": "Got it"
 }
