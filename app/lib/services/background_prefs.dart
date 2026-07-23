@@ -83,6 +83,26 @@ Color? _colorDe(List<NamedColor> paleta, String? id) {
   return null; // un nombre que no está en la paleta es "el de siempre"
 }
 
+/// Un color a `#RRGGBB` (sin alfa: la transparencia de las tarjetas va aparte).
+String _hex(Color c) {
+  final rgb = c.toARGB32() & 0xFFFFFF;
+  return '#${rgb.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+}
+
+/// `#RRGGBB` (o `#AARRGGBB`) a Color, o null si no es un hex válido. Es un
+/// valor que puede venir de un fichero manipulado, así que se valida.
+Color? _parseHex(String s) {
+  var h = s.trim();
+  if (h.startsWith('#')) h = h.substring(1);
+  if (h.length == 6) h = 'FF$h';
+  // solo dígitos hex: `int.tryParse` colaría un signo ('-FFFFFFF') y pintaría
+  // un color enmascarado en vez de rechazar el fichero manipulado
+  if (!RegExp(r'^[0-9A-Fa-f]{8}$').hasMatch(h)) return null;
+  final v = int.tryParse(h, radix: 16);
+  if (v == null) return null;
+  return Color(v);
+}
+
 /// Fondo elegido, persistido en `background.json`.
 class BackgroundPreference extends ChangeNotifier {
   /// Solo para tests: dónde viven el JSON y la copia de la imagen.
@@ -94,6 +114,10 @@ class BackgroundPreference extends ChangeNotifier {
   double _dim = kDefaultDim;
   String? _cardColorId;
   String? _textColorId;
+  // color a medida (elegido con el selector). Manda sobre el preset: si hay
+  // uno puesto, el `_...ColorId` se deja en null y viceversa.
+  Color? _cardCustom;
+  Color? _textCustom;
   double _cardOpacity = kDefaultCardOpacity;
   Future<void>? _loading;
 
@@ -105,16 +129,26 @@ class BackgroundPreference extends ChangeNotifier {
   /// Cuánto se oscurece (0..1).
   double get dim => _dim;
 
-  /// Nombre del color elegido, o null = el de siempre.
+  /// Nombre del preset elegido, o null = el de siempre o uno a medida.
   String? get cardColorId => _cardColorId;
 
   String? get textColorId => _textColorId;
 
-  /// Color de las tarjetas, null = el del tema.
-  Color? get cardColor => _colorDe(kCardColors, _cardColorId);
+  /// Color de las tarjetas, null = el del tema. El color a medida manda sobre
+  /// el preset.
+  Color? get cardColor => _cardCustom ?? _colorDe(kCardColors, _cardColorId);
 
   /// Color de la letra, null = el del tema.
-  Color? get textColor => _colorDe(kTextColors, _textColorId);
+  Color? get textColor => _textCustom ?? _colorDe(kTextColors, _textColorId);
+
+  /// El color a medida (el del selector), null = no hay o se usa un preset.
+  Color? get cardCustomColor => _cardCustom;
+
+  Color? get textCustomColor => _textCustom;
+
+  bool get cardIsCustom => _cardCustom != null;
+
+  bool get textIsCustom => _textCustom != null;
 
   /// Cuánto tapan las tarjetas al fondo (0..1).
   double get cardOpacity => _cardOpacity;
@@ -166,6 +200,23 @@ class BackgroundPreference extends ChangeNotifier {
       final text = decoded['textColor'];
       if (text is String && kTextColors.any((c) => c.id == text)) {
         _textColorId = text;
+      }
+      // color a medida (hex). Si es válido, manda sobre el preset.
+      final cardHex = decoded['cardColorHex'];
+      if (cardHex is String) {
+        final c = _parseHex(cardHex);
+        if (c != null) {
+          _cardCustom = c;
+          _cardColorId = null;
+        }
+      }
+      final textHex = decoded['textColorHex'];
+      if (textHex is String) {
+        final c = _parseHex(textHex);
+        if (c != null) {
+          _textCustom = c;
+          _textColorId = null;
+        }
       }
       final opacidad = decoded['cardOpacity'];
       if (opacidad is num) {
@@ -243,16 +294,35 @@ class BackgroundPreference extends ChangeNotifier {
   /// ignora (no se guarda un color que luego no se sabría pintar).
   Future<void> setCardColor(String? id) async {
     if (id != null && !kCardColors.any((c) => c.id == id)) return;
-    if (id == _cardColorId) return;
+    if (id == _cardColorId && _cardCustom == null) return;
     _cardColorId = id;
+    _cardCustom = null; // elegir un preset descarta el color a medida
     notifyListeners();
     await _save();
   }
 
   Future<void> setTextColor(String? id) async {
     if (id != null && !kTextColors.any((c) => c.id == id)) return;
-    if (id == _textColorId) return;
+    if (id == _textColorId && _textCustom == null) return;
     _textColorId = id;
+    _textCustom = null;
+    notifyListeners();
+    await _save();
+  }
+
+  /// Un color a medida (del selector) para las tarjetas. Descarta el preset.
+  Future<void> setCardColorCustom(Color color) async {
+    if (_cardCustom == color && _cardColorId == null) return;
+    _cardColorId = null;
+    _cardCustom = color;
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> setTextColorCustom(Color color) async {
+    if (_textCustom == color && _textColorId == null) return;
+    _textColorId = null;
+    _textCustom = color;
     notifyListeners();
     await _save();
   }
@@ -303,6 +373,8 @@ class BackgroundPreference extends ChangeNotifier {
             'dim': _dim,
             if (_cardColorId != null) 'cardColor': _cardColorId,
             if (_textColorId != null) 'textColor': _textColorId,
+            if (_cardCustom != null) 'cardColorHex': _hex(_cardCustom!),
+            if (_textCustom != null) 'textColorHex': _hex(_textCustom!),
             'cardOpacity': _cardOpacity,
           }));
     } catch (_) {
