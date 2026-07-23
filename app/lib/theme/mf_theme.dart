@@ -56,8 +56,13 @@ ThemeData mfThemeSobreFondo(ThemeData base,
   // salta a blanco/negro legible. El aviso al usuario lo da la pantalla de
   // Ajustes; aquí solo garantizamos que nunca se renderiza ilegible.
   final fondoLetra = card ?? base.colorScheme.surface;
+  // la barra inferior NO se pinta con la tarjeta: lleva su propio color
+  // (tabBar*), que no cambia con el fondo. Los iconos de la barra hay que
+  // contrastarlos con ESE color, no con el de la tarjeta.
+  final fondoBarra = base.navigationBarTheme.backgroundColor ?? fondoLetra;
   final safeText = text == null ? null : legibleOn(fondoLetra, text);
   final safeIcon = icon == null ? null : legibleOn(fondoLetra, icon);
+  final safeIconBarra = icon == null ? null : legibleOn(fondoBarra, icon);
   var tema = base.copyWith(
     scaffoldBackgroundColor: Colors.transparent,
     canvasColor: Colors.transparent,
@@ -98,7 +103,7 @@ ThemeData mfThemeSobreFondo(ThemeData base,
     tema = tema.copyWith(
       iconTheme: tema.iconTheme.copyWith(color: safeIcon),
       navigationBarTheme: tema.navigationBarTheme.copyWith(
-        iconTheme: WidgetStatePropertyAll(IconThemeData(color: safeIcon)),
+        iconTheme: WidgetStatePropertyAll(IconThemeData(color: safeIconBarra)),
       ),
     );
   }

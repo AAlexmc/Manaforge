@@ -34,4 +34,21 @@ void main() {
     final tema = mfThemeSobreFondo(base);
     expect(tema.colorScheme.onSurface, base.colorScheme.onSurface);
   });
+
+  test('el icono de la barra se contrasta con el color de la barra, no con la '
+      'tarjeta', () {
+    final barra = base.navigationBarTheme.backgroundColor!; // clara
+    // tarjeta OSCURA + icono claro: sobre la tarjeta el icono claro se lee,
+    // pero sobre la barra (clara) no. Cada uno debe ir a su fondo.
+    final tema = mfThemeSobreFondo(base,
+        card: const Color(0xFF101010), icon: const Color(0xFFF2F0EA));
+    final iconTarjeta = tema.iconTheme.color!;
+    final iconBarra = tema.navigationBarTheme.iconTheme!.resolve({})!.color!;
+    expect(esLegible(iconTarjeta, const Color(0xFF101010)), isTrue,
+        reason: 'sobre la tarjeta oscura');
+    expect(esLegible(iconBarra, barra), isTrue,
+        reason: 'sobre la barra clara');
+    expect(iconTarjeta == iconBarra, isFalse,
+        reason: 'fondos distintos → colores de icono distintos');
+  });
 }
