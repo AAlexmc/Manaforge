@@ -372,7 +372,8 @@ class _HomeShellState extends State<HomeShell> {
           market: _market,
           prices: _prices,
           search: _search,
-          tabIndex: 1),
+          tabIndex: 1,
+          onScan: _abrirEscaner),
       AlbumScreen(
           db: _db,
           collection: _collection,

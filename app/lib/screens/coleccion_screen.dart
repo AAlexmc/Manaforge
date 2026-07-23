@@ -44,6 +44,10 @@ class ColeccionScreen extends StatefulWidget {
   final SearchFocusBus? search;
   final int tabIndex;
 
+  /// Abrir el escáner. Si viene, la colección vacía enseña el botón de
+  /// escanear la primera carta.
+  final VoidCallback? onScan;
+
   const ColeccionScreen({
     super.key,
     required this.db,
@@ -55,6 +59,7 @@ class ColeccionScreen extends StatefulWidget {
     this.prices,
     this.search,
     this.tabIndex = -1,
+    this.onScan,
   });
 
   @override
@@ -354,6 +359,18 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                     Text('${widget.collection.totalCopies} cartas · '
                         '${widget.collection.distinctCards} distintas'
                         '${_total == null ? '' : ' · ${_total!.approximate ? '~' : ''}${_total!.total.toStringAsFixed(2)} €'}'),
+                    if (widget.collection.totalCopies == 0) ...[
+                      const SizedBox(height: 14),
+                      _ColeccionVaciaCta(
+                        onScan: widget.onScan,
+                        onImport: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => ImportCsvScreen(
+                                db: widget.db, collection: widget.collection),
+                          ),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 14),
                     Card(
                       clipBehavior: Clip.antiAlias,
@@ -439,6 +456,56 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
           ],
         );
       },
+    );
+  }
+}
+
+/// Lo que ve alguien que llega a la colección con la base ya descargada pero
+/// sin ninguna carta: en vez de una portada de carpetas vacías, por dónde
+/// empezar (escanear o importar).
+class _ColeccionVaciaCta extends StatelessWidget {
+  final VoidCallback? onScan;
+  final VoidCallback onImport;
+
+  const _ColeccionVaciaCta({required this.onScan, required this.onImport});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Aquí empieza tu colección',
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 6),
+            const Text(
+              'Escanea tus cartas con la cámara o importa un CSV de ManaBox. '
+              'Aparecerán aquí y en el álbum.',
+              style: TextStyle(fontSize: 12.5),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (onScan != null)
+                  FilledButton.icon(
+                    onPressed: onScan,
+                    icon: const Icon(Icons.qr_code_scanner, size: 18),
+                    label: const Text('Escanear mis cartas'),
+                  ),
+                OutlinedButton.icon(
+                  onPressed: onImport,
+                  icon: const Icon(Icons.file_upload_outlined, size: 18),
+                  label: const Text('Importar CSV'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
