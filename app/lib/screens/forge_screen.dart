@@ -33,11 +33,23 @@ class ForgeScreen extends StatefulWidget {
   final CollectionStore collection;
   final DeckStore decks;
 
+  /// Keys para que un tour pueda señalar los mandos de Forge.
+  final Key? basicasKey;
+  final Key? expansionesKey;
+  final Key? queNoTengoKey;
+  final Key? forjarKey;
+  final Key? modoTestKey;
+
   const ForgeScreen(
       {super.key,
       required this.db,
       required this.collection,
-      required this.decks});
+      required this.decks,
+      this.basicasKey,
+      this.expansionesKey,
+      this.queNoTengoKey,
+      this.forjarKey,
+      this.modoTestKey});
 
   @override
   State<ForgeScreen> createState() => _ForgeScreenState();
@@ -387,256 +399,278 @@ class _ForgeScreenState extends State<ForgeScreen> {
   Widget _buildSelector() {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: ListView(
-        children: [
-          _header(),
-          const SizedBox(height: 8),
-          const Text(
-              'Mazos completos y jugables con las cartas que ya tienes. '
-              'Sin comprar nada.'),
-          const SizedBox(height: 20),
-          SwitchListTile(
-            value: _assumeBasics,
-            onChanged: (v) => setState(() => _assumeBasics = v),
-            title: const Text('Cuento con tierras básicas sueltas'),
-            subtitle: const Text(
-                'Casi todo el mundo tiene básicas de mazos de inicio; '
-                'desactívalo para usar SOLO las básicas de tu colección.'),
-          ),
-          const SizedBox(height: 12),
-          Text('Formato de juego',
-              style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              for (final f in const [
-                ('casual', 'Casual 60'),
-                ('standard', 'Standard'),
-                ('pioneer', 'Pioneer'),
-                ('modern', 'Modern'),
-                ('pauper', 'Pauper'),
-                ('legacy', 'Legacy'),
-                ('commander', 'Commander'),
-              ])
-                ChoiceChip(
-                  visualDensity: VisualDensity.compact,
-                  label: Text(f.$2),
-                  selected: _format == f.$1,
-                  onSelected: (_) => setState(() => _format = f.$1),
+      // Column dentro de un scroll, y no ListView: la lista perezosa no
+      // construye lo que queda fuera de la vista, y entonces un tour no puede
+      // medir los mandos de abajo (Modo Test) para señalarlos. Son ~20 hijos
+      // fijos: montarlos todos no cuesta nada.
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _header(),
+            const SizedBox(height: 8),
+            const Text(
+                'Mazos completos y jugables con las cartas que ya tienes. '
+                'Sin comprar nada.'),
+            const SizedBox(height: 20),
+            KeyedSubtree(
+              key: widget.basicasKey,
+              child: SwitchListTile(
+                value: _assumeBasics,
+                onChanged: (v) => setState(() => _assumeBasics = v),
+                title: const Text('Cuento con tierras básicas sueltas'),
+                subtitle: const Text(
+                    'Casi todo el mundo tiene básicas de mazos de inicio; '
+                    'desactívalo para usar SOLO las básicas de tu colección.'),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text('Formato de juego',
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final f in const [
+                  ('casual', 'Casual 60'),
+                  ('standard', 'Standard'),
+                  ('pioneer', 'Pioneer'),
+                  ('modern', 'Modern'),
+                  ('pauper', 'Pauper'),
+                  ('legacy', 'Legacy'),
+                  ('commander', 'Commander'),
+                ])
+                  ChoiceChip(
+                    visualDensity: VisualDensity.compact,
+                    label: Text(f.$2),
+                    selected: _format == f.$1,
+                    onSelected: (_) => setState(() => _format = f.$1),
+                  ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                _format == 'commander'
+                    ? '100 cartas · singleton · comandante legendario de tu '
+                        'colección · identidad de color respetada.'
+                    : _format == 'casual'
+                        ? '60 cartas, sin restricción de legalidad: todo vale.'
+                        : '60 cartas usando SOLO tus cartas legales en '
+                            '${_format[0].toUpperCase()}${_format.substring(1)}.',
+                style: const TextStyle(fontSize: 11.5),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text('¿De dónde salen las cartas?',
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                KeyedSubtree(
+                  key: widget.expansionesKey,
+                  child: ActionChip(
+                    visualDensity: VisualDensity.compact,
+                    avatar: const Icon(Icons.collections_bookmark_outlined,
+                        size: 18),
+                    label: Text(_selSets.isEmpty
+                        ? 'Elegir expansiones'
+                        : 'Cambiar expansiones'),
+                    onPressed: _pickSets,
+                  ),
                 ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              _format == 'commander'
-                  ? '100 cartas · singleton · comandante legendario de tu '
-                      'colección · identidad de color respetada.'
-                  : _format == 'casual'
-                      ? '60 cartas, sin restricción de legalidad: todo vale.'
-                      : '60 cartas usando SOLO tus cartas legales en '
-                          '${_format[0].toUpperCase()}${_format.substring(1)}.',
+                for (final code in _selSets)
+                  InputChip(
+                    visualDensity: VisualDensity.compact,
+                    label: Text(_setLabel(code)),
+                    onDeleted: () => setState(() => _selSets.remove(code)),
+                  ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                _selSets.isEmpty
+                    ? (_includeMissing
+                        ? 'Elige al menos una expansión: sin filtro serían las '
+                            '~30.000 cartas de Magic.'
+                        : 'Sin elegir expansiones, Forge usa toda tu colección.')
+                    : (_includeMissing
+                        ? 'Cartas de ${_selSets.length} expansión'
+                            '${_selSets.length == 1 ? '' : 'es'}, tengas o no.'
+                        : 'Solo tus cartas de ${_selSets.length} expansión'
+                            '${_selSets.length == 1 ? '' : 'es'} — no toda la '
+                            'colección.'),
+                style: TextStyle(
+                    fontSize: 11.5,
+                    color: _canForge ? null : MFColors.warning),
+              ),
+            ),
+            if (!widget.collection.hasPrintingData &&
+                widget.collection.totalCopies > 0 &&
+                !_includeMissing)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  'Tu colección no guarda la edición de cada carta, así que '
+                  'filtrar por expansión dejaría fuera casi todo. Reimporta '
+                  'tu CSV con "Sustituir" y vuelve.',
+                  style: TextStyle(fontSize: 11.5, color: MFColors.warning),
+                ),
+              ),
+            KeyedSubtree(
+              key: widget.queNoTengoKey,
+              child: SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                value: _includeMissing,
+                onChanged: (v) => setState(() => _includeMissing = v),
+                title: const Text('Incluir cartas que no tengo'),
+                subtitle: const Text(
+                    'Forge deja de limitarse a tu colección y usa TODO lo '
+                    'impreso en esas expansiones; luego te dice cuántas '
+                    'cartas te faltan y cuánto costarían.'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text('A tu gusto (opcional)',
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                for (final c in const ['W', 'U', 'B', 'R', 'G'])
+                  FilterChip(
+                    visualDensity: VisualDensity.compact,
+                    avatar: CircleAvatar(
+                        radius: 6, backgroundColor: manaColors[c]!),
+                    label: Text(c),
+                    selected: _selColors.contains(c),
+                    onSelected: (v) => setState(
+                        () => v ? _selColors.add(c) : _selColors.remove(c)),
+                  ),
+                const SizedBox(width: 6),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String?>(
+                    value: _selArchetype,
+                    hint: const Text('Arquetipo: auto',
+                        style: TextStyle(fontSize: 12.5)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 12.5),
+                    borderRadius: BorderRadius.circular(10),
+                    items: const [
+                      DropdownMenuItem(
+                          value: null, child: Text('Arquetipo: auto')),
+                      DropdownMenuItem(value: 'aggro', child: Text('Aggro')),
+                      DropdownMenuItem(value: 'tempo', child: Text('Tempo')),
+                      DropdownMenuItem(
+                          value: 'midrange', child: Text('Midrange')),
+                      DropdownMenuItem(
+                          value: 'control', child: Text('Control')),
+                    ],
+                    onChanged: (v) => setState(() => _selArchetype = v),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const Text('Precio por carta:',
+                    style: TextStyle(fontSize: 12.5)),
+                _numField(_minPriceCtrl, 'mín €'),
+                const Text('—', style: TextStyle(fontSize: 12.5)),
+                _numField(_maxPriceCtrl, 'máx €'),
+                const SizedBox(width: 12),
+                const Text('Año de la carta:',
+                    style: TextStyle(fontSize: 12.5)),
+                _numField(_yearFromCtrl, 'desde', enabled: _yearSupported),
+                const Text('—', style: TextStyle(fontSize: 12.5)),
+                _numField(_yearToCtrl, 'hasta', enabled: _yearSupported),
+              ],
+            ),
+            if (!_yearSupported)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  'El filtro por año necesita la base de datos actualizada: '
+                  'Ajustes → Volver a descargar la base de datos.',
+                  style: TextStyle(fontSize: 11.5, color: MFColors.warning),
+                ),
+              ),
+            const SizedBox(height: 8),
+            Text(
+              _selColors.isEmpty
+                  ? 'Sin elegir colores, Forge prueba todas las combinaciones.'
+                  : 'Solo mazos ${_selColors.join("")} (y sus combinaciones).',
               style: const TextStyle(fontSize: 11.5),
             ),
-          ),
-          const SizedBox(height: 14),
-          Text('¿De dónde salen las cartas?',
-              style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 6),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              ActionChip(
-                visualDensity: VisualDensity.compact,
-                avatar: const Icon(Icons.collections_bookmark_outlined,
-                    size: 18),
-                label: Text(_selSets.isEmpty
-                    ? 'Elegir expansiones'
-                    : 'Cambiar expansiones'),
-                onPressed: _pickSets,
-              ),
-              for (final code in _selSets)
-                InputChip(
-                  visualDensity: VisualDensity.compact,
-                  label: Text(_setLabel(code)),
-                  onDeleted: () => setState(() => _selSets.remove(code)),
-                ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              _selSets.isEmpty
-                  ? (_includeMissing
-                      ? 'Elige al menos una expansión: sin filtro serían las '
-                          '~30.000 cartas de Magic.'
-                      : 'Sin elegir expansiones, Forge usa toda tu colección.')
-                  : (_includeMissing
-                      ? 'Cartas de ${_selSets.length} expansión'
-                          '${_selSets.length == 1 ? '' : 'es'}, tengas o no.'
-                      : 'Solo tus cartas de ${_selSets.length} expansión'
-                          '${_selSets.length == 1 ? '' : 'es'} — no toda la '
-                          'colección.'),
-              style: TextStyle(
-                  fontSize: 11.5,
-                  color: _canForge ? null : MFColors.warning),
-            ),
-          ),
-          if (!widget.collection.hasPrintingData &&
-              widget.collection.totalCopies > 0 &&
-              !_includeMissing)
-            const Padding(
-              padding: EdgeInsets.only(top: 4),
-              child: Text(
-                'Tu colección no guarda la edición de cada carta, así que '
-                'filtrar por expansión dejaría fuera casi todo. Reimporta '
-                'tu CSV con "Sustituir" y vuelve.',
-                style: TextStyle(fontSize: 11.5, color: MFColors.warning),
+            const SizedBox(height: 8),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(_includeMissing
+                    ? 'Este mazo puede llevar cartas que NO tienes: cada '
+                        'propuesta dice cuántas te faltan y lo que costarían '
+                        '(precio de Cardmarket).'
+                    : 'Forge solo usa tus ${widget.collection.totalCopies} '
+                        'cartas. Nunca inventa copias que no tienes.'),
               ),
             ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            value: _includeMissing,
-            onChanged: (v) => setState(() => _includeMissing = v),
-            title: const Text('Incluir cartas que no tengo'),
-            subtitle: const Text(
-                'Forge deja de limitarse a tu colección y usa TODO lo '
-                'impreso en esas expansiones; luego te dice cuántas cartas '
-                'te faltan y cuánto costarían.'),
-          ),
-          const SizedBox(height: 8),
-          Text('A tu gusto (opcional)',
-              style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              for (final c in const ['W', 'U', 'B', 'R', 'G'])
-                FilterChip(
-                  visualDensity: VisualDensity.compact,
-                  avatar: CircleAvatar(
-                      radius: 6, backgroundColor: manaColors[c]!),
-                  label: Text(c),
-                  selected: _selColors.contains(c),
-                  onSelected: (v) => setState(
-                      () => v ? _selColors.add(c) : _selColors.remove(c)),
-                ),
-              const SizedBox(width: 6),
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String?>(
-                  value: _selArchetype,
-                  hint: const Text('Arquetipo: auto',
-                      style: TextStyle(fontSize: 12.5)),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(fontSize: 12.5),
-                  borderRadius: BorderRadius.circular(10),
-                  items: const [
-                    DropdownMenuItem(
-                        value: null, child: Text('Arquetipo: auto')),
-                    DropdownMenuItem(value: 'aggro', child: Text('Aggro')),
-                    DropdownMenuItem(value: 'tempo', child: Text('Tempo')),
-                    DropdownMenuItem(
-                        value: 'midrange', child: Text('Midrange')),
-                    DropdownMenuItem(
-                        value: 'control', child: Text('Control')),
-                  ],
-                  onChanged: (v) => setState(() => _selArchetype = v),
+            const SizedBox(height: 20),
+            if (_cantReason != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Card(
+                  color: MFColors.warning.withValues(alpha: 0.12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(_cantReason!),
+                  ),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              const Text('Precio por carta:',
-                  style: TextStyle(fontSize: 12.5)),
-              _numField(_minPriceCtrl, 'mín €'),
-              const Text('—', style: TextStyle(fontSize: 12.5)),
-              _numField(_maxPriceCtrl, 'máx €'),
-              const SizedBox(width: 12),
-              const Text('Año de la carta:',
-                  style: TextStyle(fontSize: 12.5)),
-              _numField(_yearFromCtrl, 'desde', enabled: _yearSupported),
-              const Text('—', style: TextStyle(fontSize: 12.5)),
-              _numField(_yearToCtrl, 'hasta', enabled: _yearSupported),
-            ],
-          ),
-          if (!_yearSupported)
-            const Padding(
-              padding: EdgeInsets.only(top: 4),
-              child: Text(
-                'El filtro por año necesita la base de datos actualizada: '
-                'Ajustes → Volver a descargar la base de datos.',
-                style: TextStyle(fontSize: 11.5, color: MFColors.warning),
-              ),
-            ),
-          const SizedBox(height: 8),
-          Text(
-            _selColors.isEmpty
-                ? 'Sin elegir colores, Forge prueba todas las combinaciones.'
-                : 'Solo mazos ${_selColors.join("")} (y sus combinaciones).',
-            style: const TextStyle(fontSize: 11.5),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Text(_includeMissing
-                  ? 'Este mazo puede llevar cartas que NO tienes: cada '
-                      'propuesta dice cuántas te faltan y lo que costarían '
-                      '(precio de Cardmarket).'
-                  : 'Forge solo usa tus ${widget.collection.totalCopies} '
-                      'cartas. Nunca inventa copias que no tienes.'),
-            ),
-          ),
-          const SizedBox(height: 20),
-          if (_cantReason != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Card(
-                color: MFColors.warning.withValues(alpha: 0.12),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(_cantReason!),
+            KeyedSubtree(
+              key: widget.forjarKey,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: MFColors.forge,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
+                onPressed: _canForge ? _forge : null,
+                icon: const Icon(Icons.auto_awesome),
+                label: Text(_includeMissing
+                    ? 'Forjar mazos (con lo que me falte)'
+                    : 'Forjar mis mazos'),
               ),
             ),
-          FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: MFColors.forge,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-            onPressed: _canForge ? _forge : null,
-            icon: const Icon(Icons.auto_awesome),
-            label: Text(_includeMissing
-                ? 'Forjar mazos (con lo que me falte)'
-                : 'Forjar mis mazos'),
-          ),
-          const SizedBox(height: 8),
-          OutlinedButton.icon(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => TestScreen(
-                    db: widget.db,
-                    collection: widget.collection,
-                    decks: widget.decks),
+            const SizedBox(height: 8),
+            KeyedSubtree(
+              key: widget.modoTestKey,
+              child: OutlinedButton.icon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => TestScreen(
+                        db: widget.db,
+                        collection: widget.collection,
+                        decks: widget.decks),
+                  ),
+                ),
+                icon: const Icon(Icons.sports_kabaddi, size: 18),
+                label: const Text('Modo Test: vence a un mazo del meta'),
               ),
             ),
-            icon: const Icon(Icons.sports_kabaddi, size: 18),
-            label: const Text('Modo Test: vence a un mazo del meta'),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

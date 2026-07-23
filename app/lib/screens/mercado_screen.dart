@@ -35,13 +35,22 @@ class MercadoScreen extends StatefulWidget {
   /// Mercado elegido (se recuerda entre arranques).
   final MarketPreference market;
 
+  /// Keys para que un tour pueda señalar el selector de mercado, la wishlist
+  /// y el buscador (donde se pone la alerta de precio).
+  final Key? selectorKey;
+  final Key? wishlistKey;
+  final Key? buscarKey;
+
   const MercadoScreen(
       {super.key,
       required this.db,
       required this.collection,
       required this.wishlist,
       required this.prices,
-      required this.market});
+      required this.market,
+      this.selectorKey,
+      this.wishlistKey,
+      this.buscarKey});
 
   @override
   State<MercadoScreen> createState() => _MercadoScreenState();
@@ -520,6 +529,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
+          // margen generoso de construcción: la lista sigue siendo perezosa
+          // (la wishlist de abajo puede ser larga), pero los mandos que
+          // señala el tour —selector, wishlist y buscador— se montan aunque
+          // queden fuera de la vista, que es lo que hace falta para medirlos.
+          cacheExtent: 1200,
           children: [
             Row(
               children: [
@@ -528,14 +542,18 @@ class _MercadoScreenState extends State<MercadoScreen> {
                 Text('Mercado',
                     style: Theme.of(context).textTheme.headlineMedium),
                 const Spacer(),
-                _wishlistButton(),
+                KeyedSubtree(
+                    key: widget.wishlistKey, child: _wishlistButton()),
               ],
             ),
             const SizedBox(height: 8),
             // elegir mercado: cambia el precio de cada carta y su gráfica
-            MarketPicker(
-                preference: widget.market,
-                available: widget.prices.markets),
+            KeyedSubtree(
+              key: widget.selectorKey,
+              child: MarketPicker(
+                  preference: widget.market,
+                  available: widget.prices.markets),
+            ),
             MarketNote(market: _market),
             const SizedBox(height: 10),
             Card(
@@ -679,14 +697,17 @@ class _MercadoScreenState extends State<MercadoScreen> {
               ),
             ],
             const SizedBox(height: 14),
-            TextField(
-              controller: _searchCtrl,
-              onChanged: _search,
-              decoration: InputDecoration(
-                hintText: 'Busca el precio de cualquier carta…',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14)),
+            KeyedSubtree(
+              key: widget.buscarKey,
+              child: TextField(
+                controller: _searchCtrl,
+                onChanged: _search,
+                decoration: InputDecoration(
+                  hintText: 'Busca el precio de cualquier carta…',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                ),
               ),
             ),
             if (_results.isNotEmpty) ...[

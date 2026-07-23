@@ -347,4 +347,93 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tourSettingsName => 'Personalizar la app';
+
+  @override
+  String get tourFullName => 'Vuelta completa por la app';
+
+  @override
+  String get tourCollectionName => 'Tu colección y las carpetas';
+
+  @override
+  String get tourForgeName => 'Forjar un mazo';
+
+  @override
+  String get tourMarketName => 'Mercado, wishlist y alertas';
+
+  @override
+  String get onbAllCardsTitle => 'Todas las cartas';
+
+  @override
+  String get onbAllCardsBody =>
+      'Aquí está tu colección entera: buscar, filtrar y ordenar.';
+
+  @override
+  String get onbFoldersTitle => 'Carpetas';
+
+  @override
+  String get onbFoldersBody =>
+      'Las carpetas son etiquetas: agrupan lo que quieras y una carta puede estar en varias. Con «Nueva» creas la primera.';
+
+  @override
+  String get onbAlbumMineTitle => 'El álbum por expansiones';
+
+  @override
+  String get onbAlbumMineBody =>
+      'Cada expansión con sus huecos. Con este filtro ves solo las expansiones donde ya tienes cartas.';
+
+  @override
+  String get onbForgeBasicsTitle => 'Tierras básicas';
+
+  @override
+  String get onbForgeBasicsBody =>
+      'Si tienes básicas sueltas por casa, déjalo puesto: Forge contará con ellas. Quítalo para usar solo las de tu colección.';
+
+  @override
+  String get onbForgeSetsTitle => 'Expansiones';
+
+  @override
+  String get onbForgeSetsBody =>
+      'Acota de dónde salen las cartas. Sin elegir ninguna, Forge usa toda tu colección.';
+
+  @override
+  String get onbForgeMissingTitle => 'Cartas que no tengo';
+
+  @override
+  String get onbForgeMissingBody =>
+      'Al activarlo, Forge también propone cartas que te faltan y te dice cuántas son y cuánto costarían.';
+
+  @override
+  String get onbForgeGoTitle => 'Forjar';
+
+  @override
+  String get onbForgeGoBody =>
+      'Este botón hace los mazos. Con muchas expansiones tarda unos segundos.';
+
+  @override
+  String get onbForgeTestTitle => 'Modo Test';
+
+  @override
+  String get onbForgeTestBody =>
+      'Mide tu mazo contra uno del meta y te dice qué le falta para ganarle.';
+
+  @override
+  String get onbMarketPickTitle => 'Elegir mercado';
+
+  @override
+  String get onbMarketPickBody =>
+      'Cardmarket o TCGplayer: cambia el precio de cada carta y su gráfica.';
+
+  @override
+  String get onbWishlistTitle => 'Wishlist';
+
+  @override
+  String get onbWishlistBody =>
+      'Las cartas que quieres. El contador se pone verde cuando alguna llega a tu precio.';
+
+  @override
+  String get onbPriceAlertTitle => 'Alerta de precio';
+
+  @override
+  String get onbPriceAlertBody =>
+      'Busca una carta, dale al marcador para meterla en la wishlist y ponle un precio objetivo: la app te avisa cuando baje.';
 }

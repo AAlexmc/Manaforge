@@ -48,6 +48,10 @@ class ColeccionScreen extends StatefulWidget {
   /// escanear la primera carta.
   final VoidCallback? onScan;
 
+  /// Keys para que un tour pueda señalar "Todas las cartas" y las carpetas.
+  final Key? todasKey;
+  final Key? carpetasKey;
+
   const ColeccionScreen({
     super.key,
     required this.db,
@@ -60,6 +64,8 @@ class ColeccionScreen extends StatefulWidget {
     this.search,
     this.tabIndex = -1,
     this.onScan,
+    this.todasKey,
+    this.carpetasKey,
   });
 
   @override
@@ -372,33 +378,39 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
                       ),
                     ],
                     const SizedBox(height: 14),
-                    Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: ListTile(
-                        onTap: _openAllCards,
-                        leading: const Icon(Icons.style_outlined),
-                        title: const Text('Todas las cartas'),
-                        subtitle: Text(
-                            '${widget.collection.distinctCards} distintas · '
-                            'buscar, filtrar y ordenar'),
-                        trailing: const Icon(Icons.chevron_right),
+                    KeyedSubtree(
+                      key: widget.todasKey,
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: ListTile(
+                          onTap: _openAllCards,
+                          leading: const Icon(Icons.style_outlined),
+                          title: const Text('Todas las cartas'),
+                          subtitle: Text(
+                              '${widget.collection.distinctCards} distintas · '
+                              'buscar, filtrar y ordenar'),
+                          trailing: const Icon(Icons.chevron_right),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('Carpetas',
-                              style:
-                                  Theme.of(context).textTheme.titleMedium),
-                        ),
-                        TextButton.icon(
-                          onPressed: _newFolder,
-                          icon: const Icon(Icons.create_new_folder_outlined,
-                              size: 18),
-                          label: const Text('Nueva'),
-                        ),
-                      ],
+                    KeyedSubtree(
+                      key: widget.carpetasKey,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text('Carpetas',
+                                style:
+                                    Theme.of(context).textTheme.titleMedium),
+                          ),
+                          TextButton.icon(
+                            onPressed: _newFolder,
+                            icon: const Icon(Icons.create_new_folder_outlined,
+                                size: 18),
+                            label: const Text('Nueva'),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

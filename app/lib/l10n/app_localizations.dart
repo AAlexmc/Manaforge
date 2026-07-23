@@ -707,6 +707,162 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Personalizar la app'**
   String get tourSettingsName;
+
+  /// No description provided for @tourFullName.
+  ///
+  /// In es, this message translates to:
+  /// **'Vuelta completa por la app'**
+  String get tourFullName;
+
+  /// No description provided for @tourCollectionName.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu colección y las carpetas'**
+  String get tourCollectionName;
+
+  /// No description provided for @tourForgeName.
+  ///
+  /// In es, this message translates to:
+  /// **'Forjar un mazo'**
+  String get tourForgeName;
+
+  /// No description provided for @tourMarketName.
+  ///
+  /// In es, this message translates to:
+  /// **'Mercado, wishlist y alertas'**
+  String get tourMarketName;
+
+  /// No description provided for @onbAllCardsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas las cartas'**
+  String get onbAllCardsTitle;
+
+  /// No description provided for @onbAllCardsBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí está tu colección entera: buscar, filtrar y ordenar.'**
+  String get onbAllCardsBody;
+
+  /// No description provided for @onbFoldersTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpetas'**
+  String get onbFoldersTitle;
+
+  /// No description provided for @onbFoldersBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Las carpetas son etiquetas: agrupan lo que quieras y una carta puede estar en varias. Con «Nueva» creas la primera.'**
+  String get onbFoldersBody;
+
+  /// No description provided for @onbAlbumMineTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'El álbum por expansiones'**
+  String get onbAlbumMineTitle;
+
+  /// No description provided for @onbAlbumMineBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Cada expansión con sus huecos. Con este filtro ves solo las expansiones donde ya tienes cartas.'**
+  String get onbAlbumMineBody;
+
+  /// No description provided for @onbForgeBasicsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tierras básicas'**
+  String get onbForgeBasicsTitle;
+
+  /// No description provided for @onbForgeBasicsBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Si tienes básicas sueltas por casa, déjalo puesto: Forge contará con ellas. Quítalo para usar solo las de tu colección.'**
+  String get onbForgeBasicsBody;
+
+  /// No description provided for @onbForgeSetsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Expansiones'**
+  String get onbForgeSetsTitle;
+
+  /// No description provided for @onbForgeSetsBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Acota de dónde salen las cartas. Sin elegir ninguna, Forge usa toda tu colección.'**
+  String get onbForgeSetsBody;
+
+  /// No description provided for @onbForgeMissingTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cartas que no tengo'**
+  String get onbForgeMissingTitle;
+
+  /// No description provided for @onbForgeMissingBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Al activarlo, Forge también propone cartas que te faltan y te dice cuántas son y cuánto costarían.'**
+  String get onbForgeMissingBody;
+
+  /// No description provided for @onbForgeGoTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Forjar'**
+  String get onbForgeGoTitle;
+
+  /// No description provided for @onbForgeGoBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Este botón hace los mazos. Con muchas expansiones tarda unos segundos.'**
+  String get onbForgeGoBody;
+
+  /// No description provided for @onbForgeTestTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo Test'**
+  String get onbForgeTestTitle;
+
+  /// No description provided for @onbForgeTestBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Mide tu mazo contra uno del meta y te dice qué le falta para ganarle.'**
+  String get onbForgeTestBody;
+
+  /// No description provided for @onbMarketPickTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir mercado'**
+  String get onbMarketPickTitle;
+
+  /// No description provided for @onbMarketPickBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Cardmarket o TCGplayer: cambia el precio de cada carta y su gráfica.'**
+  String get onbMarketPickBody;
+
+  /// No description provided for @onbWishlistTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Wishlist'**
+  String get onbWishlistTitle;
+
+  /// No description provided for @onbWishlistBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Las cartas que quieres. El contador se pone verde cuando alguna llega a tu precio.'**
+  String get onbWishlistBody;
+
+  /// No description provided for @onbPriceAlertTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Alerta de precio'**
+  String get onbPriceAlertTitle;
+
+  /// No description provided for @onbPriceAlertBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca una carta, dale al marcador para meterla en la wishlist y ponle un precio objetivo: la app te avisa cuando baje.'**
+  String get onbPriceAlertBody;
 }
 
 class _AppLocalizationsDelegate
