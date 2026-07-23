@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'contrast.dart';
+
 /// Tokens de color del DesignSystem (DesignSystem/ManaForgeTokens.swift).
 /// Cualquier cambio debe hacerse primero en el handoff y replicarse aquí.
 class MFColors {
@@ -49,6 +51,13 @@ ThemeData mfThemeSobreFondo(ThemeData base,
     double cardOpacity = 1}) {
   final fondoTarjeta = (card ?? base.colorScheme.surface)
       .withValues(alpha: cardOpacity.clamp(0, 1));
+  // Red de seguridad: la letra y los iconos van SOBRE la tarjeta, así que si
+  // el color a medida no se lee (p. ej. letra clara sobre tarjeta clara)
+  // salta a blanco/negro legible. El aviso al usuario lo da la pantalla de
+  // Ajustes; aquí solo garantizamos que nunca se renderiza ilegible.
+  final fondoLetra = card ?? base.colorScheme.surface;
+  final safeText = text == null ? null : legibleOn(fondoLetra, text);
+  final safeIcon = icon == null ? null : legibleOn(fondoLetra, icon);
   var tema = base.copyWith(
     scaffoldBackgroundColor: Colors.transparent,
     canvasColor: Colors.transparent,
@@ -61,11 +70,12 @@ ThemeData mfThemeSobreFondo(ThemeData base,
     tema = tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(surface: card));
   }
-  if (text != null) {
+  if (safeText != null) {
     tema = tema.copyWith(
-      colorScheme: tema.colorScheme.copyWith(onSurface: text),
-      textTheme: tema.textTheme.apply(bodyColor: text, displayColor: text),
-      iconTheme: tema.iconTheme.copyWith(color: text),
+      colorScheme: tema.colorScheme.copyWith(onSurface: safeText),
+      textTheme:
+          tema.textTheme.apply(bodyColor: safeText, displayColor: safeText),
+      iconTheme: tema.iconTheme.copyWith(color: safeText),
     );
   }
   // las pestañas (chips): el color elegido tiñe la seleccionada y su borde
@@ -84,11 +94,11 @@ ThemeData mfThemeSobreFondo(ThemeData base,
   // los iconos. Va DESPUÉS de la letra para que gane sobre el iconTheme que
   // pone el color de letra. Los iconos de marca (Forge, Escanear) llevan su
   // color a mano en el widget, así que no los toca.
-  if (icon != null) {
+  if (safeIcon != null) {
     tema = tema.copyWith(
-      iconTheme: tema.iconTheme.copyWith(color: icon),
+      iconTheme: tema.iconTheme.copyWith(color: safeIcon),
       navigationBarTheme: tema.navigationBarTheme.copyWith(
-        iconTheme: WidgetStatePropertyAll(IconThemeData(color: icon)),
+        iconTheme: WidgetStatePropertyAll(IconThemeData(color: safeIcon)),
       ),
     );
   }

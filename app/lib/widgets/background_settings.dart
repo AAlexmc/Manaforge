@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/t.dart';
 import '../services/background_prefs.dart';
 import '../services/safe_input.dart';
+import '../theme/contrast.dart';
 
 class BackgroundSettingsCard extends StatefulWidget {
   final BackgroundPreference prefs;
@@ -46,6 +47,22 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('No pude usar esa imagen: $e')));
       }
+    }
+  }
+
+  /// Pone la letra a medida y, si queda con poco contraste sobre la tarjeta,
+  /// avisa: el tema la ajustará sola a un color legible (no la deja ilegible).
+  Future<void> _ponerLetra(
+      BuildContext context, BackgroundPreference prefs, Color c) async {
+    await prefs.setTextColorCustom(c);
+    if (!context.mounted) return;
+    final fondo = prefs.cardColor ?? Theme.of(context).colorScheme.surface;
+    if (!esLegible(c, fondo)) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Poca diferencia con la tarjeta: la letra se ajustará '
+            'sola para que se lea.'),
+        duration: Duration(seconds: 4),
+      ));
     }
   }
 
@@ -133,7 +150,7 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     onElegir: prefs.setTextColor,
                     custom: prefs.textCustomColor,
                     customActivo: prefs.textIsCustom,
-                    onCustom: prefs.setTextColorCustom,
+                    onCustom: (c) => _ponerLetra(context, prefs, c),
                   ),
                   const SizedBox(height: 12),
                   const Text('Color de las pestañas',
