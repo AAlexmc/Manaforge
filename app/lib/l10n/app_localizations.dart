@@ -5701,6 +5701,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'CONFIRMAR'**
   String get bkConfirmWord;
+
+  /// No description provided for @dbErrCards.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo descargar la base de cartas (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.'**
+  String dbErrCards(String codigo);
+
+  /// No description provided for @dbErrHashes.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo descargar la base de huellas (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.'**
+  String dbErrHashes(String codigo);
+
+  /// No description provided for @dbErrPrices.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo descargar el histórico de precios (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.'**
+  String dbErrPrices(String codigo);
+
+  /// No description provided for @ddCardCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} cartas'**
+  String ddCardCount(int n);
+
+  /// No description provided for @ddForgedWith.
+  ///
+  /// In es, this message translates to:
+  /// **'Forjado con ManaForge'**
+  String get ddForgedWith;
 }
 
 class _AppLocalizationsDelegate

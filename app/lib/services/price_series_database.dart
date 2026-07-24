@@ -13,6 +13,7 @@ import 'markets.dart';
 import 'price_history.dart';
 import 'download_check.dart';
 import 'safe_input.dart';
+import 'database_download_error.dart';
 
 /// Histórico REAL de precios de Cardmarket (~90 días por carta), generado
 /// por scripts/build_price_history_db.py a partir de los datos abiertos de
@@ -89,7 +90,9 @@ class PriceSeriesDatabase {
     try {
       final response = await secureSend(client, Uri.parse(releaseUrl));
       if (response.statusCode != 200) {
-        throw HttpException(
+        throw DatabaseDownloadError(
+            DownloadedDatabase.priceHistory,
+            response.statusCode,
             'No se pudo descargar el histórico de precios '
             '(HTTP ${response.statusCode}). ¿Se ha ejecutado ya el workflow '
             '"Build price history database"?');

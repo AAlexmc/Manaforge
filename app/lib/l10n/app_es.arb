@@ -1583,5 +1583,24 @@
   "achRankMaster": "Maestro",
   "achRankPlaneswalker": "Planeswalker",
 
-  "bkConfirmWord": "CONFIRMAR"
+  "bkConfirmWord": "CONFIRMAR",
+
+  "dbErrCards": "No se pudo descargar la base de cartas (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.",
+  "@dbErrCards": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+  "dbErrHashes": "No se pudo descargar la base de huellas (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.",
+  "@dbErrHashes": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+  "dbErrPrices": "No se pudo descargar el histórico de precios (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.",
+  "@dbErrPrices": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+
+  "ddCardCount": "{n} cartas",
+  "@ddCardCount": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "ddForgedWith": "Forjado con ManaForge"
 }

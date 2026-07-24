@@ -3468,4 +3468,27 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get bkConfirmWord => 'CONFIRMAR';
+
+  @override
+  String dbErrCards(String codigo) {
+    return 'No se pudo descargar la base de cartas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+  }
+
+  @override
+  String dbErrHashes(String codigo) {
+    return 'No se pudo descargar la base de huellas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+  }
+
+  @override
+  String dbErrPrices(String codigo) {
+    return 'No se pudo descargar el histórico de precios (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+  }
+
+  @override
+  String ddCardCount(int n) {
+    return '$n cartas';
+  }
+
+  @override
+  String get ddForgedWith => 'Forjado con ManaForge';
 }

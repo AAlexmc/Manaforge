@@ -1579,5 +1579,24 @@
   "achRankMaster": "Master",
   "achRankPlaneswalker": "Planeswalker",
 
-  "bkConfirmWord": "CONFIRM"
+  "bkConfirmWord": "CONFIRM",
+
+  "dbErrCards": "The card database couldn't be downloaded (HTTP {codigo}). Try again in a while.",
+  "@dbErrCards": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+  "dbErrHashes": "The fingerprint database couldn't be downloaded (HTTP {codigo}). Try again in a while.",
+  "@dbErrHashes": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+  "dbErrPrices": "The price history couldn't be downloaded (HTTP {codigo}). Try again in a while.",
+  "@dbErrPrices": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+
+  "ddCardCount": "{n} cards",
+  "@ddCardCount": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "ddForgedWith": "Forged with ManaForge"
 }

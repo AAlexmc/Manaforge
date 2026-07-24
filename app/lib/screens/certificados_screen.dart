@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../services/database_download_error.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/card_database.dart';
@@ -104,7 +105,7 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
           // sin base de datos no hay certificados de expansión, pero el de
           // bienvenida sí se puede dar
           _certs = widget.certificates.sync([if (welcome != null) welcome]);
-          _error = tr(context).ceNeedDb('$e');
+          _error = tr(context).ceNeedDb(downloadErrorText(tr(context), e));
         });
       }
     }

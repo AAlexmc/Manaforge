@@ -3486,4 +3486,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bkConfirmWord => 'CONFIRM';
+
+  @override
+  String dbErrCards(String codigo) {
+    return 'The card database couldn\'t be downloaded (HTTP $codigo). Try again in a while.';
+  }
+
+  @override
+  String dbErrHashes(String codigo) {
+    return 'The fingerprint database couldn\'t be downloaded (HTTP $codigo). Try again in a while.';
+  }
+
+  @override
+  String dbErrPrices(String codigo) {
+    return 'The price history couldn\'t be downloaded (HTTP $codigo). Try again in a while.';
+  }
+
+  @override
+  String ddCardCount(int n) {
+    return '$n cards';
+  }
+
+  @override
+  String get ddForgedWith => 'Forged with ManaForge';
 }
