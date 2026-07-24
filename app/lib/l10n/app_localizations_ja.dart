@@ -469,99 +469,96 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onbAboutBody => '各タブの役割、キーボードショートカット、バージョン、ライセンス。';
 
   @override
-  String get colStartHere => 'Tu colección empieza aquí';
+  String get colStartHere => 'あなたのコレクションはここから始まります';
 
   @override
   String get colNeedDb =>
-      'Primero necesito la base de datos con todas las cartas de Magic (se descarga una vez y luego todo funciona sin internet).';
+      'まずはMagicの全カードが入ったデータベースが必要です（一度ダウンロードすれば、あとはインターネットなしで全部動きます）。';
 
   @override
   String colDownloading(String pct) {
-    return 'Descargando… $pct %';
+    return 'ダウンロード中… $pct %';
   }
 
   @override
-  String get colDownloadDb => 'Descargar base de datos de cartas';
+  String get colDownloadDb => 'カードデータベースをダウンロード';
 
   @override
   String get colScryfall =>
-      'Datos e imágenes por Scryfall · Sin cuentas, sin pagos: todo queda en tu dispositivo.';
+      'データと画像はScryfall提供 · アカウントも支払いも不要、すべてあなたのデバイスの中だけに残ります。';
 
   @override
-  String get colAlbumTooltip => 'Álbum por expansiones';
+  String get colAlbumTooltip => 'エキスパンション別アルバム';
 
   @override
-  String get colImportTooltip => 'Importar CSV de ManaBox';
+  String get colImportTooltip => 'ManaBoxのCSVをインポート';
 
   @override
   String colValueLine(int copies, int distinct, String valor) {
-    return '$copies cartas · $distinct distintas$valor';
+    return '$copies 枚 · $distinct 種類$valor';
   }
 
   @override
-  String get colAllCards => 'Todas las cartas';
+  String get colAllCards => 'すべてのカード';
 
   @override
   String colAllCardsSub(int distinct) {
-    return '$distinct distintas · buscar, filtrar y ordenar';
+    return '$distinct 種類 · 検索・絞り込み・並べ替え';
   }
 
   @override
-  String get colFolders => 'Carpetas';
+  String get colFolders => 'フォルダ';
 
   @override
-  String get colNewFolder => 'Nueva';
+  String get colNewFolder => '新規';
 
   @override
   String get colNoFolders =>
-      'Aún no tienes carpetas. Sirven para agrupar lo que quieras: \"rares de Aetherdrift\", \"para vender\", \"la caja de arriba\"… Una carta puede estar en varias.';
+      'まだフォルダがありません。好きなようにまとめられます：「Aetherdriftのレア」「売る用」「上の棚の箱」…。1枚のカードを複数のフォルダに入れてもかまいません。';
 
   @override
-  String get colCreateFirstFolder => 'Crear la primera carpeta';
+  String get colCreateFirstFolder => '最初のフォルダを作る';
 
   @override
-  String get colEmptyTitle => 'Aquí empieza tu colección';
+  String get colEmptyTitle => 'ここからコレクションが始まります';
 
   @override
   String get colEmptyBody =>
-      'Escanea tus cartas con la cámara o importa un CSV de ManaBox. Aparecerán aquí y en el álbum.';
+      'カメラでカードをスキャンするか、ManaBoxのCSVをインポートしましょう。こことアルバムに並びます。';
 
   @override
-  String get colImportShort => 'Importar CSV';
+  String get colImportShort => 'CSVをインポート';
 
   @override
   String acForgetTitle(String carta) {
-    return '¿Ya no tienes $carta?';
+    return '$carta はもう持っていませんか？';
   }
 
   @override
-  String get acForgetBody =>
-      'Sale de tu colección y su hueco del álbum vuelve a estar vacío.';
+  String get acForgetBody => 'コレクションから外れて、アルバムの枠もまた空になります。';
 
   @override
   String acForgetFolders(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'También sale de las $n carpetas en las que está.',
-      one: 'También sale de la carpeta en la que está.',
+      other: '入っている $n 個のフォルダからも外れます。',
     );
     return '$_temp0';
   }
 
   @override
-  String get acForgetDecks =>
-      'Los mazos NO la pierden: se queda en la lista y el mazo te avisa de que te falta.';
+  String get acForgetDecks => 'デッキからは消えません：リストには残り、足りないことをデッキが教えてくれます。';
 
   @override
-  String get acCancel => 'Cancelar';
+  String get acCancel => 'キャンセル';
 
   @override
-  String get acForgetConfirm => 'Ya no la tengo';
+  String get acForgetConfirm => 'もう持っていません';
 
   @override
   String acAddedOn(String cuando) {
-    return 'añadida $cuando';
+    return '$cuando に追加';
   }
 
   @override
@@ -569,290 +566,281 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'en $n carpetas',
-      one: 'en 1 carpeta',
+      other: '$n 個のフォルダに',
     );
     return '$_temp0';
   }
 
   @override
-  String get acSearchHint => 'Busca una carta (español o inglés)…';
+  String get acSearchHint => 'カードを検索（スペイン語・英語）…';
 
   @override
   String acFilteredCount(int visibles, int total) {
-    return '$visibles de $total cartas';
+    return '$total 枚中 $visibles 枚';
   }
 
   @override
   String get acMissingFilterData =>
-      ' · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con \"Sustituir\" activado';
+      ' · 古いカードには絞り込み用データがないものがあります：「置き換え」をオンにしてCSVを再インポートしてください';
 
   @override
-  String get acNoneMatch => 'Ninguna carta pasa estos filtros.';
+  String get acNoneMatch => 'この絞り込みに一致するカードはありません。';
 
   @override
-  String get acEmptyHint =>
-      'Busca tu primera carta arriba, o vuelve atrás e importa tu CSV de ManaBox.';
+  String get acEmptyHint => '上で最初のカードを検索するか、戻ってManaBoxのCSVをインポートしましょう。';
 
   @override
-  String get onbHowItWorksBody =>
-      'El resumen de qué hace cada pestaña y los atajos de teclado. Si te pierdes, empieza por aquí.';
+  String get onbHowItWorksBody => '各タブの役割とキーボードショートカットのまとめです。迷ったら、ここから始めましょう。';
 
   @override
   String get onbVersionBody =>
-      'Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.';
+      '今のバージョン、その内容、そしてアプリが1日1回新しいバージョンを確認するかどうか。勝手には更新しません。';
 
   @override
-  String get onbScanSetTitle => 'Set: todas';
+  String get onbScanSetTitle => 'セット：すべて';
 
   @override
   String get onbScanSetBody =>
-      'Si estás abriendo sobres de UNA expansión, fíjala aquí: el escáner deja de dudar entre las diez reimpresiones de la misma carta.';
+      '1つのエキスパンションのパックを開けているなら、ここで固定しましょう：同じカードの10種類の再録の間でスキャナーが迷わなくなります。';
 
   @override
-  String get onbScanModeTitle => 'Rápido o con cuidado';
+  String get onbScanModeTitle => 'スピード優先か、慎重に';
 
   @override
   String get onbScanModeBody =>
-      'En «Rápido» las cartas claras entran solas y las dudosas quedan marcadas para revisar. En «Con cuidado» se para y te pregunta cuál es.';
+      '「スピード優先」でははっきりしたカードは自動で登録され、あやしいものは確認用にマークされます。「慎重に」では手を止めて、どのカードか尋ねます。';
 
   @override
-  String get onbScanPhotoTitle => 'Escanear una foto';
+  String get onbScanPhotoTitle => '写真をスキャン';
 
   @override
   String get onbScanPhotoBody =>
-      '¿Sin cámara, o con las cartas ya fotografiadas? Aquí sueltas una foto —con varias cartas si quieres— y las saca igual.';
+      'カメラがない、あるいはもうカードを撮影済み？ここに写真を放り込めば—何枚写っていても—同じように読み取ります。';
 
   @override
-  String get tourScanName => 'El escáner';
+  String get tourScanName => 'スキャナー';
 
   @override
-  String get albNeedDb =>
-      'El álbum necesita la base de datos de cartas (descárgala en Colección).';
+  String get albNeedDb => 'アルバムにはカードデータベースが必要です（コレクションでダウンロードしてください）。';
 
   @override
-  String get albRetry => 'Reintentar';
+  String get albRetry => 'もう一度';
 
   @override
   String get albApproxMode =>
-      'Álbum en modo aproximado: aún no sé qué EDICIÓN exacta tienes de cada carta. Reimporta tu CSV con \"Sustituir mi colección actual\" activado y el álbum se afinará por ilustraciones.';
+      'アルバムはおおまかモードです：各カードのどの版を持っているのかまだ分かりません。「今のコレクションを置き換える」をオンにしてCSVを再インポートすれば、イラストごとにアルバムがくっきりします。';
 
   @override
-  String get albSearchSet => 'Busca una expansión…';
+  String get albSearchSet => 'エキスパンションを検索…';
 
   @override
-  String get albOnlyMine => 'Con cartas mías';
+  String get albOnlyMine => '持っているカードあり';
 
   @override
-  String get albSortProgress => 'Más completadas';
+  String get albSortProgress => '完成度が高い順';
 
   @override
-  String get albSortNewest => 'Más nuevas';
+  String get albSortNewest => '新しい順';
 
   @override
-  String get albSortOldest => 'Más antiguas';
+  String get albSortOldest => '古い順';
 
   @override
-  String get albSortName => 'Por nombre';
+  String get albSortName => '名前順';
 
   @override
-  String get albYearAll => 'Año: todos';
+  String get albYearAll => '年：すべて';
 
   @override
-  String get albLetterAll => 'Todas';
+  String get albLetterAll => 'すべて';
 
   @override
-  String get albNoSets => 'Ninguna expansión coincide con el filtro.';
+  String get albNoSets => '絞り込みに一致するエキスパンションはありません。';
 
   @override
   String albSetProgress(int owned, int total) {
-    return '$owned/$total cartas';
+    return '$owned/$total 枚';
   }
 
   @override
-  String get albComplete => ' · ✓ ¡completa!';
+  String get albComplete => ' · ✓ コンプリート！';
 
   @override
   String albLoadError(String error) {
-    return 'No pude cargar el set: $error';
+    return 'セットを読み込めませんでした：$error';
   }
 
   @override
   String albSearchIn(String set) {
-    return 'Buscar en $set…';
+    return '$set 内を検索…';
   }
 
   @override
-  String get albOnlyMissing => 'Solo las que faltan';
+  String get albOnlyMissing => '足りないものだけ';
 
   @override
-  String get albWithVariants => 'Con variantes';
+  String get albWithVariants => 'バリエーションを含む';
 
   @override
-  String get albYouHaveItAll => '✓ Lo tienes entero';
+  String get albYouHaveItAll => '✓ すべて揃っています';
 
   @override
   String albMissingCount(int n) {
-    return 'Te faltan $n · ';
+    return 'あと $n 枚 · ';
   }
 
   @override
   String albWithoutPrice(int n) {
-    return ' ($n sin precio)';
+    return '（$n 枚は価格なし）';
   }
 
   @override
   String albVisibleOf(int visibles, int total) {
-    return '$visibles de $total';
+    return '$total 中 $visibles';
   }
 
   @override
-  String get albNoCardsNamed => 'Ninguna carta con ese nombre aquí.';
+  String get albNoCardsNamed => 'その名前のカードはここにはありません。';
 
   @override
-  String get fdNewFolder => 'Nueva carpeta';
+  String get fdNewFolder => '新しいフォルダ';
 
   @override
-  String get fdEditFolder => 'Editar carpeta';
+  String get fdEditFolder => 'フォルダを編集';
 
   @override
-  String get fdName => 'Nombre';
+  String get fdName => '名前';
 
   @override
-  String get fdNameHint => 'Rares de Aetherdrift, Para vender…';
+  String get fdNameHint => 'Aetherdriftのレア、売る用…';
 
   @override
-  String get fdColor => 'Color';
+  String get fdColor => '色';
 
   @override
-  String get fdIcon => 'Icono';
+  String get fdIcon => 'アイコン';
 
   @override
-  String get fdCreate => 'Crear';
+  String get fdCreate => '作成';
 
   @override
-  String get fdSave => 'Guardar';
+  String get fdSave => '保存';
 
   @override
-  String get fdDefaultName => 'Carpeta';
+  String get fdDefaultName => 'フォルダ';
 
   @override
   String fdDeleteTitle(String nombre) {
-    return '¿Borrar \"$nombre\"?';
+    return '「$nombre」を削除しますか？';
   }
 
   @override
-  String get fdDeleteBody =>
-      'Se borra solo la carpeta: las cartas siguen en tu colección.';
+  String get fdDeleteBody => '削除されるのはフォルダだけです：カードはコレクションに残ります。';
 
   @override
-  String get fdDelete => 'Borrar';
+  String get fdDelete => '削除';
 
   @override
-  String get fdGone => 'Esta carpeta ya no existe.';
+  String get fdGone => 'このフォルダはもうありません。';
 
   @override
-  String get fdEditTooltip => 'Editar nombre, color e icono';
+  String get fdEditTooltip => '名前・色・アイコンを編集';
 
   @override
-  String get fdDeleteTooltip => 'Borrar carpeta';
+  String get fdDeleteTooltip => 'フォルダを削除';
 
   @override
-  String get fdAddRemove => 'Añadir o quitar';
+  String get fdAddRemove => '追加・削除';
 
   @override
   String fdCounts(int distintas, int copias) {
-    return '$distintas cartas distintas · $copias copias';
+    return '$distintas 種類 · $copias 枚';
   }
 
   @override
   String fdPassFilter(int n) {
-    return ' · $n pasan el filtro';
+    return ' · $n 枚が絞り込みに一致';
   }
 
   @override
-  String get fdRoughValue => ' · valor orientativo';
+  String get fdRoughValue => ' · おおよその価値';
 
   @override
   String fdMissing(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other:
-          '$n cartas ya no están en tu colección (siguen apuntadas por si vuelven).',
-      one: '1 carta ya no está en tu colección (sigue apuntada por si vuelve).',
+      other: '$n 枚がもうコレクションにありません（戻ってきたときのためにリストには残しています）。',
     );
     return '$_temp0';
   }
 
   @override
-  String get fdRemoveThem => 'Quitarlas';
+  String get fdRemoveThem => '取り除く';
 
   @override
-  String get fdNoneMatch => 'Ninguna carta de la carpeta pasa estos filtros.';
+  String get fdNoneMatch => 'このフォルダには絞り込みに一致するカードがありません。';
 
   @override
-  String get fdEmpty =>
-      'Carpeta vacía. Dale a \"Añadir o quitar\" y marca las cartas que quieres meter.';
+  String get fdEmpty => '空のフォルダです。「追加・削除」を押して、入れたいカードにチェックを入れましょう。';
 
   @override
   String fdCopies(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n copias',
-      one: '1 copia',
+      other: '$n 枚',
     );
     return '$_temp0';
   }
 
   @override
-  String get fdRemoveFromFolder => 'Quitar de la carpeta';
+  String get fdRemoveFromFolder => 'フォルダから外す';
 
   @override
-  String get fpPickCards => 'Elige las cartas';
+  String get fpPickCards => 'カードを選ぶ';
 
   @override
   String fpSaveCount(int n) {
-    return 'Guardar ($n)';
+    return '保存（$n）';
   }
 
   @override
-  String get fpFilterByName => 'Filtra por nombre…';
+  String get fpFilterByName => '名前で絞り込み…';
 
   @override
   String fpVisibleCards(int n) {
-    return '$n cartas a la vista';
+    return '$n 枚を表示中';
   }
 
   @override
-  String get fpSelectAll => 'Marcar todas';
+  String get fpSelectAll => 'すべて選択';
 
   @override
-  String get fpNoneMatch => 'Ninguna carta pasa estos filtros.';
+  String get fpNoneMatch => 'この絞り込みに一致するカードはありません。';
 
   @override
-  String get fgMsgReading => 'Leyendo tu colección…';
+  String get fgMsgReading => 'コレクションを読み込み中…';
 
   @override
-  String get fgMsgCurve => 'Calculando la curva de maná…';
+  String get fgMsgCurve => 'マナカーブを計算中…';
 
   @override
-  String get fgMsgLands => 'Repartiendo tierras…';
+  String get fgMsgLands => '土地を配分中…';
 
   @override
-  String get fgMsgSynergy => 'Buscando sinergias…';
+  String get fgMsgSynergy => 'シナジーを探し中…';
 
   @override
-  String get fgMsgPlan => 'Escribiendo tu plan de juego…';
+  String get fgMsgPlan => 'ゲームプランを作成中…';
 
   @override
   String get fgNeedDbForSets =>
-      'Necesito la base de cartas para listar las expansiones: Ajustes → descargar la base.';
+      'エキスパンションを一覧するにはカードデータベースが必要です：設定 → データベースをダウンロード。';
 
   @override
   String fgDbError(String error) {
-    return 'No pude leer la base de datos de cartas: $error';
+    return 'カードデータベースを読み込めませんでした：$error';
   }
 
   @override
@@ -860,97 +848,92 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: ' en esas $n expansiones',
-      one: ' en esa expansión',
+      other: ' $n 個のエキスパンション内',
     );
     return '$_temp0';
   }
 
   @override
   String fgNoCommander(String donde) {
-    return 'No me sale un Commander legal$donde: hacen falta un comandante legendario y ~62 cartas DISTINTAS dentro de su identidad (es singleton), más básicas suficientes. Prueba otro formato, otras expansiones o amplía la colección.';
+    return 'リーガルなCommanderデッキが組めません$donde：伝説の統率者と、そのカラーアイデンティティ内の約62種類の異なるカード（シングルトンです）、それに十分な基本土地が必要です。別のフォーマットや別のエキスパンションを試すか、コレクションを増やしてみてください。';
   }
 
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
-    return 'Con las cartas de este pool no me sale ningún mazo completo $formato que cumpla mis reglas (tierras suficientes y curva sana)$donde. $consejo Antes que darte un mazo defectuoso, prefiero avisarte.';
+    return 'このプールのカードでは、私のルール（十分な土地と健全なカーブ）を満たす完成した $formato デッキが組めません$donde。$consejo 欠陥のあるデッキを渡すくらいなら、お知らせするほうを選びます。';
   }
 
   @override
-  String get fgOf60 => 'de 60';
+  String get fgOf60 => '60枚';
 
   @override
   String fgLegalIn(String formato) {
-    return 'LEGAL en $formato';
+    return '$formato でリーガル';
   }
 
   @override
-  String get fgTipMoreSets => 'Prueba con más expansiones o quita filtros.';
+  String get fgTipMoreSets => 'もっとエキスパンションを試すか、絞り込みを外してみましょう。';
 
   @override
   String get fgTipMoreCards =>
-      'Añade más cartas — sobre todo de tus colores principales — o marca \"incluir cartas que no tengo\".';
+      'カードをもっと追加するか—特にメインカラーのものを—「持っていないカードも含める」にチェックを入れましょう。';
 
   @override
-  String get fgPitch =>
-      'Mazos completos y jugables con las cartas que ya tienes. Sin comprar nada.';
+  String get fgPitch => '今持っているカードだけで、完成した実戦向けのデッキを。何も買わずに。';
 
   @override
-  String get fgTeaserCount => 'cartas para tu primer mazo';
+  String get fgTeaserCount => '最初のデッキ用のカード';
 
   @override
-  String get fgTeaserMissing => 'Hacer un mazo con cartas que no tengo';
+  String get fgTeaserMissing => '持っていないカードでデッキを組む';
 
   @override
-  String get fgBasics => 'Cuento con tierras básicas sueltas';
+  String get fgBasics => '手持ちの基本土地があるものとして扱う';
 
   @override
   String get fgBasicsSub =>
-      'Casi todo el mundo tiene básicas de mazos de inicio; desactívalo para usar SOLO las básicas de tu colección.';
+      'ほとんどの人はスターターデッキの基本土地を持っています。コレクションにある基本土地だけを使うにはオフにしてください。';
 
   @override
-  String get fgFormat => 'Formato de juego';
+  String get fgFormat => 'ゲームフォーマット';
 
   @override
   String get fgCasual60 => 'Casual 60';
 
   @override
   String get fgCommanderNote =>
-      '100 cartas · singleton · comandante legendario de tu colección · identidad de color respetada.';
+      '100枚 · シングルトン · コレクション内の伝説の統率者 · カラーアイデンティティを遵守。';
 
   @override
-  String get fgCasualNote =>
-      '60 cartas, sin restricción de legalidad: todo vale.';
+  String get fgCasualNote => '60枚、リーガリティ制限なし：何でもありです。';
 
   @override
   String fgFormatNote(String formato) {
-    return '60 cartas usando SOLO tus cartas legales en $formato.';
+    return '$formato でリーガルなあなたのカードだけを使った60枚。';
   }
 
   @override
-  String get fgWhereFrom => '¿De dónde salen las cartas?';
+  String get fgWhereFrom => 'カードはどこから？';
 
   @override
-  String get fgPickSets => 'Elegir expansiones';
+  String get fgPickSets => 'エキスパンションを選ぶ';
 
   @override
-  String get fgChangeSets => 'Cambiar expansiones';
+  String get fgChangeSets => 'エキスパンションを変更';
 
   @override
   String get fgNeedOneSet =>
-      'Elige al menos una expansión: sin filtro serían las ~30.000 cartas de Magic.';
+      'エキスパンションを少なくとも1つ選んでください：絞り込まないとMagicの全カード約30,000枚が対象になります。';
 
   @override
-  String get fgNoSetsNote =>
-      'Sin elegir expansiones, Forge usa toda tu colección.';
+  String get fgNoSetsNote => 'エキスパンションを選ばなければ、Forgeはコレクション全体を使います。';
 
   @override
   String fgFromSetsAny(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Cartas de $n expansiones, tengas o no.',
-      one: 'Cartas de 1 expansión, tengas o no.',
+      other: '$n 個のエキスパンションのカード、持っているかどうかは問わず。',
     );
     return '$_temp0';
   }
@@ -960,84 +943,81 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Solo tus cartas de $n expansiones — no toda la colección.',
-      one: 'Solo tus cartas de 1 expansión — no toda la colección.',
+      other: '$n 個のエキスパンションのあなたのカードだけ—コレクション全体ではありません。',
     );
     return '$_temp0';
   }
 
   @override
   String get fgNoPrintingData =>
-      'Tu colección no guarda la edición de cada carta, así que filtrar por expansión dejaría fuera casi todo. Reimporta tu CSV con \"Sustituir\" y vuelve.';
+      'コレクションには各カードの版が記録されていないため、エキスパンションで絞り込むとほとんどが外れてしまいます。「置き換え」でCSVを再インポートしてから戻ってきてください。';
 
   @override
-  String get fgIncludeMissing => 'Incluir cartas que no tengo';
+  String get fgIncludeMissing => '持っていないカードも含める';
 
   @override
   String get fgIncludeMissingSub =>
-      'Forge deja de limitarse a tu colección y usa TODO lo impreso en esas expansiones; luego te dice cuántas cartas te faltan y cuánto costarían.';
+      'Forgeはコレクションだけに縛られず、それらのエキスパンションで印刷されたすべてを使います。そのあと、何枚足りないか、いくらかかるかを教えてくれます。';
 
   @override
-  String get fgYourTaste => 'A tu gusto (opcional)';
+  String get fgYourTaste => 'お好みで（任意）';
 
   @override
-  String get fgArchetypeAuto => 'Arquetipo: auto';
+  String get fgArchetypeAuto => 'アーキタイプ：自動';
 
   @override
-  String get fgPricePerCard => 'Precio por carta:';
+  String get fgPricePerCard => '1枚あたりの価格：';
 
   @override
-  String get fgMin => 'mín €';
+  String get fgMin => '最小 €';
 
   @override
-  String get fgMax => 'máx €';
+  String get fgMax => '最大 €';
 
   @override
-  String get fgCardYear => 'Año de la carta:';
+  String get fgCardYear => 'カードの年：';
 
   @override
-  String get fgFrom => 'desde';
+  String get fgFrom => 'から';
 
   @override
-  String get fgTo => 'hasta';
+  String get fgTo => 'まで';
 
   @override
-  String get fgYearNeedsDb =>
-      'El filtro por año necesita la base de datos actualizada: Ajustes → Volver a descargar la base de datos.';
+  String get fgYearNeedsDb => '年での絞り込みには最新のデータベースが必要です：設定 → データベースを再ダウンロード。';
 
   @override
-  String get fgNoColorsNote =>
-      'Sin elegir colores, Forge prueba todas las combinaciones.';
+  String get fgNoColorsNote => '色を選ばなければ、Forgeはすべての組み合わせを試します。';
 
   @override
   String fgColorsNote(String colores) {
-    return 'Solo mazos $colores (y sus combinaciones).';
+    return '$colores のデッキ（とその組み合わせ）だけ。';
   }
 
   @override
   String get fgMissingNote =>
-      'Este mazo puede llevar cartas que NO tienes: cada propuesta dice cuántas te faltan y lo que costarían (precio de Cardmarket).';
+      'このデッキには持っていないカードが入ることがあります：各提案に、何枚足りないか、いくらかかるか（Cardmarketの価格）が表示されます。';
 
   @override
   String fgOnlyYoursNote(int n) {
-    return 'Forge solo usa tus $n cartas. Nunca inventa copias que no tienes.';
+    return 'Forgeはあなたの $n 枚だけを使います。持っていない分を勝手に作り出すことはありません。';
   }
 
   @override
-  String get fgForgeMissing => 'Forjar mazos (con lo que me falte)';
+  String get fgForgeMissing => 'デッキを鍛造（足りない分も込みで）';
 
   @override
-  String get fgForgeMine => 'Forjar mis mazos';
+  String get fgForgeMine => '自分のデッキを鍛造';
 
   @override
-  String get fgTestMode => 'Modo Test: vence a un mazo del meta';
+  String get fgTestMode => 'テストモード：メタデッキを倒せ';
 
   @override
-  String get fgOffline => 'Todo se calcula en tu dispositivo, sin internet';
+  String get fgOffline => 'すべてあなたのデバイス上で計算、インターネット不要';
 
   @override
   String fgForgingWith(int n) {
-    return 'Estás forjando con $n cartas: esto tarda unos segundos. La ventana sigue viva.';
+    return '$n 枚で鍛造中です：数秒かかります。ウィンドウは固まっていません。';
   }
 
   @override
@@ -1045,490 +1025,475 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n mazos listos para jugar',
-      one: '1 mazo listo para jugar',
+      other: '$n 個のデッキがプレイ可能です',
     );
     return '$_temp0';
   }
 
   @override
-  String get fgSwipeMissing =>
-      'Con cartas que aún no tienes · desliza para comparar';
+  String get fgSwipeMissing => 'まだ持っていないカード込み · スワイプで比較';
 
   @override
-  String get fgSwipeMine =>
-      'Hechos solo con tus cartas · desliza para comparar';
+  String get fgSwipeMine => 'あなたのカードだけで作成 · スワイプで比較';
 
   @override
-  String get fgHaveAll => '✓ Tienes todas las cartas';
+  String get fgHaveAll => '✓ すべてのカードが揃っています';
 
   @override
   String fgShortfall(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Te faltan $n cartas',
-      one: 'Te falta 1 carta',
+      other: '$n 枚足りません',
     );
     return '$_temp0';
   }
 
   @override
-  String get fgSeeDeck => 'Ver mazo completo';
+  String get fgSeeDeck => 'デッキ全体を見る';
 
   @override
-  String get fgReforge => 'Reforjar';
+  String get fgReforge => '鍛え直す';
 
   @override
   String mkAlertOne(String carta, String precio, String objetivo) {
-    return '🔔 ¡$carta está a $precio (tu objetivo: $objetivo)!';
+    return '🔔 $carta が $precio になりました（目標：$objetivo）！';
   }
 
   @override
   String mkAlertMany(int n) {
-    return '🔔 ¡$n cartas de tu wishlist han caído a su precio objetivo!';
+    return '🔔 ウィッシュリストの $n 枚が目標価格まで下がりました！';
   }
 
   @override
-  String get mkTellMeWhenDrops => 'Avísame cuando baje';
+  String get mkTellMeWhenDrops => '下がったら知らせて';
 
   @override
-  String get mkTargetPrice => 'Precio objetivo';
+  String get mkTargetPrice => '目標価格';
 
   @override
   String mkNow(String precio) {
-    return 'Ahora: $precio';
+    return '現在：$precio';
   }
 
   @override
-  String get mkUpdated => '✓ Precios y cartas actualizados';
+  String get mkUpdated => '✓ 価格とカードを更新しました';
 
   @override
   String mkUpdateFailed(String error) {
-    return 'No pude actualizar: $error';
+    return '更新できませんでした：$error';
   }
 
   @override
-  String get mkHistoryReady =>
-      '✓ Histórico de precios listo: las gráficas ya enseñan los últimos meses';
+  String get mkHistoryReady => '✓ 価格履歴の準備ができました：グラフに直近数か月が表示されます';
 
   @override
   String mkHistoryFailed(String error) {
-    return 'No pude traer el histórico (el que ya tenías sigue intacto): $error';
+    return '履歴を取得できませんでした（今までのものはそのまま残っています）：$error';
   }
 
   @override
   String get mkHistoryLocal =>
-      'Histórico de precios: solo el que ManaForge apunta a diario en tu equipo. Tráete los últimos ~90 días reales de Cardmarket (≈4 MB).';
+      '価格履歴：ManaForgeがこの端末で毎日記録しているものだけです。Cardmarketの実際の直近約90日分（約4 MB）を取り込みましょう。';
 
   @override
   String mkHistoryReal(String desde, String hasta) {
-    return 'Histórico real de Cardmarket del $desde al $hasta, y desde ahí lo que apunta ManaForge.';
+    return '$desde から $hasta までのCardmarketの実際の履歴、そしてそれ以降はManaForgeが記録した分。';
   }
 
   @override
-  String get mkFetchHistory => 'Traer histórico';
+  String get mkFetchHistory => '履歴を取り込む';
 
   @override
-  String get mkCollectionValue => 'Valor de tu colección · Cardmarket';
+  String get mkCollectionValue => 'コレクションの価値 · Cardmarket';
 
   @override
   String mkCardsCount(int n) {
-    return '$n cartas';
+    return '$n 枚';
   }
 
   @override
-  String get mkApproxSuffix => ' · valor orientativo';
+  String get mkApproxSuffix => ' · おおよその価値';
 
   @override
   String mkBulkPrices(String fecha) {
-    return 'Precios Cardmarket del $fecha (Scryfall)';
+    return '$fecha 時点のCardmarket価格（Scryfall）';
   }
 
   @override
   String mkNoData(String error) {
-    return 'Mercado sin datos: descarga la base de datos en Colección. ($error)';
+    return 'マーケットにデータがありません：コレクションでデータベースをダウンロードしてください。（$error）';
   }
 
   @override
   String mkSetsHeader(int n) {
-    return 'EXPANSIONES ($n)';
+    return 'エキスパンション（$n）';
   }
 
   @override
-  String get mkPrevious => 'Anteriores';
+  String get mkPrevious => '前へ';
 
   @override
-  String get mkNext => 'Siguientes';
+  String get mkNext => '次へ';
 
   @override
-  String get mkSearchHint => 'Busca el precio de cualquier carta…';
+  String get mkSearchHint => 'どのカードの価格でも検索…';
 
   @override
-  String get mkRemoveFromWishlist => 'Quitar de la wishlist';
+  String get mkRemoveFromWishlist => 'ウィッシュリストから外す';
 
   @override
-  String get mkAddToWishlist => 'A la wishlist: avísame cuando baje';
+  String get mkAddToWishlist => 'ウィッシュリストへ：下がったら知らせて';
 
   @override
-  String get mkYourWishlist => 'TU WISHLIST';
+  String get mkYourWishlist => 'あなたのウィッシュリスト';
 
   @override
   String mkTargetAtMost(String precio) {
-    return 'objetivo ≤ $precio';
+    return '目標 ≤ $precio';
   }
 
   @override
-  String get mkAtPrice => '¡a precio!';
+  String get mkAtPrice => '目標価格に到達！';
 
   @override
-  String get mkChangeTarget => 'Cambiar precio objetivo';
+  String get mkChangeTarget => '目標価格を変更';
 
   @override
-  String get mkTopCards => 'TUS CARTAS MÁS VALIOSAS';
+  String get mkTopCards => 'あなたの最も価値のあるカード';
 
   @override
-  String get mkImportToSeeValue => 'Importa tu colección para ver su valor.';
+  String get mkImportToSeeValue => 'コレクションをインポートすると価値が表示されます。';
 
   @override
   String mkSetCards(int n) {
-    return ' · $n cartas';
+    return ' · $n 枚';
   }
 
   @override
-  String get wlEmpty =>
-      'Búscalas en Mercado y toca el marcador para que te avise cuando bajen a tu precio.';
+  String get wlEmpty => 'マーケットで探して、しおりをタップすれば、目標価格まで下がったときに知らせます。';
 
   @override
   String wlAtPriceCount(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other:
-          '🔔 $n cartas de tu wishlist están a tu precio objetivo o por debajo.',
-      one: '🔔 1 carta de tu wishlist está a tu precio objetivo o por debajo.',
+      other: '🔔 ウィッシュリストの $n 枚が目標価格以下になっています。',
     );
     return '$_temp0';
   }
 
   @override
-  String get mpMtgoTix => 'Precios de MTGO en tix (cartas digitales)';
+  String get mpMtgoTix => 'MTGOの価格をtixで表示（デジタルカード）';
 
   @override
-  String get mpNoDataYet =>
-      'Sin datos todavía: actualiza el histórico de precios en Mercado';
+  String get mpNoDataYet => 'まだデータがありません：マーケットで価格履歴を更新してください';
 
   @override
   String get mpMtgoNote =>
-      'Precios de MTGO en tix: son cartas digitales, no valen para tasar tu colección de papel. Inicio, carpetas y logros siguen en Cardmarket (€).';
+      'MTGOの価格はtixです：これはデジタルカードなので、紙のコレクションの評価には使えません。ホーム・フォルダ・実績はCardmarket（€）のままです。';
 
   @override
   String mpMarketNote(String mercado, String moneda) {
-    return 'Precios de $mercado en $moneda. Inicio, carpetas y logros siguen valorando en Cardmarket (€): las divisas no se convierten.';
+    return '$mercado の価格を $moneda で表示。ホーム・フォルダ・実績は引き続きCardmarket（€）で評価します：通貨は換算しません。';
   }
 
   @override
-  String get mkUpdate => 'Actualizar';
+  String get mkUpdate => '更新';
 
   @override
-  String get mkApproxValue =>
-      ' · valor aproximado (reimporta con \"Sustituir\" para precios por edición)';
+  String get mkApproxValue => ' · おおよその価値（版ごとの価格には「置き換え」で再インポート）';
 
   @override
-  String get mkExactPrintings => ' · por tus ediciones exactas';
+  String get mkExactPrintings => ' · あなたの正確な版に基づく';
 
   @override
   String mkNowSuffix(String precio) {
-    return ' · ahora $precio';
+    return ' · 現在 $precio';
   }
 
   @override
-  String get wlNothingYet => 'Aún no tienes cartas en la wishlist.';
+  String get wlNothingYet => 'まだウィッシュリストにカードがありません。';
 
   @override
-  String get stDbUpdated => '✓ Base de datos actualizada';
+  String get stDbUpdated => '✓ データベースを更新しました';
 
   @override
   String stUpdateFailed(String error) {
-    return 'No se pudo actualizar: $error';
+    return '更新できませんでした：$error';
   }
 
   @override
-  String get stCardDb => 'Base de datos de cartas';
+  String get stCardDb => 'カードデータベース';
 
   @override
   String get stCardDbWhy =>
-      'Vuelve a descargarla para tener cartas nuevas, precios frescos y las funciones que piden datos recientes (como el filtro por año en Forge).';
+      '新しいカード、最新の価格、そして最近のデータを必要とする機能（Forgeの年での絞り込みなど）のために、もう一度ダウンロードしましょう。';
 
   @override
-  String get stDownloadDbAgain => 'Volver a descargar la base de datos';
+  String get stDownloadDbAgain => 'データベースを再ダウンロード';
 
   @override
-  String get stAppearance => 'Apariencia';
+  String get stAppearance => '外観';
 
   @override
-  String get stData => 'Datos';
+  String get stData => 'データ';
 
   @override
-  String get stTheApp => 'La app';
+  String get stTheApp => 'アプリ';
 
   @override
   String get stCredits =>
-      'Datos e imágenes de cartas por Scryfall. Magic: The Gathering es propiedad de Wizards of the Coast; proyecto de fans al amparo de su Fan Content Policy.';
+      'カードのデータと画像はScryfall提供。Magic: The GatheringはWizards of the Coastの所有物です。これはそのFan Content Policyに基づくファンプロジェクトです。';
 
   @override
-  String get stEditHome => 'Editar inicio';
+  String get stEditHome => 'ホームを編集';
 
   @override
-  String get stEditHomeSub => 'Elige qué secciones se ven y en qué orden';
+  String get stEditHomeSub => '表示するセクションとその順番を選べます';
 
   @override
-  String get ehLevel => 'Tu nivel';
+  String get ehLevel => 'あなたのレベル';
 
   @override
-  String get ehShortcuts => 'Accesos rápidos';
+  String get ehShortcuts => 'クイックアクション';
 
   @override
-  String get ehSummary => 'Resumen de la colección';
+  String get ehSummary => 'コレクションの概要';
 
   @override
-  String get ehRecent => 'Vistas recientemente';
+  String get ehRecent => '最近見たカード';
 
   @override
-  String get ehDecks => 'Tus mazos';
+  String get ehDecks => 'あなたのデッキ';
 
   @override
-  String get ehMeta => 'El meta ahora';
+  String get ehMeta => '今のメタ';
 
   @override
-  String get ehNewSets => 'Expansiones nuevas';
+  String get ehNewSets => '新しいエキスパンション';
 
   @override
-  String get ehGems => 'Tus joyas';
+  String get ehGems => 'あなたの逸品';
 
   @override
   String get ehHelp =>
-      'Arrastra para ordenar y usa el interruptor para elegir qué ves en Inicio. Una sección encendida solo sale si tiene algo que enseñar.';
+      'ドラッグして並べ替え、スイッチでホームに表示するものを選べます。オンにしたセクションは、見せるものがあるときだけ表示されます。';
 
   @override
-  String get ehSection => 'Sección';
+  String get ehSection => 'セクション';
 
   @override
-  String get bkNoData => 'No encuentro tus datos.';
+  String get bkNoData => 'データが見つかりません。';
 
   @override
   String bkSaved(String resumen) {
-    return '✓ Copia guardada · $resumen';
+    return '✓ バックアップを保存しました · $resumen';
   }
 
   @override
   String bkSaveFailed(String error) {
-    return 'No he podido guardarla: $error';
+    return '保存できませんでした：$error';
   }
 
   @override
-  String get bkFileName => 'Copia de ManaForge';
+  String get bkFileName => 'ManaForgeのバックアップ';
 
   @override
   String bkRestoreFailed(String error) {
-    return 'No he podido restaurarla: $error';
+    return '復元できませんでした：$error';
   }
 
   @override
   String bkRestoredNoPrevious(String resumen, String error) {
-    return '✓ Restaurado · $resumen. OJO: no he podido guardar lo que tenías antes ($error).';
+    return '✓ 復元しました · $resumen。注意：以前のデータを保存できませんでした（$error）。';
   }
 
   @override
   String bkRestored(String resumen) {
-    return '✓ Restaurado · $resumen. Lo que tenías antes está guardado en la carpeta backups.';
+    return '✓ 復元しました · $resumen。以前のデータはbackupsフォルダに保存されています。';
   }
 
   @override
-  String get bkRestoring => 'Restaurando tu copia…';
+  String get bkRestoring => 'バックアップを復元中…';
 
   @override
-  String get bkTitle => 'Copia de seguridad';
+  String get bkTitle => 'バックアップ';
 
   @override
   String get bkWhy =>
-      'Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.';
+      'あなたのカード・デッキ・フォルダ・実績は、このコンピュータの中だけにあります。ときどきコピーを保存して、別の場所に置いておきましょう：ドライブでもクラウドでも、お好きなところに。';
 
   @override
-  String get bkSave => 'Guardar copia';
+  String get bkSave => 'バックアップを保存';
 
   @override
-  String get bkRestoreTitle => 'Restaurar una copia';
+  String get bkRestoreTitle => 'バックアップを復元';
 
   @override
   String bkRestoreWarning(String palabra) {
-    return 'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe $palabra: así no se restaura nada sin querer.';
+    return '復元は、今のカード・デッキ・フォルダ・実績をバックアップの内容で置き換えます。どれを使うか選び、ボタンを押して $palabra と入力してください：こうすれば、うっかり復元してしまうことがありません。';
   }
 
   @override
-  String get bkNoBackups => 'Aún no hay copias guardadas en este ordenador.';
+  String get bkNoBackups => 'このコンピュータにはまだ保存されたバックアップがありません。';
 
   @override
-  String get bkWhich => 'Copia a restaurar';
+  String get bkWhich => '復元するバックアップ';
 
   @override
-  String get bkPickOne => 'Elige una copia';
+  String get bkPickOne => 'バックアップを選ぶ';
 
   @override
-  String get bkRestorePicked => 'Restaurar la copia elegida';
+  String get bkRestorePicked => '選んだバックアップを復元';
 
   @override
-  String get bkAutoNote =>
-      'Guardo una copia automática cada semana (las cinco últimas) y otra justo antes de cada restaurar.';
+  String get bkAutoNote => '毎週自動バックアップを保存し（直近5つ）、復元の直前にもう1つ保存します。';
 
   @override
-  String get bkFromFile => 'Restaurar de un archivo';
+  String get bkFromFile => 'ファイルから復元';
 
   @override
-  String get bkConfirmTitle => '¿Restaurar esta copia?';
+  String get bkConfirmTitle => 'このバックアップを復元しますか？';
 
   @override
   String get bkConfirmBody =>
-      'Esto reemplaza tu colección, mazos, carpetas y logros de ahora por los de esa copia. Antes de hacerlo guardo lo que tienes en la carpeta backups, por si quieres volver.';
+      'これは、今のコレクション・デッキ・フォルダ・実績をそのバックアップの内容で置き換えます。実行前に、今のデータをbackupsフォルダに保存するので、元に戻したくなっても大丈夫です。';
 
   @override
   String bkWillDelete(String cosas) {
-    return 'Esa copia no trae $cosas: al restaurarla, eso se borra.';
+    return 'そのバックアップには $cosas が含まれていません：復元すると、それは消えます。';
   }
 
   @override
   String bkTypeToConfirm(String palabra) {
-    return 'Escribe $palabra para poder seguir:';
+    return '続けるには $palabra と入力してください：';
   }
 
   @override
-  String get bkAnd => ' y ';
+  String get bkAnd => 'と';
 
   @override
-  String get ehReset => 'Restablecer';
+  String get ehReset => 'リセット';
 
   @override
   String bkOfDate(String cuando, String resumen) {
-    return 'Copia del $cuando · $resumen.';
+    return '$cuando のバックアップ · $resumen。';
   }
 
   @override
-  String get lsNoCamera => 'No encuentro ninguna cámara.';
+  String get lsNoCamera => 'カメラが見つかりません。';
 
   @override
-  String get lsCameraGone =>
-      'La cámara se ha desconectado a media sesión. Revisa el cable y dale a Reintentar.';
+  String get lsCameraGone => 'セッションの途中でカメラが切断されました。ケーブルを確認して「もう一度」を押してください。';
 
   @override
-  String get lsFrameCard => 'Encuadra la carta dentro del marco';
+  String get lsFrameCard => 'カードを枠の中に収めてください';
 
   @override
-  String get lsNoCardThere => 'No veo ninguna carta ahí';
+  String get lsNoCardThere => 'そこにはカードが見えません';
 
   @override
   String lsAddedToCollection(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '✓ $n cartas a la colección',
-      one: '✓ 1 carta a la colección',
+      other: '✓ $n 枚をコレクションに追加',
     );
     return '$_temp0';
   }
 
   @override
   String lsAndToFolder(String carpeta) {
-    return ', y a \"$carpeta\"';
+    return '、そして「$carpeta」にも';
   }
 
   @override
-  String get lsTitle => 'Escanear en vivo';
+  String get lsTitle => 'ライブスキャン';
 
   @override
-  String get lsQuickTip =>
-      'Rápido: las cartas claras entran solas; las dudosas, marcadas para revisar.';
+  String get lsQuickTip => 'スピード優先：はっきりしたカードは自動で登録され、あやしいものは確認用にマークされます。';
 
   @override
-  String get lsCarefulTip =>
-      'Con cuidado: las dudosas se paran y te preguntan cuál es.';
+  String get lsCarefulTip => '慎重に：あやしいものは手を止めて、どのカードか尋ねます。';
 
   @override
-  String get lsQuick => 'Rápido';
+  String get lsQuick => 'スピード優先';
 
   @override
-  String get lsCareful => 'Con cuidado';
+  String get lsCareful => '慎重に';
 
   @override
   String lsThisSession(int n) {
-    return '$n esta sesión';
+    return '今回のセッション $n 枚';
   }
 
   @override
-  String get lsScanPhotoTooltip => 'Escanear una foto suelta';
+  String get lsScanPhotoTooltip => '1枚の写真をスキャン';
 
   @override
-  String get lsStartingCamera => 'Encendiendo la cámara…';
+  String get lsStartingCamera => 'カメラを起動中…';
 
   @override
-  String get lsCantUseCamera => 'No puedo usar la cámara';
+  String get lsCantUseCamera => 'カメラを使えません';
 
   @override
-  String get lsCameraUnavailable => 'Cámara no disponible.';
+  String get lsCameraUnavailable => 'カメラが利用できません。';
 
   @override
-  String get lsScanPhoto => 'Escanear una foto';
+  String get lsScanPhoto => '写真をスキャン';
 
   @override
   String lsPlusOneSame(String carta, int n) {
-    return '+1 igual · $carta (×$n)';
+    return '+1 同じもの · $carta（×$n）';
   }
 
   @override
   String lsAlreadyOnTable(String carta) {
-    return 'Ya está en la mesa: $carta · retírala y vuelve a ponerla, o toca \"+1 igual\"';
+    return 'すでにテーブルにあります：$carta · いったんどけて置き直すか、「+1 同じもの」をタップしてください';
   }
 
   @override
   String lsSeeing(String carta) {
-    return 'Viendo: $carta';
+    return '認識中：$carta';
   }
 
   @override
-  String get lsPassACard => 'Pasa una carta por delante de la cámara…';
+  String get lsPassACard => 'カメラの前にカードをかざしてください…';
 
   @override
   String lsIsThis(String carta) {
-    return '¿Es $carta? No estoy seguro — toca para elegir.';
+    return '$carta ですか？確信がありません—タップして選んでください。';
   }
 
   @override
-  String get lsNotThisOne => 'No es esta — cambiar versión';
+  String get lsNotThisOne => 'これではない—版を変更';
 
   @override
-  String get lsRetry => 'Reintentar';
+  String get lsRetry => 'もう一度';
 
   @override
-  String get scBadImage => 'No pude leer esa imagen (¿es una foto válida?)';
+  String get scBadImage => 'その画像を読み取れませんでした（有効な写真ですか？）';
 
   @override
   String scAddedOne(String carta, String set, String numero) {
-    return '✓ $carta ($set #$numero)';
+    return '✓ $carta（$set #$numero）';
   }
 
   @override
-  String get scNoFolder => 'Sin carpeta';
+  String get scNoFolder => 'フォルダなし';
 
   @override
   String scAlsoTo(String carpeta) {
-    return 'Y además a: $carpeta';
+    return 'さらに：$carpeta にも';
   }
 
   @override
-  String get scLookingForCard => 'Buscando la carta en la foto…';
+  String get scLookingForCard => '写真の中のカードを探し中…';
 
   @override
   String scRecognising(int hechas, int total) {
-    return 'Reconociendo… $hechas/$total';
+    return '認識中… $hechas/$total';
   }
 
   @override
@@ -1536,394 +1501,383 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n 枚',
     );
-    return '$_temp0 · $copias en total';
+    return '$_temp0 · 合計 $copias 枚';
   }
 
   @override
   String scToReview(int n) {
-    return '$n para revisar (tócalas)';
+    return '$n 枚は要確認（タップしてください）';
   }
 
   @override
   String scUnknown(int n) {
-    return '$n sin reconocer (toca para elegir a mano)';
+    return '$n 枚は認識できず（タップして手動で選んでください）';
   }
 
   @override
   String get scNothingRecognised =>
-      'No reconocí ninguna carta en esas fotos. Prueba con mejor luz o menos reflejo.';
+      'それらの写真ではカードを1枚も認識できませんでした。もっと明るく、反射を減らして試してください。';
 
   @override
   String scAddN(int n) {
-    return 'Añadir $n a la colección';
+    return '$n 枚をコレクションに追加';
   }
 
   @override
-  String get scDropPhotos => 'Suelta aquí las fotos de tus cartas';
+  String get scDropPhotos => 'ここにカードの写真を放り込んでください';
 
   @override
   String get scDropExplain =>
-      'Una o varias a la vez — y si una foto trae VARIAS cartas (una página del álbum, la mesa llena), las saco todas y las junto en una lista para que revises y añadas las que quieras. Vale foto del móvil o escaneo.';
+      '一度に1枚でも複数でも構いません—1枚の写真に複数のカードが写っていても（アルバムの1ページ、テーブルいっぱいなど）、すべて取り出して1つのリストにまとめるので、確認して好きなものを追加できます。スマホの写真でもスキャンでもOKです。';
 
   @override
-  String get scPickPhotos => 'Elegir fotos';
+  String get scPickPhotos => '写真を選ぶ';
 
   @override
-  String get scMatchHigh => 'coincidencia alta';
+  String get scMatchHigh => '一致度：高';
 
   @override
-  String get scMatchMedium => 'coincidencia media';
+  String get scMatchMedium => '一致度：中';
 
   @override
-  String get scMatchLow => 'coincidencia baja';
+  String get scMatchLow => '一致度：低';
 
   @override
-  String get scAddToCollection => 'Añadir a la colección';
+  String get scAddToCollection => 'コレクションに追加';
 
   @override
-  String get scSeeOptions => 'No es esta — ver opciones';
+  String get scSeeOptions => 'これではない—候補を見る';
 
   @override
-  String get scScanAnother => 'Escanear otra';
+  String get scScanAnother => '別のをスキャン';
 
   @override
-  String get scNotSure => 'No estoy seguro';
+  String get scNotSure => '確信がありません';
 
   @override
-  String get scWhichIsIt => '¿Cuál es?';
+  String get scWhichIsIt => 'どれですか？';
 
   @override
   String get scNoneQuiteFits =>
-      'Ninguna encaja del todo. ¿Es alguna de estas? Si no, prueba otra foto con mejor luz.';
+      'どれもぴったりとは合いません。この中にありますか？なければ、もっと明るい写真で試してください。';
 
   @override
-  String get scNoEdges =>
-      'No vi los bordes de la carta, así que he usado la imagen entera. Estos son los parecidos:';
+  String get scNoEdges => 'カードの縁が見えなかったので、画像全体を使いました。似ているのはこちらです：';
 
   @override
-  String get scCropped =>
-      'Esto es lo que he recortado. Los candidatos, por parecido:';
+  String get scCropped => 'これが切り抜いた部分です。候補を似ている順に：';
 
   @override
-  String get scDiscard => 'Descartar y escanear otra';
+  String get scDiscard => '破棄して別のをスキャン';
 
   @override
-  String get suCardsName => 'Cartas y precios';
+  String get suCardsName => 'カードと価格';
 
   @override
-  String get suCardsWhat => 'catálogo completo de Scryfall';
+  String get suCardsWhat => 'Scryfallの全カタログ';
 
   @override
-  String get suHistoryName => 'Histórico de precios';
+  String get suHistoryName => '価格履歴';
 
   @override
-  String get suHistoryWhat => '~90 días de Cardmarket';
+  String get suHistoryWhat => 'Cardmarketの約90日分';
 
   @override
-  String get suHashesName => 'Huellas del escáner';
+  String get suHashesName => 'スキャナーの指紋データ';
 
   @override
-  String get suHashesWhat => 'para reconocer por foto';
+  String get suHashesWhat => '写真での認識用';
 
   @override
   String suUpToDate(String fecha) {
-    return 'al día ($fecha)';
+    return '最新（$fecha）';
   }
 
   @override
-  String get suUpdated => 'actualizado';
+  String get suUpdated => '更新済み';
 
   @override
   String suUpdatedWithDate(String fecha) {
-    return 'actualizado ($fecha)';
+    return '更新済み（$fecha）';
   }
 
   @override
-  String get suFailedOffline => 'no he podido traerla (sin conexión)';
+  String get suFailedOffline => '取得できませんでした（オフライン）';
 
   @override
-  String get suKeepingOld => 'sigo con la que tenías';
+  String get suKeepingOld => '今までのものを使い続けます';
 
   @override
-  String get suNeedMissing => 'falta, la traigo';
+  String get suNeedMissing => '不足、取得します';
 
   @override
-  String get suNeedStale => 'hay una nueva';
+  String get suNeedStale => '新しいものがあります';
 
   @override
-  String get suNeedFresh => 'al día';
+  String get suNeedFresh => '最新';
 
   @override
-  String get suAllUpToDate => 'Todo al día. Entrando…';
+  String get suAllUpToDate => 'すべて最新です。起動中…';
 
   @override
-  String get suUpdatingCards => 'Poniendo al día tus cartas y precios…';
+  String get suUpdatingCards => 'カードと価格を最新にしています…';
 
   @override
-  String get suChecking => 'Comprobando si hay novedades…';
+  String get suChecking => '新着がないか確認中…';
 
   @override
-  String get suNoDownloadNote =>
-      'Lo que ya está al día no se descarga. Dentro de la app puedes forzar cualquier actualización.';
+  String get suNoDownloadNote => 'すでに最新のものはダウンロードしません。アプリ内ならどの更新でも手動で実行できます。';
 
   @override
-  String get suEnter => 'Entrar';
+  String get suEnter => '入る';
 
   @override
-  String get suEnterNow => 'Entrar ya';
+  String get suEnterNow => '今すぐ入る';
 
   @override
   String icBadFile(String error) {
-    return 'No pude leer el archivo: $error';
+    return 'ファイルを読み取れませんでした：$error';
   }
 
   @override
-  String get icNotCsv =>
-      'Eso no parece un CSV — suelta un archivo .csv o .txt.';
+  String get icNotCsv => 'それはCSVではないようです—.csvか.txtのファイルを放り込んでください。';
 
   @override
-  String get icTitle => 'Importar colección';
+  String get icTitle => 'コレクションをインポート';
 
   @override
   String get icExplain =>
-      'Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:';
+      'ManaBoxのCSVをここにドラッグ（Moxfield、Archidekt、あるいはNameとQuantityの列があるCSVならなんでもOK）するか、ボタンで選ぶか、中身を手で貼り付けてください：';
 
   @override
-  String get icPickFile => 'Elegir archivo…';
+  String get icPickFile => 'ファイルを選ぶ…';
 
   @override
   String icImported(int cartas, int copias) {
-    return '✓ $cartas cartas ($copias copias) añadidas a tu colección.';
+    return '✓ $cartas 種類（$copias 枚）をコレクションに追加しました。';
   }
 
   @override
-  String get icReplaceMine => 'Sustituir mi colección actual';
+  String get icReplaceMine => '今のコレクションを置き換える';
 
   @override
   String get icReplaceWhy =>
-      'Actívalo al reimportar tu CSV completo: evita duplicar cantidades y afina el álbum por ediciones.';
+      '完全なCSVを再インポートするときはオンに：数量の二重計上を防ぎ、版ごとにアルバムをくっきりさせます。';
 
   @override
   String icImporting(int hechas, int total) {
-    return 'Importando $hechas de $total cartas…';
+    return '$total 枚中 $hechas 枚をインポート中…';
   }
 
   @override
-  String get icDropHere => 'Suelta tu CSV aquí';
+  String get icDropHere => 'ここにCSVを放り込んでください';
 
   @override
   String icTokensIgnored(int n) {
-    return '\n• $n tokens/emblemas ignorados (no van en mazos, todo bien).';
+    return '\n• $n 枚のトークン／エンブレムを無視しました（デッキには入りません、問題なし）。';
   }
 
   @override
   String icUnrecognized(String lista, String mas) {
-    return '\n✗ Sin reconocer: $lista$mas';
+    return '\n✗ 認識できず：$lista$mas';
   }
 
   @override
   String get icNoPurchasePrice =>
-      '\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").';
+      '\n• CSVに購入価格がありません：損益（P&L）は表示されません（ManaBoxは「Purchase price」列に書き出します）。';
 
   @override
   String icWithPurchasePrice(int n) {
-    return '\n• $n copias con precio de compra: ya puedes ver el P&L en Mercado.';
+    return '\n• $n 枚に購入価格あり：マーケットで損益（P&L）を確認できます。';
   }
 
   @override
-  String get icImporting2 => 'Importando…';
+  String get icImporting2 => 'インポート中…';
 
   @override
-  String get icImport => 'Importar';
+  String get icImport => 'インポート';
 
   @override
   String dkDeleted(String nombre) {
-    return 'Mazo \"$nombre\" borrado';
+    return 'デッキ「$nombre」を削除しました';
   }
 
   @override
-  String get dkUndo => 'DESHACER';
+  String get dkUndo => '元に戻す';
 
   @override
   String dkOpenFailed(String error) {
-    return 'No pude abrir el mazo (¿está descargada la base de datos?): $error';
+    return 'デッキを開けませんでした（データベースはダウンロード済みですか？）：$error';
   }
 
   @override
-  String get dkMyDecks => 'Mis mazos';
+  String get dkMyDecks => 'マイデッキ';
 
   @override
-  String get dkEmpty =>
-      'Aquí vivirán los mazos que guardes desde Forge (botón de guardar en el detalle del mazo).';
+  String get dkEmpty => 'Forgeから保存したデッキがここに並びます（デッキ詳細の保存ボタン）。';
 
   @override
   String dkSavedCount(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n guardados',
-      one: '1 guardado',
+      other: '$n 個保存済み',
     );
     return '$_temp0';
   }
 
   @override
   String dkSubtitle(String arquetipo, int hechizos, int tierras, String fecha) {
-    return '$arquetipo · $hechizos hechizos + $tierras tierras · guardado el $fecha';
+    return '$arquetipo · 呪文 $hechizos + 土地 $tierras · $fecha に保存';
   }
 
   @override
-  String get dkDeleteTooltip => 'Borrar mazo';
+  String get dkDeleteTooltip => 'デッキを削除';
 
   @override
-  String get ddSaved => '✓ Mazo guardado — lo tienes en la pestaña Mazos';
+  String get ddSaved => '✓ デッキを保存しました—「デッキ」タブにあります';
 
   @override
-  String get ddReforged => '✓ Mazo reforjado a tu curva — lista actualizada';
+  String get ddReforged => '✓ あなたのカーブに合わせてデッキを鍛え直しました—リストを更新しました';
 
   @override
-  String get ddSaveToMyDecks => 'Guardar en Mis mazos';
+  String get ddSaveToMyDecks => 'マイデッキに保存';
 
   @override
-  String get ddCopyList => 'Copiar lista (Moxfield/Arena)';
+  String get ddCopyList => 'リストをコピー（Moxfield／Arena）';
 
   @override
-  String get ddListCopied =>
-      '✓ Lista copiada — pégala en Moxfield, Arena o Discord';
+  String get ddListCopied => '✓ リストをコピーしました—Moxfield、Arena、Discordに貼り付けられます';
 
   @override
   String ddHeaderSub(String tema, String arquetipo, int hechizos, int tierras) {
-    return '$tema · $arquetipo · $hechizos hechizos + $tierras tierras';
+    return '$tema · $arquetipo · 呪文 $hechizos + 土地 $tierras';
   }
 
   @override
-  String get ddHaveAll => '✓ Tienes todas las cartas';
+  String get ddHaveAll => '✓ すべてのカードが揃っています';
 
   @override
   String ddMissing(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other:
-          '⚠ Te faltan $n cartas de este mazo — siguen en la lista, no se han borrado',
-      one:
-          '⚠ Te falta 1 carta de este mazo — sigue en la lista, no se ha borrado',
+      other: '⚠ このデッキのカードが $n 枚足りません—リストには残っていて、削除されていません',
     );
     return '$_temp0';
   }
 
   @override
-  String get ddGamePlan => 'Tu plan de juego';
+  String get ddGamePlan => 'あなたのゲームプラン';
 
   @override
-  String get ddManaCurve => 'Curva de maná';
+  String get ddManaCurve => 'マナカーブ';
 
   @override
-  String get ddEditCurve => 'Editar curva';
+  String get ddEditCurve => 'カーブを編集';
 
   @override
   String ddDragBars(int hechizos, int tierras) {
-    return 'Arrastra las barras ↑↓ · $hechizos hechizos → $tierras tierras';
+    return 'バーを↑↓にドラッグ · 呪文 $hechizos → 土地 $tierras';
   }
 
   @override
-  String get ddReforgeCurve => 'Reforjar con esta curva';
+  String get ddReforgeCurve => 'このカーブで鍛え直す';
 
   @override
   String ddCurveSummary(int tierras, int hechizos, String coste) {
-    return '⛰ $tierras tierras · ✦ $hechizos hechizos · Ø coste $coste';
+    return '⛰ 土地 $tierras · ✦ 呪文 $hechizos · Ø コスト $coste';
   }
 
   @override
-  String get ddWhyWorks => '¿Por qué este mazo funciona?';
+  String get ddWhyWorks => 'このデッキが機能する理由は？';
 
   @override
   String ddLands(int n) {
-    return 'TIERRAS ($n)';
+    return '土地（$n）';
   }
 
   @override
   String ddDeckTotal(String precio) {
-    return 'Total del mazo: ~$precio €';
+    return 'デッキ合計：約 $precio €';
   }
 
   @override
-  String get ddCheapestPrice => 'precio de la edición más barata (Cardmarket)';
+  String get ddCheapestPrice => '最も安い版の価格（Cardmarket）';
 
   @override
   String ddSomeNoPrice(int n) {
-    return '$n sin precio conocido · edición más barata (Cardmarket)';
+    return '$n 枚は価格不明 · 最も安い版（Cardmarket）';
   }
 
   @override
-  String get ddInstants => 'Instantáneos';
+  String get ddInstants => 'インスタント';
 
   @override
-  String get ddTypeCreatures => 'Criaturas';
+  String get ddTypeCreatures => 'クリーチャー';
 
   @override
-  String get ddTypeSorceries => 'Conjuros';
+  String get ddTypeSorceries => 'ソーサリー';
 
   @override
-  String get ddTypeEnchantments => 'Encantamientos';
+  String get ddTypeEnchantments => 'エンチャント';
 
   @override
-  String get ddTypeArtifacts => 'Artefactos';
+  String get ddTypeArtifacts => 'アーティファクト';
 
   @override
-  String get ddTypeOther => 'Otros';
+  String get ddTypeOther => 'その他';
 
   @override
-  String get ddOutOfRange => '  (fuera del rango sano 20-27)';
+  String get ddOutOfRange => '  （健全な範囲20〜27の外）';
 
   @override
-  String get acRecalcTitle => '¿Recalcular logros?';
+  String get acRecalcTitle => '実績を再計算しますか？';
 
   @override
   String get acRecalcBody =>
-      'Se vuelven a mirar tus cartas y se quitan los logros que hoy no se cumplan. Sirve para arreglar los que se dieron por error; si has vendido cartas, también perderás esos.';
+      'カードをもう一度チェックして、今は達成していない実績を取り消します。誤って付与された実績を直すのに便利です。カードを売った場合は、それらの実績も失います。';
 
   @override
-  String get acRecalc => 'Recalcular';
+  String get acRecalc => '再計算';
 
   @override
-  String get acAllFine => 'Todo cuadraba: no se ha quitado ningún logro.';
+  String get acAllFine => 'すべて問題ありませんでした：取り消された実績はありません。';
 
   @override
   String acRemovedN(int n) {
-    return 'Quitados $n logros que ya no se cumplen.';
+    return '達成しなくなった実績を $n 個取り消しました。';
   }
 
   @override
-  String get acTitle => 'Logros';
+  String get acTitle => '実績';
 
   @override
-  String get acRecalcTooltip => 'Recalcular con mis cartas de ahora';
+  String get acRecalcTooltip => '今のカードで再計算';
 
   @override
-  String get acCertsTooltip => 'Certificados';
+  String get acCertsTooltip => '証明書';
 
   @override
   String acUnlockedOf(int hechos, int total, int xp) {
-    return '$hechos de $total logros · $xp XP';
+    return '実績 $total 個中 $hechos 個 · $xp XP';
   }
 
   @override
   String acLevelLine(int nivel, int xp, int siguiente) {
-    return 'Nivel $nivel · faltan $xp XP para el $siguiente';
+    return 'レベル $nivel · 次のレベル $siguiente まであと $xp XP';
   }
 
   @override
-  String get acIMissing => 'Me faltan';
+  String get acIMissing => '未達成';
 
   @override
-  String get acSecret => 'Logro secreto';
+  String get acSecret => 'シークレット実績';
 
   @override
-  String get acSecretDesc => 'Se descubre solo cuando lo consigues.';
+  String get acSecretDesc => '達成して初めて明らかになります。';
 
   @override
   String acProgressLine(String progreso, String tier, int xp) {
@@ -1932,97 +1886,97 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String acDoneLine(String fecha, String tier, int xp) {
-    return '✓ Conseguido$fecha · $tier · $xp XP';
+    return '✓ 達成$fecha · $tier · $xp XP';
   }
 
   @override
   String acOnDate(String fecha) {
-    return ' el $fecha';
+    return '（$fecha）';
   }
 
   @override
   String acLevelUp(int nivel) {
-    return '¡Nivel $nivel!';
+    return 'レベル $nivel！';
   }
 
   @override
   String acLevelUpBody(String titulo, int hechos, int total) {
-    return 'Ya eres $titulo. Llevas $hechos de $total logros.';
+    return 'あなたはもう $titulo です。実績 $total 個中 $hechos 個を達成。';
   }
 
   @override
-  String get acOk => 'Vale';
+  String get acOk => 'OK';
 
   @override
-  String get acSeeAchievements => 'Ver logros';
+  String get acSeeAchievements => '実績を見る';
 
   @override
   String acToast(String titulo, String mas, int xp) {
-    return '🏆 ¡Logro! $titulo$mas · +$xp XP';
+    return '🏆 実績達成！$titulo$mas · +$xp XP';
   }
 
   @override
   String acAndMore(int n) {
-    return ' (y $n más)';
+    return '（ほか $n 個）';
   }
 
   @override
   String ceNeedDb(String error) {
-    return 'Para los de expansión hace falta la base de datos de cartas ($error)';
+    return 'エキスパンションの証明書にはカードデータベースが必要です（$error）';
   }
 
   @override
-  String get ceWhoseName => '¿A nombre de quién?';
+  String get ceWhoseName => '誰の名前で？';
 
   @override
-  String get ceCollectorName => 'Tu nombre de coleccionista';
+  String get ceCollectorName => 'あなたのコレクター名';
 
   @override
-  String get ceInNameOf => 'A nombre de…';
+  String get ceInNameOf => '名義：…';
 
   @override
   String get ceEmptyWithData =>
-      'Todavía no tienes ninguna expansión completa. Cuando completes una entera en el Álbum, aquí saldrá tu certificado para descargar.';
+      'まだ1つもエキスパンションをコンプリートしていません。アルバムで丸ごと1つ完成させると、ダウンロードできる証明書がここに出ます。';
 
   @override
   String get ceEmptyNoData =>
-      'Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV de ManaBox (trae el Scryfall ID).';
+      'エキスパンションを証明するには、あなたのカードの正確な版を知る必要があります：ManaBoxのCSVを再インポートしてください（Scryfall IDが含まれています）。';
 
   @override
-  String get ceNothingSaved => 'No se guardó nada.';
+  String get ceNothingSaved => '何も保存されませんでした。';
 
   @override
   String ceSavedTo(String ruta) {
-    return '✓ Certificado guardado en $ruta';
+    return '✓ 証明書を $ruta に保存しました';
   }
 
   @override
   String ceSaveFailed(String error) {
-    return 'No se pudo guardar: $error';
+    return '保存できませんでした：$error';
   }
 
   @override
-  String get cePickFirstCard => 'Elegir la carta con la que empecé';
+  String get cePickFirstCard => '始めたときのカードを選ぶ';
 
   @override
-  String get ceChangeFirstCard => 'Cambiar la carta con la que empecé';
+  String get ceChangeFirstCard => '始めたときのカードを変更';
 
   @override
-  String get ceDownloadPng => 'Descargar PNG';
+  String get ceDownloadPng => 'PNGをダウンロード';
 
   @override
-  String get cdNotFound => 'No encuentro esta carta en la base de datos.';
+  String get cdNotFound => 'このカードがデータベースに見つかりません。';
 
   @override
   String cdLoadFailed(String error) {
-    return 'No pude cargar la ficha: $error';
+    return 'カード情報を読み込めませんでした：$error';
   }
 
   @override
-  String get cdPrev => 'Anterior (←)';
+  String get cdPrev => '前へ（←）';
 
   @override
-  String get cdNext => 'Siguiente (→)';
+  String get cdNext => '次へ（→）';
 
   @override
   String cdPosition(int pos, int total) {
@@ -2030,12 +1984,12 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get cdCardNotFound => 'Carta no encontrada';
+  String get cdCardNotFound => 'カードが見つかりません';
 
   @override
   String cdPaid(
       String total, String divisa, int qty, String copias, String unidad) {
-    return 'Pagaste $total$divisa por $qty $copias ($unidad cada una)';
+    return '$qty $copias に $total$divisa 支払いました（1枚あたり $unidad）';
   }
 
   @override
@@ -2043,8 +1997,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'copias',
-      one: 'copia',
+      other: '枚',
     );
     return '$_temp0';
   }
@@ -2054,33 +2007,32 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '✓ Tienes $n copias en tu colección',
-      one: '✓ Tienes 1 copia en tu colección',
+      other: '✓ コレクションに $n 枚あります',
     );
     return '$_temp0';
   }
 
   @override
-  String get cdNotOwned => 'No tienes esta carta (todavía).';
+  String get cdNotOwned => 'このカードはまだ持っていません。';
 
   @override
   String cdNoPrice(String mercado) {
-    return 'Sin precio de esta carta en $mercado.';
+    return '$mercado にこのカードの価格がありません。';
   }
 
   @override
   String cdVersions(int n) {
-    return 'VERSIONES ($n)';
+    return 'バージョン（$n）';
   }
 
   @override
   String cdNoPerPrinting(String mercado) {
-    return 'sin precio por edición en $mercado';
+    return '$mercado に版ごとの価格がありません';
   }
 
   @override
   String cdPricesNormalFoil(String mercado, String moneda) {
-    return 'precios $mercado ($moneda) · normal / foil';
+    return '$mercado 価格（$moneda） · 通常 / foil';
   }
 
   @override
@@ -2090,276 +2042,267 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String cdYouHaveX(int n) {
-    return 'tienes x$n';
+    return '所持 x$n';
   }
 
   @override
-  String get smMythic => 'Mítica';
+  String get smMythic => '神話レア';
 
   @override
-  String get smRare => 'Rara';
+  String get smRare => 'レア';
 
   @override
-  String get smUncommon => 'Infrecuente';
+  String get smUncommon => 'アンコモン';
 
   @override
-  String get smCommon => 'Común';
+  String get smCommon => 'コモン';
 
   @override
   String smLoadFailed(String error) {
-    return 'No pude cargar el set: $error';
+    return 'セットを読み込めませんでした：$error';
   }
 
   @override
-  String get smSearchInSet => 'Busca en la expansión…';
+  String get smSearchInSet => 'エキスパンション内を検索…';
 
   @override
-  String get smRarityAll => 'Rareza: todas';
+  String get smRarityAll => 'レアリティ：すべて';
 
   @override
-  String get smPriceDown => 'Precio ↓';
+  String get smPriceDown => '価格 ↓';
 
   @override
-  String get smPriceUp => 'Precio ↑';
+  String get smPriceUp => '価格 ↑';
 
   @override
-  String get smNumber => 'Número';
+  String get smNumber => '番号';
 
   @override
-  String get smOnlyMine => 'Solo las mías';
+  String get smOnlyMine => '持っているものだけ';
 
   @override
   String smCardsCount(int n) {
-    return '$n cartas';
+    return '$n 枚';
   }
 
   @override
   String smNoPerPrinting(String mercado) {
-    return '$mercado: sin precio por edición';
+    return '$mercado：版ごとの価格なし';
   }
 
   @override
   String smListedValue(String mercado) {
-    return 'valor listado ($mercado): ';
+    return '掲載価値（$mercado）：';
   }
 
   @override
   String pnPaidVsToday(String pagado, String hoy) {
-    return 'Pagaste $pagado · hoy valen $hoy';
+    return '支払い $pagado · 現在の価値 $hoy';
   }
 
   @override
   String get pnNoPnl =>
-      'Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.';
+      '購入価格がないと損益（P&L）は出せません。「Purchase price」列付きのManaBox CSVをインポートすると、ここに表示されます。';
 
   @override
   String pnOverAll(int n) {
-    return 'sobre las $n copias de tu colección';
+    return 'コレクションの $n 枚が対象';
   }
 
   @override
   String pnOverSome(int conprecio, int total) {
-    return 'sobre $conprecio de $total copias (las demás no tienen precio de compra apuntado)';
+    return '$total 枚中 $conprecio 枚が対象（残りは購入価格が記録されていません）';
   }
 
   @override
   String pnNoTodayPrice(int n) {
-    return '$n copias compradas no tienen precio de hoy en la base: fuera de la cuenta';
+    return '購入した $n 枚はデータベースに今日の価格がありません：集計対象外';
   }
 
   @override
   String pnOtherCurrency(String importe, String moneda) {
-    return 'también pagaste $importe $moneda, que no se convierte';
+    return 'さらに $importe $moneda 支払っていますが、これは換算されません';
   }
 
   @override
   String pnAssumedCurrency(int n, String moneda) {
-    return '$n copias sin divisa en el CSV: se suponen $moneda';
+    return 'CSVに通貨がない $n 枚：$moneda と仮定します';
   }
 
   @override
-  String get pcTitle => 'Evolución del precio';
+  String get pcTitle => '価格の推移';
 
   @override
-  String get pcNoHistory => 'Todavía sin historial de precio de esta carta.';
+  String get pcNoHistory => 'このカードの価格履歴はまだありません。';
 
   @override
   String pcTodayPrice(String precio) {
-    return 'Precio de hoy: $precio €. La gráfica aparece en cuanto haya varios días.';
+    return '今日の価格：$precio €。数日分たまると、グラフが表示されます。';
   }
 
   @override
   String get pcExplain =>
-      'ManaForge apunta el precio de cada carta que miras o tienes, día a día. Para arrancar con los últimos meses reales de Cardmarket, trae el histórico desde Mercado.';
+      'ManaForgeは、あなたが見たり持っていたりする各カードの価格を、日ごとに記録します。Cardmarketの実際の直近数か月分から始めるには、マーケットで履歴を取り込んでください。';
 
   @override
   String pcRange(String min, String max, int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n días',
-      one: '1 día',
+      other: '$n 日',
     );
-    return 'mín $min € · máx $max € · $_temp0';
+    return '最小 $min € · 最大 $max € · $_temp0';
   }
 
   @override
-  String get spWhichSets => '¿De qué expansiones?';
+  String get spWhichSets => 'どのエキスパンションから？';
 
   @override
-  String get spSearchHint => 'Buscar por nombre o código (BLB, MH3…)';
+  String get spSearchHint => '名前かコードで検索（BLB、MH3…）';
 
   @override
-  String get spOnlyMine => 'Solo las mías';
+  String get spOnlyMine => '持っているものだけ';
 
   @override
   String spClearN(int n) {
-    return 'Quitar las $n';
+    return '$n 個を解除';
   }
 
   @override
-  String get spNoneNamed =>
-      'Ninguna expansión con ese nombre. Quita \"Solo las mías\" para ver todas.';
+  String get spNoneNamed => 'その名前のエキスパンションはありません。「持っているものだけ」をオフにすると、すべて表示されます。';
 
   @override
   String spSetLine(String set, int n) {
-    return '$set · $n cartas';
+    return '$set · $n 枚';
   }
 
   @override
-  String get spNoFilter => 'Sin filtro de expansión';
+  String get spNoFilter => 'エキスパンションの絞り込みなし';
 
   @override
   String spUseN(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Usar $n expansiones',
-      one: 'Usar 1 expansión',
+      other: '$n 個のエキスパンションを使う',
     );
     return '$_temp0';
   }
 
   @override
   String slLockedTo(String set) {
-    return 'Solo busco cartas del set $set. Tócalo para cambiar o quitar el bloqueo.';
+    return '$set セットのカードだけを探します。タップすると変更またはロック解除できます。';
   }
 
   @override
-  String get slLockHint =>
-      'Bloquea un set para escanear una caja/precon: el escáner solo buscará dentro de él y clava la edición.';
+  String get slLockHint => '箱やプレコンをスキャンするならセットをロック：スキャナーはその中だけを探し、版をぴたりと当てます。';
 
   @override
   String slSetIs(String set) {
-    return 'Set: $set';
+    return 'セット：$set';
   }
 
   @override
-  String get slSetAll => 'Set: todas';
+  String get slSetAll => 'セット：すべて';
 
   @override
-  String get slLockTitle => 'Bloquear edición';
+  String get slLockTitle => '版をロック';
 
   @override
   String get slLockBody =>
-      'Escribe el código del set (p. ej. AER, MH3, LCI) para escanear una caja entera: solo se buscarán cartas de ese set.';
+      '箱を丸ごとスキャンするには、セットコード（例：AER、MH3、LCI）を入力してください：そのセットのカードだけを探します。';
 
   @override
-  String get slSetCode => 'Código de set';
+  String get slSetCode => 'セットコード';
 
   @override
-  String get slClearLock => 'Quitar bloqueo';
+  String get slClearLock => 'ロックを解除';
 
   @override
   String get stHintQuick =>
-      'Pasa cartas por delante: las claras se apuntan solas aquí (las copias iguales suman ×N). Las dudosas, marcadas para revisar. Al terminar, confirmas todas.';
+      'カードをかざしてください：はっきりしたものはここに自動で記録されます（同じカードは×Nでまとまります）。あやしいものは確認用にマークされます。終わったら、まとめて確定します。';
 
   @override
   String get stHintCareful =>
-      'Pasa cartas por delante: las claras se apuntan solas; las dudosas te preguntan cuál es. Al terminar, confirmas todas.';
+      'カードをかざしてください：はっきりしたものは自動で記録され、あやしいものはどのカードか尋ねます。終わったら、まとめて確定します。';
 
   @override
   String stAddN(int n) {
-    return 'Añadir $n a la colección';
+    return '$n 枚をコレクションに追加';
   }
 
   @override
   String stAddNAndFolder(int n, String carpeta) {
-    return 'Añadir $n a la colección y a $carpeta';
+    return '$n 枚をコレクションと $carpeta に追加';
   }
 
   @override
-  String get stOneLess => 'Una menos';
+  String get stOneLess => '1枚減らす';
 
   @override
-  String get stAnotherSame => 'Otra igual';
+  String get stAnotherSame => '同じものをもう1枚';
 
   @override
-  String get stOnTable => 'en mesa';
+  String get stOnTable => 'テーブル上';
 
   @override
   String cdLastData(String fecha) {
-    return ' (último dato: $fecha)';
+    return '（最新データ：$fecha）';
   }
 
   @override
-  String get slLockButton => 'Bloquear';
+  String get slLockButton => 'ロック';
 
   @override
-  String get wn030Headline =>
-      'Forge por expansiones, precio de compra y avisos de versión';
+  String get wn030Headline => 'エキスパンション別のForge、購入価格、バージョン通知';
 
   @override
   String get wn030Forge =>
-      'Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.';
+      'Forge：カードをどのエキスパンションから出すか選べます。さらに「持っていないカードも含める」をオンにすると、選んだコレクション全体からデッキを組み、何枚足りないか、いくらかかるかを教えてくれます。';
 
   @override
   String get wn030Pnl =>
-      'Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.';
+      '購入価格と損益（P&L）：ManaBoxのCSVに「Purchase price」があれば、マーケットが支払額・現在の価値・その差を表示します。通貨は混ざりません。';
 
   @override
-  String get wn030PhotoFolder =>
-      'Escanear por foto también deja elegir carpeta, como el escáner en vivo.';
+  String get wn030PhotoFolder => '写真からのスキャンでも、ライブスキャンと同じようにフォルダを選べます。';
 
   @override
-  String get wn030Album =>
-      'Álbum: lo que te falta de cada expansión, con lo que costaría.';
+  String get wn030Album => 'アルバム：各エキスパンションで足りないものと、その費用。';
 
   @override
   String get wn030Background =>
-      'Fondo de pantalla: pon detrás la imagen que quieras, con velo regulable, y elige el color de las tarjetas y de la letra para que encima se siga leyendo.';
+      '壁紙：好きな画像を背景に置けます。調整できるベール付きで、カードと文字の色を選べるので、上に重ねても読みやすいままです。';
 
   @override
-  String get wn030Window =>
-      'La ventana se abre donde la dejaste, del tamaño que la dejaste.';
+  String get wn030Window => 'ウィンドウは、閉じたときの位置とサイズで開きます。';
 
   @override
   String get wn030Achievements =>
-      'Los logros ya no se llaman como el criterio, se llaman como el momento: \"Ahí va todo mi dinero\", \"Cien raras y ninguna jugable\".';
+      '実績の名前は、条件ではなくその瞬間にちなむようになりました：「有り金が全部飛んでいく」「レア100枚、使えるものゼロ」。';
 
   @override
   String get wn030Update =>
-      'La app avisa cuando hay versión nueva (no se actualiza sola) y comprueba la huella SHA-256 de las bases que se descarga.';
+      'アプリは新しいバージョンが出ると知らせ（勝手には更新しません）、ダウンロードする各データベースのSHA-256の指紋を確認します。';
 
   @override
   String get wn030Shortcuts =>
-      'Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.';
+      'キーボードショートカット：Ctrl+1…7、Ctrl+E、Ctrl+F、Ctrl+, とEscape。';
 
   @override
   String get wn030Linux =>
-      'En Linux, un instalador deja ManaForge en el menú de aplicaciones con su icono.';
+      'Linuxでは、インストーラーがManaForgeをアイコン付きでアプリケーションメニューに登録します。';
 
   @override
   String get wn030License =>
-      'Licencia PolyForm Noncommercial: compártela y tócala lo que quieras, pero no se vende.';
+      'PolyForm Noncommercialライセンス：好きに共有・改変できますが、販売はできません。';
 
   @override
   String bkSumCards(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n 枚',
     );
     return '$_temp0';
   }
@@ -2369,8 +2312,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n mazos',
-      one: '1 mazo',
+      other: 'デッキ $n 個',
     );
     return '$_temp0';
   }
@@ -2380,8 +2322,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n carpetas',
-      one: '1 carpeta',
+      other: 'フォルダ $n 個',
     );
     return '$_temp0';
   }
@@ -2391,1231 +2332,1188 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n logros',
-      one: '1 logro',
+      other: '実績 $n 個',
     );
     return '$_temp0';
   }
 
   @override
-  String get bkSumEmpty => 'copia vacía';
+  String get bkSumEmpty => '空のバックアップ';
 
   @override
-  String get bkStoreCollection => 'tu colección';
+  String get bkStoreCollection => 'あなたのコレクション';
 
   @override
-  String get bkStoreFolders => 'tus carpetas';
+  String get bkStoreFolders => 'あなたのフォルダ';
 
   @override
-  String get bkStoreDecks => 'tus mazos';
+  String get bkStoreDecks => 'あなたのデッキ';
 
   @override
-  String get bkStoreAchievements => 'tus logros';
+  String get bkStoreAchievements => 'あなたの実績';
 
   @override
-  String get bkStoreWishlist => 'tu lista de deseos';
+  String get bkStoreWishlist => 'あなたのウィッシュリスト';
 
   @override
-  String get bkStoreCertificates => 'tus certificados';
+  String get bkStoreCertificates => 'あなたの証明書';
 
   @override
-  String get bkStoreMarket => 'tu mercado preferido';
+  String get bkStoreMarket => 'あなたの優先マーケット';
 
   @override
-  String get bkStoreRecents => 'las cartas vistas hace poco';
+  String get bkStoreRecents => '最近見たカード';
 
   @override
-  String get bkStoreValueHistory => 'el historial del valor';
+  String get bkStoreValueHistory => '価値の履歴';
 
   @override
-  String get bkStorePriceHistory => 'el historial de precios';
+  String get bkStorePriceHistory => '価格の履歴';
 
   @override
-  String get bkKindAuto => 'automática';
+  String get bkKindAuto => '自動';
 
   @override
-  String get bkKindPreRestore => 'antes de restaurar';
+  String get bkKindPreRestore => '復元前';
 
   @override
-  String get bkErrFileTooBig =>
-      'Ese fichero es demasiado grande para ser una copia de ManaForge.';
+  String get bkErrFileTooBig => 'そのファイルは、ManaForgeのバックアップにしては大きすぎます。';
 
   @override
   String get bkErrExpandTooBig =>
-      'Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.';
+      'そのバックアップは展開すると大きすぎます：本物のManaForgeのバックアップではなさそうです。';
 
   @override
-  String get bkErrNotABackup =>
-      'Ese fichero no es una copia de seguridad de ManaForge.';
+  String get bkErrNotABackup => 'そのファイルはManaForgeのバックアップではありません。';
 
   @override
   String get bkErrNewerVersion =>
-      'Esa copia la hizo una versión más nueva de ManaForge. Actualiza la app y vuelve a intentarlo.';
+      'そのバックアップは、より新しいバージョンのManaForgeで作られました。アプリを更新して、もう一度お試しください。';
 
   @override
-  String get bkErrIncomplete => 'Esa copia está incompleta: no trae tus datos.';
+  String get bkErrIncomplete => 'そのバックアップは不完全です：あなたのデータが入っていません。';
 
   @override
   String bkErrDamaged(String almacen) {
-    return 'Esa copia está dañada: $almacen no se puede leer.';
+    return 'そのバックアップは壊れています：$almacen を読み取れません。';
   }
 
   @override
   String bkErrWriteFailed(String error) {
-    return 'No he podido escribir en la carpeta de datos, así que no he tocado nada: $error';
+    return 'データフォルダに書き込めなかったので、何も変更していません：$error';
   }
 
   @override
   String bkErrHalfDoneNoPrevious(String escritos, String total, String error) {
-    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). No tengo copia previa de lo que había. Detalle: $error';
+    return '復元が途中で止まりました（$total 個中 $escritos 個のファイル）。以前あったものの控えがありません。詳細：$error';
   }
 
   @override
   String bkErrHalfDonePrevious(
       String escritos, String total, String ruta, String error) {
-    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). Para volver atrás, restaura $ruta. Detalle: $error';
+    return '復元が途中で止まりました（$total 個中 $escritos 個のファイル）。元に戻すには $ruta を復元してください。詳細：$error';
   }
 
   @override
-  String get siImportTooBig =>
-      'Ese archivo es demasiado grande para ser una lista de cartas.';
+  String get siImportTooBig => 'そのファイルは、カードリストにしては大きすぎます。';
 
   @override
-  String get siInsecureDownload =>
-      'La descarga acabó en una dirección insegura y se ha cancelado.';
+  String get siInsecureDownload => 'ダウンロードが安全でないアドレスに達したため、中止しました。';
 
   @override
-  String get siRedirectNowhere =>
-      'La descarga redirige a ninguna parte y se ha cancelado.';
+  String get siRedirectNowhere => 'ダウンロードのリダイレクト先がないため、中止しました。';
 
   @override
-  String get siTooManyRedirects =>
-      'La descarga da demasiadas vueltas y se ha cancelado.';
+  String get siTooManyRedirects => 'ダウンロードのリダイレクトが多すぎるため、中止しました。';
 
   @override
-  String get siDownloadTooBig =>
-      'La descarga es mucho más grande de lo que debería y se ha cancelado.';
+  String get siDownloadTooBig => 'ダウンロードが本来よりずっと大きいため、中止しました。';
 
   @override
   String get siBadHash =>
-      'Lo descargado no coincide con la huella publicada en GitHub. No se ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.';
+      'ダウンロードした内容が、GitHubに公開されている指紋と一致しません。何もインストールしていません。もう一度お試しください。それでも続くようなら、お知らせください。';
 
   @override
-  String get siBackgroundNotImage =>
-      'Elige una imagen (.jpg, .png o .webp) como fondo.';
+  String get siBackgroundNotImage => '背景には画像（.jpg、.png、.webp）を選んでください。';
 
   @override
-  String get siBackgroundTooBig =>
-      'Esa imagen es demasiado grande para usarla de fondo.';
+  String get siBackgroundTooBig => 'その画像は背景に使うには大きすぎます。';
 
   @override
-  String get bgImages => 'Imágenes';
+  String get bgImages => '画像';
 
   @override
   String bgImageFailed(String error) {
-    return 'No pude usar esa imagen: $error';
+    return 'その画像を使えませんでした：$error';
   }
 
   @override
-  String get bgLowContrast =>
-      'Poca diferencia con la tarjeta: la letra se ajustará sola para que se lea.';
+  String get bgLowContrast => 'カードとの差が小さいです：文字が読めるように自動で調整されます。';
 
   @override
-  String get bgChipColor => 'Color de las pestañas';
+  String get bgChipColor => 'タブの色';
 
   @override
-  String get bgIconColor => 'Color de los iconos';
+  String get bgIconColor => 'アイコンの色';
 
   @override
-  String get bgUseThis => 'Usar este';
+  String get bgUseThis => 'これを使う';
 
   @override
   String get camGstreamerMissing =>
-      'GStreamer no está instalado. Instálalo con:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good';
+      'GStreamerがインストールされていません。次でインストールしてください：\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good';
 
   @override
   String camNoImage(String dispositivo, String codigo, String detalle) {
-    return 'La cámara $dispositivo no da imagen (gst-launch salió con $codigo).\n$detalle';
+    return 'カメラ $dispositivo が画像を出しません（gst-launchが $codigo で終了）。\n$detalle';
   }
 
   @override
   String camNoFrames(String dispositivo) {
-    return 'La cámara $dispositivo no ha dado ningún frame en 6 s.';
+    return 'カメラ $dispositivo が6秒間フレームを1つも出しませんでした。';
   }
 
   @override
   String get camNoCameras =>
-      'No encuentro ninguna cámara (/dev/video*). ¿Está conectada? Comprueba con `lsusb` que el sistema la ve.';
+      'カメラ（/dev/video*）が見つかりません。接続されていますか？`lsusb` でシステムが認識しているか確認してください。';
 
   @override
   String camNoneWorked(String detalle) {
-    return 'Ninguna cámara dio imagen:\n$detalle';
+    return 'どのカメラも画像を出しませんでした：\n$detalle';
   }
 
   @override
-  String get bkRestoreAction => 'Restaurar';
+  String get bkRestoreAction => '復元';
 
   @override
-  String get fpUnselect => 'Desmarcar';
+  String get fpUnselect => '選択解除';
 
   @override
-  String get stClear => 'Vaciar';
+  String get stClear => '空にする';
 
   @override
-  String get tlRemove => 'Quitar';
+  String get tlRemove => '取り除く';
 
   @override
-  String get tlUnrecognized => 'Sin reconocer';
+  String get tlUnrecognized => '認識できず';
 
   @override
-  String get tlNothingAlike => 'nada parecido en la base — re-foto o quitar';
+  String get tlNothingAlike => 'データベースに似たものなし—撮り直すか取り除く';
 
   @override
-  String get tlTapToPick => 'toca para elegir a mano entre parecidas';
+  String get tlTapToPick => 'タップして似ているものから手動で選ぶ';
 
   @override
-  String get lsQuantity => 'Cantidad';
+  String get lsQuantity => '数量';
 
   @override
-  String get scPhotos => 'Fotos';
+  String get scPhotos => '写真';
 
   @override
-  String get ftWhichFolder => '¿En qué carpeta las quieres?';
+  String get ftWhichFolder => 'どのフォルダに入れますか？';
 
   @override
   String get ftWhichFolderSub =>
-      'Entran en tu colección igual; la carpeta es solo una etiqueta para encontrarlas luego.';
+      'どちらにしてもコレクションには入ります。フォルダは、あとで見つけるためのラベルにすぎません。';
 
   @override
-  String get ftNone => 'Ninguna';
+  String get ftNone => 'なし';
 
   @override
   String ftCards(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n 枚',
     );
     return '$_temp0';
   }
 
   @override
-  String get ftNewFolderEllipsis => 'Carpeta nueva…';
+  String get ftNewFolderEllipsis => '新しいフォルダ…';
 
   @override
-  String get ftNewFolder => 'Carpeta nueva';
+  String get ftNewFolder => '新しいフォルダ';
 
   @override
-  String get ftNewFolderHint => 'Caja de la tienda, Para vender…';
+  String get ftNewFolderHint => 'お店の箱、売る用…';
 
   @override
-  String get sgTitle => 'El ojo del escáner';
+  String get sgTitle => 'スキャナーの目';
 
   @override
   String get sgWhy =>
-      'Para reconocer cartas sin internet necesito la base de huellas visuales (~12 MB): la firma del arte de cada ilustración de Magic. Se descarga una vez.';
+      'インターネットなしでカードを認識するには、視覚的な指紋データベース（約12 MB）が必要です：Magicの各イラストのアートの署名です。一度だけダウンロードします。';
 
   @override
-  String get sgDownload => 'Descargar base de huellas';
+  String get sgDownload => '指紋データベースをダウンロード';
 
   @override
-  String get cmFullCard => 'Ver ficha completa (precios y legalidad)';
+  String get cmFullCard => 'カード詳細を見る（価格とリーガリティ）';
 
   @override
-  String get cmSwipeHint =>
-      'arrastra o usa ← → para pasar · toca fuera para cerrar';
+  String get cmSwipeHint => 'ドラッグか← →でめくる · 外側をタップで閉じる';
 
   @override
-  String get cmTapOutHint => 'toca fuera para cerrar';
+  String get cmTapOutHint => '外側をタップで閉じる';
 
   @override
-  String get fcTitle => '¿Con qué carta empezaste?';
+  String get fcTitle => 'どのカードから始めましたか？';
 
   @override
-  String get fcRemove => 'Quitar';
+  String get fcRemove => '取り除く';
 
   @override
-  String get fcSearchHint => 'Buscar en tu colección';
+  String get fcSearchHint => 'コレクション内を検索';
 
   @override
-  String get fcNoMatch => 'No encuentro ninguna carta con eso.';
+  String get fcNoMatch => 'それに合うカードが見つかりません。';
 
   @override
-  String get acNoneWithFilters => 'Nada por aquí con estos filtros.';
+  String get acNoneWithFilters => 'この絞り込みでは何もありません。';
 
   @override
-  String get acAll => 'Todos';
+  String get acAll => 'すべて';
 
   @override
-  String get tsTitle => 'Modo Test — vence al meta';
+  String get tsTitle => 'テストモード—メタを倒せ';
 
   @override
   String get tsIntro =>
-      'Elige contra qué mazo del meta quieres jugar. ManaForge construye mazos con TUS cartas, simula cientos de partidas contra él y se queda con el que más gana — probando además cambios de carta uno a uno para afinarlo.';
+      'どのメタデッキと対戦したいか選んでください。ManaForgeはあなたのカードでデッキを組み、それと数百回対戦をシミュレートして、最も勝つものを選びます—さらにカードの入れ替えを1枚ずつ試して磨き上げます。';
 
   @override
-  String get tsLoadingMeta => 'Cargando meta…';
+  String get tsLoadingMeta => 'メタを読み込み中…';
 
   @override
-  String get tsLocalPresets => 'Presets locales (sin conexión)';
+  String get tsLocalPresets => 'ローカルプリセット（オフライン）';
 
   @override
   String get tsNoDeckToFace =>
-      'Con las cartas actuales no me sale ningún mazo completo que enfrentar. Añade más cartas y vuelve a intentarlo.';
+      '今のカードでは、対戦させる完成したデッキが組めません。カードを追加して、もう一度お試しください。';
 
   @override
   String tsSimFailed(String error) {
-    return 'No pude simular: $error';
+    return 'シミュレートできませんでした：$error';
   }
 
   @override
   String tsFormatShare(String formato, String cuota) {
-    return '$formato · $cuota del meta';
+    return '$formato · メタの $cuota';
   }
 
   @override
-  String get tsSimulating =>
-      'Simulando partidas… (unos segundos; todo en tu equipo)';
+  String get tsSimulating => '対戦をシミュレート中…（数秒、すべてあなたの端末上で）';
 
   @override
   String tsFindBest(String meta) {
-    return 'Buscar mi mejor mazo contra $meta';
+    return '$meta に対する自分の最強デッキを探す';
   }
 
   @override
   String get tsHonesty =>
-      'Honestidad: la simulación entiende colores de maná, mulligans, evasión (volar, arrollar, toque mortal…), removal instantáneo y contramagia — pero no el texto completo de cada carta. El porcentaje sirve para COMPARAR tus mazos entre sí, no como predicción exacta.';
+      '正直に言うと：シミュレーションはマナの色、マリガン、回避（飛行、トランプル、接死…）、インスタント除去、打ち消しは理解しますが、各カードの全文までは理解しません。この勝率は、自分のデッキ同士を比較するためのもので、正確な予測ではありません。';
 
   @override
   String tsChampion(String meta) {
-    return 'Tu campeón contra $meta';
+    return '$meta に対するあなたのチャンピオン';
   }
 
   @override
   String tsWinRateLine(int mazos, int partidas) {
-    return 'de victorias estimadas · $mazos mazos probados · $partidas partidas por mazo';
+    return 'の推定勝率 · デッキ $mazos 個を試行 · 1デッキあたり $partidas 戦';
   }
 
   @override
   String get tsNoDominant =>
-      'Ningún mazo de tu colección domina este enfrentamiento — este es el que mejor pelea. Mira sus debilidades en el detalle.';
+      'コレクションのどのデッキもこの対戦を圧倒はしません—これが一番よく戦うものです。詳細でその弱点を確認してください。';
 
   @override
-  String get tsSeeDeck => 'Ver mazo completo (y guardarlo)';
+  String get tsSeeDeck => 'デッキ全体を見る（そして保存）';
 
   @override
   String hsLevelLine(int hechos, int total, int xp, int nivel) {
-    return '$hechos/$total logros · $xp XP para el nivel $nivel';
+    return '実績 $total 個中 $hechos 個 · レベル $nivel まで $xp XP';
   }
 
   @override
-  String get hsForgeDecks => 'Forjar mazos';
+  String get hsForgeDecks => 'デッキを鍛造';
 
   @override
-  String get hsTestYourself => '⚔ ponte a prueba';
+  String get hsTestYourself => '⚔ 腕試し';
 
   @override
-  String get bgCustom => 'A medida';
+  String get bgCustom => 'カスタム';
 
   @override
-  String get bgPickCustom => 'Elegir un color a medida';
+  String get bgPickCustom => 'カスタム色を選ぶ';
 
   @override
-  String get bgCustomColor => 'Color a medida';
+  String get bgCustomColor => 'カスタム色';
 
   @override
-  String get bgSampleTab => 'Rojo';
+  String get bgSampleTab => '赤';
 
   @override
-  String get cfSortRecent => 'Recién añadidas';
+  String get cfSortRecent => '追加した順';
 
   @override
-  String get cfSortAlpha => 'Nombre A-Z';
+  String get cfSortAlpha => '名前 A-Z';
 
   @override
-  String get cfSortCmc => 'Coste';
+  String get cfSortCmc => 'コスト';
 
   @override
-  String get cfSortQty => 'Cantidad';
+  String get cfSortQty => '数量';
 
   @override
-  String get cfSortBy => 'Ordenar por';
+  String get cfSortBy => '並べ替え';
 
   @override
-  String get cfSort => 'Orden';
+  String get cfSort => '並び順';
 
   @override
-  String get cfClear => 'Limpiar';
+  String get cfClear => 'クリア';
 
   @override
-  String get cfCost => 'Coste';
+  String get cfCost => 'コスト';
 
   @override
-  String get cfCostAll => 'Coste: todos';
+  String get cfCostAll => 'コスト：すべて';
 
   @override
   String cfCostN(String n) {
-    return 'Coste $n';
+    return 'コスト $n';
   }
 
   @override
-  String get cfType => 'Tipo';
+  String get cfType => 'タイプ';
 
   @override
-  String get cfTypeAll => 'Tipo: todos';
+  String get cfTypeAll => 'タイプ：すべて';
 
   @override
-  String get cfTypeCreature => 'Criaturas';
+  String get cfTypeCreature => 'クリーチャー';
 
   @override
-  String get cfTypeInstant => 'Instantáneos';
+  String get cfTypeInstant => 'インスタント';
 
   @override
-  String get cfTypeSorcery => 'Conjuros';
+  String get cfTypeSorcery => 'ソーサリー';
 
   @override
-  String get cfTypeArtifact => 'Artefactos';
+  String get cfTypeArtifact => 'アーティファクト';
 
   @override
-  String get cfTypeEnchantment => 'Encantamientos';
+  String get cfTypeEnchantment => 'エンチャント';
 
   @override
-  String get cfTypeLand => 'Tierras';
+  String get cfTypeLand => '土地';
 
   @override
-  String get cfPower => 'Ataque';
+  String get cfPower => 'パワー';
 
   @override
-  String get cfPowerAll => 'Ataque: todos';
+  String get cfPowerAll => 'パワー：すべて';
 
   @override
   String cfPowerMin(int n) {
-    return 'Ataque ≥ $n';
+    return 'パワー ≥ $n';
   }
 
   @override
-  String get cfToughness => 'Defensa';
+  String get cfToughness => 'タフネス';
 
   @override
-  String get cfToughnessAll => 'Defensa: todos';
+  String get cfToughnessAll => 'タフネス：すべて';
 
   @override
   String cfToughnessMin(int n) {
-    return 'Defensa ≥ $n';
+    return 'タフネス ≥ $n';
   }
 
   @override
-  String get cfNoDate => 'sin fecha';
+  String get cfNoDate => '日付なし';
 
   @override
-  String get cfToday => 'hoy';
+  String get cfToday => '今日';
 
   @override
-  String get cfYesterday => 'ayer';
+  String get cfYesterday => '昨日';
 
   @override
   String cfDaysAgo(int n) {
-    return 'hace $n días';
+    return '$n 日前';
   }
 
   @override
-  String get pcWeek => 'Semana';
+  String get pcWeek => '週';
 
   @override
-  String get pcMonth => 'Mes';
+  String get pcMonth => '月';
 
   @override
-  String get pcAll => 'Todo';
+  String get pcAll => 'すべて';
 
   @override
-  String get vpTapCorrect => 'Toca la carta correcta';
+  String get vpTapCorrect => '正しいカードをタップ';
 
   @override
-  String get achCopias1 => 'La primera de muchas';
+  String get achCopias1 => '最初の1枚、これから山ほど';
 
   @override
-  String get achCopias10 => 'Solo iba a comprar una';
+  String get achCopias10 => '1枚だけ買うつもりだった';
 
   @override
-  String get achCopias50 => 'Ya no caben en la mano';
+  String get achCopias50 => 'もう片手に収まらない';
 
   @override
-  String get achCopias100 => 'Cien y subiendo';
+  String get achCopias100 => '100枚、まだ増える';
 
   @override
-  String get achCopias500 => 'La caja se queda pequeña';
+  String get achCopias500 => '箱が手狭になってきた';
 
   @override
-  String get achCopias1000 => 'Mil. Y las quiero todas';
+  String get achCopias1000 => '1000枚。全部欲しい';
 
   @override
-  String get achCopias5000 => 'Esto ya es un almacén';
+  String get achCopias5000 => 'もはや倉庫';
 
   @override
-  String get achCopias10000 => 'Diez mil, pero yo controlo';
+  String get achCopias10000 => '1万枚、でもいつでもやめられる';
 
   @override
   String achCopiasDesc(String n) {
-    return 'Ten $n cartas en tu colección.';
+    return 'コレクションに $n 枚のカードを持つ。';
   }
 
   @override
-  String get achDistintas25 => 'Aquí hay variedad';
+  String get achDistintas25 => 'バラエティが出てきた';
 
   @override
-  String get achDistintas100 => 'Cien caras distintas';
+  String get achDistintas100 => '100種類の違う顔ぶれ';
 
   @override
-  String get achDistintas500 => 'Media biblioteca';
+  String get achDistintas500 => '図書館の半分';
 
   @override
-  String get achDistintas1000 => 'Enciclopedia andante';
+  String get achDistintas1000 => '歩く百科事典';
 
   @override
-  String get achDistintas2500 => 'Ya no me las sé todas';
+  String get achDistintas2500 => 'もう全部は覚えきれない';
 
   @override
-  String get achDistintas5000 => 'El archivo';
+  String get achDistintas5000 => 'アーカイブ';
 
   @override
   String achDistintasDesc(String n) {
-    return 'Ten $n cartas DISTINTAS (sin contar repetidas).';
+    return '$n 種類の異なるカードを持つ（重複は数えません）。';
   }
 
   @override
-  String get achPlaysets1 => 'Cuatro iguales';
+  String get achPlaysets1 => '同じの4枚そろい';
 
   @override
-  String get achPlaysets20 => 'Veinte playsets, cero mazos';
+  String get achPlaysets20 => 'プレイセット20組、デッキはゼロ';
 
   @override
-  String get achPlaysets1Desc => 'Ten 4 copias de una misma carta.';
+  String get achPlaysets1Desc => '同じカードを4枚持つ。';
 
   @override
-  String get achPlaysets20Desc =>
-      'Ten 20 playsets distintos (4 copias de cada uno).';
+  String get achPlaysets20Desc => '20種類のプレイセットを持つ（それぞれ4枚ずつ）。';
 
   @override
-  String get achComunes10 => 'Las que nadie quiere';
+  String get achComunes10 => '誰もいらないやつ';
 
   @override
-  String get achComunes50 => 'El montón de siempre';
+  String get achComunes50 => 'いつもの山';
 
   @override
-  String get achComunes200 => 'Rey del montón';
+  String get achComunes200 => '山の王';
 
   @override
-  String get achComunes500 => 'Marea de comunes';
+  String get achComunes500 => 'コモンの大波';
 
   @override
   String achComunesDesc(String n) {
-    return 'Ten $n cartas comunes distintas.';
+    return '$n 種類のコモンを持つ。';
   }
 
   @override
-  String get achInfrecuentes10 => 'Algo mejor que común';
+  String get achInfrecuentes10 => 'コモンより一段上';
 
   @override
-  String get achInfrecuentes50 => 'Plata fina';
+  String get achInfrecuentes50 => '上質な銀';
 
   @override
-  String get achInfrecuentes200 => 'Cazador de infrecuentes';
+  String get achInfrecuentes200 => 'アンコモンハンター';
 
   @override
-  String get achInfrecuentes500 => 'Plata a espuertas';
+  String get achInfrecuentes500 => '銀をバケツ一杯';
 
   @override
   String achInfrecuentesDesc(String n) {
-    return 'Ten $n cartas infrecuentes distintas.';
+    return '$n 種類のアンコモンを持つ。';
   }
 
   @override
-  String get achRaras5 => 'Suena bien al abrir el sobre';
+  String get achRaras5 => 'パックを開けて聞こえるいい音';
 
   @override
-  String get achRaras25 => 'Cofre de raras';
+  String get achRaras25 => 'レアの宝箱';
 
   @override
-  String get achRaras100 => 'Cien raras y ninguna jugable';
+  String get achRaras100 => 'レア100枚、使えるものゼロ';
 
   @override
-  String get achRaras300 => 'Cámara acorazada';
+  String get achRaras300 => '金庫室';
 
   @override
   String achRarasDesc(String n) {
-    return 'Ten $n cartas raras distintas.';
+    return '$n 種類のレアを持つ。';
   }
 
   @override
-  String get achMiticas1 => 'Mi primera mítica';
+  String get achMiticas1 => '初めての神話レア';
 
   @override
-  String get achMiticas10 => 'Diez míticas';
+  String get achMiticas10 => '神話レア10枚';
 
   @override
-  String get achMiticas50 => 'Coleccionista mítico';
+  String get achMiticas50 => '神話級コレクター';
 
   @override
-  String get achMiticas150 => 'Panteón mítico';
+  String get achMiticas150 => '神話の万神殿';
 
   @override
   String achMiticasDesc(String n) {
-    return 'Ten $n cartas míticas distintas.';
+    return '$n 種類の神話レアを持つ。';
   }
 
   @override
-  String get achBlancas25 => 'Orden y concierto';
+  String get achBlancas25 => '秩序と規律';
 
   @override
-  String get achBlancas100 => 'Ejército de plata';
+  String get achBlancas100 => '白銀の軍勢';
 
   @override
   String achBlancasDesc(String n) {
-    return 'Ten $n cartas blancas distintas.';
+    return '$n 種類の白いカードを持つ。';
   }
 
   @override
-  String get achAzules25 => 'Eso no te lo permito';
+  String get achAzules25 => 'それはやらせない';
 
   @override
-  String get achAzules100 => 'Torre de marfil';
+  String get achAzules100 => '象牙の塔';
 
   @override
   String achAzulesDesc(String n) {
-    return 'Ten $n cartas azules distintas.';
+    return '$n 種類の青いカードを持つ。';
   }
 
   @override
-  String get achNegras25 => 'Pacto oscuro';
+  String get achNegras25 => '闇の契約';
 
   @override
-  String get achNegras100 => 'Señor de la cripta';
+  String get achNegras100 => '地下墓地の主';
 
   @override
   String achNegrasDesc(String n) {
-    return 'Ten $n cartas negras distintas.';
+    return '$n 種類の黒いカードを持つ。';
   }
 
   @override
-  String get achRojas25 => 'A quemarlo todo';
+  String get achRojas25 => '何もかも焼き尽くせ';
 
   @override
-  String get achRojas100 => 'Incendio general';
+  String get achRojas100 => '大炎上';
 
   @override
   String achRojasDesc(String n) {
-    return 'Ten $n cartas rojas distintas.';
+    return '$n 種類の赤いカードを持つ。';
   }
 
   @override
-  String get achVerdes25 => 'Un brote';
+  String get achVerdes25 => '芽生え';
 
   @override
-  String get achVerdes100 => 'El bosque entero';
+  String get achVerdes100 => '森まるごと';
 
   @override
   String achVerdesDesc(String n) {
-    return 'Ten $n cartas verdes distintas.';
+    return '$n 種類の緑のカードを持つ。';
   }
 
   @override
-  String get achIncoloras25 => 'Metal frío';
+  String get achIncoloras25 => '冷たい金属';
 
   @override
-  String get achIncoloras100 => 'Forja eterna';
+  String get achIncoloras100 => '永遠の鍛冶場';
 
   @override
   String achIncolorasDesc(String n) {
-    return 'Ten $n cartas incoloras distintas.';
+    return '$n 種類の無色のカードを持つ。';
   }
 
   @override
-  String get achArcoiris => 'Los cinco colores';
+  String get achArcoiris => '五色そろい踏み';
 
   @override
-  String get achArcoirisDesc =>
-      'Ten al menos una carta de cada uno de los 5 colores.';
+  String get achArcoirisDesc => '5色それぞれ、少なくとも1枚ずつ持つ。';
 
   @override
-  String get achMulticolor10 => 'Mezclando colores';
+  String get achMulticolor10 => '色を混ぜて';
 
   @override
-  String get achMulticolor50 => 'Alianza dorada';
+  String get achMulticolor50 => '黄金の同盟';
 
   @override
   String achMulticolorDesc(String n) {
-    return 'Ten $n cartas multicolor distintas.';
+    return '$n 種類の多色カードを持つ。';
   }
 
   @override
-  String get achCincocolores => 'Los cinco de golpe';
+  String get achCincocolores => '5色いっぺんに';
 
   @override
-  String get achCincocoloresDesc => 'Ten una carta con los cinco colores.';
+  String get achCincocoloresDesc => '5色すべてを持つカードを1枚持つ。';
 
   @override
-  String get achSets1 => 'Primera expansión';
+  String get achSets1 => '初めてのエキスパンション';
 
   @override
-  String get achSets5 => 'Cinco mundos';
+  String get achSets5 => '5つの世界';
 
   @override
-  String get achSets10 => 'Viajero de planos';
+  String get achSets10 => 'プレインズウォーカー見習い';
 
   @override
-  String get achSets25 => 'Trotamundos';
+  String get achSets25 => '世界を股にかける';
 
   @override
-  String get achSets50 => 'Medio multiverso';
+  String get achSets50 => '多元宇宙の半分';
 
   @override
   String achSetsDesc(String n) {
-    return 'Ten cartas de $n expansiones distintas.';
+    return '$n 個の異なるエキスパンションのカードを持つ。';
   }
 
   @override
-  String get achSetscompletos1 => 'No falta ni una';
+  String get achSetscompletos1 => '1枚も欠けなし';
 
   @override
-  String get achSetscompletos3 => 'Tres álbumes enteros';
+  String get achSetscompletos3 => 'アルバム3冊まるごと';
 
   @override
-  String get achSetscompletos10 => 'Maestro del álbum';
+  String get achSetscompletos10 => 'アルバムの達人';
 
   @override
-  String get achSetscompletos1Desc =>
-      'Completa una expansión entera en el Álbum.';
+  String get achSetscompletos1Desc => 'アルバムでエキスパンションを丸ごと1つ完成させる。';
 
   @override
   String achSetscompletos3Desc(String n) {
-    return 'Completa $n expansiones enteras.';
+    return '$n 個のエキスパンションを丸ごと完成させる。';
   }
 
   @override
-  String get achAnyos5 => 'Cinco años de cartón';
+  String get achAnyos5 => '厚紙5年分';
 
   @override
-  String get achAnyos15 => 'Máquina del tiempo';
+  String get achAnyos15 => 'タイムマシン';
 
   @override
   String achAnyosDesc(String n) {
-    return 'Ten cartas de $n años de salida distintos.';
+    return '$n 種類の異なる発売年のカードを持つ。';
   }
 
   @override
-  String get achValor10 => 'Primeros euros';
+  String get achValor10 => '初めての数ユーロ';
 
   @override
-  String get achValor50 => 'La hucha';
+  String get achValor50 => '貯金箱';
 
   @override
-  String get achValor250 => 'Ahí va la paga';
+  String get achValor250 => '小遣いが飛んでいく';
 
   @override
-  String get achValor1000 => 'Ahí va todo mi dinero';
+  String get achValor1000 => '有り金が全部飛んでいく';
 
   @override
-  String get achValor5000 => 'No se lo digas a nadie';
+  String get achValor5000 => '誰にも言わないで';
 
   @override
-  String get achValor10000 => 'Vale más que mi coche';
+  String get achValor10000 => '車より高い';
 
   @override
-  String get achValor25000 => 'Colección de museo';
+  String get achValor25000 => '美術館級のコレクション';
 
   @override
   String achValorDesc(String n) {
-    return 'Que tu colección valga $n € o más.';
+    return 'コレクションの価値が $n € 以上になる。';
   }
 
   @override
-  String get achJoya20 => 'Una carta de las buenas';
+  String get achJoya20 => 'いいやつが1枚';
 
   @override
-  String get achJoya100 => 'La joya de la colección';
+  String get achJoya100 => 'コレクションの至宝';
 
   @override
-  String get achJoya500 => 'Esta no sale de la funda';
+  String get achJoya500 => 'これはスリーブから出さない';
 
   @override
-  String get achJoya1000 => 'Mil euros en una sola funda';
+  String get achJoya1000 => 'スリーブ1枚に1000ユーロ';
 
   @override
-  String get achJoya2500 => 'El santo grial';
+  String get achJoya2500 => '聖杯';
 
   @override
   String achJoyaDesc(String n) {
-    return 'Ten una sola carta que valga $n € o más.';
+    return '1枚で $n € 以上の価値があるカードを持つ。';
   }
 
   @override
-  String get achFoils1 => 'Primer brillo';
+  String get achFoils1 => '初めての輝き';
 
   @override
-  String get achFoils10 => 'Destellos';
+  String get achFoils10 => 'きらめき';
 
   @override
-  String get achFoils50 => 'Brilla la caja';
+  String get achFoils50 => '箱が光る';
 
   @override
-  String get achFoils200 => 'Aquí ya no hay nada mate';
+  String get achFoils200 => 'つや消しはもう1枚もない';
 
   @override
-  String get achFoils500 => 'Todo brilla';
+  String get achFoils500 => '何もかも輝く';
 
   @override
-  String get achFoils1000 => 'Fábrica de brillos';
+  String get achFoils1000 => '輝き工場';
 
   @override
   String achFoilsDesc(String n) {
-    return 'Ten $n cartas foil.';
+    return 'foilカードを $n 枚持つ。';
   }
 
   @override
-  String get achFoiljoya10 => 'Foil de las buenas';
+  String get achFoiljoya10 => 'いいfoil';
 
   @override
-  String get achFoiljoya50 => 'Foil de las caras';
+  String get achFoiljoya50 => 'お高いfoil';
 
   @override
-  String get achFoiljoya200 => 'Foil de museo';
+  String get achFoiljoya200 => '美術館級のfoil';
 
   @override
   String achFoiljoyaDesc(String n) {
-    return 'Ten una foil que valga $n € o más.';
+    return '$n € 以上の価値があるfoilを1枚持つ。';
   }
 
   @override
-  String get achFoilvalor50 => 'Vitrina que brilla';
+  String get achFoilvalor50 => '輝くショーケース';
 
   @override
-  String get achFoilvalor250 => 'Vitrina cara';
+  String get achFoilvalor250 => 'お高いショーケース';
 
   @override
-  String get achFoilvalor1000 => 'Mil euros de brillo';
+  String get achFoilvalor1000 => '1000ユーロ分の輝き';
 
   @override
-  String get achFoilvalor5000 => 'Vitrina de museo';
+  String get achFoilvalor5000 => '美術館級のショーケース';
 
   @override
   String achFoilvalorDesc(String n) {
-    return 'Que todas tus foils juntas valgan $n € o más.';
+    return 'foilの合計価値が $n € 以上になる。';
   }
 
   @override
-  String get achMazos1 => 'Primer mazo';
+  String get achMazos1 => '初めてのデッキ';
 
   @override
-  String get achMazos5 => 'Cinco mazos guardados';
+  String get achMazos5 => 'デッキ5個保存';
 
   @override
-  String get achMazos25 => 'El taller no para';
+  String get achMazos25 => '工房は止まらない';
 
   @override
   String achMazosDesc(String n) {
-    return 'Guarda $n mazos hechos con Forge.';
+    return 'Forgeで作ったデッキを $n 個保存する。';
   }
 
   @override
-  String get achMazoscore => 'Mazo redondo';
+  String get achMazoscore => 'そつのないデッキ';
 
   @override
-  String get achMazoscoreDesc => 'Genera un mazo con puntuación 90 o más.';
+  String get achMazoscoreDesc => 'スコア90以上のデッキを生成する。';
 
   @override
-  String get achMazocolores3 => 'Tricolor';
+  String get achMazocolores3 => '3色';
 
   @override
-  String get achMazocolores5 => 'Arcoíris jugable';
+  String get achMazocolores5 => '実戦向けの虹';
 
   @override
   String achMazocoloresDesc(String n) {
-    return 'Guarda un mazo de $n colores.';
+    return '$n 色のデッキを保存する。';
   }
 
   @override
-  String get achMazomono => 'Sin mezclar nada';
+  String get achMazomono => '混ぜもの一切なし';
 
   @override
-  String get achMazomonoDesc => 'Guarda un mazo de un solo color.';
+  String get achMazomonoDesc => '単色のデッキを保存する。';
 
   @override
-  String get achMazocommander => 'Al mando';
+  String get achMazocommander => '指揮を執る';
 
   @override
-  String get achMazocommanderDesc => 'Guarda un mazo de Commander.';
+  String get achMazocommanderDesc => 'Commanderのデッキを保存する。';
 
   @override
-  String get achEscaneadas1 => 'Primer escaneo';
+  String get achEscaneadas1 => '初めてのスキャン';
 
   @override
-  String get achEscaneadas50 => 'Mano rápida';
+  String get achEscaneadas50 => '早業の手さばき';
 
   @override
-  String get achEscaneadas500 => 'Escáner en serie';
+  String get achEscaneadas500 => 'まとめてスキャン';
 
   @override
-  String get achEscaneadas2000 => 'Escaneo hasta dormido';
+  String get achEscaneadas2000 => '寝ながらでもスキャン';
 
   @override
   String achEscaneadasDesc(String n) {
-    return 'Escanea $n cartas con la cámara o por foto.';
+    return 'カメラか写真で $n 枚のカードをスキャンする。';
   }
 
   @override
-  String get achFoto9 => 'Página entera de una foto';
+  String get achFoto9 => '写真1枚でページまるごと';
 
   @override
-  String get achFoto20 => 'Veinte de una tacada';
+  String get achFoto20 => '一度に20枚';
 
   @override
   String achFotoDesc(String n) {
-    return 'Reconoce $n cartas en una sola foto.';
+    return '1枚の写真で $n 枚のカードを認識する。';
   }
 
   @override
-  String get achEscaneoperfecto => 'Ni una para revisar';
+  String get achEscaneoperfecto => '確認ゼロ枚';
 
   @override
-  String get achEscaneoperfectoDesc =>
-      'Escanea una página entera sin que ninguna carta quede para revisar.';
+  String get achEscaneoperfectoDesc => '1ページ丸ごと、1枚も確認送りにせずスキャンする。';
 
   @override
-  String get achDias2 => 'Has vuelto';
+  String get achDias2 => '戻ってきた';
 
   @override
-  String get achDias7 => 'Una semana aquí';
+  String get achDias7 => 'ここで1週間';
 
   @override
-  String get achDias30 => 'Un mes aquí';
+  String get achDias30 => 'ここで1か月';
 
   @override
-  String get achDias100 => 'Cien días aquí';
+  String get achDias100 => 'ここで100日';
 
   @override
   String achDiasDesc(String n) {
-    return 'Usa ManaForge $n días distintos.';
+    return 'ManaForgeを $n 日、別々の日に使う。';
   }
 
   @override
-  String get achRacha3 => 'Tres seguidos';
+  String get achRacha3 => '3日連続';
 
   @override
-  String get achRacha7 => 'Semana perfecta';
+  String get achRacha7 => '完璧な1週間';
 
   @override
-  String get achRacha30 => 'Mes sin fallar';
+  String get achRacha30 => '1か月休まず';
 
   @override
   String achRachaDesc(String n) {
-    return 'Entra $n días seguidos.';
+    return '$n 日連続でアクセスする。';
   }
 
   @override
-  String get achSemanas => 'Cuatro semanas sin faltar';
+  String get achSemanas => '4週間、一度も欠かさず';
 
   @override
-  String get achSemanasDesc => 'Usa ManaForge 4 semanas seguidas.';
+  String get achSemanasDesc => 'ManaForgeを4週連続で使う。';
 
   @override
-  String get achCarpetas1 => 'Empieza el orden';
+  String get achCarpetas1 => '整理のはじまり';
 
   @override
-  String get achCarpetas5 => 'Todo clasificado';
+  String get achCarpetas5 => '全部仕分け済み';
 
   @override
   String achCarpetasDesc(String n) {
-    return 'Crea $n carpetas.';
+    return '$n 個のフォルダを作る。';
   }
 
   @override
-  String get achCarpetagrande => 'Carpetón';
+  String get achCarpetagrande => '特大フォルダ';
 
   @override
-  String get achCarpetagrandeDesc => 'Ten una carpeta con 100 cartas o más.';
+  String get achCarpetagrandeDesc => '100枚以上入ったフォルダを持つ。';
 
   @override
-  String get achCarpetavalor => 'Esta carpeta no la presto';
+  String get achCarpetavalor => 'このフォルダは貸さない';
 
   @override
-  String get achCarpetavalorDesc => 'Ten una carpeta que valga 100 € o más.';
+  String get achCarpetavalorDesc => '100 € 以上の価値があるフォルダを持つ。';
 
   @override
-  String get achTierrasbasicas => 'Las cinco básicas';
+  String get achTierrasbasicas => '基本土地5種そろい';
 
   @override
-  String get achTierrasbasicasDesc =>
-      'Ten los cinco tipos de tierra básica (llanura, isla, pantano, montaña y bosque).';
+  String get achTierrasbasicasDesc => '5種類の基本土地（平地・島・沼・山・森）をすべて持つ。';
 
   @override
-  String get achFuerza => 'Menudo bicho';
+  String get achFuerza => 'とんでもない化け物';
 
   @override
-  String get achFuerzaDesc => 'Ten una criatura de fuerza 10 o más.';
+  String get achFuerzaDesc => 'パワー10以上のクリーチャーを持つ。';
 
   @override
-  String get achCoste => 'Esta no la lanzo en la vida';
+  String get achCoste => 'こんなの一生唱えない';
 
   @override
-  String get achCosteDesc => 'Ten una carta de coste convertido 10 o más.';
+  String get achCosteDesc => '点数で見たマナ・コスト10以上のカードを持つ。';
 
   @override
-  String get achCostecero => 'Gratis';
+  String get achCostecero => 'タダ';
 
   @override
-  String get achCosteceroDesc => 'Ten una carta de coste 0.';
+  String get achCosteceroDesc => 'コスト0のカードを持つ。';
 
   @override
-  String get achTipos => 'De todo un poco';
+  String get achTipos => '何でも少しずつ';
 
   @override
   String get achTiposDesc =>
-      'Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, un encantamiento, una tierra y un planeswalker.';
+      'クリーチャー、インスタント、ソーサリー、アーティファクト、エンチャント、土地、プレインズウォーカーを少なくとも1枚ずつ持つ。';
 
   @override
-  String get achPlaneswalkers => 'Compañía de planeswalkers';
+  String get achPlaneswalkers => 'プレインズウォーカー勢ぞろい';
 
   @override
-  String get achPlaneswalkersDesc => 'Ten 5 planeswalkers distintos.';
+  String get achPlaneswalkersDesc => '5種類の異なるプレインズウォーカーを持つ。';
 
   @override
-  String get achNoventas => 'Reliquia de los 90';
+  String get achNoventas => '90年代の遺物';
 
   @override
-  String get achNoventasDesc => 'Ten una carta de los años 90.';
+  String get achNoventasDesc => '1990年代のカードを持つ。';
 
   @override
-  String get achIdiomas1 => 'Esta no la sé leer';
+  String get achIdiomas1 => 'これは読めない';
 
   @override
-  String get achIdiomas25 => 'Colección políglota';
+  String get achIdiomas25 => '多言語コレクション';
 
   @override
-  String get achIdiomas1Desc => 'Ten una carta en un idioma que no sea inglés.';
+  String get achIdiomas1Desc => '英語以外の言語のカードを1枚持つ。';
 
   @override
-  String get achIdiomas25Desc => 'Ten 25 cartas en otros idiomas.';
+  String get achIdiomas25Desc => '他言語のカードを25枚持つ。';
 
   @override
-  String get achWishlist => 'La lista de los caprichos';
+  String get achWishlist => '物欲リスト';
 
   @override
-  String get achWishlistDesc => 'Apunta 20 cartas en la wishlist.';
+  String get achWishlistDesc => 'ウィッシュリストに20枚のカードを登録する。';
 
   @override
-  String get achTierBronze => 'Bronce';
+  String get achTierBronze => 'ブロンズ';
 
   @override
-  String get achTierSilver => 'Plata';
+  String get achTierSilver => 'シルバー';
 
   @override
-  String get achTierGold => 'Oro';
+  String get achTierGold => 'ゴールド';
 
   @override
-  String get achTierMythic => 'Mítico';
+  String get achTierMythic => 'ミシック';
 
   @override
-  String get achCatCollection => 'Colección';
+  String get achCatCollection => 'コレクション';
 
   @override
-  String get achCatRarity => 'Rarezas';
+  String get achCatRarity => 'レアリティ';
 
   @override
-  String get achCatColor => 'Colores';
+  String get achCatColor => '色';
 
   @override
-  String get achCatSets => 'Expansiones';
+  String get achCatSets => 'エキスパンション';
 
   @override
-  String get achCatValue => 'Valor';
+  String get achCatValue => '価値';
 
   @override
-  String get achCatFoils => 'Foils';
+  String get achCatFoils => 'foil';
 
   @override
   String get achCatForge => 'Forge';
 
   @override
-  String get achCatScanner => 'Escáner';
+  String get achCatScanner => 'スキャナー';
 
   @override
-  String get achCatDedication => 'Dedicación';
+  String get achCatDedication => 'やり込み';
 
   @override
-  String get achCatFolders => 'Carpetas';
+  String get achCatFolders => 'フォルダ';
 
   @override
-  String get achCatCuriosities => 'Curiosidades';
+  String get achCatCuriosities => '変わり種';
 
   @override
-  String get achRankApprentice => 'Aprendiz';
+  String get achRankApprentice => '見習い';
 
   @override
-  String get achRankSummoner => 'Invocador';
+  String get achRankSummoner => '召喚士';
 
   @override
-  String get achRankMage => 'Mago';
+  String get achRankMage => '魔道士';
 
   @override
-  String get achRankArchmage => 'Archimago';
+  String get achRankArchmage => '大魔道士';
 
   @override
-  String get achRankMaster => 'Maestro';
+  String get achRankMaster => '達人';
 
   @override
-  String get achRankPlaneswalker => 'Planeswalker';
+  String get achRankPlaneswalker => 'プレインズウォーカー';
 
   @override
-  String get bkConfirmWord => 'CONFIRMAR';
+  String get bkConfirmWord => 'CONFIRM';
 
   @override
   String dbErrCards(String codigo) {
-    return 'No se pudo descargar la base de cartas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return 'カードデータベースをダウンロードできませんでした（HTTP $codigo）。しばらくしてからもう一度お試しください。';
   }
 
   @override
   String dbErrHashes(String codigo) {
-    return 'No se pudo descargar la base de huellas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return '指紋データベースをダウンロードできませんでした（HTTP $codigo）。しばらくしてからもう一度お試しください。';
   }
 
   @override
   String dbErrPrices(String codigo) {
-    return 'No se pudo descargar el histórico de precios (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return '価格履歴をダウンロードできませんでした（HTTP $codigo）。しばらくしてからもう一度お試しください。';
   }
 
   @override
   String ddCardCount(int n) {
-    return '$n cartas';
+    return '$n 枚';
   }
 
   @override
-  String get ddForgedWith => 'Forjado con ManaForge';
+  String get ddForgedWith => 'ManaForgeで鍛造';
 
   @override
-  String get fxThemeLifegain => 'drenaje de vida';
+  String get fxThemeLifegain => 'ライフゲイン';
 
   @override
-  String get fxThemeSacrifice => 'sacrificio';
+  String get fxThemeSacrifice => 'サクリファイス';
 
   @override
-  String get fxThemeSpells => 'hechizos';
+  String get fxThemeSpells => '呪文';
 
   @override
-  String get fxThemeArtifacts => 'artefactos';
+  String get fxThemeArtifacts => 'アーティファクト';
 
   @override
-  String get fxThemeCounters => 'contadores +1/+1';
+  String get fxThemeCounters => '+1/+1カウンター';
 
   @override
-  String get fxThemeTokens => 'enjambre';
+  String get fxThemeTokens => 'スウォーム';
 
   @override
-  String get fxThemeGraveyard => 'cementerio';
+  String get fxThemeGraveyard => '墓地';
 
   @override
-  String get fxThemeGoodstuff => 'lo mejor de tus cartas';
+  String get fxThemeGoodstuff => '選りすぐりの強カード';
 
   @override
-  String get fxTagLifegain =>
-      'Cada punto de vida que ganas es daño para ellos: drena y aguanta.';
+  String get fxTagLifegain => '得たライフ1点1点が相手へのダメージ：吸い取って、耐えしのげ。';
 
   @override
-  String get fxTagSacrifice =>
-      'Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.';
+  String get fxTagSacrifice => 'あなたのクリーチャーは死んでこそ価値がある：生け贄に捧げて、通行料を取り立てろ。';
 
   @override
-  String get fxTagSpells =>
-      'Cada instantáneo cuenta: juega en el turno del rival y castiga.';
+  String get fxTagSpells => 'インスタント1枚1枚が効いてくる：相手のターンに動いて、しっかり咎めろ。';
 
   @override
-  String get fxTagArtifacts =>
-      'Monta tu taller: cada artefacto hace más fuertes a los demás.';
+  String get fxTagArtifacts => '工房を整えろ：アーティファクト1つ1つが、ほかを強くする。';
 
   @override
-  String get fxTagCounters =>
-      'Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.';
+  String get fxTagCounters => '+1/+1カウンター：あなたのクリーチャーは手の届かないところまで育つ。';
 
   @override
-  String get fxTagTokens =>
-      'Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.';
+  String get fxTagTokens => '盤面をトークンで埋め尽くせ：相手が1体なら、こちらは5体。';
 
   @override
-  String get fxTagGraveyard =>
-      'Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.';
+  String get fxTagGraveyard => '墓地はあなたの第2の手札：どんどん貯めて、いいものを使い回せ。';
 
   @override
-  String get fxTagAggro =>
-      'Sal rápido y pega a la cara: la partida debería acabar pronto.';
+  String get fxTagAggro => '早く出て顔面を殴れ：試合は早々に終わるはず。';
 
   @override
-  String get fxTagTempo =>
-      'Presiona pronto y protege la ventaja con tus hechizos.';
+  String get fxTagTempo => '早めに攻めて、呪文でリードを守れ。';
 
   @override
   String fxTagMidrange(String tema) {
-    return 'Cambia bien tus cartas y gana el medio juego con $tema.';
+    return 'うまくカードを交換して、$tema で中盤を制せ。';
   }
 
   @override
-  String get fxTagControl =>
-      'Aguanta, responde a todo y remata cuando la mesa sea tuya.';
+  String get fxTagControl => '耐えて、すべてに対処し、盤面を握ったら仕留めろ。';
 
   @override
-  String get fxMidLifegain =>
-      'Encadena tus fuentes de vida con los que castigan al rival por ello.';
+  String get fxMidLifegain => 'ライフ回復源を、それで相手を咎めるカードとつなげろ。';
 
   @override
-  String get fxMidSacrifice =>
-      'Sacrifica lo barato para robar, drenar o hacer crecer al resto.';
+  String get fxMidSacrifice => '安いものを生け贄にして、ドロー・ドレイン・残りの強化につなげろ。';
 
   @override
-  String get fxMidSpells =>
-      'Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.';
+  String get fxMidSpells => 'マナは構えておけ：呪文を唱えるたびにクリーチャーが育つ。';
 
   @override
-  String get fxMidArtifacts =>
-      'Despliega artefactos baratos y activa a los que los cuentan.';
+  String get fxMidArtifacts => '軽いアーティファクトを並べて、その数を数えるカードを起動しろ。';
 
   @override
-  String get fxMidCounters =>
-      'Apila contadores en una o dos criaturas y protégelas.';
+  String get fxMidCounters => '1〜2体のクリーチャーにカウンターを盛って、守り抜け。';
 
   @override
-  String get fxMidTokens =>
-      'Genera fichas cada turno y busca los efectos que las hacen mayores.';
+  String get fxMidTokens => '毎ターン、トークンを生成して、それを強化する効果を探せ。';
 
   @override
-  String get fxMidGraveyard =>
-      'Muele y descarta con intención: lo que cae al cementerio vuelve.';
+  String get fxMidGraveyard => '狙って切削・捨て札しろ：墓地に落ちたものは戻ってくる。';
 
   @override
-  String get fxEndLifegain =>
-      'Con la vida alta, cambia a modo agresivo: ellos ya no llegan.';
+  String get fxEndLifegain => 'ライフが高いうちに攻めに転じろ：相手はもう届かない。';
 
   @override
-  String get fxEndSacrifice =>
-      'El valor acumulado te da la partida: cada cambio te sale gratis.';
+  String get fxEndSacrifice => '積み上げたアドバンテージが試合を決める：どの交換もこちらは実質タダ。';
 
   @override
-  String get fxEndSpells =>
-      'Un par de hechizos en el mismo turno y tus criaturas cierran.';
+  String get fxEndSpells => '同じターンに呪文を2枚、あとはクリーチャーが試合を締める。';
 
   @override
-  String get fxEndArtifacts =>
-      'Tu mesa vale el doble que la suya: remata con tus payoffs.';
+  String get fxEndArtifacts => 'あなたの盤面は相手の倍の価値：ペイオフで仕留めろ。';
 
   @override
-  String get fxEndCounters =>
-      'Una amenaza enorme y protegida acaba la partida en dos golpes.';
+  String get fxEndCounters => '守られた巨大な脅威が、2回の攻撃で試合を終わらせる。';
 
   @override
-  String get fxEndTokens =>
-      'Ataca en masa: ningún bloqueo aguanta a todo tu ejército.';
+  String get fxEndTokens => '総攻撃を仕掛けろ：どんなブロックも、あなたの全軍は止められない。';
 
   @override
-  String get fxEndGraveyard =>
-      'Reutiliza tus mejores cartas: juegas con dos manos contra una.';
+  String get fxEndGraveyard => '最強のカードを使い回せ：相手の1つの手札に、こちらは2つで戦う。';
 
   @override
   String get fxTurns12 => 'T1-T2';
@@ -3627,48 +3525,42 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fxTurns5 => 'T5+';
 
   @override
-  String get fxAggroEarly => 'Juega una criatura cada turno, sin excepción.';
+  String get fxAggroEarly => '毎ターン、必ずクリーチャーを1体プレイしろ。';
 
   @override
-  String get fxAggroMid =>
-      'Sigue atacando; guarda el daño directo para quitar bloqueadores.';
+  String get fxAggroMid => '攻め続けろ。火力はブロッカー除去用に取っておけ。';
 
   @override
-  String get fxAggroLate => 'Remata con todo: aquí deberías cerrar la partida.';
+  String get fxAggroLate => '全力で仕留めろ：ここで試合を締めるべきだ。';
 
   @override
-  String get fxTempoEarly => 'Amenaza barata y maná abierto cuando puedas.';
+  String get fxTempoEarly => '軽い脅威を出しつつ、できるときはマナを構えろ。';
 
   @override
-  String get fxTempoMid => 'Ataca y usa tus hechizos en el turno del rival.';
+  String get fxTempoMid => '攻めながら、相手のターンに呪文を使え。';
 
   @override
-  String get fxTempoLate =>
-      'Protege tus criaturas y cierra por el aire o con daño directo.';
+  String get fxTempoLate => 'クリーチャーを守って、空から、あるいは火力で締めろ。';
 
   @override
-  String get fxMidrangeEarly =>
-      'Desarrolla y no regales cartas: cambios de uno por uno buenos.';
+  String get fxMidrangeEarly => '盤面を作り、カードを無駄にするな：1対1の有利な交換を。';
 
   @override
   String fxMidrangeMid(String tema) {
-    return 'Despliega tus motores de $tema y estabiliza la mesa.';
+    return '$tema のエンジンを展開して、盤面を安定させろ。';
   }
 
   @override
-  String get fxMidrangeLate =>
-      'Tus cartas valen más que las suyas: conviértelo en la partida.';
+  String get fxMidrangeLate => 'あなたのカードは相手より価値が高い：それを勝ちに変えろ。';
 
   @override
-  String get fxControlEarly =>
-      'Tierra al turno y responde solo a lo que importa.';
+  String get fxControlEarly => '毎ターン土地を置き、重要なものだけに対処しろ。';
 
   @override
-  String get fxControlMid =>
-      'Limpia la mesa y roba cartas: el tiempo juega para ti.';
+  String get fxControlMid => '盤面を一掃してカードを引け：時間はあなたの味方。';
 
   @override
-  String get fxControlLate => 'Baja una amenaza y protégela hasta el final.';
+  String get fxControlLate => '脅威を1つ出して、最後まで守り抜け。';
 
   @override
   String get fxArchetypeAggro => 'aggro';
@@ -3685,41 +3577,37 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String fxWhyItWorks(String coste, String tierras, String arquetipo,
       int criaturas, int interaccion, String tema) {
-    return 'Coste medio $coste: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva $tierras tierras — dentro del rango de un mazo $arquetipo. Hay $criaturas criaturas para mantener la mesa y $interaccion cartas de interacción para lo que traiga el rival. El tema ($tema) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.';
+    return '平均コスト $coste：カーステンの法則（コスト3.0で土地24枚、±0.5ごとに±1）によれば、このデッキは土地 $tierras 枚—$arquetipo デッキの範囲内です。盤面を支えるクリーチャーが $criaturas 体、相手の動きに対処する干渉カードが $interaccion 枚。テーマ（$tema）があなたのシナジーを集約します：テーマのパーツを見るほど、その1枚1枚が強くなります。';
   }
 
   @override
   String fxNoLandsRange(String tierras, String min, String max) {
-    return 'Con esa curva salen $tierras tierras: fuera del rango sano ($min-$max). Ajusta el total de hechizos.';
+    return 'そのカーブだと土地は $tierras 枚：健全な範囲（$min-$max）の外です。呪文の合計枚数を調整してください。';
   }
 
   @override
   String get fxNoCards =>
-      'Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.';
+      'コレクションには、そのカーブを埋めるのに十分なこれらの色のカードがありません。呪文を減らすか、別のコストで試してください。';
 
   @override
   String fxNoProfile(String coste, String tierras) {
-    return 'Esa curva (coste medio $coste con $tierras tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.';
+    return 'そのカーブ（平均コスト $coste で土地 $tierras 枚）は、どの健全なプロファイルにも当てはまりません：軽いデッキは土地を減らしたがり、重いデッキは増やしたがります。両者を近づけてください。';
   }
 
   @override
-  String get fxNoBasics =>
-      'No hay tierras básicas suficientes en la colección para esa curva.';
+  String get fxNoBasics => 'コレクションには、そのカーブに必要な基本土地が足りません。';
 
   @override
   String fxHardRule(String detalle) {
-    return 'La curva pedida rompe una regla dura: $detalle';
+    return '指定したカーブは、絶対的なルールを破っています：$detalle';
   }
 
   @override
-  String get tsPresetMonoRed =>
-      'Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.';
+  String get tsPresetMonoRed => '軽いクリーチャーと顔面へのダメージ：ペースについていけないと4〜5ターンで負けます。';
 
   @override
-  String get tsPresetAzorius =>
-      'Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.';
+  String get tsPresetAzorius => '打ち消し、全体除去、ドロー：試合を長引かせて、少数のフィニッシャーで勝ちます。';
 
   @override
-  String get tsPresetGolgari =>
-      'Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas.';
+  String get tsPresetGolgari => '1対1の交換、効率的なクリーチャー、黒の除去：カードの質で長期戦を制します。';
 }
