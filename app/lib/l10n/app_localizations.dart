@@ -4549,6 +4549,1152 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Toca la carta correcta'**
   String get vpTapCorrect;
+
+  /// No description provided for @achCopias1.
+  ///
+  /// In es, this message translates to:
+  /// **'La primera de muchas'**
+  String get achCopias1;
+
+  /// No description provided for @achCopias10.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo iba a comprar una'**
+  String get achCopias10;
+
+  /// No description provided for @achCopias50.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya no caben en la mano'**
+  String get achCopias50;
+
+  /// No description provided for @achCopias100.
+  ///
+  /// In es, this message translates to:
+  /// **'Cien y subiendo'**
+  String get achCopias100;
+
+  /// No description provided for @achCopias500.
+  ///
+  /// In es, this message translates to:
+  /// **'La caja se queda pequeña'**
+  String get achCopias500;
+
+  /// No description provided for @achCopias1000.
+  ///
+  /// In es, this message translates to:
+  /// **'Mil. Y las quiero todas'**
+  String get achCopias1000;
+
+  /// No description provided for @achCopias5000.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto ya es un almacén'**
+  String get achCopias5000;
+
+  /// No description provided for @achCopias10000.
+  ///
+  /// In es, this message translates to:
+  /// **'Diez mil, pero yo controlo'**
+  String get achCopias10000;
+
+  /// No description provided for @achCopiasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas en tu colección.'**
+  String achCopiasDesc(String n);
+
+  /// No description provided for @achDistintas25.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí hay variedad'**
+  String get achDistintas25;
+
+  /// No description provided for @achDistintas100.
+  ///
+  /// In es, this message translates to:
+  /// **'Cien caras distintas'**
+  String get achDistintas100;
+
+  /// No description provided for @achDistintas500.
+  ///
+  /// In es, this message translates to:
+  /// **'Media biblioteca'**
+  String get achDistintas500;
+
+  /// No description provided for @achDistintas1000.
+  ///
+  /// In es, this message translates to:
+  /// **'Enciclopedia andante'**
+  String get achDistintas1000;
+
+  /// No description provided for @achDistintas2500.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya no me las sé todas'**
+  String get achDistintas2500;
+
+  /// No description provided for @achDistintas5000.
+  ///
+  /// In es, this message translates to:
+  /// **'El archivo'**
+  String get achDistintas5000;
+
+  /// No description provided for @achDistintasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas DISTINTAS (sin contar repetidas).'**
+  String achDistintasDesc(String n);
+
+  /// No description provided for @achPlaysets1.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuatro iguales'**
+  String get achPlaysets1;
+
+  /// No description provided for @achPlaysets20.
+  ///
+  /// In es, this message translates to:
+  /// **'Veinte playsets, cero mazos'**
+  String get achPlaysets20;
+
+  /// No description provided for @achPlaysets1Desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten 4 copias de una misma carta.'**
+  String get achPlaysets1Desc;
+
+  /// No description provided for @achPlaysets20Desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten 20 playsets distintos (4 copias de cada uno).'**
+  String get achPlaysets20Desc;
+
+  /// No description provided for @achComunes10.
+  ///
+  /// In es, this message translates to:
+  /// **'Las que nadie quiere'**
+  String get achComunes10;
+
+  /// No description provided for @achComunes50.
+  ///
+  /// In es, this message translates to:
+  /// **'El montón de siempre'**
+  String get achComunes50;
+
+  /// No description provided for @achComunes200.
+  ///
+  /// In es, this message translates to:
+  /// **'Rey del montón'**
+  String get achComunes200;
+
+  /// No description provided for @achComunes500.
+  ///
+  /// In es, this message translates to:
+  /// **'Marea de comunes'**
+  String get achComunes500;
+
+  /// No description provided for @achComunesDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas comunes distintas.'**
+  String achComunesDesc(String n);
+
+  /// No description provided for @achInfrecuentes10.
+  ///
+  /// In es, this message translates to:
+  /// **'Algo mejor que común'**
+  String get achInfrecuentes10;
+
+  /// No description provided for @achInfrecuentes50.
+  ///
+  /// In es, this message translates to:
+  /// **'Plata fina'**
+  String get achInfrecuentes50;
+
+  /// No description provided for @achInfrecuentes200.
+  ///
+  /// In es, this message translates to:
+  /// **'Cazador de infrecuentes'**
+  String get achInfrecuentes200;
+
+  /// No description provided for @achInfrecuentes500.
+  ///
+  /// In es, this message translates to:
+  /// **'Plata a espuertas'**
+  String get achInfrecuentes500;
+
+  /// No description provided for @achInfrecuentesDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas infrecuentes distintas.'**
+  String achInfrecuentesDesc(String n);
+
+  /// No description provided for @achRaras5.
+  ///
+  /// In es, this message translates to:
+  /// **'Suena bien al abrir el sobre'**
+  String get achRaras5;
+
+  /// No description provided for @achRaras25.
+  ///
+  /// In es, this message translates to:
+  /// **'Cofre de raras'**
+  String get achRaras25;
+
+  /// No description provided for @achRaras100.
+  ///
+  /// In es, this message translates to:
+  /// **'Cien raras y ninguna jugable'**
+  String get achRaras100;
+
+  /// No description provided for @achRaras300.
+  ///
+  /// In es, this message translates to:
+  /// **'Cámara acorazada'**
+  String get achRaras300;
+
+  /// No description provided for @achRarasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas raras distintas.'**
+  String achRarasDesc(String n);
+
+  /// No description provided for @achMiticas1.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi primera mítica'**
+  String get achMiticas1;
+
+  /// No description provided for @achMiticas10.
+  ///
+  /// In es, this message translates to:
+  /// **'Diez míticas'**
+  String get achMiticas10;
+
+  /// No description provided for @achMiticas50.
+  ///
+  /// In es, this message translates to:
+  /// **'Coleccionista mítico'**
+  String get achMiticas50;
+
+  /// No description provided for @achMiticas150.
+  ///
+  /// In es, this message translates to:
+  /// **'Panteón mítico'**
+  String get achMiticas150;
+
+  /// No description provided for @achMiticasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas míticas distintas.'**
+  String achMiticasDesc(String n);
+
+  /// No description provided for @achBlancas25.
+  ///
+  /// In es, this message translates to:
+  /// **'Orden y concierto'**
+  String get achBlancas25;
+
+  /// No description provided for @achBlancas100.
+  ///
+  /// In es, this message translates to:
+  /// **'Ejército de plata'**
+  String get achBlancas100;
+
+  /// No description provided for @achBlancasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas blancas distintas.'**
+  String achBlancasDesc(String n);
+
+  /// No description provided for @achAzules25.
+  ///
+  /// In es, this message translates to:
+  /// **'Eso no te lo permito'**
+  String get achAzules25;
+
+  /// No description provided for @achAzules100.
+  ///
+  /// In es, this message translates to:
+  /// **'Torre de marfil'**
+  String get achAzules100;
+
+  /// No description provided for @achAzulesDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas azules distintas.'**
+  String achAzulesDesc(String n);
+
+  /// No description provided for @achNegras25.
+  ///
+  /// In es, this message translates to:
+  /// **'Pacto oscuro'**
+  String get achNegras25;
+
+  /// No description provided for @achNegras100.
+  ///
+  /// In es, this message translates to:
+  /// **'Señor de la cripta'**
+  String get achNegras100;
+
+  /// No description provided for @achNegrasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas negras distintas.'**
+  String achNegrasDesc(String n);
+
+  /// No description provided for @achRojas25.
+  ///
+  /// In es, this message translates to:
+  /// **'A quemarlo todo'**
+  String get achRojas25;
+
+  /// No description provided for @achRojas100.
+  ///
+  /// In es, this message translates to:
+  /// **'Incendio general'**
+  String get achRojas100;
+
+  /// No description provided for @achRojasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas rojas distintas.'**
+  String achRojasDesc(String n);
+
+  /// No description provided for @achVerdes25.
+  ///
+  /// In es, this message translates to:
+  /// **'Un brote'**
+  String get achVerdes25;
+
+  /// No description provided for @achVerdes100.
+  ///
+  /// In es, this message translates to:
+  /// **'El bosque entero'**
+  String get achVerdes100;
+
+  /// No description provided for @achVerdesDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas verdes distintas.'**
+  String achVerdesDesc(String n);
+
+  /// No description provided for @achIncoloras25.
+  ///
+  /// In es, this message translates to:
+  /// **'Metal frío'**
+  String get achIncoloras25;
+
+  /// No description provided for @achIncoloras100.
+  ///
+  /// In es, this message translates to:
+  /// **'Forja eterna'**
+  String get achIncoloras100;
+
+  /// No description provided for @achIncolorasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas incoloras distintas.'**
+  String achIncolorasDesc(String n);
+
+  /// No description provided for @achArcoiris.
+  ///
+  /// In es, this message translates to:
+  /// **'Los cinco colores'**
+  String get achArcoiris;
+
+  /// No description provided for @achArcoirisDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten al menos una carta de cada uno de los 5 colores.'**
+  String get achArcoirisDesc;
+
+  /// No description provided for @achMulticolor10.
+  ///
+  /// In es, this message translates to:
+  /// **'Mezclando colores'**
+  String get achMulticolor10;
+
+  /// No description provided for @achMulticolor50.
+  ///
+  /// In es, this message translates to:
+  /// **'Alianza dorada'**
+  String get achMulticolor50;
+
+  /// No description provided for @achMulticolorDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas multicolor distintas.'**
+  String achMulticolorDesc(String n);
+
+  /// No description provided for @achCincocolores.
+  ///
+  /// In es, this message translates to:
+  /// **'Los cinco de golpe'**
+  String get achCincocolores;
+
+  /// No description provided for @achCincocoloresDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una carta con los cinco colores.'**
+  String get achCincocoloresDesc;
+
+  /// No description provided for @achSets1.
+  ///
+  /// In es, this message translates to:
+  /// **'Primera expansión'**
+  String get achSets1;
+
+  /// No description provided for @achSets5.
+  ///
+  /// In es, this message translates to:
+  /// **'Cinco mundos'**
+  String get achSets5;
+
+  /// No description provided for @achSets10.
+  ///
+  /// In es, this message translates to:
+  /// **'Viajero de planos'**
+  String get achSets10;
+
+  /// No description provided for @achSets25.
+  ///
+  /// In es, this message translates to:
+  /// **'Trotamundos'**
+  String get achSets25;
+
+  /// No description provided for @achSets50.
+  ///
+  /// In es, this message translates to:
+  /// **'Medio multiverso'**
+  String get achSets50;
+
+  /// No description provided for @achSetsDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten cartas de {n} expansiones distintas.'**
+  String achSetsDesc(String n);
+
+  /// No description provided for @achSetscompletos1.
+  ///
+  /// In es, this message translates to:
+  /// **'No falta ni una'**
+  String get achSetscompletos1;
+
+  /// No description provided for @achSetscompletos3.
+  ///
+  /// In es, this message translates to:
+  /// **'Tres álbumes enteros'**
+  String get achSetscompletos3;
+
+  /// No description provided for @achSetscompletos10.
+  ///
+  /// In es, this message translates to:
+  /// **'Maestro del álbum'**
+  String get achSetscompletos10;
+
+  /// No description provided for @achSetscompletos1Desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa una expansión entera en el Álbum.'**
+  String get achSetscompletos1Desc;
+
+  /// No description provided for @achSetscompletos3Desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa {n} expansiones enteras.'**
+  String achSetscompletos3Desc(String n);
+
+  /// No description provided for @achAnyos5.
+  ///
+  /// In es, this message translates to:
+  /// **'Cinco años de cartón'**
+  String get achAnyos5;
+
+  /// No description provided for @achAnyos15.
+  ///
+  /// In es, this message translates to:
+  /// **'Máquina del tiempo'**
+  String get achAnyos15;
+
+  /// No description provided for @achAnyosDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten cartas de {n} años de salida distintos.'**
+  String achAnyosDesc(String n);
+
+  /// No description provided for @achValor10.
+  ///
+  /// In es, this message translates to:
+  /// **'Primeros euros'**
+  String get achValor10;
+
+  /// No description provided for @achValor50.
+  ///
+  /// In es, this message translates to:
+  /// **'La hucha'**
+  String get achValor50;
+
+  /// No description provided for @achValor250.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahí va la paga'**
+  String get achValor250;
+
+  /// No description provided for @achValor1000.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahí va todo mi dinero'**
+  String get achValor1000;
+
+  /// No description provided for @achValor5000.
+  ///
+  /// In es, this message translates to:
+  /// **'No se lo digas a nadie'**
+  String get achValor5000;
+
+  /// No description provided for @achValor10000.
+  ///
+  /// In es, this message translates to:
+  /// **'Vale más que mi coche'**
+  String get achValor10000;
+
+  /// No description provided for @achValor25000.
+  ///
+  /// In es, this message translates to:
+  /// **'Colección de museo'**
+  String get achValor25000;
+
+  /// No description provided for @achValorDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Que tu colección valga {n} € o más.'**
+  String achValorDesc(String n);
+
+  /// No description provided for @achJoya20.
+  ///
+  /// In es, this message translates to:
+  /// **'Una carta de las buenas'**
+  String get achJoya20;
+
+  /// No description provided for @achJoya100.
+  ///
+  /// In es, this message translates to:
+  /// **'La joya de la colección'**
+  String get achJoya100;
+
+  /// No description provided for @achJoya500.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta no sale de la funda'**
+  String get achJoya500;
+
+  /// No description provided for @achJoya1000.
+  ///
+  /// In es, this message translates to:
+  /// **'Mil euros en una sola funda'**
+  String get achJoya1000;
+
+  /// No description provided for @achJoya2500.
+  ///
+  /// In es, this message translates to:
+  /// **'El santo grial'**
+  String get achJoya2500;
+
+  /// No description provided for @achJoyaDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una sola carta que valga {n} € o más.'**
+  String achJoyaDesc(String n);
+
+  /// No description provided for @achFoils1.
+  ///
+  /// In es, this message translates to:
+  /// **'Primer brillo'**
+  String get achFoils1;
+
+  /// No description provided for @achFoils10.
+  ///
+  /// In es, this message translates to:
+  /// **'Destellos'**
+  String get achFoils10;
+
+  /// No description provided for @achFoils50.
+  ///
+  /// In es, this message translates to:
+  /// **'Brilla la caja'**
+  String get achFoils50;
+
+  /// No description provided for @achFoils200.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí ya no hay nada mate'**
+  String get achFoils200;
+
+  /// No description provided for @achFoils500.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo brilla'**
+  String get achFoils500;
+
+  /// No description provided for @achFoils1000.
+  ///
+  /// In es, this message translates to:
+  /// **'Fábrica de brillos'**
+  String get achFoils1000;
+
+  /// No description provided for @achFoilsDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten {n} cartas foil.'**
+  String achFoilsDesc(String n);
+
+  /// No description provided for @achFoiljoya10.
+  ///
+  /// In es, this message translates to:
+  /// **'Foil de las buenas'**
+  String get achFoiljoya10;
+
+  /// No description provided for @achFoiljoya50.
+  ///
+  /// In es, this message translates to:
+  /// **'Foil de las caras'**
+  String get achFoiljoya50;
+
+  /// No description provided for @achFoiljoya200.
+  ///
+  /// In es, this message translates to:
+  /// **'Foil de museo'**
+  String get achFoiljoya200;
+
+  /// No description provided for @achFoiljoyaDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una foil que valga {n} € o más.'**
+  String achFoiljoyaDesc(String n);
+
+  /// No description provided for @achFoilvalor50.
+  ///
+  /// In es, this message translates to:
+  /// **'Vitrina que brilla'**
+  String get achFoilvalor50;
+
+  /// No description provided for @achFoilvalor250.
+  ///
+  /// In es, this message translates to:
+  /// **'Vitrina cara'**
+  String get achFoilvalor250;
+
+  /// No description provided for @achFoilvalor1000.
+  ///
+  /// In es, this message translates to:
+  /// **'Mil euros de brillo'**
+  String get achFoilvalor1000;
+
+  /// No description provided for @achFoilvalor5000.
+  ///
+  /// In es, this message translates to:
+  /// **'Vitrina de museo'**
+  String get achFoilvalor5000;
+
+  /// No description provided for @achFoilvalorDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Que todas tus foils juntas valgan {n} € o más.'**
+  String achFoilvalorDesc(String n);
+
+  /// No description provided for @achMazos1.
+  ///
+  /// In es, this message translates to:
+  /// **'Primer mazo'**
+  String get achMazos1;
+
+  /// No description provided for @achMazos5.
+  ///
+  /// In es, this message translates to:
+  /// **'Cinco mazos guardados'**
+  String get achMazos5;
+
+  /// No description provided for @achMazos25.
+  ///
+  /// In es, this message translates to:
+  /// **'El taller no para'**
+  String get achMazos25;
+
+  /// No description provided for @achMazosDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Guarda {n} mazos hechos con Forge.'**
+  String achMazosDesc(String n);
+
+  /// No description provided for @achMazoscore.
+  ///
+  /// In es, this message translates to:
+  /// **'Mazo redondo'**
+  String get achMazoscore;
+
+  /// No description provided for @achMazoscoreDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Genera un mazo con puntuación 90 o más.'**
+  String get achMazoscoreDesc;
+
+  /// No description provided for @achMazocolores3.
+  ///
+  /// In es, this message translates to:
+  /// **'Tricolor'**
+  String get achMazocolores3;
+
+  /// No description provided for @achMazocolores5.
+  ///
+  /// In es, this message translates to:
+  /// **'Arcoíris jugable'**
+  String get achMazocolores5;
+
+  /// No description provided for @achMazocoloresDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Guarda un mazo de {n} colores.'**
+  String achMazocoloresDesc(String n);
+
+  /// No description provided for @achMazomono.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin mezclar nada'**
+  String get achMazomono;
+
+  /// No description provided for @achMazomonoDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Guarda un mazo de un solo color.'**
+  String get achMazomonoDesc;
+
+  /// No description provided for @achMazocommander.
+  ///
+  /// In es, this message translates to:
+  /// **'Al mando'**
+  String get achMazocommander;
+
+  /// No description provided for @achMazocommanderDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Guarda un mazo de Commander.'**
+  String get achMazocommanderDesc;
+
+  /// No description provided for @achEscaneadas1.
+  ///
+  /// In es, this message translates to:
+  /// **'Primer escaneo'**
+  String get achEscaneadas1;
+
+  /// No description provided for @achEscaneadas50.
+  ///
+  /// In es, this message translates to:
+  /// **'Mano rápida'**
+  String get achEscaneadas50;
+
+  /// No description provided for @achEscaneadas500.
+  ///
+  /// In es, this message translates to:
+  /// **'Escáner en serie'**
+  String get achEscaneadas500;
+
+  /// No description provided for @achEscaneadas2000.
+  ///
+  /// In es, this message translates to:
+  /// **'Escaneo hasta dormido'**
+  String get achEscaneadas2000;
+
+  /// No description provided for @achEscaneadasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanea {n} cartas con la cámara o por foto.'**
+  String achEscaneadasDesc(String n);
+
+  /// No description provided for @achFoto9.
+  ///
+  /// In es, this message translates to:
+  /// **'Página entera de una foto'**
+  String get achFoto9;
+
+  /// No description provided for @achFoto20.
+  ///
+  /// In es, this message translates to:
+  /// **'Veinte de una tacada'**
+  String get achFoto20;
+
+  /// No description provided for @achFotoDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Reconoce {n} cartas en una sola foto.'**
+  String achFotoDesc(String n);
+
+  /// No description provided for @achEscaneoperfecto.
+  ///
+  /// In es, this message translates to:
+  /// **'Ni una para revisar'**
+  String get achEscaneoperfecto;
+
+  /// No description provided for @achEscaneoperfectoDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanea una página entera sin que ninguna carta quede para revisar.'**
+  String get achEscaneoperfectoDesc;
+
+  /// No description provided for @achDias2.
+  ///
+  /// In es, this message translates to:
+  /// **'Has vuelto'**
+  String get achDias2;
+
+  /// No description provided for @achDias7.
+  ///
+  /// In es, this message translates to:
+  /// **'Una semana aquí'**
+  String get achDias7;
+
+  /// No description provided for @achDias30.
+  ///
+  /// In es, this message translates to:
+  /// **'Un mes aquí'**
+  String get achDias30;
+
+  /// No description provided for @achDias100.
+  ///
+  /// In es, this message translates to:
+  /// **'Cien días aquí'**
+  String get achDias100;
+
+  /// No description provided for @achDiasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa ManaForge {n} días distintos.'**
+  String achDiasDesc(String n);
+
+  /// No description provided for @achRacha3.
+  ///
+  /// In es, this message translates to:
+  /// **'Tres seguidos'**
+  String get achRacha3;
+
+  /// No description provided for @achRacha7.
+  ///
+  /// In es, this message translates to:
+  /// **'Semana perfecta'**
+  String get achRacha7;
+
+  /// No description provided for @achRacha30.
+  ///
+  /// In es, this message translates to:
+  /// **'Mes sin fallar'**
+  String get achRacha30;
+
+  /// No description provided for @achRachaDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Entra {n} días seguidos.'**
+  String achRachaDesc(String n);
+
+  /// No description provided for @achSemanas.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuatro semanas sin faltar'**
+  String get achSemanas;
+
+  /// No description provided for @achSemanasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa ManaForge 4 semanas seguidas.'**
+  String get achSemanasDesc;
+
+  /// No description provided for @achCarpetas1.
+  ///
+  /// In es, this message translates to:
+  /// **'Empieza el orden'**
+  String get achCarpetas1;
+
+  /// No description provided for @achCarpetas5.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo clasificado'**
+  String get achCarpetas5;
+
+  /// No description provided for @achCarpetasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea {n} carpetas.'**
+  String achCarpetasDesc(String n);
+
+  /// No description provided for @achCarpetagrande.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpetón'**
+  String get achCarpetagrande;
+
+  /// No description provided for @achCarpetagrandeDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una carpeta con 100 cartas o más.'**
+  String get achCarpetagrandeDesc;
+
+  /// No description provided for @achCarpetavalor.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta carpeta no la presto'**
+  String get achCarpetavalor;
+
+  /// No description provided for @achCarpetavalorDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una carpeta que valga 100 € o más.'**
+  String get achCarpetavalorDesc;
+
+  /// No description provided for @achTierrasbasicas.
+  ///
+  /// In es, this message translates to:
+  /// **'Las cinco básicas'**
+  String get achTierrasbasicas;
+
+  /// No description provided for @achTierrasbasicasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten los cinco tipos de tierra básica (llanura, isla, pantano, montaña y bosque).'**
+  String get achTierrasbasicasDesc;
+
+  /// No description provided for @achFuerza.
+  ///
+  /// In es, this message translates to:
+  /// **'Menudo bicho'**
+  String get achFuerza;
+
+  /// No description provided for @achFuerzaDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una criatura de fuerza 10 o más.'**
+  String get achFuerzaDesc;
+
+  /// No description provided for @achCoste.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta no la lanzo en la vida'**
+  String get achCoste;
+
+  /// No description provided for @achCosteDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una carta de coste convertido 10 o más.'**
+  String get achCosteDesc;
+
+  /// No description provided for @achCostecero.
+  ///
+  /// In es, this message translates to:
+  /// **'Gratis'**
+  String get achCostecero;
+
+  /// No description provided for @achCosteceroDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una carta de coste 0.'**
+  String get achCosteceroDesc;
+
+  /// No description provided for @achTipos.
+  ///
+  /// In es, this message translates to:
+  /// **'De todo un poco'**
+  String get achTipos;
+
+  /// No description provided for @achTiposDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, un encantamiento, una tierra y un planeswalker.'**
+  String get achTiposDesc;
+
+  /// No description provided for @achPlaneswalkers.
+  ///
+  /// In es, this message translates to:
+  /// **'Compañía de planeswalkers'**
+  String get achPlaneswalkers;
+
+  /// No description provided for @achPlaneswalkersDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten 5 planeswalkers distintos.'**
+  String get achPlaneswalkersDesc;
+
+  /// No description provided for @achNoventas.
+  ///
+  /// In es, this message translates to:
+  /// **'Reliquia de los 90'**
+  String get achNoventas;
+
+  /// No description provided for @achNoventasDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una carta de los años 90.'**
+  String get achNoventasDesc;
+
+  /// No description provided for @achIdiomas1.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta no la sé leer'**
+  String get achIdiomas1;
+
+  /// No description provided for @achIdiomas25.
+  ///
+  /// In es, this message translates to:
+  /// **'Colección políglota'**
+  String get achIdiomas25;
+
+  /// No description provided for @achIdiomas1Desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten una carta en un idioma que no sea inglés.'**
+  String get achIdiomas1Desc;
+
+  /// No description provided for @achIdiomas25Desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Ten 25 cartas en otros idiomas.'**
+  String get achIdiomas25Desc;
+
+  /// No description provided for @achWishlist.
+  ///
+  /// In es, this message translates to:
+  /// **'La lista de los caprichos'**
+  String get achWishlist;
+
+  /// No description provided for @achWishlistDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Apunta 20 cartas en la wishlist.'**
+  String get achWishlistDesc;
+
+  /// No description provided for @achTierBronze.
+  ///
+  /// In es, this message translates to:
+  /// **'Bronce'**
+  String get achTierBronze;
+
+  /// No description provided for @achTierSilver.
+  ///
+  /// In es, this message translates to:
+  /// **'Plata'**
+  String get achTierSilver;
+
+  /// No description provided for @achTierGold.
+  ///
+  /// In es, this message translates to:
+  /// **'Oro'**
+  String get achTierGold;
+
+  /// No description provided for @achTierMythic.
+  ///
+  /// In es, this message translates to:
+  /// **'Mítico'**
+  String get achTierMythic;
+
+  /// No description provided for @achCatCollection.
+  ///
+  /// In es, this message translates to:
+  /// **'Colección'**
+  String get achCatCollection;
+
+  /// No description provided for @achCatRarity.
+  ///
+  /// In es, this message translates to:
+  /// **'Rarezas'**
+  String get achCatRarity;
+
+  /// No description provided for @achCatColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Colores'**
+  String get achCatColor;
+
+  /// No description provided for @achCatSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Expansiones'**
+  String get achCatSets;
+
+  /// No description provided for @achCatValue.
+  ///
+  /// In es, this message translates to:
+  /// **'Valor'**
+  String get achCatValue;
+
+  /// No description provided for @achCatFoils.
+  ///
+  /// In es, this message translates to:
+  /// **'Foils'**
+  String get achCatFoils;
+
+  /// No description provided for @achCatForge.
+  ///
+  /// In es, this message translates to:
+  /// **'Forge'**
+  String get achCatForge;
+
+  /// No description provided for @achCatScanner.
+  ///
+  /// In es, this message translates to:
+  /// **'Escáner'**
+  String get achCatScanner;
+
+  /// No description provided for @achCatDedication.
+  ///
+  /// In es, this message translates to:
+  /// **'Dedicación'**
+  String get achCatDedication;
+
+  /// No description provided for @achCatFolders.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpetas'**
+  String get achCatFolders;
+
+  /// No description provided for @achCatCuriosities.
+  ///
+  /// In es, this message translates to:
+  /// **'Curiosidades'**
+  String get achCatCuriosities;
+
+  /// No description provided for @achRankApprentice.
+  ///
+  /// In es, this message translates to:
+  /// **'Aprendiz'**
+  String get achRankApprentice;
+
+  /// No description provided for @achRankSummoner.
+  ///
+  /// In es, this message translates to:
+  /// **'Invocador'**
+  String get achRankSummoner;
+
+  /// No description provided for @achRankMage.
+  ///
+  /// In es, this message translates to:
+  /// **'Mago'**
+  String get achRankMage;
+
+  /// No description provided for @achRankArchmage.
+  ///
+  /// In es, this message translates to:
+  /// **'Archimago'**
+  String get achRankArchmage;
+
+  /// No description provided for @achRankMaster.
+  ///
+  /// In es, this message translates to:
+  /// **'Maestro'**
+  String get achRankMaster;
+
+  /// No description provided for @achRankPlaneswalker.
+  ///
+  /// In es, this message translates to:
+  /// **'Planeswalker'**
+  String get achRankPlaneswalker;
 }
 
 class _AppLocalizationsDelegate

@@ -1297,5 +1297,282 @@
   "pcMonth": "Month",
   "pcAll": "All",
 
-  "vpTapCorrect": "Tap the right card"
+  "vpTapCorrect": "Tap the right card",
+
+  "achCopias1": "The first of many",
+  "achCopias10": "I was only going to buy one",
+  "achCopias50": "They don't fit in one hand any more",
+  "achCopias100": "A hundred and counting",
+  "achCopias500": "The box is getting small",
+  "achCopias1000": "A thousand. And I want them all",
+  "achCopias5000": "This is a warehouse now",
+  "achCopias10000": "Ten thousand, but I can stop whenever",
+  "achCopiasDesc": "Have {n} cards in your collection.",
+  "@achCopiasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achDistintas25": "Now there's variety",
+  "achDistintas100": "A hundred different faces",
+  "achDistintas500": "Half a library",
+  "achDistintas1000": "Walking encyclopedia",
+  "achDistintas2500": "I don't know them all any more",
+  "achDistintas5000": "The archive",
+  "achDistintasDesc": "Have {n} DIFFERENT cards (duplicates don't count).",
+  "@achDistintasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achPlaysets1": "Four of a kind",
+  "achPlaysets20": "Twenty playsets, zero decks",
+  "achPlaysets1Desc": "Have 4 copies of the same card.",
+  "achPlaysets20Desc": "Have 20 different playsets (4 copies of each).",
+  "achComunes10": "The ones nobody wants",
+  "achComunes50": "The usual pile",
+  "achComunes200": "King of the pile",
+  "achComunes500": "A tide of commons",
+  "achComunesDesc": "Have {n} different common cards.",
+  "@achComunesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achInfrecuentes10": "A step up from common",
+  "achInfrecuentes50": "Fine silver",
+  "achInfrecuentes200": "Uncommon hunter",
+  "achInfrecuentes500": "Silver by the bucket",
+  "achInfrecuentesDesc": "Have {n} different uncommon cards.",
+  "@achInfrecuentesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achRaras5": "That sounds good opening a pack",
+  "achRaras25": "A chest of rares",
+  "achRaras100": "A hundred rares and none playable",
+  "achRaras300": "The vault",
+  "achRarasDesc": "Have {n} different rare cards.",
+  "@achRarasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMiticas1": "My first mythic",
+  "achMiticas10": "Ten mythics",
+  "achMiticas50": "Mythic collector",
+  "achMiticas150": "Mythic pantheon",
+  "achMiticasDesc": "Have {n} different mythic cards.",
+  "@achMiticasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achBlancas25": "Law and order",
+  "achBlancas100": "Army of silver",
+  "achBlancasDesc": "Have {n} different white cards.",
+  "@achBlancasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achAzules25": "I can't let you do that",
+  "achAzules100": "Ivory tower",
+  "achAzulesDesc": "Have {n} different blue cards.",
+  "@achAzulesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achNegras25": "Dark pact",
+  "achNegras100": "Lord of the crypt",
+  "achNegrasDesc": "Have {n} different black cards.",
+  "@achNegrasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achRojas25": "Burn it all down",
+  "achRojas100": "General blaze",
+  "achRojasDesc": "Have {n} different red cards.",
+  "@achRojasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achVerdes25": "A sprout",
+  "achVerdes100": "The whole forest",
+  "achVerdesDesc": "Have {n} different green cards.",
+  "@achVerdesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achIncoloras25": "Cold metal",
+  "achIncoloras100": "Eternal forge",
+  "achIncolorasDesc": "Have {n} different colourless cards.",
+  "@achIncolorasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achArcoiris": "All five colours",
+  "achArcoirisDesc": "Have at least one card of each of the 5 colours.",
+  "achMulticolor10": "Mixing colours",
+  "achMulticolor50": "Golden alliance",
+  "achMulticolorDesc": "Have {n} different multicolour cards.",
+  "@achMulticolorDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achCincocolores": "All five at once",
+  "achCincocoloresDesc": "Have a card with all five colours.",
+  "achSets1": "First set",
+  "achSets5": "Five worlds",
+  "achSets10": "Planeswalker in training",
+  "achSets25": "Globetrotter",
+  "achSets50": "Half the multiverse",
+  "achSetsDesc": "Have cards from {n} different sets.",
+  "@achSetsDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achSetscompletos1": "Not one missing",
+  "achSetscompletos3": "Three full albums",
+  "achSetscompletos10": "Master of the album",
+  "achSetscompletos1Desc": "Complete a whole set in the Album.",
+  "achSetscompletos3Desc": "Complete {n} whole sets.",
+  "@achSetscompletos3Desc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achAnyos5": "Five years of cardboard",
+  "achAnyos15": "Time machine",
+  "achAnyosDesc": "Have cards from {n} different release years.",
+  "@achAnyosDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achValor10": "First euros",
+  "achValor50": "The piggy bank",
+  "achValor250": "There goes my allowance",
+  "achValor1000": "There goes all my money",
+  "achValor5000": "Don't tell anyone",
+  "achValor10000": "Worth more than my car",
+  "achValor25000": "A museum collection",
+  "achValorDesc": "Get your collection to be worth {n} € or more.",
+  "@achValorDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achJoya20": "One of the good ones",
+  "achJoya100": "The jewel of the collection",
+  "achJoya500": "This one never leaves its sleeve",
+  "achJoya1000": "A thousand euros in a single sleeve",
+  "achJoya2500": "The holy grail",
+  "achJoyaDesc": "Have a single card worth {n} € or more.",
+  "@achJoyaDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoils1": "First shine",
+  "achFoils10": "Sparkles",
+  "achFoils50": "The box shines",
+  "achFoils200": "Nothing matte left here",
+  "achFoils500": "Everything shines",
+  "achFoils1000": "Shine factory",
+  "achFoilsDesc": "Have {n} foil cards.",
+  "@achFoilsDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoiljoya10": "A good foil",
+  "achFoiljoya50": "An expensive foil",
+  "achFoiljoya200": "A museum foil",
+  "achFoiljoyaDesc": "Have a foil worth {n} € or more.",
+  "@achFoiljoyaDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoilvalor50": "A cabinet that shines",
+  "achFoilvalor250": "An expensive cabinet",
+  "achFoilvalor1000": "A thousand euros of shine",
+  "achFoilvalor5000": "A museum cabinet",
+  "achFoilvalorDesc": "Get all your foils together to be worth {n} € or more.",
+  "@achFoilvalorDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMazos1": "First deck",
+  "achMazos5": "Five decks saved",
+  "achMazos25": "The workshop never stops",
+  "achMazosDesc": "Save {n} decks made with Forge.",
+  "@achMazosDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMazoscore": "A tidy deck",
+  "achMazoscoreDesc": "Generate a deck scoring 90 or more.",
+  "achMazocolores3": "Three colours",
+  "achMazocolores5": "Playable rainbow",
+  "achMazocoloresDesc": "Save a {n}-colour deck.",
+  "@achMazocoloresDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMazomono": "Nothing mixed in",
+  "achMazomonoDesc": "Save a single-colour deck.",
+  "achMazocommander": "In command",
+  "achMazocommanderDesc": "Save a Commander deck.",
+  "achEscaneadas1": "First scan",
+  "achEscaneadas50": "Quick hands",
+  "achEscaneadas500": "Scanning in bulk",
+  "achEscaneadas2000": "I scan in my sleep",
+  "achEscaneadasDesc": "Scan {n} cards with the camera or from a photo.",
+  "@achEscaneadasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoto9": "A whole page from one photo",
+  "achFoto20": "Twenty in one go",
+  "achFotoDesc": "Recognise {n} cards in a single photo.",
+  "@achFotoDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achEscaneoperfecto": "Not one to review",
+  "achEscaneoperfectoDesc": "Scan a whole page without leaving a single card to review.",
+  "achDias2": "You came back",
+  "achDias7": "A week here",
+  "achDias30": "A month here",
+  "achDias100": "A hundred days here",
+  "achDiasDesc": "Use ManaForge on {n} different days.",
+  "@achDiasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achRacha3": "Three in a row",
+  "achRacha7": "A perfect week",
+  "achRacha30": "A month without missing one",
+  "achRachaDesc": "Come in {n} days in a row.",
+  "@achRachaDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achSemanas": "Four weeks without missing one",
+  "achSemanasDesc": "Use ManaForge 4 weeks in a row.",
+  "achCarpetas1": "Order begins",
+  "achCarpetas5": "All sorted",
+  "achCarpetasDesc": "Create {n} folders.",
+  "@achCarpetasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achCarpetagrande": "Big folder",
+  "achCarpetagrandeDesc": "Have a folder with 100 cards or more.",
+  "achCarpetavalor": "I'm not lending this folder",
+  "achCarpetavalorDesc": "Have a folder worth 100 € or more.",
+  "achTierrasbasicas": "The five basics",
+  "achTierrasbasicasDesc": "Have all five basic land types (plains, island, swamp, mountain and forest).",
+  "achFuerza": "What a beast",
+  "achFuerzaDesc": "Have a creature with power 10 or more.",
+  "achCoste": "I'm never casting this",
+  "achCosteDesc": "Have a card with converted mana cost 10 or more.",
+  "achCostecero": "Free",
+  "achCosteceroDesc": "Have a card with cost 0.",
+  "achTipos": "A bit of everything",
+  "achTiposDesc": "Have at least one creature, one instant, one sorcery, one artifact, one enchantment, one land and one planeswalker.",
+  "achPlaneswalkers": "Planeswalker company",
+  "achPlaneswalkersDesc": "Have 5 different planeswalkers.",
+  "achNoventas": "A relic from the 90s",
+  "achNoventasDesc": "Have a card from the 1990s.",
+  "achIdiomas1": "I can't read this one",
+  "achIdiomas25": "Polyglot collection",
+  "achIdiomas1Desc": "Have a card in a language other than English.",
+  "achIdiomas25Desc": "Have 25 cards in other languages.",
+  "achWishlist": "The list of whims",
+  "achWishlistDesc": "Put 20 cards on your wishlist.",
+
+  "achTierBronze": "Bronze",
+  "achTierSilver": "Silver",
+  "achTierGold": "Gold",
+  "achTierMythic": "Mythic",
+  "achCatCollection": "Collection",
+  "achCatRarity": "Rarities",
+  "achCatColor": "Colours",
+  "achCatSets": "Sets",
+  "achCatValue": "Value",
+  "achCatFoils": "Foils",
+  "achCatForge": "Forge",
+  "achCatScanner": "Scanner",
+  "achCatDedication": "Dedication",
+  "achCatFolders": "Folders",
+  "achCatCuriosities": "Oddities",
+  "achRankApprentice": "Apprentice",
+  "achRankSummoner": "Summoner",
+  "achRankMage": "Mage",
+  "achRankArchmage": "Archmage",
+  "achRankMaster": "Master",
+  "achRankPlaneswalker": "Planeswalker"
 }

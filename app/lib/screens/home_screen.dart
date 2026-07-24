@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../l10n/t.dart';
+import '../services/achievements.dart';
 import '../services/achievements_controller.dart';
 import '../services/app_update.dart';
 import '../services/certificate_store.dart';
@@ -215,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(level.title,
+                        Text(levelTitle(tr(context), level.level),
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15)),
                         Text(

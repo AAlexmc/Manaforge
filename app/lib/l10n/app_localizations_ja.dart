@@ -2829,4 +2829,639 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get vpTapCorrect => 'Toca la carta correcta';
+
+  @override
+  String get achCopias1 => 'La primera de muchas';
+
+  @override
+  String get achCopias10 => 'Solo iba a comprar una';
+
+  @override
+  String get achCopias50 => 'Ya no caben en la mano';
+
+  @override
+  String get achCopias100 => 'Cien y subiendo';
+
+  @override
+  String get achCopias500 => 'La caja se queda pequeña';
+
+  @override
+  String get achCopias1000 => 'Mil. Y las quiero todas';
+
+  @override
+  String get achCopias5000 => 'Esto ya es un almacén';
+
+  @override
+  String get achCopias10000 => 'Diez mil, pero yo controlo';
+
+  @override
+  String achCopiasDesc(String n) {
+    return 'Ten $n cartas en tu colección.';
+  }
+
+  @override
+  String get achDistintas25 => 'Aquí hay variedad';
+
+  @override
+  String get achDistintas100 => 'Cien caras distintas';
+
+  @override
+  String get achDistintas500 => 'Media biblioteca';
+
+  @override
+  String get achDistintas1000 => 'Enciclopedia andante';
+
+  @override
+  String get achDistintas2500 => 'Ya no me las sé todas';
+
+  @override
+  String get achDistintas5000 => 'El archivo';
+
+  @override
+  String achDistintasDesc(String n) {
+    return 'Ten $n cartas DISTINTAS (sin contar repetidas).';
+  }
+
+  @override
+  String get achPlaysets1 => 'Cuatro iguales';
+
+  @override
+  String get achPlaysets20 => 'Veinte playsets, cero mazos';
+
+  @override
+  String get achPlaysets1Desc => 'Ten 4 copias de una misma carta.';
+
+  @override
+  String get achPlaysets20Desc =>
+      'Ten 20 playsets distintos (4 copias de cada uno).';
+
+  @override
+  String get achComunes10 => 'Las que nadie quiere';
+
+  @override
+  String get achComunes50 => 'El montón de siempre';
+
+  @override
+  String get achComunes200 => 'Rey del montón';
+
+  @override
+  String get achComunes500 => 'Marea de comunes';
+
+  @override
+  String achComunesDesc(String n) {
+    return 'Ten $n cartas comunes distintas.';
+  }
+
+  @override
+  String get achInfrecuentes10 => 'Algo mejor que común';
+
+  @override
+  String get achInfrecuentes50 => 'Plata fina';
+
+  @override
+  String get achInfrecuentes200 => 'Cazador de infrecuentes';
+
+  @override
+  String get achInfrecuentes500 => 'Plata a espuertas';
+
+  @override
+  String achInfrecuentesDesc(String n) {
+    return 'Ten $n cartas infrecuentes distintas.';
+  }
+
+  @override
+  String get achRaras5 => 'Suena bien al abrir el sobre';
+
+  @override
+  String get achRaras25 => 'Cofre de raras';
+
+  @override
+  String get achRaras100 => 'Cien raras y ninguna jugable';
+
+  @override
+  String get achRaras300 => 'Cámara acorazada';
+
+  @override
+  String achRarasDesc(String n) {
+    return 'Ten $n cartas raras distintas.';
+  }
+
+  @override
+  String get achMiticas1 => 'Mi primera mítica';
+
+  @override
+  String get achMiticas10 => 'Diez míticas';
+
+  @override
+  String get achMiticas50 => 'Coleccionista mítico';
+
+  @override
+  String get achMiticas150 => 'Panteón mítico';
+
+  @override
+  String achMiticasDesc(String n) {
+    return 'Ten $n cartas míticas distintas.';
+  }
+
+  @override
+  String get achBlancas25 => 'Orden y concierto';
+
+  @override
+  String get achBlancas100 => 'Ejército de plata';
+
+  @override
+  String achBlancasDesc(String n) {
+    return 'Ten $n cartas blancas distintas.';
+  }
+
+  @override
+  String get achAzules25 => 'Eso no te lo permito';
+
+  @override
+  String get achAzules100 => 'Torre de marfil';
+
+  @override
+  String achAzulesDesc(String n) {
+    return 'Ten $n cartas azules distintas.';
+  }
+
+  @override
+  String get achNegras25 => 'Pacto oscuro';
+
+  @override
+  String get achNegras100 => 'Señor de la cripta';
+
+  @override
+  String achNegrasDesc(String n) {
+    return 'Ten $n cartas negras distintas.';
+  }
+
+  @override
+  String get achRojas25 => 'A quemarlo todo';
+
+  @override
+  String get achRojas100 => 'Incendio general';
+
+  @override
+  String achRojasDesc(String n) {
+    return 'Ten $n cartas rojas distintas.';
+  }
+
+  @override
+  String get achVerdes25 => 'Un brote';
+
+  @override
+  String get achVerdes100 => 'El bosque entero';
+
+  @override
+  String achVerdesDesc(String n) {
+    return 'Ten $n cartas verdes distintas.';
+  }
+
+  @override
+  String get achIncoloras25 => 'Metal frío';
+
+  @override
+  String get achIncoloras100 => 'Forja eterna';
+
+  @override
+  String achIncolorasDesc(String n) {
+    return 'Ten $n cartas incoloras distintas.';
+  }
+
+  @override
+  String get achArcoiris => 'Los cinco colores';
+
+  @override
+  String get achArcoirisDesc =>
+      'Ten al menos una carta de cada uno de los 5 colores.';
+
+  @override
+  String get achMulticolor10 => 'Mezclando colores';
+
+  @override
+  String get achMulticolor50 => 'Alianza dorada';
+
+  @override
+  String achMulticolorDesc(String n) {
+    return 'Ten $n cartas multicolor distintas.';
+  }
+
+  @override
+  String get achCincocolores => 'Los cinco de golpe';
+
+  @override
+  String get achCincocoloresDesc => 'Ten una carta con los cinco colores.';
+
+  @override
+  String get achSets1 => 'Primera expansión';
+
+  @override
+  String get achSets5 => 'Cinco mundos';
+
+  @override
+  String get achSets10 => 'Viajero de planos';
+
+  @override
+  String get achSets25 => 'Trotamundos';
+
+  @override
+  String get achSets50 => 'Medio multiverso';
+
+  @override
+  String achSetsDesc(String n) {
+    return 'Ten cartas de $n expansiones distintas.';
+  }
+
+  @override
+  String get achSetscompletos1 => 'No falta ni una';
+
+  @override
+  String get achSetscompletos3 => 'Tres álbumes enteros';
+
+  @override
+  String get achSetscompletos10 => 'Maestro del álbum';
+
+  @override
+  String get achSetscompletos1Desc =>
+      'Completa una expansión entera en el Álbum.';
+
+  @override
+  String achSetscompletos3Desc(String n) {
+    return 'Completa $n expansiones enteras.';
+  }
+
+  @override
+  String get achAnyos5 => 'Cinco años de cartón';
+
+  @override
+  String get achAnyos15 => 'Máquina del tiempo';
+
+  @override
+  String achAnyosDesc(String n) {
+    return 'Ten cartas de $n años de salida distintos.';
+  }
+
+  @override
+  String get achValor10 => 'Primeros euros';
+
+  @override
+  String get achValor50 => 'La hucha';
+
+  @override
+  String get achValor250 => 'Ahí va la paga';
+
+  @override
+  String get achValor1000 => 'Ahí va todo mi dinero';
+
+  @override
+  String get achValor5000 => 'No se lo digas a nadie';
+
+  @override
+  String get achValor10000 => 'Vale más que mi coche';
+
+  @override
+  String get achValor25000 => 'Colección de museo';
+
+  @override
+  String achValorDesc(String n) {
+    return 'Que tu colección valga $n € o más.';
+  }
+
+  @override
+  String get achJoya20 => 'Una carta de las buenas';
+
+  @override
+  String get achJoya100 => 'La joya de la colección';
+
+  @override
+  String get achJoya500 => 'Esta no sale de la funda';
+
+  @override
+  String get achJoya1000 => 'Mil euros en una sola funda';
+
+  @override
+  String get achJoya2500 => 'El santo grial';
+
+  @override
+  String achJoyaDesc(String n) {
+    return 'Ten una sola carta que valga $n € o más.';
+  }
+
+  @override
+  String get achFoils1 => 'Primer brillo';
+
+  @override
+  String get achFoils10 => 'Destellos';
+
+  @override
+  String get achFoils50 => 'Brilla la caja';
+
+  @override
+  String get achFoils200 => 'Aquí ya no hay nada mate';
+
+  @override
+  String get achFoils500 => 'Todo brilla';
+
+  @override
+  String get achFoils1000 => 'Fábrica de brillos';
+
+  @override
+  String achFoilsDesc(String n) {
+    return 'Ten $n cartas foil.';
+  }
+
+  @override
+  String get achFoiljoya10 => 'Foil de las buenas';
+
+  @override
+  String get achFoiljoya50 => 'Foil de las caras';
+
+  @override
+  String get achFoiljoya200 => 'Foil de museo';
+
+  @override
+  String achFoiljoyaDesc(String n) {
+    return 'Ten una foil que valga $n € o más.';
+  }
+
+  @override
+  String get achFoilvalor50 => 'Vitrina que brilla';
+
+  @override
+  String get achFoilvalor250 => 'Vitrina cara';
+
+  @override
+  String get achFoilvalor1000 => 'Mil euros de brillo';
+
+  @override
+  String get achFoilvalor5000 => 'Vitrina de museo';
+
+  @override
+  String achFoilvalorDesc(String n) {
+    return 'Que todas tus foils juntas valgan $n € o más.';
+  }
+
+  @override
+  String get achMazos1 => 'Primer mazo';
+
+  @override
+  String get achMazos5 => 'Cinco mazos guardados';
+
+  @override
+  String get achMazos25 => 'El taller no para';
+
+  @override
+  String achMazosDesc(String n) {
+    return 'Guarda $n mazos hechos con Forge.';
+  }
+
+  @override
+  String get achMazoscore => 'Mazo redondo';
+
+  @override
+  String get achMazoscoreDesc => 'Genera un mazo con puntuación 90 o más.';
+
+  @override
+  String get achMazocolores3 => 'Tricolor';
+
+  @override
+  String get achMazocolores5 => 'Arcoíris jugable';
+
+  @override
+  String achMazocoloresDesc(String n) {
+    return 'Guarda un mazo de $n colores.';
+  }
+
+  @override
+  String get achMazomono => 'Sin mezclar nada';
+
+  @override
+  String get achMazomonoDesc => 'Guarda un mazo de un solo color.';
+
+  @override
+  String get achMazocommander => 'Al mando';
+
+  @override
+  String get achMazocommanderDesc => 'Guarda un mazo de Commander.';
+
+  @override
+  String get achEscaneadas1 => 'Primer escaneo';
+
+  @override
+  String get achEscaneadas50 => 'Mano rápida';
+
+  @override
+  String get achEscaneadas500 => 'Escáner en serie';
+
+  @override
+  String get achEscaneadas2000 => 'Escaneo hasta dormido';
+
+  @override
+  String achEscaneadasDesc(String n) {
+    return 'Escanea $n cartas con la cámara o por foto.';
+  }
+
+  @override
+  String get achFoto9 => 'Página entera de una foto';
+
+  @override
+  String get achFoto20 => 'Veinte de una tacada';
+
+  @override
+  String achFotoDesc(String n) {
+    return 'Reconoce $n cartas en una sola foto.';
+  }
+
+  @override
+  String get achEscaneoperfecto => 'Ni una para revisar';
+
+  @override
+  String get achEscaneoperfectoDesc =>
+      'Escanea una página entera sin que ninguna carta quede para revisar.';
+
+  @override
+  String get achDias2 => 'Has vuelto';
+
+  @override
+  String get achDias7 => 'Una semana aquí';
+
+  @override
+  String get achDias30 => 'Un mes aquí';
+
+  @override
+  String get achDias100 => 'Cien días aquí';
+
+  @override
+  String achDiasDesc(String n) {
+    return 'Usa ManaForge $n días distintos.';
+  }
+
+  @override
+  String get achRacha3 => 'Tres seguidos';
+
+  @override
+  String get achRacha7 => 'Semana perfecta';
+
+  @override
+  String get achRacha30 => 'Mes sin fallar';
+
+  @override
+  String achRachaDesc(String n) {
+    return 'Entra $n días seguidos.';
+  }
+
+  @override
+  String get achSemanas => 'Cuatro semanas sin faltar';
+
+  @override
+  String get achSemanasDesc => 'Usa ManaForge 4 semanas seguidas.';
+
+  @override
+  String get achCarpetas1 => 'Empieza el orden';
+
+  @override
+  String get achCarpetas5 => 'Todo clasificado';
+
+  @override
+  String achCarpetasDesc(String n) {
+    return 'Crea $n carpetas.';
+  }
+
+  @override
+  String get achCarpetagrande => 'Carpetón';
+
+  @override
+  String get achCarpetagrandeDesc => 'Ten una carpeta con 100 cartas o más.';
+
+  @override
+  String get achCarpetavalor => 'Esta carpeta no la presto';
+
+  @override
+  String get achCarpetavalorDesc => 'Ten una carpeta que valga 100 € o más.';
+
+  @override
+  String get achTierrasbasicas => 'Las cinco básicas';
+
+  @override
+  String get achTierrasbasicasDesc =>
+      'Ten los cinco tipos de tierra básica (llanura, isla, pantano, montaña y bosque).';
+
+  @override
+  String get achFuerza => 'Menudo bicho';
+
+  @override
+  String get achFuerzaDesc => 'Ten una criatura de fuerza 10 o más.';
+
+  @override
+  String get achCoste => 'Esta no la lanzo en la vida';
+
+  @override
+  String get achCosteDesc => 'Ten una carta de coste convertido 10 o más.';
+
+  @override
+  String get achCostecero => 'Gratis';
+
+  @override
+  String get achCosteceroDesc => 'Ten una carta de coste 0.';
+
+  @override
+  String get achTipos => 'De todo un poco';
+
+  @override
+  String get achTiposDesc =>
+      'Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, un encantamiento, una tierra y un planeswalker.';
+
+  @override
+  String get achPlaneswalkers => 'Compañía de planeswalkers';
+
+  @override
+  String get achPlaneswalkersDesc => 'Ten 5 planeswalkers distintos.';
+
+  @override
+  String get achNoventas => 'Reliquia de los 90';
+
+  @override
+  String get achNoventasDesc => 'Ten una carta de los años 90.';
+
+  @override
+  String get achIdiomas1 => 'Esta no la sé leer';
+
+  @override
+  String get achIdiomas25 => 'Colección políglota';
+
+  @override
+  String get achIdiomas1Desc => 'Ten una carta en un idioma que no sea inglés.';
+
+  @override
+  String get achIdiomas25Desc => 'Ten 25 cartas en otros idiomas.';
+
+  @override
+  String get achWishlist => 'La lista de los caprichos';
+
+  @override
+  String get achWishlistDesc => 'Apunta 20 cartas en la wishlist.';
+
+  @override
+  String get achTierBronze => 'Bronce';
+
+  @override
+  String get achTierSilver => 'Plata';
+
+  @override
+  String get achTierGold => 'Oro';
+
+  @override
+  String get achTierMythic => 'Mítico';
+
+  @override
+  String get achCatCollection => 'Colección';
+
+  @override
+  String get achCatRarity => 'Rarezas';
+
+  @override
+  String get achCatColor => 'Colores';
+
+  @override
+  String get achCatSets => 'Expansiones';
+
+  @override
+  String get achCatValue => 'Valor';
+
+  @override
+  String get achCatFoils => 'Foils';
+
+  @override
+  String get achCatForge => 'Forge';
+
+  @override
+  String get achCatScanner => 'Escáner';
+
+  @override
+  String get achCatDedication => 'Dedicación';
+
+  @override
+  String get achCatFolders => 'Carpetas';
+
+  @override
+  String get achCatCuriosities => 'Curiosidades';
+
+  @override
+  String get achRankApprentice => 'Aprendiz';
+
+  @override
+  String get achRankSummoner => 'Invocador';
+
+  @override
+  String get achRankMage => 'Mago';
+
+  @override
+  String get achRankArchmage => 'Archimago';
+
+  @override
+  String get achRankMaster => 'Maestro';
+
+  @override
+  String get achRankPlaneswalker => 'Planeswalker';
 }

@@ -194,7 +194,7 @@ class _LogrosScreenState extends State<LogrosScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(level.title,
+                        Text(levelTitle(tr(context), level.level),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -260,7 +260,7 @@ class _LogrosScreenState extends State<LogrosScreen> {
             FilterChip(
               visualDensity: VisualDensity.compact,
               avatar: Icon(categoryIcon(c), size: 16),
-              label: Text(c.label),
+              label: Text(categoryLabel(tr(context), c)),
               selected: _category == c,
               onSelected: (v) => setState(() => _category = v ? c : null),
             ),
@@ -311,7 +311,7 @@ class _AchievementTile extends StatelessWidget {
         ),
       ),
       title: Text(
-        hidden ? tr(context).acSecret : a.title,
+        hidden ? tr(context).acSecret : a.title(tr(context)),
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: locked ? Theme.of(context).disabledColor : null,
@@ -321,7 +321,7 @@ class _AchievementTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            hidden ? tr(context).acSecretDesc : a.description,
+            hidden ? tr(context).acSecretDesc : a.description(tr(context)),
             style: const TextStyle(fontSize: 12),
           ),
           const SizedBox(height: 4),
@@ -332,8 +332,9 @@ class _AchievementTile extends StatelessWidget {
                   value: state.progress, minHeight: 5),
             ),
             const SizedBox(height: 2),
-            Text(tr(context).acProgressLine(
-                    state.progressLabel, a.tier.label, a.xp),
+            Text(
+                tr(context).acProgressLine(state.progressLabel,
+                    tierLabel(tr(context), a.tier), a.xp),
                 style: const TextStyle(fontSize: 11)),
           ] else
             Text(
@@ -341,7 +342,7 @@ class _AchievementTile extends StatelessWidget {
                   state.unlockedAt == null
                       ? ''
                       : tr(context).acOnDate(_date(state.unlockedAt!)),
-                  a.tier.label,
+                  tierLabel(tr(context), a.tier),
                   a.xp),
               style: TextStyle(fontSize: 11, color: color),
             ),
@@ -369,7 +370,7 @@ void showLevelUpDialog(
       icon: const Icon(Icons.military_tech, size: 40),
       title: Text(tr(context).acLevelUp(level.level)),
       content: Text(
-        tr(context).acLevelUpBody(level.title,
+        tr(context).acLevelUpBody(levelTitle(tr(context), level.level),
             achievements.unlockedCount, achievements.totalCount),
         textAlign: TextAlign.center,
       ),
@@ -422,7 +423,7 @@ void showAchievementToasts(
     backgroundColor: tierColor(first.tier),
     content: Text(
       tr(context).acToast(
-          first.title,
+          first.title(tr(context)),
           more > 0 ? tr(context).acAndMore(more) : '',
           fresh.fold<int>(0, (s, a) => s + a.xp)),
       style: const TextStyle(

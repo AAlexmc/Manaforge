@@ -41,8 +41,7 @@ class AchievementsController extends ChangeNotifier {
   int _xp = 0;
   int get xp => _xp;
 
-  ({int level, String title, int xpInLevel, int xpForNext}) get level =>
-      levelFor(_xp);
+  ({int level, int xpInLevel, int xpForNext}) get level => levelFor(_xp);
 
   int get unlockedCount => _states.where((s) => s.unlocked).length;
   int get totalCount => kAchievements.length;
