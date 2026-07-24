@@ -3,6 +3,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/price_series_database.dart';
@@ -14,33 +17,34 @@ import '../theme/mf_theme.dart';
 /// falta: sin la de cartas no hay app; el histórico y las huellas mejoran
 /// el Mercado y el escáner.
 List<UpdateSource> defaultUpdateSources({
+  required AppLocalizations t,
   required CardDatabase db,
   required PriceSeriesDatabase prices,
   required ScannerDatabase scanner,
 }) =>
     [
       UpdateSource(
-        name: 'Cartas y precios',
+        name: t.suCardsName,
         size: '22 MB',
-        what: 'catálogo completo de Scryfall',
+        what: t.suCardsWhat,
         lastDate: db.bulkDate,
         downloadedAt: db.lastDownloaded,
         download: db.download,
         maxAgeDays: kCardsMaxAgeDays,
       ),
       UpdateSource(
-        name: 'Histórico de precios',
+        name: t.suHistoryName,
         size: '3 MB',
-        what: '~90 días de Cardmarket',
+        what: t.suHistoryWhat,
         lastDate: () async => (await prices.covered())?.$2,
         downloadedAt: prices.lastDownloaded,
         download: prices.download,
         maxAgeDays: kPricesMaxAgeDays,
       ),
       UpdateSource(
-        name: 'Huellas del escáner',
+        name: t.suHashesName,
         size: '11 MB',
-        what: 'para reconocer por foto',
+        what: t.suHashesWhat,
         lastDate: scanner.updatedDate,
         downloadedAt: scanner.lastDownloaded,
         download: scanner.download,
@@ -176,7 +180,7 @@ class _StartupScreenState extends State<StartupScreen> {
       if (mounted) {
         setState(() {
           task.state = _State.done;
-          task.detail = 'al día (${date ?? '—'})';
+          task.detail = tr(context).suUpToDate(date ?? '—');
         });
       }
       return;
@@ -184,7 +188,7 @@ class _StartupScreenState extends State<StartupScreen> {
     if (mounted) {
       setState(() {
         task.state = _State.updating;
-        task.detail = updateLabel(need);
+        task.detail = updateLabel(tr(context), need);
         task.progress = 0;
       });
     }
@@ -208,7 +212,8 @@ class _StartupScreenState extends State<StartupScreen> {
         setState(() {
           task.state = _State.done;
           task.progress = null;
-          task.detail = fresh == null ? 'actualizado' : 'actualizado ($fresh)';
+          task.detail =
+              fresh == null ? tr(context).suUpdated : tr(context).suUpdatedWithDate(fresh);
         });
       }
     } catch (_) {
@@ -218,15 +223,16 @@ class _StartupScreenState extends State<StartupScreen> {
           task.state = _State.failed;
           task.progress = null;
           task.detail = need == UpdateNeed.missing
-              ? 'no he podido traerla (sin conexión)'
-              : 'sigo con la que tenías';
+              ? tr(context).suFailedOffline
+              : tr(context).suKeepingOld;
         });
       }
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     final pendientes = _tasks.where((t) => t.state == _State.updating).length;
     return Scaffold(
       body: Center(
@@ -253,10 +259,10 @@ class _StartupScreenState extends State<StartupScreen> {
                 const SizedBox(height: 6),
                 Text(
                   _finished
-                      ? 'Todo al día. Entrando…'
+                      ? t.suAllUpToDate
                       : pendientes > 0
-                          ? 'Poniendo al día tus cartas y precios…'
-                          : 'Comprobando si hay novedades…',
+                          ? t.suUpdatingCards
+                          : t.suChecking,
                   style: const TextStyle(fontSize: 13),
                 ),
                 const SizedBox(height: 22),
@@ -266,8 +272,7 @@ class _StartupScreenState extends State<StartupScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Lo que ya está al día no se descarga. Dentro de la '
-                        'app puedes forzar cualquier actualización.',
+                        t.suNoDownloadNote,
                         style: TextStyle(
                             fontSize: 11.5,
                             color: Theme.of(context)
@@ -279,7 +284,7 @@ class _StartupScreenState extends State<StartupScreen> {
                     const SizedBox(width: 12),
                     FilledButton(
                       onPressed: _enter,
-                      child: Text(_finished ? 'Entrar' : 'Entrar ya'),
+                      child: Text(_finished ? t.suEnter : t.suEnterNow),
                     ),
                   ],
                 ),
