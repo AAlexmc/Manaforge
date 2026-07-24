@@ -10,6 +10,8 @@ library;
 
 import 'package:path_provider/path_provider.dart';
 
+import '../l10n/app_localizations.dart';
+
 /// ¿Existe carpeta de datos donde guardar las bases? En tests (y en un
 /// entorno sin el plugin de rutas) no, y ahí no hay nada que descargar.
 Future<bool> storageAvailable() async {
@@ -76,10 +78,10 @@ UpdateNeed updateNeed(String? lastDate,
 }
 
 /// Texto corto para la pantalla de arranque.
-String updateLabel(UpdateNeed need) => switch (need) {
-      UpdateNeed.missing => 'falta, la traigo',
-      UpdateNeed.stale => 'hay una nueva',
-      UpdateNeed.fresh => 'al día',
+String updateLabel(AppLocalizations t, UpdateNeed need) => switch (need) {
+      UpdateNeed.missing => t.suNeedMissing,
+      UpdateNeed.stale => t.suNeedStale,
+      UpdateNeed.fresh => t.suNeedFresh,
     };
 
 /// Una base descargable, vista por la pantalla de arranque. Se pasa como

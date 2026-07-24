@@ -705,5 +705,67 @@
   "scNoneQuiteFits": "Ninguna encaja del todo. ¿Es alguna de estas? Si no, prueba otra foto con mejor luz.",
   "scNoEdges": "No vi los bordes de la carta, así que he usado la imagen entera. Estos son los parecidos:",
   "scCropped": "Esto es lo que he recortado. Los candidatos, por parecido:",
-  "scDiscard": "Descartar y escanear otra"
+  "scDiscard": "Descartar y escanear otra",
+
+  "suCardsName": "Cartas y precios",
+  "suCardsWhat": "catálogo completo de Scryfall",
+  "suHistoryName": "Histórico de precios",
+  "suHistoryWhat": "~90 días de Cardmarket",
+  "suHashesName": "Huellas del escáner",
+  "suHashesWhat": "para reconocer por foto",
+  "suUpToDate": "al día ({fecha})",
+  "@suUpToDate": {
+    "placeholders": { "fecha": { "type": "String" } }
+  },
+  "suUpdated": "actualizado",
+  "suUpdatedWithDate": "actualizado ({fecha})",
+  "@suUpdatedWithDate": {
+    "placeholders": { "fecha": { "type": "String" } }
+  },
+  "suFailedOffline": "no he podido traerla (sin conexión)",
+  "suKeepingOld": "sigo con la que tenías",
+  "suNeedMissing": "falta, la traigo",
+  "suNeedStale": "hay una nueva",
+  "suNeedFresh": "al día",
+  "suAllUpToDate": "Todo al día. Entrando…",
+  "suUpdatingCards": "Poniendo al día tus cartas y precios…",
+  "suChecking": "Comprobando si hay novedades…",
+  "suNoDownloadNote": "Lo que ya está al día no se descarga. Dentro de la app puedes forzar cualquier actualización.",
+  "suEnter": "Entrar",
+  "suEnterNow": "Entrar ya",
+  "icBadFile": "No pude leer el archivo: {error}",
+  "@icBadFile": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "icNotCsv": "Eso no parece un CSV — suelta un archivo .csv o .txt.",
+  "icTitle": "Importar colección",
+  "icExplain": "Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:",
+  "icPickFile": "Elegir archivo…",
+  "icImported": "✓ {cartas} cartas ({copias} copias) añadidas a tu colección.",
+  "@icImported": {
+    "placeholders": { "cartas": { "type": "int" }, "copias": { "type": "int" } }
+  },
+  "icReplaceMine": "Sustituir mi colección actual",
+  "icReplaceWhy": "Actívalo al reimportar tu CSV completo: evita duplicar cantidades y afina el álbum por ediciones.",
+  "icImporting": "Importando {hechas} de {total} cartas…",
+  "@icImporting": {
+    "placeholders": { "hechas": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "icDropHere": "Suelta tu CSV aquí",
+
+  "icTokensIgnored": "\n• {n} tokens/emblemas ignorados (no van en mazos, todo bien).",
+  "@icTokensIgnored": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "icUnrecognized": "\n✗ Sin reconocer: {lista}{mas}",
+  "@icUnrecognized": {
+    "placeholders": { "lista": { "type": "String" }, "mas": { "type": "String" } }
+  },
+  "icNoPurchasePrice": "\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").",
+  "icWithPurchasePrice": "\n• {n} copias con precio de compra: ya puedes ver el P&L en Mercado.",
+  "@icWithPurchasePrice": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "icImporting2": "Importando…",
+  "icImport": "Importar"
 }

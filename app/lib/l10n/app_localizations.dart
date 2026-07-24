@@ -2693,6 +2693,222 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Descartar y escanear otra'**
   String get scDiscard;
+
+  /// No description provided for @suCardsName.
+  ///
+  /// In es, this message translates to:
+  /// **'Cartas y precios'**
+  String get suCardsName;
+
+  /// No description provided for @suCardsWhat.
+  ///
+  /// In es, this message translates to:
+  /// **'catálogo completo de Scryfall'**
+  String get suCardsWhat;
+
+  /// No description provided for @suHistoryName.
+  ///
+  /// In es, this message translates to:
+  /// **'Histórico de precios'**
+  String get suHistoryName;
+
+  /// No description provided for @suHistoryWhat.
+  ///
+  /// In es, this message translates to:
+  /// **'~90 días de Cardmarket'**
+  String get suHistoryWhat;
+
+  /// No description provided for @suHashesName.
+  ///
+  /// In es, this message translates to:
+  /// **'Huellas del escáner'**
+  String get suHashesName;
+
+  /// No description provided for @suHashesWhat.
+  ///
+  /// In es, this message translates to:
+  /// **'para reconocer por foto'**
+  String get suHashesWhat;
+
+  /// No description provided for @suUpToDate.
+  ///
+  /// In es, this message translates to:
+  /// **'al día ({fecha})'**
+  String suUpToDate(String fecha);
+
+  /// No description provided for @suUpdated.
+  ///
+  /// In es, this message translates to:
+  /// **'actualizado'**
+  String get suUpdated;
+
+  /// No description provided for @suUpdatedWithDate.
+  ///
+  /// In es, this message translates to:
+  /// **'actualizado ({fecha})'**
+  String suUpdatedWithDate(String fecha);
+
+  /// No description provided for @suFailedOffline.
+  ///
+  /// In es, this message translates to:
+  /// **'no he podido traerla (sin conexión)'**
+  String get suFailedOffline;
+
+  /// No description provided for @suKeepingOld.
+  ///
+  /// In es, this message translates to:
+  /// **'sigo con la que tenías'**
+  String get suKeepingOld;
+
+  /// No description provided for @suNeedMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'falta, la traigo'**
+  String get suNeedMissing;
+
+  /// No description provided for @suNeedStale.
+  ///
+  /// In es, this message translates to:
+  /// **'hay una nueva'**
+  String get suNeedStale;
+
+  /// No description provided for @suNeedFresh.
+  ///
+  /// In es, this message translates to:
+  /// **'al día'**
+  String get suNeedFresh;
+
+  /// No description provided for @suAllUpToDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo al día. Entrando…'**
+  String get suAllUpToDate;
+
+  /// No description provided for @suUpdatingCards.
+  ///
+  /// In es, this message translates to:
+  /// **'Poniendo al día tus cartas y precios…'**
+  String get suUpdatingCards;
+
+  /// No description provided for @suChecking.
+  ///
+  /// In es, this message translates to:
+  /// **'Comprobando si hay novedades…'**
+  String get suChecking;
+
+  /// No description provided for @suNoDownloadNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que ya está al día no se descarga. Dentro de la app puedes forzar cualquier actualización.'**
+  String get suNoDownloadNote;
+
+  /// No description provided for @suEnter.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrar'**
+  String get suEnter;
+
+  /// No description provided for @suEnterNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrar ya'**
+  String get suEnterNow;
+
+  /// No description provided for @icBadFile.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude leer el archivo: {error}'**
+  String icBadFile(String error);
+
+  /// No description provided for @icNotCsv.
+  ///
+  /// In es, this message translates to:
+  /// **'Eso no parece un CSV — suelta un archivo .csv o .txt.'**
+  String get icNotCsv;
+
+  /// No description provided for @icTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar colección'**
+  String get icTitle;
+
+  /// No description provided for @icExplain.
+  ///
+  /// In es, this message translates to:
+  /// **'Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:'**
+  String get icExplain;
+
+  /// No description provided for @icPickFile.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir archivo…'**
+  String get icPickFile;
+
+  /// No description provided for @icImported.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ {cartas} cartas ({copias} copias) añadidas a tu colección.'**
+  String icImported(int cartas, int copias);
+
+  /// No description provided for @icReplaceMine.
+  ///
+  /// In es, this message translates to:
+  /// **'Sustituir mi colección actual'**
+  String get icReplaceMine;
+
+  /// No description provided for @icReplaceWhy.
+  ///
+  /// In es, this message translates to:
+  /// **'Actívalo al reimportar tu CSV completo: evita duplicar cantidades y afina el álbum por ediciones.'**
+  String get icReplaceWhy;
+
+  /// No description provided for @icImporting.
+  ///
+  /// In es, this message translates to:
+  /// **'Importando {hechas} de {total} cartas…'**
+  String icImporting(int hechas, int total);
+
+  /// No description provided for @icDropHere.
+  ///
+  /// In es, this message translates to:
+  /// **'Suelta tu CSV aquí'**
+  String get icDropHere;
+
+  /// No description provided for @icTokensIgnored.
+  ///
+  /// In es, this message translates to:
+  /// **'\n• {n} tokens/emblemas ignorados (no van en mazos, todo bien).'**
+  String icTokensIgnored(int n);
+
+  /// No description provided for @icUnrecognized.
+  ///
+  /// In es, this message translates to:
+  /// **'\n✗ Sin reconocer: {lista}{mas}'**
+  String icUnrecognized(String lista, String mas);
+
+  /// No description provided for @icNoPurchasePrice.
+  ///
+  /// In es, this message translates to:
+  /// **'\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").'**
+  String get icNoPurchasePrice;
+
+  /// No description provided for @icWithPurchasePrice.
+  ///
+  /// In es, this message translates to:
+  /// **'\n• {n} copias con precio de compra: ya puedes ver el P&L en Mercado.'**
+  String icWithPurchasePrice(int n);
+
+  /// No description provided for @icImporting2.
+  ///
+  /// In es, this message translates to:
+  /// **'Importando…'**
+  String get icImporting2;
+
+  /// No description provided for @icImport.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar'**
+  String get icImport;
 }
 
 class _AppLocalizationsDelegate

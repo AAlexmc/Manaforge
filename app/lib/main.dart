@@ -549,7 +549,7 @@ class _HomeShellState extends State<HomeShell> {
     if (!_started) {
       return StartupScreen(
         sources: defaultUpdateSources(
-            db: _db, prices: _prices, scanner: _scanner),
+            t: tr(context), db: _db, prices: _prices, scanner: _scanner),
         collection: _collection,
         onReady: () => setState(() => _started = true),
       );

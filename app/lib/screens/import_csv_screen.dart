@@ -4,6 +4,8 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/safe_input.dart';
@@ -77,7 +79,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No pude leer el archivo: $e')));
+          SnackBar(content: Text(tr(context).icBadFile('$e'))));
     }
   }
 
@@ -98,9 +100,8 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         name.endsWith('.txt') ||
         name.endsWith('.tsv');
     if (!looksText) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text('Eso no parece un CSV — suelta un archivo .csv o .txt.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(tr(context).icNotCsv)));
       return;
     }
     _loadFile(file);
@@ -218,9 +219,10 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Importar colección')),
+      appBar: AppBar(title: Text(t.icTitle)),
       body: SafeArea(
         child: DropTarget(
           onDragEntered: (_) => setState(() => _dragging = true),
@@ -236,18 +238,14 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text(
-                        'Arrastra aquí tu CSV de ManaBox (también vale '
-                        'Moxfield, Archidekt o cualquier CSV con columnas '
-                        'Name y Quantity), elígelo con el botón, o pega su '
-                        'contenido a mano:'),
+                    Text(t.icExplain),
                     const SizedBox(height: 12),
                     Row(
                       children: [
                         OutlinedButton.icon(
                           onPressed: _working ? null : _pickFile,
                           icon: const Icon(Icons.folder_open),
-                          label: const Text('Elegir archivo…'),
+                          label: Text(t.icPickFile),
                         ),
                         if (_loadedFileName != null) ...[
                           const SizedBox(width: 12),
@@ -282,14 +280,23 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                     const SizedBox(height: 12),
                     if (_result != null) ...[
                       Text(
-                        '✓ ${_result!.imported} cartas (${_result!.copies} copias) '
-                        'añadidas a tu colección.'
-                        '${_result!.tokensIgnored == 0 ? '' : '\n• ${_result!.tokensIgnored} tokens/emblemas ignorados (no van en mazos, todo bien).'}'
-                        '${_result!.unrecognized.isEmpty ? '' : '\n✗ Sin reconocer: ${_result!.unrecognized.take(8).join(", ")}'
-                            '${_result!.unrecognized.length > 8 ? '…' : ''}'}'
-                        // decir cuántas traían precio de compra evita la duda
-                        // de "¿por qué no me sale el P&L?"
-                        '${_result!.withPurchasePrice == 0 ? '\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna "Purchase price").' : '\n• ${_result!.withPurchasePrice} copias con precio de compra: ya puedes ver el P&L en Mercado.'}',
+                        t.icImported(_result!.imported, _result!.copies) +
+                            (_result!.tokensIgnored == 0
+                                ? ''
+                                : t.icTokensIgnored(_result!.tokensIgnored)) +
+                            (_result!.unrecognized.isEmpty
+                                ? ''
+                                : t.icUnrecognized(
+                                    _result!.unrecognized.take(8).join(', '),
+                                    _result!.unrecognized.length > 8
+                                        ? '…'
+                                        : '')) +
+                            // decir cuántas traían precio de compra evita la
+                            // duda de "¿por qué no me sale el P&L?"
+                            (_result!.withPurchasePrice == 0
+                                ? t.icNoPurchasePrice
+                                : t.icWithPurchasePrice(
+                                    _result!.withPurchasePrice)),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -300,17 +307,15 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                       onChanged: _working
                           ? null
                           : (v) => setState(() => _replace = v),
-                      title: const Text('Sustituir mi colección actual'),
-                      subtitle: const Text(
-                          'Actívalo al reimportar tu CSV completo: evita '
-                          'duplicar cantidades y afina el álbum por ediciones.'),
+                      title: Text(t.icReplaceMine),
+                      subtitle: Text(t.icReplaceWhy),
                     ),
                     const SizedBox(height: 4),
                     if (_working && _total > 0) ...[
                       LinearProgressIndicator(
                           value: _done / _total, minHeight: 6),
                       const SizedBox(height: 6),
-                      Text('Importando $_done de $_total cartas…',
+                      Text(t.icImporting(_done, _total),
                           style: const TextStyle(fontSize: 12.5)),
                       const SizedBox(height: 8),
                     ],
@@ -323,7 +328,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                               child:
                                   CircularProgressIndicator(strokeWidth: 2))
                           : const Icon(Icons.file_download_done),
-                      label: Text(_working ? 'Importando…' : 'Importar'),
+                      label: Text(_working ? t.icImporting2 : t.icImport),
                     ),
                   ],
                 ),
@@ -338,15 +343,15 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
                         border: Border.all(color: MFColors.forge, width: 2),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.file_download,
+                            const Icon(Icons.file_download,
                                 size: 48, color: MFColors.forge),
-                            SizedBox(height: 8),
-                            Text('Suelta tu CSV aquí',
-                                style: TextStyle(
+                            const SizedBox(height: 8),
+                            Text(tr(context).icDropHere,
+                                style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                     color: MFColors.forge)),

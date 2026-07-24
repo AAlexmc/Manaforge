@@ -1632,4 +1632,133 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get scDiscard => 'Descartar y escanear otra';
+
+  @override
+  String get suCardsName => 'Cartas y precios';
+
+  @override
+  String get suCardsWhat => 'catálogo completo de Scryfall';
+
+  @override
+  String get suHistoryName => 'Histórico de precios';
+
+  @override
+  String get suHistoryWhat => '~90 días de Cardmarket';
+
+  @override
+  String get suHashesName => 'Huellas del escáner';
+
+  @override
+  String get suHashesWhat => 'para reconocer por foto';
+
+  @override
+  String suUpToDate(String fecha) {
+    return 'al día ($fecha)';
+  }
+
+  @override
+  String get suUpdated => 'actualizado';
+
+  @override
+  String suUpdatedWithDate(String fecha) {
+    return 'actualizado ($fecha)';
+  }
+
+  @override
+  String get suFailedOffline => 'no he podido traerla (sin conexión)';
+
+  @override
+  String get suKeepingOld => 'sigo con la que tenías';
+
+  @override
+  String get suNeedMissing => 'falta, la traigo';
+
+  @override
+  String get suNeedStale => 'hay una nueva';
+
+  @override
+  String get suNeedFresh => 'al día';
+
+  @override
+  String get suAllUpToDate => 'Todo al día. Entrando…';
+
+  @override
+  String get suUpdatingCards => 'Poniendo al día tus cartas y precios…';
+
+  @override
+  String get suChecking => 'Comprobando si hay novedades…';
+
+  @override
+  String get suNoDownloadNote =>
+      'Lo que ya está al día no se descarga. Dentro de la app puedes forzar cualquier actualización.';
+
+  @override
+  String get suEnter => 'Entrar';
+
+  @override
+  String get suEnterNow => 'Entrar ya';
+
+  @override
+  String icBadFile(String error) {
+    return 'No pude leer el archivo: $error';
+  }
+
+  @override
+  String get icNotCsv =>
+      'Eso no parece un CSV — suelta un archivo .csv o .txt.';
+
+  @override
+  String get icTitle => 'Importar colección';
+
+  @override
+  String get icExplain =>
+      'Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:';
+
+  @override
+  String get icPickFile => 'Elegir archivo…';
+
+  @override
+  String icImported(int cartas, int copias) {
+    return '✓ $cartas cartas ($copias copias) añadidas a tu colección.';
+  }
+
+  @override
+  String get icReplaceMine => 'Sustituir mi colección actual';
+
+  @override
+  String get icReplaceWhy =>
+      'Actívalo al reimportar tu CSV completo: evita duplicar cantidades y afina el álbum por ediciones.';
+
+  @override
+  String icImporting(int hechas, int total) {
+    return 'Importando $hechas de $total cartas…';
+  }
+
+  @override
+  String get icDropHere => 'Suelta tu CSV aquí';
+
+  @override
+  String icTokensIgnored(int n) {
+    return '\n• $n tokens/emblemas ignorados (no van en mazos, todo bien).';
+  }
+
+  @override
+  String icUnrecognized(String lista, String mas) {
+    return '\n✗ Sin reconocer: $lista$mas';
+  }
+
+  @override
+  String get icNoPurchasePrice =>
+      '\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").';
+
+  @override
+  String icWithPurchasePrice(int n) {
+    return '\n• $n copias con precio de compra: ya puedes ver el P&L en Mercado.';
+  }
+
+  @override
+  String get icImporting2 => 'Importando…';
+
+  @override
+  String get icImport => 'Importar';
 }

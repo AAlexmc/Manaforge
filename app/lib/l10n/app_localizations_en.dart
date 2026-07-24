@@ -1628,4 +1628,133 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scDiscard => 'Discard and scan another';
+
+  @override
+  String get suCardsName => 'Cards and prices';
+
+  @override
+  String get suCardsWhat => 'the full Scryfall catalogue';
+
+  @override
+  String get suHistoryName => 'Price history';
+
+  @override
+  String get suHistoryWhat => '~90 days of Cardmarket';
+
+  @override
+  String get suHashesName => 'Scanner fingerprints';
+
+  @override
+  String get suHashesWhat => 'to recognise by photo';
+
+  @override
+  String suUpToDate(String fecha) {
+    return 'up to date ($fecha)';
+  }
+
+  @override
+  String get suUpdated => 'updated';
+
+  @override
+  String suUpdatedWithDate(String fecha) {
+    return 'updated ($fecha)';
+  }
+
+  @override
+  String get suFailedOffline => 'couldn\'t fetch it (no connection)';
+
+  @override
+  String get suKeepingOld => 'keeping the one you had';
+
+  @override
+  String get suNeedMissing => 'missing, fetching it';
+
+  @override
+  String get suNeedStale => 'there\'s a new one';
+
+  @override
+  String get suNeedFresh => 'up to date';
+
+  @override
+  String get suAllUpToDate => 'All up to date. Coming in…';
+
+  @override
+  String get suUpdatingCards => 'Bringing your cards and prices up to date…';
+
+  @override
+  String get suChecking => 'Checking for anything new…';
+
+  @override
+  String get suNoDownloadNote =>
+      'Whatever is already up to date isn\'t downloaded. Inside the app you can force any update.';
+
+  @override
+  String get suEnter => 'Enter';
+
+  @override
+  String get suEnterNow => 'Enter now';
+
+  @override
+  String icBadFile(String error) {
+    return 'Couldn\'t read the file: $error';
+  }
+
+  @override
+  String get icNotCsv =>
+      'That doesn\'t look like a CSV — drop a .csv or .txt file.';
+
+  @override
+  String get icTitle => 'Import collection';
+
+  @override
+  String get icExplain =>
+      'Drag your ManaBox CSV here (Moxfield, Archidekt or any CSV with Name and Quantity columns also work), pick it with the button, or paste its contents by hand:';
+
+  @override
+  String get icPickFile => 'Pick a file…';
+
+  @override
+  String icImported(int cartas, int copias) {
+    return '✓ $cartas cards ($copias copies) added to your collection.';
+  }
+
+  @override
+  String get icReplaceMine => 'Replace my current collection';
+
+  @override
+  String get icReplaceWhy =>
+      'Turn it on when re-importing your full CSV: it avoids doubling quantities and sharpens the album by printing.';
+
+  @override
+  String icImporting(int hechas, int total) {
+    return 'Importing $hechas of $total cards…';
+  }
+
+  @override
+  String get icDropHere => 'Drop your CSV here';
+
+  @override
+  String icTokensIgnored(int n) {
+    return '\n• $n tokens/emblems ignored (they don\'t go in decks, all good).';
+  }
+
+  @override
+  String icUnrecognized(String lista, String mas) {
+    return '\n✗ Not recognised: $lista$mas';
+  }
+
+  @override
+  String get icNoPurchasePrice =>
+      '\n• No purchase price in the CSV: there\'ll be no P&L (ManaBox exports it in the \"Purchase price\" column).';
+
+  @override
+  String icWithPurchasePrice(int n) {
+    return '\n• $n copies with a purchase price: you can now see the P&L in Market.';
+  }
+
+  @override
+  String get icImporting2 => 'Importing…';
+
+  @override
+  String get icImport => 'Import';
 }
