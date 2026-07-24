@@ -608,5 +608,98 @@
   "bkOfDate": "Backup from {cuando} · {resumen}.",
   "@bkOfDate": {
     "placeholders": { "cuando": { "type": "String" }, "resumen": { "type": "String" } }
-  }
+  },
+
+  "lsNoCamera": "I can't find any camera.",
+  "lsCameraGone": "The camera dropped out mid-session. Check the cable and hit Try again.",
+  "lsFrameCard": "Line the card up inside the frame",
+  "lsNoCardThere": "I don't see a card there",
+  "lsAddedToCollection": "{n, plural, =1{✓ 1 card into the collection} other{✓ {n} cards into the collection}}",
+  "@lsAddedToCollection": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "lsAndToFolder": ", and into \"{carpeta}\"",
+  "@lsAndToFolder": {
+    "placeholders": { "carpeta": { "type": "String" } }
+  },
+  "lsTitle": "Live scan",
+  "lsQuickTip": "Fast: clear cards go in on their own; doubtful ones get flagged for review.",
+  "lsCarefulTip": "Careful: doubtful ones stop and ask you which card it is.",
+  "lsQuick": "Fast",
+  "lsCareful": "Careful",
+  "lsThisSession": "{n} this session",
+  "@lsThisSession": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "lsScanPhotoTooltip": "Scan a single photo",
+  "lsStartingCamera": "Waking the camera up…",
+  "lsCantUseCamera": "I can't use the camera",
+  "lsCameraUnavailable": "Camera unavailable.",
+  "lsScanPhoto": "Scan a photo",
+  "lsPlusOneSame": "+1 same · {carta} (×{n})",
+  "@lsPlusOneSame": {
+    "placeholders": { "carta": { "type": "String" }, "n": { "type": "int" } }
+  },
+  "lsAlreadyOnTable": "Already on the table: {carta} · take it away and put it back, or tap \"+1 same\"",
+  "@lsAlreadyOnTable": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "lsSeeing": "Seeing: {carta}",
+  "@lsSeeing": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "lsPassACard": "Hold a card up to the camera…",
+  "lsIsThis": "Is this {carta}? I'm not sure — tap to choose.",
+  "@lsIsThis": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "lsNotThisOne": "Not this one — change printing",
+  "lsRetry": "Try again",
+  "scBadImage": "Couldn't read that image (is it a valid photo?)",
+  "scAddedOne": "✓ {carta} ({set} #{numero})",
+  "@scAddedOne": {
+    "placeholders": { "carta": { "type": "String" }, "set": { "type": "String" }, "numero": { "type": "String" } }
+  },
+  "scNoFolder": "No folder",
+  "scAlsoTo": "And also into: {carpeta}",
+  "@scAlsoTo": {
+    "placeholders": { "carpeta": { "type": "String" } }
+  },
+  "scLookingForCard": "Looking for the card in the photo…",
+  "scRecognising": "Recognising… {hechas}/{total}",
+  "@scRecognising": {
+    "placeholders": { "hechas": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "scTrayCount": "{n, plural, =1{1 card}other{{n} cards}} · {copias} in total",
+  "@scTrayCount": {
+    "placeholders": { "n": { "type": "int" }, "copias": { "type": "int" } }
+  },
+  "scToReview": "{n} to review (tap them)",
+  "@scToReview": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "scUnknown": "{n} not recognised (tap to pick by hand)",
+  "@scUnknown": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "scNothingRecognised": "I didn't recognise a single card in those photos. Try better light or less glare.",
+  "scAddN": "Add {n} to the collection",
+  "@scAddN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "scDropPhotos": "Drop your card photos here",
+  "scDropExplain": "One or many at a time — and if a photo has SEVERAL cards (an album page, a full table), I pull them all out and put them in one list for you to review and add whichever you want. A phone photo or a scan both work.",
+  "scPickPhotos": "Pick photos",
+  "scMatchHigh": "strong match",
+  "scMatchMedium": "fair match",
+  "scMatchLow": "weak match",
+  "scAddToCollection": "Add to the collection",
+  "scSeeOptions": "Not this one — see options",
+  "scScanAnother": "Scan another",
+  "scNotSure": "I'm not sure",
+  "scWhichIsIt": "Which one is it?",
+  "scNoneQuiteFits": "None of them quite fits. Is it one of these? If not, try another photo with better light.",
+  "scNoEdges": "I couldn't see the card's edges, so I used the whole image. These are the closest:",
+  "scCropped": "This is what I cropped. The candidates, by likeness:",
+  "scDiscard": "Discard and scan another"
 }
