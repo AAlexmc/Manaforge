@@ -3,6 +3,7 @@ import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
+import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/deck_store.dart';
@@ -33,7 +34,11 @@ class TestScreen extends StatefulWidget {
 
 class _TestScreenState extends State<TestScreen> {
   List<MetaDeck> _decks = metaDecks;
-  String _decksSource = 'Cargando meta…';
+  /// De dónde salen los mazos del meta. Vacío hasta que se sepa: el texto de
+  /// "cargando" (y el de "presets locales") lo pone el `build`, que sí sabe en
+  /// qué idioma va la app.
+  String _decksSource = '';
+  bool? _decksOnline;
   String _metaId = metaDecks.first.id;
   String? _formatFilter;
   bool _running = false;
@@ -50,6 +55,7 @@ class _TestScreenState extends State<TestScreen> {
       setState(() {
         _decks = result.decks;
         _decksSource = result.source;
+        _decksOnline = result.online;
         final wanted = widget.initialMetaId;
         if (wanted != null && _decks.any((m) => m.id == wanted)) {
           _metaId = wanted;
@@ -101,6 +107,7 @@ class _TestScreenState extends State<TestScreen> {
       _result = null;
       _error = null;
     });
+    final t = tr(context);
     try {
       final meta = _meta;
       final pool = await widget.db.buildPool(widget.collection.qtyByOracle);
@@ -115,8 +122,7 @@ class _TestScreenState extends State<TestScreen> {
       setState(() {
         _running = false;
         if (result == null) {
-          _error = 'Con las cartas actuales no me sale ningún mazo completo '
-              'que enfrentar. Añade más cartas y vuelve a intentarlo.';
+          _error = t.tsNoDeckToFace;
         } else {
           _result = result;
           _resultMeta = meta;
@@ -127,7 +133,7 @@ class _TestScreenState extends State<TestScreen> {
       if (mounted) {
         setState(() {
           _running = false;
-          _error = 'No pude simular: $e';
+          _error = t.tsSimFailed('$e');
         });
       }
     }
@@ -135,19 +141,21 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Modo Test — vence al meta')),
+      appBar: AppBar(title: Text(t.tsTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const Text(
-                'Elige contra qué mazo del meta quieres jugar. ManaForge '
-                'construye mazos con TUS cartas, simula cientos de partidas '
-                'contra él y se queda con el que más gana — probando además '
-                'cambios de carta uno a uno para afinarlo.'),
+            Text(t.tsIntro),
             const SizedBox(height: 8),
-            Text(_decksSource,
+            Text(
+                _decksOnline == null
+                    ? t.tsLoadingMeta
+                    : (_decksSource.isEmpty
+                        ? t.tsLocalPresets
+                        : _decksSource),
                 style: const TextStyle(
                     fontSize: 11.5, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
@@ -158,7 +166,7 @@ class _TestScreenState extends State<TestScreen> {
                 for (final f in _formats())
                   FilterChip(
                     visualDensity: VisualDensity.compact,
-                    label: Text(f ?? 'Todos'),
+                    label: Text(f ?? t.acAll),
                     selected: _formatFilter == f,
                     onSelected: (_) =>
                         setState(() => _formatFilter = f),
@@ -181,7 +189,7 @@ class _TestScreenState extends State<TestScreen> {
                       Text(m.name),
                       if (m.share.isNotEmpty) ...[
                         const SizedBox(width: 8),
-                        Text('${m.format} · ${m.share} del meta',
+                        Text(t.tsFormatShare(m.format, m.share),
                             style: const TextStyle(fontSize: 11)),
                       ],
                     ],
@@ -193,10 +201,7 @@ class _TestScreenState extends State<TestScreen> {
             if (_running) ...[
               const LinearProgressIndicator(color: MFColors.forge),
               const SizedBox(height: 10),
-              const Text(
-                'Simulando partidas… (unos segundos; todo en tu equipo)',
-                textAlign: TextAlign.center,
-              ),
+              Text(t.tsSimulating, textAlign: TextAlign.center),
             ] else
               FilledButton.icon(
                 style: FilledButton.styleFrom(
@@ -205,7 +210,7 @@ class _TestScreenState extends State<TestScreen> {
                 ),
                 onPressed: _run,
                 icon: const Icon(Icons.sports_kabaddi),
-                label: Text('Buscar mi mejor mazo contra ${_meta.name}'),
+                label: Text(t.tsFindBest(_meta.name)),
               ),
             if (_error != null)
               Padding(
@@ -220,14 +225,7 @@ class _TestScreenState extends State<TestScreen> {
               ),
             if (_result != null) _buildResult(),
             const SizedBox(height: 12),
-            const Text(
-              'Honestidad: la simulación entiende colores de maná, mulligans, '
-              'evasión (volar, arrollar, toque mortal…), removal instantáneo '
-              'y contramagia — pero no el texto completo de cada carta. El '
-              'porcentaje sirve para COMPARAR tus mazos entre sí, no como '
-              'predicción exacta.',
-              style: TextStyle(fontSize: 11.5),
-            ),
+            Text(t.tsHonesty, style: const TextStyle(fontSize: 11.5)),
           ],
         ),
       ),
@@ -235,6 +233,7 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   Widget _buildResult() {
+    final t = tr(context);
     final result = _result!;
     final meta = _resultMeta!;
     final deck = result.deck.deck;
@@ -246,7 +245,7 @@ class _TestScreenState extends State<TestScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Tu campeón contra ${meta.name}',
+            Text(t.tsChampion(meta.name),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Row(
@@ -261,9 +260,8 @@ class _TestScreenState extends State<TestScreen> {
                             fontWeight: FontWeight.bold)),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(
-                      'de victorias estimadas · ${result.decksTried} mazos '
-                      'probados · ${result.gamesPerEval} partidas por mazo'),
+                  child: Text(t.tsWinRateLine(
+                      result.decksTried, result.gamesPerEval)),
                 ),
               ],
             ),
@@ -280,13 +278,10 @@ class _TestScreenState extends State<TestScreen> {
               ],
             ),
             if (!good)
-              const Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                    'Ningún mazo de tu colección domina este enfrentamiento '
-                    '— este es el que mejor pelea. Mira sus debilidades en '
-                    'el detalle.',
-                    style: TextStyle(fontSize: 12)),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(t.tsNoDominant,
+                    style: const TextStyle(fontSize: 12)),
               ),
             const SizedBox(height: 12),
             FilledButton(
@@ -302,7 +297,7 @@ class _TestScreenState extends State<TestScreen> {
                   ),
                 ),
               ),
-              child: const Text('Ver mazo completo (y guardarlo)'),
+              child: Text(t.tsSeeDeck),
             ),
           ],
         ),

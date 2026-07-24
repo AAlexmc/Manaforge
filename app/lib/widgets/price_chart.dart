@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 
 import '../l10n/t.dart';
 
+import '../l10n/app_localizations.dart';
 import '../services/price_history.dart';
 import '../theme/mf_theme.dart';
 
 /// Rangos de la gráfica, como el mercado de Steam (Semana/Mes/Todo).
 enum PriceRange {
-  week('Semana', 7),
-  month('Mes', 30),
-  all('Todo', null);
+  week(7),
+  month(30),
+  all(null);
 
-  final String label;
   final int? days;
 
-  const PriceRange(this.label, this.days);
+  const PriceRange(this.days);
 }
+
+/// Cómo se llama cada rango en el idioma del usuario.
+String priceRangeLabel(AppLocalizations t, PriceRange range) =>
+    switch (range) {
+      PriceRange.week => t.pcWeek,
+      PriceRange.month => t.pcMonth,
+      PriceRange.all => t.pcAll,
+    };
 
 /// Gráfica de evolución del precio de UNA carta, estilo mercado de Steam:
 /// línea verde sobre rejilla, ejes con precio y fecha, selector de rango y
@@ -49,6 +57,7 @@ class _PriceChartState extends State<PriceChart> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     var shown = filterRange(widget.points, _range.days);
     // si el rango elegido deja menos de dos puntos pero SÍ hay historia
     // más antigua, enseñarla: decir "aún no hay datos" sería mentira
@@ -71,7 +80,7 @@ class _PriceChartState extends State<PriceChart> {
                   Padding(
                     padding: const EdgeInsets.only(left: 4),
                     child: _RangeChip(
-                      label: r.label,
+                      label: priceRangeLabel(t, r),
                       selected: _range == r,
                       onTap: () => setState(() {
                         _range = r;

@@ -7,6 +7,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../services/folder_store.dart';
 import 'folder_tile.dart';
 
@@ -29,22 +30,20 @@ Future<FolderTarget?> showFolderTargetSheet(BuildContext context,
         child: ListView(
           shrinkWrap: true,
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 4),
-              child: Text('¿En qué carpeta las quieres?',
-                  style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+              child: Text(tr(context).ftWhichFolder,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
-              child: Text(
-                  'Entran en tu colección igual; la carpeta es solo una '
-                  'etiqueta para encontrarlas luego.',
-                  style: TextStyle(fontSize: 12.5)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: Text(tr(context).ftWhichFolderSub,
+                  style: const TextStyle(fontSize: 12.5)),
             ),
             ListTile(
               leading: const Icon(Icons.block, size: 20),
-              title: const Text('Ninguna'),
+              title: Text(tr(context).ftNone),
               trailing: selectedId == null
                   ? const Icon(Icons.check, size: 20)
                   : null,
@@ -56,7 +55,7 @@ Future<FolderTarget?> showFolderTargetSheet(BuildContext context,
                 leading: Icon(folderIconFor(folder.icon),
                     color: Color(folder.colorValue)),
                 title: Text(folder.name),
-                subtitle: Text('${folder.count} cartas'),
+                subtitle: Text(tr(context).ftCards(folder.count)),
                 trailing: selectedId == folder.id
                     ? const Icon(Icons.check, size: 20)
                     : null,
@@ -66,7 +65,7 @@ Future<FolderTarget?> showFolderTargetSheet(BuildContext context,
             const Divider(height: 8),
             ListTile(
               leading: const Icon(Icons.create_new_folder_outlined),
-              title: const Text('Carpeta nueva…'),
+              title: Text(tr(context).ftNewFolderEllipsis),
               onTap: () async {
                 final nombre = await _askFolderName(context);
                 if (nombre == null || !context.mounted) return;
@@ -114,24 +113,24 @@ class _NewFolderDialogState extends State<_NewFolderDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Carpeta nueva'),
+      title: Text(tr(context).ftNewFolder),
       content: TextField(
         controller: _ctrl,
         autofocus: true,
-        decoration: const InputDecoration(
-          labelText: 'Nombre',
-          hintText: 'Caja de la tienda, Para vender…',
+        decoration: InputDecoration(
+          labelText: tr(context).fdName,
+          hintText: tr(context).ftNewFolderHint,
         ),
         onSubmitted: (v) => Navigator.of(context).pop(v),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
+          child: Text(tr(context).acCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_ctrl.text),
-          child: const Text('Crear'),
+          child: Text(tr(context).fdCreate),
         ),
       ],
     );

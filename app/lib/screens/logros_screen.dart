@@ -154,11 +154,10 @@ class _LogrosScreenState extends State<LogrosScreen> {
                       key: widget.nivelKey, child: _levelCard(context, c))),
               SliverToBoxAdapter(child: _filters(context)),
               if (states.isEmpty)
-                const SliverToBoxAdapter(
+                SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Center(
-                        child: Text('Nada por aquí con estos filtros.')),
+                    padding: const EdgeInsets.all(32),
+                    child: Center(child: Text(tr(context).acNoneWithFilters)),
                   ),
                 )
               else
@@ -253,7 +252,7 @@ class _LogrosScreenState extends State<LogrosScreen> {
         children: [
           FilterChip(
             visualDensity: VisualDensity.compact,
-            label: const Text('Todos'),
+            label: Text(tr(context).acAll),
             selected: _category == null,
             onSelected: (_) => setState(() => _category = null),
           ),
@@ -430,7 +429,7 @@ void showAchievementToasts(
           color: Colors.black, fontWeight: FontWeight.bold),
     ),
     action: SnackBarAction(
-      label: 'Ver',
+      label: tr(context).versionSee,
       textColor: Colors.black,
       onPressed: () => Navigator.of(context).push(
         MaterialPageRoute(

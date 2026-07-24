@@ -172,7 +172,7 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
                     const SizedBox(width: 10),
                     OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancelar'),
+                      child: Text(t.acCancel),
                     ),
                   ],
                 ),

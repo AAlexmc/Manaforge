@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../services/certificates.dart';
 import '../services/collection_store.dart';
 import '../theme/mf_theme.dart';
@@ -55,14 +56,14 @@ class _FirstCardPickScreenState extends State<FirstCardPickScreen> {
     final cards = _visible;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('¿Con qué carta empezaste?'),
+        title: Text(tr(context).fcTitle),
         actions: [
           if (widget.selected != null)
             TextButton(
               // devolver el "quitar" tiene que ser distinto de cancelar, que
               // es lo que hace la flecha de atrás
               onPressed: () => Navigator.of(context).pop(_borrar),
-              child: const Text('Quitar'),
+              child: Text(tr(context).fcRemove),
             ),
         ],
       ),
@@ -72,9 +73,9 @@ class _FirstCardPickScreenState extends State<FirstCardPickScreen> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: TextField(
               controller: _searchCtrl,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Buscar en tu colección',
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: tr(context).fcSearchHint,
                 isDense: true,
               ),
               onChanged: (v) => setState(() => _query = v),
@@ -82,11 +83,11 @@ class _FirstCardPickScreenState extends State<FirstCardPickScreen> {
           ),
           Expanded(
             child: cards.isEmpty
-                ? const Center(
+                ? Center(
                     child: Padding(
-                      padding: EdgeInsets.all(32),
+                      padding: const EdgeInsets.all(32),
                       child: Text(
-                        'No encuentro ninguna carta con eso.',
+                        tr(context).fcNoMatch,
                         textAlign: TextAlign.center,
                       ),
                     ),

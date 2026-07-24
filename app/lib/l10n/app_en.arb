@@ -1169,5 +1169,133 @@
   "camNoneWorked": "No camera produced an image:\n{detalle}",
   "@camNoneWorked": {
     "placeholders": {"detalle": {"type": "String"}}
-  }
+  },
+
+  "bkRestoreAction": "Restore",
+
+  "fpUnselect": "Unselect",
+
+  "stClear": "Clear",
+  "tlRemove": "Remove",
+  "tlUnrecognized": "Not recognised",
+  "tlNothingAlike": "nothing like it in the database — retake the photo or remove it",
+  "tlTapToPick": "tap to pick by hand from the look-alikes",
+  "lsQuantity": "Quantity",
+  "scPhotos": "Photos",
+
+  "ftWhichFolder": "Which folder do you want them in?",
+  "ftWhichFolderSub": "They go into your collection either way; the folder is just a label to find them again.",
+  "ftNone": "None",
+  "ftCards": "{n, plural, =1{1 card} other{{n} cards}}",
+  "@ftCards": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "ftNewFolderEllipsis": "New folder…",
+  "ftNewFolder": "New folder",
+  "ftNewFolderHint": "Shop box, To sell…",
+
+  "sgTitle": "The scanner's eye",
+  "sgWhy": "To recognise cards without internet I need the visual fingerprint database (~12 MB): the signature of every Magic illustration. It downloads once.",
+  "sgDownload": "Download fingerprint database",
+
+  "cmFullCard": "See the full card (prices and legality)",
+  "cmSwipeHint": "drag or use ← → to flip through · tap outside to close",
+  "cmTapOutHint": "tap outside to close",
+
+  "fcTitle": "Which card did you start with?",
+  "fcRemove": "Remove",
+  "fcSearchHint": "Search your collection",
+  "fcNoMatch": "I can't find any card with that.",
+
+  "acNoneWithFilters": "Nothing here with these filters.",
+  "acAll": "All",
+
+  "tsTitle": "Test Mode — beat the meta",
+  "tsIntro": "Choose which meta deck you want to play against. ManaForge builds decks from YOUR cards, simulates hundreds of games against it and keeps the one that wins most — trying card swaps one by one to sharpen it.",
+  "tsLoadingMeta": "Loading the meta…",
+  "tsLocalPresets": "Local presets (offline)",
+  "tsNoDeckToFace": "With your current cards I can't build a complete deck to face it. Add more cards and try again.",
+  "tsSimFailed": "I couldn't simulate: {error}",
+  "@tsSimFailed": {
+    "placeholders": {"error": {"type": "String"}}
+  },
+  "tsFormatShare": "{formato} · {cuota} of the meta",
+  "@tsFormatShare": {
+    "placeholders": {"formato": {"type": "String"}, "cuota": {"type": "String"}}
+  },
+  "tsSimulating": "Simulating games… (a few seconds; all on your machine)",
+  "tsFindBest": "Find my best deck against {meta}",
+  "@tsFindBest": {
+    "placeholders": {"meta": {"type": "String"}}
+  },
+  "tsHonesty": "Being honest: the simulation understands mana colours, mulligans, evasion (flying, trample, deathtouch…), instant-speed removal and counterspells — but not the full text of every card. The percentage is for COMPARING your decks with each other, not an exact prediction.",
+  "tsChampion": "Your champion against {meta}",
+  "@tsChampion": {
+    "placeholders": {"meta": {"type": "String"}}
+  },
+  "tsWinRateLine": "estimated win rate · {mazos} decks tried · {partidas} games per deck",
+  "@tsWinRateLine": {
+    "placeholders": {"mazos": {"type": "int"}, "partidas": {"type": "int"}}
+  },
+  "tsNoDominant": "No deck in your collection dominates this matchup — this is the one that fights best. Look at its weak spots in the detail.",
+  "tsSeeDeck": "See the full deck (and save it)",
+
+  "hsLevelLine": "{hechos}/{total} achievements · {xp} XP to level {nivel}",
+  "@hsLevelLine": {
+    "placeholders": {"hechos": {"type": "int"}, "total": {"type": "int"}, "xp": {"type": "int"}, "nivel": {"type": "int"}}
+  },
+  "hsForgeDecks": "Forge decks",
+  "hsTestYourself": "⚔ put yourself to the test",
+
+  "bgCustom": "Custom",
+  "bgPickCustom": "Pick a custom colour",
+  "bgCustomColor": "Custom colour",
+  "bgSampleTab": "Red",
+
+  "cfSortRecent": "Just added",
+  "cfSortAlpha": "Name A-Z",
+  "cfSortCmc": "Cost",
+  "cfSortQty": "Quantity",
+  "cfSortBy": "Sort by",
+  "cfSort": "Sort",
+  "cfClear": "Clear",
+  "cfCost": "Cost",
+  "cfCostAll": "Cost: all",
+  "cfCostN": "Cost {n}",
+  "@cfCostN": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "cfType": "Type",
+  "cfTypeAll": "Type: all",
+  "cfTypeCreature": "Creatures",
+  "cfTypeInstant": "Instants",
+  "cfTypeSorcery": "Sorceries",
+  "cfTypeArtifact": "Artifacts",
+  "cfTypeEnchantment": "Enchantments",
+  "cfTypeLand": "Lands",
+  "cfPower": "Power",
+  "cfPowerAll": "Power: all",
+  "cfPowerMin": "Power ≥ {n}",
+  "@cfPowerMin": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "cfToughness": "Toughness",
+  "cfToughnessAll": "Toughness: all",
+  "cfToughnessMin": "Toughness ≥ {n}",
+  "@cfToughnessMin": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "cfNoDate": "no date",
+  "cfToday": "today",
+  "cfYesterday": "yesterday",
+  "cfDaysAgo": "{n} days ago",
+  "@cfDaysAgo": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+
+  "pcWeek": "Week",
+  "pcMonth": "Month",
+  "pcAll": "All",
+
+  "vpTapCorrect": "Tap the right card"
 }

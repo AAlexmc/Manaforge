@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../scanner/scan_tray.dart';
 import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
@@ -98,7 +99,7 @@ class TrayList extends StatelessWidget {
           IconButton(
             visualDensity: VisualDensity.compact,
             icon: const Icon(Icons.delete_outline, size: 20),
-            tooltip: 'Quitar',
+            tooltip: tr(context).tlRemove,
             onPressed: () => onRemove(line),
           ),
         ],
@@ -110,6 +111,7 @@ class TrayList extends StatelessWidget {
   /// una carta propuesta — proponer una equivocada es mentir) y invita a
   /// elegir a mano entre las mejores apuestas o quitarla.
   Widget _unrecognizedRow(BuildContext context, TrayLine line) {
+    final t = tr(context);
     final errorColor = Theme.of(context).colorScheme.error;
     return ListTile(
       onTap: line.candidates.isEmpty ? null : () => onEdit(line),
@@ -124,18 +126,16 @@ class TrayList extends StatelessWidget {
                 child: Image.memory(line.artPng!, fit: BoxFit.cover),
               ),
       ),
-      title: const Text('Sin reconocer',
+      title: Text(t.tlUnrecognized,
           maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Text(
-        line.candidates.isEmpty
-            ? 'nada parecido en la base — re-foto o quitar'
-            : 'toca para elegir a mano entre parecidas',
+        line.candidates.isEmpty ? t.tlNothingAlike : t.tlTapToPick,
         style: TextStyle(fontSize: 12.5, color: errorColor),
       ),
       trailing: IconButton(
         visualDensity: VisualDensity.compact,
         icon: const Icon(Icons.delete_outline, size: 20),
-        tooltip: 'Quitar',
+        tooltip: t.tlRemove,
         onPressed: () => onRemove(line),
       ),
     );

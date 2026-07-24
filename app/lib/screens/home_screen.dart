@@ -219,9 +219,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15)),
                         Text(
-                            '${a.unlockedCount}/${a.totalCount} logros · '
-                            '${level.xpForNext - level.xpInLevel} XP para el '
-                            'nivel ${level.level + 1}',
+                            tr(context).hsLevelLine(
+                                a.unlockedCount,
+                                a.totalCount,
+                                level.xpForNext - level.xpInLevel,
+                                level.level + 1),
                             style: const TextStyle(fontSize: 11.5)),
                         const SizedBox(height: 6),
                         ClipRRect(
@@ -297,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: FilledButton.styleFrom(backgroundColor: MFColors.forge),
             onPressed: () => widget.onGoToTab(3),
             icon: const Icon(Icons.auto_awesome, size: 18),
-            label: const Text('Forjar mazos'),
+            label: Text(tr(context).hsForgeDecks),
           ),
           OutlinedButton.icon(
             onPressed: () => Navigator.of(context).push(
@@ -309,17 +311,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             icon: const Icon(Icons.sports_kabaddi, size: 18),
-            label: const Text('Modo Test'),
+            label: Text(tr(context).onbForgeTestTitle),
           ),
           OutlinedButton.icon(
             onPressed: () => widget.onGoToTab(2),
             icon: const Icon(Icons.auto_stories, size: 18),
-            label: const Text('Álbum'),
+            label: Text(tr(context).tabAlbum),
           ),
           OutlinedButton.icon(
             onPressed: _openLogros,
             icon: const Icon(Icons.emoji_events_outlined, size: 18),
-            label: const Text('Logros'),
+            label: Text(tr(context).onbAchievementsName),
           ),
         ],
       );
@@ -496,8 +498,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 13)),
-                      const Text('⚔ ponte a prueba',
-                          style: TextStyle(
+                      Text(tr(context).hsTestYourself,
+                          style: const TextStyle(
                               fontSize: 10.5, color: MFColors.forge)),
                     ],
                   ),
@@ -615,7 +617,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     IconButton(
                       key: widget.editarInicioKey,
-                      tooltip: 'Editar inicio',
+                      tooltip: tr(context).stEditHome,
                       icon: const Icon(Icons.tune),
                       onPressed: _abrirEditor,
                     ),
@@ -655,8 +657,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   FontWeight.bold),
                                     ),
                                     Text(
-                                        '${widget.collection.totalCopies} cartas · '
-                                        '${widget.collection.distinctCards} distintas',
+                                        tr(context).cardsAndDistinct(
+                                            widget.collection.totalCopies,
+                                            widget.collection.distinctCards),
                                         style: const TextStyle(
                                             fontSize: 11.5)),
                                   ],

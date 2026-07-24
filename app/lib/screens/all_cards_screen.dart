@@ -138,7 +138,8 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
     // sin fecha (colección anterior a esta versión) no se dice nada: ya lo
     // cuenta la posición, y "añadida sin fecha" en 300 filas es ruido
     if (_sort == CollectionSort.recent && card.addedAt != null) {
-      parts.add(tr(context).acAddedOn(addedLabel(card.addedAt)));
+      parts.add(tr(context)
+          .acAddedOn(addedLabel(tr(context), card.addedAt)));
     }
     final inFolders = widget.folders?.foldersContaining(card.oracleId) ?? 0;
     if (inFolders > 0) {

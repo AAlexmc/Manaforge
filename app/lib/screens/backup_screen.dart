@@ -359,12 +359,12 @@ Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancelar'),
+                child: Text(t.acCancel),
               ),
               FilledButton(
                 onPressed:
                     puede ? () => Navigator.of(context).pop(true) : null,
-                child: const Text('Restaurar'),
+                child: Text(t.bkRestoreAction),
               ),
             ],
           );

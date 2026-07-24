@@ -3,6 +3,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:manaforge_app/l10n/app_localizations_es.dart';
 import 'package:manaforge_app/screens/coleccion_screen.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 
@@ -19,6 +20,8 @@ OwnedCard _card(String name,
 
 int _ms(int year, int month, int day) =>
     DateTime(year, month, day).millisecondsSinceEpoch;
+
+final _t = AppLocalizationsEs();
 
 void main() {
   group('sortCollection', () {
@@ -79,37 +82,37 @@ void main() {
     final hoy = DateTime(2026, 7, 21, 15);
 
     test('hoy, ayer y esta semana se dicen en cristiano', () {
-      expect(addedLabel(_ms(2026, 7, 21), now: hoy), 'hoy');
-      expect(addedLabel(_ms(2026, 7, 20), now: hoy), 'ayer');
-      expect(addedLabel(_ms(2026, 7, 18), now: hoy), 'hace 3 días');
+      expect(addedLabel(_t, _ms(2026, 7, 21), now: hoy), 'hoy');
+      expect(addedLabel(_t, _ms(2026, 7, 20), now: hoy), 'ayer');
+      expect(addedLabel(_t, _ms(2026, 7, 18), now: hoy), 'hace 3 días');
     });
 
     test('más de una semana: la fecha', () {
-      expect(addedLabel(_ms(2026, 6, 3), now: hoy), '03/06/2026');
+      expect(addedLabel(_t, _ms(2026, 6, 3), now: hoy), '03/06/2026');
     });
 
     test('sin fecha lo dice, no inventa una', () {
-      expect(addedLabel(null, now: hoy), 'sin fecha');
+      expect(addedLabel(_t, null, now: hoy), 'sin fecha');
     });
 
     test('la frontera de la semana: 6 días en cristiano, 7 ya con fecha',
         () {
-      expect(addedLabel(_ms(2026, 7, 15), now: hoy), 'hace 6 días');
-      expect(addedLabel(_ms(2026, 7, 14), now: hoy), '14/07/2026');
+      expect(addedLabel(_t, _ms(2026, 7, 15), now: hoy), 'hace 6 días');
+      expect(addedLabel(_t, _ms(2026, 7, 14), now: hoy), '14/07/2026');
     });
 
     test('el cambio de hora no adelanta un día', () {
       // el 29-mar de 2026 el día dura 23 h en Madrid: contando en hora
       // local, "ayer" salía como "hoy"
-      expect(addedLabel(_ms(2026, 3, 29), now: DateTime(2026, 3, 30, 12)),
+      expect(addedLabel(_t, _ms(2026, 3, 29), now: DateTime(2026, 3, 30, 12)),
           'ayer');
-      expect(addedLabel(_ms(2026, 10, 25), now: DateTime(2026, 10, 26, 12)),
+      expect(addedLabel(_t, _ms(2026, 10, 25), now: DateTime(2026, 10, 26, 12)),
           'ayer');
     });
 
     test('una fecha futura (reloj torcido) dice "hoy", no días negativos',
         () {
-      expect(addedLabel(_ms(2027, 1, 1), now: hoy), 'hoy');
+      expect(addedLabel(_t, _ms(2027, 1, 1), now: hoy), 'hoy');
     });
   });
 
@@ -232,7 +235,7 @@ void main() {
           'addedAt': raw,
         });
         expect(card.addedAt, isNull, reason: 'con $raw');
-        expect(() => addedLabel(card.addedAt), returnsNormally);
+        expect(() => addedLabel(_t, card.addedAt), returnsNormally);
       }
     });
 

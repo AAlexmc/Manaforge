@@ -126,8 +126,9 @@ class MetaDeckService {
         return _parse(await cache.readAsString(), online: true);
       } catch (_) {/* caché corrupta */}
     }
-    return const MetaDecksResult(
-        metaDecks, 'Presets locales (sin conexión)', online: false);
+    // sin `source`: no hay feed que citar y el texto ("presets locales") lo
+    // pone la pantalla, que sabe en qué idioma va la app
+    return const MetaDecksResult(metaDecks, '', online: false);
   }
 }
 
