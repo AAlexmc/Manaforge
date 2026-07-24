@@ -26,7 +26,6 @@
   "shortcutClose": "上に開いているものを閉じる",
   "language": "言語",
   "languageSystem": "システムに合わせる",
-  "languagePartial": "アプリは段階的に翻訳中です。基本部分はすでにお使いの言語で表示されますが、その他の画面は当面スペイン語のままです。",
   "versionTitle": "ManaForge のバージョン",
   "versionYouHave": "現在のバージョンは {version} です。",
   "versionSeeWhatsNew": "変更点を見る",

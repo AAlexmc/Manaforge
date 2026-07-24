@@ -31,7 +31,6 @@
 
   "language": "Language",
   "languageSystem": "Match the system",
-  "languagePartial": "The app is being translated in stages: the shell is already in your language, the rest of the screens are still in Spanish for now.",
 
   "versionTitle": "ManaForge version",
   "versionYouHave": "You're on {version}.",

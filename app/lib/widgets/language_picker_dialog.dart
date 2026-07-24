@@ -41,9 +41,6 @@ Future<void> showLanguagePickerDialog(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(tr(context).languagePartial,
-                  style: const TextStyle(fontSize: 12)),
-              const SizedBox(height: 10),
               Wrap(
                 spacing: 6,
                 runSpacing: 6,

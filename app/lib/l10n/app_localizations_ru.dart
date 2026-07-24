@@ -95,10 +95,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get languageSystem => 'Как в системе';
 
   @override
-  String get languagePartial =>
-      'Приложение переводится постепенно: основа уже на вашем языке, остальные экраны пока на испанском.';
-
-  @override
   String get versionTitle => 'Версия ManaForge';
 
   @override

@@ -26,7 +26,6 @@
   "shortcutClose": "Закрыть то, что открыто сверху",
   "language": "Язык",
   "languageSystem": "Как в системе",
-  "languagePartial": "Приложение переводится постепенно: основа уже на вашем языке, остальные экраны пока на испанском.",
   "versionTitle": "Версия ManaForge",
   "versionYouHave": "У вас {version}.",
   "versionSeeWhatsNew": "Что нового",

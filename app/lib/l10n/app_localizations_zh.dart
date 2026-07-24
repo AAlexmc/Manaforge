@@ -88,9 +88,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get languageSystem => '跟随系统';
 
   @override
-  String get languagePartial => '应用正在分阶段翻译：主体框架已是你的语言，其余界面暂时仍是西班牙语。';
-
-  @override
   String get versionTitle => 'ManaForge 版本';
 
   @override
@@ -558,7 +555,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get acSearchHint => '搜索卡牌（中文或英文）…';
+  String get acSearchHint => '搜索卡牌（西班牙语或英语）…';
 
   @override
   String acFilteredCount(int visibles, int total) {

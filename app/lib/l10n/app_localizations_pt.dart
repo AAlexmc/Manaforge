@@ -95,10 +95,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get languageSystem => 'O do sistema';
 
   @override
-  String get languagePartial =>
-      'O app está sendo traduzido por partes: a estrutura já está no seu idioma, o resto das telas continua em espanhol por enquanto.';
-
-  @override
   String get versionTitle => 'Versão do ManaForge';
 
   @override
@@ -599,7 +595,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get acSearchHint => 'Busque uma carta (português ou inglês)…';
+  String get acSearchHint => 'Busque uma carta (espanhol ou inglês)…';
 
   @override
   String acFilteredCount(int visibles, int total) {
