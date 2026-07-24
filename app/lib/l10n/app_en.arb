@@ -1598,5 +1598,83 @@
   "@ddCardCount": {
     "placeholders": {"n": {"type": "int"}}
   },
-  "ddForgedWith": "Forged with ManaForge"
+  "ddForgedWith": "Forged with ManaForge",
+
+  "fxThemeLifegain": "lifegain",
+  "fxThemeSacrifice": "sacrifice",
+  "fxThemeSpells": "spells",
+  "fxThemeArtifacts": "artifacts",
+  "fxThemeCounters": "+1/+1 counters",
+  "fxThemeTokens": "swarm",
+  "fxThemeGraveyard": "graveyard",
+  "fxThemeGoodstuff": "the best of your cards",
+  "fxTagLifegain": "Every life point you gain is damage to them: drain and hold on.",
+  "fxTagSacrifice": "Your creatures are worth more dead: sacrifice them and collect the toll.",
+  "fxTagSpells": "Every instant counts: play on their turn and punish.",
+  "fxTagArtifacts": "Set up your workshop: every artifact makes the others stronger.",
+  "fxTagCounters": "+1/+1 counters: your creatures grow out of reach.",
+  "fxTagTokens": "Flood the board with tokens: where they have one, you have five.",
+  "fxTagGraveyard": "Your graveyard is your second hand: fill it and recycle the best.",
+  "fxTagAggro": "Come out fast and hit their face: this game should end early.",
+  "fxTagTempo": "Press early and protect your lead with your spells.",
+  "fxTagMidrange": "Trade your cards well and win the midgame with {tema}.",
+  "@fxTagMidrange": {
+    "placeholders": {"tema": {"type": "String"}}
+  },
+  "fxTagControl": "Hold on, answer everything and finish when the board is yours.",
+  "fxMidLifegain": "Chain your lifegain with the cards that punish them for it.",
+  "fxMidSacrifice": "Sacrifice the cheap stuff to draw, drain or grow the rest.",
+  "fxMidSpells": "Keep mana open: your creatures grow with every spell you cast.",
+  "fxMidArtifacts": "Deploy cheap artifacts and turn on the ones that count them.",
+  "fxMidCounters": "Pile counters on one or two creatures and protect them.",
+  "fxMidTokens": "Make tokens every turn and look for the effects that pump them.",
+  "fxMidGraveyard": "Mill and discard on purpose: what hits the graveyard comes back.",
+  "fxEndLifegain": "With your life high, switch to aggro: they can't get there any more.",
+  "fxEndSacrifice": "The value you piled up wins it: every trade is free for you.",
+  "fxEndSpells": "A couple of spells in one turn and your creatures close it out.",
+  "fxEndArtifacts": "Your board is worth twice theirs: finish with your payoffs.",
+  "fxEndCounters": "One huge, protected threat ends the game in two swings.",
+  "fxEndTokens": "Attack in force: no block holds off your whole army.",
+  "fxEndGraveyard": "Reuse your best cards: you play with two hands against one.",
+  "fxTurns12": "T1-T2",
+  "fxTurns34": "T3-T4",
+  "fxTurns5": "T5+",
+  "fxAggroEarly": "Play a creature every turn, no exceptions.",
+  "fxAggroMid": "Keep attacking; save the burn to clear blockers.",
+  "fxAggroLate": "Go for it all: this is where you should close the game.",
+  "fxTempoEarly": "A cheap threat and open mana whenever you can.",
+  "fxTempoMid": "Attack and use your spells on their turn.",
+  "fxTempoLate": "Protect your creatures and close it in the air or with burn.",
+  "fxMidrangeEarly": "Develop and don't give cards away: good one-for-one trades.",
+  "fxMidrangeMid": "Deploy your {tema} engines and stabilise the board.",
+  "@fxMidrangeMid": {
+    "placeholders": {"tema": {"type": "String"}}
+  },
+  "fxMidrangeLate": "Your cards are worth more than theirs: turn that into the game.",
+  "fxControlEarly": "A land a turn, and only answer what matters.",
+  "fxControlMid": "Sweep the board and draw cards: time is on your side.",
+  "fxControlLate": "Land one threat and protect it to the end.",
+  "fxArchetypeAggro": "aggro",
+  "fxArchetypeTempo": "tempo",
+  "fxArchetypeMidrange": "midrange",
+  "fxArchetypeControl": "control",
+  "fxWhyItWorks": "Average cost {coste}: by Karsten's rule (24 lands at cost 3.0, ±1 for every ±0.5), this deck runs {tierras} lands — within the range of a {arquetipo} deck. There are {criaturas} creatures to hold the board and {interaccion} interaction cards for whatever they bring. The theme ({tema}) focuses your synergies: the more theme pieces you see, the stronger each one gets.",
+  "@fxWhyItWorks": {
+    "placeholders": {"coste": {"type": "String"}, "tierras": {"type": "String"}, "arquetipo": {"type": "String"}, "criaturas": {"type": "int"}, "interaccion": {"type": "int"}, "tema": {"type": "String"}}
+  },
+
+  "fxNoLandsRange": "That curve leaves {tierras} lands: outside the healthy range ({min}-{max}). Adjust the total number of spells.",
+  "@fxNoLandsRange": {
+    "placeholders": {"tierras": {"type": "String"}, "min": {"type": "String"}, "max": {"type": "String"}}
+  },
+  "fxNoCards": "Your collection doesn't have enough cards in these colours to fill that curve. Try fewer spells, or different costs.",
+  "fxNoProfile": "That curve (average cost {coste} with {tierras} lands) doesn't fit any healthy profile: a cheap deck wants fewer lands and an expensive one wants more. Bring them closer.",
+  "@fxNoProfile": {
+    "placeholders": {"coste": {"type": "String"}, "tierras": {"type": "String"}}
+  },
+  "fxNoBasics": "There aren't enough basic lands in your collection for that curve.",
+  "fxHardRule": "The curve you asked for breaks a hard rule: {detalle}",
+  "@fxHardRule": {
+    "placeholders": {"detalle": {"type": "String"}}
+  }
 }

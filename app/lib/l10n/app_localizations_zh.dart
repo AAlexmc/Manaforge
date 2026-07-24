@@ -3478,4 +3478,223 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ddForgedWith => 'Forjado con ManaForge';
+
+  @override
+  String get fxThemeLifegain => 'drenaje de vida';
+
+  @override
+  String get fxThemeSacrifice => 'sacrificio';
+
+  @override
+  String get fxThemeSpells => 'hechizos';
+
+  @override
+  String get fxThemeArtifacts => 'artefactos';
+
+  @override
+  String get fxThemeCounters => 'contadores +1/+1';
+
+  @override
+  String get fxThemeTokens => 'enjambre';
+
+  @override
+  String get fxThemeGraveyard => 'cementerio';
+
+  @override
+  String get fxThemeGoodstuff => 'lo mejor de tus cartas';
+
+  @override
+  String get fxTagLifegain =>
+      'Cada punto de vida que ganas es daño para ellos: drena y aguanta.';
+
+  @override
+  String get fxTagSacrifice =>
+      'Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.';
+
+  @override
+  String get fxTagSpells =>
+      'Cada instantáneo cuenta: juega en el turno del rival y castiga.';
+
+  @override
+  String get fxTagArtifacts =>
+      'Monta tu taller: cada artefacto hace más fuertes a los demás.';
+
+  @override
+  String get fxTagCounters =>
+      'Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.';
+
+  @override
+  String get fxTagTokens =>
+      'Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.';
+
+  @override
+  String get fxTagGraveyard =>
+      'Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.';
+
+  @override
+  String get fxTagAggro =>
+      'Sal rápido y pega a la cara: la partida debería acabar pronto.';
+
+  @override
+  String get fxTagTempo =>
+      'Presiona pronto y protege la ventaja con tus hechizos.';
+
+  @override
+  String fxTagMidrange(String tema) {
+    return 'Cambia bien tus cartas y gana el medio juego con $tema.';
+  }
+
+  @override
+  String get fxTagControl =>
+      'Aguanta, responde a todo y remata cuando la mesa sea tuya.';
+
+  @override
+  String get fxMidLifegain =>
+      'Encadena tus fuentes de vida con los que castigan al rival por ello.';
+
+  @override
+  String get fxMidSacrifice =>
+      'Sacrifica lo barato para robar, drenar o hacer crecer al resto.';
+
+  @override
+  String get fxMidSpells =>
+      'Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.';
+
+  @override
+  String get fxMidArtifacts =>
+      'Despliega artefactos baratos y activa a los que los cuentan.';
+
+  @override
+  String get fxMidCounters =>
+      'Apila contadores en una o dos criaturas y protégelas.';
+
+  @override
+  String get fxMidTokens =>
+      'Genera fichas cada turno y busca los efectos que las hacen mayores.';
+
+  @override
+  String get fxMidGraveyard =>
+      'Muele y descarta con intención: lo que cae al cementerio vuelve.';
+
+  @override
+  String get fxEndLifegain =>
+      'Con la vida alta, cambia a modo agresivo: ellos ya no llegan.';
+
+  @override
+  String get fxEndSacrifice =>
+      'El valor acumulado te da la partida: cada cambio te sale gratis.';
+
+  @override
+  String get fxEndSpells =>
+      'Un par de hechizos en el mismo turno y tus criaturas cierran.';
+
+  @override
+  String get fxEndArtifacts =>
+      'Tu mesa vale el doble que la suya: remata con tus payoffs.';
+
+  @override
+  String get fxEndCounters =>
+      'Una amenaza enorme y protegida acaba la partida en dos golpes.';
+
+  @override
+  String get fxEndTokens =>
+      'Ataca en masa: ningún bloqueo aguanta a todo tu ejército.';
+
+  @override
+  String get fxEndGraveyard =>
+      'Reutiliza tus mejores cartas: juegas con dos manos contra una.';
+
+  @override
+  String get fxTurns12 => 'T1-T2';
+
+  @override
+  String get fxTurns34 => 'T3-T4';
+
+  @override
+  String get fxTurns5 => 'T5+';
+
+  @override
+  String get fxAggroEarly => 'Juega una criatura cada turno, sin excepción.';
+
+  @override
+  String get fxAggroMid =>
+      'Sigue atacando; guarda el daño directo para quitar bloqueadores.';
+
+  @override
+  String get fxAggroLate => 'Remata con todo: aquí deberías cerrar la partida.';
+
+  @override
+  String get fxTempoEarly => 'Amenaza barata y maná abierto cuando puedas.';
+
+  @override
+  String get fxTempoMid => 'Ataca y usa tus hechizos en el turno del rival.';
+
+  @override
+  String get fxTempoLate =>
+      'Protege tus criaturas y cierra por el aire o con daño directo.';
+
+  @override
+  String get fxMidrangeEarly =>
+      'Desarrolla y no regales cartas: cambios de uno por uno buenos.';
+
+  @override
+  String fxMidrangeMid(String tema) {
+    return 'Despliega tus motores de $tema y estabiliza la mesa.';
+  }
+
+  @override
+  String get fxMidrangeLate =>
+      'Tus cartas valen más que las suyas: conviértelo en la partida.';
+
+  @override
+  String get fxControlEarly =>
+      'Tierra al turno y responde solo a lo que importa.';
+
+  @override
+  String get fxControlMid =>
+      'Limpia la mesa y roba cartas: el tiempo juega para ti.';
+
+  @override
+  String get fxControlLate => 'Baja una amenaza y protégela hasta el final.';
+
+  @override
+  String get fxArchetypeAggro => 'aggro';
+
+  @override
+  String get fxArchetypeTempo => 'tempo';
+
+  @override
+  String get fxArchetypeMidrange => 'midrange';
+
+  @override
+  String get fxArchetypeControl => 'control';
+
+  @override
+  String fxWhyItWorks(String coste, String tierras, String arquetipo,
+      int criaturas, int interaccion, String tema) {
+    return 'Coste medio $coste: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva $tierras tierras — dentro del rango de un mazo $arquetipo. Hay $criaturas criaturas para mantener la mesa y $interaccion cartas de interacción para lo que traiga el rival. El tema ($tema) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.';
+  }
+
+  @override
+  String fxNoLandsRange(String tierras, String min, String max) {
+    return 'Con esa curva salen $tierras tierras: fuera del rango sano ($min-$max). Ajusta el total de hechizos.';
+  }
+
+  @override
+  String get fxNoCards =>
+      'Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.';
+
+  @override
+  String fxNoProfile(String coste, String tierras) {
+    return 'Esa curva (coste medio $coste con $tierras tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.';
+  }
+
+  @override
+  String get fxNoBasics =>
+      'No hay tierras básicas suficientes en la colección para esa curva.';
+
+  @override
+  String fxHardRule(String detalle) {
+    return 'La curva pedida rompe una regla dura: $detalle';
+  }
 }

@@ -1602,5 +1602,83 @@
   "@ddCardCount": {
     "placeholders": {"n": {"type": "int"}}
   },
-  "ddForgedWith": "Forjado con ManaForge"
+  "ddForgedWith": "Forjado con ManaForge",
+
+  "fxThemeLifegain": "drenaje de vida",
+  "fxThemeSacrifice": "sacrificio",
+  "fxThemeSpells": "hechizos",
+  "fxThemeArtifacts": "artefactos",
+  "fxThemeCounters": "contadores +1/+1",
+  "fxThemeTokens": "enjambre",
+  "fxThemeGraveyard": "cementerio",
+  "fxThemeGoodstuff": "lo mejor de tus cartas",
+  "fxTagLifegain": "Cada punto de vida que ganas es daño para ellos: drena y aguanta.",
+  "fxTagSacrifice": "Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.",
+  "fxTagSpells": "Cada instantáneo cuenta: juega en el turno del rival y castiga.",
+  "fxTagArtifacts": "Monta tu taller: cada artefacto hace más fuertes a los demás.",
+  "fxTagCounters": "Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.",
+  "fxTagTokens": "Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.",
+  "fxTagGraveyard": "Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.",
+  "fxTagAggro": "Sal rápido y pega a la cara: la partida debería acabar pronto.",
+  "fxTagTempo": "Presiona pronto y protege la ventaja con tus hechizos.",
+  "fxTagMidrange": "Cambia bien tus cartas y gana el medio juego con {tema}.",
+  "@fxTagMidrange": {
+    "placeholders": {"tema": {"type": "String"}}
+  },
+  "fxTagControl": "Aguanta, responde a todo y remata cuando la mesa sea tuya.",
+  "fxMidLifegain": "Encadena tus fuentes de vida con los que castigan al rival por ello.",
+  "fxMidSacrifice": "Sacrifica lo barato para robar, drenar o hacer crecer al resto.",
+  "fxMidSpells": "Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.",
+  "fxMidArtifacts": "Despliega artefactos baratos y activa a los que los cuentan.",
+  "fxMidCounters": "Apila contadores en una o dos criaturas y protégelas.",
+  "fxMidTokens": "Genera fichas cada turno y busca los efectos que las hacen mayores.",
+  "fxMidGraveyard": "Muele y descarta con intención: lo que cae al cementerio vuelve.",
+  "fxEndLifegain": "Con la vida alta, cambia a modo agresivo: ellos ya no llegan.",
+  "fxEndSacrifice": "El valor acumulado te da la partida: cada cambio te sale gratis.",
+  "fxEndSpells": "Un par de hechizos en el mismo turno y tus criaturas cierran.",
+  "fxEndArtifacts": "Tu mesa vale el doble que la suya: remata con tus payoffs.",
+  "fxEndCounters": "Una amenaza enorme y protegida acaba la partida en dos golpes.",
+  "fxEndTokens": "Ataca en masa: ningún bloqueo aguanta a todo tu ejército.",
+  "fxEndGraveyard": "Reutiliza tus mejores cartas: juegas con dos manos contra una.",
+  "fxTurns12": "T1-T2",
+  "fxTurns34": "T3-T4",
+  "fxTurns5": "T5+",
+  "fxAggroEarly": "Juega una criatura cada turno, sin excepción.",
+  "fxAggroMid": "Sigue atacando; guarda el daño directo para quitar bloqueadores.",
+  "fxAggroLate": "Remata con todo: aquí deberías cerrar la partida.",
+  "fxTempoEarly": "Amenaza barata y maná abierto cuando puedas.",
+  "fxTempoMid": "Ataca y usa tus hechizos en el turno del rival.",
+  "fxTempoLate": "Protege tus criaturas y cierra por el aire o con daño directo.",
+  "fxMidrangeEarly": "Desarrolla y no regales cartas: cambios de uno por uno buenos.",
+  "fxMidrangeMid": "Despliega tus motores de {tema} y estabiliza la mesa.",
+  "@fxMidrangeMid": {
+    "placeholders": {"tema": {"type": "String"}}
+  },
+  "fxMidrangeLate": "Tus cartas valen más que las suyas: conviértelo en la partida.",
+  "fxControlEarly": "Tierra al turno y responde solo a lo que importa.",
+  "fxControlMid": "Limpia la mesa y roba cartas: el tiempo juega para ti.",
+  "fxControlLate": "Baja una amenaza y protégela hasta el final.",
+  "fxArchetypeAggro": "aggro",
+  "fxArchetypeTempo": "tempo",
+  "fxArchetypeMidrange": "midrange",
+  "fxArchetypeControl": "control",
+  "fxWhyItWorks": "Coste medio {coste}: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva {tierras} tierras — dentro del rango de un mazo {arquetipo}. Hay {criaturas} criaturas para mantener la mesa y {interaccion} cartas de interacción para lo que traiga el rival. El tema ({tema}) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.",
+  "@fxWhyItWorks": {
+    "placeholders": {"coste": {"type": "String"}, "tierras": {"type": "String"}, "arquetipo": {"type": "String"}, "criaturas": {"type": "int"}, "interaccion": {"type": "int"}, "tema": {"type": "String"}}
+  },
+
+  "fxNoLandsRange": "Con esa curva salen {tierras} tierras: fuera del rango sano ({min}-{max}). Ajusta el total de hechizos.",
+  "@fxNoLandsRange": {
+    "placeholders": {"tierras": {"type": "String"}, "min": {"type": "String"}, "max": {"type": "String"}}
+  },
+  "fxNoCards": "Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.",
+  "fxNoProfile": "Esa curva (coste medio {coste} con {tierras} tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.",
+  "@fxNoProfile": {
+    "placeholders": {"coste": {"type": "String"}, "tierras": {"type": "String"}}
+  },
+  "fxNoBasics": "No hay tierras básicas suficientes en la colección para esa curva.",
+  "fxHardRule": "La curva pedida rompe una regla dura: {detalle}",
+  "@fxHardRule": {
+    "placeholders": {"detalle": {"type": "String"}}
+  }
 }

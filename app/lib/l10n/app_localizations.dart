@@ -5731,6 +5731,355 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Forjado con ManaForge'**
   String get ddForgedWith;
+
+  /// No description provided for @fxThemeLifegain.
+  ///
+  /// In es, this message translates to:
+  /// **'drenaje de vida'**
+  String get fxThemeLifegain;
+
+  /// No description provided for @fxThemeSacrifice.
+  ///
+  /// In es, this message translates to:
+  /// **'sacrificio'**
+  String get fxThemeSacrifice;
+
+  /// No description provided for @fxThemeSpells.
+  ///
+  /// In es, this message translates to:
+  /// **'hechizos'**
+  String get fxThemeSpells;
+
+  /// No description provided for @fxThemeArtifacts.
+  ///
+  /// In es, this message translates to:
+  /// **'artefactos'**
+  String get fxThemeArtifacts;
+
+  /// No description provided for @fxThemeCounters.
+  ///
+  /// In es, this message translates to:
+  /// **'contadores +1/+1'**
+  String get fxThemeCounters;
+
+  /// No description provided for @fxThemeTokens.
+  ///
+  /// In es, this message translates to:
+  /// **'enjambre'**
+  String get fxThemeTokens;
+
+  /// No description provided for @fxThemeGraveyard.
+  ///
+  /// In es, this message translates to:
+  /// **'cementerio'**
+  String get fxThemeGraveyard;
+
+  /// No description provided for @fxThemeGoodstuff.
+  ///
+  /// In es, this message translates to:
+  /// **'lo mejor de tus cartas'**
+  String get fxThemeGoodstuff;
+
+  /// No description provided for @fxTagLifegain.
+  ///
+  /// In es, this message translates to:
+  /// **'Cada punto de vida que ganas es daño para ellos: drena y aguanta.'**
+  String get fxTagLifegain;
+
+  /// No description provided for @fxTagSacrifice.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.'**
+  String get fxTagSacrifice;
+
+  /// No description provided for @fxTagSpells.
+  ///
+  /// In es, this message translates to:
+  /// **'Cada instantáneo cuenta: juega en el turno del rival y castiga.'**
+  String get fxTagSpells;
+
+  /// No description provided for @fxTagArtifacts.
+  ///
+  /// In es, this message translates to:
+  /// **'Monta tu taller: cada artefacto hace más fuertes a los demás.'**
+  String get fxTagArtifacts;
+
+  /// No description provided for @fxTagCounters.
+  ///
+  /// In es, this message translates to:
+  /// **'Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.'**
+  String get fxTagCounters;
+
+  /// No description provided for @fxTagTokens.
+  ///
+  /// In es, this message translates to:
+  /// **'Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.'**
+  String get fxTagTokens;
+
+  /// No description provided for @fxTagGraveyard.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.'**
+  String get fxTagGraveyard;
+
+  /// No description provided for @fxTagAggro.
+  ///
+  /// In es, this message translates to:
+  /// **'Sal rápido y pega a la cara: la partida debería acabar pronto.'**
+  String get fxTagAggro;
+
+  /// No description provided for @fxTagTempo.
+  ///
+  /// In es, this message translates to:
+  /// **'Presiona pronto y protege la ventaja con tus hechizos.'**
+  String get fxTagTempo;
+
+  /// No description provided for @fxTagMidrange.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambia bien tus cartas y gana el medio juego con {tema}.'**
+  String fxTagMidrange(String tema);
+
+  /// No description provided for @fxTagControl.
+  ///
+  /// In es, this message translates to:
+  /// **'Aguanta, responde a todo y remata cuando la mesa sea tuya.'**
+  String get fxTagControl;
+
+  /// No description provided for @fxMidLifegain.
+  ///
+  /// In es, this message translates to:
+  /// **'Encadena tus fuentes de vida con los que castigan al rival por ello.'**
+  String get fxMidLifegain;
+
+  /// No description provided for @fxMidSacrifice.
+  ///
+  /// In es, this message translates to:
+  /// **'Sacrifica lo barato para robar, drenar o hacer crecer al resto.'**
+  String get fxMidSacrifice;
+
+  /// No description provided for @fxMidSpells.
+  ///
+  /// In es, this message translates to:
+  /// **'Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.'**
+  String get fxMidSpells;
+
+  /// No description provided for @fxMidArtifacts.
+  ///
+  /// In es, this message translates to:
+  /// **'Despliega artefactos baratos y activa a los que los cuentan.'**
+  String get fxMidArtifacts;
+
+  /// No description provided for @fxMidCounters.
+  ///
+  /// In es, this message translates to:
+  /// **'Apila contadores en una o dos criaturas y protégelas.'**
+  String get fxMidCounters;
+
+  /// No description provided for @fxMidTokens.
+  ///
+  /// In es, this message translates to:
+  /// **'Genera fichas cada turno y busca los efectos que las hacen mayores.'**
+  String get fxMidTokens;
+
+  /// No description provided for @fxMidGraveyard.
+  ///
+  /// In es, this message translates to:
+  /// **'Muele y descarta con intención: lo que cae al cementerio vuelve.'**
+  String get fxMidGraveyard;
+
+  /// No description provided for @fxEndLifegain.
+  ///
+  /// In es, this message translates to:
+  /// **'Con la vida alta, cambia a modo agresivo: ellos ya no llegan.'**
+  String get fxEndLifegain;
+
+  /// No description provided for @fxEndSacrifice.
+  ///
+  /// In es, this message translates to:
+  /// **'El valor acumulado te da la partida: cada cambio te sale gratis.'**
+  String get fxEndSacrifice;
+
+  /// No description provided for @fxEndSpells.
+  ///
+  /// In es, this message translates to:
+  /// **'Un par de hechizos en el mismo turno y tus criaturas cierran.'**
+  String get fxEndSpells;
+
+  /// No description provided for @fxEndArtifacts.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu mesa vale el doble que la suya: remata con tus payoffs.'**
+  String get fxEndArtifacts;
+
+  /// No description provided for @fxEndCounters.
+  ///
+  /// In es, this message translates to:
+  /// **'Una amenaza enorme y protegida acaba la partida en dos golpes.'**
+  String get fxEndCounters;
+
+  /// No description provided for @fxEndTokens.
+  ///
+  /// In es, this message translates to:
+  /// **'Ataca en masa: ningún bloqueo aguanta a todo tu ejército.'**
+  String get fxEndTokens;
+
+  /// No description provided for @fxEndGraveyard.
+  ///
+  /// In es, this message translates to:
+  /// **'Reutiliza tus mejores cartas: juegas con dos manos contra una.'**
+  String get fxEndGraveyard;
+
+  /// No description provided for @fxTurns12.
+  ///
+  /// In es, this message translates to:
+  /// **'T1-T2'**
+  String get fxTurns12;
+
+  /// No description provided for @fxTurns34.
+  ///
+  /// In es, this message translates to:
+  /// **'T3-T4'**
+  String get fxTurns34;
+
+  /// No description provided for @fxTurns5.
+  ///
+  /// In es, this message translates to:
+  /// **'T5+'**
+  String get fxTurns5;
+
+  /// No description provided for @fxAggroEarly.
+  ///
+  /// In es, this message translates to:
+  /// **'Juega una criatura cada turno, sin excepción.'**
+  String get fxAggroEarly;
+
+  /// No description provided for @fxAggroMid.
+  ///
+  /// In es, this message translates to:
+  /// **'Sigue atacando; guarda el daño directo para quitar bloqueadores.'**
+  String get fxAggroMid;
+
+  /// No description provided for @fxAggroLate.
+  ///
+  /// In es, this message translates to:
+  /// **'Remata con todo: aquí deberías cerrar la partida.'**
+  String get fxAggroLate;
+
+  /// No description provided for @fxTempoEarly.
+  ///
+  /// In es, this message translates to:
+  /// **'Amenaza barata y maná abierto cuando puedas.'**
+  String get fxTempoEarly;
+
+  /// No description provided for @fxTempoMid.
+  ///
+  /// In es, this message translates to:
+  /// **'Ataca y usa tus hechizos en el turno del rival.'**
+  String get fxTempoMid;
+
+  /// No description provided for @fxTempoLate.
+  ///
+  /// In es, this message translates to:
+  /// **'Protege tus criaturas y cierra por el aire o con daño directo.'**
+  String get fxTempoLate;
+
+  /// No description provided for @fxMidrangeEarly.
+  ///
+  /// In es, this message translates to:
+  /// **'Desarrolla y no regales cartas: cambios de uno por uno buenos.'**
+  String get fxMidrangeEarly;
+
+  /// No description provided for @fxMidrangeMid.
+  ///
+  /// In es, this message translates to:
+  /// **'Despliega tus motores de {tema} y estabiliza la mesa.'**
+  String fxMidrangeMid(String tema);
+
+  /// No description provided for @fxMidrangeLate.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus cartas valen más que las suyas: conviértelo en la partida.'**
+  String get fxMidrangeLate;
+
+  /// No description provided for @fxControlEarly.
+  ///
+  /// In es, this message translates to:
+  /// **'Tierra al turno y responde solo a lo que importa.'**
+  String get fxControlEarly;
+
+  /// No description provided for @fxControlMid.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpia la mesa y roba cartas: el tiempo juega para ti.'**
+  String get fxControlMid;
+
+  /// No description provided for @fxControlLate.
+  ///
+  /// In es, this message translates to:
+  /// **'Baja una amenaza y protégela hasta el final.'**
+  String get fxControlLate;
+
+  /// No description provided for @fxArchetypeAggro.
+  ///
+  /// In es, this message translates to:
+  /// **'aggro'**
+  String get fxArchetypeAggro;
+
+  /// No description provided for @fxArchetypeTempo.
+  ///
+  /// In es, this message translates to:
+  /// **'tempo'**
+  String get fxArchetypeTempo;
+
+  /// No description provided for @fxArchetypeMidrange.
+  ///
+  /// In es, this message translates to:
+  /// **'midrange'**
+  String get fxArchetypeMidrange;
+
+  /// No description provided for @fxArchetypeControl.
+  ///
+  /// In es, this message translates to:
+  /// **'control'**
+  String get fxArchetypeControl;
+
+  /// No description provided for @fxWhyItWorks.
+  ///
+  /// In es, this message translates to:
+  /// **'Coste medio {coste}: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva {tierras} tierras — dentro del rango de un mazo {arquetipo}. Hay {criaturas} criaturas para mantener la mesa y {interaccion} cartas de interacción para lo que traiga el rival. El tema ({tema}) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.'**
+  String fxWhyItWorks(String coste, String tierras, String arquetipo,
+      int criaturas, int interaccion, String tema);
+
+  /// No description provided for @fxNoLandsRange.
+  ///
+  /// In es, this message translates to:
+  /// **'Con esa curva salen {tierras} tierras: fuera del rango sano ({min}-{max}). Ajusta el total de hechizos.'**
+  String fxNoLandsRange(String tierras, String min, String max);
+
+  /// No description provided for @fxNoCards.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.'**
+  String get fxNoCards;
+
+  /// No description provided for @fxNoProfile.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa curva (coste medio {coste} con {tierras} tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.'**
+  String fxNoProfile(String coste, String tierras);
+
+  /// No description provided for @fxNoBasics.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay tierras básicas suficientes en la colección para esa curva.'**
+  String get fxNoBasics;
+
+  /// No description provided for @fxHardRule.
+  ///
+  /// In es, this message translates to:
+  /// **'La curva pedida rompe una regla dura: {detalle}'**
+  String fxHardRule(String detalle);
 }
 
 class _AppLocalizationsDelegate

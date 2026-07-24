@@ -3,6 +3,7 @@ import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
+import '../services/forge_texts.dart';
 import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
@@ -271,9 +272,9 @@ class _TestScreenState extends State<TestScreen> {
                 ColorIdentityDots(colors: deck.colors, size: 14),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                      '${deck.name} · ${deck.archetype.name} · '
-                      '${fe.themeName(result.deck.theme)}'),
+                  child: Text('${deck.name} · '
+                      '${archetypeName(t, deck.archetype)} · '
+                      '${themeName(t, result.deck.theme)}'),
                 ),
               ],
             ),

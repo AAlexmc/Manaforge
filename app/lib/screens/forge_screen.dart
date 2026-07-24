@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
+import '../services/forge_texts.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/card_database.dart';
@@ -775,6 +776,7 @@ class _ProposalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     final deck = gen.deck;
     final hist = fe.ManaCurve.curveHistogram(deck.cards, pool, cap: 6);
     final accent = manaColors[deck.colors.isEmpty ? 'C' : deck.colors[0]] ??
@@ -812,12 +814,12 @@ class _ProposalCard extends StatelessWidget {
               Text(deck.name,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold)),
-              Text(fe.themeName(gen.theme)),
+              Text(themeName(t, gen.theme)),
               const SizedBox(height: 14),
               MiniCurve(histogram: hist, color: accent),
               const SizedBox(height: 14),
               Expanded(
-                child: Text('"${fe.tagline(gen)}"',
+                child: Text('"${tagline(t, gen)}"',
                     style: const TextStyle(fontStyle: FontStyle.italic)),
               ),
               if ((shortfall?.copies ?? 0) == 0)

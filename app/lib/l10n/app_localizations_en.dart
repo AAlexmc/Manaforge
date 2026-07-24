@@ -3509,4 +3509,222 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ddForgedWith => 'Forged with ManaForge';
+
+  @override
+  String get fxThemeLifegain => 'lifegain';
+
+  @override
+  String get fxThemeSacrifice => 'sacrifice';
+
+  @override
+  String get fxThemeSpells => 'spells';
+
+  @override
+  String get fxThemeArtifacts => 'artifacts';
+
+  @override
+  String get fxThemeCounters => '+1/+1 counters';
+
+  @override
+  String get fxThemeTokens => 'swarm';
+
+  @override
+  String get fxThemeGraveyard => 'graveyard';
+
+  @override
+  String get fxThemeGoodstuff => 'the best of your cards';
+
+  @override
+  String get fxTagLifegain =>
+      'Every life point you gain is damage to them: drain and hold on.';
+
+  @override
+  String get fxTagSacrifice =>
+      'Your creatures are worth more dead: sacrifice them and collect the toll.';
+
+  @override
+  String get fxTagSpells =>
+      'Every instant counts: play on their turn and punish.';
+
+  @override
+  String get fxTagArtifacts =>
+      'Set up your workshop: every artifact makes the others stronger.';
+
+  @override
+  String get fxTagCounters =>
+      '+1/+1 counters: your creatures grow out of reach.';
+
+  @override
+  String get fxTagTokens =>
+      'Flood the board with tokens: where they have one, you have five.';
+
+  @override
+  String get fxTagGraveyard =>
+      'Your graveyard is your second hand: fill it and recycle the best.';
+
+  @override
+  String get fxTagAggro =>
+      'Come out fast and hit their face: this game should end early.';
+
+  @override
+  String get fxTagTempo =>
+      'Press early and protect your lead with your spells.';
+
+  @override
+  String fxTagMidrange(String tema) {
+    return 'Trade your cards well and win the midgame with $tema.';
+  }
+
+  @override
+  String get fxTagControl =>
+      'Hold on, answer everything and finish when the board is yours.';
+
+  @override
+  String get fxMidLifegain =>
+      'Chain your lifegain with the cards that punish them for it.';
+
+  @override
+  String get fxMidSacrifice =>
+      'Sacrifice the cheap stuff to draw, drain or grow the rest.';
+
+  @override
+  String get fxMidSpells =>
+      'Keep mana open: your creatures grow with every spell you cast.';
+
+  @override
+  String get fxMidArtifacts =>
+      'Deploy cheap artifacts and turn on the ones that count them.';
+
+  @override
+  String get fxMidCounters =>
+      'Pile counters on one or two creatures and protect them.';
+
+  @override
+  String get fxMidTokens =>
+      'Make tokens every turn and look for the effects that pump them.';
+
+  @override
+  String get fxMidGraveyard =>
+      'Mill and discard on purpose: what hits the graveyard comes back.';
+
+  @override
+  String get fxEndLifegain =>
+      'With your life high, switch to aggro: they can\'t get there any more.';
+
+  @override
+  String get fxEndSacrifice =>
+      'The value you piled up wins it: every trade is free for you.';
+
+  @override
+  String get fxEndSpells =>
+      'A couple of spells in one turn and your creatures close it out.';
+
+  @override
+  String get fxEndArtifacts =>
+      'Your board is worth twice theirs: finish with your payoffs.';
+
+  @override
+  String get fxEndCounters =>
+      'One huge, protected threat ends the game in two swings.';
+
+  @override
+  String get fxEndTokens =>
+      'Attack in force: no block holds off your whole army.';
+
+  @override
+  String get fxEndGraveyard =>
+      'Reuse your best cards: you play with two hands against one.';
+
+  @override
+  String get fxTurns12 => 'T1-T2';
+
+  @override
+  String get fxTurns34 => 'T3-T4';
+
+  @override
+  String get fxTurns5 => 'T5+';
+
+  @override
+  String get fxAggroEarly => 'Play a creature every turn, no exceptions.';
+
+  @override
+  String get fxAggroMid => 'Keep attacking; save the burn to clear blockers.';
+
+  @override
+  String get fxAggroLate =>
+      'Go for it all: this is where you should close the game.';
+
+  @override
+  String get fxTempoEarly => 'A cheap threat and open mana whenever you can.';
+
+  @override
+  String get fxTempoMid => 'Attack and use your spells on their turn.';
+
+  @override
+  String get fxTempoLate =>
+      'Protect your creatures and close it in the air or with burn.';
+
+  @override
+  String get fxMidrangeEarly =>
+      'Develop and don\'t give cards away: good one-for-one trades.';
+
+  @override
+  String fxMidrangeMid(String tema) {
+    return 'Deploy your $tema engines and stabilise the board.';
+  }
+
+  @override
+  String get fxMidrangeLate =>
+      'Your cards are worth more than theirs: turn that into the game.';
+
+  @override
+  String get fxControlEarly => 'A land a turn, and only answer what matters.';
+
+  @override
+  String get fxControlMid =>
+      'Sweep the board and draw cards: time is on your side.';
+
+  @override
+  String get fxControlLate => 'Land one threat and protect it to the end.';
+
+  @override
+  String get fxArchetypeAggro => 'aggro';
+
+  @override
+  String get fxArchetypeTempo => 'tempo';
+
+  @override
+  String get fxArchetypeMidrange => 'midrange';
+
+  @override
+  String get fxArchetypeControl => 'control';
+
+  @override
+  String fxWhyItWorks(String coste, String tierras, String arquetipo,
+      int criaturas, int interaccion, String tema) {
+    return 'Average cost $coste: by Karsten\'s rule (24 lands at cost 3.0, ±1 for every ±0.5), this deck runs $tierras lands — within the range of a $arquetipo deck. There are $criaturas creatures to hold the board and $interaccion interaction cards for whatever they bring. The theme ($tema) focuses your synergies: the more theme pieces you see, the stronger each one gets.';
+  }
+
+  @override
+  String fxNoLandsRange(String tierras, String min, String max) {
+    return 'That curve leaves $tierras lands: outside the healthy range ($min-$max). Adjust the total number of spells.';
+  }
+
+  @override
+  String get fxNoCards =>
+      'Your collection doesn\'t have enough cards in these colours to fill that curve. Try fewer spells, or different costs.';
+
+  @override
+  String fxNoProfile(String coste, String tierras) {
+    return 'That curve (average cost $coste with $tierras lands) doesn\'t fit any healthy profile: a cheap deck wants fewer lands and an expensive one wants more. Bring them closer.';
+  }
+
+  @override
+  String get fxNoBasics =>
+      'There aren\'t enough basic lands in your collection for that curve.';
+
+  @override
+  String fxHardRule(String detalle) {
+    return 'The curve you asked for breaks a hard rule: $detalle';
+  }
 }
