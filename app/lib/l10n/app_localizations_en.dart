@@ -3727,4 +3727,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String fxHardRule(String detalle) {
     return 'The curve you asked for breaks a hard rule: $detalle';
   }
+
+  @override
+  String get tsPresetMonoRed =>
+      'Cheap creatures and damage to the face: it kills you in 4-5 turns if you can\'t keep up.';
+
+  @override
+  String get tsPresetAzorius =>
+      'Counterspells, sweepers and card draw: it drags the game out and wins with a couple of finishers.';
+
+  @override
+  String get tsPresetGolgari =>
+      'One-for-one trades, efficient creatures and black removal: it wins the long game on card quality.';
 }

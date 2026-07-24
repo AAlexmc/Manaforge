@@ -1680,5 +1680,9 @@
   "fxHardRule": "La curva pedida rompe una regla dura: {detalle}",
   "@fxHardRule": {
     "placeholders": {"detalle": {"type": "String"}}
-  }
+  },
+
+  "tsPresetMonoRed": "Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.",
+  "tsPresetAzorius": "Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.",
+  "tsPresetGolgari": "Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas."
 }

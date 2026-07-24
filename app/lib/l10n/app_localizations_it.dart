@@ -3734,4 +3734,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String fxHardRule(String detalle) {
     return 'La curva pedida rompe una regla dura: $detalle';
   }
+
+  @override
+  String get tsPresetMonoRed =>
+      'Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.';
+
+  @override
+  String get tsPresetAzorius =>
+      'Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.';
+
+  @override
+  String get tsPresetGolgari =>
+      'Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas.';
 }

@@ -1676,5 +1676,9 @@
   "fxHardRule": "The curve you asked for breaks a hard rule: {detalle}",
   "@fxHardRule": {
     "placeholders": {"detalle": {"type": "String"}}
-  }
+  },
+
+  "tsPresetMonoRed": "Cheap creatures and damage to the face: it kills you in 4-5 turns if you can't keep up.",
+  "tsPresetAzorius": "Counterspells, sweepers and card draw: it drags the game out and wins with a couple of finishers.",
+  "tsPresetGolgari": "One-for-one trades, efficient creatures and black removal: it wins the long game on card quality."
 }

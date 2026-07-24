@@ -6080,6 +6080,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'La curva pedida rompe una regla dura: {detalle}'**
   String fxHardRule(String detalle);
+
+  /// No description provided for @tsPresetMonoRed.
+  ///
+  /// In es, this message translates to:
+  /// **'Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.'**
+  String get tsPresetMonoRed;
+
+  /// No description provided for @tsPresetAzorius.
+  ///
+  /// In es, this message translates to:
+  /// **'Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.'**
+  String get tsPresetAzorius;
+
+  /// No description provided for @tsPresetGolgari.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas.'**
+  String get tsPresetGolgari;
 }
 
 class _AppLocalizationsDelegate
