@@ -912,5 +912,168 @@
   },
   "cePickFirstCard": "Elegir la carta con la que empecé",
   "ceChangeFirstCard": "Cambiar la carta con la que empecé",
-  "ceDownloadPng": "Descargar PNG"
+  "ceDownloadPng": "Descargar PNG",
+
+  "cdNotFound": "No encuentro esta carta en la base de datos.",
+  "cdLoadFailed": "No pude cargar la ficha: {error}",
+  "@cdLoadFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cdPrev": "Anterior (←)",
+  "cdNext": "Siguiente (→)",
+  "cdPosition": "{pos} / {total}",
+  "@cdPosition": {
+    "placeholders": { "pos": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "cdCardNotFound": "Carta no encontrada",
+  "cdPaid": "Pagaste {total}{divisa} por {qty} {copias} ({unidad} cada una)",
+  "@cdPaid": {
+    "placeholders": { "total": { "type": "String" }, "divisa": { "type": "String" }, "qty": { "type": "int" }, "copias": { "type": "String" }, "unidad": { "type": "String" } }
+  },
+  "cdCopyWord": "{n, plural, =1{copia}other{copias}}",
+  "@cdCopyWord": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "cdYouHave": "{n, plural, =1{✓ Tienes 1 copia en tu colección}other{✓ Tienes {n} copias en tu colección}}",
+  "@cdYouHave": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "cdNotOwned": "No tienes esta carta (todavía).",
+  "cdNoPrice": "Sin precio de esta carta en {mercado}.",
+  "@cdNoPrice": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "cdVersions": "VERSIONES ({n})",
+  "@cdVersions": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "cdNoPerPrinting": "sin precio por edición en {mercado}",
+  "@cdNoPerPrinting": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "cdPricesNormalFoil": "precios {mercado} ({moneda}) · normal / foil",
+  "@cdPricesNormalFoil": {
+    "placeholders": { "mercado": { "type": "String" }, "moneda": { "type": "String" } }
+  },
+  "cdFoil": "foil {precio}",
+  "@cdFoil": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "cdYouHaveX": "tienes x{n}",
+  "@cdYouHaveX": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "smMythic": "Mítica",
+  "smRare": "Rara",
+  "smUncommon": "Infrecuente",
+  "smCommon": "Común",
+  "smLoadFailed": "No pude cargar el set: {error}",
+  "@smLoadFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "smSearchInSet": "Busca en la expansión…",
+  "smRarityAll": "Rareza: todas",
+  "smPriceDown": "Precio ↓",
+  "smPriceUp": "Precio ↑",
+  "smNumber": "Número",
+  "smOnlyMine": "Solo las mías",
+  "smCardsCount": "{n} cartas",
+  "@smCardsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "smNoPerPrinting": "{mercado}: sin precio por edición",
+  "@smNoPerPrinting": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "smListedValue": "valor listado ({mercado}): ",
+  "@smListedValue": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "pnPaidVsToday": "Pagaste {pagado} · hoy valen {hoy}",
+  "@pnPaidVsToday": {
+    "placeholders": { "pagado": { "type": "String" }, "hoy": { "type": "String" } }
+  },
+  "pnNoPnl": "Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.",
+  "pnOverAll": "sobre las {n} copias de tu colección",
+  "@pnOverAll": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pnOverSome": "sobre {conprecio} de {total} copias (las demás no tienen precio de compra apuntado)",
+  "@pnOverSome": {
+    "placeholders": { "conprecio": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "pnNoTodayPrice": "{n} copias compradas no tienen precio de hoy en la base: fuera de la cuenta",
+  "@pnNoTodayPrice": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pnOtherCurrency": "también pagaste {importe} {moneda}, que no se convierte",
+  "@pnOtherCurrency": {
+    "placeholders": { "importe": { "type": "String" }, "moneda": { "type": "String" } }
+  },
+  "pnAssumedCurrency": "{n} copias sin divisa en el CSV: se suponen {moneda}",
+  "@pnAssumedCurrency": {
+    "placeholders": { "n": { "type": "int" }, "moneda": { "type": "String" } }
+  },
+  "pcTitle": "Evolución del precio",
+  "pcNoHistory": "Todavía sin historial de precio de esta carta.",
+  "pcTodayPrice": "Precio de hoy: {precio} €. La gráfica aparece en cuanto haya varios días.",
+  "@pcTodayPrice": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "pcExplain": "ManaForge apunta el precio de cada carta que miras o tienes, día a día. Para arrancar con los últimos meses reales de Cardmarket, trae el histórico desde Mercado.",
+  "pcRange": "mín {min} € · máx {max} € · {n, plural, =1{1 día}other{{n} días}}",
+  "@pcRange": {
+    "placeholders": { "min": { "type": "String" }, "max": { "type": "String" }, "n": { "type": "int" } }
+  },
+  "spWhichSets": "¿De qué expansiones?",
+  "spSearchHint": "Buscar por nombre o código (BLB, MH3…)",
+  "spOnlyMine": "Solo las mías",
+  "spClearN": "Quitar las {n}",
+  "@spClearN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "spNoneNamed": "Ninguna expansión con ese nombre. Quita \"Solo las mías\" para ver todas.",
+  "spSetLine": "{set} · {n} cartas",
+  "@spSetLine": {
+    "placeholders": { "set": { "type": "String" }, "n": { "type": "int" } }
+  },
+  "spNoFilter": "Sin filtro de expansión",
+  "spUseN": "{n, plural, =1{Usar 1 expansión}other{Usar {n} expansiones}}",
+  "@spUseN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "slLockedTo": "Solo busco cartas del set {set}. Tócalo para cambiar o quitar el bloqueo.",
+  "@slLockedTo": {
+    "placeholders": { "set": { "type": "String" } }
+  },
+  "slLockHint": "Bloquea un set para escanear una caja/precon: el escáner solo buscará dentro de él y clava la edición.",
+  "slSetIs": "Set: {set}",
+  "@slSetIs": {
+    "placeholders": { "set": { "type": "String" } }
+  },
+  "slSetAll": "Set: todas",
+  "slLockTitle": "Bloquear edición",
+  "slLockBody": "Escribe el código del set (p. ej. AER, MH3, LCI) para escanear una caja entera: solo se buscarán cartas de ese set.",
+  "slSetCode": "Código de set",
+  "slClearLock": "Quitar bloqueo",
+  "stHintQuick": "Pasa cartas por delante: las claras se apuntan solas aquí (las copias iguales suman ×N). Las dudosas, marcadas para revisar. Al terminar, confirmas todas.",
+  "stHintCareful": "Pasa cartas por delante: las claras se apuntan solas; las dudosas te preguntan cuál es. Al terminar, confirmas todas.",
+  "stAddN": "Añadir {n} a la colección",
+  "@stAddN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "stAddNAndFolder": "Añadir {n} a la colección y a {carpeta}",
+  "@stAddNAndFolder": {
+    "placeholders": { "n": { "type": "int" }, "carpeta": { "type": "String" } }
+  },
+  "stOneLess": "Una menos",
+  "stAnotherSame": "Otra igual",
+  "stOnTable": "en mesa",
+
+  "cdLastData": " (último dato: {fecha})",
+  "@cdLastData": {
+    "placeholders": { "fecha": { "type": "String" } }
+  },
+
+  "slLockButton": "Bloquear"
 }

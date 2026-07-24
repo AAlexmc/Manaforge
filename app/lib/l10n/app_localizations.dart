@@ -3317,6 +3317,409 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Descargar PNG'**
   String get ceDownloadPng;
+
+  /// No description provided for @cdNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No encuentro esta carta en la base de datos.'**
+  String get cdNotFound;
+
+  /// No description provided for @cdLoadFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude cargar la ficha: {error}'**
+  String cdLoadFailed(String error);
+
+  /// No description provided for @cdPrev.
+  ///
+  /// In es, this message translates to:
+  /// **'Anterior (←)'**
+  String get cdPrev;
+
+  /// No description provided for @cdNext.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente (→)'**
+  String get cdNext;
+
+  /// No description provided for @cdPosition.
+  ///
+  /// In es, this message translates to:
+  /// **'{pos} / {total}'**
+  String cdPosition(int pos, int total);
+
+  /// No description provided for @cdCardNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'Carta no encontrada'**
+  String get cdCardNotFound;
+
+  /// No description provided for @cdPaid.
+  ///
+  /// In es, this message translates to:
+  /// **'Pagaste {total}{divisa} por {qty} {copias} ({unidad} cada una)'**
+  String cdPaid(
+      String total, String divisa, int qty, String copias, String unidad);
+
+  /// No description provided for @cdCopyWord.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{copia}other{copias}}'**
+  String cdCopyWord(int n);
+
+  /// No description provided for @cdYouHave.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{✓ Tienes 1 copia en tu colección}other{✓ Tienes {n} copias en tu colección}}'**
+  String cdYouHave(int n);
+
+  /// No description provided for @cdNotOwned.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes esta carta (todavía).'**
+  String get cdNotOwned;
+
+  /// No description provided for @cdNoPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin precio de esta carta en {mercado}.'**
+  String cdNoPrice(String mercado);
+
+  /// No description provided for @cdVersions.
+  ///
+  /// In es, this message translates to:
+  /// **'VERSIONES ({n})'**
+  String cdVersions(int n);
+
+  /// No description provided for @cdNoPerPrinting.
+  ///
+  /// In es, this message translates to:
+  /// **'sin precio por edición en {mercado}'**
+  String cdNoPerPrinting(String mercado);
+
+  /// No description provided for @cdPricesNormalFoil.
+  ///
+  /// In es, this message translates to:
+  /// **'precios {mercado} ({moneda}) · normal / foil'**
+  String cdPricesNormalFoil(String mercado, String moneda);
+
+  /// No description provided for @cdFoil.
+  ///
+  /// In es, this message translates to:
+  /// **'foil {precio}'**
+  String cdFoil(String precio);
+
+  /// No description provided for @cdYouHaveX.
+  ///
+  /// In es, this message translates to:
+  /// **'tienes x{n}'**
+  String cdYouHaveX(int n);
+
+  /// No description provided for @smMythic.
+  ///
+  /// In es, this message translates to:
+  /// **'Mítica'**
+  String get smMythic;
+
+  /// No description provided for @smRare.
+  ///
+  /// In es, this message translates to:
+  /// **'Rara'**
+  String get smRare;
+
+  /// No description provided for @smUncommon.
+  ///
+  /// In es, this message translates to:
+  /// **'Infrecuente'**
+  String get smUncommon;
+
+  /// No description provided for @smCommon.
+  ///
+  /// In es, this message translates to:
+  /// **'Común'**
+  String get smCommon;
+
+  /// No description provided for @smLoadFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude cargar el set: {error}'**
+  String smLoadFailed(String error);
+
+  /// No description provided for @smSearchInSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Busca en la expansión…'**
+  String get smSearchInSet;
+
+  /// No description provided for @smRarityAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Rareza: todas'**
+  String get smRarityAll;
+
+  /// No description provided for @smPriceDown.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio ↓'**
+  String get smPriceDown;
+
+  /// No description provided for @smPriceUp.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio ↑'**
+  String get smPriceUp;
+
+  /// No description provided for @smNumber.
+  ///
+  /// In es, this message translates to:
+  /// **'Número'**
+  String get smNumber;
+
+  /// No description provided for @smOnlyMine.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo las mías'**
+  String get smOnlyMine;
+
+  /// No description provided for @smCardsCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} cartas'**
+  String smCardsCount(int n);
+
+  /// No description provided for @smNoPerPrinting.
+  ///
+  /// In es, this message translates to:
+  /// **'{mercado}: sin precio por edición'**
+  String smNoPerPrinting(String mercado);
+
+  /// No description provided for @smListedValue.
+  ///
+  /// In es, this message translates to:
+  /// **'valor listado ({mercado}): '**
+  String smListedValue(String mercado);
+
+  /// No description provided for @pnPaidVsToday.
+  ///
+  /// In es, this message translates to:
+  /// **'Pagaste {pagado} · hoy valen {hoy}'**
+  String pnPaidVsToday(String pagado, String hoy);
+
+  /// No description provided for @pnNoPnl.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.'**
+  String get pnNoPnl;
+
+  /// No description provided for @pnOverAll.
+  ///
+  /// In es, this message translates to:
+  /// **'sobre las {n} copias de tu colección'**
+  String pnOverAll(int n);
+
+  /// No description provided for @pnOverSome.
+  ///
+  /// In es, this message translates to:
+  /// **'sobre {conprecio} de {total} copias (las demás no tienen precio de compra apuntado)'**
+  String pnOverSome(int conprecio, int total);
+
+  /// No description provided for @pnNoTodayPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} copias compradas no tienen precio de hoy en la base: fuera de la cuenta'**
+  String pnNoTodayPrice(int n);
+
+  /// No description provided for @pnOtherCurrency.
+  ///
+  /// In es, this message translates to:
+  /// **'también pagaste {importe} {moneda}, que no se convierte'**
+  String pnOtherCurrency(String importe, String moneda);
+
+  /// No description provided for @pnAssumedCurrency.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} copias sin divisa en el CSV: se suponen {moneda}'**
+  String pnAssumedCurrency(int n, String moneda);
+
+  /// No description provided for @pcTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Evolución del precio'**
+  String get pcTitle;
+
+  /// No description provided for @pcNoHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía sin historial de precio de esta carta.'**
+  String get pcNoHistory;
+
+  /// No description provided for @pcTodayPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio de hoy: {precio} €. La gráfica aparece en cuanto haya varios días.'**
+  String pcTodayPrice(String precio);
+
+  /// No description provided for @pcExplain.
+  ///
+  /// In es, this message translates to:
+  /// **'ManaForge apunta el precio de cada carta que miras o tienes, día a día. Para arrancar con los últimos meses reales de Cardmarket, trae el histórico desde Mercado.'**
+  String get pcExplain;
+
+  /// No description provided for @pcRange.
+  ///
+  /// In es, this message translates to:
+  /// **'mín {min} € · máx {max} € · {n, plural, =1{1 día}other{{n} días}}'**
+  String pcRange(String min, String max, int n);
+
+  /// No description provided for @spWhichSets.
+  ///
+  /// In es, this message translates to:
+  /// **'¿De qué expansiones?'**
+  String get spWhichSets;
+
+  /// No description provided for @spSearchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar por nombre o código (BLB, MH3…)'**
+  String get spSearchHint;
+
+  /// No description provided for @spOnlyMine.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo las mías'**
+  String get spOnlyMine;
+
+  /// No description provided for @spClearN.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar las {n}'**
+  String spClearN(int n);
+
+  /// No description provided for @spNoneNamed.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna expansión con ese nombre. Quita \"Solo las mías\" para ver todas.'**
+  String get spNoneNamed;
+
+  /// No description provided for @spSetLine.
+  ///
+  /// In es, this message translates to:
+  /// **'{set} · {n} cartas'**
+  String spSetLine(String set, int n);
+
+  /// No description provided for @spNoFilter.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin filtro de expansión'**
+  String get spNoFilter;
+
+  /// No description provided for @spUseN.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Usar 1 expansión}other{Usar {n} expansiones}}'**
+  String spUseN(int n);
+
+  /// No description provided for @slLockedTo.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo busco cartas del set {set}. Tócalo para cambiar o quitar el bloqueo.'**
+  String slLockedTo(String set);
+
+  /// No description provided for @slLockHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Bloquea un set para escanear una caja/precon: el escáner solo buscará dentro de él y clava la edición.'**
+  String get slLockHint;
+
+  /// No description provided for @slSetIs.
+  ///
+  /// In es, this message translates to:
+  /// **'Set: {set}'**
+  String slSetIs(String set);
+
+  /// No description provided for @slSetAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Set: todas'**
+  String get slSetAll;
+
+  /// No description provided for @slLockTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Bloquear edición'**
+  String get slLockTitle;
+
+  /// No description provided for @slLockBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe el código del set (p. ej. AER, MH3, LCI) para escanear una caja entera: solo se buscarán cartas de ese set.'**
+  String get slLockBody;
+
+  /// No description provided for @slSetCode.
+  ///
+  /// In es, this message translates to:
+  /// **'Código de set'**
+  String get slSetCode;
+
+  /// No description provided for @slClearLock.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar bloqueo'**
+  String get slClearLock;
+
+  /// No description provided for @stHintQuick.
+  ///
+  /// In es, this message translates to:
+  /// **'Pasa cartas por delante: las claras se apuntan solas aquí (las copias iguales suman ×N). Las dudosas, marcadas para revisar. Al terminar, confirmas todas.'**
+  String get stHintQuick;
+
+  /// No description provided for @stHintCareful.
+  ///
+  /// In es, this message translates to:
+  /// **'Pasa cartas por delante: las claras se apuntan solas; las dudosas te preguntan cuál es. Al terminar, confirmas todas.'**
+  String get stHintCareful;
+
+  /// No description provided for @stAddN.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir {n} a la colección'**
+  String stAddN(int n);
+
+  /// No description provided for @stAddNAndFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir {n} a la colección y a {carpeta}'**
+  String stAddNAndFolder(int n, String carpeta);
+
+  /// No description provided for @stOneLess.
+  ///
+  /// In es, this message translates to:
+  /// **'Una menos'**
+  String get stOneLess;
+
+  /// No description provided for @stAnotherSame.
+  ///
+  /// In es, this message translates to:
+  /// **'Otra igual'**
+  String get stAnotherSame;
+
+  /// No description provided for @stOnTable.
+  ///
+  /// In es, this message translates to:
+  /// **'en mesa'**
+  String get stOnTable;
+
+  /// No description provided for @cdLastData.
+  ///
+  /// In es, this message translates to:
+  /// **' (último dato: {fecha})'**
+  String cdLastData(String fecha);
+
+  /// No description provided for @slLockButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Bloquear'**
+  String get slLockButton;
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
+
 import '../scanner/scan_tray.dart';
 import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
@@ -54,18 +57,14 @@ class SessionTray extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     final lines = tray.lines;
     if (lines.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(12),
         child: Text(
-          quickMode
-              ? 'Pasa cartas por delante: las claras se apuntan solas aquí '
-                  '(las copias iguales suman ×N). Las dudosas, marcadas para '
-                  'revisar. Al terminar, confirmas todas.'
-              : 'Pasa cartas por delante: las claras se apuntan solas; las '
-                  'dudosas te preguntan cuál es. Al terminar, confirmas todas.',
+          quickMode ? t.stHintQuick : t.stHintCareful,
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 12),
         ),
@@ -80,7 +79,7 @@ class SessionTray extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 10),
             itemCount: lines.length,
-            itemBuilder: (context, i) => _tile(lines[i]),
+            itemBuilder: (context, i) => _tile(t, lines[i]),
           ),
         ),
         if (onPickFolder != null)
@@ -95,8 +94,8 @@ class SessionTray extends StatelessWidget {
                         : Icons.folder,
                     size: 18),
                 label: Text(folderName == null
-                    ? 'Sin carpeta'
-                    : 'Y además a: $folderName'),
+                    ? t.scNoFolder
+                    : t.scAlsoTo(folderName!)),
                 onPressed: onPickFolder,
               ),
             ),
@@ -113,9 +112,8 @@ class SessionTray extends StatelessWidget {
                   // incluida la carpeta: es la última pantalla antes de
                   // tocarlo y no se puede quedar a medias de contarlo
                   label: Text(folderName == null
-                      ? 'Añadir ${tray.totalQty} a la colección'
-                      : 'Añadir ${tray.totalQty} a la colección '
-                          'y a $folderName'),
+                      ? t.stAddN(tray.totalQty)
+                      : t.stAddNAndFolder(tray.totalQty, folderName!)),
                 ),
               ),
               const SizedBox(width: 10),
@@ -130,7 +128,7 @@ class SessionTray extends StatelessWidget {
     );
   }
 
-  Widget _tile(TrayLine line) {
+  Widget _tile(AppLocalizations t, TrayLine line) {
     final entry = line.chosen.entry;
     final hit = hitCache[entry.scryfallId];
     final enMesa = onTableKey != null && line.key == onTableKey;
@@ -204,19 +202,19 @@ class SessionTray extends StatelessWidget {
                 children: [
                   _StepButton(
                       icon: Icons.remove,
-                      tooltip: 'Una menos',
+                      tooltip: t.stOneLess,
                       onTap: () => onQty(line, -1)),
                   Text('${line.qty}',
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold)),
                   _StepButton(
                       icon: Icons.add,
-                      tooltip: 'Otra igual',
+                      tooltip: t.stAnotherSame,
                       onTap: () => onQty(line, 1)),
                 ],
               ),
               Text(
-                enMesa ? 'en mesa' : (hit?.printedName ?? entry.name),
+                enMesa ? t.stOnTable : (hit?.printedName ?? entry.name),
                 maxLines: enMesa ? 1 : 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,

@@ -908,5 +908,168 @@
   },
   "cePickFirstCard": "Choose the card I started with",
   "ceChangeFirstCard": "Change the card I started with",
-  "ceDownloadPng": "Download PNG"
+  "ceDownloadPng": "Download PNG",
+
+  "cdNotFound": "I can't find this card in the database.",
+  "cdLoadFailed": "Couldn't load the card: {error}",
+  "@cdLoadFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cdPrev": "Previous (←)",
+  "cdNext": "Next (→)",
+  "cdPosition": "{pos} / {total}",
+  "@cdPosition": {
+    "placeholders": { "pos": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "cdCardNotFound": "Card not found",
+  "cdPaid": "You paid {total}{divisa} for {qty} {copias} ({unidad} each)",
+  "@cdPaid": {
+    "placeholders": { "total": { "type": "String" }, "divisa": { "type": "String" }, "qty": { "type": "int" }, "copias": { "type": "String" }, "unidad": { "type": "String" } }
+  },
+  "cdCopyWord": "{n, plural, =1{copy}other{copies}}",
+  "@cdCopyWord": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "cdYouHave": "{n, plural, =1{✓ You have 1 copy in your collection}other{✓ You have {n} copies in your collection}}",
+  "@cdYouHave": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "cdNotOwned": "You don't have this card (yet).",
+  "cdNoPrice": "No price for this card on {mercado}.",
+  "@cdNoPrice": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "cdVersions": "VERSIONS ({n})",
+  "@cdVersions": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "cdNoPerPrinting": "no per-printing price on {mercado}",
+  "@cdNoPerPrinting": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "cdPricesNormalFoil": "{mercado} prices ({moneda}) · normal / foil",
+  "@cdPricesNormalFoil": {
+    "placeholders": { "mercado": { "type": "String" }, "moneda": { "type": "String" } }
+  },
+  "cdFoil": "foil {precio}",
+  "@cdFoil": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "cdYouHaveX": "you have x{n}",
+  "@cdYouHaveX": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "smMythic": "Mythic",
+  "smRare": "Rare",
+  "smUncommon": "Uncommon",
+  "smCommon": "Common",
+  "smLoadFailed": "Couldn't load the set: {error}",
+  "@smLoadFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "smSearchInSet": "Search in the set…",
+  "smRarityAll": "Rarity: all",
+  "smPriceDown": "Price ↓",
+  "smPriceUp": "Price ↑",
+  "smNumber": "Number",
+  "smOnlyMine": "Only mine",
+  "smCardsCount": "{n} cards",
+  "@smCardsCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "smNoPerPrinting": "{mercado}: no per-printing price",
+  "@smNoPerPrinting": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "smListedValue": "listed value ({mercado}): ",
+  "@smListedValue": {
+    "placeholders": { "mercado": { "type": "String" } }
+  },
+  "pnPaidVsToday": "You paid {pagado} · today they're worth {hoy}",
+  "@pnPaidVsToday": {
+    "placeholders": { "pagado": { "type": "String" }, "hoy": { "type": "String" } }
+  },
+  "pnNoPnl": "No purchase price means no P&L. Import your ManaBox CSV with the \"Purchase price\" column and it shows up here.",
+  "pnOverAll": "over the {n} copies in your collection",
+  "@pnOverAll": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pnOverSome": "over {conprecio} of {total} copies (the rest have no purchase price recorded)",
+  "@pnOverSome": {
+    "placeholders": { "conprecio": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "pnNoTodayPrice": "{n} bought copies have no current price in the database: left out of the count",
+  "@pnNoTodayPrice": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pnOtherCurrency": "you also paid {importe} {moneda}, which isn't converted",
+  "@pnOtherCurrency": {
+    "placeholders": { "importe": { "type": "String" }, "moneda": { "type": "String" } }
+  },
+  "pnAssumedCurrency": "{n} copies with no currency in the CSV: assumed {moneda}",
+  "@pnAssumedCurrency": {
+    "placeholders": { "n": { "type": "int" }, "moneda": { "type": "String" } }
+  },
+  "pcTitle": "Price over time",
+  "pcNoHistory": "No price history for this card yet.",
+  "pcTodayPrice": "Today's price: {precio} €. The chart appears once there are several days.",
+  "@pcTodayPrice": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "pcExplain": "ManaForge notes down the price of every card you look at or own, day by day. To start with the real last few months from Cardmarket, fetch the history from Market.",
+  "pcRange": "min {min} € · max {max} € · {n, plural, =1{1 day}other{{n} days}}",
+  "@pcRange": {
+    "placeholders": { "min": { "type": "String" }, "max": { "type": "String" }, "n": { "type": "int" } }
+  },
+  "spWhichSets": "Which sets?",
+  "spSearchHint": "Search by name or code (BLB, MH3…)",
+  "spOnlyMine": "Only mine",
+  "spClearN": "Clear the {n}",
+  "@spClearN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "spNoneNamed": "No set by that name. Turn off \"Only mine\" to see them all.",
+  "spSetLine": "{set} · {n} cards",
+  "@spSetLine": {
+    "placeholders": { "set": { "type": "String" }, "n": { "type": "int" } }
+  },
+  "spNoFilter": "No set filter",
+  "spUseN": "{n, plural, =1{Use 1 set}other{Use {n} sets}}",
+  "@spUseN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "slLockedTo": "I only look for cards from the {set} set. Tap it to change or clear the lock.",
+  "@slLockedTo": {
+    "placeholders": { "set": { "type": "String" } }
+  },
+  "slLockHint": "Lock a set to scan a box/precon: the scanner only looks inside it and nails the printing.",
+  "slSetIs": "Set: {set}",
+  "@slSetIs": {
+    "placeholders": { "set": { "type": "String" } }
+  },
+  "slSetAll": "Set: all",
+  "slLockTitle": "Lock printing",
+  "slLockBody": "Type the set code (e.g. AER, MH3, LCI) to scan a whole box: only cards from that set will be searched.",
+  "slSetCode": "Set code",
+  "slClearLock": "Clear the lock",
+  "stHintQuick": "Hold cards up: clear ones note themselves here (identical copies stack ×N). Doubtful ones get flagged for review. When you're done, you confirm them all.",
+  "stHintCareful": "Hold cards up: clear ones note themselves; doubtful ones ask which card it is. When you're done, you confirm them all.",
+  "stAddN": "Add {n} to the collection",
+  "@stAddN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "stAddNAndFolder": "Add {n} to the collection and to {carpeta}",
+  "@stAddNAndFolder": {
+    "placeholders": { "n": { "type": "int" }, "carpeta": { "type": "String" } }
+  },
+  "stOneLess": "One fewer",
+  "stAnotherSame": "Another one",
+  "stOnTable": "on the table",
+
+  "cdLastData": " (last data: {fecha})",
+  "@cdLastData": {
+    "placeholders": { "fecha": { "type": "String" } }
+  },
+
+  "slLockButton": "Lock"
 }

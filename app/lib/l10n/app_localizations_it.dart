@@ -2032,4 +2032,299 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ceDownloadPng => 'Descargar PNG';
+
+  @override
+  String get cdNotFound => 'No encuentro esta carta en la base de datos.';
+
+  @override
+  String cdLoadFailed(String error) {
+    return 'No pude cargar la ficha: $error';
+  }
+
+  @override
+  String get cdPrev => 'Anterior (←)';
+
+  @override
+  String get cdNext => 'Siguiente (→)';
+
+  @override
+  String cdPosition(int pos, int total) {
+    return '$pos / $total';
+  }
+
+  @override
+  String get cdCardNotFound => 'Carta no encontrada';
+
+  @override
+  String cdPaid(
+      String total, String divisa, int qty, String copias, String unidad) {
+    return 'Pagaste $total$divisa por $qty $copias ($unidad cada una)';
+  }
+
+  @override
+  String cdCopyWord(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'copias',
+      one: 'copia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cdYouHave(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '✓ Tienes $n copias en tu colección',
+      one: '✓ Tienes 1 copia en tu colección',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cdNotOwned => 'No tienes esta carta (todavía).';
+
+  @override
+  String cdNoPrice(String mercado) {
+    return 'Sin precio de esta carta en $mercado.';
+  }
+
+  @override
+  String cdVersions(int n) {
+    return 'VERSIONES ($n)';
+  }
+
+  @override
+  String cdNoPerPrinting(String mercado) {
+    return 'sin precio por edición en $mercado';
+  }
+
+  @override
+  String cdPricesNormalFoil(String mercado, String moneda) {
+    return 'precios $mercado ($moneda) · normal / foil';
+  }
+
+  @override
+  String cdFoil(String precio) {
+    return 'foil $precio';
+  }
+
+  @override
+  String cdYouHaveX(int n) {
+    return 'tienes x$n';
+  }
+
+  @override
+  String get smMythic => 'Mítica';
+
+  @override
+  String get smRare => 'Rara';
+
+  @override
+  String get smUncommon => 'Infrecuente';
+
+  @override
+  String get smCommon => 'Común';
+
+  @override
+  String smLoadFailed(String error) {
+    return 'No pude cargar el set: $error';
+  }
+
+  @override
+  String get smSearchInSet => 'Busca en la expansión…';
+
+  @override
+  String get smRarityAll => 'Rareza: todas';
+
+  @override
+  String get smPriceDown => 'Precio ↓';
+
+  @override
+  String get smPriceUp => 'Precio ↑';
+
+  @override
+  String get smNumber => 'Número';
+
+  @override
+  String get smOnlyMine => 'Solo las mías';
+
+  @override
+  String smCardsCount(int n) {
+    return '$n cartas';
+  }
+
+  @override
+  String smNoPerPrinting(String mercado) {
+    return '$mercado: sin precio por edición';
+  }
+
+  @override
+  String smListedValue(String mercado) {
+    return 'valor listado ($mercado): ';
+  }
+
+  @override
+  String pnPaidVsToday(String pagado, String hoy) {
+    return 'Pagaste $pagado · hoy valen $hoy';
+  }
+
+  @override
+  String get pnNoPnl =>
+      'Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.';
+
+  @override
+  String pnOverAll(int n) {
+    return 'sobre las $n copias de tu colección';
+  }
+
+  @override
+  String pnOverSome(int conprecio, int total) {
+    return 'sobre $conprecio de $total copias (las demás no tienen precio de compra apuntado)';
+  }
+
+  @override
+  String pnNoTodayPrice(int n) {
+    return '$n copias compradas no tienen precio de hoy en la base: fuera de la cuenta';
+  }
+
+  @override
+  String pnOtherCurrency(String importe, String moneda) {
+    return 'también pagaste $importe $moneda, que no se convierte';
+  }
+
+  @override
+  String pnAssumedCurrency(int n, String moneda) {
+    return '$n copias sin divisa en el CSV: se suponen $moneda';
+  }
+
+  @override
+  String get pcTitle => 'Evolución del precio';
+
+  @override
+  String get pcNoHistory => 'Todavía sin historial de precio de esta carta.';
+
+  @override
+  String pcTodayPrice(String precio) {
+    return 'Precio de hoy: $precio €. La gráfica aparece en cuanto haya varios días.';
+  }
+
+  @override
+  String get pcExplain =>
+      'ManaForge apunta el precio de cada carta que miras o tienes, día a día. Para arrancar con los últimos meses reales de Cardmarket, trae el histórico desde Mercado.';
+
+  @override
+  String pcRange(String min, String max, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n días',
+      one: '1 día',
+    );
+    return 'mín $min € · máx $max € · $_temp0';
+  }
+
+  @override
+  String get spWhichSets => '¿De qué expansiones?';
+
+  @override
+  String get spSearchHint => 'Buscar por nombre o código (BLB, MH3…)';
+
+  @override
+  String get spOnlyMine => 'Solo las mías';
+
+  @override
+  String spClearN(int n) {
+    return 'Quitar las $n';
+  }
+
+  @override
+  String get spNoneNamed =>
+      'Ninguna expansión con ese nombre. Quita \"Solo las mías\" para ver todas.';
+
+  @override
+  String spSetLine(String set, int n) {
+    return '$set · $n cartas';
+  }
+
+  @override
+  String get spNoFilter => 'Sin filtro de expansión';
+
+  @override
+  String spUseN(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Usar $n expansiones',
+      one: 'Usar 1 expansión',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String slLockedTo(String set) {
+    return 'Solo busco cartas del set $set. Tócalo para cambiar o quitar el bloqueo.';
+  }
+
+  @override
+  String get slLockHint =>
+      'Bloquea un set para escanear una caja/precon: el escáner solo buscará dentro de él y clava la edición.';
+
+  @override
+  String slSetIs(String set) {
+    return 'Set: $set';
+  }
+
+  @override
+  String get slSetAll => 'Set: todas';
+
+  @override
+  String get slLockTitle => 'Bloquear edición';
+
+  @override
+  String get slLockBody =>
+      'Escribe el código del set (p. ej. AER, MH3, LCI) para escanear una caja entera: solo se buscarán cartas de ese set.';
+
+  @override
+  String get slSetCode => 'Código de set';
+
+  @override
+  String get slClearLock => 'Quitar bloqueo';
+
+  @override
+  String get stHintQuick =>
+      'Pasa cartas por delante: las claras se apuntan solas aquí (las copias iguales suman ×N). Las dudosas, marcadas para revisar. Al terminar, confirmas todas.';
+
+  @override
+  String get stHintCareful =>
+      'Pasa cartas por delante: las claras se apuntan solas; las dudosas te preguntan cuál es. Al terminar, confirmas todas.';
+
+  @override
+  String stAddN(int n) {
+    return 'Añadir $n a la colección';
+  }
+
+  @override
+  String stAddNAndFolder(int n, String carpeta) {
+    return 'Añadir $n a la colección y a $carpeta';
+  }
+
+  @override
+  String get stOneLess => 'Una menos';
+
+  @override
+  String get stAnotherSame => 'Otra igual';
+
+  @override
+  String get stOnTable => 'en mesa';
+
+  @override
+  String cdLastData(String fecha) {
+    return ' (último dato: $fecha)';
+  }
+
+  @override
+  String get slLockButton => 'Bloquear';
 }
