@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/market_prefs.dart';
@@ -46,12 +49,14 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
   bool _onlyMine = false;
   _Sort _sort = _Sort.priceDesc;
 
-  static const _rarities = <String, String>{
-    'mythic': 'Mítica',
-    'rare': 'Rara',
-    'uncommon': 'Infrecuente',
-    'common': 'Común',
-  };
+    static const _rarityKeys = ['mythic', 'rare', 'uncommon', 'common'];
+
+  String _rarityLabel(AppLocalizations t, String key) => switch (key) {
+        'mythic' => t.smMythic,
+        'rare' => t.smRare,
+        'uncommon' => t.smUncommon,
+        _ => t.smCommon,
+      };
 
   Market get _market => widget.market?.market ?? Market.cardmarket;
 
@@ -132,7 +137,8 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
   String _euro(double? v) => v == null ? '—' : formatMoney(v, _market);
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     final cards = _cards;
     final visible = _visible();
     final totalValue = visible.fold<double>(
@@ -146,7 +152,7 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
           ? Center(
               child: _error == null
                   ? const CircularProgressIndicator()
-                  : Text('No pude cargar el set: $_error'),
+                                    : Text(t.smLoadFailed('$_error')),
             )
           : Column(
               children: [
@@ -155,7 +161,7 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                   child: TextField(
                     onChanged: (v) => setState(() => _query = v),
                     decoration: InputDecoration(
-                      hintText: 'Busca en la expansión…',
+                      hintText: t.smSearchInSet,
                       prefixIcon: const Icon(Icons.search),
                       isDense: true,
                       border: OutlineInputBorder(
@@ -187,20 +193,20 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                       DropdownButtonHideUnderline(
                         child: DropdownButton<String?>(
                           value: _rarity,
-                          hint: const Text('Rareza',
-                              style: TextStyle(fontSize: 12)),
+                          hint: Text(t.smRarityAll,
+                              style: const TextStyle(fontSize: 12)),
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall
                               ?.copyWith(fontSize: 12),
                           borderRadius: BorderRadius.circular(10),
                           items: [
-                            const DropdownMenuItem(
+                            DropdownMenuItem(
                                 value: null,
-                                child: Text('Rareza: todas')),
-                            for (final e in _rarities.entries)
+                                child: Text(t.smRarityAll)),
+                            for (final k in _rarityKeys)
                               DropdownMenuItem(
-                                  value: e.key, child: Text(e.value)),
+                                  value: k, child: Text(_rarityLabel(t, k))),
                           ],
                           onChanged: (v) =>
                               setState(() => _rarity = v),
@@ -214,19 +220,19 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                               .bodySmall
                               ?.copyWith(fontSize: 12),
                           borderRadius: BorderRadius.circular(10),
-                          items: const [
+                          items: [
                             DropdownMenuItem(
                                 value: _Sort.priceDesc,
-                                child: Text('Precio ↓')),
+                                child: Text(t.smPriceDown)),
                             DropdownMenuItem(
                                 value: _Sort.priceAsc,
-                                child: Text('Precio ↑')),
+                                child: Text(t.smPriceUp)),
                             DropdownMenuItem(
                                 value: _Sort.number,
-                                child: Text('Número')),
+                                child: Text(t.smNumber)),
                             DropdownMenuItem(
                                 value: _Sort.name,
-                                child: Text('Nombre')),
+                                child: Text(tr(context).albSortName)),
                           ],
                           onChanged: (v) =>
                               setState(() => _sort = v ?? _Sort.priceDesc),
@@ -234,8 +240,8 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                       ),
                       FilterChip(
                         visualDensity: VisualDensity.compact,
-                        label: const Text('Solo las mías',
-                            style: TextStyle(fontSize: 11)),
+                        label: Text(t.smOnlyMine,
+                            style: const TextStyle(fontSize: 11)),
                         selected: _onlyMine,
                         onSelected: (v) =>
                             setState(() => _onlyMine = v),
@@ -254,14 +260,14 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      Text('${visible.length} cartas',
+                      Text(t.smCardsCount(visible.length),
                           style: const TextStyle(fontSize: 11.5)),
                       const Spacer(),
                       Text(
                           _market.todayColumn == null
-                              ? '${_market.label}: sin precio por edición'
-                              : 'valor listado (${_market.label}): '
-                                  '${_euro(totalValue)}',
+                              ? t.smNoPerPrinting(_market.label)
+                              : t.smListedValue(_market.label) +
+                                  _euro(totalValue),
                           style: const TextStyle(fontSize: 11.5)),
                     ],
                   ),
@@ -302,7 +308,7 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                                 overflow: TextOverflow.ellipsis),
                             subtitle: Text(
                                 '#${card.collectorNumber} · ${card.rarity}'
-                                '${owned > 0 ? ' · tienes x$owned' : ''}',
+                                '${owned > 0 ? ' · ${tr(context).cdYouHaveX(owned)}' : ''}',
                                 style: TextStyle(
                                     color: owned > 0
                                         ? MFColors.success
@@ -319,7 +325,7 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                                             FontWeight.bold)),
                                 if (card.priceFoil != null)
                                   Text(
-                                      'foil ${_euro(card.priceFoil)}',
+                                      tr(context).cdFoil(_euro(card.priceFoil)),
                                       style: const TextStyle(
                                           fontSize: 10.5,
                                           color: MFColors.warning)),

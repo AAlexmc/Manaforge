@@ -7,6 +7,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/card_database.dart';
 
 /// Abre la hoja y devuelve la selección nueva. `null` = cerrada sin tocar
@@ -76,7 +78,8 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     final visibles = _visibles;
     return SafeArea(
       child: Padding(
@@ -86,12 +89,12 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
           height: MediaQuery.of(context).size.height * 0.75,
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 4),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('¿De qué expansiones?',
-                      style: TextStyle(
+                  child: Text(t.spWhichSets,
+                      style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
@@ -99,11 +102,11 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: TextField(
                   controller: _searchCtrl,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     isDense: true,
-                    prefixIcon: Icon(Icons.search, size: 20),
-                    hintText: 'Buscar por nombre o código (BLB, MH3…)',
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.search, size: 20),
+                    hintText: t.spSearchHint,
+                    border: const OutlineInputBorder(),
                   ),
                   onChanged: (v) => setState(() => _query = v),
                 ),
@@ -113,7 +116,7 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
                   const SizedBox(width: 8),
                   FilterChip(
                     visualDensity: VisualDensity.compact,
-                    label: const Text('Solo las mías'),
+                    label: Text(t.spOnlyMine),
                     selected: _soloMias,
                     onSelected: (v) => setState(() => _soloMias = v),
                   ),
@@ -121,7 +124,7 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
                   if (_sel.isNotEmpty)
                     TextButton(
                       onPressed: () => setState(_sel.clear),
-                      child: Text('Quitar las ${_sel.length}'),
+                      child: Text(t.spClearN(_sel.length)),
                     ),
                   const SizedBox(width: 8),
                 ],
@@ -129,12 +132,10 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
               const Divider(height: 8),
               Expanded(
                 child: visibles.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Padding(
-                          padding: EdgeInsets.all(24),
-                          child: Text(
-                              'Ninguna expansión con ese nombre. Quita '
-                              '"Solo las mías" para ver todas.',
+                          padding: const EdgeInsets.all(24),
+                          child: Text(t.spNoneNamed,
                               textAlign: TextAlign.center),
                         ),
                       )
@@ -147,9 +148,8 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
                             dense: true,
                             value: _sel.contains(s.code),
                             title: Text(s.name),
-                            subtitle: Text(
-                                '${s.code.toUpperCase()} · ${s.total} cartas'
-                                '${tuyas > 0 ? ' · tienes $tuyas' : ''}'),
+                            subtitle: Text(t.spSetLine(s.code.toUpperCase(), s.total) +
+                                (tuyas > 0 ? ' · ${t.cdYouHaveX(tuyas)}' : '')),
                             onChanged: (v) => setState(() => v == true
                                 ? _sel.add(s.code)
                                 : _sel.remove(s.code)),
@@ -165,9 +165,8 @@ class _SetPickerSheetState extends State<_SetPickerSheet> {
                       child: FilledButton(
                         onPressed: () => Navigator.of(context).pop(_sel),
                         child: Text(_sel.isEmpty
-                            ? 'Sin filtro de expansión'
-                            : 'Usar ${_sel.length} expansión'
-                                '${_sel.length == 1 ? '' : 'es'}'),
+                            ? t.spNoFilter
+                            : t.spUseN(_sel.length)),
                       ),
                     ),
                     const SizedBox(width: 10),

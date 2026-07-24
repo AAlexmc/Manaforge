@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/price_history.dart';
 import '../theme/mf_theme.dart';
 
@@ -61,9 +63,9 @@ class _PriceChartState extends State<PriceChart> {
           children: [
             Row(
               children: [
-                const Expanded(
-                  child: Text('Evolución del precio',
-                      style: TextStyle(fontSize: 13)),
+                Expanded(
+                  child: Text(tr(context).pcTitle,
+                      style: const TextStyle(fontSize: 13)),
                 ),
                 for (final r in PriceRange.values)
                   Padding(
@@ -144,7 +146,8 @@ class _PriceChartState extends State<PriceChart> {
     if (i != _hover) setState(() => _hover = i);
   }
 
-  Widget _empty(BuildContext context) {
+    Widget _empty(BuildContext context) {
+    final t = tr(context);
     final price = widget.currentPrice;
     return Center(
       child: Padding(
@@ -162,10 +165,8 @@ class _PriceChartState extends State<PriceChart> {
             Flexible(
               child: Text(
                 price == null
-                    ? 'Todavía sin historial de precio de esta carta.'
-                    : 'Precio de hoy: ${price.toStringAsFixed(2)} €. '
-                        'La gráfica aparece en cuanto haya varios días '
-                        'apuntados.',
+                    ? t.pcNoHistory
+                    : t.pcTodayPrice(price.toStringAsFixed(2)),
                 textAlign: TextAlign.center,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -173,15 +174,13 @@ class _PriceChartState extends State<PriceChart> {
               ),
             ),
             const SizedBox(height: 4),
-            const Flexible(
+            Flexible(
               child: Text(
-                'ManaForge apunta el precio de cada carta que miras o '
-                'tienes, día a día. Para arrancar con los últimos meses '
-                'reales de Cardmarket, trae el histórico desde Mercado.',
+                t.pcExplain,
                 textAlign: TextAlign.center,
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 11),
+                style: const TextStyle(fontSize: 11),
               ),
             ),
           ],
@@ -222,9 +221,8 @@ class _PriceChartState extends State<PriceChart> {
         // en pantallas estrechas se recorta esto antes que la variación
         Flexible(
           child: Text(
-            'mín ${min.toStringAsFixed(2)} € · '
-            'máx ${max.toStringAsFixed(2)} € · '
-            '${shown.length} día${shown.length == 1 ? '' : 's'}',
+                        tr(context).pcRange(min.toStringAsFixed(2),
+                max.toStringAsFixed(2), shown.length),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.right,

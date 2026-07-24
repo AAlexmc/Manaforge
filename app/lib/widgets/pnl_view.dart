@@ -7,6 +7,9 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
+
 import '../services/markets.dart';
 import '../services/pnl.dart';
 import '../theme/mf_theme.dart';
@@ -20,7 +23,8 @@ class PnlView extends StatelessWidget {
   const PnlView({super.key, required this.pnl, required this.market});
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     if (!pnl.hasData) return _sinDatos(context);
     final sube = pnl.delta >= 0;
     final color = sube ? MFColors.success : MFColors.manaRed;
@@ -28,8 +32,8 @@ class PnlView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Pagaste ${formatMoney(pnl.paid, market)} · '
-            'hoy valen ${formatMoney(pnl.value, market)}'),
+        Text(t.pnPaidVsToday(formatMoney(pnl.paid, market),
+            formatMoney(pnl.value, market))),
         const SizedBox(height: 2),
         Text(
           '${sube ? '+' : '−'}${formatMoney(pnl.delta.abs(), market)}'
@@ -39,35 +43,30 @@ class PnlView extends StatelessWidget {
               color: color, fontWeight: FontWeight.bold, fontSize: 18),
         ),
         const SizedBox(height: 2),
-        Text(_alcance(), style: const TextStyle(fontSize: 11.5)),
-        for (final aviso in _avisos())
+        Text(_alcance(t), style: const TextStyle(fontSize: 11.5)),
+        for (final aviso in _avisos(t))
           Text('· $aviso', style: const TextStyle(fontSize: 11.5)),
       ],
     );
   }
 
-  Widget _sinDatos(BuildContext context) => const Text(
-        'Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la '
-        'columna "Purchase price" y aparece aquí.',
-        style: TextStyle(fontSize: 11.5),
+    Widget _sinDatos(BuildContext context) => Text(
+        tr(context).pnNoPnl,
+        style: const TextStyle(fontSize: 11.5),
       );
 
   /// Sobre cuántas copias está medido. Es la línea que evita que el
   /// porcentaje se lea como si cubriera toda la colección.
-  String _alcance() => pnl.complete
-      ? 'sobre las ${pnl.totalCopies} copias de tu colección'
-      : 'sobre ${pnl.copies} de ${pnl.totalCopies} copias '
-          '(las demás no tienen precio de compra apuntado)';
+    String _alcance(AppLocalizations t) => pnl.complete
+      ? t.pnOverAll(pnl.totalCopies)
+      : t.pnOverSome(pnl.copies, pnl.totalCopies);
 
-  List<String> _avisos() => [
+    List<String> _avisos(AppLocalizations t) => [
         if (pnl.copiesWithoutPrice > 0)
-          '${pnl.copiesWithoutPrice} copias compradas no tienen precio de hoy '
-              'en la base: fuera de la cuenta',
+          t.pnNoTodayPrice(pnl.copiesWithoutPrice),
         for (final e in pnl.otherCurrencies.entries)
-          'también pagaste ${e.value.toStringAsFixed(2)} ${e.key}, '
-              'que no se convierte',
+          t.pnOtherCurrency(e.value.toStringAsFixed(2), e.key),
         if (pnl.copiesAssumedCurrency > 0)
-          '${pnl.copiesAssumedCurrency} copias sin divisa en el CSV: se '
-              'suponen ${market.currency}',
+          t.pnAssumedCurrency(pnl.copiesAssumedCurrency, market.currency),
       ];
 }

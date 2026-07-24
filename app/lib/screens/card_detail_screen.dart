@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../l10n/t.dart';
 import 'package:flutter/services.dart';
 
 import '../services/card_database.dart';
@@ -145,7 +147,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
         if (mounted) {
           setState(() {
             _loading = false;
-            _error = 'No encuentro esta carta en la base de datos.';
+            _error = tr(context).cdNotFound;
           });
         }
         return;
@@ -172,7 +174,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
       if (mounted) {
         setState(() {
           _loading = false;
-          _error = 'No pude cargar la ficha: $e';
+          _error = tr(context).cdLoadFailed('$e');
         });
       }
     }
@@ -233,20 +235,20 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     final detail = _detail;
     return Scaffold(
       appBar: AppBar(
-        title: Text(detail?.name ?? 'Carta'),
+        title: Text(detail?.name ?? tr(context).cdCardNotFound),
         actions: [
           if (_hayLista) ...[
             IconButton(
-              tooltip: 'Anterior (←)',
+              tooltip: tr(context).cdPrev,
               icon: const Icon(Icons.chevron_left),
               onPressed: _puedeAnterior ? () => _mover(-1) : null,
             ),
             Center(
-              child: Text('${_pos + 1} / ${widget.siblings!.length}',
+              child: Text(tr(context).cdPosition(_pos + 1, widget.siblings!.length),
                   style: const TextStyle(fontSize: 12.5)),
             ),
             IconButton(
-              tooltip: 'Siguiente (→)',
+              tooltip: tr(context).cdNext,
               icon: const Icon(Icons.chevron_right),
               onPressed: _puedeSiguiente ? () => _mover(1) : null,
             ),
@@ -286,7 +288,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                   ? Center(
                       child: Padding(
                         padding: const EdgeInsets.all(24),
-                        child: Text(_error ?? 'Carta no encontrada',
+                        child: Text(_error ?? tr(context).cdCardNotFound,
                             textAlign: TextAlign.center),
                       ),
                     )
@@ -298,16 +300,19 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
 
   /// "Pagaste X por N copias", una línea por divisa. Vacío si no hay ningún
   /// precio de compra apuntado para esta carta.
-  List<String> _pagadoPorEsta(String oracleId) {
+    List<String> _pagadoPorEsta(BuildContext context, String oracleId) {
+    final t = tr(context);
     final collection = widget.collection;
     if (collection == null || !collection.hasPurchaseData) return const [];
     final out = <String>[];
     collection.paidForCard(oracleId).forEach((divisa, dato) {
       final unidad = dato.total / dato.qty;
-      out.add('Pagaste ${dato.total.toStringAsFixed(2)}'
-          '${divisa == null ? '' : ' $divisa'} por ${dato.qty} '
-          'copia${dato.qty == 1 ? '' : 's'} '
-          '(${unidad.toStringAsFixed(2)} cada una)');
+      out.add(t.cdPaid(
+          dato.total.toStringAsFixed(2),
+          divisa == null ? '' : ' $divisa',
+          dato.qty,
+          t.cdCopyWord(dato.qty),
+          unidad.toStringAsFixed(2)));
     });
     return out;
   }
@@ -398,8 +403,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                             children: [
                               Text(
                                 ownedTotal > 0
-                                    ? '✓ Tienes $ownedTotal copia${ownedTotal == 1 ? '' : 's'} en tu colección'
-                                    : 'No tienes esta carta (todavía).',
+                                    ? tr(context).cdYouHave(ownedTotal)
+                                    : tr(context).cdNotOwned,
                                 style: TextStyle(
                                     color: ownedTotal > 0
                                         ? MFColors.success
@@ -408,7 +413,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                               // lo que pagaste, si el CSV lo traía: una divisa
                               // por línea, porque no se convierten
                               for (final linea
-                                  in _pagadoPorEsta(detail.oracleId))
+                                  in _pagadoPorEsta(context, detail.oracleId))
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Text(linea,
@@ -428,10 +433,10 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                     if (_market != Market.cardmarket)
                       Text(
                         _todayPrice == null
-                            ? 'Sin precio de esta carta en ${_market.label}.'
+                            ? tr(context).cdNoPrice(_market.label)
                             : '${_market.label}: '
                                 '${formatMoney(_todayPrice!, _market)}'
-                                '${_priceAsOf != null ? ' (último dato: $_priceAsOf)' : ''}',
+                                '${_priceAsOf != null ? tr(context).cdLastData(_priceAsOf!) : ''}',
                         style: const TextStyle(
                             fontSize: 12.5, fontWeight: FontWeight.bold),
                       ),
@@ -472,7 +477,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        Text('VERSIONES (${_versions.length})',
+                        Text(tr(context).cdVersions(_versions.length),
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge
@@ -480,9 +485,9 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                         const Spacer(),
                         Text(
                             _market.todayColumn == null
-                                ? 'sin precio por edición en ${_market.label}'
-                                : 'precios ${_market.label} '
-                                    '(${_market.currency}) · normal / foil',
+                                ? tr(context).cdNoPerPrinting(_market.label)
+                                : tr(context).cdPricesNormalFoil(
+                                    _market.label, _market.currency),
                             style: const TextStyle(fontSize: 11)),
                       ],
                     ),
@@ -519,13 +524,14 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                                 Text(_price(v.price),
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
-                                Text('foil ${_price(v.priceFoil)}',
+                                Text(tr(context).cdFoil(_price(v.priceFoil)),
                                     style: const TextStyle(
                                         fontSize: 11,
                                         color: MFColors.warning)),
                                 if ((printingQty[v.printingKey] ?? 0) > 0)
                                   Text(
-                                      'tienes x${printingQty[v.printingKey]}',
+                                      tr(context).cdYouHaveX(
+                                          printingQty[v.printingKey] ?? 0),
                                       style: const TextStyle(
                                           fontSize: 11,
                                           color: MFColors.success)),
