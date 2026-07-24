@@ -494,99 +494,99 @@ class AppLocalizationsDe extends AppLocalizations {
       'Was jeder Tab macht, die Tastenkürzel, die Version und die Lizenz.';
 
   @override
-  String get colStartHere => 'Tu colección empieza aquí';
+  String get colStartHere => 'Deine Sammlung fängt hier an';
 
   @override
   String get colNeedDb =>
-      'Primero necesito la base de datos con todas las cartas de Magic (se descarga una vez y luego todo funciona sin internet).';
+      'Zuerst brauche ich die Datenbank mit allen Magic-Karten (sie wird einmal heruntergeladen, danach läuft alles ohne Internet).';
 
   @override
   String colDownloading(String pct) {
-    return 'Descargando… $pct %';
+    return 'Lade herunter… $pct %';
   }
 
   @override
-  String get colDownloadDb => 'Descargar base de datos de cartas';
+  String get colDownloadDb => 'Kartendatenbank herunterladen';
 
   @override
   String get colScryfall =>
-      'Datos e imágenes por Scryfall · Sin cuentas, sin pagos: todo queda en tu dispositivo.';
+      'Daten und Bilder von Scryfall · Keine Konten, keine Zahlungen: Alles bleibt auf deinem Gerät.';
 
   @override
-  String get colAlbumTooltip => 'Álbum por expansiones';
+  String get colAlbumTooltip => 'Album nach Sets';
 
   @override
-  String get colImportTooltip => 'Importar CSV de ManaBox';
+  String get colImportTooltip => 'ManaBox-CSV importieren';
 
   @override
   String colValueLine(int copies, int distinct, String valor) {
-    return '$copies cartas · $distinct distintas$valor';
+    return '$copies Karten · $distinct verschiedene$valor';
   }
 
   @override
-  String get colAllCards => 'Todas las cartas';
+  String get colAllCards => 'Alle Karten';
 
   @override
   String colAllCardsSub(int distinct) {
-    return '$distinct distintas · buscar, filtrar y ordenar';
+    return '$distinct verschiedene · suchen, filtern und sortieren';
   }
 
   @override
-  String get colFolders => 'Carpetas';
+  String get colFolders => 'Ordner';
 
   @override
-  String get colNewFolder => 'Nueva';
+  String get colNewFolder => 'Neu';
 
   @override
   String get colNoFolders =>
-      'Aún no tienes carpetas. Sirven para agrupar lo que quieras: \"rares de Aetherdrift\", \"para vender\", \"la caja de arriba\"… Una carta puede estar en varias.';
+      'Du hast noch keine Ordner. Sie bündeln, was du willst: \"Seltene aus Aetherdrift\", \"zum Verkaufen\", \"die Kiste oben\"… Eine Karte darf in mehreren stecken.';
 
   @override
-  String get colCreateFirstFolder => 'Crear la primera carpeta';
+  String get colCreateFirstFolder => 'Ersten Ordner anlegen';
 
   @override
-  String get colEmptyTitle => 'Aquí empieza tu colección';
+  String get colEmptyTitle => 'Hier fängt deine Sammlung an';
 
   @override
   String get colEmptyBody =>
-      'Escanea tus cartas con la cámara o importa un CSV de ManaBox. Aparecerán aquí y en el álbum.';
+      'Scanne deine Karten mit der Kamera oder importiere eine ManaBox-CSV. Sie tauchen hier und im Album auf.';
 
   @override
-  String get colImportShort => 'Importar CSV';
+  String get colImportShort => 'CSV importieren';
 
   @override
   String acForgetTitle(String carta) {
-    return '¿Ya no tienes $carta?';
+    return 'Du hast $carta nicht mehr?';
   }
 
   @override
   String get acForgetBody =>
-      'Sale de tu colección y su hueco del álbum vuelve a estar vacío.';
+      'Sie verschwindet aus deiner Sammlung und ihr Platz im Album ist wieder leer.';
 
   @override
   String acForgetFolders(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'También sale de las $n carpetas en las que está.',
-      one: 'También sale de la carpeta en la que está.',
+      other: 'Sie fliegt auch aus den $n Ordnern, in denen sie steckt.',
+      one: 'Sie fliegt auch aus dem Ordner, in dem sie steckt.',
     );
     return '$_temp0';
   }
 
   @override
   String get acForgetDecks =>
-      'Los mazos NO la pierden: se queda en la lista y el mazo te avisa de que te falta.';
+      'Die Decks verlieren sie NICHT: Sie bleibt in der Liste und das Deck sagt dir, dass sie dir fehlt.';
 
   @override
-  String get acCancel => 'Cancelar';
+  String get acCancel => 'Abbrechen';
 
   @override
-  String get acForgetConfirm => 'Ya no la tengo';
+  String get acForgetConfirm => 'Hab ich nicht mehr';
 
   @override
   String acAddedOn(String cuando) {
-    return 'añadida $cuando';
+    return 'hinzugefügt $cuando';
   }
 
   @override
@@ -594,209 +594,209 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'en $n carpetas',
-      one: 'en 1 carpeta',
+      other: 'in $n Ordnern',
+      one: 'in 1 Ordner',
     );
     return '$_temp0';
   }
 
   @override
-  String get acSearchHint => 'Busca una carta (español o inglés)…';
+  String get acSearchHint => 'Such eine Karte (spanisch oder englisch)…';
 
   @override
   String acFilteredCount(int visibles, int total) {
-    return '$visibles de $total cartas';
+    return '$visibles von $total Karten';
   }
 
   @override
   String get acMissingFilterData =>
-      ' · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con \"Sustituir\" activado';
+      ' · bei ein paar alten Karten fehlen die Filterdaten: importiere deine CSV neu mit aktiviertem \"Ersetzen\"';
 
   @override
-  String get acNoneMatch => 'Ninguna carta pasa estos filtros.';
+  String get acNoneMatch => 'Keine Karte kommt durch diese Filter.';
 
   @override
   String get acEmptyHint =>
-      'Busca tu primera carta arriba, o vuelve atrás e importa tu CSV de ManaBox.';
+      'Such deine erste Karte hier oben, oder geh zurück und importiere deine ManaBox-CSV.';
 
   @override
   String get onbHowItWorksBody =>
-      'El resumen de qué hace cada pestaña y los atajos de teclado. Si te pierdes, empieza por aquí.';
+      'Die Kurzfassung, was jeder Reiter macht, plus die Tastenkürzel. Wenn du dich verirrst, fang hier an.';
 
   @override
   String get onbVersionBody =>
-      'Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.';
+      'Welche Version du hast, was drin ist, und ob die App einmal am Tag nach einer neuen schauen soll. Sie aktualisiert sich nie von selbst.';
 
   @override
-  String get onbScanSetTitle => 'Set: todas';
+  String get onbScanSetTitle => 'Set: alle';
 
   @override
   String get onbScanSetBody =>
-      'Si estás abriendo sobres de UNA expansión, fíjala aquí: el escáner deja de dudar entre las diez reimpresiones de la misma carta.';
+      'Wenn du Booster aus EINEM Set öffnest, leg es hier fest: Der Scanner hört auf, zwischen den zehn Nachdrucken derselben Karte zu schwanken.';
 
   @override
-  String get onbScanModeTitle => 'Rápido o con cuidado';
+  String get onbScanModeTitle => 'Schnell oder sorgfältig';
 
   @override
   String get onbScanModeBody =>
-      'En «Rápido» las cartas claras entran solas y las dudosas quedan marcadas para revisar. En «Con cuidado» se para y te pregunta cuál es.';
+      'Bei »Schnell« wandern klare Karten von allein rein und die zweifelhaften werden zum Prüfen markiert. Bei »Sorgfältig« hält er an und fragt dich, welche es ist.';
 
   @override
-  String get onbScanPhotoTitle => 'Escanear una foto';
+  String get onbScanPhotoTitle => 'Ein Foto scannen';
 
   @override
   String get onbScanPhotoBody =>
-      '¿Sin cámara, o con las cartas ya fotografiadas? Aquí sueltas una foto —con varias cartas si quieres— y las saca igual.';
+      'Keine Kamera, oder die Karten schon fotografiert? Hier wirfst du ein Foto rein — gern mit mehreren Karten — und er holt sie genauso raus.';
 
   @override
-  String get tourScanName => 'El escáner';
+  String get tourScanName => 'Der Scanner';
 
   @override
   String get albNeedDb =>
-      'El álbum necesita la base de datos de cartas (descárgala en Colección).';
+      'Das Album braucht die Kartendatenbank (lade sie in der Sammlung herunter).';
 
   @override
-  String get albRetry => 'Reintentar';
+  String get albRetry => 'Nochmal versuchen';
 
   @override
   String get albApproxMode =>
-      'Álbum en modo aproximado: aún no sé qué EDICIÓN exacta tienes de cada carta. Reimporta tu CSV con \"Sustituir mi colección actual\" activado y el álbum se afinará por ilustraciones.';
+      'Album im Grobmodus: Ich weiß noch nicht, welche DRUCKVERSION du von jeder Karte hast. Importiere deine CSV neu mit aktiviertem \"Meine aktuelle Sammlung ersetzen\", dann schärft sich das Album nach Illustrationen.';
 
   @override
-  String get albSearchSet => 'Busca una expansión…';
+  String get albSearchSet => 'Such ein Set…';
 
   @override
-  String get albOnlyMine => 'Con cartas mías';
+  String get albOnlyMine => 'Mit Karten von mir';
 
   @override
-  String get albSortProgress => 'Más completadas';
+  String get albSortProgress => 'Am vollständigsten';
 
   @override
-  String get albSortNewest => 'Más nuevas';
+  String get albSortNewest => 'Neueste';
 
   @override
-  String get albSortOldest => 'Más antiguas';
+  String get albSortOldest => 'Älteste';
 
   @override
-  String get albSortName => 'Por nombre';
+  String get albSortName => 'Nach Name';
 
   @override
-  String get albYearAll => 'Año: todos';
+  String get albYearAll => 'Jahr: alle';
 
   @override
-  String get albLetterAll => 'Todas';
+  String get albLetterAll => 'Alle';
 
   @override
-  String get albNoSets => 'Ninguna expansión coincide con el filtro.';
+  String get albNoSets => 'Kein Set passt zum Filter.';
 
   @override
   String albSetProgress(int owned, int total) {
-    return '$owned/$total cartas';
+    return '$owned/$total Karten';
   }
 
   @override
-  String get albComplete => ' · ✓ ¡completa!';
+  String get albComplete => ' · ✓ komplett!';
 
   @override
   String albLoadError(String error) {
-    return 'No pude cargar el set: $error';
+    return 'Ich konnte das Set nicht laden: $error';
   }
 
   @override
   String albSearchIn(String set) {
-    return 'Buscar en $set…';
+    return 'In $set suchen…';
   }
 
   @override
-  String get albOnlyMissing => 'Solo las que faltan';
+  String get albOnlyMissing => 'Nur die fehlenden';
 
   @override
-  String get albWithVariants => 'Con variantes';
+  String get albWithVariants => 'Mit Varianten';
 
   @override
-  String get albYouHaveItAll => '✓ Lo tienes entero';
+  String get albYouHaveItAll => '✓ Du hast alles';
 
   @override
   String albMissingCount(int n) {
-    return 'Te faltan $n · ';
+    return 'Dir fehlen $n · ';
   }
 
   @override
   String albWithoutPrice(int n) {
-    return ' ($n sin precio)';
+    return ' ($n ohne Preis)';
   }
 
   @override
   String albVisibleOf(int visibles, int total) {
-    return '$visibles de $total';
+    return '$visibles von $total';
   }
 
   @override
-  String get albNoCardsNamed => 'Ninguna carta con ese nombre aquí.';
+  String get albNoCardsNamed => 'Hier gibt es keine Karte mit dem Namen.';
 
   @override
-  String get fdNewFolder => 'Nueva carpeta';
+  String get fdNewFolder => 'Neuer Ordner';
 
   @override
-  String get fdEditFolder => 'Editar carpeta';
+  String get fdEditFolder => 'Ordner bearbeiten';
 
   @override
-  String get fdName => 'Nombre';
+  String get fdName => 'Name';
 
   @override
-  String get fdNameHint => 'Rares de Aetherdrift, Para vender…';
+  String get fdNameHint => 'Seltene aus Aetherdrift, Zum Verkaufen…';
 
   @override
-  String get fdColor => 'Color';
+  String get fdColor => 'Farbe';
 
   @override
-  String get fdIcon => 'Icono';
+  String get fdIcon => 'Symbol';
 
   @override
-  String get fdCreate => 'Crear';
+  String get fdCreate => 'Anlegen';
 
   @override
-  String get fdSave => 'Guardar';
+  String get fdSave => 'Speichern';
 
   @override
-  String get fdDefaultName => 'Carpeta';
+  String get fdDefaultName => 'Ordner';
 
   @override
   String fdDeleteTitle(String nombre) {
-    return '¿Borrar \"$nombre\"?';
+    return '\"$nombre\" löschen?';
   }
 
   @override
   String get fdDeleteBody =>
-      'Se borra solo la carpeta: las cartas siguen en tu colección.';
+      'Nur der Ordner geht: Die Karten bleiben in deiner Sammlung.';
 
   @override
-  String get fdDelete => 'Borrar';
+  String get fdDelete => 'Löschen';
 
   @override
-  String get fdGone => 'Esta carpeta ya no existe.';
+  String get fdGone => 'Diesen Ordner gibt es nicht mehr.';
 
   @override
-  String get fdEditTooltip => 'Editar nombre, color e icono';
+  String get fdEditTooltip => 'Name, Farbe und Symbol bearbeiten';
 
   @override
-  String get fdDeleteTooltip => 'Borrar carpeta';
+  String get fdDeleteTooltip => 'Ordner löschen';
 
   @override
-  String get fdAddRemove => 'Añadir o quitar';
+  String get fdAddRemove => 'Hinzufügen oder entfernen';
 
   @override
   String fdCounts(int distintas, int copias) {
-    return '$distintas cartas distintas · $copias copias';
+    return '$distintas verschiedene Karten · $copias Exemplare';
   }
 
   @override
   String fdPassFilter(int n) {
-    return ' · $n pasan el filtro';
+    return ' · $n kommen durch den Filter';
   }
 
   @override
-  String get fdRoughValue => ' · valor orientativo';
+  String get fdRoughValue => ' · Richtwert';
 
   @override
   String fdMissing(int n) {
@@ -804,80 +804,82 @@ class AppLocalizationsDe extends AppLocalizations {
       n,
       locale: localeName,
       other:
-          '$n cartas ya no están en tu colección (siguen apuntadas por si vuelven).',
-      one: '1 carta ya no está en tu colección (sigue apuntada por si vuelve).',
+          '$n Karten sind nicht mehr in deiner Sammlung (sie bleiben notiert, falls sie zurückkommen).',
+      one:
+          '1 Karte ist nicht mehr in deiner Sammlung (sie bleibt notiert, falls sie zurückkommt).',
     );
     return '$_temp0';
   }
 
   @override
-  String get fdRemoveThem => 'Quitarlas';
+  String get fdRemoveThem => 'Rauswerfen';
 
   @override
-  String get fdNoneMatch => 'Ninguna carta de la carpeta pasa estos filtros.';
+  String get fdNoneMatch =>
+      'Keine Karte aus dem Ordner kommt durch diese Filter.';
 
   @override
   String get fdEmpty =>
-      'Carpeta vacía. Dale a \"Añadir o quitar\" y marca las cartas que quieres meter.';
+      'Leerer Ordner. Drück auf \"Hinzufügen oder entfernen\" und hak die Karten ab, die rein sollen.';
 
   @override
   String fdCopies(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n copias',
-      one: '1 copia',
+      other: '$n Exemplare',
+      one: '1 Exemplar',
     );
     return '$_temp0';
   }
 
   @override
-  String get fdRemoveFromFolder => 'Quitar de la carpeta';
+  String get fdRemoveFromFolder => 'Aus dem Ordner entfernen';
 
   @override
-  String get fpPickCards => 'Elige las cartas';
+  String get fpPickCards => 'Wähl die Karten';
 
   @override
   String fpSaveCount(int n) {
-    return 'Guardar ($n)';
+    return 'Speichern ($n)';
   }
 
   @override
-  String get fpFilterByName => 'Filtra por nombre…';
+  String get fpFilterByName => 'Nach Name filtern…';
 
   @override
   String fpVisibleCards(int n) {
-    return '$n cartas a la vista';
+    return '$n Karten im Blick';
   }
 
   @override
-  String get fpSelectAll => 'Marcar todas';
+  String get fpSelectAll => 'Alle markieren';
 
   @override
-  String get fpNoneMatch => 'Ninguna carta pasa estos filtros.';
+  String get fpNoneMatch => 'Keine Karte kommt durch diese Filter.';
 
   @override
-  String get fgMsgReading => 'Leyendo tu colección…';
+  String get fgMsgReading => 'Lese deine Sammlung…';
 
   @override
-  String get fgMsgCurve => 'Calculando la curva de maná…';
+  String get fgMsgCurve => 'Berechne die Manakurve…';
 
   @override
-  String get fgMsgLands => 'Repartiendo tierras…';
+  String get fgMsgLands => 'Teile Länder aus…';
 
   @override
-  String get fgMsgSynergy => 'Buscando sinergias…';
+  String get fgMsgSynergy => 'Suche Synergien…';
 
   @override
-  String get fgMsgPlan => 'Escribiendo tu plan de juego…';
+  String get fgMsgPlan => 'Schreibe deinen Spielplan…';
 
   @override
   String get fgNeedDbForSets =>
-      'Necesito la base de cartas para listar las expansiones: Ajustes → descargar la base.';
+      'Ich brauche die Kartendatenbank, um die Sets aufzulisten: Einstellungen → Datenbank herunterladen.';
 
   @override
   String fgDbError(String error) {
-    return 'No pude leer la base de datos de cartas: $error';
+    return 'Ich konnte die Kartendatenbank nicht lesen: $error';
   }
 
   @override
@@ -885,97 +887,98 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: ' en esas $n expansiones',
-      one: ' en esa expansión',
+      other: ' in diesen $n Sets',
+      one: ' in diesem Set',
     );
     return '$_temp0';
   }
 
   @override
   String fgNoCommander(String donde) {
-    return 'No me sale un Commander legal$donde: hacen falta un comandante legendario y ~62 cartas DISTINTAS dentro de su identidad (es singleton), más básicas suficientes. Prueba otro formato, otras expansiones o amplía la colección.';
+    return 'Ein legales Commander-Deck kriege ich nicht hin$donde: Es braucht einen legendären Kommandeur und ~62 VERSCHIEDENE Karten innerhalb seiner Farbidentität (es ist Singleton), plus genug Standardländer. Probier ein anderes Format, andere Sets oder erweitere deine Sammlung.';
   }
 
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
-    return 'Con las cartas de este pool no me sale ningún mazo completo $formato que cumpla mis reglas (tierras suficientes y curva sana)$donde. $consejo Antes que darte un mazo defectuoso, prefiero avisarte.';
+    return 'Mit den Karten aus diesem Pool kriege ich kein vollständiges $formato-Deck hin, das meine Regeln erfüllt (genug Länder und eine gesunde Kurve)$donde. $consejo Statt dir ein kaputtes Deck anzudrehen, sage ich es dir lieber.';
   }
 
   @override
-  String get fgOf60 => 'de 60';
+  String get fgOf60 => '60-Karten';
 
   @override
   String fgLegalIn(String formato) {
-    return 'LEGAL en $formato';
+    return 'LEGAL in $formato';
   }
 
   @override
-  String get fgTipMoreSets => 'Prueba con más expansiones o quita filtros.';
+  String get fgTipMoreSets =>
+      'Probier mehr Sets oder nimm ein paar Filter raus.';
 
   @override
   String get fgTipMoreCards =>
-      'Añade más cartas — sobre todo de tus colores principales — o marca \"incluir cartas que no tengo\".';
+      'Füg mehr Karten hinzu — vor allem in deinen Hauptfarben — oder hak \"Karten einbeziehen, die ich nicht habe\" an.';
 
   @override
   String get fgPitch =>
-      'Mazos completos y jugables con las cartas que ya tienes. Sin comprar nada.';
+      'Vollständige, spielbare Decks aus den Karten, die du schon hast. Ohne irgendwas zu kaufen.';
 
   @override
-  String get fgTeaserCount => 'cartas para tu primer mazo';
+  String get fgTeaserCount => 'Karten für dein erstes Deck';
 
   @override
-  String get fgTeaserMissing => 'Hacer un mazo con cartas que no tengo';
+  String get fgTeaserMissing => 'Ein Deck mit Karten bauen, die ich nicht habe';
 
   @override
-  String get fgBasics => 'Cuento con tierras básicas sueltas';
+  String get fgBasics => 'Ich habe lose Standardländer';
 
   @override
   String get fgBasicsSub =>
-      'Casi todo el mundo tiene básicas de mazos de inicio; desactívalo para usar SOLO las básicas de tu colección.';
+      'Fast jeder hat Standardländer aus Startdecks; schalt es aus, um NUR die Standardländer aus deiner Sammlung zu nehmen.';
 
   @override
-  String get fgFormat => 'Formato de juego';
+  String get fgFormat => 'Spielformat';
 
   @override
   String get fgCasual60 => 'Casual 60';
 
   @override
   String get fgCommanderNote =>
-      '100 cartas · singleton · comandante legendario de tu colección · identidad de color respetada.';
+      '100 Karten · Singleton · ein legendärer Kommandeur aus deiner Sammlung · Farbidentität wird eingehalten.';
 
   @override
   String get fgCasualNote =>
-      '60 cartas, sin restricción de legalidad: todo vale.';
+      '60 Karten, keine Legalitätsgrenzen: alles erlaubt.';
 
   @override
   String fgFormatNote(String formato) {
-    return '60 cartas usando SOLO tus cartas legales en $formato.';
+    return '60 Karten mit NUR deinen Karten, die in $formato legal sind.';
   }
 
   @override
-  String get fgWhereFrom => '¿De dónde salen las cartas?';
+  String get fgWhereFrom => 'Woher kommen die Karten?';
 
   @override
-  String get fgPickSets => 'Elegir expansiones';
+  String get fgPickSets => 'Sets wählen';
 
   @override
-  String get fgChangeSets => 'Cambiar expansiones';
+  String get fgChangeSets => 'Sets ändern';
 
   @override
   String get fgNeedOneSet =>
-      'Elige al menos una expansión: sin filtro serían las ~30.000 cartas de Magic.';
+      'Wähl mindestens ein Set: ohne Filter wären es alle ~30.000 Magic-Karten.';
 
   @override
   String get fgNoSetsNote =>
-      'Sin elegir expansiones, Forge usa toda tu colección.';
+      'Ohne gewählte Sets nimmt Forge deine ganze Sammlung.';
 
   @override
   String fgFromSetsAny(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Cartas de $n expansiones, tengas o no.',
-      one: 'Cartas de 1 expansión, tengas o no.',
+      other: 'Karten aus $n Sets, egal ob du sie hast.',
+      one: 'Karten aus 1 Set, egal ob du sie hast.',
     );
     return '$_temp0';
   }
@@ -985,84 +988,85 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Solo tus cartas de $n expansiones — no toda la colección.',
-      one: 'Solo tus cartas de 1 expansión — no toda la colección.',
+      other: 'Nur deine Karten aus $n Sets — nicht die ganze Sammlung.',
+      one: 'Nur deine Karten aus 1 Set — nicht die ganze Sammlung.',
     );
     return '$_temp0';
   }
 
   @override
   String get fgNoPrintingData =>
-      'Tu colección no guarda la edición de cada carta, así que filtrar por expansión dejaría fuera casi todo. Reimporta tu CSV con \"Sustituir\" y vuelve.';
+      'Deine Sammlung merkt sich die Druckversion der Karten nicht, deshalb würde ein Set-Filter fast alles rauswerfen. Importiere deine CSV neu mit \"Ersetzen\" und komm wieder.';
 
   @override
-  String get fgIncludeMissing => 'Incluir cartas que no tengo';
+  String get fgIncludeMissing => 'Karten einbeziehen, die ich nicht habe';
 
   @override
   String get fgIncludeMissingSub =>
-      'Forge deja de limitarse a tu colección y usa TODO lo impreso en esas expansiones; luego te dice cuántas cartas te faltan y cuánto costarían.';
+      'Forge hält sich nicht mehr an deine Sammlung und nimmt ALLES, was in diesen Sets gedruckt wurde; danach sagt es dir, wie viele Karten dir fehlen und was sie kosten würden.';
 
   @override
-  String get fgYourTaste => 'A tu gusto (opcional)';
+  String get fgYourTaste => 'Nach deinem Geschmack (optional)';
 
   @override
-  String get fgArchetypeAuto => 'Arquetipo: auto';
+  String get fgArchetypeAuto => 'Archetyp: auto';
 
   @override
-  String get fgPricePerCard => 'Precio por carta:';
+  String get fgPricePerCard => 'Preis pro Karte:';
 
   @override
-  String get fgMin => 'mín €';
+  String get fgMin => 'min €';
 
   @override
-  String get fgMax => 'máx €';
+  String get fgMax => 'max €';
 
   @override
-  String get fgCardYear => 'Año de la carta:';
+  String get fgCardYear => 'Jahr der Karte:';
 
   @override
-  String get fgFrom => 'desde';
+  String get fgFrom => 'von';
 
   @override
-  String get fgTo => 'hasta';
+  String get fgTo => 'bis';
 
   @override
   String get fgYearNeedsDb =>
-      'El filtro por año necesita la base de datos actualizada: Ajustes → Volver a descargar la base de datos.';
+      'Der Jahresfilter braucht eine aktuelle Datenbank: Einstellungen → Datenbank neu herunterladen.';
 
   @override
   String get fgNoColorsNote =>
-      'Sin elegir colores, Forge prueba todas las combinaciones.';
+      'Ohne gewählte Farben probiert Forge alle Kombinationen.';
 
   @override
   String fgColorsNote(String colores) {
-    return 'Solo mazos $colores (y sus combinaciones).';
+    return 'Nur Decks in $colores (und ihren Kombinationen).';
   }
 
   @override
   String get fgMissingNote =>
-      'Este mazo puede llevar cartas que NO tienes: cada propuesta dice cuántas te faltan y lo que costarían (precio de Cardmarket).';
+      'Dieses Deck kann Karten enthalten, die du NICHT hast: Jeder Vorschlag sagt dir, wie viele dir fehlen und was sie kosten würden (Cardmarket-Preis).';
 
   @override
   String fgOnlyYoursNote(int n) {
-    return 'Forge solo usa tus $n cartas. Nunca inventa copias que no tienes.';
+    return 'Forge nimmt nur deine $n Karten. Es erfindet nie Exemplare, die du nicht hast.';
   }
 
   @override
-  String get fgForgeMissing => 'Forjar mazos (con lo que me falte)';
+  String get fgForgeMissing => 'Decks schmieden (auch mit dem, was mir fehlt)';
 
   @override
-  String get fgForgeMine => 'Forjar mis mazos';
+  String get fgForgeMine => 'Meine Decks schmieden';
 
   @override
-  String get fgTestMode => 'Modo Test: vence a un mazo del meta';
+  String get fgTestMode => 'Testmodus: schlag ein Meta-Deck';
 
   @override
-  String get fgOffline => 'Todo se calcula en tu dispositivo, sin internet';
+  String get fgOffline =>
+      'Alles wird auf deinem Gerät berechnet, ohne Internet';
 
   @override
   String fgForgingWith(int n) {
-    return 'Estás forjando con $n cartas: esto tarda unos segundos. La ventana sigue viva.';
+    return 'Du schmiedest mit $n Karten: Das dauert ein paar Sekunden. Das Fenster lebt noch.';
   }
 
   @override
@@ -1070,159 +1074,161 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n mazos listos para jugar',
-      one: '1 mazo listo para jugar',
+      other: '$n Decks sind spielbereit',
+      one: '1 Deck ist spielbereit',
     );
     return '$_temp0';
   }
 
   @override
   String get fgSwipeMissing =>
-      'Con cartas que aún no tienes · desliza para comparar';
+      'Mit Karten, die du noch nicht hast · wisch zum Vergleichen';
 
   @override
   String get fgSwipeMine =>
-      'Hechos solo con tus cartas · desliza para comparar';
+      'Nur aus deinen Karten gebaut · wisch zum Vergleichen';
 
   @override
-  String get fgHaveAll => '✓ Tienes todas las cartas';
+  String get fgHaveAll => '✓ Du hast jede Karte';
 
   @override
   String fgShortfall(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Te faltan $n cartas',
-      one: 'Te falta 1 carta',
+      other: 'Dir fehlen $n Karten',
+      one: 'Dir fehlt 1 Karte',
     );
     return '$_temp0';
   }
 
   @override
-  String get fgSeeDeck => 'Ver mazo completo';
+  String get fgSeeDeck => 'Ganzes Deck ansehen';
 
   @override
-  String get fgReforge => 'Reforjar';
+  String get fgReforge => 'Neu schmieden';
 
   @override
   String mkAlertOne(String carta, String precio, String objetivo) {
-    return '🔔 ¡$carta está a $precio (tu objetivo: $objetivo)!';
+    return '🔔 $carta steht bei $precio (dein Ziel: $objetivo)!';
   }
 
   @override
   String mkAlertMany(int n) {
-    return '🔔 ¡$n cartas de tu wishlist han caído a su precio objetivo!';
+    return '🔔 $n Karten von deiner Wunschliste sind auf ihren Zielpreis gefallen!';
   }
 
   @override
-  String get mkTellMeWhenDrops => 'Avísame cuando baje';
+  String get mkTellMeWhenDrops => 'Sag mir Bescheid, wenn sie fällt';
 
   @override
-  String get mkTargetPrice => 'Precio objetivo';
+  String get mkTargetPrice => 'Zielpreis';
 
   @override
   String mkNow(String precio) {
-    return 'Ahora: $precio';
+    return 'Jetzt: $precio';
   }
 
   @override
-  String get mkUpdated => '✓ Precios y cartas actualizados';
+  String get mkUpdated => '✓ Preise und Karten aktualisiert';
 
   @override
   String mkUpdateFailed(String error) {
-    return 'No pude actualizar: $error';
+    return 'Ich konnte nicht aktualisieren: $error';
   }
 
   @override
   String get mkHistoryReady =>
-      '✓ Histórico de precios listo: las gráficas ya enseñan los últimos meses';
+      '✓ Preisverlauf steht: Die Diagramme zeigen jetzt die letzten Monate';
 
   @override
   String mkHistoryFailed(String error) {
-    return 'No pude traer el histórico (el que ya tenías sigue intacto): $error';
+    return 'Ich konnte den Verlauf nicht holen (der alte bleibt unangetastet): $error';
   }
 
   @override
   String get mkHistoryLocal =>
-      'Histórico de precios: solo el que ManaForge apunta a diario en tu equipo. Tráete los últimos ~90 días reales de Cardmarket (≈4 MB).';
+      'Preisverlauf: nur das, was ManaForge täglich auf deinem Rechner notiert. Hol dir die echten letzten ~90 Tage von Cardmarket (≈4 MB).';
 
   @override
   String mkHistoryReal(String desde, String hasta) {
-    return 'Histórico real de Cardmarket del $desde al $hasta, y desde ahí lo que apunta ManaForge.';
+    return 'Echter Cardmarket-Verlauf vom $desde bis $hasta, und ab da das, was ManaForge notiert.';
   }
 
   @override
-  String get mkFetchHistory => 'Traer histórico';
+  String get mkFetchHistory => 'Verlauf holen';
 
   @override
-  String get mkCollectionValue => 'Valor de tu colección · Cardmarket';
+  String get mkCollectionValue => 'Wert deiner Sammlung · Cardmarket';
 
   @override
   String mkCardsCount(int n) {
-    return '$n cartas';
+    return '$n Karten';
   }
 
   @override
-  String get mkApproxSuffix => ' · valor orientativo';
+  String get mkApproxSuffix => ' · Richtwert';
 
   @override
   String mkBulkPrices(String fecha) {
-    return 'Precios Cardmarket del $fecha (Scryfall)';
+    return 'Cardmarket-Preise vom $fecha (Scryfall)';
   }
 
   @override
   String mkNoData(String error) {
-    return 'Mercado sin datos: descarga la base de datos en Colección. ($error)';
+    return 'Markt ohne Daten: Lade die Datenbank in der Sammlung herunter. ($error)';
   }
 
   @override
   String mkSetsHeader(int n) {
-    return 'EXPANSIONES ($n)';
+    return 'SETS ($n)';
   }
 
   @override
-  String get mkPrevious => 'Anteriores';
+  String get mkPrevious => 'Zurück';
 
   @override
-  String get mkNext => 'Siguientes';
+  String get mkNext => 'Weiter';
 
   @override
-  String get mkSearchHint => 'Busca el precio de cualquier carta…';
+  String get mkSearchHint => 'Schlag den Preis einer beliebigen Karte nach…';
 
   @override
-  String get mkRemoveFromWishlist => 'Quitar de la wishlist';
+  String get mkRemoveFromWishlist => 'Von der Wunschliste nehmen';
 
   @override
-  String get mkAddToWishlist => 'A la wishlist: avísame cuando baje';
+  String get mkAddToWishlist =>
+      'Auf die Wunschliste: sag mir Bescheid, wenn sie fällt';
 
   @override
-  String get mkYourWishlist => 'TU WISHLIST';
+  String get mkYourWishlist => 'DEINE WUNSCHLISTE';
 
   @override
   String mkTargetAtMost(String precio) {
-    return 'objetivo ≤ $precio';
+    return 'Ziel ≤ $precio';
   }
 
   @override
-  String get mkAtPrice => '¡a precio!';
+  String get mkAtPrice => 'zum Zielpreis!';
 
   @override
-  String get mkChangeTarget => 'Cambiar precio objetivo';
+  String get mkChangeTarget => 'Zielpreis ändern';
 
   @override
-  String get mkTopCards => 'TUS CARTAS MÁS VALIOSAS';
+  String get mkTopCards => 'DEINE WERTVOLLSTEN KARTEN';
 
   @override
-  String get mkImportToSeeValue => 'Importa tu colección para ver su valor.';
+  String get mkImportToSeeValue =>
+      'Importiere deine Sammlung, um ihren Wert zu sehen.';
 
   @override
   String mkSetCards(int n) {
-    return ' · $n cartas';
+    return ' · $n Karten';
   }
 
   @override
   String get wlEmpty =>
-      'Búscalas en Mercado y toca el marcador para que te avise cuando bajen a tu precio.';
+      'Such sie im Markt und tipp auf das Lesezeichen, damit du Bescheid kriegst, wenn sie auf deinen Preis fallen.';
 
   @override
   String wlAtPriceCount(int n) {
@@ -1230,310 +1236,314 @@ class AppLocalizationsDe extends AppLocalizations {
       n,
       locale: localeName,
       other:
-          '🔔 $n cartas de tu wishlist están a tu precio objetivo o por debajo.',
-      one: '🔔 1 carta de tu wishlist está a tu precio objetivo o por debajo.',
+          '🔔 $n Karten von deiner Wunschliste sind auf deinem Zielpreis oder darunter.',
+      one:
+          '🔔 1 Karte von deiner Wunschliste ist auf deinem Zielpreis oder darunter.',
     );
     return '$_temp0';
   }
 
   @override
-  String get mpMtgoTix => 'Precios de MTGO en tix (cartas digitales)';
+  String get mpMtgoTix => 'MTGO-Preise in Tix (digitale Karten)';
 
   @override
   String get mpNoDataYet =>
-      'Sin datos todavía: actualiza el histórico de precios en Mercado';
+      'Noch keine Daten: aktualisiere den Preisverlauf im Markt';
 
   @override
   String get mpMtgoNote =>
-      'Precios de MTGO en tix: son cartas digitales, no valen para tasar tu colección de papel. Inicio, carpetas y logros siguen en Cardmarket (€).';
+      'MTGO-Preise in Tix: Das sind digitale Karten, zum Bewerten deiner Papiersammlung taugen sie nicht. Start, Ordner und Erfolge bleiben bei Cardmarket (€).';
 
   @override
   String mpMarketNote(String mercado, String moneda) {
-    return 'Precios de $mercado en $moneda. Inicio, carpetas y logros siguen valorando en Cardmarket (€): las divisas no se convierten.';
+    return '$mercado-Preise in $moneda. Start, Ordner und Erfolge bewerten weiter mit Cardmarket (€): Währungen werden nicht umgerechnet.';
   }
 
   @override
-  String get mkUpdate => 'Actualizar';
+  String get mkUpdate => 'Aktualisieren';
 
   @override
   String get mkApproxValue =>
-      ' · valor aproximado (reimporta con \"Sustituir\" para precios por edición)';
+      ' · ungefährer Wert (importiere neu mit \"Ersetzen\" für Preise pro Druckversion)';
 
   @override
-  String get mkExactPrintings => ' · por tus ediciones exactas';
+  String get mkExactPrintings => ' · nach deinen genauen Druckversionen';
 
   @override
   String mkNowSuffix(String precio) {
-    return ' · ahora $precio';
+    return ' · jetzt $precio';
   }
 
   @override
-  String get wlNothingYet => 'Aún no tienes cartas en la wishlist.';
+  String get wlNothingYet => 'Noch nichts auf deiner Wunschliste.';
 
   @override
-  String get stDbUpdated => '✓ Base de datos actualizada';
+  String get stDbUpdated => '✓ Datenbank aktualisiert';
 
   @override
   String stUpdateFailed(String error) {
-    return 'No se pudo actualizar: $error';
+    return 'Aktualisieren ging nicht: $error';
   }
 
   @override
-  String get stCardDb => 'Base de datos de cartas';
+  String get stCardDb => 'Kartendatenbank';
 
   @override
   String get stCardDbWhy =>
-      'Vuelve a descargarla para tener cartas nuevas, precios frescos y las funciones que piden datos recientes (como el filtro por año en Forge).';
+      'Lade sie neu herunter für neue Karten, frische Preise und die Funktionen, die aktuelle Daten brauchen (wie den Jahresfilter in Forge).';
 
   @override
-  String get stDownloadDbAgain => 'Volver a descargar la base de datos';
+  String get stDownloadDbAgain => 'Datenbank neu herunterladen';
 
   @override
-  String get stAppearance => 'Apariencia';
+  String get stAppearance => 'Aussehen';
 
   @override
-  String get stData => 'Datos';
+  String get stData => 'Daten';
 
   @override
-  String get stTheApp => 'La app';
+  String get stTheApp => 'Die App';
 
   @override
   String get stCredits =>
-      'Datos e imágenes de cartas por Scryfall. Magic: The Gathering es propiedad de Wizards of the Coast; proyecto de fans al amparo de su Fan Content Policy.';
+      'Kartendaten und -bilder von Scryfall. Magic: The Gathering gehört Wizards of the Coast; ein Fan-Projekt im Rahmen ihrer Fan Content Policy.';
 
   @override
-  String get stEditHome => 'Editar inicio';
+  String get stEditHome => 'Start bearbeiten';
 
   @override
-  String get stEditHomeSub => 'Elige qué secciones se ven y en qué orden';
+  String get stEditHomeSub =>
+      'Wähl, welche Abschnitte zu sehen sind und in welcher Reihenfolge';
 
   @override
-  String get ehLevel => 'Tu nivel';
+  String get ehLevel => 'Dein Level';
 
   @override
-  String get ehShortcuts => 'Accesos rápidos';
+  String get ehShortcuts => 'Schnellzugriffe';
 
   @override
-  String get ehSummary => 'Resumen de la colección';
+  String get ehSummary => 'Überblick über die Sammlung';
 
   @override
-  String get ehRecent => 'Vistas recientemente';
+  String get ehRecent => 'Zuletzt angesehen';
 
   @override
-  String get ehDecks => 'Tus mazos';
+  String get ehDecks => 'Deine Decks';
 
   @override
-  String get ehMeta => 'El meta ahora';
+  String get ehMeta => 'Das Meta gerade';
 
   @override
-  String get ehNewSets => 'Expansiones nuevas';
+  String get ehNewSets => 'Neue Sets';
 
   @override
-  String get ehGems => 'Tus joyas';
+  String get ehGems => 'Deine Schätze';
 
   @override
   String get ehHelp =>
-      'Arrastra para ordenar y usa el interruptor para elegir qué ves en Inicio. Una sección encendida solo sale si tiene algo que enseñar.';
+      'Zieh zum Sortieren und nimm den Schalter, um zu wählen, was du auf Start siehst. Ein eingeschalteter Abschnitt taucht nur auf, wenn er etwas zu zeigen hat.';
 
   @override
-  String get ehSection => 'Sección';
+  String get ehSection => 'Abschnitt';
 
   @override
-  String get bkNoData => 'No encuentro tus datos.';
+  String get bkNoData => 'Ich finde deine Daten nicht.';
 
   @override
   String bkSaved(String resumen) {
-    return '✓ Copia guardada · $resumen';
+    return '✓ Backup gespeichert · $resumen';
   }
 
   @override
   String bkSaveFailed(String error) {
-    return 'No he podido guardarla: $error';
+    return 'Ich konnte es nicht speichern: $error';
   }
 
   @override
-  String get bkFileName => 'Copia de ManaForge';
+  String get bkFileName => 'ManaForge-Backup';
 
   @override
   String bkRestoreFailed(String error) {
-    return 'No he podido restaurarla: $error';
+    return 'Ich konnte es nicht wiederherstellen: $error';
   }
 
   @override
   String bkRestoredNoPrevious(String resumen, String error) {
-    return '✓ Restaurado · $resumen. OJO: no he podido guardar lo que tenías antes ($error).';
+    return '✓ Wiederhergestellt · $resumen. ACHTUNG: Ich konnte nicht sichern, was du vorher hattest ($error).';
   }
 
   @override
   String bkRestored(String resumen) {
-    return '✓ Restaurado · $resumen. Lo que tenías antes está guardado en la carpeta backups.';
+    return '✓ Wiederhergestellt · $resumen. Was du vorher hattest, liegt im Ordner backups.';
   }
 
   @override
-  String get bkRestoring => 'Restaurando tu copia…';
+  String get bkRestoring => 'Stelle dein Backup wieder her…';
 
   @override
-  String get bkTitle => 'Copia de seguridad';
+  String get bkTitle => 'Backup';
 
   @override
   String get bkWhy =>
-      'Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.';
+      'Deine Karten, Decks, Ordner und Erfolge leben nur auf diesem Rechner. Sichere ab und zu eine Kopie und leg sie woanders ab: eine Platte, die Cloud, was du willst.';
 
   @override
-  String get bkSave => 'Guardar copia';
+  String get bkSave => 'Backup speichern';
 
   @override
-  String get bkRestoreTitle => 'Restaurar una copia';
+  String get bkRestoreTitle => 'Ein Backup wiederherstellen';
 
   @override
   String bkRestoreWarning(String palabra) {
-    return 'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe $palabra: así no se restaura nada sin querer.';
+    return 'Wiederherstellen ERSETZT deine jetzigen Karten, Decks, Ordner und Erfolge durch die aus dem Backup. Wähl eins, drück den Knopf und tipp $palabra: So wird nichts aus Versehen wiederhergestellt.';
   }
 
   @override
-  String get bkNoBackups => 'Aún no hay copias guardadas en este ordenador.';
+  String get bkNoBackups =>
+      'Auf diesem Rechner sind noch keine Backups gespeichert.';
 
   @override
-  String get bkWhich => 'Copia a restaurar';
+  String get bkWhich => 'Backup zum Wiederherstellen';
 
   @override
-  String get bkPickOne => 'Elige una copia';
+  String get bkPickOne => 'Wähl ein Backup';
 
   @override
-  String get bkRestorePicked => 'Restaurar la copia elegida';
+  String get bkRestorePicked => 'Gewähltes Backup wiederherstellen';
 
   @override
   String get bkAutoNote =>
-      'Guardo una copia automática cada semana (las cinco últimas) y otra justo antes de cada restaurar.';
+      'Ich speichere jede Woche ein automatisches Backup (die letzten fünf) und eins direkt vor jedem Wiederherstellen.';
 
   @override
-  String get bkFromFile => 'Restaurar de un archivo';
+  String get bkFromFile => 'Aus einer Datei wiederherstellen';
 
   @override
-  String get bkConfirmTitle => '¿Restaurar esta copia?';
+  String get bkConfirmTitle => 'Dieses Backup wiederherstellen?';
 
   @override
   String get bkConfirmBody =>
-      'Esto reemplaza tu colección, mazos, carpetas y logros de ahora por los de esa copia. Antes de hacerlo guardo lo que tienes en la carpeta backups, por si quieres volver.';
+      'Das ersetzt deine jetzige Sammlung, deine Decks, Ordner und Erfolge durch die aus diesem Backup. Vorher sichere ich, was du hast, im Ordner backups — falls du zurückwillst.';
 
   @override
   String bkWillDelete(String cosas) {
-    return 'Esa copia no trae $cosas: al restaurarla, eso se borra.';
+    return 'In diesem Backup fehlt $cosas: Beim Wiederherstellen wird das gelöscht.';
   }
 
   @override
   String bkTypeToConfirm(String palabra) {
-    return 'Escribe $palabra para poder seguir:';
+    return 'Tipp $palabra, um weiterzumachen:';
   }
 
   @override
-  String get bkAnd => ' y ';
+  String get bkAnd => ' und ';
 
   @override
-  String get ehReset => 'Restablecer';
+  String get ehReset => 'Zurücksetzen';
 
   @override
   String bkOfDate(String cuando, String resumen) {
-    return 'Copia del $cuando · $resumen.';
+    return 'Backup vom $cuando · $resumen.';
   }
 
   @override
-  String get lsNoCamera => 'No encuentro ninguna cámara.';
+  String get lsNoCamera => 'Ich finde keine Kamera.';
 
   @override
   String get lsCameraGone =>
-      'La cámara se ha desconectado a media sesión. Revisa el cable y dale a Reintentar.';
+      'Die Kamera hat sich mitten in der Sitzung verabschiedet. Prüf das Kabel und drück auf Nochmal versuchen.';
 
   @override
-  String get lsFrameCard => 'Encuadra la carta dentro del marco';
+  String get lsFrameCard => 'Bring die Karte in den Rahmen';
 
   @override
-  String get lsNoCardThere => 'No veo ninguna carta ahí';
+  String get lsNoCardThere => 'Ich sehe da keine Karte';
 
   @override
   String lsAddedToCollection(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '✓ $n cartas a la colección',
-      one: '✓ 1 carta a la colección',
+      other: '✓ $n Karten in die Sammlung',
+      one: '✓ 1 Karte in die Sammlung',
     );
     return '$_temp0';
   }
 
   @override
   String lsAndToFolder(String carpeta) {
-    return ', y a \"$carpeta\"';
+    return ', und in \"$carpeta\"';
   }
 
   @override
-  String get lsTitle => 'Escanear en vivo';
+  String get lsTitle => 'Live scannen';
 
   @override
   String get lsQuickTip =>
-      'Rápido: las cartas claras entran solas; las dudosas, marcadas para revisar.';
+      'Schnell: Klare Karten wandern von allein rein; zweifelhafte werden zum Prüfen markiert.';
 
   @override
   String get lsCarefulTip =>
-      'Con cuidado: las dudosas se paran y te preguntan cuál es.';
+      'Sorgfältig: Zweifelhafte halten an und fragen dich, welche es ist.';
 
   @override
-  String get lsQuick => 'Rápido';
+  String get lsQuick => 'Schnell';
 
   @override
-  String get lsCareful => 'Con cuidado';
+  String get lsCareful => 'Sorgfältig';
 
   @override
   String lsThisSession(int n) {
-    return '$n esta sesión';
+    return '$n in dieser Sitzung';
   }
 
   @override
-  String get lsScanPhotoTooltip => 'Escanear una foto suelta';
+  String get lsScanPhotoTooltip => 'Ein einzelnes Foto scannen';
 
   @override
-  String get lsStartingCamera => 'Encendiendo la cámara…';
+  String get lsStartingCamera => 'Wecke die Kamera auf…';
 
   @override
-  String get lsCantUseCamera => 'No puedo usar la cámara';
+  String get lsCantUseCamera => 'Ich kann die Kamera nicht benutzen';
 
   @override
-  String get lsCameraUnavailable => 'Cámara no disponible.';
+  String get lsCameraUnavailable => 'Kamera nicht verfügbar.';
 
   @override
-  String get lsScanPhoto => 'Escanear una foto';
+  String get lsScanPhoto => 'Ein Foto scannen';
 
   @override
   String lsPlusOneSame(String carta, int n) {
-    return '+1 igual · $carta (×$n)';
+    return '+1 gleiche · $carta (×$n)';
   }
 
   @override
   String lsAlreadyOnTable(String carta) {
-    return 'Ya está en la mesa: $carta · retírala y vuelve a ponerla, o toca \"+1 igual\"';
+    return 'Liegt schon auf dem Tisch: $carta · nimm sie weg und leg sie neu hin, oder tipp auf \"+1 gleiche\"';
   }
 
   @override
   String lsSeeing(String carta) {
-    return 'Viendo: $carta';
+    return 'Sehe: $carta';
   }
 
   @override
-  String get lsPassACard => 'Pasa una carta por delante de la cámara…';
+  String get lsPassACard => 'Halt eine Karte vor die Kamera…';
 
   @override
   String lsIsThis(String carta) {
-    return '¿Es $carta? No estoy seguro — toca para elegir.';
+    return 'Ist das $carta? Ich bin mir nicht sicher — tipp zum Wählen.';
   }
 
   @override
-  String get lsNotThisOne => 'No es esta — cambiar versión';
+  String get lsNotThisOne => 'Nicht diese — Druckversion wechseln';
 
   @override
-  String get lsRetry => 'Reintentar';
+  String get lsRetry => 'Nochmal versuchen';
 
   @override
-  String get scBadImage => 'No pude leer esa imagen (¿es una foto válida?)';
+  String get scBadImage =>
+      'Ich konnte das Bild nicht lesen (ist das ein gültiges Foto?)';
 
   @override
   String scAddedOne(String carta, String set, String numero) {
@@ -1541,19 +1551,19 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get scNoFolder => 'Sin carpeta';
+  String get scNoFolder => 'Kein Ordner';
 
   @override
   String scAlsoTo(String carpeta) {
-    return 'Y además a: $carpeta';
+    return 'Und außerdem in: $carpeta';
   }
 
   @override
-  String get scLookingForCard => 'Buscando la carta en la foto…';
+  String get scLookingForCard => 'Suche die Karte auf dem Foto…';
 
   @override
   String scRecognising(int hechas, int total) {
-    return 'Reconociendo… $hechas/$total';
+    return 'Erkenne… $hechas/$total';
   }
 
   @override
@@ -1561,271 +1571,272 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n Karten',
+      one: '1 Karte',
     );
-    return '$_temp0 · $copias en total';
+    return '$_temp0 · $copias insgesamt';
   }
 
   @override
   String scToReview(int n) {
-    return '$n para revisar (tócalas)';
+    return '$n zum Prüfen (tipp sie an)';
   }
 
   @override
   String scUnknown(int n) {
-    return '$n sin reconocer (toca para elegir a mano)';
+    return '$n nicht erkannt (tipp an, um von Hand zu wählen)';
   }
 
   @override
   String get scNothingRecognised =>
-      'No reconocí ninguna carta en esas fotos. Prueba con mejor luz o menos reflejo.';
+      'Ich habe auf diesen Fotos keine einzige Karte erkannt. Probier besseres Licht oder weniger Spiegelung.';
 
   @override
   String scAddN(int n) {
-    return 'Añadir $n a la colección';
+    return '$n zur Sammlung hinzufügen';
   }
 
   @override
-  String get scDropPhotos => 'Suelta aquí las fotos de tus cartas';
+  String get scDropPhotos => 'Wirf hier die Fotos deiner Karten rein';
 
   @override
   String get scDropExplain =>
-      'Una o varias a la vez — y si una foto trae VARIAS cartas (una página del álbum, la mesa llena), las saco todas y las junto en una lista para que revises y añadas las que quieras. Vale foto del móvil o escaneo.';
+      'Eins oder mehrere auf einmal — und wenn ein Foto MEHRERE Karten zeigt (eine Albumseite, der volle Tisch), hole ich sie alle raus und packe sie in eine Liste, die du prüfen und beliebig übernehmen kannst. Handyfoto oder Scan, beides geht.';
 
   @override
-  String get scPickPhotos => 'Elegir fotos';
+  String get scPickPhotos => 'Fotos wählen';
 
   @override
-  String get scMatchHigh => 'coincidencia alta';
+  String get scMatchHigh => 'hohe Übereinstimmung';
 
   @override
-  String get scMatchMedium => 'coincidencia media';
+  String get scMatchMedium => 'mittlere Übereinstimmung';
 
   @override
-  String get scMatchLow => 'coincidencia baja';
+  String get scMatchLow => 'geringe Übereinstimmung';
 
   @override
-  String get scAddToCollection => 'Añadir a la colección';
+  String get scAddToCollection => 'Zur Sammlung hinzufügen';
 
   @override
-  String get scSeeOptions => 'No es esta — ver opciones';
+  String get scSeeOptions => 'Nicht diese — Optionen zeigen';
 
   @override
-  String get scScanAnother => 'Escanear otra';
+  String get scScanAnother => 'Nächste scannen';
 
   @override
-  String get scNotSure => 'No estoy seguro';
+  String get scNotSure => 'Ich bin mir nicht sicher';
 
   @override
-  String get scWhichIsIt => '¿Cuál es?';
+  String get scWhichIsIt => 'Welche ist es?';
 
   @override
   String get scNoneQuiteFits =>
-      'Ninguna encaja del todo. ¿Es alguna de estas? Si no, prueba otra foto con mejor luz.';
+      'Keine passt so richtig. Ist es eine davon? Wenn nicht, probier ein anderes Foto mit besserem Licht.';
 
   @override
   String get scNoEdges =>
-      'No vi los bordes de la carta, así que he usado la imagen entera. Estos son los parecidos:';
+      'Ich habe die Kanten der Karte nicht gesehen und deshalb das ganze Bild genommen. Das sind die Ähnlichsten:';
 
   @override
   String get scCropped =>
-      'Esto es lo que he recortado. Los candidatos, por parecido:';
+      'Das habe ich zugeschnitten. Die Kandidaten, nach Ähnlichkeit:';
 
   @override
-  String get scDiscard => 'Descartar y escanear otra';
+  String get scDiscard => 'Verwerfen und nächste scannen';
 
   @override
-  String get suCardsName => 'Cartas y precios';
+  String get suCardsName => 'Karten und Preise';
 
   @override
-  String get suCardsWhat => 'catálogo completo de Scryfall';
+  String get suCardsWhat => 'der komplette Scryfall-Katalog';
 
   @override
-  String get suHistoryName => 'Histórico de precios';
+  String get suHistoryName => 'Preisverlauf';
 
   @override
-  String get suHistoryWhat => '~90 días de Cardmarket';
+  String get suHistoryWhat => '~90 Tage Cardmarket';
 
   @override
-  String get suHashesName => 'Huellas del escáner';
+  String get suHashesName => 'Fingerabdrücke des Scanners';
 
   @override
-  String get suHashesWhat => 'para reconocer por foto';
+  String get suHashesWhat => 'zum Erkennen per Foto';
 
   @override
   String suUpToDate(String fecha) {
-    return 'al día ($fecha)';
+    return 'aktuell ($fecha)';
   }
 
   @override
-  String get suUpdated => 'actualizado';
+  String get suUpdated => 'aktualisiert';
 
   @override
   String suUpdatedWithDate(String fecha) {
-    return 'actualizado ($fecha)';
+    return 'aktualisiert ($fecha)';
   }
 
   @override
-  String get suFailedOffline => 'no he podido traerla (sin conexión)';
+  String get suFailedOffline => 'konnte ich nicht holen (keine Verbindung)';
 
   @override
-  String get suKeepingOld => 'sigo con la que tenías';
+  String get suKeepingOld => 'ich bleibe bei dem, was du hattest';
 
   @override
-  String get suNeedMissing => 'falta, la traigo';
+  String get suNeedMissing => 'fehlt, ich hole sie';
 
   @override
-  String get suNeedStale => 'hay una nueva';
+  String get suNeedStale => 'es gibt eine neue';
 
   @override
-  String get suNeedFresh => 'al día';
+  String get suNeedFresh => 'aktuell';
 
   @override
-  String get suAllUpToDate => 'Todo al día. Entrando…';
+  String get suAllUpToDate => 'Alles aktuell. Ich komme rein…';
 
   @override
-  String get suUpdatingCards => 'Poniendo al día tus cartas y precios…';
+  String get suUpdatingCards => 'Bringe deine Karten und Preise auf Stand…';
 
   @override
-  String get suChecking => 'Comprobando si hay novedades…';
+  String get suChecking => 'Schaue, ob es was Neues gibt…';
 
   @override
   String get suNoDownloadNote =>
-      'Lo que ya está al día no se descarga. Dentro de la app puedes forzar cualquier actualización.';
+      'Was schon aktuell ist, wird nicht heruntergeladen. In der App kannst du jede Aktualisierung erzwingen.';
 
   @override
-  String get suEnter => 'Entrar';
+  String get suEnter => 'Loslegen';
 
   @override
-  String get suEnterNow => 'Entrar ya';
+  String get suEnterNow => 'Jetzt loslegen';
 
   @override
   String icBadFile(String error) {
-    return 'No pude leer el archivo: $error';
+    return 'Ich konnte die Datei nicht lesen: $error';
   }
 
   @override
   String get icNotCsv =>
-      'Eso no parece un CSV — suelta un archivo .csv o .txt.';
+      'Das sieht nicht nach einer CSV aus — wirf eine .csv- oder .txt-Datei rein.';
 
   @override
-  String get icTitle => 'Importar colección';
+  String get icTitle => 'Sammlung importieren';
 
   @override
   String get icExplain =>
-      'Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:';
+      'Zieh deine ManaBox-CSV hierher (Moxfield, Archidekt oder jede CSV mit den Spalten Name und Quantity gehen auch), wähl sie über den Knopf, oder füg ihren Inhalt von Hand ein:';
 
   @override
-  String get icPickFile => 'Elegir archivo…';
+  String get icPickFile => 'Datei wählen…';
 
   @override
   String icImported(int cartas, int copias) {
-    return '✓ $cartas cartas ($copias copias) añadidas a tu colección.';
+    return '✓ $cartas Karten ($copias Exemplare) zu deiner Sammlung hinzugefügt.';
   }
 
   @override
-  String get icReplaceMine => 'Sustituir mi colección actual';
+  String get icReplaceMine => 'Meine aktuelle Sammlung ersetzen';
 
   @override
   String get icReplaceWhy =>
-      'Actívalo al reimportar tu CSV completo: evita duplicar cantidades y afina el álbum por ediciones.';
+      'Schalt es ein, wenn du deine komplette CSV neu importierst: Es verhindert doppelte Mengen und schärft das Album nach Druckversionen.';
 
   @override
   String icImporting(int hechas, int total) {
-    return 'Importando $hechas de $total cartas…';
+    return 'Importiere $hechas von $total Karten…';
   }
 
   @override
-  String get icDropHere => 'Suelta tu CSV aquí';
+  String get icDropHere => 'Wirf deine CSV hier rein';
 
   @override
   String icTokensIgnored(int n) {
-    return '\n• $n tokens/emblemas ignorados (no van en mazos, todo bien).';
+    return '\n• $n Spielsteine/Embleme ignoriert (die gehören nicht ins Deck, alles gut).';
   }
 
   @override
   String icUnrecognized(String lista, String mas) {
-    return '\n✗ Sin reconocer: $lista$mas';
+    return '\n✗ Nicht erkannt: $lista$mas';
   }
 
   @override
   String get icNoPurchasePrice =>
-      '\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").';
+      '\n• Kein Kaufpreis in der CSV: Damit gibt es kein P&L (ManaBox exportiert ihn in der Spalte \"Purchase price\").';
 
   @override
   String icWithPurchasePrice(int n) {
-    return '\n• $n copias con precio de compra: ya puedes ver el P&L en Mercado.';
+    return '\n• $n Exemplare mit Kaufpreis: Du siehst das P&L jetzt im Markt.';
   }
 
   @override
-  String get icImporting2 => 'Importando…';
+  String get icImporting2 => 'Importiere…';
 
   @override
-  String get icImport => 'Importar';
+  String get icImport => 'Importieren';
 
   @override
   String dkDeleted(String nombre) {
-    return 'Mazo \"$nombre\" borrado';
+    return 'Deck \"$nombre\" gelöscht';
   }
 
   @override
-  String get dkUndo => 'DESHACER';
+  String get dkUndo => 'RÜCKGÄNGIG';
 
   @override
   String dkOpenFailed(String error) {
-    return 'No pude abrir el mazo (¿está descargada la base de datos?): $error';
+    return 'Ich konnte das Deck nicht öffnen (ist die Datenbank heruntergeladen?): $error';
   }
 
   @override
-  String get dkMyDecks => 'Mis mazos';
+  String get dkMyDecks => 'Meine Decks';
 
   @override
   String get dkEmpty =>
-      'Aquí vivirán los mazos que guardes desde Forge (botón de guardar en el detalle del mazo).';
+      'Hier wohnen die Decks, die du aus Forge speicherst (Speichern-Knopf in der Deck-Ansicht).';
 
   @override
   String dkSavedCount(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n guardados',
-      one: '1 guardado',
+      other: '$n gespeichert',
+      one: '1 gespeichert',
     );
     return '$_temp0';
   }
 
   @override
   String dkSubtitle(String arquetipo, int hechizos, int tierras, String fecha) {
-    return '$arquetipo · $hechizos hechizos + $tierras tierras · guardado el $fecha';
+    return '$arquetipo · $hechizos Zauber + $tierras Länder · gespeichert am $fecha';
   }
 
   @override
-  String get dkDeleteTooltip => 'Borrar mazo';
+  String get dkDeleteTooltip => 'Deck löschen';
 
   @override
-  String get ddSaved => '✓ Mazo guardado — lo tienes en la pestaña Mazos';
+  String get ddSaved => '✓ Deck gespeichert — du findest es im Reiter Decks';
 
   @override
-  String get ddReforged => '✓ Mazo reforjado a tu curva — lista actualizada';
+  String get ddReforged =>
+      '✓ Deck auf deine Kurve neu geschmiedet — Liste aktualisiert';
 
   @override
-  String get ddSaveToMyDecks => 'Guardar en Mis mazos';
+  String get ddSaveToMyDecks => 'In Meine Decks speichern';
 
   @override
-  String get ddCopyList => 'Copiar lista (Moxfield/Arena)';
+  String get ddCopyList => 'Liste kopieren (Moxfield/Arena)';
 
   @override
   String get ddListCopied =>
-      '✓ Lista copiada — pégala en Moxfield, Arena o Discord';
+      '✓ Liste kopiert — füg sie in Moxfield, Arena oder Discord ein';
 
   @override
   String ddHeaderSub(String tema, String arquetipo, int hechizos, int tierras) {
-    return '$tema · $arquetipo · $hechizos hechizos + $tierras tierras';
+    return '$tema · $arquetipo · $hechizos Zauber + $tierras Länder';
   }
 
   @override
-  String get ddHaveAll => '✓ Tienes todas las cartas';
+  String get ddHaveAll => '✓ Du hast jede Karte';
 
   @override
   String ddMissing(int n) {
@@ -1833,122 +1844,123 @@ class AppLocalizationsDe extends AppLocalizations {
       n,
       locale: localeName,
       other:
-          '⚠ Te faltan $n cartas de este mazo — siguen en la lista, no se han borrado',
+          '⚠ Dir fehlen $n Karten aus diesem Deck — sie bleiben in der Liste, gelöscht wurden sie nicht',
       one:
-          '⚠ Te falta 1 carta de este mazo — sigue en la lista, no se ha borrado',
+          '⚠ Dir fehlt 1 Karte aus diesem Deck — sie bleibt in der Liste, gelöscht wurde sie nicht',
     );
     return '$_temp0';
   }
 
   @override
-  String get ddGamePlan => 'Tu plan de juego';
+  String get ddGamePlan => 'Dein Spielplan';
 
   @override
-  String get ddManaCurve => 'Curva de maná';
+  String get ddManaCurve => 'Manakurve';
 
   @override
-  String get ddEditCurve => 'Editar curva';
+  String get ddEditCurve => 'Kurve bearbeiten';
 
   @override
   String ddDragBars(int hechizos, int tierras) {
-    return 'Arrastra las barras ↑↓ · $hechizos hechizos → $tierras tierras';
+    return 'Zieh die Balken ↑↓ · $hechizos Zauber → $tierras Länder';
   }
 
   @override
-  String get ddReforgeCurve => 'Reforjar con esta curva';
+  String get ddReforgeCurve => 'Mit dieser Kurve neu schmieden';
 
   @override
   String ddCurveSummary(int tierras, int hechizos, String coste) {
-    return '⛰ $tierras tierras · ✦ $hechizos hechizos · Ø coste $coste';
+    return '⛰ $tierras Länder · ✦ $hechizos Zauber · Ø Kosten $coste';
   }
 
   @override
-  String get ddWhyWorks => '¿Por qué este mazo funciona?';
+  String get ddWhyWorks => 'Warum funktioniert dieses Deck?';
 
   @override
   String ddLands(int n) {
-    return 'TIERRAS ($n)';
+    return 'LÄNDER ($n)';
   }
 
   @override
   String ddDeckTotal(String precio) {
-    return 'Total del mazo: ~$precio €';
+    return 'Deck gesamt: ~$precio €';
   }
 
   @override
-  String get ddCheapestPrice => 'precio de la edición más barata (Cardmarket)';
+  String get ddCheapestPrice =>
+      'Preis der günstigsten Druckversion (Cardmarket)';
 
   @override
   String ddSomeNoPrice(int n) {
-    return '$n sin precio conocido · edición más barata (Cardmarket)';
+    return '$n ohne bekannten Preis · günstigste Druckversion (Cardmarket)';
   }
 
   @override
-  String get ddInstants => 'Instantáneos';
+  String get ddInstants => 'Spontanzauber';
 
   @override
-  String get ddTypeCreatures => 'Criaturas';
+  String get ddTypeCreatures => 'Kreaturen';
 
   @override
-  String get ddTypeSorceries => 'Conjuros';
+  String get ddTypeSorceries => 'Hexereien';
 
   @override
-  String get ddTypeEnchantments => 'Encantamientos';
+  String get ddTypeEnchantments => 'Verzauberungen';
 
   @override
-  String get ddTypeArtifacts => 'Artefactos';
+  String get ddTypeArtifacts => 'Artefakte';
 
   @override
-  String get ddTypeOther => 'Otros';
+  String get ddTypeOther => 'Sonstige';
 
   @override
-  String get ddOutOfRange => '  (fuera del rango sano 20-27)';
+  String get ddOutOfRange => '  (außerhalb des gesunden Bereichs 20-27)';
 
   @override
-  String get acRecalcTitle => '¿Recalcular logros?';
+  String get acRecalcTitle => 'Erfolge neu berechnen?';
 
   @override
   String get acRecalcBody =>
-      'Se vuelven a mirar tus cartas y se quitan los logros que hoy no se cumplan. Sirve para arreglar los que se dieron por error; si has vendido cartas, también perderás esos.';
+      'Deine Karten werden noch einmal durchgesehen und Erfolge, die heute nicht mehr zutreffen, verschwinden. Gut, um versehentlich vergebene zu korrigieren; wenn du Karten verkauft hast, verlierst du die aber auch.';
 
   @override
-  String get acRecalc => 'Recalcular';
+  String get acRecalc => 'Neu berechnen';
 
   @override
-  String get acAllFine => 'Todo cuadraba: no se ha quitado ningún logro.';
+  String get acAllFine => 'Alles stimmte: Es wurde kein Erfolg entfernt.';
 
   @override
   String acRemovedN(int n) {
-    return 'Quitados $n logros que ya no se cumplen.';
+    return '$n Erfolge entfernt, die nicht mehr zutreffen.';
   }
 
   @override
-  String get acTitle => 'Logros';
+  String get acTitle => 'Erfolge';
 
   @override
-  String get acRecalcTooltip => 'Recalcular con mis cartas de ahora';
+  String get acRecalcTooltip => 'Mit meinen aktuellen Karten neu berechnen';
 
   @override
-  String get acCertsTooltip => 'Certificados';
+  String get acCertsTooltip => 'Zertifikate';
 
   @override
   String acUnlockedOf(int hechos, int total, int xp) {
-    return '$hechos de $total logros · $xp XP';
+    return '$hechos von $total Erfolgen · $xp XP';
   }
 
   @override
   String acLevelLine(int nivel, int xp, int siguiente) {
-    return 'Nivel $nivel · faltan $xp XP para el $siguiente';
+    return 'Level $nivel · noch $xp XP bis $siguiente';
   }
 
   @override
-  String get acIMissing => 'Me faltan';
+  String get acIMissing => 'Mir fehlen';
 
   @override
-  String get acSecret => 'Logro secreto';
+  String get acSecret => 'Geheimer Erfolg';
 
   @override
-  String get acSecretDesc => 'Se descubre solo cuando lo consigues.';
+  String get acSecretDesc => 'Er zeigt sich erst, wenn du ihn schaffst.';
 
   @override
   String acProgressLine(String progreso, String tier, int xp) {
@@ -1957,97 +1969,98 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String acDoneLine(String fecha, String tier, int xp) {
-    return '✓ Conseguido$fecha · $tier · $xp XP';
+    return '✓ Geschafft$fecha · $tier · $xp XP';
   }
 
   @override
   String acOnDate(String fecha) {
-    return ' el $fecha';
+    return ' am $fecha';
   }
 
   @override
   String acLevelUp(int nivel) {
-    return '¡Nivel $nivel!';
+    return 'Level $nivel!';
   }
 
   @override
   String acLevelUpBody(String titulo, int hechos, int total) {
-    return 'Ya eres $titulo. Llevas $hechos de $total logros.';
+    return 'Du bist jetzt $titulo. Du hast $hechos von $total Erfolgen.';
   }
 
   @override
-  String get acOk => 'Vale';
+  String get acOk => 'Alles klar';
 
   @override
-  String get acSeeAchievements => 'Ver logros';
+  String get acSeeAchievements => 'Erfolge ansehen';
 
   @override
   String acToast(String titulo, String mas, int xp) {
-    return '🏆 ¡Logro! $titulo$mas · +$xp XP';
+    return '🏆 Erfolg! $titulo$mas · +$xp XP';
   }
 
   @override
   String acAndMore(int n) {
-    return ' (y $n más)';
+    return ' (und $n weitere)';
   }
 
   @override
   String ceNeedDb(String error) {
-    return 'Para los de expansión hace falta la base de datos de cartas ($error)';
+    return 'Für Set-Zertifikate braucht es die Kartendatenbank ($error)';
   }
 
   @override
-  String get ceWhoseName => '¿A nombre de quién?';
+  String get ceWhoseName => 'Auf wessen Namen?';
 
   @override
-  String get ceCollectorName => 'Tu nombre de coleccionista';
+  String get ceCollectorName => 'Dein Sammlername';
 
   @override
-  String get ceInNameOf => 'A nombre de…';
+  String get ceInNameOf => 'Auf den Namen…';
 
   @override
   String get ceEmptyWithData =>
-      'Todavía no tienes ninguna expansión completa. Cuando completes una entera en el Álbum, aquí saldrá tu certificado para descargar.';
+      'Du hast noch kein Set komplett. Wenn du eins im Album vollmachst, taucht hier dein Zertifikat zum Herunterladen auf.';
 
   @override
   String get ceEmptyNoData =>
-      'Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV de ManaBox (trae el Scryfall ID).';
+      'Um ein Set zu zertifizieren, muss ich die genaue Druckversion deiner Karten kennen: importiere deine ManaBox-CSV neu (sie bringt die Scryfall-ID mit).';
 
   @override
-  String get ceNothingSaved => 'No se guardó nada.';
+  String get ceNothingSaved => 'Es wurde nichts gespeichert.';
 
   @override
   String ceSavedTo(String ruta) {
-    return '✓ Certificado guardado en $ruta';
+    return '✓ Zertifikat gespeichert unter $ruta';
   }
 
   @override
   String ceSaveFailed(String error) {
-    return 'No se pudo guardar: $error';
+    return 'Speichern ging nicht: $error';
   }
 
   @override
-  String get cePickFirstCard => 'Elegir la carta con la que empecé';
+  String get cePickFirstCard => 'Die Karte wählen, mit der ich angefangen habe';
 
   @override
-  String get ceChangeFirstCard => 'Cambiar la carta con la que empecé';
+  String get ceChangeFirstCard =>
+      'Die Karte ändern, mit der ich angefangen habe';
 
   @override
-  String get ceDownloadPng => 'Descargar PNG';
+  String get ceDownloadPng => 'PNG herunterladen';
 
   @override
-  String get cdNotFound => 'No encuentro esta carta en la base de datos.';
+  String get cdNotFound => 'Ich finde diese Karte nicht in der Datenbank.';
 
   @override
   String cdLoadFailed(String error) {
-    return 'No pude cargar la ficha: $error';
+    return 'Ich konnte die Karte nicht laden: $error';
   }
 
   @override
-  String get cdPrev => 'Anterior (←)';
+  String get cdPrev => 'Vorherige (←)';
 
   @override
-  String get cdNext => 'Siguiente (→)';
+  String get cdNext => 'Nächste (→)';
 
   @override
   String cdPosition(int pos, int total) {
@@ -2055,12 +2068,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get cdCardNotFound => 'Carta no encontrada';
+  String get cdCardNotFound => 'Karte nicht gefunden';
 
   @override
   String cdPaid(
       String total, String divisa, int qty, String copias, String unidad) {
-    return 'Pagaste $total$divisa por $qty $copias ($unidad cada una)';
+    return 'Du hast $total$divisa für $qty $copias bezahlt ($unidad pro Stück)';
   }
 
   @override
@@ -2068,8 +2081,8 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'copias',
-      one: 'copia',
+      other: 'Exemplare',
+      one: 'Exemplar',
     );
     return '$_temp0';
   }
@@ -2079,33 +2092,33 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '✓ Tienes $n copias en tu colección',
-      one: '✓ Tienes 1 copia en tu colección',
+      other: '✓ Du hast $n Exemplare in deiner Sammlung',
+      one: '✓ Du hast 1 Exemplar in deiner Sammlung',
     );
     return '$_temp0';
   }
 
   @override
-  String get cdNotOwned => 'No tienes esta carta (todavía).';
+  String get cdNotOwned => 'Du hast diese Karte (noch) nicht.';
 
   @override
   String cdNoPrice(String mercado) {
-    return 'Sin precio de esta carta en $mercado.';
+    return 'Kein Preis für diese Karte auf $mercado.';
   }
 
   @override
   String cdVersions(int n) {
-    return 'VERSIONES ($n)';
+    return 'VERSIONEN ($n)';
   }
 
   @override
   String cdNoPerPrinting(String mercado) {
-    return 'sin precio por edición en $mercado';
+    return 'kein Preis pro Druckversion auf $mercado';
   }
 
   @override
   String cdPricesNormalFoil(String mercado, String moneda) {
-    return 'precios $mercado ($moneda) · normal / foil';
+    return '$mercado-Preise ($moneda) · normal / foil';
   }
 
   @override
@@ -2115,164 +2128,164 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String cdYouHaveX(int n) {
-    return 'tienes x$n';
+    return 'du hast x$n';
   }
 
   @override
-  String get smMythic => 'Mítica';
+  String get smMythic => 'Mythisch selten';
 
   @override
-  String get smRare => 'Rara';
+  String get smRare => 'Selten';
 
   @override
-  String get smUncommon => 'Infrecuente';
+  String get smUncommon => 'Ungewöhnlich';
 
   @override
-  String get smCommon => 'Común';
+  String get smCommon => 'Gewöhnlich';
 
   @override
   String smLoadFailed(String error) {
-    return 'No pude cargar el set: $error';
+    return 'Ich konnte das Set nicht laden: $error';
   }
 
   @override
-  String get smSearchInSet => 'Busca en la expansión…';
+  String get smSearchInSet => 'Im Set suchen…';
 
   @override
-  String get smRarityAll => 'Rareza: todas';
+  String get smRarityAll => 'Seltenheit: alle';
 
   @override
-  String get smPriceDown => 'Precio ↓';
+  String get smPriceDown => 'Preis ↓';
 
   @override
-  String get smPriceUp => 'Precio ↑';
+  String get smPriceUp => 'Preis ↑';
 
   @override
-  String get smNumber => 'Número';
+  String get smNumber => 'Nummer';
 
   @override
-  String get smOnlyMine => 'Solo las mías';
+  String get smOnlyMine => 'Nur meine';
 
   @override
   String smCardsCount(int n) {
-    return '$n cartas';
+    return '$n Karten';
   }
 
   @override
   String smNoPerPrinting(String mercado) {
-    return '$mercado: sin precio por edición';
+    return '$mercado: kein Preis pro Druckversion';
   }
 
   @override
   String smListedValue(String mercado) {
-    return 'valor listado ($mercado): ';
+    return 'gelisteter Wert ($mercado): ';
   }
 
   @override
   String pnPaidVsToday(String pagado, String hoy) {
-    return 'Pagaste $pagado · hoy valen $hoy';
+    return 'Du hast $pagado bezahlt · heute sind sie $hoy wert';
   }
 
   @override
   String get pnNoPnl =>
-      'Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.';
+      'Ohne Kaufpreis gibt es kein P&L. Importiere deine ManaBox-CSV mit der Spalte \"Purchase price\", dann taucht es hier auf.';
 
   @override
   String pnOverAll(int n) {
-    return 'sobre las $n copias de tu colección';
+    return 'über die $n Exemplare in deiner Sammlung';
   }
 
   @override
   String pnOverSome(int conprecio, int total) {
-    return 'sobre $conprecio de $total copias (las demás no tienen precio de compra apuntado)';
+    return 'über $conprecio von $total Exemplaren (bei den anderen ist kein Kaufpreis notiert)';
   }
 
   @override
   String pnNoTodayPrice(int n) {
-    return '$n copias compradas no tienen precio de hoy en la base: fuera de la cuenta';
+    return 'Für $n gekaufte Exemplare gibt es keinen heutigen Preis in der Datenbank: bleiben außen vor';
   }
 
   @override
   String pnOtherCurrency(String importe, String moneda) {
-    return 'también pagaste $importe $moneda, que no se convierte';
+    return 'du hast außerdem $importe $moneda bezahlt, was nicht umgerechnet wird';
   }
 
   @override
   String pnAssumedCurrency(int n, String moneda) {
-    return '$n copias sin divisa en el CSV: se suponen $moneda';
+    return '$n Exemplare ohne Währung in der CSV: angenommen $moneda';
   }
 
   @override
-  String get pcTitle => 'Evolución del precio';
+  String get pcTitle => 'Preisentwicklung';
 
   @override
-  String get pcNoHistory => 'Todavía sin historial de precio de esta carta.';
+  String get pcNoHistory => 'Für diese Karte gibt es noch keinen Preisverlauf.';
 
   @override
   String pcTodayPrice(String precio) {
-    return 'Precio de hoy: $precio €. La gráfica aparece en cuanto haya varios días.';
+    return 'Preis heute: $precio €. Das Diagramm erscheint, sobald mehrere Tage da sind.';
   }
 
   @override
   String get pcExplain =>
-      'ManaForge apunta el precio de cada carta que miras o tienes, día a día. Para arrancar con los últimos meses reales de Cardmarket, trae el histórico desde Mercado.';
+      'ManaForge notiert den Preis jeder Karte, die du ansiehst oder besitzt, Tag für Tag. Um mit den echten letzten Monaten von Cardmarket zu starten, hol dir den Verlauf im Markt.';
 
   @override
   String pcRange(String min, String max, int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n días',
-      one: '1 día',
+      other: '$n Tage',
+      one: '1 Tag',
     );
-    return 'mín $min € · máx $max € · $_temp0';
+    return 'min $min € · max $max € · $_temp0';
   }
 
   @override
-  String get spWhichSets => '¿De qué expansiones?';
+  String get spWhichSets => 'Aus welchen Sets?';
 
   @override
-  String get spSearchHint => 'Buscar por nombre o código (BLB, MH3…)';
+  String get spSearchHint => 'Nach Name oder Code suchen (BLB, MH3…)';
 
   @override
-  String get spOnlyMine => 'Solo las mías';
+  String get spOnlyMine => 'Nur meine';
 
   @override
   String spClearN(int n) {
-    return 'Quitar las $n';
+    return 'Die $n entfernen';
   }
 
   @override
   String get spNoneNamed =>
-      'Ninguna expansión con ese nombre. Quita \"Solo las mías\" para ver todas.';
+      'Kein Set mit dem Namen. Schalt \"Nur meine\" aus, um alle zu sehen.';
 
   @override
   String spSetLine(String set, int n) {
-    return '$set · $n cartas';
+    return '$set · $n Karten';
   }
 
   @override
-  String get spNoFilter => 'Sin filtro de expansión';
+  String get spNoFilter => 'Kein Set-Filter';
 
   @override
   String spUseN(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Usar $n expansiones',
-      one: 'Usar 1 expansión',
+      other: '$n Sets nehmen',
+      one: '1 Set nehmen',
     );
     return '$_temp0';
   }
 
   @override
   String slLockedTo(String set) {
-    return 'Solo busco cartas del set $set. Tócalo para cambiar o quitar el bloqueo.';
+    return 'Ich suche nur Karten aus dem Set $set. Tipp drauf, um zu wechseln oder die Sperre zu lösen.';
   }
 
   @override
   String get slLockHint =>
-      'Bloquea un set para escanear una caja/precon: el escáner solo buscará dentro de él y clava la edición.';
+      'Sperr ein Set, um eine Box oder ein Precon zu scannen: Der Scanner sucht nur darin und trifft die Druckversion genau.';
 
   @override
   String slSetIs(String set) {
@@ -2280,111 +2293,111 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get slSetAll => 'Set: todas';
+  String get slSetAll => 'Set: alle';
 
   @override
-  String get slLockTitle => 'Bloquear edición';
+  String get slLockTitle => 'Druckversion sperren';
 
   @override
   String get slLockBody =>
-      'Escribe el código del set (p. ej. AER, MH3, LCI) para escanear una caja entera: solo se buscarán cartas de ese set.';
+      'Tipp den Set-Code ein (z. B. AER, MH3, LCI), um eine ganze Box zu scannen: Es werden nur Karten aus diesem Set gesucht.';
 
   @override
-  String get slSetCode => 'Código de set';
+  String get slSetCode => 'Set-Code';
 
   @override
-  String get slClearLock => 'Quitar bloqueo';
+  String get slClearLock => 'Sperre lösen';
 
   @override
   String get stHintQuick =>
-      'Pasa cartas por delante: las claras se apuntan solas aquí (las copias iguales suman ×N). Las dudosas, marcadas para revisar. Al terminar, confirmas todas.';
+      'Halt Karten davor: Die klaren notieren sich hier von allein (gleiche Exemplare stapeln sich ×N). Die zweifelhaften werden zum Prüfen markiert. Am Ende bestätigst du alle.';
 
   @override
   String get stHintCareful =>
-      'Pasa cartas por delante: las claras se apuntan solas; las dudosas te preguntan cuál es. Al terminar, confirmas todas.';
+      'Halt Karten davor: Die klaren notieren sich von allein; die zweifelhaften fragen dich, welche es ist. Am Ende bestätigst du alle.';
 
   @override
   String stAddN(int n) {
-    return 'Añadir $n a la colección';
+    return '$n zur Sammlung hinzufügen';
   }
 
   @override
   String stAddNAndFolder(int n, String carpeta) {
-    return 'Añadir $n a la colección y a $carpeta';
+    return '$n zur Sammlung und zu $carpeta hinzufügen';
   }
 
   @override
-  String get stOneLess => 'Una menos';
+  String get stOneLess => 'Eine weniger';
 
   @override
-  String get stAnotherSame => 'Otra igual';
+  String get stAnotherSame => 'Noch eine gleiche';
 
   @override
-  String get stOnTable => 'en mesa';
+  String get stOnTable => 'auf dem Tisch';
 
   @override
   String cdLastData(String fecha) {
-    return ' (último dato: $fecha)';
+    return ' (letzter Stand: $fecha)';
   }
 
   @override
-  String get slLockButton => 'Bloquear';
+  String get slLockButton => 'Sperren';
 
   @override
   String get wn030Headline =>
-      'Forge por expansiones, precio de compra y avisos de versión';
+      'Forge nach Sets, Kaufpreis und Hinweise auf neue Versionen';
 
   @override
   String get wn030Forge =>
-      'Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.';
+      'Forge: Wähl, aus welchen Sets die Karten kommen. Und wenn du \"Karten einbeziehen, die ich nicht habe\" einschaltest, baut es das Deck aus dem ganzen gewählten Set und sagt dir, wie viele dir fehlen und was sie kosten.';
 
   @override
   String get wn030Pnl =>
-      'Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.';
+      'Kaufpreis und P&L: Wenn deine ManaBox-CSV \"Purchase price\" mitbringt, zeigt dir der Markt, was du bezahlt hast, was es heute wert ist und die Differenz. Währungen werden nie vermischt.';
 
   @override
   String get wn030PhotoFolder =>
-      'Escanear por foto también deja elegir carpeta, como el escáner en vivo.';
+      'Beim Scannen per Foto kannst du jetzt auch einen Ordner wählen, wie beim Live-Scanner.';
 
   @override
   String get wn030Album =>
-      'Álbum: lo que te falta de cada expansión, con lo que costaría.';
+      'Album: was dir aus jedem Set fehlt, und was es kosten würde.';
 
   @override
   String get wn030Background =>
-      'Fondo de pantalla: pon detrás la imagen que quieras, con velo regulable, y elige el color de las tarjetas y de la letra para que encima se siga leyendo.';
+      'Hintergrundbild: Leg dahinter, welches Bild du willst, mit regelbarem Schleier, und wähl die Farbe der Kacheln und der Schrift, damit man darauf noch lesen kann.';
 
   @override
   String get wn030Window =>
-      'La ventana se abre donde la dejaste, del tamaño que la dejaste.';
+      'Das Fenster geht da auf, wo du es gelassen hast, in der Größe, in der du es gelassen hast.';
 
   @override
   String get wn030Achievements =>
-      'Los logros ya no se llaman como el criterio, se llaman como el momento: \"Ahí va todo mi dinero\", \"Cien raras y ninguna jugable\".';
+      'Die Erfolge heißen nicht mehr wie ihre Bedingung, sondern wie der Moment: \"Da geht mein ganzes Geld hin\", \"Hundert Seltene und keine spielbar\".';
 
   @override
   String get wn030Update =>
-      'La app avisa cuando hay versión nueva (no se actualiza sola) y comprueba la huella SHA-256 de las bases que se descarga.';
+      'Die App sagt Bescheid, wenn es eine neue Version gibt (sie aktualisiert sich nie von selbst) und prüft den SHA-256-Fingerabdruck jeder Datenbank, die sie herunterlädt.';
 
   @override
   String get wn030Shortcuts =>
-      'Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.';
+      'Tastenkürzel: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, und Escape.';
 
   @override
   String get wn030Linux =>
-      'En Linux, un instalador deja ManaForge en el menú de aplicaciones con su icono.';
+      'Unter Linux legt ein Installer ManaForge mit seinem Icon ins Anwendungsmenü.';
 
   @override
   String get wn030License =>
-      'Licencia PolyForm Noncommercial: compártela y tócala lo que quieras, pero no se vende.';
+      'PolyForm-Noncommercial-Lizenz: Teil sie und bastel dran, so viel du willst, aber verkauft wird sie nicht.';
 
   @override
   String bkSumCards(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n Karten',
+      one: '1 Karte',
     );
     return '$_temp0';
   }
@@ -2394,8 +2407,8 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n mazos',
-      one: '1 mazo',
+      other: '$n Decks',
+      one: '1 Deck',
     );
     return '$_temp0';
   }
@@ -2405,8 +2418,8 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n carpetas',
-      one: '1 carpeta',
+      other: '$n Ordner',
+      one: '1 Ordner',
     );
     return '$_temp0';
   }
@@ -2416,1044 +2429,1048 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n logros',
-      one: '1 logro',
+      other: '$n Erfolge',
+      one: '1 Erfolg',
     );
     return '$_temp0';
   }
 
   @override
-  String get bkSumEmpty => 'copia vacía';
+  String get bkSumEmpty => 'leeres Backup';
 
   @override
-  String get bkStoreCollection => 'tu colección';
+  String get bkStoreCollection => 'deine Sammlung';
 
   @override
-  String get bkStoreFolders => 'tus carpetas';
+  String get bkStoreFolders => 'deine Ordner';
 
   @override
-  String get bkStoreDecks => 'tus mazos';
+  String get bkStoreDecks => 'deine Decks';
 
   @override
-  String get bkStoreAchievements => 'tus logros';
+  String get bkStoreAchievements => 'deine Erfolge';
 
   @override
-  String get bkStoreWishlist => 'tu lista de deseos';
+  String get bkStoreWishlist => 'deine Wunschliste';
 
   @override
-  String get bkStoreCertificates => 'tus certificados';
+  String get bkStoreCertificates => 'deine Zertifikate';
 
   @override
-  String get bkStoreMarket => 'tu mercado preferido';
+  String get bkStoreMarket => 'dein bevorzugter Markt';
 
   @override
-  String get bkStoreRecents => 'las cartas vistas hace poco';
+  String get bkStoreRecents => 'die zuletzt angesehenen Karten';
 
   @override
-  String get bkStoreValueHistory => 'el historial del valor';
+  String get bkStoreValueHistory => 'der Wertverlauf';
 
   @override
-  String get bkStorePriceHistory => 'el historial de precios';
+  String get bkStorePriceHistory => 'der Preisverlauf';
 
   @override
-  String get bkKindAuto => 'automática';
+  String get bkKindAuto => 'automatisch';
 
   @override
-  String get bkKindPreRestore => 'antes de restaurar';
+  String get bkKindPreRestore => 'vor dem Wiederherstellen';
 
   @override
   String get bkErrFileTooBig =>
-      'Ese fichero es demasiado grande para ser una copia de ManaForge.';
+      'Diese Datei ist viel zu groß für ein ManaForge-Backup.';
 
   @override
   String get bkErrExpandTooBig =>
-      'Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.';
+      'Dieses Backup ist entpackt viel zu groß: Das sieht nicht nach einem echten ManaForge-Backup aus.';
 
   @override
-  String get bkErrNotABackup =>
-      'Ese fichero no es una copia de seguridad de ManaForge.';
+  String get bkErrNotABackup => 'Diese Datei ist kein ManaForge-Backup.';
 
   @override
   String get bkErrNewerVersion =>
-      'Esa copia la hizo una versión más nueva de ManaForge. Actualiza la app y vuelve a intentarlo.';
+      'Dieses Backup stammt von einer neueren ManaForge-Version. Aktualisiere die App und probier es nochmal.';
 
   @override
-  String get bkErrIncomplete => 'Esa copia está incompleta: no trae tus datos.';
+  String get bkErrIncomplete =>
+      'Dieses Backup ist unvollständig: Deine Daten sind nicht drin.';
 
   @override
   String bkErrDamaged(String almacen) {
-    return 'Esa copia está dañada: $almacen no se puede leer.';
+    return 'Dieses Backup ist beschädigt: $almacen lässt sich nicht lesen.';
   }
 
   @override
   String bkErrWriteFailed(String error) {
-    return 'No he podido escribir en la carpeta de datos, así que no he tocado nada: $error';
+    return 'Ich konnte nicht in den Datenordner schreiben, also habe ich nichts angefasst: $error';
   }
 
   @override
   String bkErrHalfDoneNoPrevious(String escritos, String total, String error) {
-    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). No tengo copia previa de lo que había. Detalle: $error';
+    return 'Das Wiederherstellen ist auf halber Strecke steckengeblieben ($escritos von $total Dateien). Ich habe kein früheres Backup von dem, was da war. Details: $error';
   }
 
   @override
   String bkErrHalfDonePrevious(
       String escritos, String total, String ruta, String error) {
-    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). Para volver atrás, restaura $ruta. Detalle: $error';
+    return 'Das Wiederherstellen ist auf halber Strecke steckengeblieben ($escritos von $total Dateien). Zum Zurückgehen stell $ruta wieder her. Details: $error';
   }
 
   @override
   String get siImportTooBig =>
-      'Ese archivo es demasiado grande para ser una lista de cartas.';
+      'Diese Datei ist viel zu groß für eine Kartenliste.';
 
   @override
   String get siInsecureDownload =>
-      'La descarga acabó en una dirección insegura y se ha cancelado.';
+      'Der Download ist bei einer unsicheren Adresse gelandet und wurde abgebrochen.';
 
   @override
   String get siRedirectNowhere =>
-      'La descarga redirige a ninguna parte y se ha cancelado.';
+      'Der Download leitet ins Nirgendwo weiter und wurde abgebrochen.';
 
   @override
   String get siTooManyRedirects =>
-      'La descarga da demasiadas vueltas y se ha cancelado.';
+      'Der Download dreht sich zu oft im Kreis und wurde abgebrochen.';
 
   @override
   String get siDownloadTooBig =>
-      'La descarga es mucho más grande de lo que debería y se ha cancelado.';
+      'Der Download ist viel größer, als er sein sollte, und wurde abgebrochen.';
 
   @override
   String get siBadHash =>
-      'Lo descargado no coincide con la huella publicada en GitHub. No se ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.';
+      'Das Heruntergeladene passt nicht zum Fingerabdruck, der auf GitHub steht. Es wurde nichts installiert. Probier es nochmal; wenn es weiter passiert, sag Bescheid.';
 
   @override
   String get siBackgroundNotImage =>
-      'Elige una imagen (.jpg, .png o .webp) como fondo.';
+      'Wähl ein Bild (.jpg, .png oder .webp) als Hintergrund.';
 
   @override
   String get siBackgroundTooBig =>
-      'Esa imagen es demasiado grande para usarla de fondo.';
+      'Dieses Bild ist zu groß, um es als Hintergrund zu nehmen.';
 
   @override
-  String get bgImages => 'Imágenes';
+  String get bgImages => 'Bilder';
 
   @override
   String bgImageFailed(String error) {
-    return 'No pude usar esa imagen: $error';
+    return 'Ich konnte dieses Bild nicht nehmen: $error';
   }
 
   @override
   String get bgLowContrast =>
-      'Poca diferencia con la tarjeta: la letra se ajustará sola para que se lea.';
+      'Zu nah an der Farbe der Kachel: Die Schrift passt sich selbst an, damit man sie lesen kann.';
 
   @override
-  String get bgChipColor => 'Color de las pestañas';
+  String get bgChipColor => 'Farbe der Reiter';
 
   @override
-  String get bgIconColor => 'Color de los iconos';
+  String get bgIconColor => 'Farbe der Symbole';
 
   @override
-  String get bgUseThis => 'Usar este';
+  String get bgUseThis => 'Dieses nehmen';
 
   @override
   String get camGstreamerMissing =>
-      'GStreamer no está instalado. Instálalo con:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good';
+      'GStreamer ist nicht installiert. Installier es mit:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good';
 
   @override
   String camNoImage(String dispositivo, String codigo, String detalle) {
-    return 'La cámara $dispositivo no da imagen (gst-launch salió con $codigo).\n$detalle';
+    return 'Die Kamera $dispositivo liefert kein Bild (gst-launch endete mit $codigo).\n$detalle';
   }
 
   @override
   String camNoFrames(String dispositivo) {
-    return 'La cámara $dispositivo no ha dado ningún frame en 6 s.';
+    return 'Die Kamera $dispositivo hat in 6 s keinen einzigen Frame geliefert.';
   }
 
   @override
   String get camNoCameras =>
-      'No encuentro ninguna cámara (/dev/video*). ¿Está conectada? Comprueba con `lsusb` que el sistema la ve.';
+      'Ich finde keine Kamera (/dev/video*). Ist sie angeschlossen? Prüf mit `lsusb`, ob das System sie sieht.';
 
   @override
   String camNoneWorked(String detalle) {
-    return 'Ninguna cámara dio imagen:\n$detalle';
+    return 'Keine Kamera lieferte ein Bild:\n$detalle';
   }
 
   @override
-  String get bkRestoreAction => 'Restaurar';
+  String get bkRestoreAction => 'Wiederherstellen';
 
   @override
-  String get fpUnselect => 'Desmarcar';
+  String get fpUnselect => 'Abwählen';
 
   @override
-  String get stClear => 'Vaciar';
+  String get stClear => 'Leeren';
 
   @override
-  String get tlRemove => 'Quitar';
+  String get tlRemove => 'Entfernen';
 
   @override
-  String get tlUnrecognized => 'Sin reconocer';
+  String get tlUnrecognized => 'Nicht erkannt';
 
   @override
-  String get tlNothingAlike => 'nada parecido en la base — re-foto o quitar';
+  String get tlNothingAlike =>
+      'nichts Ähnliches in der Datenbank — neu fotografieren oder entfernen';
 
   @override
-  String get tlTapToPick => 'toca para elegir a mano entre parecidas';
+  String get tlTapToPick => 'tipp an, um von Hand aus den Ähnlichen zu wählen';
 
   @override
-  String get lsQuantity => 'Cantidad';
+  String get lsQuantity => 'Anzahl';
 
   @override
   String get scPhotos => 'Fotos';
 
   @override
-  String get ftWhichFolder => '¿En qué carpeta las quieres?';
+  String get ftWhichFolder => 'In welchen Ordner sollen sie?';
 
   @override
   String get ftWhichFolderSub =>
-      'Entran en tu colección igual; la carpeta es solo una etiqueta para encontrarlas luego.';
+      'In deine Sammlung kommen sie so oder so; der Ordner ist nur ein Etikett, um sie später wiederzufinden.';
 
   @override
-  String get ftNone => 'Ninguna';
+  String get ftNone => 'Keiner';
 
   @override
   String ftCards(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n Karten',
+      one: '1 Karte',
     );
     return '$_temp0';
   }
 
   @override
-  String get ftNewFolderEllipsis => 'Carpeta nueva…';
+  String get ftNewFolderEllipsis => 'Neuer Ordner…';
 
   @override
-  String get ftNewFolder => 'Carpeta nueva';
+  String get ftNewFolder => 'Neuer Ordner';
 
   @override
-  String get ftNewFolderHint => 'Caja de la tienda, Para vender…';
+  String get ftNewFolderHint => 'Kiste aus dem Laden, Zum Verkaufen…';
 
   @override
-  String get sgTitle => 'El ojo del escáner';
+  String get sgTitle => 'Das Auge des Scanners';
 
   @override
   String get sgWhy =>
-      'Para reconocer cartas sin internet necesito la base de huellas visuales (~12 MB): la firma del arte de cada ilustración de Magic. Se descarga una vez.';
+      'Um Karten ohne Internet zu erkennen, brauche ich die Datenbank der visuellen Fingerabdrücke (~12 MB): die Signatur jeder Magic-Illustration. Sie wird einmal heruntergeladen.';
 
   @override
-  String get sgDownload => 'Descargar base de huellas';
+  String get sgDownload => 'Fingerabdruck-Datenbank herunterladen';
 
   @override
-  String get cmFullCard => 'Ver ficha completa (precios y legalidad)';
+  String get cmFullCard => 'Ganze Karte ansehen (Preise und Legalität)';
 
   @override
   String get cmSwipeHint =>
-      'arrastra o usa ← → para pasar · toca fuera para cerrar';
+      'zieh oder nimm ← →, um zu blättern · tipp daneben zum Schließen';
 
   @override
-  String get cmTapOutHint => 'toca fuera para cerrar';
+  String get cmTapOutHint => 'tipp daneben zum Schließen';
 
   @override
-  String get fcTitle => '¿Con qué carta empezaste?';
+  String get fcTitle => 'Mit welcher Karte hast du angefangen?';
 
   @override
-  String get fcRemove => 'Quitar';
+  String get fcRemove => 'Entfernen';
 
   @override
-  String get fcSearchHint => 'Buscar en tu colección';
+  String get fcSearchHint => 'In deiner Sammlung suchen';
 
   @override
-  String get fcNoMatch => 'No encuentro ninguna carta con eso.';
+  String get fcNoMatch => 'Ich finde keine Karte damit.';
 
   @override
-  String get acNoneWithFilters => 'Nada por aquí con estos filtros.';
+  String get acNoneWithFilters => 'Mit diesen Filtern ist hier nichts.';
 
   @override
-  String get acAll => 'Todos';
+  String get acAll => 'Alle';
 
   @override
-  String get tsTitle => 'Modo Test — vence al meta';
+  String get tsTitle => 'Testmodus — schlag das Meta';
 
   @override
   String get tsIntro =>
-      'Elige contra qué mazo del meta quieres jugar. ManaForge construye mazos con TUS cartas, simula cientos de partidas contra él y se queda con el que más gana — probando además cambios de carta uno a uno para afinarlo.';
+      'Wähl, gegen welches Meta-Deck du spielen willst. ManaForge baut Decks aus DEINEN Karten, simuliert hunderte Partien dagegen und behält das, was am meisten gewinnt — und probiert dazu Kartentausche einzeln durch, um es zu schärfen.';
 
   @override
-  String get tsLoadingMeta => 'Cargando meta…';
+  String get tsLoadingMeta => 'Lade das Meta…';
 
   @override
-  String get tsLocalPresets => 'Presets locales (sin conexión)';
+  String get tsLocalPresets => 'Lokale Vorlagen (ohne Verbindung)';
 
   @override
   String get tsNoDeckToFace =>
-      'Con las cartas actuales no me sale ningún mazo completo que enfrentar. Añade más cartas y vuelve a intentarlo.';
+      'Mit deinen jetzigen Karten kriege ich kein vollständiges Deck zusammen, das antreten könnte. Füg mehr Karten hinzu und probier es nochmal.';
 
   @override
   String tsSimFailed(String error) {
-    return 'No pude simular: $error';
+    return 'Ich konnte nicht simulieren: $error';
   }
 
   @override
   String tsFormatShare(String formato, String cuota) {
-    return '$formato · $cuota del meta';
+    return '$formato · $cuota des Metas';
   }
 
   @override
   String get tsSimulating =>
-      'Simulando partidas… (unos segundos; todo en tu equipo)';
+      'Simuliere Partien… (ein paar Sekunden; alles auf deinem Rechner)';
 
   @override
   String tsFindBest(String meta) {
-    return 'Buscar mi mejor mazo contra $meta';
+    return 'Mein bestes Deck gegen $meta suchen';
   }
 
   @override
   String get tsHonesty =>
-      'Honestidad: la simulación entiende colores de maná, mulligans, evasión (volar, arrollar, toque mortal…), removal instantáneo y contramagia — pero no el texto completo de cada carta. El porcentaje sirve para COMPARAR tus mazos entre sí, no como predicción exacta.';
+      'Ganz ehrlich: Die Simulation versteht Manafarben, Mulligans, Evasion (Fliegend, Trampelschaden, Todesberührung…), Removal zur Spontanzauber-Zeit und Gegenzauber — aber nicht den kompletten Text jeder Karte. Der Prozentwert dient dazu, deine Decks UNTEREINANDER zu vergleichen, nicht als exakte Vorhersage.';
 
   @override
   String tsChampion(String meta) {
-    return 'Tu campeón contra $meta';
+    return 'Dein Champion gegen $meta';
   }
 
   @override
   String tsWinRateLine(int mazos, int partidas) {
-    return 'de victorias estimadas · $mazos mazos probados · $partidas partidas por mazo';
+    return 'geschätzte Siege · $mazos Decks getestet · $partidas Partien pro Deck';
   }
 
   @override
   String get tsNoDominant =>
-      'Ningún mazo de tu colección domina este enfrentamiento — este es el que mejor pelea. Mira sus debilidades en el detalle.';
+      'Kein Deck aus deiner Sammlung beherrscht dieses Matchup — das hier kämpft am besten. Schau dir seine Schwächen im Detail an.';
 
   @override
-  String get tsSeeDeck => 'Ver mazo completo (y guardarlo)';
+  String get tsSeeDeck => 'Ganzes Deck ansehen (und speichern)';
 
   @override
   String hsLevelLine(int hechos, int total, int xp, int nivel) {
-    return '$hechos/$total logros · $xp XP para el nivel $nivel';
+    return '$hechos/$total Erfolge · $xp XP bis Level $nivel';
   }
 
   @override
-  String get hsForgeDecks => 'Forjar mazos';
+  String get hsForgeDecks => 'Decks schmieden';
 
   @override
-  String get hsTestYourself => '⚔ ponte a prueba';
+  String get hsTestYourself => '⚔ stell dich auf die Probe';
 
   @override
-  String get bgCustom => 'A medida';
+  String get bgCustom => 'Eigene';
 
   @override
-  String get bgPickCustom => 'Elegir un color a medida';
+  String get bgPickCustom => 'Eine eigene Farbe wählen';
 
   @override
-  String get bgCustomColor => 'Color a medida';
+  String get bgCustomColor => 'Eigene Farbe';
 
   @override
-  String get bgSampleTab => 'Rojo';
+  String get bgSampleTab => 'Rot';
 
   @override
-  String get cfSortRecent => 'Recién añadidas';
+  String get cfSortRecent => 'Gerade hinzugefügt';
 
   @override
-  String get cfSortAlpha => 'Nombre A-Z';
+  String get cfSortAlpha => 'Name A-Z';
 
   @override
-  String get cfSortCmc => 'Coste';
+  String get cfSortCmc => 'Kosten';
 
   @override
-  String get cfSortQty => 'Cantidad';
+  String get cfSortQty => 'Anzahl';
 
   @override
-  String get cfSortBy => 'Ordenar por';
+  String get cfSortBy => 'Sortieren nach';
 
   @override
-  String get cfSort => 'Orden';
+  String get cfSort => 'Sortierung';
 
   @override
-  String get cfClear => 'Limpiar';
+  String get cfClear => 'Zurücksetzen';
 
   @override
-  String get cfCost => 'Coste';
+  String get cfCost => 'Kosten';
 
   @override
-  String get cfCostAll => 'Coste: todos';
+  String get cfCostAll => 'Kosten: alle';
 
   @override
   String cfCostN(String n) {
-    return 'Coste $n';
+    return 'Kosten $n';
   }
 
   @override
-  String get cfType => 'Tipo';
+  String get cfType => 'Typ';
 
   @override
-  String get cfTypeAll => 'Tipo: todos';
+  String get cfTypeAll => 'Typ: alle';
 
   @override
-  String get cfTypeCreature => 'Criaturas';
+  String get cfTypeCreature => 'Kreaturen';
 
   @override
-  String get cfTypeInstant => 'Instantáneos';
+  String get cfTypeInstant => 'Spontanzauber';
 
   @override
-  String get cfTypeSorcery => 'Conjuros';
+  String get cfTypeSorcery => 'Hexereien';
 
   @override
-  String get cfTypeArtifact => 'Artefactos';
+  String get cfTypeArtifact => 'Artefakte';
 
   @override
-  String get cfTypeEnchantment => 'Encantamientos';
+  String get cfTypeEnchantment => 'Verzauberungen';
 
   @override
-  String get cfTypeLand => 'Tierras';
+  String get cfTypeLand => 'Länder';
 
   @override
-  String get cfPower => 'Ataque';
+  String get cfPower => 'Stärke';
 
   @override
-  String get cfPowerAll => 'Ataque: todos';
+  String get cfPowerAll => 'Stärke: alle';
 
   @override
   String cfPowerMin(int n) {
-    return 'Ataque ≥ $n';
+    return 'Stärke ≥ $n';
   }
 
   @override
-  String get cfToughness => 'Defensa';
+  String get cfToughness => 'Widerstandskraft';
 
   @override
-  String get cfToughnessAll => 'Defensa: todos';
+  String get cfToughnessAll => 'Widerstandskraft: alle';
 
   @override
   String cfToughnessMin(int n) {
-    return 'Defensa ≥ $n';
+    return 'Widerstandskraft ≥ $n';
   }
 
   @override
-  String get cfNoDate => 'sin fecha';
+  String get cfNoDate => 'ohne Datum';
 
   @override
-  String get cfToday => 'hoy';
+  String get cfToday => 'heute';
 
   @override
-  String get cfYesterday => 'ayer';
+  String get cfYesterday => 'gestern';
 
   @override
   String cfDaysAgo(int n) {
-    return 'hace $n días';
+    return 'vor $n Tagen';
   }
 
   @override
-  String get pcWeek => 'Semana';
+  String get pcWeek => 'Woche';
 
   @override
-  String get pcMonth => 'Mes';
+  String get pcMonth => 'Monat';
 
   @override
-  String get pcAll => 'Todo';
+  String get pcAll => 'Alles';
 
   @override
-  String get vpTapCorrect => 'Toca la carta correcta';
+  String get vpTapCorrect => 'Tipp die richtige Karte an';
 
   @override
-  String get achCopias1 => 'La primera de muchas';
+  String get achCopias1 => 'Die erste von vielen';
 
   @override
-  String get achCopias10 => 'Solo iba a comprar una';
+  String get achCopias10 => 'Ich wollte nur eine kaufen';
 
   @override
-  String get achCopias50 => 'Ya no caben en la mano';
+  String get achCopias50 => 'Passt nicht mehr in eine Hand';
 
   @override
-  String get achCopias100 => 'Cien y subiendo';
+  String get achCopias100 => 'Hundert, Tendenz steigend';
 
   @override
-  String get achCopias500 => 'La caja se queda pequeña';
+  String get achCopias500 => 'Die Kiste wird langsam eng';
 
   @override
-  String get achCopias1000 => 'Mil. Y las quiero todas';
+  String get achCopias1000 => 'Tausend. Und ich will sie alle';
 
   @override
-  String get achCopias5000 => 'Esto ya es un almacén';
+  String get achCopias5000 => 'Das ist jetzt ein Lagerhaus';
 
   @override
-  String get achCopias10000 => 'Diez mil, pero yo controlo';
+  String get achCopias10000 => 'Zehntausend, aber ich hab\'s im Griff';
 
   @override
   String achCopiasDesc(String n) {
-    return 'Ten $n cartas en tu colección.';
+    return 'Hab $n Karten in deiner Sammlung.';
   }
 
   @override
-  String get achDistintas25 => 'Aquí hay variedad';
+  String get achDistintas25 => 'Da kommt Abwechslung rein';
 
   @override
-  String get achDistintas100 => 'Cien caras distintas';
+  String get achDistintas100 => 'Hundert verschiedene Gesichter';
 
   @override
-  String get achDistintas500 => 'Media biblioteca';
+  String get achDistintas500 => 'Eine halbe Bibliothek';
 
   @override
-  String get achDistintas1000 => 'Enciclopedia andante';
+  String get achDistintas1000 => 'Wandelnde Enzyklopädie';
 
   @override
-  String get achDistintas2500 => 'Ya no me las sé todas';
+  String get achDistintas2500 => 'Ich kenne sie nicht mehr alle';
 
   @override
-  String get achDistintas5000 => 'El archivo';
+  String get achDistintas5000 => 'Das Archiv';
 
   @override
   String achDistintasDesc(String n) {
-    return 'Ten $n cartas DISTINTAS (sin contar repetidas).';
+    return 'Hab $n VERSCHIEDENE Karten (Doppelte zählen nicht).';
   }
 
   @override
-  String get achPlaysets1 => 'Cuatro iguales';
+  String get achPlaysets1 => 'Vier Gleiche';
 
   @override
-  String get achPlaysets20 => 'Veinte playsets, cero mazos';
+  String get achPlaysets20 => 'Zwanzig Playsets, null Decks';
 
   @override
-  String get achPlaysets1Desc => 'Ten 4 copias de una misma carta.';
+  String get achPlaysets1Desc => 'Hab 4 Exemplare derselben Karte.';
 
   @override
   String get achPlaysets20Desc =>
-      'Ten 20 playsets distintos (4 copias de cada uno).';
+      'Hab 20 verschiedene Playsets (je 4 Exemplare).';
 
   @override
-  String get achComunes10 => 'Las que nadie quiere';
+  String get achComunes10 => 'Die, die keiner haben will';
 
   @override
-  String get achComunes50 => 'El montón de siempre';
+  String get achComunes50 => 'Der übliche Stapel';
 
   @override
-  String get achComunes200 => 'Rey del montón';
+  String get achComunes200 => 'König des Stapels';
 
   @override
-  String get achComunes500 => 'Marea de comunes';
+  String get achComunes500 => 'Eine Flut von Gewöhnlichen';
 
   @override
   String achComunesDesc(String n) {
-    return 'Ten $n cartas comunes distintas.';
+    return 'Hab $n verschiedene gewöhnliche Karten.';
   }
 
   @override
-  String get achInfrecuentes10 => 'Algo mejor que común';
+  String get achInfrecuentes10 => 'Eine Stufe über gewöhnlich';
 
   @override
-  String get achInfrecuentes50 => 'Plata fina';
+  String get achInfrecuentes50 => 'Feines Silber';
 
   @override
-  String get achInfrecuentes200 => 'Cazador de infrecuentes';
+  String get achInfrecuentes200 => 'Jäger der Ungewöhnlichen';
 
   @override
-  String get achInfrecuentes500 => 'Plata a espuertas';
+  String get achInfrecuentes500 => 'Silber eimerweise';
 
   @override
   String achInfrecuentesDesc(String n) {
-    return 'Ten $n cartas infrecuentes distintas.';
+    return 'Hab $n verschiedene ungewöhnliche Karten.';
   }
 
   @override
-  String get achRaras5 => 'Suena bien al abrir el sobre';
+  String get achRaras5 => 'Klingt gut beim Boosteröffnen';
 
   @override
-  String get achRaras25 => 'Cofre de raras';
+  String get achRaras25 => 'Eine Truhe voller Seltener';
 
   @override
-  String get achRaras100 => 'Cien raras y ninguna jugable';
+  String get achRaras100 => 'Hundert Seltene und keine spielbar';
 
   @override
-  String get achRaras300 => 'Cámara acorazada';
+  String get achRaras300 => 'Der Tresorraum';
 
   @override
   String achRarasDesc(String n) {
-    return 'Ten $n cartas raras distintas.';
+    return 'Hab $n verschiedene seltene Karten.';
   }
 
   @override
-  String get achMiticas1 => 'Mi primera mítica';
+  String get achMiticas1 => 'Meine erste Mythische';
 
   @override
-  String get achMiticas10 => 'Diez míticas';
+  String get achMiticas10 => 'Zehn Mythische';
 
   @override
-  String get achMiticas50 => 'Coleccionista mítico';
+  String get achMiticas50 => 'Mythischer Sammler';
 
   @override
-  String get achMiticas150 => 'Panteón mítico';
+  String get achMiticas150 => 'Mythisches Pantheon';
 
   @override
   String achMiticasDesc(String n) {
-    return 'Ten $n cartas míticas distintas.';
+    return 'Hab $n verschiedene mythisch seltene Karten.';
   }
 
   @override
-  String get achBlancas25 => 'Orden y concierto';
+  String get achBlancas25 => 'Ordnung muss sein';
 
   @override
-  String get achBlancas100 => 'Ejército de plata';
+  String get achBlancas100 => 'Silbernes Heer';
 
   @override
   String achBlancasDesc(String n) {
-    return 'Ten $n cartas blancas distintas.';
+    return 'Hab $n verschiedene weiße Karten.';
   }
 
   @override
-  String get achAzules25 => 'Eso no te lo permito';
+  String get achAzules25 => 'Das lasse ich nicht zu';
 
   @override
-  String get achAzules100 => 'Torre de marfil';
+  String get achAzules100 => 'Elfenbeinturm';
 
   @override
   String achAzulesDesc(String n) {
-    return 'Ten $n cartas azules distintas.';
+    return 'Hab $n verschiedene blaue Karten.';
   }
 
   @override
-  String get achNegras25 => 'Pacto oscuro';
+  String get achNegras25 => 'Dunkler Pakt';
 
   @override
-  String get achNegras100 => 'Señor de la cripta';
+  String get achNegras100 => 'Herr der Gruft';
 
   @override
   String achNegrasDesc(String n) {
-    return 'Ten $n cartas negras distintas.';
+    return 'Hab $n verschiedene schwarze Karten.';
   }
 
   @override
-  String get achRojas25 => 'A quemarlo todo';
+  String get achRojas25 => 'Alles abfackeln';
 
   @override
-  String get achRojas100 => 'Incendio general';
+  String get achRojas100 => 'Großbrand';
 
   @override
   String achRojasDesc(String n) {
-    return 'Ten $n cartas rojas distintas.';
+    return 'Hab $n verschiedene rote Karten.';
   }
 
   @override
-  String get achVerdes25 => 'Un brote';
+  String get achVerdes25 => 'Ein Trieb';
 
   @override
-  String get achVerdes100 => 'El bosque entero';
+  String get achVerdes100 => 'Der ganze Wald';
 
   @override
   String achVerdesDesc(String n) {
-    return 'Ten $n cartas verdes distintas.';
+    return 'Hab $n verschiedene grüne Karten.';
   }
 
   @override
-  String get achIncoloras25 => 'Metal frío';
+  String get achIncoloras25 => 'Kaltes Metall';
 
   @override
-  String get achIncoloras100 => 'Forja eterna';
+  String get achIncoloras100 => 'Ewige Schmiede';
 
   @override
   String achIncolorasDesc(String n) {
-    return 'Ten $n cartas incoloras distintas.';
+    return 'Hab $n verschiedene farblose Karten.';
   }
 
   @override
-  String get achArcoiris => 'Los cinco colores';
+  String get achArcoiris => 'Alle fünf Farben';
 
   @override
   String get achArcoirisDesc =>
-      'Ten al menos una carta de cada uno de los 5 colores.';
+      'Hab mindestens eine Karte von jeder der 5 Farben.';
 
   @override
-  String get achMulticolor10 => 'Mezclando colores';
+  String get achMulticolor10 => 'Farben mischen';
 
   @override
-  String get achMulticolor50 => 'Alianza dorada';
+  String get achMulticolor50 => 'Goldenes Bündnis';
 
   @override
   String achMulticolorDesc(String n) {
-    return 'Ten $n cartas multicolor distintas.';
+    return 'Hab $n verschiedene mehrfarbige Karten.';
   }
 
   @override
-  String get achCincocolores => 'Los cinco de golpe';
+  String get achCincocolores => 'Alle fünf auf einen Schlag';
 
   @override
-  String get achCincocoloresDesc => 'Ten una carta con los cinco colores.';
+  String get achCincocoloresDesc => 'Hab eine Karte mit allen fünf Farben.';
 
   @override
-  String get achSets1 => 'Primera expansión';
+  String get achSets1 => 'Erstes Set';
 
   @override
-  String get achSets5 => 'Cinco mundos';
+  String get achSets5 => 'Fünf Welten';
 
   @override
-  String get achSets10 => 'Viajero de planos';
+  String get achSets10 => 'Planeswalker in Ausbildung';
 
   @override
-  String get achSets25 => 'Trotamundos';
+  String get achSets25 => 'Weltenbummler';
 
   @override
-  String get achSets50 => 'Medio multiverso';
+  String get achSets50 => 'Das halbe Multiversum';
 
   @override
   String achSetsDesc(String n) {
-    return 'Ten cartas de $n expansiones distintas.';
+    return 'Hab Karten aus $n verschiedenen Sets.';
   }
 
   @override
-  String get achSetscompletos1 => 'No falta ni una';
+  String get achSetscompletos1 => 'Keine einzige fehlt';
 
   @override
-  String get achSetscompletos3 => 'Tres álbumes enteros';
+  String get achSetscompletos3 => 'Drei volle Alben';
 
   @override
-  String get achSetscompletos10 => 'Maestro del álbum';
+  String get achSetscompletos10 => 'Meister des Albums';
 
   @override
-  String get achSetscompletos1Desc =>
-      'Completa una expansión entera en el Álbum.';
+  String get achSetscompletos1Desc => 'Mach ein ganzes Set im Album voll.';
 
   @override
   String achSetscompletos3Desc(String n) {
-    return 'Completa $n expansiones enteras.';
+    return 'Mach $n ganze Sets voll.';
   }
 
   @override
-  String get achAnyos5 => 'Cinco años de cartón';
+  String get achAnyos5 => 'Fünf Jahrgänge Pappe';
 
   @override
-  String get achAnyos15 => 'Máquina del tiempo';
+  String get achAnyos15 => 'Zeitmaschine';
 
   @override
   String achAnyosDesc(String n) {
-    return 'Ten cartas de $n años de salida distintos.';
+    return 'Hab Karten aus $n verschiedenen Erscheinungsjahren.';
   }
 
   @override
-  String get achValor10 => 'Primeros euros';
+  String get achValor10 => 'Die ersten Euros';
 
   @override
-  String get achValor50 => 'La hucha';
+  String get achValor50 => 'Das Sparschwein';
 
   @override
-  String get achValor250 => 'Ahí va la paga';
+  String get achValor250 => 'Da geht das Taschengeld hin';
 
   @override
-  String get achValor1000 => 'Ahí va todo mi dinero';
+  String get achValor1000 => 'Da geht mein ganzes Geld hin';
 
   @override
-  String get achValor5000 => 'No se lo digas a nadie';
+  String get achValor5000 => 'Sag es bloß keinem';
 
   @override
-  String get achValor10000 => 'Vale más que mi coche';
+  String get achValor10000 => 'Mehr wert als mein Auto';
 
   @override
-  String get achValor25000 => 'Colección de museo';
+  String get achValor25000 => 'Eine Sammlung fürs Museum';
 
   @override
   String achValorDesc(String n) {
-    return 'Que tu colección valga $n € o más.';
+    return 'Bring deine Sammlung auf einen Wert von $n € oder mehr.';
   }
 
   @override
-  String get achJoya20 => 'Una carta de las buenas';
+  String get achJoya20 => 'Eine von den guten Karten';
 
   @override
-  String get achJoya100 => 'La joya de la colección';
+  String get achJoya100 => 'Das Schmuckstück der Sammlung';
 
   @override
-  String get achJoya500 => 'Esta no sale de la funda';
+  String get achJoya500 => 'Die kommt nie aus der Hülle';
 
   @override
-  String get achJoya1000 => 'Mil euros en una sola funda';
+  String get achJoya1000 => 'Tausend Euro in einer einzigen Hülle';
 
   @override
-  String get achJoya2500 => 'El santo grial';
+  String get achJoya2500 => 'Der heilige Gral';
 
   @override
   String achJoyaDesc(String n) {
-    return 'Ten una sola carta que valga $n € o más.';
+    return 'Hab eine einzelne Karte, die $n € oder mehr wert ist.';
   }
 
   @override
-  String get achFoils1 => 'Primer brillo';
+  String get achFoils1 => 'Der erste Glanz';
 
   @override
-  String get achFoils10 => 'Destellos';
+  String get achFoils10 => 'Es funkelt';
 
   @override
-  String get achFoils50 => 'Brilla la caja';
+  String get achFoils50 => 'Die Kiste glänzt';
 
   @override
-  String get achFoils200 => 'Aquí ya no hay nada mate';
+  String get achFoils200 => 'Hier ist nichts mehr matt';
 
   @override
-  String get achFoils500 => 'Todo brilla';
+  String get achFoils500 => 'Alles glänzt';
 
   @override
-  String get achFoils1000 => 'Fábrica de brillos';
+  String get achFoils1000 => 'Glanzfabrik';
 
   @override
   String achFoilsDesc(String n) {
-    return 'Ten $n cartas foil.';
+    return 'Hab $n foil-Karten.';
   }
 
   @override
-  String get achFoiljoya10 => 'Foil de las buenas';
+  String get achFoiljoya10 => 'Eine gute foil';
 
   @override
-  String get achFoiljoya50 => 'Foil de las caras';
+  String get achFoiljoya50 => 'Eine teure foil';
 
   @override
-  String get achFoiljoya200 => 'Foil de museo';
+  String get achFoiljoya200 => 'Eine foil fürs Museum';
 
   @override
   String achFoiljoyaDesc(String n) {
-    return 'Ten una foil que valga $n € o más.';
+    return 'Hab eine foil, die $n € oder mehr wert ist.';
   }
 
   @override
-  String get achFoilvalor50 => 'Vitrina que brilla';
+  String get achFoilvalor50 => 'Eine Vitrine, die glitzert';
 
   @override
-  String get achFoilvalor250 => 'Vitrina cara';
+  String get achFoilvalor250 => 'Teure Vitrine';
 
   @override
-  String get achFoilvalor1000 => 'Mil euros de brillo';
+  String get achFoilvalor1000 => 'Tausend Euro Glanz';
 
   @override
-  String get achFoilvalor5000 => 'Vitrina de museo';
+  String get achFoilvalor5000 => 'Vitrine fürs Museum';
 
   @override
   String achFoilvalorDesc(String n) {
-    return 'Que todas tus foils juntas valgan $n € o más.';
+    return 'Bring alle deine foils zusammen auf $n € oder mehr.';
   }
 
   @override
-  String get achMazos1 => 'Primer mazo';
+  String get achMazos1 => 'Erstes Deck';
 
   @override
-  String get achMazos5 => 'Cinco mazos guardados';
+  String get achMazos5 => 'Fünf Decks gespeichert';
 
   @override
-  String get achMazos25 => 'El taller no para';
+  String get achMazos25 => 'Die Werkstatt steht nie still';
 
   @override
   String achMazosDesc(String n) {
-    return 'Guarda $n mazos hechos con Forge.';
+    return 'Speichere $n mit Forge gebaute Decks.';
   }
 
   @override
-  String get achMazoscore => 'Mazo redondo';
+  String get achMazoscore => 'Ein rundes Deck';
 
   @override
-  String get achMazoscoreDesc => 'Genera un mazo con puntuación 90 o más.';
+  String get achMazoscoreDesc => 'Bau ein Deck mit 90 Punkten oder mehr.';
 
   @override
-  String get achMazocolores3 => 'Tricolor';
+  String get achMazocolores3 => 'Dreifarbig';
 
   @override
-  String get achMazocolores5 => 'Arcoíris jugable';
+  String get achMazocolores5 => 'Spielbarer Regenbogen';
 
   @override
   String achMazocoloresDesc(String n) {
-    return 'Guarda un mazo de $n colores.';
+    return 'Speichere ein Deck mit $n Farben.';
   }
 
   @override
-  String get achMazomono => 'Sin mezclar nada';
+  String get achMazomono => 'Nichts dazugemischt';
 
   @override
-  String get achMazomonoDesc => 'Guarda un mazo de un solo color.';
+  String get achMazomonoDesc => 'Speichere ein einfarbiges Deck.';
 
   @override
-  String get achMazocommander => 'Al mando';
+  String get achMazocommander => 'Das Kommando übernommen';
 
   @override
-  String get achMazocommanderDesc => 'Guarda un mazo de Commander.';
+  String get achMazocommanderDesc => 'Speichere ein Commander-Deck.';
 
   @override
-  String get achEscaneadas1 => 'Primer escaneo';
+  String get achEscaneadas1 => 'Erster Scan';
 
   @override
-  String get achEscaneadas50 => 'Mano rápida';
+  String get achEscaneadas50 => 'Schnelle Hände';
 
   @override
-  String get achEscaneadas500 => 'Escáner en serie';
+  String get achEscaneadas500 => 'Scannen am Fließband';
 
   @override
-  String get achEscaneadas2000 => 'Escaneo hasta dormido';
+  String get achEscaneadas2000 => 'Ich scanne im Schlaf';
 
   @override
   String achEscaneadasDesc(String n) {
-    return 'Escanea $n cartas con la cámara o por foto.';
+    return 'Scanne $n Karten mit der Kamera oder per Foto.';
   }
 
   @override
-  String get achFoto9 => 'Página entera de una foto';
+  String get achFoto9 => 'Eine ganze Seite aus einem Foto';
 
   @override
-  String get achFoto20 => 'Veinte de una tacada';
+  String get achFoto20 => 'Zwanzig auf einen Streich';
 
   @override
   String achFotoDesc(String n) {
-    return 'Reconoce $n cartas en una sola foto.';
+    return 'Erkenne $n Karten auf einem einzigen Foto.';
   }
 
   @override
-  String get achEscaneoperfecto => 'Ni una para revisar';
+  String get achEscaneoperfecto => 'Keine einzige zum Prüfen';
 
   @override
   String get achEscaneoperfectoDesc =>
-      'Escanea una página entera sin que ninguna carta quede para revisar.';
+      'Scanne eine ganze Seite, ohne dass eine Karte zum Prüfen übrig bleibt.';
 
   @override
-  String get achDias2 => 'Has vuelto';
+  String get achDias2 => 'Du bist wieder da';
 
   @override
-  String get achDias7 => 'Una semana aquí';
+  String get achDias7 => 'Eine Woche hier';
 
   @override
-  String get achDias30 => 'Un mes aquí';
+  String get achDias30 => 'Ein Monat hier';
 
   @override
-  String get achDias100 => 'Cien días aquí';
+  String get achDias100 => 'Hundert Tage hier';
 
   @override
   String achDiasDesc(String n) {
-    return 'Usa ManaForge $n días distintos.';
+    return 'Nutze ManaForge an $n verschiedenen Tagen.';
   }
 
   @override
-  String get achRacha3 => 'Tres seguidos';
+  String get achRacha3 => 'Drei am Stück';
 
   @override
-  String get achRacha7 => 'Semana perfecta';
+  String get achRacha7 => 'Perfekte Woche';
 
   @override
-  String get achRacha30 => 'Mes sin fallar';
+  String get achRacha30 => 'Ein Monat ohne Aussetzer';
 
   @override
   String achRachaDesc(String n) {
-    return 'Entra $n días seguidos.';
+    return 'Komm $n Tage hintereinander vorbei.';
   }
 
   @override
-  String get achSemanas => 'Cuatro semanas sin faltar';
+  String get achSemanas => 'Vier Wochen ohne zu fehlen';
 
   @override
-  String get achSemanasDesc => 'Usa ManaForge 4 semanas seguidas.';
+  String get achSemanasDesc => 'Nutze ManaForge 4 Wochen hintereinander.';
 
   @override
-  String get achCarpetas1 => 'Empieza el orden';
+  String get achCarpetas1 => 'Die Ordnung beginnt';
 
   @override
-  String get achCarpetas5 => 'Todo clasificado';
+  String get achCarpetas5 => 'Alles einsortiert';
 
   @override
   String achCarpetasDesc(String n) {
-    return 'Crea $n carpetas.';
+    return 'Leg $n Ordner an.';
   }
 
   @override
-  String get achCarpetagrande => 'Carpetón';
+  String get achCarpetagrande => 'Ein Riesenordner';
 
   @override
-  String get achCarpetagrandeDesc => 'Ten una carpeta con 100 cartas o más.';
+  String get achCarpetagrandeDesc =>
+      'Hab einen Ordner mit 100 Karten oder mehr.';
 
   @override
-  String get achCarpetavalor => 'Esta carpeta no la presto';
+  String get achCarpetavalor => 'Diesen Ordner verleihe ich nicht';
 
   @override
-  String get achCarpetavalorDesc => 'Ten una carpeta que valga 100 € o más.';
+  String get achCarpetavalorDesc =>
+      'Hab einen Ordner, der 100 € oder mehr wert ist.';
 
   @override
-  String get achTierrasbasicas => 'Las cinco básicas';
+  String get achTierrasbasicas => 'Die fünf Standardländer';
 
   @override
   String get achTierrasbasicasDesc =>
-      'Ten los cinco tipos de tierra básica (llanura, isla, pantano, montaña y bosque).';
+      'Hab alle fünf Standardland-Typen (Ebene, Insel, Sumpf, Gebirge und Wald).';
 
   @override
-  String get achFuerza => 'Menudo bicho';
+  String get achFuerza => 'Was für ein Vieh';
 
   @override
-  String get achFuerzaDesc => 'Ten una criatura de fuerza 10 o más.';
+  String get achFuerzaDesc => 'Hab eine Kreatur mit Stärke 10 oder mehr.';
 
   @override
-  String get achCoste => 'Esta no la lanzo en la vida';
+  String get achCoste => 'Die wirke ich nie im Leben';
 
   @override
-  String get achCosteDesc => 'Ten una carta de coste convertido 10 o más.';
+  String get achCosteDesc =>
+      'Hab eine Karte mit umgewandelten Manakosten von 10 oder mehr.';
 
   @override
-  String get achCostecero => 'Gratis';
+  String get achCostecero => 'Umsonst';
 
   @override
-  String get achCosteceroDesc => 'Ten una carta de coste 0.';
+  String get achCosteceroDesc => 'Hab eine Karte mit Kosten 0.';
 
   @override
-  String get achTipos => 'De todo un poco';
+  String get achTipos => 'Von allem etwas';
 
   @override
   String get achTiposDesc =>
-      'Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, un encantamiento, una tierra y un planeswalker.';
+      'Hab mindestens eine Kreatur, einen Spontanzauber, eine Hexerei, ein Artefakt, eine Verzauberung, ein Land und einen Planeswalker.';
 
   @override
-  String get achPlaneswalkers => 'Compañía de planeswalkers';
+  String get achPlaneswalkers => 'Eine Runde Planeswalker';
 
   @override
-  String get achPlaneswalkersDesc => 'Ten 5 planeswalkers distintos.';
+  String get achPlaneswalkersDesc => 'Hab 5 verschiedene Planeswalker.';
 
   @override
-  String get achNoventas => 'Reliquia de los 90';
+  String get achNoventas => 'Ein Relikt aus den 90ern';
 
   @override
-  String get achNoventasDesc => 'Ten una carta de los años 90.';
+  String get achNoventasDesc => 'Hab eine Karte aus den 1990ern.';
 
   @override
-  String get achIdiomas1 => 'Esta no la sé leer';
+  String get achIdiomas1 => 'Die kann ich nicht lesen';
 
   @override
-  String get achIdiomas25 => 'Colección políglota';
+  String get achIdiomas25 => 'Vielsprachige Sammlung';
 
   @override
-  String get achIdiomas1Desc => 'Ten una carta en un idioma que no sea inglés.';
+  String get achIdiomas1Desc =>
+      'Hab eine Karte in einer anderen Sprache als Englisch.';
 
   @override
-  String get achIdiomas25Desc => 'Ten 25 cartas en otros idiomas.';
+  String get achIdiomas25Desc => 'Hab 25 Karten in anderen Sprachen.';
 
   @override
-  String get achWishlist => 'La lista de los caprichos';
+  String get achWishlist => 'Die Liste der Gelüste';
 
   @override
-  String get achWishlistDesc => 'Apunta 20 cartas en la wishlist.';
+  String get achWishlistDesc => 'Setz 20 Karten auf deine Wunschliste.';
 
   @override
-  String get achTierBronze => 'Bronce';
+  String get achTierBronze => 'Bronze';
 
   @override
-  String get achTierSilver => 'Plata';
+  String get achTierSilver => 'Silber';
 
   @override
-  String get achTierGold => 'Oro';
+  String get achTierGold => 'Gold';
 
   @override
-  String get achTierMythic => 'Mítico';
+  String get achTierMythic => 'Mythisch';
 
   @override
-  String get achCatCollection => 'Colección';
+  String get achCatCollection => 'Sammlung';
 
   @override
-  String get achCatRarity => 'Rarezas';
+  String get achCatRarity => 'Seltenheiten';
 
   @override
-  String get achCatColor => 'Colores';
+  String get achCatColor => 'Farben';
 
   @override
-  String get achCatSets => 'Expansiones';
+  String get achCatSets => 'Sets';
 
   @override
-  String get achCatValue => 'Valor';
+  String get achCatValue => 'Wert';
 
   @override
   String get achCatFoils => 'Foils';
@@ -3462,37 +3479,37 @@ class AppLocalizationsDe extends AppLocalizations {
   String get achCatForge => 'Forge';
 
   @override
-  String get achCatScanner => 'Escáner';
+  String get achCatScanner => 'Scanner';
 
   @override
-  String get achCatDedication => 'Dedicación';
+  String get achCatDedication => 'Hingabe';
 
   @override
-  String get achCatFolders => 'Carpetas';
+  String get achCatFolders => 'Ordner';
 
   @override
-  String get achCatCuriosities => 'Curiosidades';
+  String get achCatCuriosities => 'Kuriositäten';
 
   @override
-  String get achRankApprentice => 'Aprendiz';
+  String get achRankApprentice => 'Lehrling';
 
   @override
-  String get achRankSummoner => 'Invocador';
+  String get achRankSummoner => 'Beschwörer';
 
   @override
-  String get achRankMage => 'Mago';
+  String get achRankMage => 'Magier';
 
   @override
-  String get achRankArchmage => 'Archimago';
+  String get achRankArchmage => 'Erzmagier';
 
   @override
-  String get achRankMaster => 'Maestro';
+  String get achRankMaster => 'Meister';
 
   @override
   String get achRankPlaneswalker => 'Planeswalker';
 
   @override
-  String get bkConfirmWord => 'CONFIRMAR';
+  String get bkConfirmWord => 'ERSETZEN';
 
   @override
   String dbErrCards(String codigo) {
