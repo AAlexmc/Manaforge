@@ -335,12 +335,12 @@ class _MercadoScreenState extends State<MercadoScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
+            child: Text(tr(context).acCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context)
                 .pop(double.tryParse(ctrl.text.replaceAll(',', '.'))),
-            child: const Text('Guardar'),
+            child: Text(tr(context).fdSave),
           ),
         ],
       ),
@@ -502,7 +502,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
               ),
             ),
             icon: const Icon(Icons.bookmark, size: 18),
-            label: const Text('Wishlist'),
+            label: Text(tr(context).onbWishlistTitle),
           ),
         );
       },
@@ -544,7 +544,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
               children: [
                 const Icon(Icons.storefront, color: MFColors.warning),
                 const SizedBox(width: 8),
-                Text('Mercado',
+                Text(tr(context).tabMarket,
                     style: Theme.of(context).textTheme.headlineMedium),
                 const Spacer(),
                 KeyedSubtree(

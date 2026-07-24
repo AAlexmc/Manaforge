@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../scanner/scan_tray.dart';
 import '../services/card_database.dart';
 import '../theme/mf_theme.dart';
@@ -59,9 +60,10 @@ class _VersionPickerBody extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('¿Cuál es?', style: Theme.of(context).textTheme.titleLarge),
+          Text(tr(context).scWhichIsIt,
+              style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 4),
-          Text('Toca la carta correcta',
+          Text(tr(context).vpTapCorrect,
               style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 14),
           Flexible(
@@ -91,7 +93,7 @@ class _VersionPickerBody extends StatelessWidget {
           const SizedBox(height: 6),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
+            child: Text(tr(context).acCancel),
           ),
         ],
       ),

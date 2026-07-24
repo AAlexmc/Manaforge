@@ -2568,4 +2568,284 @@ class AppLocalizationsEn extends AppLocalizations {
   String camNoneWorked(String detalle) {
     return 'No camera produced an image:\n$detalle';
   }
+
+  @override
+  String get bkRestoreAction => 'Restore';
+
+  @override
+  String get fpUnselect => 'Unselect';
+
+  @override
+  String get stClear => 'Clear';
+
+  @override
+  String get tlRemove => 'Remove';
+
+  @override
+  String get tlUnrecognized => 'Not recognised';
+
+  @override
+  String get tlNothingAlike =>
+      'nothing like it in the database — retake the photo or remove it';
+
+  @override
+  String get tlTapToPick => 'tap to pick by hand from the look-alikes';
+
+  @override
+  String get lsQuantity => 'Quantity';
+
+  @override
+  String get scPhotos => 'Photos';
+
+  @override
+  String get ftWhichFolder => 'Which folder do you want them in?';
+
+  @override
+  String get ftWhichFolderSub =>
+      'They go into your collection either way; the folder is just a label to find them again.';
+
+  @override
+  String get ftNone => 'None';
+
+  @override
+  String ftCards(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n cards',
+      one: '1 card',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ftNewFolderEllipsis => 'New folder…';
+
+  @override
+  String get ftNewFolder => 'New folder';
+
+  @override
+  String get ftNewFolderHint => 'Shop box, To sell…';
+
+  @override
+  String get sgTitle => 'The scanner\'s eye';
+
+  @override
+  String get sgWhy =>
+      'To recognise cards without internet I need the visual fingerprint database (~12 MB): the signature of every Magic illustration. It downloads once.';
+
+  @override
+  String get sgDownload => 'Download fingerprint database';
+
+  @override
+  String get cmFullCard => 'See the full card (prices and legality)';
+
+  @override
+  String get cmSwipeHint =>
+      'drag or use ← → to flip through · tap outside to close';
+
+  @override
+  String get cmTapOutHint => 'tap outside to close';
+
+  @override
+  String get fcTitle => 'Which card did you start with?';
+
+  @override
+  String get fcRemove => 'Remove';
+
+  @override
+  String get fcSearchHint => 'Search your collection';
+
+  @override
+  String get fcNoMatch => 'I can\'t find any card with that.';
+
+  @override
+  String get acNoneWithFilters => 'Nothing here with these filters.';
+
+  @override
+  String get acAll => 'All';
+
+  @override
+  String get tsTitle => 'Test Mode — beat the meta';
+
+  @override
+  String get tsIntro =>
+      'Choose which meta deck you want to play against. ManaForge builds decks from YOUR cards, simulates hundreds of games against it and keeps the one that wins most — trying card swaps one by one to sharpen it.';
+
+  @override
+  String get tsLoadingMeta => 'Loading the meta…';
+
+  @override
+  String get tsLocalPresets => 'Local presets (offline)';
+
+  @override
+  String get tsNoDeckToFace =>
+      'With your current cards I can\'t build a complete deck to face it. Add more cards and try again.';
+
+  @override
+  String tsSimFailed(String error) {
+    return 'I couldn\'t simulate: $error';
+  }
+
+  @override
+  String tsFormatShare(String formato, String cuota) {
+    return '$formato · $cuota of the meta';
+  }
+
+  @override
+  String get tsSimulating =>
+      'Simulating games… (a few seconds; all on your machine)';
+
+  @override
+  String tsFindBest(String meta) {
+    return 'Find my best deck against $meta';
+  }
+
+  @override
+  String get tsHonesty =>
+      'Being honest: the simulation understands mana colours, mulligans, evasion (flying, trample, deathtouch…), instant-speed removal and counterspells — but not the full text of every card. The percentage is for COMPARING your decks with each other, not an exact prediction.';
+
+  @override
+  String tsChampion(String meta) {
+    return 'Your champion against $meta';
+  }
+
+  @override
+  String tsWinRateLine(int mazos, int partidas) {
+    return 'estimated win rate · $mazos decks tried · $partidas games per deck';
+  }
+
+  @override
+  String get tsNoDominant =>
+      'No deck in your collection dominates this matchup — this is the one that fights best. Look at its weak spots in the detail.';
+
+  @override
+  String get tsSeeDeck => 'See the full deck (and save it)';
+
+  @override
+  String hsLevelLine(int hechos, int total, int xp, int nivel) {
+    return '$hechos/$total achievements · $xp XP to level $nivel';
+  }
+
+  @override
+  String get hsForgeDecks => 'Forge decks';
+
+  @override
+  String get hsTestYourself => '⚔ put yourself to the test';
+
+  @override
+  String get bgCustom => 'Custom';
+
+  @override
+  String get bgPickCustom => 'Pick a custom colour';
+
+  @override
+  String get bgCustomColor => 'Custom colour';
+
+  @override
+  String get bgSampleTab => 'Red';
+
+  @override
+  String get cfSortRecent => 'Just added';
+
+  @override
+  String get cfSortAlpha => 'Name A-Z';
+
+  @override
+  String get cfSortCmc => 'Cost';
+
+  @override
+  String get cfSortQty => 'Quantity';
+
+  @override
+  String get cfSortBy => 'Sort by';
+
+  @override
+  String get cfSort => 'Sort';
+
+  @override
+  String get cfClear => 'Clear';
+
+  @override
+  String get cfCost => 'Cost';
+
+  @override
+  String get cfCostAll => 'Cost: all';
+
+  @override
+  String cfCostN(String n) {
+    return 'Cost $n';
+  }
+
+  @override
+  String get cfType => 'Type';
+
+  @override
+  String get cfTypeAll => 'Type: all';
+
+  @override
+  String get cfTypeCreature => 'Creatures';
+
+  @override
+  String get cfTypeInstant => 'Instants';
+
+  @override
+  String get cfTypeSorcery => 'Sorceries';
+
+  @override
+  String get cfTypeArtifact => 'Artifacts';
+
+  @override
+  String get cfTypeEnchantment => 'Enchantments';
+
+  @override
+  String get cfTypeLand => 'Lands';
+
+  @override
+  String get cfPower => 'Power';
+
+  @override
+  String get cfPowerAll => 'Power: all';
+
+  @override
+  String cfPowerMin(int n) {
+    return 'Power ≥ $n';
+  }
+
+  @override
+  String get cfToughness => 'Toughness';
+
+  @override
+  String get cfToughnessAll => 'Toughness: all';
+
+  @override
+  String cfToughnessMin(int n) {
+    return 'Toughness ≥ $n';
+  }
+
+  @override
+  String get cfNoDate => 'no date';
+
+  @override
+  String get cfToday => 'today';
+
+  @override
+  String get cfYesterday => 'yesterday';
+
+  @override
+  String cfDaysAgo(int n) {
+    return '$n days ago';
+  }
+
+  @override
+  String get pcWeek => 'Week';
+
+  @override
+  String get pcMonth => 'Month';
+
+  @override
+  String get pcAll => 'All';
+
+  @override
+  String get vpTapCorrect => 'Tap the right card';
 }

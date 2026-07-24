@@ -401,31 +401,26 @@ class _ForgeScreenState extends State<ForgeScreen> {
           children: [
             _header(),
             const SizedBox(height: 8),
-            const Text(
-                'Mazos completos y jugables con las cartas que ya tienes. '
-                'Sin comprar nada.'),
+            Text(t.fgPitch),
             const SizedBox(height: 20),
             KeyedSubtree(
               key: widget.basicasKey,
               child: SwitchListTile(
                 value: _assumeBasics,
                 onChanged: (v) => setState(() => _assumeBasics = v),
-                title: const Text('Cuento con tierras básicas sueltas'),
-                subtitle: const Text(
-                    'Casi todo el mundo tiene básicas de mazos de inicio; '
-                    'desactívalo para usar SOLO las básicas de tu colección.'),
+                title: Text(t.fgBasics),
+                subtitle: Text(t.fgBasicsSub),
               ),
             ),
             const SizedBox(height: 12),
-            Text('Formato de juego',
-                style: Theme.of(context).textTheme.titleSmall),
+            Text(t.fgFormat, style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 8),
             Wrap(
               spacing: 6,
               runSpacing: 6,
               children: [
-                for (final f in const [
-                  ('casual', 'Casual 60'),
+                for (final f in [
+                  ('casual', t.fgCasual60),
                   ('standard', 'Standard'),
                   ('pioneer', 'Pioneer'),
                   ('modern', 'Modern'),
@@ -445,17 +440,16 @@ class _ForgeScreenState extends State<ForgeScreen> {
               padding: const EdgeInsets.only(top: 4),
               child: Text(
                 _format == 'commander'
-                    ? '100 cartas · singleton · comandante legendario de tu '
-                        'colección · identidad de color respetada.'
+                    ? t.fgCommanderNote
                     : _format == 'casual'
-                        ? '60 cartas, sin restricción de legalidad: todo vale.'
-                        : '60 cartas usando SOLO tus cartas legales en '
-                            '${_format[0].toUpperCase()}${_format.substring(1)}.',
+                        ? t.fgCasualNote
+                        : t.fgFormatNote(
+                            '${_format[0].toUpperCase()}${_format.substring(1)}'),
                 style: const TextStyle(fontSize: 11.5),
               ),
             ),
             const SizedBox(height: 14),
-            Text('¿De dónde salen las cartas?',
+            Text(t.fgWhereFrom,
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 6),
             Wrap(
@@ -469,9 +463,8 @@ class _ForgeScreenState extends State<ForgeScreen> {
                     visualDensity: VisualDensity.compact,
                     avatar: const Icon(Icons.collections_bookmark_outlined,
                         size: 18),
-                    label: Text(_selSets.isEmpty
-                        ? 'Elegir expansiones'
-                        : 'Cambiar expansiones'),
+                    label: Text(
+                        _selSets.isEmpty ? t.fgPickSets : t.fgChangeSets),
                     onPressed: _pickSets,
                   ),
                 ),
@@ -487,16 +480,10 @@ class _ForgeScreenState extends State<ForgeScreen> {
               padding: const EdgeInsets.only(top: 4),
               child: Text(
                 _selSets.isEmpty
-                    ? (_includeMissing
-                        ? 'Elige al menos una expansión: sin filtro serían las '
-                            '~30.000 cartas de Magic.'
-                        : 'Sin elegir expansiones, Forge usa toda tu colección.')
+                    ? (_includeMissing ? t.fgNeedOneSet : t.fgNoSetsNote)
                     : (_includeMissing
-                        ? 'Cartas de ${_selSets.length} expansión'
-                            '${_selSets.length == 1 ? '' : 'es'}, tengas o no.'
-                        : 'Solo tus cartas de ${_selSets.length} expansión'
-                            '${_selSets.length == 1 ? '' : 'es'} — no toda la '
-                            'colección.'),
+                        ? t.fgFromSetsAny(_selSets.length)
+                        : t.fgFromSetsMine(_selSets.length)),
                 style: TextStyle(
                     fontSize: 11.5,
                     color: _canForge ? null : MFColors.warning),
@@ -505,13 +492,12 @@ class _ForgeScreenState extends State<ForgeScreen> {
             if (!widget.collection.hasPrintingData &&
                 widget.collection.totalCopies > 0 &&
                 !_includeMissing)
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  'Tu colección no guarda la edición de cada carta, así que '
-                  'filtrar por expansión dejaría fuera casi todo. Reimporta '
-                  'tu CSV con "Sustituir" y vuelve.',
-                  style: TextStyle(fontSize: 11.5, color: MFColors.warning),
+                  t.fgNoPrintingData,
+                  style: const TextStyle(
+                      fontSize: 11.5, color: MFColors.warning),
                 ),
               ),
             // aire por arriba: sin él, el foco del tour (que engorda el rect 8
@@ -523,15 +509,12 @@ class _ForgeScreenState extends State<ForgeScreen> {
                 contentPadding: EdgeInsets.zero,
                 value: _includeMissing,
                 onChanged: (v) => setState(() => _includeMissing = v),
-                title: const Text('Incluir cartas que no tengo'),
-                subtitle: const Text(
-                    'Forge deja de limitarse a tu colección y usa TODO lo '
-                    'impreso en esas expansiones; luego te dice cuántas '
-                    'cartas te faltan y cuánto costarían.'),
+                title: Text(t.fgIncludeMissing),
+                subtitle: Text(t.fgIncludeMissingSub),
               ),
             ),
             const SizedBox(height: 8),
-            Text('A tu gusto (opcional)',
+            Text(t.fgYourTaste,
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 8),
             Wrap(

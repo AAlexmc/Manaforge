@@ -78,7 +78,7 @@ class _FolderPickScreenState extends State<FolderPickScreen> {
                   onChanged: (v) => setState(() => _query = v),
                   decoration: InputDecoration(
                     isDense: true,
-                    hintText: 'Filtra por nombre…',
+                    hintText: t.fpFilterByName,
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14)),
@@ -111,7 +111,7 @@ class _FolderPickScreenState extends State<FolderPickScreen> {
                           ? null
                           : () => setState(() => _picked.removeAll(
                               visible.map((c) => c.oracleId))),
-                      child: const Text('Desmarcar'),
+                      child: Text(t.fpUnselect),
                     ),
                   ],
                 ),

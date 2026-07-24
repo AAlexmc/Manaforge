@@ -64,7 +64,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     final wishlist = widget.wishlist;
     final db = widget.db;
     return Scaffold(
-      appBar: AppBar(title: const Text('Wishlist')),
+      appBar: AppBar(title: Text(t.onbWishlistTitle)),
       body: ListenableBuilder(
         listenable: wishlist,
         builder: (context, _) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../services/scanner_database.dart';
 
 /// Puerta de la base de huellas: si aún no está descargada enseña el
@@ -68,29 +69,25 @@ class _ScannerDbGateState extends State<ScannerDbGate> {
           const Spacer(),
           const Icon(Icons.fingerprint, size: 56),
           const SizedBox(height: 12),
-          Text('El ojo del escáner',
+          Text(tr(context).sgTitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          const Text(
-            'Para reconocer cartas sin internet necesito la base de huellas '
-            'visuales (~12 MB): la firma del arte de cada ilustración de '
-            'Magic. Se descarga una vez.',
-            textAlign: TextAlign.center,
-          ),
+          Text(tr(context).sgWhy, textAlign: TextAlign.center),
           const SizedBox(height: 20),
           if (_progress != null) ...[
             LinearProgressIndicator(value: _progress),
             const SizedBox(height: 8),
             Text(
-              'Descargando… ${((_progress ?? 0) * 100).toStringAsFixed(0)} %',
+              tr(context)
+                  .colDownloading(((_progress ?? 0) * 100).toStringAsFixed(0)),
               textAlign: TextAlign.center,
             ),
           ] else
             FilledButton.icon(
               onPressed: _download,
               icon: const Icon(Icons.download),
-              label: const Text('Descargar base de huellas'),
+              label: Text(tr(context).sgDownload),
             ),
           if (_error != null)
             Padding(

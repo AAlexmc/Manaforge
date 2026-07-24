@@ -309,11 +309,11 @@ class _CirculoCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     final borde = Theme.of(context).colorScheme.onSurface;
     return Tooltip(
-      message: 'A medida',
+      message: tr(context).bgCustom,
       child: Semantics(
         button: true,
         selected: activo,
-        label: 'Elegir un color a medida',
+        label: tr(context).bgPickCustom,
         child: InkWell(
           onTap: onTap,
           customBorder: const CircleBorder(),
@@ -356,7 +356,7 @@ Future<void> _elegirColor(
   final ok = await showDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: const Text('Color a medida'),
+      title: Text(tr(ctx).bgCustomColor),
       content: SingleChildScrollView(
         child: ColorPicker(
           pickerColor: inicial,
@@ -439,7 +439,7 @@ class _Vistazo extends StatelessWidget {
                             color: chip,
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text('Rojo',
+                          child: Text(tr(context).bgSampleTab,
                               style: TextStyle(
                                   fontSize: 11,
                                   color: ThemeData.estimateBrightnessForColor(

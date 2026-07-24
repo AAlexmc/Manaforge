@@ -4063,6 +4063,492 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ninguna cámara dio imagen:\n{detalle}'**
   String camNoneWorked(String detalle);
+
+  /// No description provided for @bkRestoreAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar'**
+  String get bkRestoreAction;
+
+  /// No description provided for @fpUnselect.
+  ///
+  /// In es, this message translates to:
+  /// **'Desmarcar'**
+  String get fpUnselect;
+
+  /// No description provided for @stClear.
+  ///
+  /// In es, this message translates to:
+  /// **'Vaciar'**
+  String get stClear;
+
+  /// No description provided for @tlRemove.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar'**
+  String get tlRemove;
+
+  /// No description provided for @tlUnrecognized.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin reconocer'**
+  String get tlUnrecognized;
+
+  /// No description provided for @tlNothingAlike.
+  ///
+  /// In es, this message translates to:
+  /// **'nada parecido en la base — re-foto o quitar'**
+  String get tlNothingAlike;
+
+  /// No description provided for @tlTapToPick.
+  ///
+  /// In es, this message translates to:
+  /// **'toca para elegir a mano entre parecidas'**
+  String get tlTapToPick;
+
+  /// No description provided for @lsQuantity.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad'**
+  String get lsQuantity;
+
+  /// No description provided for @scPhotos.
+  ///
+  /// In es, this message translates to:
+  /// **'Fotos'**
+  String get scPhotos;
+
+  /// No description provided for @ftWhichFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'¿En qué carpeta las quieres?'**
+  String get ftWhichFolder;
+
+  /// No description provided for @ftWhichFolderSub.
+  ///
+  /// In es, this message translates to:
+  /// **'Entran en tu colección igual; la carpeta es solo una etiqueta para encontrarlas luego.'**
+  String get ftWhichFolderSub;
+
+  /// No description provided for @ftNone.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna'**
+  String get ftNone;
+
+  /// No description provided for @ftCards.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 carta} other{{n} cartas}}'**
+  String ftCards(int n);
+
+  /// No description provided for @ftNewFolderEllipsis.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpeta nueva…'**
+  String get ftNewFolderEllipsis;
+
+  /// No description provided for @ftNewFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Carpeta nueva'**
+  String get ftNewFolder;
+
+  /// No description provided for @ftNewFolderHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Caja de la tienda, Para vender…'**
+  String get ftNewFolderHint;
+
+  /// No description provided for @sgTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'El ojo del escáner'**
+  String get sgTitle;
+
+  /// No description provided for @sgWhy.
+  ///
+  /// In es, this message translates to:
+  /// **'Para reconocer cartas sin internet necesito la base de huellas visuales (~12 MB): la firma del arte de cada ilustración de Magic. Se descarga una vez.'**
+  String get sgWhy;
+
+  /// No description provided for @sgDownload.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargar base de huellas'**
+  String get sgDownload;
+
+  /// No description provided for @cmFullCard.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver ficha completa (precios y legalidad)'**
+  String get cmFullCard;
+
+  /// No description provided for @cmSwipeHint.
+  ///
+  /// In es, this message translates to:
+  /// **'arrastra o usa ← → para pasar · toca fuera para cerrar'**
+  String get cmSwipeHint;
+
+  /// No description provided for @cmTapOutHint.
+  ///
+  /// In es, this message translates to:
+  /// **'toca fuera para cerrar'**
+  String get cmTapOutHint;
+
+  /// No description provided for @fcTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Con qué carta empezaste?'**
+  String get fcTitle;
+
+  /// No description provided for @fcRemove.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar'**
+  String get fcRemove;
+
+  /// No description provided for @fcSearchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar en tu colección'**
+  String get fcSearchHint;
+
+  /// No description provided for @fcNoMatch.
+  ///
+  /// In es, this message translates to:
+  /// **'No encuentro ninguna carta con eso.'**
+  String get fcNoMatch;
+
+  /// No description provided for @acNoneWithFilters.
+  ///
+  /// In es, this message translates to:
+  /// **'Nada por aquí con estos filtros.'**
+  String get acNoneWithFilters;
+
+  /// No description provided for @acAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get acAll;
+
+  /// No description provided for @tsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo Test — vence al meta'**
+  String get tsTitle;
+
+  /// No description provided for @tsIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige contra qué mazo del meta quieres jugar. ManaForge construye mazos con TUS cartas, simula cientos de partidas contra él y se queda con el que más gana — probando además cambios de carta uno a uno para afinarlo.'**
+  String get tsIntro;
+
+  /// No description provided for @tsLoadingMeta.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando meta…'**
+  String get tsLoadingMeta;
+
+  /// No description provided for @tsLocalPresets.
+  ///
+  /// In es, this message translates to:
+  /// **'Presets locales (sin conexión)'**
+  String get tsLocalPresets;
+
+  /// No description provided for @tsNoDeckToFace.
+  ///
+  /// In es, this message translates to:
+  /// **'Con las cartas actuales no me sale ningún mazo completo que enfrentar. Añade más cartas y vuelve a intentarlo.'**
+  String get tsNoDeckToFace;
+
+  /// No description provided for @tsSimFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude simular: {error}'**
+  String tsSimFailed(String error);
+
+  /// No description provided for @tsFormatShare.
+  ///
+  /// In es, this message translates to:
+  /// **'{formato} · {cuota} del meta'**
+  String tsFormatShare(String formato, String cuota);
+
+  /// No description provided for @tsSimulating.
+  ///
+  /// In es, this message translates to:
+  /// **'Simulando partidas… (unos segundos; todo en tu equipo)'**
+  String get tsSimulating;
+
+  /// No description provided for @tsFindBest.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar mi mejor mazo contra {meta}'**
+  String tsFindBest(String meta);
+
+  /// No description provided for @tsHonesty.
+  ///
+  /// In es, this message translates to:
+  /// **'Honestidad: la simulación entiende colores de maná, mulligans, evasión (volar, arrollar, toque mortal…), removal instantáneo y contramagia — pero no el texto completo de cada carta. El porcentaje sirve para COMPARAR tus mazos entre sí, no como predicción exacta.'**
+  String get tsHonesty;
+
+  /// No description provided for @tsChampion.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu campeón contra {meta}'**
+  String tsChampion(String meta);
+
+  /// No description provided for @tsWinRateLine.
+  ///
+  /// In es, this message translates to:
+  /// **'de victorias estimadas · {mazos} mazos probados · {partidas} partidas por mazo'**
+  String tsWinRateLine(int mazos, int partidas);
+
+  /// No description provided for @tsNoDominant.
+  ///
+  /// In es, this message translates to:
+  /// **'Ningún mazo de tu colección domina este enfrentamiento — este es el que mejor pelea. Mira sus debilidades en el detalle.'**
+  String get tsNoDominant;
+
+  /// No description provided for @tsSeeDeck.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mazo completo (y guardarlo)'**
+  String get tsSeeDeck;
+
+  /// No description provided for @hsLevelLine.
+  ///
+  /// In es, this message translates to:
+  /// **'{hechos}/{total} logros · {xp} XP para el nivel {nivel}'**
+  String hsLevelLine(int hechos, int total, int xp, int nivel);
+
+  /// No description provided for @hsForgeDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'Forjar mazos'**
+  String get hsForgeDecks;
+
+  /// No description provided for @hsTestYourself.
+  ///
+  /// In es, this message translates to:
+  /// **'⚔ ponte a prueba'**
+  String get hsTestYourself;
+
+  /// No description provided for @bgCustom.
+  ///
+  /// In es, this message translates to:
+  /// **'A medida'**
+  String get bgCustom;
+
+  /// No description provided for @bgPickCustom.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir un color a medida'**
+  String get bgPickCustom;
+
+  /// No description provided for @bgCustomColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Color a medida'**
+  String get bgCustomColor;
+
+  /// No description provided for @bgSampleTab.
+  ///
+  /// In es, this message translates to:
+  /// **'Rojo'**
+  String get bgSampleTab;
+
+  /// No description provided for @cfSortRecent.
+  ///
+  /// In es, this message translates to:
+  /// **'Recién añadidas'**
+  String get cfSortRecent;
+
+  /// No description provided for @cfSortAlpha.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre A-Z'**
+  String get cfSortAlpha;
+
+  /// No description provided for @cfSortCmc.
+  ///
+  /// In es, this message translates to:
+  /// **'Coste'**
+  String get cfSortCmc;
+
+  /// No description provided for @cfSortQty.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad'**
+  String get cfSortQty;
+
+  /// No description provided for @cfSortBy.
+  ///
+  /// In es, this message translates to:
+  /// **'Ordenar por'**
+  String get cfSortBy;
+
+  /// No description provided for @cfSort.
+  ///
+  /// In es, this message translates to:
+  /// **'Orden'**
+  String get cfSort;
+
+  /// No description provided for @cfClear.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar'**
+  String get cfClear;
+
+  /// No description provided for @cfCost.
+  ///
+  /// In es, this message translates to:
+  /// **'Coste'**
+  String get cfCost;
+
+  /// No description provided for @cfCostAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Coste: todos'**
+  String get cfCostAll;
+
+  /// No description provided for @cfCostN.
+  ///
+  /// In es, this message translates to:
+  /// **'Coste {n}'**
+  String cfCostN(String n);
+
+  /// No description provided for @cfType.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo'**
+  String get cfType;
+
+  /// No description provided for @cfTypeAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo: todos'**
+  String get cfTypeAll;
+
+  /// No description provided for @cfTypeCreature.
+  ///
+  /// In es, this message translates to:
+  /// **'Criaturas'**
+  String get cfTypeCreature;
+
+  /// No description provided for @cfTypeInstant.
+  ///
+  /// In es, this message translates to:
+  /// **'Instantáneos'**
+  String get cfTypeInstant;
+
+  /// No description provided for @cfTypeSorcery.
+  ///
+  /// In es, this message translates to:
+  /// **'Conjuros'**
+  String get cfTypeSorcery;
+
+  /// No description provided for @cfTypeArtifact.
+  ///
+  /// In es, this message translates to:
+  /// **'Artefactos'**
+  String get cfTypeArtifact;
+
+  /// No description provided for @cfTypeEnchantment.
+  ///
+  /// In es, this message translates to:
+  /// **'Encantamientos'**
+  String get cfTypeEnchantment;
+
+  /// No description provided for @cfTypeLand.
+  ///
+  /// In es, this message translates to:
+  /// **'Tierras'**
+  String get cfTypeLand;
+
+  /// No description provided for @cfPower.
+  ///
+  /// In es, this message translates to:
+  /// **'Ataque'**
+  String get cfPower;
+
+  /// No description provided for @cfPowerAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Ataque: todos'**
+  String get cfPowerAll;
+
+  /// No description provided for @cfPowerMin.
+  ///
+  /// In es, this message translates to:
+  /// **'Ataque ≥ {n}'**
+  String cfPowerMin(int n);
+
+  /// No description provided for @cfToughness.
+  ///
+  /// In es, this message translates to:
+  /// **'Defensa'**
+  String get cfToughness;
+
+  /// No description provided for @cfToughnessAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Defensa: todos'**
+  String get cfToughnessAll;
+
+  /// No description provided for @cfToughnessMin.
+  ///
+  /// In es, this message translates to:
+  /// **'Defensa ≥ {n}'**
+  String cfToughnessMin(int n);
+
+  /// No description provided for @cfNoDate.
+  ///
+  /// In es, this message translates to:
+  /// **'sin fecha'**
+  String get cfNoDate;
+
+  /// No description provided for @cfToday.
+  ///
+  /// In es, this message translates to:
+  /// **'hoy'**
+  String get cfToday;
+
+  /// No description provided for @cfYesterday.
+  ///
+  /// In es, this message translates to:
+  /// **'ayer'**
+  String get cfYesterday;
+
+  /// No description provided for @cfDaysAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'hace {n} días'**
+  String cfDaysAgo(int n);
+
+  /// No description provided for @pcWeek.
+  ///
+  /// In es, this message translates to:
+  /// **'Semana'**
+  String get pcWeek;
+
+  /// No description provided for @pcMonth.
+  ///
+  /// In es, this message translates to:
+  /// **'Mes'**
+  String get pcMonth;
+
+  /// No description provided for @pcAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo'**
+  String get pcAll;
+
+  /// No description provided for @vpTapCorrect.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca la carta correcta'**
+  String get vpTapCorrect;
 }
 
 class _AppLocalizationsDelegate

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../theme/mf_theme.dart';
 
 /// En escritorio, las listas horizontales no se pueden arrastrar con el
@@ -464,12 +465,10 @@ class _CardZoomViewState extends State<_CardZoomView> {
                   card.onDetails!();
                 },
                 icon: const Icon(Icons.info_outline, size: 18),
-                label: const Text('Ver ficha completa (precios y legalidad)'),
+                label: Text(tr(context).cmFullCard),
               ),
             Text(
-                varias
-                    ? 'arrastra o usa ← → para pasar · toca fuera para cerrar'
-                    : 'toca fuera para cerrar',
+                varias ? tr(context).cmSwipeHint : tr(context).cmTapOutHint,
                 style: const TextStyle(fontSize: 11, color: Colors.white54)),
           ],
         ),

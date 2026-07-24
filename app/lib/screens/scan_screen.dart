@@ -171,8 +171,7 @@ class _ScanScreenState extends State<ScanScreen> {
   int _batchTotal = 0;
   final Map<String, CardHit?> _hitCache = {};
 
-  static const _typeGroup = XTypeGroup(
-      label: 'Fotos', extensions: ['jpg', 'jpeg', 'png', 'webp', 'bmp']);
+  static const _photoExtensions = ['jpg', 'jpeg', 'png', 'webp', 'bmp'];
 
   @override
   void initState() {
@@ -197,7 +196,9 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Future<void> _pickPhotos() async {
-    final files = await openFiles(acceptedTypeGroups: const [_typeGroup]);
+    final files = await openFiles(acceptedTypeGroups: [
+      XTypeGroup(label: tr(context).scPhotos, extensions: _photoExtensions)
+    ]);
     if (files.isEmpty) return;
     if (files.length == 1) {
       await _scanFile(files.first);

@@ -119,7 +119,7 @@ class SessionTray extends StatelessWidget {
               const SizedBox(width: 10),
               OutlinedButton(
                 onPressed: onClear,
-                child: const Text('Vaciar'),
+                child: Text(t.stClear),
               ),
             ],
           ),

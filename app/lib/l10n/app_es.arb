@@ -1173,5 +1173,133 @@
   "camNoneWorked": "Ninguna cámara dio imagen:\n{detalle}",
   "@camNoneWorked": {
     "placeholders": {"detalle": {"type": "String"}}
-  }
+  },
+
+  "bkRestoreAction": "Restaurar",
+
+  "fpUnselect": "Desmarcar",
+
+  "stClear": "Vaciar",
+  "tlRemove": "Quitar",
+  "tlUnrecognized": "Sin reconocer",
+  "tlNothingAlike": "nada parecido en la base — re-foto o quitar",
+  "tlTapToPick": "toca para elegir a mano entre parecidas",
+  "lsQuantity": "Cantidad",
+  "scPhotos": "Fotos",
+
+  "ftWhichFolder": "¿En qué carpeta las quieres?",
+  "ftWhichFolderSub": "Entran en tu colección igual; la carpeta es solo una etiqueta para encontrarlas luego.",
+  "ftNone": "Ninguna",
+  "ftCards": "{n, plural, =1{1 carta} other{{n} cartas}}",
+  "@ftCards": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "ftNewFolderEllipsis": "Carpeta nueva…",
+  "ftNewFolder": "Carpeta nueva",
+  "ftNewFolderHint": "Caja de la tienda, Para vender…",
+
+  "sgTitle": "El ojo del escáner",
+  "sgWhy": "Para reconocer cartas sin internet necesito la base de huellas visuales (~12 MB): la firma del arte de cada ilustración de Magic. Se descarga una vez.",
+  "sgDownload": "Descargar base de huellas",
+
+  "cmFullCard": "Ver ficha completa (precios y legalidad)",
+  "cmSwipeHint": "arrastra o usa ← → para pasar · toca fuera para cerrar",
+  "cmTapOutHint": "toca fuera para cerrar",
+
+  "fcTitle": "¿Con qué carta empezaste?",
+  "fcRemove": "Quitar",
+  "fcSearchHint": "Buscar en tu colección",
+  "fcNoMatch": "No encuentro ninguna carta con eso.",
+
+  "acNoneWithFilters": "Nada por aquí con estos filtros.",
+  "acAll": "Todos",
+
+  "tsTitle": "Modo Test — vence al meta",
+  "tsIntro": "Elige contra qué mazo del meta quieres jugar. ManaForge construye mazos con TUS cartas, simula cientos de partidas contra él y se queda con el que más gana — probando además cambios de carta uno a uno para afinarlo.",
+  "tsLoadingMeta": "Cargando meta…",
+  "tsLocalPresets": "Presets locales (sin conexión)",
+  "tsNoDeckToFace": "Con las cartas actuales no me sale ningún mazo completo que enfrentar. Añade más cartas y vuelve a intentarlo.",
+  "tsSimFailed": "No pude simular: {error}",
+  "@tsSimFailed": {
+    "placeholders": {"error": {"type": "String"}}
+  },
+  "tsFormatShare": "{formato} · {cuota} del meta",
+  "@tsFormatShare": {
+    "placeholders": {"formato": {"type": "String"}, "cuota": {"type": "String"}}
+  },
+  "tsSimulating": "Simulando partidas… (unos segundos; todo en tu equipo)",
+  "tsFindBest": "Buscar mi mejor mazo contra {meta}",
+  "@tsFindBest": {
+    "placeholders": {"meta": {"type": "String"}}
+  },
+  "tsHonesty": "Honestidad: la simulación entiende colores de maná, mulligans, evasión (volar, arrollar, toque mortal…), removal instantáneo y contramagia — pero no el texto completo de cada carta. El porcentaje sirve para COMPARAR tus mazos entre sí, no como predicción exacta.",
+  "tsChampion": "Tu campeón contra {meta}",
+  "@tsChampion": {
+    "placeholders": {"meta": {"type": "String"}}
+  },
+  "tsWinRateLine": "de victorias estimadas · {mazos} mazos probados · {partidas} partidas por mazo",
+  "@tsWinRateLine": {
+    "placeholders": {"mazos": {"type": "int"}, "partidas": {"type": "int"}}
+  },
+  "tsNoDominant": "Ningún mazo de tu colección domina este enfrentamiento — este es el que mejor pelea. Mira sus debilidades en el detalle.",
+  "tsSeeDeck": "Ver mazo completo (y guardarlo)",
+
+  "hsLevelLine": "{hechos}/{total} logros · {xp} XP para el nivel {nivel}",
+  "@hsLevelLine": {
+    "placeholders": {"hechos": {"type": "int"}, "total": {"type": "int"}, "xp": {"type": "int"}, "nivel": {"type": "int"}}
+  },
+  "hsForgeDecks": "Forjar mazos",
+  "hsTestYourself": "⚔ ponte a prueba",
+
+  "bgCustom": "A medida",
+  "bgPickCustom": "Elegir un color a medida",
+  "bgCustomColor": "Color a medida",
+  "bgSampleTab": "Rojo",
+
+  "cfSortRecent": "Recién añadidas",
+  "cfSortAlpha": "Nombre A-Z",
+  "cfSortCmc": "Coste",
+  "cfSortQty": "Cantidad",
+  "cfSortBy": "Ordenar por",
+  "cfSort": "Orden",
+  "cfClear": "Limpiar",
+  "cfCost": "Coste",
+  "cfCostAll": "Coste: todos",
+  "cfCostN": "Coste {n}",
+  "@cfCostN": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "cfType": "Tipo",
+  "cfTypeAll": "Tipo: todos",
+  "cfTypeCreature": "Criaturas",
+  "cfTypeInstant": "Instantáneos",
+  "cfTypeSorcery": "Conjuros",
+  "cfTypeArtifact": "Artefactos",
+  "cfTypeEnchantment": "Encantamientos",
+  "cfTypeLand": "Tierras",
+  "cfPower": "Ataque",
+  "cfPowerAll": "Ataque: todos",
+  "cfPowerMin": "Ataque ≥ {n}",
+  "@cfPowerMin": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "cfToughness": "Defensa",
+  "cfToughnessAll": "Defensa: todos",
+  "cfToughnessMin": "Defensa ≥ {n}",
+  "@cfToughnessMin": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "cfNoDate": "sin fecha",
+  "cfToday": "hoy",
+  "cfYesterday": "ayer",
+  "cfDaysAgo": "hace {n} días",
+  "@cfDaysAgo": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+
+  "pcWeek": "Semana",
+  "pcMonth": "Mes",
+  "pcAll": "Todo",
+
+  "vpTapCorrect": "Toca la carta correcta"
 }

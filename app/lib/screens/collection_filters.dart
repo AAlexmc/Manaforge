@@ -6,21 +6,27 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import '../services/collection_store.dart';
 import '../widgets/common.dart';
 
 /// Cómo se ordena la lista de la colección.
 enum CollectionSort {
   /// Lo último que has escaneado o añadido, primero.
-  recent('Recién añadidas'),
-  alpha('Nombre A-Z'),
-  cmc('Coste'),
-  qty('Cantidad'),
-  ;
-
-  final String label;
-  const CollectionSort(this.label);
+  recent,
+  alpha,
+  cmc,
+  qty,
 }
+
+/// Cómo se llama cada orden en el idioma del usuario.
+String sortLabel(AppLocalizations t, CollectionSort sort) => switch (sort) {
+      CollectionSort.recent => t.cfSortRecent,
+      CollectionSort.alpha => t.cfSortAlpha,
+      CollectionSort.cmc => t.cfSortCmc,
+      CollectionSort.qty => t.cfSortQty,
+    };
 
 /// Ordena una copia de [cards] según [sort]. Función pura (la colección ya
 /// llega ordenada por nombre; aquí solo se reordena) para poder testearla.
@@ -125,17 +131,20 @@ class CollectionFilterBar extends StatelessWidget {
   const CollectionFilterBar(
       {super.key, required this.value, required this.onChanged});
 
-  static const typeOptions = <String, String>{
-    'Creature': 'Criaturas',
-    'Instant': 'Instantáneos',
-    'Sorcery': 'Conjuros',
-    'Artifact': 'Artefactos',
-    'Enchantment': 'Encantamientos',
-    'Land': 'Tierras',
-  };
+  /// Los tipos que se pueden filtrar: clave de Scryfall (en inglés, que es
+  /// como vienen los datos) -> nombre para la persona.
+  static Map<String, String> typeOptions(AppLocalizations t) => {
+        'Creature': t.cfTypeCreature,
+        'Instant': t.cfTypeInstant,
+        'Sorcery': t.cfTypeSorcery,
+        'Artifact': t.cfTypeArtifact,
+        'Enchantment': t.cfTypeEnchantment,
+        'Land': t.cfTypeLand,
+      };
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Wrap(
       spacing: 6,
       runSpacing: 6,
@@ -157,42 +166,42 @@ class CollectionFilterBar extends StatelessWidget {
           ),
         _dropdown<int?>(
           context,
-          hint: 'Coste',
+          hint: t.cfCost,
           value: value.cmc,
           items: {
-            null: 'Coste: todos',
-            for (var i = 0; i <= 5; i++) i: 'Coste $i',
-            6: 'Coste 6+',
+            null: t.cfCostAll,
+            for (var i = 0; i <= 5; i++) i: t.cfCostN('$i'),
+            6: t.cfCostN('6+'),
           },
           onChanged: (v) =>
               onChanged(value.copyWith(cmc: v, clearCmc: v == null)),
         ),
         _dropdown<String?>(
           context,
-          hint: 'Tipo',
+          hint: t.cfType,
           value: value.type,
-          items: {null: 'Tipo: todos', ...typeOptions},
+          items: {null: t.cfTypeAll, ...typeOptions(t)},
           onChanged: (v) =>
               onChanged(value.copyWith(type: v, clearType: v == null)),
         ),
         _dropdown<int?>(
           context,
-          hint: 'Ataque',
+          hint: t.cfPower,
           value: value.minPower,
           items: {
-            null: 'Ataque: todos',
-            for (var i = 1; i <= 6; i++) i: 'Ataque ≥ $i',
+            null: t.cfPowerAll,
+            for (var i = 1; i <= 6; i++) i: t.cfPowerMin(i),
           },
           onChanged: (v) => onChanged(
               value.copyWith(minPower: v, clearMinPower: v == null)),
         ),
         _dropdown<int?>(
           context,
-          hint: 'Defensa',
+          hint: t.cfToughness,
           value: value.minToughness,
           items: {
-            null: 'Defensa: todos',
-            for (var i = 1; i <= 6; i++) i: 'Defensa ≥ $i',
+            null: t.cfToughnessAll,
+            for (var i = 1; i <= 6; i++) i: t.cfToughnessMin(i),
           },
           onChanged: (v) => onChanged(
               value.copyWith(minToughness: v, clearMinToughness: v == null)),
@@ -201,7 +210,7 @@ class CollectionFilterBar extends StatelessWidget {
           TextButton.icon(
             onPressed: () => onChanged(value.cleared()),
             icon: const Icon(Icons.filter_alt_off, size: 16),
-            label: const Text('Limpiar'),
+            label: Text(t.cfClear),
           ),
       ],
     );
@@ -242,15 +251,16 @@ class CollectionSortPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Row(
       children: [
-        const Text('Ordenar por', style: TextStyle(fontSize: 12.5)),
+        Text(t.cfSortBy, style: const TextStyle(fontSize: 12.5)),
         const SizedBox(width: 8),
         _dropdown<CollectionSort>(
           context,
-          hint: 'Orden',
+          hint: t.cfSort,
           value: value,
-          items: {for (final s in CollectionSort.values) s: s.label},
+          items: {for (final s in CollectionSort.values) s: sortLabel(t, s)},
           onChanged: onChanged,
         ),
       ],
@@ -259,8 +269,8 @@ class CollectionSortPicker extends StatelessWidget {
 }
 
 /// "hoy", "ayer", "hace 3 días", o la fecha si es vieja.
-String addedLabel(int? addedAt, {DateTime? now}) {
-  if (addedAt == null) return 'sin fecha';
+String addedLabel(AppLocalizations t, int? addedAt, {DateTime? now}) {
+  if (addedAt == null) return t.cfNoDate;
   final when = DateTime.fromMillisecondsSinceEpoch(addedAt);
   final today = now ?? DateTime.now();
   // los días civiles se cuentan en UTC: en hora local, el día del cambio
@@ -268,9 +278,9 @@ String addedLabel(int? addedAt, {DateTime? now}) {
   final days = DateTime.utc(today.year, today.month, today.day)
       .difference(DateTime.utc(when.year, when.month, when.day))
       .inDays;
-  if (days <= 0) return 'hoy';
-  if (days == 1) return 'ayer';
-  if (days < 7) return 'hace $days días';
+  if (days <= 0) return t.cfToday;
+  if (days == 1) return t.cfYesterday;
+  if (days < 7) return t.cfDaysAgo(days);
   two(int n) => n < 10 ? '0$n' : '$n';
   return '${two(when.day)}/${two(when.month)}/${when.year}';
 }

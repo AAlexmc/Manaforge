@@ -806,7 +806,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      const Text('Cantidad'),
+                      Text(tr(context).lsQuantity),
                       const Spacer(),
                       IconButton.filledTonal(
                         icon: const Icon(Icons.remove),
