@@ -47,10 +47,10 @@ class _MazosScreenState extends State<MazosScreen> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
-        content: Text('Mazo "${d.name}" borrado'),
+        content: Text(tr(context).dkDeleted(d.name)),
         duration: const Duration(seconds: 6),
         action: SnackBarAction(
-          label: 'DESHACER',
+          label: tr(context).dkUndo,
           onPressed: () => widget.decks.restore(d, index),
         ),
       ));
@@ -82,8 +82,7 @@ class _MazosScreenState extends State<MazosScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('No pude abrir el mazo '
-                '(¿está descargada la base de datos?): $e')));
+            content: Text(tr(context).dkOpenFailed('$e'))));
       }
     } finally {
       if (mounted) setState(() => _opening = false);
@@ -110,13 +109,12 @@ class _MazosScreenState extends State<MazosScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Mis mazos',
+                  Text(tr(context).dkMyDecks,
                       style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: 4),
                   Text(decks.isEmpty
-                      ? 'Aquí vivirán los mazos que guardes desde Forge '
-                          '(botón de guardar en el detalle del mazo).'
-                      : '${decks.length} guardado${decks.length == 1 ? '' : 's'}'),
+                      ? tr(context).dkEmpty
+                      : tr(context).dkSavedCount(decks.length)),
                   const SizedBox(height: 12),
                   Expanded(
                     child: decks.isEmpty
@@ -149,12 +147,13 @@ class _MazosScreenState extends State<MazosScreen> {
                                   leading: ColorIdentityDots(
                                       colors: d.colors, size: 14),
                                   title: Text(d.name),
-                                  subtitle: Text(
-                                      '${d.archetype} · ${d.totalSpells} hechizos '
-                                      '+ ${d.totalLands} tierras · '
-                                      'guardado el ${_dateLabel(d.savedAt)}'),
+                                  subtitle: Text(tr(context).dkSubtitle(
+                                      d.archetype,
+                                      d.totalSpells,
+                                      d.totalLands,
+                                      _dateLabel(d.savedAt))),
                                   trailing: IconButton(
-                                    tooltip: 'Borrar mazo',
+                                    tooltip: tr(context).dkDeleteTooltip,
                                     icon: const Icon(
                                         Icons.delete_outline,
                                         color: MFColors.warning),

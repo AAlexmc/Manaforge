@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../l10n/app_localizations.dart';
+import '../l10n/t.dart';
 import 'package:flutter/services.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
@@ -107,8 +110,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
 
   void _saveDeck() {
     widget.decks!.add(SavedDeck.fromGenerated(_gen));
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('✓ Mazo guardado — lo tienes en la pestaña Mazos')));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(tr(context).ddSaved)));
   }
 
   Map<String, fe.Card> get _pool => widget.pool;
@@ -126,21 +129,30 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
     return buffer.toString();
   }
 
+    String _typeLabel(AppLocalizations t, String key) => switch (key) {
+        'creatures' => t.ddTypeCreatures,
+        'instants' => t.ddInstants,
+        'sorceries' => t.ddTypeSorceries,
+        'enchantments' => t.ddTypeEnchantments,
+        'artifacts' => t.ddTypeArtifacts,
+        _ => t.ddTypeOther,
+      };
+
   Map<String, List<MapEntry<String, int>>> _grouped() {
     final groups = <String, List<MapEntry<String, int>>>{};
     for (final e in _gen.deck.cards.entries) {
       final types = _pool[e.key]!.types;
-      final key = types.contains('Creature')
-          ? 'Criaturas'
+            final key = types.contains('Creature')
+          ? 'creatures'
           : types.contains('Instant')
-              ? 'Instantáneos'
+              ? 'instants'
               : types.contains('Sorcery')
-                  ? 'Conjuros'
+                  ? 'sorceries'
                   : types.contains('Enchantment')
-                      ? 'Encantamientos'
+                      ? 'enchantments'
                       : types.contains('Artifact')
-                          ? 'Artefactos'
-                          : 'Otros';
+                          ? 'artifacts'
+                          : 'other';
       groups.putIfAbsent(key, () => []).add(e);
     }
     for (final list in groups.values) {
@@ -166,8 +178,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
         _loadImages(); // el banner refleja las cartas nuevas
       });
       _loadPrices();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('✓ Mazo reforjado a tu curva — lista actualizada')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(tr(context).ddReforged)));
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(result.reason!)));
@@ -175,7 +187,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final t = tr(context);
     final deck = _gen.deck;
     final hist = fe.ManaCurve.curveHistogram(deck.cards, _pool, cap: 6);
     final accent = manaColors[deck.colors.isEmpty ? 'C' : deck.colors[0]] ??
@@ -193,19 +206,18 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
         actions: [
           if (widget.decks != null)
             IconButton(
-              tooltip: 'Guardar en Mis mazos',
+              tooltip: t.ddSaveToMyDecks,
               icon: const Icon(Icons.bookmark_add_outlined),
               onPressed: _saveDeck,
             ),
           IconButton(
-            tooltip: 'Copiar lista (Moxfield/Arena)',
+            tooltip: t.ddCopyList,
             icon: const Icon(Icons.copy_all),
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: _exportText()));
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text(
-                        '✓ Lista copiada — pégala en Moxfield, Arena o Discord')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(tr(context).ddListCopied)));
               }
             },
           ),
@@ -219,9 +231,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               ColorIdentityDots(colors: deck.colors, size: 16),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(
-                    '${fe.themeName(_gen.theme)} · ${deck.archetype.name} · '
-                    '$nSpells hechizos + $nLands tierras'),
+                child: Text(t.ddHeaderSub(fe.themeName(_gen.theme),
+                    deck.archetype.name, nSpells, nLands)),
               ),
               if (_prices.isNotEmpty)
                 Text('~${_deckValue.toStringAsFixed(2)} €',
@@ -232,12 +243,11 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           ),
           const SizedBox(height: 6),
           if (_faltan == 0)
-            const Text('✓ Tienes todas las cartas',
-                style: TextStyle(color: MFColors.success))
+            Text(t.ddHaveAll,
+                style: const TextStyle(color: MFColors.success))
           else
             Text(
-                '⚠ Te faltan $_faltan carta${_faltan == 1 ? '' : 's'} de este '
-                'mazo — siguen en la lista, no se han borrado',
+                t.ddMissing(_faltan),
                 style: const TextStyle(color: MFColors.warning)),
           if (_imagesF != null) ...[
             const SizedBox(height: 14),
@@ -253,7 +263,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Tu plan de juego',
+                  Text(t.ddGamePlan,
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   for (final (turns, text) in fe.gamePlan(_gen))
@@ -286,7 +296,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text('Curva de maná',
+                        child: Text(t.ddManaCurve,
                             style: Theme.of(context).textTheme.titleMedium),
                       ),
                       if (!_editingCurve &&
@@ -294,7 +304,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                         TextButton.icon(
                           onPressed: () => _startEditing(hist),
                           icon: const Icon(Icons.tune, size: 18),
-                          label: const Text('Editar curva'),
+                          label: Text(t.ddEditCurve),
                         ),
                     ],
                   ),
@@ -307,9 +317,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Arrastra las barras ↑↓ · $editedSpells hechizos → '
-                      '$editedLands tierras'
-                      '${editedLandsOk ? '' : '  (fuera del rango sano 20-27)'}',
+                      t.ddDragBars(editedSpells, editedLands) +
+                          (editedLandsOk ? '' : t.ddOutOfRange),
                       style: TextStyle(
                           fontSize: 12,
                           color: editedLandsOk
@@ -324,21 +333,20 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                               backgroundColor: MFColors.forge),
                           onPressed: _reforge,
                           icon: const Icon(Icons.auto_awesome, size: 18),
-                          label: const Text('Reforjar con esta curva'),
+                          label: Text(t.ddReforgeCurve),
                         ),
                         const SizedBox(width: 8),
                         TextButton(
                           onPressed: () =>
                               setState(() => _editingCurve = false),
-                          child: const Text('Cancelar'),
+                          child: Text(t.acCancel),
                         ),
                       ],
                     ),
                   ] else
                     CurveChart(histogram: hist, color: accent),
                   const SizedBox(height: 8),
-                  Text('⛰ $nLands tierras · ✦ $nSpells hechizos · '
-                      'Ø coste ${avg.toStringAsFixed(1)}'),
+                  Text(t.ddCurveSummary(nLands, nSpells, avg.toStringAsFixed(1))),
                 ],
               ),
             ),
@@ -346,8 +354,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           const SizedBox(height: 12),
           Card(
             child: ExpansionTile(
-              title: const Text('¿Por qué este mazo funciona?',
-                  style: TextStyle(color: MFColors.forge)),
+              title: Text(t.ddWhyWorks,
+                  style: const TextStyle(color: MFColors.forge)),
               childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               children: [Text(fe.whyItWorks(_gen, _pool))],
             ),
@@ -357,7 +365,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 4),
               child: Text(
-                  '${group.key} (${group.value.fold(0, (a, e) => a + e.value)})'
+                  '${_typeLabel(t, group.key)} '
+                          '(${group.value.fold(0, (a, e) => a + e.value)})'
                       .toUpperCase(),
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.bold)),
@@ -389,7 +398,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           ],
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 4),
-            child: Text('TIERRAS ($nLands)',
+            child: Text(t.ddLands(nLands),
                 style: const TextStyle(
                     fontSize: 12, fontWeight: FontWeight.bold)),
           ),
@@ -418,16 +427,15 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text('Total del mazo: ~${_deckValue.toStringAsFixed(2)} €',
+                  Text(t.ddDeckTotal(_deckValue.toStringAsFixed(2)),
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: MFColors.warning)),
                   const SizedBox(height: 2),
                   Text(
                       _sinPrecio == 0
-                          ? 'precio de la edición más barata (Cardmarket)'
-                          : '$_sinPrecio sin precio conocido · edición más '
-                              'barata (Cardmarket)',
+                          ? t.ddCheapestPrice
+                          : t.ddSomeNoPrice(_sinPrecio),
                       style: const TextStyle(
                           fontSize: 11, color: Colors.white54)),
                 ],

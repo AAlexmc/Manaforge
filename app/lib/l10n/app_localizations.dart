@@ -2909,6 +2909,414 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Importar'**
   String get icImport;
+
+  /// No description provided for @dkDeleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Mazo \"{nombre}\" borrado'**
+  String dkDeleted(String nombre);
+
+  /// No description provided for @dkUndo.
+  ///
+  /// In es, this message translates to:
+  /// **'DESHACER'**
+  String get dkUndo;
+
+  /// No description provided for @dkOpenFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude abrir el mazo (¿está descargada la base de datos?): {error}'**
+  String dkOpenFailed(String error);
+
+  /// No description provided for @dkMyDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'Mis mazos'**
+  String get dkMyDecks;
+
+  /// No description provided for @dkEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí vivirán los mazos que guardes desde Forge (botón de guardar en el detalle del mazo).'**
+  String get dkEmpty;
+
+  /// No description provided for @dkSavedCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 guardado} other{{n} guardados}}'**
+  String dkSavedCount(int n);
+
+  /// No description provided for @dkSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'{arquetipo} · {hechizos} hechizos + {tierras} tierras · guardado el {fecha}'**
+  String dkSubtitle(String arquetipo, int hechizos, int tierras, String fecha);
+
+  /// No description provided for @dkDeleteTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar mazo'**
+  String get dkDeleteTooltip;
+
+  /// No description provided for @ddSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Mazo guardado — lo tienes en la pestaña Mazos'**
+  String get ddSaved;
+
+  /// No description provided for @ddReforged.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Mazo reforjado a tu curva — lista actualizada'**
+  String get ddReforged;
+
+  /// No description provided for @ddSaveToMyDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar en Mis mazos'**
+  String get ddSaveToMyDecks;
+
+  /// No description provided for @ddCopyList.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar lista (Moxfield/Arena)'**
+  String get ddCopyList;
+
+  /// No description provided for @ddListCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Lista copiada — pégala en Moxfield, Arena o Discord'**
+  String get ddListCopied;
+
+  /// No description provided for @ddHeaderSub.
+  ///
+  /// In es, this message translates to:
+  /// **'{tema} · {arquetipo} · {hechizos} hechizos + {tierras} tierras'**
+  String ddHeaderSub(String tema, String arquetipo, int hechizos, int tierras);
+
+  /// No description provided for @ddHaveAll.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Tienes todas las cartas'**
+  String get ddHaveAll;
+
+  /// No description provided for @ddMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{⚠ Te falta 1 carta de este mazo — sigue en la lista, no se ha borrado} other{⚠ Te faltan {n} cartas de este mazo — siguen en la lista, no se han borrado}}'**
+  String ddMissing(int n);
+
+  /// No description provided for @ddGamePlan.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu plan de juego'**
+  String get ddGamePlan;
+
+  /// No description provided for @ddManaCurve.
+  ///
+  /// In es, this message translates to:
+  /// **'Curva de maná'**
+  String get ddManaCurve;
+
+  /// No description provided for @ddEditCurve.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar curva'**
+  String get ddEditCurve;
+
+  /// No description provided for @ddDragBars.
+  ///
+  /// In es, this message translates to:
+  /// **'Arrastra las barras ↑↓ · {hechizos} hechizos → {tierras} tierras'**
+  String ddDragBars(int hechizos, int tierras);
+
+  /// No description provided for @ddReforgeCurve.
+  ///
+  /// In es, this message translates to:
+  /// **'Reforjar con esta curva'**
+  String get ddReforgeCurve;
+
+  /// No description provided for @ddCurveSummary.
+  ///
+  /// In es, this message translates to:
+  /// **'⛰ {tierras} tierras · ✦ {hechizos} hechizos · Ø coste {coste}'**
+  String ddCurveSummary(int tierras, int hechizos, String coste);
+
+  /// No description provided for @ddWhyWorks.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Por qué este mazo funciona?'**
+  String get ddWhyWorks;
+
+  /// No description provided for @ddLands.
+  ///
+  /// In es, this message translates to:
+  /// **'TIERRAS ({n})'**
+  String ddLands(int n);
+
+  /// No description provided for @ddDeckTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Total del mazo: ~{precio} €'**
+  String ddDeckTotal(String precio);
+
+  /// No description provided for @ddCheapestPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'precio de la edición más barata (Cardmarket)'**
+  String get ddCheapestPrice;
+
+  /// No description provided for @ddSomeNoPrice.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} sin precio conocido · edición más barata (Cardmarket)'**
+  String ddSomeNoPrice(int n);
+
+  /// No description provided for @ddInstants.
+  ///
+  /// In es, this message translates to:
+  /// **'Instantáneos'**
+  String get ddInstants;
+
+  /// No description provided for @ddTypeCreatures.
+  ///
+  /// In es, this message translates to:
+  /// **'Criaturas'**
+  String get ddTypeCreatures;
+
+  /// No description provided for @ddTypeSorceries.
+  ///
+  /// In es, this message translates to:
+  /// **'Conjuros'**
+  String get ddTypeSorceries;
+
+  /// No description provided for @ddTypeEnchantments.
+  ///
+  /// In es, this message translates to:
+  /// **'Encantamientos'**
+  String get ddTypeEnchantments;
+
+  /// No description provided for @ddTypeArtifacts.
+  ///
+  /// In es, this message translates to:
+  /// **'Artefactos'**
+  String get ddTypeArtifacts;
+
+  /// No description provided for @ddTypeOther.
+  ///
+  /// In es, this message translates to:
+  /// **'Otros'**
+  String get ddTypeOther;
+
+  /// No description provided for @ddOutOfRange.
+  ///
+  /// In es, this message translates to:
+  /// **'  (fuera del rango sano 20-27)'**
+  String get ddOutOfRange;
+
+  /// No description provided for @acRecalcTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Recalcular logros?'**
+  String get acRecalcTitle;
+
+  /// No description provided for @acRecalcBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se vuelven a mirar tus cartas y se quitan los logros que hoy no se cumplan. Sirve para arreglar los que se dieron por error; si has vendido cartas, también perderás esos.'**
+  String get acRecalcBody;
+
+  /// No description provided for @acRecalc.
+  ///
+  /// In es, this message translates to:
+  /// **'Recalcular'**
+  String get acRecalc;
+
+  /// No description provided for @acAllFine.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo cuadraba: no se ha quitado ningún logro.'**
+  String get acAllFine;
+
+  /// No description provided for @acRemovedN.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitados {n} logros que ya no se cumplen.'**
+  String acRemovedN(int n);
+
+  /// No description provided for @acTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Logros'**
+  String get acTitle;
+
+  /// No description provided for @acRecalcTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Recalcular con mis cartas de ahora'**
+  String get acRecalcTooltip;
+
+  /// No description provided for @acCertsTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Certificados'**
+  String get acCertsTooltip;
+
+  /// No description provided for @acUnlockedOf.
+  ///
+  /// In es, this message translates to:
+  /// **'{hechos} de {total} logros · {xp} XP'**
+  String acUnlockedOf(int hechos, int total, int xp);
+
+  /// No description provided for @acLevelLine.
+  ///
+  /// In es, this message translates to:
+  /// **'Nivel {nivel} · faltan {xp} XP para el {siguiente}'**
+  String acLevelLine(int nivel, int xp, int siguiente);
+
+  /// No description provided for @acIMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Me faltan'**
+  String get acIMissing;
+
+  /// No description provided for @acSecret.
+  ///
+  /// In es, this message translates to:
+  /// **'Logro secreto'**
+  String get acSecret;
+
+  /// No description provided for @acSecretDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Se descubre solo cuando lo consigues.'**
+  String get acSecretDesc;
+
+  /// No description provided for @acProgressLine.
+  ///
+  /// In es, this message translates to:
+  /// **'{progreso} · {tier} · {xp} XP'**
+  String acProgressLine(String progreso, String tier, int xp);
+
+  /// No description provided for @acDoneLine.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Conseguido{fecha} · {tier} · {xp} XP'**
+  String acDoneLine(String fecha, String tier, int xp);
+
+  /// No description provided for @acOnDate.
+  ///
+  /// In es, this message translates to:
+  /// **' el {fecha}'**
+  String acOnDate(String fecha);
+
+  /// No description provided for @acLevelUp.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Nivel {nivel}!'**
+  String acLevelUp(int nivel);
+
+  /// No description provided for @acLevelUpBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya eres {titulo}. Llevas {hechos} de {total} logros.'**
+  String acLevelUpBody(String titulo, int hechos, int total);
+
+  /// No description provided for @acOk.
+  ///
+  /// In es, this message translates to:
+  /// **'Vale'**
+  String get acOk;
+
+  /// No description provided for @acSeeAchievements.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver logros'**
+  String get acSeeAchievements;
+
+  /// No description provided for @acToast.
+  ///
+  /// In es, this message translates to:
+  /// **'🏆 ¡Logro! {titulo}{mas} · +{xp} XP'**
+  String acToast(String titulo, String mas, int xp);
+
+  /// No description provided for @acAndMore.
+  ///
+  /// In es, this message translates to:
+  /// **' (y {n} más)'**
+  String acAndMore(int n);
+
+  /// No description provided for @ceNeedDb.
+  ///
+  /// In es, this message translates to:
+  /// **'Para los de expansión hace falta la base de datos de cartas ({error})'**
+  String ceNeedDb(String error);
+
+  /// No description provided for @ceWhoseName.
+  ///
+  /// In es, this message translates to:
+  /// **'¿A nombre de quién?'**
+  String get ceWhoseName;
+
+  /// No description provided for @ceCollectorName.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu nombre de coleccionista'**
+  String get ceCollectorName;
+
+  /// No description provided for @ceInNameOf.
+  ///
+  /// In es, this message translates to:
+  /// **'A nombre de…'**
+  String get ceInNameOf;
+
+  /// No description provided for @ceEmptyWithData.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no tienes ninguna expansión completa. Cuando completes una entera en el Álbum, aquí saldrá tu certificado para descargar.'**
+  String get ceEmptyWithData;
+
+  /// No description provided for @ceEmptyNoData.
+  ///
+  /// In es, this message translates to:
+  /// **'Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV de ManaBox (trae el Scryfall ID).'**
+  String get ceEmptyNoData;
+
+  /// No description provided for @ceNothingSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'No se guardó nada.'**
+  String get ceNothingSaved;
+
+  /// No description provided for @ceSavedTo.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ Certificado guardado en {ruta}'**
+  String ceSavedTo(String ruta);
+
+  /// No description provided for @ceSaveFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar: {error}'**
+  String ceSaveFailed(String error);
+
+  /// No description provided for @cePickFirstCard.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir la carta con la que empecé'**
+  String get cePickFirstCard;
+
+  /// No description provided for @ceChangeFirstCard.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar la carta con la que empecé'**
+  String get ceChangeFirstCard;
+
+  /// No description provided for @ceDownloadPng.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargar PNG'**
+  String get ceDownloadPng;
 }
 
 class _AppLocalizationsDelegate
