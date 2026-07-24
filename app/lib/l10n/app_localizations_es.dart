@@ -95,10 +95,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get languageSystem => 'El del sistema';
 
   @override
-  String get languagePartial =>
-      'La app se está traduciendo por partes: el armazón ya está en tu idioma y el resto de pantallas siguen en español de momento.';
-
-  @override
   String get versionTitle => 'Versión de ManaForge';
 
   @override

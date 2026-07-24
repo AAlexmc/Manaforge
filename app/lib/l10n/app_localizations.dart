@@ -270,12 +270,6 @@ abstract class AppLocalizations {
   /// **'El del sistema'**
   String get languageSystem;
 
-  /// No description provided for @languagePartial.
-  ///
-  /// In es, this message translates to:
-  /// **'La app se está traduciendo por partes: el armazón ya está en tu idioma y el resto de pantallas siguen en español de momento.'**
-  String get languagePartial;
-
   /// No description provided for @versionTitle.
   ///
   /// In es, this message translates to:

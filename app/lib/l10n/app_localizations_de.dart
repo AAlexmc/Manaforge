@@ -95,10 +95,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get languageSystem => 'Wie das System';
 
   @override
-  String get languagePartial =>
-      'Die App wird nach und nach übersetzt: das Grundgerüst ist schon in deiner Sprache, die übrigen Bildschirme bleiben vorerst auf Spanisch.';
-
-  @override
   String get versionTitle => 'ManaForge-Version';
 
   @override

@@ -31,7 +31,6 @@
 
   "language": "Idioma",
   "languageSystem": "El del sistema",
-  "languagePartial": "La app se está traduciendo por partes: el armazón ya está en tu idioma y el resto de pantallas siguen en español de momento.",
 
   "versionTitle": "Versión de ManaForge",
   "versionYouHave": "Tienes la {version}.",
