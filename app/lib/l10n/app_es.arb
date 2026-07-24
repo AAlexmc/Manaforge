@@ -1075,5 +1075,103 @@
     "placeholders": { "fecha": { "type": "String" } }
   },
 
-  "slLockButton": "Bloquear"
+  "slLockButton": "Bloquear",
+
+  "wn030Headline": "Forge por expansiones, precio de compra y avisos de versión",
+  "wn030Forge": "Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.",
+  "wn030Pnl": "Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.",
+  "wn030PhotoFolder": "Escanear por foto también deja elegir carpeta, como el escáner en vivo.",
+  "wn030Album": "Álbum: lo que te falta de cada expansión, con lo que costaría.",
+  "wn030Background": "Fondo de pantalla: pon detrás la imagen que quieras, con velo regulable, y elige el color de las tarjetas y de la letra para que encima se siga leyendo.",
+  "wn030Window": "La ventana se abre donde la dejaste, del tamaño que la dejaste.",
+  "wn030Achievements": "Los logros ya no se llaman como el criterio, se llaman como el momento: \"Ahí va todo mi dinero\", \"Cien raras y ninguna jugable\".",
+  "wn030Update": "La app avisa cuando hay versión nueva (no se actualiza sola) y comprueba la huella SHA-256 de las bases que se descarga.",
+  "wn030Shortcuts": "Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.",
+  "wn030Linux": "En Linux, un instalador deja ManaForge en el menú de aplicaciones con su icono.",
+  "wn030License": "Licencia PolyForm Noncommercial: compártela y tócala lo que quieras, pero no se vende.",
+
+  "bkSumCards": "{n, plural, =1{1 carta} other{{n} cartas}}",
+  "@bkSumCards": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumDecks": "{n, plural, =1{1 mazo} other{{n} mazos}}",
+  "@bkSumDecks": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumFolders": "{n, plural, =1{1 carpeta} other{{n} carpetas}}",
+  "@bkSumFolders": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumAchievements": "{n, plural, =1{1 logro} other{{n} logros}}",
+  "@bkSumAchievements": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumEmpty": "copia vacía",
+  "bkStoreCollection": "tu colección",
+  "bkStoreFolders": "tus carpetas",
+  "bkStoreDecks": "tus mazos",
+  "bkStoreAchievements": "tus logros",
+  "bkStoreWishlist": "tu lista de deseos",
+  "bkStoreCertificates": "tus certificados",
+  "bkStoreMarket": "tu mercado preferido",
+  "bkStoreRecents": "las cartas vistas hace poco",
+  "bkStoreValueHistory": "el historial del valor",
+  "bkStorePriceHistory": "el historial de precios",
+  "bkKindAuto": "automática",
+  "bkKindPreRestore": "antes de restaurar",
+  "bkErrFileTooBig": "Ese fichero es demasiado grande para ser una copia de ManaForge.",
+  "bkErrExpandTooBig": "Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.",
+  "bkErrNotABackup": "Ese fichero no es una copia de seguridad de ManaForge.",
+  "bkErrNewerVersion": "Esa copia la hizo una versión más nueva de ManaForge. Actualiza la app y vuelve a intentarlo.",
+  "bkErrIncomplete": "Esa copia está incompleta: no trae tus datos.",
+  "bkErrDamaged": "Esa copia está dañada: {almacen} no se puede leer.",
+  "@bkErrDamaged": {
+    "placeholders": {"almacen": {"type": "String"}}
+  },
+  "bkErrWriteFailed": "No he podido escribir en la carpeta de datos, así que no he tocado nada: {error}",
+  "@bkErrWriteFailed": {
+    "placeholders": {"error": {"type": "String"}}
+  },
+  "bkErrHalfDoneNoPrevious": "El restaurar se ha quedado a medias ({escritos} de {total} ficheros). No tengo copia previa de lo que había. Detalle: {error}",
+  "@bkErrHalfDoneNoPrevious": {
+    "placeholders": {"escritos": {"type": "String"}, "total": {"type": "String"}, "error": {"type": "String"}}
+  },
+  "bkErrHalfDonePrevious": "El restaurar se ha quedado a medias ({escritos} de {total} ficheros). Para volver atrás, restaura {ruta}. Detalle: {error}",
+  "@bkErrHalfDonePrevious": {
+    "placeholders": {"escritos": {"type": "String"}, "total": {"type": "String"}, "ruta": {"type": "String"}, "error": {"type": "String"}}
+  },
+
+  "siImportTooBig": "Ese archivo es demasiado grande para ser una lista de cartas.",
+  "siInsecureDownload": "La descarga acabó en una dirección insegura y se ha cancelado.",
+  "siRedirectNowhere": "La descarga redirige a ninguna parte y se ha cancelado.",
+  "siTooManyRedirects": "La descarga da demasiadas vueltas y se ha cancelado.",
+  "siDownloadTooBig": "La descarga es mucho más grande de lo que debería y se ha cancelado.",
+  "siBadHash": "Lo descargado no coincide con la huella publicada en GitHub. No se ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.",
+  "siBackgroundNotImage": "Elige una imagen (.jpg, .png o .webp) como fondo.",
+  "siBackgroundTooBig": "Esa imagen es demasiado grande para usarla de fondo.",
+
+  "bgImages": "Imágenes",
+  "bgImageFailed": "No pude usar esa imagen: {error}",
+  "@bgImageFailed": {
+    "placeholders": {"error": {"type": "String"}}
+  },
+  "bgLowContrast": "Poca diferencia con la tarjeta: la letra se ajustará sola para que se lea.",
+  "bgChipColor": "Color de las pestañas",
+  "bgIconColor": "Color de los iconos",
+  "bgUseThis": "Usar este",
+
+  "camGstreamerMissing": "GStreamer no está instalado. Instálalo con:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good",
+  "camNoImage": "La cámara {dispositivo} no da imagen (gst-launch salió con {codigo}).\n{detalle}",
+  "@camNoImage": {
+    "placeholders": {"dispositivo": {"type": "String"}, "codigo": {"type": "String"}, "detalle": {"type": "String"}}
+  },
+  "camNoFrames": "La cámara {dispositivo} no ha dado ningún frame en 6 s.",
+  "@camNoFrames": {
+    "placeholders": {"dispositivo": {"type": "String"}}
+  },
+  "camNoCameras": "No encuentro ninguna cámara (/dev/video*). ¿Está conectada? Comprueba con `lsusb` que el sistema la ve.",
+  "camNoneWorked": "Ninguna cámara dio imagen:\n{detalle}",
+  "@camNoneWorked": {
+    "placeholders": {"detalle": {"type": "String"}}
+  }
 }

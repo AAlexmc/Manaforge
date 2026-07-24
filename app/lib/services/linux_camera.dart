@@ -11,13 +11,57 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
+import '../l10n/app_localizations.dart';
+
 /// No hay cámara utilizable (sin dispositivos, sin GStreamer, o el
 /// pipeline no arranca). El mensaje está pensado para enseñarlo tal cual.
 class CameraUnavailable implements Exception {
+  /// El mensaje en español: registro y red de seguridad. Lo que ve el usuario
+  /// sale de [cameraErrorText], que sabe en qué idioma va la app.
   final String message;
-  const CameraUnavailable(this.message);
+  final CameraErrorCode code;
+
+  /// Lo que va en los huecos del mensaje traducido, en orden.
+  final List<String> args;
+
+  const CameraUnavailable(this.message,
+      {this.code = CameraErrorCode.other, this.args = const []});
   @override
   String toString() => message;
+}
+
+/// El texto de un fallo de cámara, en el idioma del usuario.
+String cameraErrorText(AppLocalizations t, CameraUnavailable e) {
+  String arg(int i) => i < e.args.length ? e.args[i] : '';
+  return switch (e.code) {
+    CameraErrorCode.gstreamerMissing => t.camGstreamerMissing,
+    CameraErrorCode.noImage => t.camNoImage(arg(0), arg(1), arg(2)),
+    CameraErrorCode.noFrames => t.camNoFrames(arg(0)),
+    CameraErrorCode.noCameras => t.camNoCameras,
+    CameraErrorCode.noneWorked => t.camNoneWorked(arg(0)),
+    CameraErrorCode.other => e.message,
+  };
+}
+
+/// Por qué no hay cámara.
+enum CameraErrorCode {
+  /// Falta GStreamer en el sistema.
+  gstreamerMissing,
+
+  /// El pipeline murió sin dar imagen. `args`: dispositivo, código, detalle.
+  noImage,
+
+  /// El pipeline arrancó pero no llegó ningún frame. `args`: dispositivo.
+  noFrames,
+
+  /// No hay ningún `/dev/video*`.
+  noCameras,
+
+  /// Había cámaras, pero ninguna dio imagen. `args`: detalle.
+  noneWorked,
+
+  /// Cualquier otro: se enseña [CameraUnavailable.message] tal cual.
+  other,
 }
 
 class VideoDevice {
@@ -161,7 +205,8 @@ class LinuxCamera {
     } on ProcessException {
       throw const CameraUnavailable(
           'GStreamer no está instalado. Instálalo con:\n'
-          'sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good');
+          'sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good',
+          code: CameraErrorCode.gstreamerMissing);
     }
     final splitter = MjpegSplitter();
     final first = Completer<void>();
@@ -178,7 +223,9 @@ class LinuxCamera {
       if (!first.isCompleted) {
         first.completeError(CameraUnavailable(
             'La cámara $device no da imagen (gst-launch salió con $code).\n'
-            '${stderrBuf.toString().trim()}'));
+            '${stderrBuf.toString().trim()}',
+            code: CameraErrorCode.noImage,
+            args: [device, '$code', stderrBuf.toString().trim()]));
       } else if (!_disposed && _proc == proc) {
         died.value = true; // el pipeline ACTIVO murió con la sesión en marcha
       }
@@ -186,7 +233,9 @@ class LinuxCamera {
     try {
       await first.future.timeout(const Duration(seconds: 6),
           onTimeout: () => throw CameraUnavailable(
-              'La cámara $device no ha dado ningún frame en 6 s.'));
+              'La cámara $device no ha dado ningún frame en 6 s.',
+              code: CameraErrorCode.noFrames,
+              args: [device]));
     } catch (_) {
       // intento fallido: limpiar SOLO lo suyo (otra variante puede seguir)
       sub.cancel();
@@ -206,7 +255,8 @@ class LinuxCamera {
     if (devices.isEmpty) {
       throw const CameraUnavailable(
           'No encuentro ninguna cámara (/dev/video*). ¿Está conectada? '
-          'Comprueba con `lsusb` que el sistema la ve.');
+          'Comprueba con `lsusb` que el sistema la ve.',
+          code: CameraErrorCode.noCameras);
     }
     final errors = <String>[];
     for (final d in devices) {
@@ -221,7 +271,9 @@ class LinuxCamera {
       }
     }
     throw CameraUnavailable(
-        'Ninguna cámara dio imagen:\n${errors.join('\n')}');
+        'Ninguna cámara dio imagen:\n${errors.join('\n')}',
+        code: CameraErrorCode.noneWorked,
+        args: [errors.join('\n')]);
   }
 
   void dispose() {

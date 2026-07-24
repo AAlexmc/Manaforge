@@ -8,14 +8,16 @@
 /// `kAppVersion` (hay un test que ata la versión al `pubspec.yaml`).
 library;
 
+import '../l10n/app_localizations.dart';
 import 'backup.dart' show kAppVersion;
 
-/// Novedades de una versión, en el idioma de la casa: qué cambia y por qué
-/// te importa, no el número de PR.
+/// Novedades de una versión: qué cambia y por qué te importa, no el número de
+/// PR. El texto vive en las traducciones, así que las novedades se leen en el
+/// idioma que tenga puesto el usuario; aquí solo queda a qué versión van.
 class VersionNews {
   final String version;
-  final String headline;
-  final List<String> bullets;
+  final String Function(AppLocalizations t) headline;
+  final List<String> Function(AppLocalizations t) bullets;
 
   const VersionNews({
     required this.version,
@@ -24,35 +26,28 @@ class VersionNews {
   });
 }
 
+String _headline030(AppLocalizations t) => t.wn030Headline;
+
+List<String> _bullets030(AppLocalizations t) => [
+      t.wn030Forge,
+      t.wn030Pnl,
+      t.wn030PhotoFolder,
+      t.wn030Album,
+      t.wn030Background,
+      t.wn030Window,
+      t.wn030Achievements,
+      t.wn030Update,
+      t.wn030Shortcuts,
+      t.wn030Linux,
+      t.wn030License,
+    ];
+
 /// De la más nueva a la más vieja.
 const List<VersionNews> kWhatsNew = [
   VersionNews(
     version: '0.3.0',
-    headline: 'Forge por expansiones, precio de compra y avisos de versión',
-    bullets: [
-      'Forge: elige de qué expansiones salen las cartas. Y si activas '
-          '"incluir cartas que no tengo", te monta el mazo con toda la '
-          'colección elegida y te dice cuántas te faltan y cuánto cuestan.',
-      'Precio de compra y P&L: si tu CSV de ManaBox trae "Purchase price", '
-          'el Mercado te dice lo que pagaste, lo que vale hoy y la '
-          'diferencia. Las divisas no se mezclan.',
-      'Escanear por foto también deja elegir carpeta, como el escáner en '
-          'vivo.',
-      'Álbum: lo que te falta de cada expansión, con lo que costaría.',
-      'Fondo de pantalla: pon detrás la imagen que quieras, con velo '
-          'regulable, y elige el color de las tarjetas y de la letra para '
-          'que encima se siga leyendo.',
-      'La ventana se abre donde la dejaste, del tamaño que la dejaste.',
-      'Los logros ya no se llaman como el criterio, se llaman como el '
-          'momento: "Ahí va todo mi dinero", "Cien raras y ninguna jugable".',
-      'La app avisa cuando hay versión nueva (no se actualiza sola) y '
-          'comprueba la huella SHA-256 de las bases que se descarga.',
-      'Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.',
-      'En Linux, un instalador deja ManaForge en el menú de aplicaciones '
-          'con su icono.',
-      'Licencia PolyForm Noncommercial: compártela y tócala lo que quieras, '
-          'pero no se vende.',
-    ],
+    headline: _headline030,
+    bullets: _bullets030,
   ),
 ];
 

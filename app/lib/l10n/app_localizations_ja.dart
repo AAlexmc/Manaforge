@@ -2303,4 +2303,251 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get slLockButton => 'Bloquear';
+
+  @override
+  String get wn030Headline =>
+      'Forge por expansiones, precio de compra y avisos de versión';
+
+  @override
+  String get wn030Forge =>
+      'Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.';
+
+  @override
+  String get wn030Pnl =>
+      'Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.';
+
+  @override
+  String get wn030PhotoFolder =>
+      'Escanear por foto también deja elegir carpeta, como el escáner en vivo.';
+
+  @override
+  String get wn030Album =>
+      'Álbum: lo que te falta de cada expansión, con lo que costaría.';
+
+  @override
+  String get wn030Background =>
+      'Fondo de pantalla: pon detrás la imagen que quieras, con velo regulable, y elige el color de las tarjetas y de la letra para que encima se siga leyendo.';
+
+  @override
+  String get wn030Window =>
+      'La ventana se abre donde la dejaste, del tamaño que la dejaste.';
+
+  @override
+  String get wn030Achievements =>
+      'Los logros ya no se llaman como el criterio, se llaman como el momento: \"Ahí va todo mi dinero\", \"Cien raras y ninguna jugable\".';
+
+  @override
+  String get wn030Update =>
+      'La app avisa cuando hay versión nueva (no se actualiza sola) y comprueba la huella SHA-256 de las bases que se descarga.';
+
+  @override
+  String get wn030Shortcuts =>
+      'Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.';
+
+  @override
+  String get wn030Linux =>
+      'En Linux, un instalador deja ManaForge en el menú de aplicaciones con su icono.';
+
+  @override
+  String get wn030License =>
+      'Licencia PolyForm Noncommercial: compártela y tócala lo que quieras, pero no se vende.';
+
+  @override
+  String bkSumCards(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n cartas',
+      one: '1 carta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bkSumDecks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n mazos',
+      one: '1 mazo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bkSumFolders(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n carpetas',
+      one: '1 carpeta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bkSumAchievements(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n logros',
+      one: '1 logro',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bkSumEmpty => 'copia vacía';
+
+  @override
+  String get bkStoreCollection => 'tu colección';
+
+  @override
+  String get bkStoreFolders => 'tus carpetas';
+
+  @override
+  String get bkStoreDecks => 'tus mazos';
+
+  @override
+  String get bkStoreAchievements => 'tus logros';
+
+  @override
+  String get bkStoreWishlist => 'tu lista de deseos';
+
+  @override
+  String get bkStoreCertificates => 'tus certificados';
+
+  @override
+  String get bkStoreMarket => 'tu mercado preferido';
+
+  @override
+  String get bkStoreRecents => 'las cartas vistas hace poco';
+
+  @override
+  String get bkStoreValueHistory => 'el historial del valor';
+
+  @override
+  String get bkStorePriceHistory => 'el historial de precios';
+
+  @override
+  String get bkKindAuto => 'automática';
+
+  @override
+  String get bkKindPreRestore => 'antes de restaurar';
+
+  @override
+  String get bkErrFileTooBig =>
+      'Ese fichero es demasiado grande para ser una copia de ManaForge.';
+
+  @override
+  String get bkErrExpandTooBig =>
+      'Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.';
+
+  @override
+  String get bkErrNotABackup =>
+      'Ese fichero no es una copia de seguridad de ManaForge.';
+
+  @override
+  String get bkErrNewerVersion =>
+      'Esa copia la hizo una versión más nueva de ManaForge. Actualiza la app y vuelve a intentarlo.';
+
+  @override
+  String get bkErrIncomplete => 'Esa copia está incompleta: no trae tus datos.';
+
+  @override
+  String bkErrDamaged(String almacen) {
+    return 'Esa copia está dañada: $almacen no se puede leer.';
+  }
+
+  @override
+  String bkErrWriteFailed(String error) {
+    return 'No he podido escribir en la carpeta de datos, así que no he tocado nada: $error';
+  }
+
+  @override
+  String bkErrHalfDoneNoPrevious(String escritos, String total, String error) {
+    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). No tengo copia previa de lo que había. Detalle: $error';
+  }
+
+  @override
+  String bkErrHalfDonePrevious(
+      String escritos, String total, String ruta, String error) {
+    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). Para volver atrás, restaura $ruta. Detalle: $error';
+  }
+
+  @override
+  String get siImportTooBig =>
+      'Ese archivo es demasiado grande para ser una lista de cartas.';
+
+  @override
+  String get siInsecureDownload =>
+      'La descarga acabó en una dirección insegura y se ha cancelado.';
+
+  @override
+  String get siRedirectNowhere =>
+      'La descarga redirige a ninguna parte y se ha cancelado.';
+
+  @override
+  String get siTooManyRedirects =>
+      'La descarga da demasiadas vueltas y se ha cancelado.';
+
+  @override
+  String get siDownloadTooBig =>
+      'La descarga es mucho más grande de lo que debería y se ha cancelado.';
+
+  @override
+  String get siBadHash =>
+      'Lo descargado no coincide con la huella publicada en GitHub. No se ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.';
+
+  @override
+  String get siBackgroundNotImage =>
+      'Elige una imagen (.jpg, .png o .webp) como fondo.';
+
+  @override
+  String get siBackgroundTooBig =>
+      'Esa imagen es demasiado grande para usarla de fondo.';
+
+  @override
+  String get bgImages => 'Imágenes';
+
+  @override
+  String bgImageFailed(String error) {
+    return 'No pude usar esa imagen: $error';
+  }
+
+  @override
+  String get bgLowContrast =>
+      'Poca diferencia con la tarjeta: la letra se ajustará sola para que se lea.';
+
+  @override
+  String get bgChipColor => 'Color de las pestañas';
+
+  @override
+  String get bgIconColor => 'Color de los iconos';
+
+  @override
+  String get bgUseThis => 'Usar este';
+
+  @override
+  String get camGstreamerMissing =>
+      'GStreamer no está instalado. Instálalo con:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good';
+
+  @override
+  String camNoImage(String dispositivo, String codigo, String detalle) {
+    return 'La cámara $dispositivo no da imagen (gst-launch salió con $codigo).\n$detalle';
+  }
+
+  @override
+  String camNoFrames(String dispositivo) {
+    return 'La cámara $dispositivo no ha dado ningún frame en 6 s.';
+  }
+
+  @override
+  String get camNoCameras =>
+      'No encuentro ninguna cámara (/dev/video*). ¿Está conectada? Comprueba con `lsusb` que el sistema la ve.';
+
+  @override
+  String camNoneWorked(String detalle) {
+    return 'Ninguna cámara dio imagen:\n$detalle';
+  }
 }

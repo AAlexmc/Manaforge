@@ -6,6 +6,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:manaforge_app/l10n/app_localizations_es.dart';
 import 'package:manaforge_app/services/backup.dart' show kAppVersion;
 import 'package:manaforge_app/services/whats_new.dart';
 
@@ -14,7 +15,11 @@ void main() {
     // si esto falla al publicar, es que se subió kAppVersion sin contar qué
     // trae: el aviso saldría vacío
     expect(newsFor(kAppVersion), isNotNull);
-    expect(currentNews!.bullets, isNotEmpty);
+    final t = AppLocalizationsEs();
+    expect(currentNews!.bullets(t), isNotEmpty);
+    expect(currentNews!.headline(t), isNotEmpty);
+    // y ninguna viñeta se queda en blanco por una clave que no existe
+    expect(currentNews!.bullets(t).where((b) => b.trim().isEmpty), isEmpty);
   });
 
   test('las novedades van de la más nueva a la más vieja', () {

@@ -5,6 +5,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import '../services/backup.dart';
 
@@ -65,13 +66,17 @@ class _BackupCardState extends State<BackupCard> {
   }
 
   Future<void> _export() async {
+    final t = tr(context);
     setState(() {
       _busy = true;
       _status = null;
     });
     try {
       final dir = await widget.dataDir();
-      if (dir == null) throw const BackupError('No encuentro tus datos.');
+      if (dir == null) {
+        throw const BackupError('No encuentro tus datos.',
+            code: BackupErrorCode.noData);
+      }
       final bytes = await buildBackup(dir);
       final nombre = 'manaforge-${backupStamp(DateTime.now())}.mfbak';
       final destino = await getSaveLocation(suggestedName: nombre);
@@ -79,27 +84,31 @@ class _BackupCardState extends State<BackupCard> {
       await File(destino.path).writeAsBytes(bytes, flush: true);
       final manifest = readManifest(bytes);
       if (mounted) {
-        setState(() => _status = '✓ Copia guardada · ${manifest.summary}');
+        setState(() => _status = t.bkSaved(manifest.summary(t)));
       }
     } on BackupError catch (e) {
-      if (mounted) setState(() => _status = e.message);
+      if (mounted) setState(() => _status = backupErrorText(t, e));
     } catch (e) {
-      if (mounted) setState(() => _status = 'No he podido guardarla: $e');
+      if (mounted) setState(() => _status = t.bkSaveFailed('$e'));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
   Future<void> _restore() async {
+    final t = tr(context);
     setState(() {
       _busy = true;
       _status = null;
     });
     try {
       final dir = await widget.dataDir();
-      if (dir == null) throw const BackupError('No encuentro tus datos.');
-      final origen = await openFile(acceptedTypeGroups: const [
-        XTypeGroup(label: 'Copia de ManaForge', extensions: ['mfbak'])
+      if (dir == null) {
+        throw const BackupError('No encuentro tus datos.',
+            code: BackupErrorCode.noData);
+      }
+      final origen = await openFile(acceptedTypeGroups: [
+        XTypeGroup(label: t.bkFileName, extensions: const ['mfbak'])
       ]);
       if (origen == null) return; // cancelado
       // el tamaño se mira ANTES de leerlo a memoria: un fichero de fuera con
@@ -107,9 +116,9 @@ class _BackupCardState extends State<BackupCard> {
       ensureBackupFileSize(await origen.length());
       await _apply(await origen.readAsBytes(), dir);
     } on BackupError catch (e) {
-      if (mounted) setState(() => _status = e.message);
+      if (mounted) setState(() => _status = backupErrorText(t, e));
     } catch (e) {
-      if (mounted) setState(() => _status = 'No he podido restaurarla: $e');
+      if (mounted) setState(() => _status = t.bkRestoreFailed('$e'));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -117,19 +126,23 @@ class _BackupCardState extends State<BackupCard> {
 
   /// Restaurar la copia elegida en el desplegable.
   Future<void> _restoreAuto(File file) async {
+    final t = tr(context);
     setState(() {
       _busy = true;
       _status = null;
     });
     try {
       final dir = await widget.dataDir();
-      if (dir == null) throw const BackupError('No encuentro tus datos.');
+      if (dir == null) {
+        throw const BackupError('No encuentro tus datos.',
+            code: BackupErrorCode.noData);
+      }
       ensureBackupFileSize(await file.length());
       await _apply(await file.readAsBytes(), dir);
     } on BackupError catch (e) {
-      if (mounted) setState(() => _status = e.message);
+      if (mounted) setState(() => _status = backupErrorText(t, e));
     } catch (e) {
-      if (mounted) setState(() => _status = 'No he podido restaurarla: $e');
+      if (mounted) setState(() => _status = t.bkRestoreFailed('$e'));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -138,6 +151,7 @@ class _BackupCardState extends State<BackupCard> {
   /// El camino común de los dos: validar, preguntar y aplicar. Uno solo para
   /// que el aviso de "esto reemplaza lo de ahora" no pueda faltar en una vía.
   Future<void> _apply(Uint8List bytes, Directory dir) async {
+    final t = tr(context);
     // se lee y valida ANTES de preguntar: no tiene sentido pedir confirmación
     // de algo que no se va a poder aplicar. Y se lee UNA vez: descomprimir es
     // el trabajo caro, y va en otro hilo (compute) para no colgar la ventana
@@ -151,10 +165,9 @@ class _BackupCardState extends State<BackupCard> {
         () => restoreBackup(bytes, dir, contents: copia));
     if (!mounted) return;
     setState(() => _status = report.previous == null
-        ? '✓ Restaurado · ${manifest.summary}. OJO: no he podido guardar lo '
-            'que tenías antes (${report.previousError}).'
-        : '✓ Restaurado · ${manifest.summary}. Lo que tenías antes está '
-            'guardado en la carpeta backups.');
+        ? t.bkRestoredNoPrevious(
+            manifest.summary(t), '${report.previousError}')
+        : t.bkRestored(manifest.summary(t)));
     widget.onRestored();
     // el restaurar deja una copia `pre-restore` nueva: que salga en la lista
     unawaited(_loadAutos());
@@ -173,14 +186,14 @@ class _BackupCardState extends State<BackupCard> {
     unawaited(showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const PopScope(
+      builder: (dialogContext) => PopScope(
         canPop: false,
         child: AlertDialog(
           content: Row(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 16),
-              Expanded(child: Text('Restaurando tu copia…')),
+              const CircularProgressIndicator(),
+              const SizedBox(width: 16),
+              Expanded(child: Text(tr(dialogContext).bkRestoring)),
             ],
           ),
         ),
@@ -195,43 +208,34 @@ class _BackupCardState extends State<BackupCard> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Copia de seguridad',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(t.bkTitle, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
-            const Text(
-                'Tus cartas, mazos, carpetas y logros viven solo en este '
-                'ordenador. Guarda una copia de vez en cuando y déjala en '
-                'otro sitio: un disco, la nube, lo que quieras.',
-                style: TextStyle(fontSize: 12.5)),
+            Text(t.bkWhy, style: const TextStyle(fontSize: 12.5)),
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: _busy ? null : _export,
               icon: const Icon(Icons.save_alt),
-              label: const Text('Guardar copia'),
+              label: Text(t.bkSave),
             ),
             if (_status != null) ...[
               const SizedBox(height: 10),
               Text(_status!, style: const TextStyle(fontSize: 12.5)),
             ],
             const Divider(height: 32),
-            Text('Restaurar una copia',
+            Text(t.bkRestoreTitle,
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
-            const Text(
-                'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de '
-                'ahora por los de la copia. Elige cuál, dale al botón y '
-                'escribe CONFIRMAR: así no se restaura nada sin querer.',
-                style: TextStyle(fontSize: 12.5)),
+            Text(t.bkRestoreWarning, style: const TextStyle(fontSize: 12.5)),
             const SizedBox(height: 12),
             if (_autos.isEmpty)
-              const Text('Aún no hay copias guardadas en este ordenador.',
-                  style: TextStyle(fontSize: 12.5))
+              Text(t.bkNoBackups, style: const TextStyle(fontSize: 12.5))
             else ...[
               DropdownButtonFormField<File>(
                 // la clave depende de la LISTA: si las copias cambian (una
@@ -241,17 +245,17 @@ class _BackupCardState extends State<BackupCard> {
                 key: ValueKey(_autos.map((f) => f.path).join('|')),
                 initialValue: _elegida,
                 isExpanded: true,
-                decoration: const InputDecoration(
-                  labelText: 'Copia a restaurar',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: t.bkWhich,
+                  border: const OutlineInputBorder(),
                   isDense: true,
                 ),
-                hint: const Text('Elige una copia'),
+                hint: Text(t.bkPickOne),
                 items: [
                   for (final file in _autos)
                     DropdownMenuItem<File>(
                       value: file,
-                      child: Text(backupLabel(file),
+                      child: Text(backupLabel(file, t),
                           style: const TextStyle(fontSize: 12.5),
                           overflow: TextOverflow.ellipsis),
                     ),
@@ -267,19 +271,16 @@ class _BackupCardState extends State<BackupCard> {
                     ? null
                     : () => _restoreAuto(_elegida!),
                 icon: const Icon(Icons.settings_backup_restore),
-                label: const Text('Restaurar la copia elegida'),
+                label: Text(t.bkRestorePicked),
               ),
               const SizedBox(height: 6),
-              const Text(
-                  'Guardo una copia automática cada semana (las cinco '
-                  'últimas) y otra justo antes de cada restaurar.',
-                  style: TextStyle(fontSize: 12)),
+              Text(t.bkAutoNote, style: const TextStyle(fontSize: 12)),
             ],
             const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: _busy ? null : _restore,
               icon: const Icon(Icons.folder_open),
-              label: const Text('Restaurar de un archivo'),
+              label: Text(t.bkFromFile),
             ),
           ],
         ),
@@ -289,9 +290,10 @@ class _BackupCardState extends State<BackupCard> {
 }
 
 /// "a, b y c" — para poder leer la lista de lo que se borra de corrido.
-String _enumerar(BuildContext context, List<String> cosas) {
+String _enumerar(AppLocalizations t, List<String> cosas) {
   if (cosas.length == 1) return cosas.single;
-  return '${cosas.sublist(0, cosas.length - 1).join(', ')}${tr(context).bkAnd}${cosas.last}';
+  return '${cosas.sublist(0, cosas.length - 1).join(', ')}'
+      '${t.bkAnd}${cosas.last}';
 }
 
 /// La palabra que hay que escribir para restaurar. Escribirla cuesta tres
@@ -306,6 +308,11 @@ Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
   final t = tr(context);
   final fecha = manifest.createdAt.toLocal();
   final cuando = '${fecha.day}/${fecha.month}/${fecha.year}';
+  // los dos historiales de precios dan el mismo texto: sin quitar repes
+  // saldría "el historial de precios y el historial de precios"
+  final borrados = <String>{
+    for (final store in willDelete) backupStoreName(t, store),
+  }.toList();
   final ok = await showDialog<bool>(
     context: context,
     builder: (context) {
@@ -320,15 +327,15 @@ Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${t.bkOfDate(cuando, manifest.summary)}\n\n'
+                Text('${t.bkOfDate(cuando, manifest.summary(t))}\n\n'
                     '${t.bkConfirmBody}'),
-                if (willDelete.isNotEmpty) ...[
+                if (borrados.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   // lo que la copia NO trae se BORRA, y el resumen de arriba
                   // solo cuenta cartas, mazos, carpetas y logros: sin esto,
                   // una copia vieja se llevaba por delante los certificados o
                   // el historial de precios sin decirlo en ninguna parte
-                  Text(t.bkWillDelete(_enumerar(context, willDelete)),
+                  Text(t.bkWillDelete(_enumerar(t, borrados)),
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
                 const SizedBox(height: 16),
