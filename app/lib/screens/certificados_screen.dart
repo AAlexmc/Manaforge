@@ -104,8 +104,7 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
           // sin base de datos no hay certificados de expansión, pero el de
           // bienvenida sí se puede dar
           _certs = widget.certificates.sync([if (welcome != null) welcome]);
-          _error = 'Para los de expansión hace falta la base de datos de '
-              'cartas ($e)';
+          _error = tr(context).ceNeedDb('$e');
         });
       }
     }
@@ -116,21 +115,22 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
     final name = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('¿A nombre de quién?'),
+        title: Text(tr(context).ceWhoseName),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(
-              labelText: 'Nombre', hintText: 'Tu nombre de coleccionista'),
+          decoration: InputDecoration(
+              labelText: tr(context).fdName,
+              hintText: tr(context).ceCollectorName),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar')),
+              child: Text(tr(context).acCancel)),
           FilledButton(
               onPressed: () => Navigator.of(context).pop(ctrl.text),
-              child: const Text('Guardar')),
+              child: Text(tr(context).fdSave)),
         ],
       ),
     );
@@ -141,10 +141,10 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Certificados'),
+        title: Text(tr(context).acCertsTooltip),
         actions: [
           IconButton(
-            tooltip: 'A nombre de…',
+            tooltip: tr(context).ceInNameOf,
             icon: const Icon(Icons.badge_outlined),
             onPressed: _editName,
           ),
@@ -164,12 +164,8 @@ class _CertificadosScreenState extends State<CertificadosScreen> {
                 child: Text(
                   _error ??
                       (widget.collection.hasPrintingData
-                          ? 'Todavía no tienes ninguna expansión completa. '
-                              'Cuando completes una entera en el Álbum, aquí '
-                              'saldrá tu certificado para descargar.'
-                          : 'Para certificar una expansión hace falta saber '
-                              'la edición exacta de tus cartas: reimporta tu '
-                              'CSV de ManaBox (trae el Scryfall ID).'),
+                          ? tr(context).ceEmptyWithData
+                          : tr(context).ceEmptyNoData),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -257,6 +253,9 @@ class _CertificateViewScreenState extends State<CertificateViewScreen> {
   }
 
   Future<void> _download() async {
+    // los textos se cogen ANTES de los await: usar el context tras uno es un
+    // aviso del analizador
+    final t = tr(context);
     setState(() => _saving = true);
     String? message;
     try {
@@ -273,11 +272,9 @@ class _CertificateViewScreenState extends State<CertificateViewScreen> {
         _boundaryKey,
         'certificado-${widget.certificate.id.replaceAll(':', '-')}.png',
       );
-      message = path == null
-          ? 'No se guardó nada.'
-          : '✓ Certificado guardado en $path';
+      message = path == null ? t.ceNothingSaved : t.ceSavedTo(path);
     } catch (e) {
-      message = 'No se pudo guardar: $e';
+      message = t.ceSaveFailed('$e');
     }
     if (!mounted) return;
     setState(() => _saving = false);
@@ -314,8 +311,8 @@ class _CertificateViewScreenState extends State<CertificateViewScreen> {
                     onPressed: _saving ? null : _pickFirstCard,
                     icon: const Icon(Icons.auto_stories_outlined),
                     label: Text(widget.certificates.firstCard == null
-                        ? 'Elegir la carta con la que empecé'
-                        : 'Cambiar la carta con la que empecé'),
+                        ? tr(context).cePickFirstCard
+                        : tr(context).ceChangeFirstCard),
                   ),
                 FilledButton.icon(
                   onPressed: _saving ? null : _download,
@@ -325,7 +322,7 @@ class _CertificateViewScreenState extends State<CertificateViewScreen> {
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.download),
-                  label: const Text('Descargar PNG'),
+                  label: Text(tr(context).ceDownloadPng),
                 ),
               ],
             ),

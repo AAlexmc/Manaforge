@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
+
 import '../services/achievements.dart';
 import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
@@ -80,18 +82,15 @@ class _LogrosScreenState extends State<LogrosScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('¿Recalcular logros?'),
-        content: const Text(
-            'Se vuelven a mirar tus cartas y se quitan los logros que hoy no '
-            'se cumplan. Sirve para arreglar los que se dieron por error; si '
-            'has vendido cartas, también perderás esos.'),
+        title: Text(tr(context).acRecalcTitle),
+        content: Text(tr(context).acRecalcBody),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar')),
+              child: Text(tr(context).acCancel)),
           FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Recalcular')),
+              child: Text(tr(context).acRecalc)),
         ],
       ),
     );
@@ -100,8 +99,8 @@ class _LogrosScreenState extends State<LogrosScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(removed == 0
-          ? 'Todo cuadraba: no se ha quitado ningún logro.'
-          : 'Quitados $removed logros que ya no se cumplen.'),
+          ? tr(context).acAllFine
+          : tr(context).acRemovedN(removed)),
     ));
   }
 
@@ -109,10 +108,10 @@ class _LogrosScreenState extends State<LogrosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Logros'),
+        title: Text(tr(context).acTitle),
         actions: [
           IconButton(
-            tooltip: 'Recalcular con mis cartas de ahora',
+            tooltip: tr(context).acRecalcTooltip,
             icon: const Icon(Icons.refresh),
             onPressed: _recalculate,
           ),
@@ -121,7 +120,7 @@ class _LogrosScreenState extends State<LogrosScreen> {
               widget.certificates != null)
             IconButton(
               key: widget.certificadosKey,
-              tooltip: 'Certificados',
+              tooltip: tr(context).acCertsTooltip,
               icon: const Icon(Icons.workspace_premium_outlined),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -201,8 +200,8 @@ class _LogrosScreenState extends State<LogrosScreen> {
                                 .textTheme
                                 .titleLarge
                                 ?.copyWith(fontWeight: FontWeight.bold)),
-                        Text('${c.unlockedCount} de ${c.totalCount} logros · '
-                            '${c.xp} XP'),
+                        Text(tr(context).acUnlockedOf(
+                            c.unlockedCount, c.totalCount, c.xp)),
                       ],
                     ),
                   ),
@@ -216,8 +215,8 @@ class _LogrosScreenState extends State<LogrosScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Nivel ${level.level} · faltan '
-                '${level.xpForNext - level.xpInLevel} XP para el ${level.level + 1}',
+                tr(context).acLevelLine(level.level,
+                    level.xpForNext - level.xpInLevel, level.level + 1),
                 style: const TextStyle(fontSize: 12),
               ),
             ],
@@ -269,7 +268,7 @@ class _LogrosScreenState extends State<LogrosScreen> {
           FilterChip(
             visualDensity: VisualDensity.compact,
             avatar: const Icon(Icons.hourglass_bottom, size: 16),
-            label: const Text('Me faltan'),
+            label: Text(tr(context).acIMissing),
             selected: _onlyPending,
             onSelected: (v) => setState(() => _onlyPending = v),
           ),
@@ -313,7 +312,7 @@ class _AchievementTile extends StatelessWidget {
         ),
       ),
       title: Text(
-        hidden ? 'Logro secreto' : a.title,
+        hidden ? tr(context).acSecret : a.title,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: locked ? Theme.of(context).disabledColor : null,
@@ -323,9 +322,7 @@ class _AchievementTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            hidden
-                ? 'Se descubre solo cuando lo consigues.'
-                : a.description,
+            hidden ? tr(context).acSecretDesc : a.description,
             style: const TextStyle(fontSize: 12),
           ),
           const SizedBox(height: 4),
@@ -336,12 +333,17 @@ class _AchievementTile extends StatelessWidget {
                   value: state.progress, minHeight: 5),
             ),
             const SizedBox(height: 2),
-            Text('${state.progressLabel} · ${a.tier.label} · ${a.xp} XP',
+            Text(tr(context).acProgressLine(
+                    state.progressLabel, a.tier.label, a.xp),
                 style: const TextStyle(fontSize: 11)),
           ] else
             Text(
-              '✓ Conseguido${state.unlockedAt == null ? '' : ' el ${_date(state.unlockedAt!)}'}'
-              ' · ${a.tier.label} · ${a.xp} XP',
+              tr(context).acDoneLine(
+                  state.unlockedAt == null
+                      ? ''
+                      : tr(context).acOnDate(_date(state.unlockedAt!)),
+                  a.tier.label,
+                  a.xp),
               style: TextStyle(fontSize: 11, color: color),
             ),
         ],
@@ -366,16 +368,16 @@ void showLevelUpDialog(
     context: context,
     builder: (context) => AlertDialog(
       icon: const Icon(Icons.military_tech, size: 40),
-      title: Text('¡Nivel ${level.level}!'),
+      title: Text(tr(context).acLevelUp(level.level)),
       content: Text(
-        'Ya eres ${level.title}. Llevas ${achievements.unlockedCount} de '
-        '${achievements.totalCount} logros.',
+        tr(context).acLevelUpBody(level.title,
+            achievements.unlockedCount, achievements.totalCount),
         textAlign: TextAlign.center,
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Vale'),
+          child: Text(tr(context).acOk),
         ),
         Builder(
           builder: (context) => FilledButton(
@@ -387,7 +389,7 @@ void showLevelUpDialog(
               nav.push(MaterialPageRoute(
                   builder: (_) => LogrosScreen(achievements: achievements)));
             },
-            child: const Text('Ver logros'),
+            child: Text(tr(context).acSeeAchievements),
           ),
         ),
       ],
@@ -420,8 +422,10 @@ void showAchievementToasts(
     persist: false,
     backgroundColor: tierColor(first.tier),
     content: Text(
-      '🏆 ¡Logro! ${first.title}'
-      '${more > 0 ? ' (y $more más)' : ''} · +${fresh.fold<int>(0, (s, a) => s + a.xp)} XP',
+      tr(context).acToast(
+          first.title,
+          more > 0 ? tr(context).acAndMore(more) : '',
+          fresh.fold<int>(0, (s, a) => s + a.xp)),
       style: const TextStyle(
           color: Colors.black, fontWeight: FontWeight.bold),
     ),

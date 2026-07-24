@@ -1757,4 +1757,275 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get icImport => 'Import';
+
+  @override
+  String dkDeleted(String nombre) {
+    return 'Deck \"$nombre\" deleted';
+  }
+
+  @override
+  String get dkUndo => 'UNDO';
+
+  @override
+  String dkOpenFailed(String error) {
+    return 'Couldn\'t open the deck (is the database downloaded?): $error';
+  }
+
+  @override
+  String get dkMyDecks => 'My decks';
+
+  @override
+  String get dkEmpty =>
+      'The decks you save from Forge will live here (save button in the deck detail).';
+
+  @override
+  String dkSavedCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n saved',
+      one: '1 saved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dkSubtitle(String arquetipo, int hechizos, int tierras, String fecha) {
+    return '$arquetipo · $hechizos spells + $tierras lands · saved on $fecha';
+  }
+
+  @override
+  String get dkDeleteTooltip => 'Delete deck';
+
+  @override
+  String get ddSaved => '✓ Deck saved — it\'s in the Decks tab';
+
+  @override
+  String get ddReforged => '✓ Deck reforged to your curve — list updated';
+
+  @override
+  String get ddSaveToMyDecks => 'Save to My decks';
+
+  @override
+  String get ddCopyList => 'Copy list (Moxfield/Arena)';
+
+  @override
+  String get ddListCopied =>
+      '✓ List copied — paste it into Moxfield, Arena or Discord';
+
+  @override
+  String ddHeaderSub(String tema, String arquetipo, int hechizos, int tierras) {
+    return '$tema · $arquetipo · $hechizos spells + $tierras lands';
+  }
+
+  @override
+  String get ddHaveAll => '✓ You have every card';
+
+  @override
+  String ddMissing(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          '⚠ You\'re missing $n cards from this deck — they stay in the list, they weren\'t deleted',
+      one:
+          '⚠ You\'re missing 1 card from this deck — it stays in the list, it wasn\'t deleted',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ddGamePlan => 'Your game plan';
+
+  @override
+  String get ddManaCurve => 'Mana curve';
+
+  @override
+  String get ddEditCurve => 'Edit curve';
+
+  @override
+  String ddDragBars(int hechizos, int tierras) {
+    return 'Drag the bars ↑↓ · $hechizos spells → $tierras lands';
+  }
+
+  @override
+  String get ddReforgeCurve => 'Reforge with this curve';
+
+  @override
+  String ddCurveSummary(int tierras, int hechizos, String coste) {
+    return '⛰ $tierras lands · ✦ $hechizos spells · Ø cost $coste';
+  }
+
+  @override
+  String get ddWhyWorks => 'Why does this deck work?';
+
+  @override
+  String ddLands(int n) {
+    return 'LANDS ($n)';
+  }
+
+  @override
+  String ddDeckTotal(String precio) {
+    return 'Deck total: ~$precio €';
+  }
+
+  @override
+  String get ddCheapestPrice => 'price of the cheapest printing (Cardmarket)';
+
+  @override
+  String ddSomeNoPrice(int n) {
+    return '$n without a known price · cheapest printing (Cardmarket)';
+  }
+
+  @override
+  String get ddInstants => 'Instants';
+
+  @override
+  String get ddTypeCreatures => 'Creatures';
+
+  @override
+  String get ddTypeSorceries => 'Sorceries';
+
+  @override
+  String get ddTypeEnchantments => 'Enchantments';
+
+  @override
+  String get ddTypeArtifacts => 'Artifacts';
+
+  @override
+  String get ddTypeOther => 'Other';
+
+  @override
+  String get ddOutOfRange => '  (outside the healthy 20-27 range)';
+
+  @override
+  String get acRecalcTitle => 'Recalculate achievements?';
+
+  @override
+  String get acRecalcBody =>
+      'Your cards are checked again and any achievements that no longer hold are removed. Good for fixing ones awarded by mistake; if you\'ve sold cards, you\'ll lose those too.';
+
+  @override
+  String get acRecalc => 'Recalculate';
+
+  @override
+  String get acAllFine => 'Everything checked out: no achievement was removed.';
+
+  @override
+  String acRemovedN(int n) {
+    return 'Removed $n achievements that no longer hold.';
+  }
+
+  @override
+  String get acTitle => 'Achievements';
+
+  @override
+  String get acRecalcTooltip => 'Recalculate with my current cards';
+
+  @override
+  String get acCertsTooltip => 'Certificates';
+
+  @override
+  String acUnlockedOf(int hechos, int total, int xp) {
+    return '$hechos of $total achievements · $xp XP';
+  }
+
+  @override
+  String acLevelLine(int nivel, int xp, int siguiente) {
+    return 'Level $nivel · $xp XP to level $siguiente';
+  }
+
+  @override
+  String get acIMissing => 'I\'m missing';
+
+  @override
+  String get acSecret => 'Secret achievement';
+
+  @override
+  String get acSecretDesc => 'You\'ll find out only once you earn it.';
+
+  @override
+  String acProgressLine(String progreso, String tier, int xp) {
+    return '$progreso · $tier · $xp XP';
+  }
+
+  @override
+  String acDoneLine(String fecha, String tier, int xp) {
+    return '✓ Earned$fecha · $tier · $xp XP';
+  }
+
+  @override
+  String acOnDate(String fecha) {
+    return ' on $fecha';
+  }
+
+  @override
+  String acLevelUp(int nivel) {
+    return 'Level $nivel!';
+  }
+
+  @override
+  String acLevelUpBody(String titulo, int hechos, int total) {
+    return 'You\'re now $titulo. You\'ve earned $hechos of $total achievements.';
+  }
+
+  @override
+  String get acOk => 'OK';
+
+  @override
+  String get acSeeAchievements => 'See achievements';
+
+  @override
+  String acToast(String titulo, String mas, int xp) {
+    return '🏆 Achievement! $titulo$mas · +$xp XP';
+  }
+
+  @override
+  String acAndMore(int n) {
+    return ' (and $n more)';
+  }
+
+  @override
+  String ceNeedDb(String error) {
+    return 'Set certificates need the card database ($error)';
+  }
+
+  @override
+  String get ceWhoseName => 'In whose name?';
+
+  @override
+  String get ceCollectorName => 'Your collector name';
+
+  @override
+  String get ceInNameOf => 'In the name of…';
+
+  @override
+  String get ceEmptyWithData =>
+      'You haven\'t completed a full set yet. When you finish one in the Album, your certificate will show up here to download.';
+
+  @override
+  String get ceEmptyNoData =>
+      'Certifying a set needs the exact printing of your cards: re-import your ManaBox CSV (it carries the Scryfall ID).';
+
+  @override
+  String get ceNothingSaved => 'Nothing was saved.';
+
+  @override
+  String ceSavedTo(String ruta) {
+    return '✓ Certificate saved to $ruta';
+  }
+
+  @override
+  String ceSaveFailed(String error) {
+    return 'Couldn\'t save it: $error';
+  }
+
+  @override
+  String get cePickFirstCard => 'Choose the card I started with';
+
+  @override
+  String get ceChangeFirstCard => 'Change the card I started with';
+
+  @override
+  String get ceDownloadPng => 'Download PNG';
 }

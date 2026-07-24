@@ -1738,4 +1738,275 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get icImport => 'Importar';
+
+  @override
+  String dkDeleted(String nombre) {
+    return 'Mazo \"$nombre\" borrado';
+  }
+
+  @override
+  String get dkUndo => 'DESHACER';
+
+  @override
+  String dkOpenFailed(String error) {
+    return 'No pude abrir el mazo (¿está descargada la base de datos?): $error';
+  }
+
+  @override
+  String get dkMyDecks => 'Mis mazos';
+
+  @override
+  String get dkEmpty =>
+      'Aquí vivirán los mazos que guardes desde Forge (botón de guardar en el detalle del mazo).';
+
+  @override
+  String dkSavedCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n guardados',
+      one: '1 guardado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dkSubtitle(String arquetipo, int hechizos, int tierras, String fecha) {
+    return '$arquetipo · $hechizos hechizos + $tierras tierras · guardado el $fecha';
+  }
+
+  @override
+  String get dkDeleteTooltip => 'Borrar mazo';
+
+  @override
+  String get ddSaved => '✓ Mazo guardado — lo tienes en la pestaña Mazos';
+
+  @override
+  String get ddReforged => '✓ Mazo reforjado a tu curva — lista actualizada';
+
+  @override
+  String get ddSaveToMyDecks => 'Guardar en Mis mazos';
+
+  @override
+  String get ddCopyList => 'Copiar lista (Moxfield/Arena)';
+
+  @override
+  String get ddListCopied =>
+      '✓ Lista copiada — pégala en Moxfield, Arena o Discord';
+
+  @override
+  String ddHeaderSub(String tema, String arquetipo, int hechizos, int tierras) {
+    return '$tema · $arquetipo · $hechizos hechizos + $tierras tierras';
+  }
+
+  @override
+  String get ddHaveAll => '✓ Tienes todas las cartas';
+
+  @override
+  String ddMissing(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          '⚠ Te faltan $n cartas de este mazo — siguen en la lista, no se han borrado',
+      one:
+          '⚠ Te falta 1 carta de este mazo — sigue en la lista, no se ha borrado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ddGamePlan => 'Tu plan de juego';
+
+  @override
+  String get ddManaCurve => 'Curva de maná';
+
+  @override
+  String get ddEditCurve => 'Editar curva';
+
+  @override
+  String ddDragBars(int hechizos, int tierras) {
+    return 'Arrastra las barras ↑↓ · $hechizos hechizos → $tierras tierras';
+  }
+
+  @override
+  String get ddReforgeCurve => 'Reforjar con esta curva';
+
+  @override
+  String ddCurveSummary(int tierras, int hechizos, String coste) {
+    return '⛰ $tierras tierras · ✦ $hechizos hechizos · Ø coste $coste';
+  }
+
+  @override
+  String get ddWhyWorks => '¿Por qué este mazo funciona?';
+
+  @override
+  String ddLands(int n) {
+    return 'TIERRAS ($n)';
+  }
+
+  @override
+  String ddDeckTotal(String precio) {
+    return 'Total del mazo: ~$precio €';
+  }
+
+  @override
+  String get ddCheapestPrice => 'precio de la edición más barata (Cardmarket)';
+
+  @override
+  String ddSomeNoPrice(int n) {
+    return '$n sin precio conocido · edición más barata (Cardmarket)';
+  }
+
+  @override
+  String get ddInstants => 'Instantáneos';
+
+  @override
+  String get ddTypeCreatures => 'Criaturas';
+
+  @override
+  String get ddTypeSorceries => 'Conjuros';
+
+  @override
+  String get ddTypeEnchantments => 'Encantamientos';
+
+  @override
+  String get ddTypeArtifacts => 'Artefactos';
+
+  @override
+  String get ddTypeOther => 'Otros';
+
+  @override
+  String get ddOutOfRange => '  (fuera del rango sano 20-27)';
+
+  @override
+  String get acRecalcTitle => '¿Recalcular logros?';
+
+  @override
+  String get acRecalcBody =>
+      'Se vuelven a mirar tus cartas y se quitan los logros que hoy no se cumplan. Sirve para arreglar los que se dieron por error; si has vendido cartas, también perderás esos.';
+
+  @override
+  String get acRecalc => 'Recalcular';
+
+  @override
+  String get acAllFine => 'Todo cuadraba: no se ha quitado ningún logro.';
+
+  @override
+  String acRemovedN(int n) {
+    return 'Quitados $n logros que ya no se cumplen.';
+  }
+
+  @override
+  String get acTitle => 'Logros';
+
+  @override
+  String get acRecalcTooltip => 'Recalcular con mis cartas de ahora';
+
+  @override
+  String get acCertsTooltip => 'Certificados';
+
+  @override
+  String acUnlockedOf(int hechos, int total, int xp) {
+    return '$hechos de $total logros · $xp XP';
+  }
+
+  @override
+  String acLevelLine(int nivel, int xp, int siguiente) {
+    return 'Nivel $nivel · faltan $xp XP para el $siguiente';
+  }
+
+  @override
+  String get acIMissing => 'Me faltan';
+
+  @override
+  String get acSecret => 'Logro secreto';
+
+  @override
+  String get acSecretDesc => 'Se descubre solo cuando lo consigues.';
+
+  @override
+  String acProgressLine(String progreso, String tier, int xp) {
+    return '$progreso · $tier · $xp XP';
+  }
+
+  @override
+  String acDoneLine(String fecha, String tier, int xp) {
+    return '✓ Conseguido$fecha · $tier · $xp XP';
+  }
+
+  @override
+  String acOnDate(String fecha) {
+    return ' el $fecha';
+  }
+
+  @override
+  String acLevelUp(int nivel) {
+    return '¡Nivel $nivel!';
+  }
+
+  @override
+  String acLevelUpBody(String titulo, int hechos, int total) {
+    return 'Ya eres $titulo. Llevas $hechos de $total logros.';
+  }
+
+  @override
+  String get acOk => 'Vale';
+
+  @override
+  String get acSeeAchievements => 'Ver logros';
+
+  @override
+  String acToast(String titulo, String mas, int xp) {
+    return '🏆 ¡Logro! $titulo$mas · +$xp XP';
+  }
+
+  @override
+  String acAndMore(int n) {
+    return ' (y $n más)';
+  }
+
+  @override
+  String ceNeedDb(String error) {
+    return 'Para los de expansión hace falta la base de datos de cartas ($error)';
+  }
+
+  @override
+  String get ceWhoseName => '¿A nombre de quién?';
+
+  @override
+  String get ceCollectorName => 'Tu nombre de coleccionista';
+
+  @override
+  String get ceInNameOf => 'A nombre de…';
+
+  @override
+  String get ceEmptyWithData =>
+      'Todavía no tienes ninguna expansión completa. Cuando completes una entera en el Álbum, aquí saldrá tu certificado para descargar.';
+
+  @override
+  String get ceEmptyNoData =>
+      'Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV de ManaBox (trae el Scryfall ID).';
+
+  @override
+  String get ceNothingSaved => 'No se guardó nada.';
+
+  @override
+  String ceSavedTo(String ruta) {
+    return '✓ Certificado guardado en $ruta';
+  }
+
+  @override
+  String ceSaveFailed(String error) {
+    return 'No se pudo guardar: $error';
+  }
+
+  @override
+  String get cePickFirstCard => 'Elegir la carta con la que empecé';
+
+  @override
+  String get ceChangeFirstCard => 'Cambiar la carta con la que empecé';
+
+  @override
+  String get ceDownloadPng => 'Descargar PNG';
 }

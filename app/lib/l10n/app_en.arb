@@ -763,5 +763,150 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "icImporting2": "Importing…",
-  "icImport": "Import"
+  "icImport": "Import",
+
+  "dkDeleted": "Deck \"{nombre}\" deleted",
+  "@dkDeleted": {
+    "placeholders": { "nombre": { "type": "String" } }
+  },
+  "dkUndo": "UNDO",
+  "dkOpenFailed": "Couldn't open the deck (is the database downloaded?): {error}",
+  "@dkOpenFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "dkMyDecks": "My decks",
+  "dkEmpty": "The decks you save from Forge will live here (save button in the deck detail).",
+  "dkSavedCount": "{n, plural, =1{1 saved} other{{n} saved}}",
+  "@dkSavedCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "dkSubtitle": "{arquetipo} · {hechizos} spells + {tierras} lands · saved on {fecha}",
+  "@dkSubtitle": {
+    "placeholders": { "arquetipo": { "type": "String" }, "hechizos": { "type": "int" }, "tierras": { "type": "int" }, "fecha": { "type": "String" } }
+  },
+  "dkDeleteTooltip": "Delete deck",
+  "ddSaved": "✓ Deck saved — it's in the Decks tab",
+  "ddReforged": "✓ Deck reforged to your curve — list updated",
+  "ddSaveToMyDecks": "Save to My decks",
+  "ddCopyList": "Copy list (Moxfield/Arena)",
+  "ddListCopied": "✓ List copied — paste it into Moxfield, Arena or Discord",
+  "ddHeaderSub": "{tema} · {arquetipo} · {hechizos} spells + {tierras} lands",
+  "@ddHeaderSub": {
+    "placeholders": { "tema": { "type": "String" }, "arquetipo": { "type": "String" }, "hechizos": { "type": "int" }, "tierras": { "type": "int" } }
+  },
+  "ddHaveAll": "✓ You have every card",
+  "ddMissing": "{n, plural, =1{⚠ You're missing 1 card from this deck — it stays in the list, it wasn't deleted} other{⚠ You're missing {n} cards from this deck — they stay in the list, they weren't deleted}}",
+  "@ddMissing": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "ddGamePlan": "Your game plan",
+  "ddManaCurve": "Mana curve",
+  "ddEditCurve": "Edit curve",
+  "ddDragBars": "Drag the bars ↑↓ · {hechizos} spells → {tierras} lands",
+  "@ddDragBars": {
+    "placeholders": { "hechizos": { "type": "int" }, "tierras": { "type": "int" } }
+  },
+  "ddReforgeCurve": "Reforge with this curve",
+  "ddCurveSummary": "⛰ {tierras} lands · ✦ {hechizos} spells · Ø cost {coste}",
+  "@ddCurveSummary": {
+    "placeholders": { "tierras": { "type": "int" }, "hechizos": { "type": "int" }, "coste": { "type": "String" } }
+  },
+  "ddWhyWorks": "Why does this deck work?",
+  "ddLands": "LANDS ({n})",
+  "@ddLands": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "ddDeckTotal": "Deck total: ~{precio} €",
+  "@ddDeckTotal": {
+    "placeholders": { "precio": { "type": "String" } }
+  },
+  "ddCheapestPrice": "price of the cheapest printing (Cardmarket)",
+  "ddSomeNoPrice": "{n} without a known price · cheapest printing (Cardmarket)",
+  "@ddSomeNoPrice": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "ddInstants": "Instants",
+
+  "ddTypeCreatures": "Creatures",
+  "ddTypeSorceries": "Sorceries",
+  "ddTypeEnchantments": "Enchantments",
+  "ddTypeArtifacts": "Artifacts",
+  "ddTypeOther": "Other",
+
+  "ddOutOfRange": "  (outside the healthy 20-27 range)",
+
+  "acRecalcTitle": "Recalculate achievements?",
+  "acRecalcBody": "Your cards are checked again and any achievements that no longer hold are removed. Good for fixing ones awarded by mistake; if you've sold cards, you'll lose those too.",
+  "acRecalc": "Recalculate",
+  "acAllFine": "Everything checked out: no achievement was removed.",
+  "acRemovedN": "Removed {n} achievements that no longer hold.",
+  "@acRemovedN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "acTitle": "Achievements",
+  "acRecalcTooltip": "Recalculate with my current cards",
+  "acCertsTooltip": "Certificates",
+  "acUnlockedOf": "{hechos} of {total} achievements · {xp} XP",
+  "@acUnlockedOf": {
+    "placeholders": { "hechos": { "type": "int" }, "total": { "type": "int" }, "xp": { "type": "int" } }
+  },
+  "acLevelLine": "Level {nivel} · {xp} XP to level {siguiente}",
+  "@acLevelLine": {
+    "placeholders": { "nivel": { "type": "int" }, "xp": { "type": "int" }, "siguiente": { "type": "int" } }
+  },
+  "acIMissing": "I'm missing",
+  "acSecret": "Secret achievement",
+  "acSecretDesc": "You'll find out only once you earn it.",
+  "acProgressLine": "{progreso} · {tier} · {xp} XP",
+  "@acProgressLine": {
+    "placeholders": { "progreso": { "type": "String" }, "tier": { "type": "String" }, "xp": { "type": "int" } }
+  },
+  "acDoneLine": "✓ Earned{fecha} · {tier} · {xp} XP",
+  "@acDoneLine": {
+    "placeholders": { "fecha": { "type": "String" }, "tier": { "type": "String" }, "xp": { "type": "int" } }
+  },
+  "acOnDate": " on {fecha}",
+  "@acOnDate": {
+    "placeholders": { "fecha": { "type": "String" } }
+  },
+  "acLevelUp": "Level {nivel}!",
+  "@acLevelUp": {
+    "placeholders": { "nivel": { "type": "int" } }
+  },
+  "acLevelUpBody": "You're now {titulo}. You've earned {hechos} of {total} achievements.",
+  "@acLevelUpBody": {
+    "placeholders": { "titulo": { "type": "String" }, "hechos": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "acOk": "OK",
+  "acSeeAchievements": "See achievements",
+  "acToast": "🏆 Achievement! {titulo}{mas} · +{xp} XP",
+  "@acToast": {
+    "placeholders": { "titulo": { "type": "String" }, "mas": { "type": "String" }, "xp": { "type": "int" } }
+  },
+  "acAndMore": " (and {n} more)",
+  "@acAndMore": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "ceNeedDb": "Set certificates need the card database ({error})",
+  "@ceNeedDb": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "ceWhoseName": "In whose name?",
+  "ceCollectorName": "Your collector name",
+  "ceInNameOf": "In the name of…",
+  "ceEmptyWithData": "You haven't completed a full set yet. When you finish one in the Album, your certificate will show up here to download.",
+  "ceEmptyNoData": "Certifying a set needs the exact printing of your cards: re-import your ManaBox CSV (it carries the Scryfall ID).",
+  "ceNothingSaved": "Nothing was saved.",
+  "ceSavedTo": "✓ Certificate saved to {ruta}",
+  "@ceSavedTo": {
+    "placeholders": { "ruta": { "type": "String" } }
+  },
+  "ceSaveFailed": "Couldn't save it: {error}",
+  "@ceSaveFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cePickFirstCard": "Choose the card I started with",
+  "ceChangeFirstCard": "Change the card I started with",
+  "ceDownloadPng": "Download PNG"
 }
