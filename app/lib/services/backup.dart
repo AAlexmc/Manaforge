@@ -16,6 +16,8 @@ import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
 
+import '../l10n/app_localizations.dart';
+
 /// Versión del formato de la copia. Una copia con versión MAYOR que esta no se
 /// restaura: la escribió una app más nueva y podría traer campos que aquí se
 /// perderían sin que nadie se entere.
@@ -67,12 +69,59 @@ const int kKeepPreRestore = 20;
 
 /// Fallo con mensaje ya escrito para enseñárselo al usuario tal cual.
 class BackupError implements Exception {
+  /// Qué ha fallado, para poder contarlo en el idioma del usuario. El
+  /// [message] es el mismo texto en español: sirve de registro y de red de
+  /// seguridad si algún día se lanza desde un sitio sin traducciones.
+  final BackupErrorCode code;
+
+  /// Lo que hay que meter en el hueco del mensaje traducido, en orden.
+  final List<String> args;
+
   final String message;
 
-  const BackupError(this.message);
+  const BackupError(this.message,
+      {this.code = BackupErrorCode.other, this.args = const []});
 
   @override
   String toString() => message;
+}
+
+/// Los fallos que sabe contar una copia de seguridad.
+enum BackupErrorCode {
+  /// Sin sitio donde viven los datos del usuario.
+  noData,
+
+  /// El fichero es demasiado grande para leerlo siquiera.
+  fileTooBig,
+
+  /// Comprimido cabía, descomprimido no: no es una copia de verdad.
+  expandTooBig,
+
+  /// No hay forma de leerlo como copia de ManaForge.
+  notABackup,
+
+  /// La hizo una versión más nueva de la app.
+  newerVersion,
+
+  /// Es una copia, pero no trae los datos.
+  incomplete,
+
+  /// Un almacén conocido viene ilegible. `args`: nombre del almacén.
+  damaged,
+
+  /// No se ha podido escribir en la carpeta de datos. `args`: detalle.
+  writeFailed,
+
+  /// Restaurar se quedó a medias y NO había copia previa.
+  /// `args`: escritos, totales, detalle.
+  halfDoneNoPrevious,
+
+  /// Restaurar se quedó a medias y sí hay copia previa.
+  /// `args`: escritos, totales, ruta de la copia previa, detalle.
+  halfDonePrevious,
+
+  /// Cualquier otro: se enseña [BackupError.message] tal cual.
+  other,
 }
 
 /// Construye la copia en memoria. Los almacenes que no existan simplemente no
@@ -148,18 +197,18 @@ class BackupManifest {
   });
 
   /// Resumen de una línea para el diálogo de confirmación.
-  String get summary {
+  String summary(AppLocalizations t) {
     final partes = <String>[];
-    void agregar(String clave, String uno, String varios) {
+    void agregar(String clave, String Function(int n) texto) {
       final n = counts[clave] ?? 0;
-      if (n > 0) partes.add('$n ${n == 1 ? uno : varios}');
+      if (n > 0) partes.add(texto(n));
     }
 
-    agregar('cartas', 'carta', 'cartas');
-    agregar('mazos', 'mazo', 'mazos');
-    agregar('carpetas', 'carpeta', 'carpetas');
-    agregar('logros', 'logro', 'logros');
-    return partes.isEmpty ? 'copia vacía' : partes.join(' · ');
+    agregar('cartas', t.bkSumCards);
+    agregar('mazos', t.bkSumDecks);
+    agregar('carpetas', t.bkSumFolders);
+    agregar('logros', t.bkSumAchievements);
+    return partes.isEmpty ? t.bkSumEmpty : partes.join(' · ');
   }
 }
 
@@ -188,7 +237,8 @@ const int kMaxBackupFileBytes = 500 * 1024 * 1024;
 void ensureBackupFileSize(int bytes) {
   if (bytes > kMaxBackupFileBytes) {
     throw const BackupError(
-        'Ese fichero es demasiado grande para ser una copia de ManaForge.');
+        'Ese fichero es demasiado grande para ser una copia de ManaForge.',
+        code: BackupErrorCode.fileTooBig);
   }
 }
 
@@ -215,12 +265,14 @@ BackupManifest readManifest(Uint8List bytes) => readBackup(bytes).manifest;
 /// cartas, mazos, carpetas y logros: sin esto, una copia que solo lleve la
 /// colección se lleva por delante los certificados y el historial de precios
 /// sin que en ningún sitio lo ponga.
+/// Devuelve los NOMBRES DE FICHERO de los almacenes; el texto para la persona
+/// lo pone la interfaz con [backupStoreName], que sí sabe en qué idioma va.
 List<String> storesToDelete(BackupManifest manifest,
         {required Iterable<String> present}) =>
     [
       for (final name in present)
         if (kBackupStores.contains(name) && !manifest.stores.contains(name))
-          if (kBackupStoreNames[name] != null) kBackupStoreNames[name]!
+          if (kBackupStoreKeys.contains(name)) name
     ];
 
 /// Qué almacenes del usuario hay ahora mismo en disco (para poder decirle cuál
@@ -233,20 +285,58 @@ Future<List<String>> presentStores(Directory dataDir) async {
   return out;
 }
 
-/// Nombre humano de cada almacén, para poder decir qué se borra.
-const Map<String, String> kBackupStoreNames = {
-  'collection.json': 'tu colección',
-  'folders.json': 'tus carpetas',
-  'decks.json': 'tus mazos',
-  'achievements.json': 'tus logros',
-  'wishlist.json': 'tu lista de deseos',
-  'certificates.json': 'tus certificados',
-  'market.json': 'tu mercado preferido',
-  'recents.json': 'las cartas vistas hace poco',
-  'value_history.json': 'el historial del valor',
-  'price_history.jsonl': 'el historial de precios',
-  'price_history.json': 'el historial de precios',
+/// Los almacenes que se saben nombrar en cristiano (para decir qué se borra).
+/// El texto sale de [backupStoreName]; aquí solo está la lista.
+const Set<String> kBackupStoreKeys = {
+  'collection.json',
+  'folders.json',
+  'decks.json',
+  'achievements.json',
+  'wishlist.json',
+  'certificates.json',
+  'market.json',
+  'recents.json',
+  'value_history.json',
+  'price_history.jsonl',
+  'price_history.json',
 };
+
+/// Nombre humano de cada almacén, para poder decir qué se borra. Los dos
+/// historiales de precios (`.json` y `.jsonl`) son la misma cosa para quien
+/// lee, así que dan el mismo texto: quien los enseñe tiene que quitar repes.
+String backupStoreName(AppLocalizations t, String store) => switch (store) {
+      'collection.json' => t.bkStoreCollection,
+      'folders.json' => t.bkStoreFolders,
+      'decks.json' => t.bkStoreDecks,
+      'achievements.json' => t.bkStoreAchievements,
+      'wishlist.json' => t.bkStoreWishlist,
+      'certificates.json' => t.bkStoreCertificates,
+      'market.json' => t.bkStoreMarket,
+      'recents.json' => t.bkStoreRecents,
+      'value_history.json' => t.bkStoreValueHistory,
+      'price_history.jsonl' || 'price_history.json' => t.bkStorePriceHistory,
+      _ => store,
+    };
+
+/// El mensaje de un fallo de copia, en el idioma del usuario.
+String backupErrorText(AppLocalizations t, BackupError e) {
+  String arg(int i) => i < e.args.length ? e.args[i] : '';
+  return switch (e.code) {
+    BackupErrorCode.noData => t.bkNoData,
+    BackupErrorCode.fileTooBig => t.bkErrFileTooBig,
+    BackupErrorCode.expandTooBig => t.bkErrExpandTooBig,
+    BackupErrorCode.notABackup => t.bkErrNotABackup,
+    BackupErrorCode.newerVersion => t.bkErrNewerVersion,
+    BackupErrorCode.incomplete => t.bkErrIncomplete,
+    BackupErrorCode.damaged => t.bkErrDamaged(arg(0)),
+    BackupErrorCode.writeFailed => t.bkErrWriteFailed(arg(0)),
+    BackupErrorCode.halfDoneNoPrevious =>
+      t.bkErrHalfDoneNoPrevious(arg(0), arg(1), arg(2)),
+    BackupErrorCode.halfDonePrevious =>
+      t.bkErrHalfDonePrevious(arg(0), arg(1), arg(2), arg(3)),
+    BackupErrorCode.other => e.message,
+  };
+}
 
 /// Descomprime CONTANDO lo que sale: una copia manipulada que se hinche se
 /// para en cuanto pasa del tope, no cuando ya no hay RAM.
@@ -272,7 +362,8 @@ class _CappedSink implements Sink<List<int>> {
     if (_total > maxBytes) {
       throw const BackupError(
           'Esa copia es demasiado grande al abrirla: no parece una copia de '
-          'ManaForge de verdad.');
+          'ManaForge de verdad.',
+          code: BackupErrorCode.expandTooBig);
     }
     out.add(chunk);
   }
@@ -283,8 +374,9 @@ class _CappedSink implements Sink<List<int>> {
 
 Map<String, dynamic> _decode(Uint8List bytes,
     {int maxBytes = kMaxBackupBytes}) {
-  const noEsCopia =
-      BackupError('Ese fichero no es una copia de seguridad de ManaForge.');
+  const noEsCopia = BackupError(
+      'Ese fichero no es una copia de seguridad de ManaForge.',
+      code: BackupErrorCode.notABackup);
   final Object? decoded;
   try {
     decoded = jsonDecode(utf8.decode(_gunzipCapped(bytes, maxBytes)));
@@ -299,10 +391,12 @@ Map<String, dynamic> _decode(Uint8List bytes,
   if (format > kBackupFormatVersion) {
     throw const BackupError(
         'Esa copia la hizo una versión más nueva de ManaForge. Actualiza la '
-        'app y vuelve a intentarlo.');
+        'app y vuelve a intentarlo.',
+        code: BackupErrorCode.newerVersion);
   }
   if (decoded['stores'] is! Map<String, dynamic>) {
-    throw const BackupError('Esa copia está incompleta: no trae tus datos.');
+    throw const BackupError('Esa copia está incompleta: no trae tus datos.',
+        code: BackupErrorCode.incomplete);
   }
   return decoded;
 }
@@ -337,7 +431,8 @@ Map<String, String> _storesOf(Map<String, dynamic> payload) {
   for (final e in raw.entries) {
     if (!kBackupStores.contains(e.key)) continue; // nombre desconocido: fuera
     if (e.value is! String) {
-      throw BackupError('Esa copia está dañada: ${e.key} no se puede leer.');
+      throw BackupError('Esa copia está dañada: ${e.key} no se puede leer.',
+          code: BackupErrorCode.damaged, args: [e.key]);
     }
     stores[e.key] = e.value as String;
   }
@@ -432,8 +527,11 @@ Future<RestoreReport> restoreBackup(Uint8List bytes, Directory dataDir,
         await tmp.delete();
       } catch (_) {/* si no se puede borrar, tampoco hay más que hacer */}
     }
-    throw BackupError('No he podido escribir en la carpeta de datos, así que '
-        'no he tocado nada: $e');
+    throw BackupError(
+        'No he podido escribir en la carpeta de datos, así que '
+        'no he tocado nada: $e',
+        code: BackupErrorCode.writeFailed,
+        args: ['$e']);
   }
 
   final written = <String>[];
@@ -458,7 +556,16 @@ Future<RestoreReport> restoreBackup(Uint8List bytes, Directory dataDir,
         : 'Para volver atrás, restaura ${previous.path}.';
     throw BackupError(
         'El restaurar se ha quedado a medias (${written.length} de '
-        '${stores.length} ficheros). $vuelta Detalle: $e');
+        '${stores.length} ficheros). $vuelta Detalle: $e',
+        code: previous == null
+            ? BackupErrorCode.halfDoneNoPrevious
+            : BackupErrorCode.halfDonePrevious,
+        args: [
+          '${written.length}',
+          '${stores.length}',
+          if (previous != null) previous.path,
+          '$e',
+        ]);
   }
 
   return RestoreReport(
@@ -575,16 +682,16 @@ Future<List<File>> _backupsWithPrefix(Directory dir, String? prefix) async {
 
 /// Nombre legible de una copia para la UI: el nombre de fichero crudo no le
 /// dice nada a nadie.
-String backupLabel(File file) {
+String backupLabel(File file, AppLocalizations t) {
   final name = p.basename(file.path);
   final tipo =
-      name.startsWith('pre-restore-') ? 'antes de restaurar' : 'automática';
+      name.startsWith('pre-restore-') ? t.bkKindPreRestore : t.bkKindAuto;
   final stamp = _stampOf(name);
   if (stamp == null) return '$tipo · $name';
-  final t = stamp.toLocal();
+  final fecha = stamp.toLocal();
   String dos(int n) => n.toString().padLeft(2, '0');
-  return '$tipo · ${dos(t.day)}/${dos(t.month)}/${t.year} '
-      '${dos(t.hour)}:${dos(t.minute)}';
+  return '$tipo · ${dos(fecha.day)}/${dos(fecha.month)}/${fecha.year} '
+      '${dos(fecha.hour)}:${dos(fecha.minute)}';
 }
 
 /// Fecha de un nombre `<prefijo>-YYYY-MM-DD-HHmmss[-N].mfbak`, o null si no

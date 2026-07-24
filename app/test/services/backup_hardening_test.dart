@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:manaforge_app/l10n/app_localizations_es.dart';
 import 'package:manaforge_app/services/backup.dart';
 import 'package:path/path.dart' as p;
 
@@ -92,10 +93,17 @@ void main() {
       'decks.json',
     ]);
 
-    expect(borra, contains('tus certificados'));
-    expect(borra, contains('el historial de precios'));
-    expect(borra, contains('tus mazos'));
-    expect(borra.join(), isNot(contains('colección')),
+    expect(borra, contains('certificates.json'));
+    expect(borra, contains('price_history.jsonl'));
+    expect(borra, contains('decks.json'));
+    expect(borra, isNot(contains('collection.json')),
         reason: 'la colección SÍ viene en la copia');
+
+    // y cada uno se sabe decir en cristiano, que es de lo que va el aviso
+    final t = AppLocalizationsEs();
+    final dicho = borra.map((s) => backupStoreName(t, s)).toList();
+    expect(dicho, contains('tus certificados'));
+    expect(dicho, contains('el historial de precios'));
+    expect(dicho, contains('tus mazos'));
   });
 }

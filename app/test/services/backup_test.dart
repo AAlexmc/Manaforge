@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:manaforge_app/l10n/app_localizations_es.dart';
 import 'package:manaforge_app/services/backup.dart';
 import 'package:path/path.dart' as p;
 
@@ -284,9 +285,10 @@ void main() {
 
   test('cada copia se enseña con su tipo y su fecha, no con el nombre crudo',
       () {
-    expect(backupLabel(File('/x/auto-2026-07-21-201500.mfbak')),
+    final t = AppLocalizationsEs();
+    expect(backupLabel(File('/x/auto-2026-07-21-201500.mfbak'), t),
         startsWith('automática · 21/07/2026'));
-    expect(backupLabel(File('/x/pre-restore-2026-07-21-201500.mfbak')),
+    expect(backupLabel(File('/x/pre-restore-2026-07-21-201500.mfbak'), t),
         startsWith('antes de restaurar · 21/07/2026'));
   });
 
@@ -443,7 +445,7 @@ void main() {
     final manifest = readManifest(bytes);
 
     expect(manifest.counts['cartas'], 0);
-    expect(manifest.summary, 'copia vacía');
+    expect(manifest.summary(AppLocalizationsEs()), 'copia vacía');
   });
 
   test('el historial de precios (jsonl y el formato viejo) también se copia',

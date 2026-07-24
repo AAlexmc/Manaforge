@@ -45,14 +45,24 @@ Future<void> maybeShowWhatsNew(
 Future<void> showWhatsNewDialog(BuildContext context, VersionNews news) {
   return showDialog<void>(
     context: context,
-    builder: (context) => AlertDialog(
+    builder: (context) => _WhatsNewDialog(news: news),
+  );
+}
+
+class _WhatsNewDialog extends StatelessWidget {
+  const _WhatsNewDialog({required this.news});
+
+  final VersionNews news;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = tr(context);
+    return AlertDialog(
       title: Row(
         children: [
           const Icon(Icons.auto_awesome, color: MFColors.forge),
           const SizedBox(width: 8),
-          Expanded(
-              child: Text(
-                  tr(context).whatsNewTitle(news.version))),
+          Expanded(child: Text(t.whatsNewTitle(news.version))),
         ],
       ),
       content: SizedBox(
@@ -62,10 +72,10 @@ Future<void> showWhatsNewDialog(BuildContext context, VersionNews news) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(news.headline,
+              Text(news.headline(t),
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              for (final linea in news.bullets)
+              for (final linea in news.bullets(t))
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Row(
@@ -85,9 +95,9 @@ Future<void> showWhatsNewDialog(BuildContext context, VersionNews news) {
       actions: [
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(tr(context).whatsNewClose),
+          child: Text(t.whatsNewClose),
         ),
       ],
-    ),
-  );
+    );
+  }
 }

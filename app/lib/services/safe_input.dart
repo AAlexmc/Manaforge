@@ -9,15 +9,66 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-/// Algo de fuera que no se acepta, con el mensaje ya escrito para el usuario.
+import '../l10n/app_localizations.dart';
+
+/// Algo de fuera que no se acepta.
+///
+/// El [message] está en español y sirve de registro y de red de seguridad; lo
+/// que ve el usuario sale de [inputRejectedText], que sí sabe en qué idioma
+/// tiene la app.
 class InputRejected implements Exception {
   final String message;
+  final InputRejectedCode code;
 
-  const InputRejected(this.message);
+  const InputRejected(this.message, {this.code = InputRejectedCode.other});
 
   @override
   String toString() => message;
 }
+
+/// Por qué se ha rechazado algo de fuera.
+enum InputRejectedCode {
+  /// El CSV que se quiere importar es enorme.
+  importTooBig,
+
+  /// La descarga acabó en una dirección que no es https.
+  insecureDownload,
+
+  /// Una redirección sin destino.
+  redirectNowhere,
+
+  /// Demasiados saltos de redirección.
+  tooManyRedirects,
+
+  /// La descarga pesa mucho más de lo que debería.
+  downloadTooBig,
+
+  /// Lo descargado no cuadra con la huella publicada.
+  badHash,
+
+  /// El fichero elegido de fondo no es una imagen de las aceptadas.
+  backgroundNotImage,
+
+  /// La imagen de fondo es demasiado grande.
+  backgroundTooBig,
+
+  /// Cualquier otro: se enseña [InputRejected.message] tal cual.
+  other,
+}
+
+/// El texto de un rechazo, en el idioma del usuario.
+String inputRejectedText(AppLocalizations t, InputRejected e) =>
+    switch (e.code) {
+      InputRejectedCode.importTooBig => t.siImportTooBig,
+      InputRejectedCode.insecureDownload => t.siInsecureDownload,
+      InputRejectedCode.redirectNowhere => t.siRedirectNowhere,
+      InputRejectedCode.tooManyRedirects => t.siTooManyRedirects,
+      InputRejectedCode.downloadTooBig => t.siDownloadTooBig,
+      InputRejectedCode.badHash => t.siBadHash,
+      InputRejectedCode.backgroundNotImage => t.siBackgroundNotImage,
+      InputRejectedCode.backgroundTooBig => t.siBackgroundTooBig,
+      InputRejectedCode.other => e.message,
+    };
 
 /// Tope de un CSV importable. Una colección enorme de 100.000 cartas no llega
 /// a 20 MB; el tope está para que arrastrar un fichero equivocado (un vídeo,
@@ -28,7 +79,8 @@ const int kMaxImportBytes = 50 * 1024 * 1024;
 void ensureImportFileSize(int bytes) {
   if (bytes > kMaxImportBytes) {
     throw const InputRejected(
-        'Ese archivo es demasiado grande para ser una lista de cartas.');
+        'Ese archivo es demasiado grande para ser una lista de cartas.',
+        code: InputRejectedCode.importTooBig);
   }
 }
 
@@ -43,7 +95,8 @@ void ensureImportFileSize(int bytes) {
 void ensureSecureDownload(Uri? finalUrl) {
   if (finalUrl != null && finalUrl.scheme != 'https') {
     throw const InputRejected(
-        'La descarga acabó en una dirección insegura y se ha cancelado.');
+        'La descarga acabó en una dirección insegura y se ha cancelado.',
+        code: InputRejectedCode.insecureDownload);
   }
 }
 
@@ -73,12 +126,14 @@ Future<http.StreamedResponse> secureSend(http.Client client, Uri url,
     unawaited(response.stream.drain<void>().catchError((Object _) {}));
     if (destino == null) {
       throw const InputRejected(
-          'La descarga redirige a ninguna parte y se ha cancelado.');
+          'La descarga redirige a ninguna parte y se ha cancelado.',
+          code: InputRejectedCode.redirectNowhere);
     }
     actual = actual.resolve(destino);
   }
   throw const InputRejected(
-      'La descarga da demasiadas vueltas y se ha cancelado.');
+      'La descarga da demasiadas vueltas y se ha cancelado.',
+      code: InputRejectedCode.tooManyRedirects);
 }
 
 /// Tope de lo que puede ocupar una base descargada. La más gorda (las cartas)
@@ -89,7 +144,8 @@ void ensureDownloadSize(int received) {
   if (received > kMaxDownloadBytes) {
     throw const InputRejected(
         'La descarga es mucho más grande de lo que debería y se ha '
-        'cancelado.');
+        'cancelado.',
+        code: InputRejectedCode.downloadTooBig);
   }
 }
 

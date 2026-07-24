@@ -29,23 +29,25 @@ class BackgroundSettingsCard extends StatefulWidget {
 }
 
 class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
-  static const _tipos = XTypeGroup(
-      label: 'Imágenes', extensions: ['jpg', 'jpeg', 'png', 'webp']);
-
   Future<void> _elegir() async {
+    final t = tr(context);
     try {
-      final fichero = await openFile(acceptedTypeGroups: const [_tipos]);
+      final fichero = await openFile(acceptedTypeGroups: [
+        XTypeGroup(
+            label: t.bgImages,
+            extensions: const ['jpg', 'jpeg', 'png', 'webp'])
+      ]);
       if (fichero == null) return;
       await widget.prefs.select(File(fichero.path));
     } on InputRejected catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.message)));
+            .showSnackBar(SnackBar(content: Text(inputRejectedText(t, e))));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No pude usar esa imagen: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(t.bgImageFailed('$e'))));
       }
     }
   }
@@ -58,10 +60,9 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
     if (!context.mounted) return;
     final fondo = prefs.cardColor ?? Theme.of(context).colorScheme.surface;
     if (!esLegible(c, fondo)) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Poca diferencia con la tarjeta: la letra se ajustará '
-            'sola para que se lea.'),
-        duration: Duration(seconds: 4),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(tr(context).bgLowContrast),
+        duration: const Duration(seconds: 4),
       ));
     }
   }
@@ -153,8 +154,7 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     onCustom: (c) => _ponerLetra(context, prefs, c),
                   ),
                   const SizedBox(height: 12),
-                  const Text('Color de las pestañas',
-                      style: TextStyle(fontSize: 12)),
+                  Text(t.bgChipColor, style: const TextStyle(fontSize: 12)),
                   const SizedBox(height: 6),
                   _Muestras(
                     paleta: const [],
@@ -166,8 +166,7 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     onCustom: prefs.setChipColor,
                   ),
                   const SizedBox(height: 12),
-                  const Text('Color de los iconos',
-                      style: TextStyle(fontSize: 12)),
+                  Text(t.bgIconColor, style: const TextStyle(fontSize: 12)),
                   const SizedBox(height: 6),
                   _Muestras(
                     paleta: const [],
@@ -371,10 +370,10 @@ Future<void> _elegirColor(
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancelar')),
+            child: Text(tr(ctx).acCancel)),
         FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Usar este')),
+            child: Text(tr(ctx).bgUseThis)),
       ],
     ),
   );

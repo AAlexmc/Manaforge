@@ -254,12 +254,14 @@ class BackgroundPreference extends ChangeNotifier {
     final ext = p.extension(source.path).toLowerCase();
     if (!kBackgroundExtensions.contains(ext)) {
       throw const InputRejected(
-          'Elige una imagen (.jpg, .png o .webp) como fondo.');
+          'Elige una imagen (.jpg, .png o .webp) como fondo.',
+          code: InputRejectedCode.backgroundNotImage);
     }
     final bytes = await source.length();
     if (bytes > kMaxBackgroundBytes) {
       throw const InputRejected(
-          'Esa imagen es demasiado grande para usarla de fondo.');
+          'Esa imagen es demasiado grande para usarla de fondo.',
+          code: InputRejectedCode.backgroundTooBig);
     }
     final dir = await _dir();
     if (dir == null) return; // sin carpeta de datos (tests): no hay dónde

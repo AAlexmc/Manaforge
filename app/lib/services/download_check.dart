@@ -80,5 +80,6 @@ void ensureSha256({required String? expected, required Digest actual}) {
   if (actual.toString().toLowerCase() == expected.toLowerCase()) return;
   throw const InputRejected(
       'Lo descargado no coincide con la huella publicada en GitHub. No se '
-      'ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.');
+      'ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.',
+      code: InputRejectedCode.badHash);
 }

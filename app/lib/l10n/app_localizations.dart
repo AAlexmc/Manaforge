@@ -3720,6 +3720,349 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Bloquear'**
   String get slLockButton;
+
+  /// No description provided for @wn030Headline.
+  ///
+  /// In es, this message translates to:
+  /// **'Forge por expansiones, precio de compra y avisos de versión'**
+  String get wn030Headline;
+
+  /// No description provided for @wn030Forge.
+  ///
+  /// In es, this message translates to:
+  /// **'Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.'**
+  String get wn030Forge;
+
+  /// No description provided for @wn030Pnl.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.'**
+  String get wn030Pnl;
+
+  /// No description provided for @wn030PhotoFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear por foto también deja elegir carpeta, como el escáner en vivo.'**
+  String get wn030PhotoFolder;
+
+  /// No description provided for @wn030Album.
+  ///
+  /// In es, this message translates to:
+  /// **'Álbum: lo que te falta de cada expansión, con lo que costaría.'**
+  String get wn030Album;
+
+  /// No description provided for @wn030Background.
+  ///
+  /// In es, this message translates to:
+  /// **'Fondo de pantalla: pon detrás la imagen que quieras, con velo regulable, y elige el color de las tarjetas y de la letra para que encima se siga leyendo.'**
+  String get wn030Background;
+
+  /// No description provided for @wn030Window.
+  ///
+  /// In es, this message translates to:
+  /// **'La ventana se abre donde la dejaste, del tamaño que la dejaste.'**
+  String get wn030Window;
+
+  /// No description provided for @wn030Achievements.
+  ///
+  /// In es, this message translates to:
+  /// **'Los logros ya no se llaman como el criterio, se llaman como el momento: \"Ahí va todo mi dinero\", \"Cien raras y ninguna jugable\".'**
+  String get wn030Achievements;
+
+  /// No description provided for @wn030Update.
+  ///
+  /// In es, this message translates to:
+  /// **'La app avisa cuando hay versión nueva (no se actualiza sola) y comprueba la huella SHA-256 de las bases que se descarga.'**
+  String get wn030Update;
+
+  /// No description provided for @wn030Shortcuts.
+  ///
+  /// In es, this message translates to:
+  /// **'Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.'**
+  String get wn030Shortcuts;
+
+  /// No description provided for @wn030Linux.
+  ///
+  /// In es, this message translates to:
+  /// **'En Linux, un instalador deja ManaForge en el menú de aplicaciones con su icono.'**
+  String get wn030Linux;
+
+  /// No description provided for @wn030License.
+  ///
+  /// In es, this message translates to:
+  /// **'Licencia PolyForm Noncommercial: compártela y tócala lo que quieras, pero no se vende.'**
+  String get wn030License;
+
+  /// No description provided for @bkSumCards.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 carta} other{{n} cartas}}'**
+  String bkSumCards(int n);
+
+  /// No description provided for @bkSumDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 mazo} other{{n} mazos}}'**
+  String bkSumDecks(int n);
+
+  /// No description provided for @bkSumFolders.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 carpeta} other{{n} carpetas}}'**
+  String bkSumFolders(int n);
+
+  /// No description provided for @bkSumAchievements.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 logro} other{{n} logros}}'**
+  String bkSumAchievements(int n);
+
+  /// No description provided for @bkSumEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'copia vacía'**
+  String get bkSumEmpty;
+
+  /// No description provided for @bkStoreCollection.
+  ///
+  /// In es, this message translates to:
+  /// **'tu colección'**
+  String get bkStoreCollection;
+
+  /// No description provided for @bkStoreFolders.
+  ///
+  /// In es, this message translates to:
+  /// **'tus carpetas'**
+  String get bkStoreFolders;
+
+  /// No description provided for @bkStoreDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'tus mazos'**
+  String get bkStoreDecks;
+
+  /// No description provided for @bkStoreAchievements.
+  ///
+  /// In es, this message translates to:
+  /// **'tus logros'**
+  String get bkStoreAchievements;
+
+  /// No description provided for @bkStoreWishlist.
+  ///
+  /// In es, this message translates to:
+  /// **'tu lista de deseos'**
+  String get bkStoreWishlist;
+
+  /// No description provided for @bkStoreCertificates.
+  ///
+  /// In es, this message translates to:
+  /// **'tus certificados'**
+  String get bkStoreCertificates;
+
+  /// No description provided for @bkStoreMarket.
+  ///
+  /// In es, this message translates to:
+  /// **'tu mercado preferido'**
+  String get bkStoreMarket;
+
+  /// No description provided for @bkStoreRecents.
+  ///
+  /// In es, this message translates to:
+  /// **'las cartas vistas hace poco'**
+  String get bkStoreRecents;
+
+  /// No description provided for @bkStoreValueHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'el historial del valor'**
+  String get bkStoreValueHistory;
+
+  /// No description provided for @bkStorePriceHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'el historial de precios'**
+  String get bkStorePriceHistory;
+
+  /// No description provided for @bkKindAuto.
+  ///
+  /// In es, this message translates to:
+  /// **'automática'**
+  String get bkKindAuto;
+
+  /// No description provided for @bkKindPreRestore.
+  ///
+  /// In es, this message translates to:
+  /// **'antes de restaurar'**
+  String get bkKindPreRestore;
+
+  /// No description provided for @bkErrFileTooBig.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese fichero es demasiado grande para ser una copia de ManaForge.'**
+  String get bkErrFileTooBig;
+
+  /// No description provided for @bkErrExpandTooBig.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.'**
+  String get bkErrExpandTooBig;
+
+  /// No description provided for @bkErrNotABackup.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese fichero no es una copia de seguridad de ManaForge.'**
+  String get bkErrNotABackup;
+
+  /// No description provided for @bkErrNewerVersion.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa copia la hizo una versión más nueva de ManaForge. Actualiza la app y vuelve a intentarlo.'**
+  String get bkErrNewerVersion;
+
+  /// No description provided for @bkErrIncomplete.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa copia está incompleta: no trae tus datos.'**
+  String get bkErrIncomplete;
+
+  /// No description provided for @bkErrDamaged.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa copia está dañada: {almacen} no se puede leer.'**
+  String bkErrDamaged(String almacen);
+
+  /// No description provided for @bkErrWriteFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No he podido escribir en la carpeta de datos, así que no he tocado nada: {error}'**
+  String bkErrWriteFailed(String error);
+
+  /// No description provided for @bkErrHalfDoneNoPrevious.
+  ///
+  /// In es, this message translates to:
+  /// **'El restaurar se ha quedado a medias ({escritos} de {total} ficheros). No tengo copia previa de lo que había. Detalle: {error}'**
+  String bkErrHalfDoneNoPrevious(String escritos, String total, String error);
+
+  /// No description provided for @bkErrHalfDonePrevious.
+  ///
+  /// In es, this message translates to:
+  /// **'El restaurar se ha quedado a medias ({escritos} de {total} ficheros). Para volver atrás, restaura {ruta}. Detalle: {error}'**
+  String bkErrHalfDonePrevious(
+      String escritos, String total, String ruta, String error);
+
+  /// No description provided for @siImportTooBig.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese archivo es demasiado grande para ser una lista de cartas.'**
+  String get siImportTooBig;
+
+  /// No description provided for @siInsecureDownload.
+  ///
+  /// In es, this message translates to:
+  /// **'La descarga acabó en una dirección insegura y se ha cancelado.'**
+  String get siInsecureDownload;
+
+  /// No description provided for @siRedirectNowhere.
+  ///
+  /// In es, this message translates to:
+  /// **'La descarga redirige a ninguna parte y se ha cancelado.'**
+  String get siRedirectNowhere;
+
+  /// No description provided for @siTooManyRedirects.
+  ///
+  /// In es, this message translates to:
+  /// **'La descarga da demasiadas vueltas y se ha cancelado.'**
+  String get siTooManyRedirects;
+
+  /// No description provided for @siDownloadTooBig.
+  ///
+  /// In es, this message translates to:
+  /// **'La descarga es mucho más grande de lo que debería y se ha cancelado.'**
+  String get siDownloadTooBig;
+
+  /// No description provided for @siBadHash.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo descargado no coincide con la huella publicada en GitHub. No se ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.'**
+  String get siBadHash;
+
+  /// No description provided for @siBackgroundNotImage.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige una imagen (.jpg, .png o .webp) como fondo.'**
+  String get siBackgroundNotImage;
+
+  /// No description provided for @siBackgroundTooBig.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa imagen es demasiado grande para usarla de fondo.'**
+  String get siBackgroundTooBig;
+
+  /// No description provided for @bgImages.
+  ///
+  /// In es, this message translates to:
+  /// **'Imágenes'**
+  String get bgImages;
+
+  /// No description provided for @bgImageFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude usar esa imagen: {error}'**
+  String bgImageFailed(String error);
+
+  /// No description provided for @bgLowContrast.
+  ///
+  /// In es, this message translates to:
+  /// **'Poca diferencia con la tarjeta: la letra se ajustará sola para que se lea.'**
+  String get bgLowContrast;
+
+  /// No description provided for @bgChipColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Color de las pestañas'**
+  String get bgChipColor;
+
+  /// No description provided for @bgIconColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Color de los iconos'**
+  String get bgIconColor;
+
+  /// No description provided for @bgUseThis.
+  ///
+  /// In es, this message translates to:
+  /// **'Usar este'**
+  String get bgUseThis;
+
+  /// No description provided for @camGstreamerMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'GStreamer no está instalado. Instálalo con:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good'**
+  String get camGstreamerMissing;
+
+  /// No description provided for @camNoImage.
+  ///
+  /// In es, this message translates to:
+  /// **'La cámara {dispositivo} no da imagen (gst-launch salió con {codigo}).\n{detalle}'**
+  String camNoImage(String dispositivo, String codigo, String detalle);
+
+  /// No description provided for @camNoFrames.
+  ///
+  /// In es, this message translates to:
+  /// **'La cámara {dispositivo} no ha dado ningún frame en 6 s.'**
+  String camNoFrames(String dispositivo);
+
+  /// No description provided for @camNoCameras.
+  ///
+  /// In es, this message translates to:
+  /// **'No encuentro ninguna cámara (/dev/video*). ¿Está conectada? Comprueba con `lsusb` que el sistema la ve.'**
+  String get camNoCameras;
+
+  /// No description provided for @camNoneWorked.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna cámara dio imagen:\n{detalle}'**
+  String camNoneWorked(String detalle);
 }
 
 class _AppLocalizationsDelegate

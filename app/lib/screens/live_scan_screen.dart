@@ -189,7 +189,9 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
         if (mounted) {
           setState(() {
             _starting = false;
-            _cameraError = e.toString();
+            _cameraError = e is CameraUnavailable
+                ? cameraErrorText(tr(context), e)
+                : e.toString();
           });
         }
       }

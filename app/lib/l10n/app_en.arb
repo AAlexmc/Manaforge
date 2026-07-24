@@ -1071,5 +1071,103 @@
     "placeholders": { "fecha": { "type": "String" } }
   },
 
-  "slLockButton": "Lock"
+  "slLockButton": "Lock",
+
+  "wn030Headline": "Forge by set, purchase price and version alerts",
+  "wn030Forge": "Forge: pick which sets the cards come from. And if you turn on \"include cards I don't own\", it builds the deck from the whole chosen set and tells you how many you're missing and what they cost.",
+  "wn030Pnl": "Purchase price and P&L: if your ManaBox CSV has \"Purchase price\", Market shows what you paid, what it's worth today and the difference. Currencies are never mixed.",
+  "wn030PhotoFolder": "Scanning from a photo lets you pick a folder too, just like the live scanner.",
+  "wn030Album": "Album: what you're missing from each set, and what it would cost.",
+  "wn030Background": "Wallpaper: put any image behind it, with an adjustable veil, and choose the card and text colours so everything stays readable on top.",
+  "wn030Window": "The window opens where you left it, at the size you left it.",
+  "wn030Achievements": "Achievements are no longer named after the rule but after the moment: \"There goes all my money\", \"A hundred rares and none playable\".",
+  "wn030Update": "The app tells you when there's a new version (it never updates itself) and checks the SHA-256 fingerprint of every database it downloads.",
+  "wn030Shortcuts": "Keyboard shortcuts: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, and Escape.",
+  "wn030Linux": "On Linux, an installer puts ManaForge in your application menu with its icon.",
+  "wn030License": "PolyForm Noncommercial licence: share it and tinker all you like, but it isn't for sale.",
+
+  "bkSumCards": "{n, plural, =1{1 card} other{{n} cards}}",
+  "@bkSumCards": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumDecks": "{n, plural, =1{1 deck} other{{n} decks}}",
+  "@bkSumDecks": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumFolders": "{n, plural, =1{1 folder} other{{n} folders}}",
+  "@bkSumFolders": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumAchievements": "{n, plural, =1{1 achievement} other{{n} achievements}}",
+  "@bkSumAchievements": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "bkSumEmpty": "empty backup",
+  "bkStoreCollection": "your collection",
+  "bkStoreFolders": "your folders",
+  "bkStoreDecks": "your decks",
+  "bkStoreAchievements": "your achievements",
+  "bkStoreWishlist": "your wishlist",
+  "bkStoreCertificates": "your certificates",
+  "bkStoreMarket": "your preferred market",
+  "bkStoreRecents": "the cards you looked at recently",
+  "bkStoreValueHistory": "your value history",
+  "bkStorePriceHistory": "your price history",
+  "bkKindAuto": "automatic",
+  "bkKindPreRestore": "before restoring",
+  "bkErrFileTooBig": "That file is far too big to be a ManaForge backup.",
+  "bkErrExpandTooBig": "That backup is far too big once unpacked: it doesn't look like a real ManaForge backup.",
+  "bkErrNotABackup": "That file is not a ManaForge backup.",
+  "bkErrNewerVersion": "That backup was made by a newer version of ManaForge. Update the app and try again.",
+  "bkErrIncomplete": "That backup is incomplete: it doesn't carry your data.",
+  "bkErrDamaged": "That backup is damaged: {almacen} can't be read.",
+  "@bkErrDamaged": {
+    "placeholders": {"almacen": {"type": "String"}}
+  },
+  "bkErrWriteFailed": "I couldn't write to the data folder, so I haven't touched anything: {error}",
+  "@bkErrWriteFailed": {
+    "placeholders": {"error": {"type": "String"}}
+  },
+  "bkErrHalfDoneNoPrevious": "The restore stopped halfway ({escritos} of {total} files). I have no earlier backup of what was there. Details: {error}",
+  "@bkErrHalfDoneNoPrevious": {
+    "placeholders": {"escritos": {"type": "String"}, "total": {"type": "String"}, "error": {"type": "String"}}
+  },
+  "bkErrHalfDonePrevious": "The restore stopped halfway ({escritos} of {total} files). To go back, restore {ruta}. Details: {error}",
+  "@bkErrHalfDonePrevious": {
+    "placeholders": {"escritos": {"type": "String"}, "total": {"type": "String"}, "ruta": {"type": "String"}, "error": {"type": "String"}}
+  },
+
+  "siImportTooBig": "That file is far too big to be a card list.",
+  "siInsecureDownload": "The download ended up at an insecure address and has been cancelled.",
+  "siRedirectNowhere": "The download redirects nowhere and has been cancelled.",
+  "siTooManyRedirects": "The download goes round in too many circles and has been cancelled.",
+  "siDownloadTooBig": "The download is far bigger than it should be and has been cancelled.",
+  "siBadHash": "What was downloaded doesn't match the fingerprint published on GitHub. Nothing has been installed. Try again; if it keeps happening, say so.",
+  "siBackgroundNotImage": "Pick an image (.jpg, .png or .webp) as your background.",
+  "siBackgroundTooBig": "That image is too big to use as a background.",
+
+  "bgImages": "Images",
+  "bgImageFailed": "I couldn't use that image: {error}",
+  "@bgImageFailed": {
+    "placeholders": {"error": {"type": "String"}}
+  },
+  "bgLowContrast": "Too close to the card colour: the text will adjust itself so it stays readable.",
+  "bgChipColor": "Tab colour",
+  "bgIconColor": "Icon colour",
+  "bgUseThis": "Use this one",
+
+  "camGstreamerMissing": "GStreamer isn't installed. Install it with:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good",
+  "camNoImage": "Camera {dispositivo} gives no image (gst-launch exited with {codigo}).\n{detalle}",
+  "@camNoImage": {
+    "placeholders": {"dispositivo": {"type": "String"}, "codigo": {"type": "String"}, "detalle": {"type": "String"}}
+  },
+  "camNoFrames": "Camera {dispositivo} hasn't produced a single frame in 6 s.",
+  "@camNoFrames": {
+    "placeholders": {"dispositivo": {"type": "String"}}
+  },
+  "camNoCameras": "I can't find any camera (/dev/video*). Is it plugged in? Check with `lsusb` that the system sees it.",
+  "camNoneWorked": "No camera produced an image:\n{detalle}",
+  "@camNoneWorked": {
+    "placeholders": {"detalle": {"type": "String"}}
+  }
 }
