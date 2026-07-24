@@ -3,10 +3,12 @@ import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
+import '../services/forge_texts.dart';
 import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/deck_store.dart';
+import '../l10n/app_localizations.dart';
 import '../services/meta_decks.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
@@ -194,7 +196,7 @@ class _TestScreenState extends State<TestScreen> {
                       ],
                     ],
                   ),
-                  subtitle: Text(m.description),
+                  subtitle: Text(_metaDescription(t, m)),
                 ),
               ),
             const SizedBox(height: 16),
@@ -271,9 +273,9 @@ class _TestScreenState extends State<TestScreen> {
                 ColorIdentityDots(colors: deck.colors, size: 14),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                      '${deck.name} · ${deck.archetype.name} · '
-                      '${fe.themeName(result.deck.theme)}'),
+                  child: Text('${deck.name} · '
+                      '${archetypeName(t, deck.archetype)} · '
+                      '${themeName(t, result.deck.theme)}'),
                 ),
               ],
             ),
@@ -305,3 +307,13 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 }
+
+/// Los tres mazos de meta que la app trae dentro para cuando no hay conexión
+/// son contenido nuestro, así que se traducen. Los que bajan del feed vienen
+/// con su texto ya escrito y se enseñan tal cual.
+String _metaDescription(AppLocalizations t, MetaDeck m) => switch (m.id) {
+      'mono_red_aggro' => t.tsPresetMonoRed,
+      'azorius_control' => t.tsPresetAzorius,
+      'golgari_midrange' => t.tsPresetGolgari,
+      _ => m.description,
+    };

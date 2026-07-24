@@ -2,25 +2,15 @@ import 'package:forge_engine/forge_engine.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('los textos de plan cubren todos los arquetipos y temas', () {
-    for (final archetype in Archetype.values) {
-      final gen = GeneratedDeck(
-          Deck(
-              name: 'T',
-              colors: 'W',
-              archetype: archetype,
-              cards: const {},
-              lands: const {}),
-          'lifegain',
-          5.0);
-      expect(tagline(gen), isNotEmpty);
-      expect(gamePlan(gen).length, 3);
-    }
-    expect(themeName('lifegain'), 'drenaje de vida');
-    expect(themeName('desconocido'), 'desconocido');
+  test('los temas que sabe detectar el motor están todos nombrados', () {
+    // el TEXTO de cada tema vive en la app (se lee en diez idiomas); aquí solo
+    // se comprueba que la lista no se queda coja ni repite
+    expect(kThemes, contains('lifegain'));
+    expect(kThemes, contains('goodstuff'));
+    expect(kThemes.toSet().length, kThemes.length);
   });
 
-  test('whyItWorks incluye los números reales del mazo', () {
+  test('whyItWorksFacts cuenta los números reales del mazo', () {
     final pool = {
       'A': const Card(
           name: 'A', qty: 4, manaCost: '{1}{W}', cmc: 2, colors: 'W',
@@ -38,10 +28,10 @@ void main() {
             lands: const {'Plains': 24}),
         'goodstuff',
         5.0);
-    final text = whyItWorks(gen, pool);
-    expect(text, contains('24'));       // tierras
-    expect(text, contains('2.50'));     // coste medio
-    expect(text, contains('4 criaturas'));
-    expect(text, contains('4 cartas'));
+    final f = whyItWorksFacts(gen, pool);
+    expect(f.lands, 24);
+    expect(f.avgCmc.toStringAsFixed(2), '2.50');
+    expect(f.creatures, 4);
+    expect(f.interaction, 4);
   });
 }

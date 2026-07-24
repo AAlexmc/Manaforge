@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/database_download_error.dart';
 import '../l10n/t.dart';
 
 import '../services/card_database.dart';
@@ -372,7 +373,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
       if (mounted) {
         setState(() => _updateProgress = null);
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(tr(context).mkUpdateFailed('$e'))));
+            SnackBar(
+                content: Text(tr(context)
+                    .mkUpdateFailed(downloadErrorText(tr(context), e)))));
       }
     }
   }

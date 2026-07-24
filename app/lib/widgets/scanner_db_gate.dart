@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/database_download_error.dart';
 import '../l10n/t.dart';
 import '../services/scanner_database.dart';
 
@@ -49,7 +50,7 @@ class _ScannerDbGateState extends State<ScannerDbGate> {
       if (mounted) {
         setState(() {
           _progress = null;
-          _error = e.toString();
+          _error = downloadErrorText(tr(context), e);
         });
       }
     }

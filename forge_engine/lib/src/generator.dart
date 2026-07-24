@@ -291,11 +291,46 @@ Map<String, int>? _manaBase(
 }
 
 /// Resultado de una reforja con curva personalizada: mazo o motivo del "no".
+/// Por qué no se puede reforjar con la curva pedida. El motor es Dart puro y
+/// no tiene traducciones: dice el MOTIVO y los números, y el texto lo pone la
+/// app (`forge_texts.dart`), que sí sabe en qué idioma va.
+enum ReforgeRefusal {
+  /// La curva deja un número de tierras fuera de todo rango sano.
+  /// `args`: tierras, mínimo, máximo.
+  landsOutOfRange,
+
+  /// No hay cartas suficientes de esos colores para llenar la curva.
+  notEnoughCards,
+
+  /// La curva no encaja en ningún arquetipo. `args`: coste medio, tierras.
+  curveHasNoProfile,
+
+  /// No hay tierras básicas suficientes en la colección.
+  notEnoughBasics,
+
+  /// El mazo resultante rompe una regla dura. `args`: el detalle.
+  hardRule,
+}
+
 class ReforgeResult {
   final GeneratedDeck? deck;
+
+  /// El motivo en español: registro y red de seguridad.
   final String? reason;
-  const ReforgeResult.ok(GeneratedDeck this.deck) : reason = null;
-  const ReforgeResult.no(String this.reason) : deck = null;
+
+  /// El motivo en máquina, para poder contarlo en otro idioma.
+  final ReforgeRefusal? refusal;
+
+  /// Lo que va en los huecos del motivo, en orden.
+  final List<String> args;
+
+  const ReforgeResult.ok(GeneratedDeck this.deck)
+      : reason = null,
+        refusal = null,
+        args = const [];
+  const ReforgeResult.no(String this.reason,
+      {required ReforgeRefusal this.refusal, this.args = const []})
+      : deck = null;
 }
 
 /// Reforja un mazo para una curva objetivo ABSOLUTA {cmc: nº de hechizos}
@@ -312,7 +347,13 @@ ReforgeResult reforgeWithCurve(
     return ReforgeResult.no(
         'Con esa curva salen $nLands tierras: fuera del rango sano '
         '(${Archetype.aggro.landMin}-${Archetype.control.landMax}). '
-        'Ajusta el total de hechizos.');
+        'Ajusta el total de hechizos.',
+        refusal: ReforgeRefusal.landsOutOfRange,
+        args: [
+          '$nLands',
+          '${Archetype.aggro.landMin}',
+          '${Archetype.control.landMax}'
+        ]);
   }
 
   final (theme, rolesByCard) = detectTheme(cands);
@@ -370,7 +411,8 @@ ReforgeResult reforgeWithCurve(
     if (shortfall > 0) {
       return ReforgeResult.no(
           'Tu colección no tiene suficientes cartas de estos colores para '
-          'llenar esa curva. Prueba con menos hechizos o con otros costes.');
+          'llenar esa curva. Prueba con menos hechizos o con otros costes.',
+          refusal: ReforgeRefusal.notEnoughCards);
     }
   }
 
@@ -380,13 +422,16 @@ ReforgeResult reforgeWithCurve(
     return ReforgeResult.no(
         'Esa curva (coste medio ${avg.toStringAsFixed(1)} con $nLands '
         'tierras) no encaja en ningún perfil sano: un mazo barato quiere '
-        'menos tierras y uno caro quiere más. Acércalos.');
+        'menos tierras y uno caro quiere más. Acércalos.',
+        refusal: ReforgeRefusal.curveHasNoProfile,
+        args: [avg.toStringAsFixed(1), '$nLands']);
   }
 
   final lands = _manaBase(chosen, pool, colors, nLands);
   if (lands == null) {
     return const ReforgeResult.no(
-        'No hay tierras básicas suficientes en la colección para esa curva.');
+        'No hay tierras básicas suficientes en la colección para esa curva.',
+        refusal: ReforgeRefusal.notEnoughBasics);
   }
 
   final deck = Deck(
@@ -398,8 +443,10 @@ ReforgeResult reforgeWithCurve(
   );
   final errors = DeckValidator.validate(deck, pool);
   if (errors.isNotEmpty) {
-    return ReforgeResult.no('La curva pedida rompe una regla dura: '
-        '${errors.first}');
+    return ReforgeResult.no(
+        'La curva pedida rompe una regla dura: ${errors.first}',
+        refusal: ReforgeRefusal.hardRule,
+        args: [errors.first]);
   }
 
   var spellCount = 0;

@@ -4,6 +4,7 @@ import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../services/database_download_error.dart';
 import '../services/app_update.dart';
 import '../services/background_prefs.dart';
 import '../services/card_database.dart';
@@ -138,7 +139,8 @@ class _AjustesScreenState extends State<AjustesScreen> {
       if (mounted) {
         setState(() {
           _progress = null;
-          _status = tr(context).stUpdateFailed('$e');
+          _status =
+              tr(context).stUpdateFailed(downloadErrorText(tr(context), e));
         });
       }
     }

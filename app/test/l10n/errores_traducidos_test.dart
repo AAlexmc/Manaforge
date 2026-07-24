@@ -57,7 +57,7 @@ void main() {
     });
 
     test('el almacén de una copia se nombra en cristiano en $nombre', () {
-      for (final store in kBackupStoreKeys) {
+      for (final store in kBackupStores) {
         final texto = backupStoreName(t, store);
         expect(texto.trim(), isNotEmpty, reason: store);
         expect(texto, isNot(equals(store)), reason: '$store se queda sin nombre');

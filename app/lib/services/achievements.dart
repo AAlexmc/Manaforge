@@ -4,40 +4,65 @@
 /// pueden testear sin base de datos ni ficheros.
 library;
 
+import '../l10n/app_localizations.dart';
+
 /// Rareza del logro; de ella sale el XP que da.
 enum AchievementTier {
-  bronze('Bronce', 10),
-  silver('Plata', 25),
-  gold('Oro', 60),
-  mythic('Mítico', 150);
+  bronze(10),
+  silver(25),
+  gold(60),
+  mythic(150);
 
-  final String label;
   final int xp;
-  const AchievementTier(this.label, this.xp);
+  const AchievementTier(this.xp);
 }
+
+/// Cómo se llama cada rareza en el idioma del usuario.
+String tierLabel(AppLocalizations t, AchievementTier tier) => switch (tier) {
+      AchievementTier.bronze => t.achTierBronze,
+      AchievementTier.silver => t.achTierSilver,
+      AchievementTier.gold => t.achTierGold,
+      AchievementTier.mythic => t.achTierMythic,
+    };
 
 enum AchievementCategory {
-  coleccion('Colección'),
-  rareza('Rarezas'),
-  color('Colores'),
-  expansiones('Expansiones'),
-  valor('Valor'),
-  foils('Foils'),
-  forge('Forge'),
-  escaner('Escáner'),
-  dedicacion('Dedicación'),
-  carpetas('Carpetas'),
-  curiosidades('Curiosidades');
-
-  final String label;
-  const AchievementCategory(this.label);
+  coleccion,
+  rareza,
+  color,
+  expansiones,
+  valor,
+  foils,
+  forge,
+  escaner,
+  dedicacion,
+  carpetas,
+  curiosidades,
 }
+
+/// Cómo se llama cada categoría en el idioma del usuario.
+String categoryLabel(AppLocalizations t, AchievementCategory c) =>
+    switch (c) {
+      AchievementCategory.coleccion => t.achCatCollection,
+      AchievementCategory.rareza => t.achCatRarity,
+      AchievementCategory.color => t.achCatColor,
+      AchievementCategory.expansiones => t.achCatSets,
+      AchievementCategory.valor => t.achCatValue,
+      AchievementCategory.foils => t.achCatFoils,
+      AchievementCategory.forge => t.achCatForge,
+      AchievementCategory.escaner => t.achCatScanner,
+      AchievementCategory.dedicacion => t.achCatDedication,
+      AchievementCategory.carpetas => t.achCatFolders,
+      AchievementCategory.curiosidades => t.achCatCuriosities,
+    };
 
 /// Un logro: una meta numérica sobre la foto de la colección.
 class Achievement {
   final String id;
-  final String title;
-  final String description;
+
+  /// El nombre y la explicación salen de las traducciones: los logros se leen
+  /// en el idioma que tenga puesto la app, y cambian con él.
+  final String Function(AppLocalizations t) title;
+  final String Function(AppLocalizations t) description;
   final AchievementCategory category;
   final AchievementTier tier;
 
@@ -263,17 +288,18 @@ int xpToReach(int level) => level <= 1 ? 0 : 20 * level * (level - 1);
 /// Título del rango según el nivel. Los cortes están puestos para que el
 /// último rango SEA alcanzable con el catálogo de hoy (3.395 XP = nivel 13):
 /// si se añaden logros, se suben los cortes.
-String levelTitle(int level) {
-  if (level >= 13) return 'Planeswalker';
-  if (level >= 10) return 'Maestro';
-  if (level >= 7) return 'Archimago';
-  if (level >= 5) return 'Mago';
-  if (level >= 3) return 'Invocador';
-  return 'Aprendiz';
+String levelTitle(AppLocalizations t, int level) {
+  if (level >= 13) return t.achRankPlaneswalker;
+  if (level >= 10) return t.achRankMaster;
+  if (level >= 7) return t.achRankArchmage;
+  if (level >= 5) return t.achRankMage;
+  if (level >= 3) return t.achRankSummoner;
+  return t.achRankApprentice;
 }
 
-/// Nivel actual, cuánto llevas dentro del nivel y cuánto vale el nivel.
-({int level, String title, int xpInLevel, int xpForNext}) levelFor(int xp) {
+/// Nivel actual, cuánto llevas dentro del nivel y cuánto vale el nivel. El
+/// título del rango no va aquí: lo pone [levelTitle], que sabe el idioma.
+({int level, int xpInLevel, int xpForNext}) levelFor(int xp) {
   var level = 1;
   while (xp >= xpToReach(level + 1)) {
     level++;
@@ -282,7 +308,6 @@ String levelTitle(int level) {
   final ceil = xpToReach(level + 1);
   return (
     level: level,
-    title: levelTitle(level),
     xpInLevel: xp - floor,
     xpForNext: ceil - floor,
   );
@@ -297,8 +322,8 @@ String levelTitle(int level) {
 List<Achievement> _series({
   required String id,
   required AchievementCategory category,
-  required String Function(num goal) title,
-  required String Function(num goal) description,
+  required String Function(AppLocalizations t, num goal) title,
+  required String Function(AppLocalizations t, num goal) description,
   required List<(num, AchievementTier)> steps,
   required num Function(AchievementSnapshot) value,
   bool secret = false,
@@ -307,8 +332,8 @@ List<Achievement> _series({
       for (final (goal, tier) in steps)
         Achievement(
           id: '$id-${goal.toStringAsFixed(0)}',
-          title: title(goal),
-          description: description(goal),
+          title: (t) => title(t, goal),
+          description: (t) => description(t, goal),
           category: category,
           tier: tier,
           goal: goal,
@@ -338,17 +363,17 @@ final List<Achievement> kAchievements = [
       (5000, _g),
       (10000, _m),
     ],
-    title: (g) => switch (g) {
-      1 => 'La primera de muchas',
-      10 => 'Solo iba a comprar una',
-      50 => 'Ya no caben en la mano',
-      100 => 'Cien y subiendo',
-      500 => 'La caja se queda pequeña',
-      1000 => 'Mil. Y las quiero todas',
-      5000 => 'Esto ya es un almacén',
-      _ => 'Diez mil, pero yo controlo',
+    title: (t, g) => switch (g) {
+      1 => t.achCopias1,
+      10 => t.achCopias10,
+      50 => t.achCopias50,
+      100 => t.achCopias100,
+      500 => t.achCopias500,
+      1000 => t.achCopias1000,
+      5000 => t.achCopias5000,
+      _ => t.achCopias10000,
     },
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas en tu colección.',
+    description: (t, g) => t.achCopiasDesc(g.toStringAsFixed(0)),
     value: (s) => s.totalCopies,
   ),
   ..._series(
@@ -362,26 +387,23 @@ final List<Achievement> kAchievements = [
       (2500, _m),
       (5000, _m),
     ],
-    title: (g) => switch (g) {
-      25 => 'Aquí hay variedad',
-      100 => 'Cien caras distintas',
-      500 => 'Media biblioteca',
-      1000 => 'Enciclopedia andante',
-      2500 => 'Ya no me las sé todas',
-      _ => 'El archivo',
+    title: (t, g) => switch (g) {
+      25 => t.achDistintas25,
+      100 => t.achDistintas100,
+      500 => t.achDistintas500,
+      1000 => t.achDistintas1000,
+      2500 => t.achDistintas2500,
+      _ => t.achDistintas5000,
     },
-    description: (g) =>
-        'Ten ${g.toStringAsFixed(0)} cartas DISTINTAS (sin contar repetidas).',
+    description: (t, g) => t.achDistintasDesc(g.toStringAsFixed(0)),
     value: (s) => s.distinctCards,
   ),
   ..._series(
     id: 'playsets',
     category: AchievementCategory.coleccion,
     steps: [(1, _b), (20, _g)],
-    title: (g) => g == 1 ? 'Cuatro iguales' : 'Veinte playsets, cero mazos',
-    description: (g) => g == 1
-        ? 'Ten 4 copias de una misma carta.'
-        : 'Ten 20 playsets distintos (4 copias de cada uno).',
+    title: (t, g) => g == 1 ? t.achPlaysets1 : t.achPlaysets20,
+    description: (t, g) => g == 1 ? t.achPlaysets1Desc : t.achPlaysets20Desc,
     value: (s) => s.playsets,
   ),
 
@@ -390,53 +412,52 @@ final List<Achievement> kAchievements = [
     id: 'comunes',
     category: AchievementCategory.rareza,
     steps: [(10, _b), (50, _b), (200, _s), (500, _g)],
-    title: (g) => switch (g) {
-      10 => 'Las que nadie quiere',
-      50 => 'El montón de siempre',
-      200 => 'Rey del montón',
-      _ => 'Marea de comunes',
+    title: (t, g) => switch (g) {
+      10 => t.achComunes10,
+      50 => t.achComunes50,
+      200 => t.achComunes200,
+      _ => t.achComunes500,
     },
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas comunes distintas.',
+    description: (t, g) => t.achComunesDesc(g.toStringAsFixed(0)),
     value: (s) => s.rarity('common'),
   ),
   ..._series(
     id: 'infrecuentes',
     category: AchievementCategory.rareza,
     steps: [(10, _b), (50, _b), (200, _s), (500, _g)],
-    title: (g) => switch (g) {
-      10 => 'Algo mejor que común',
-      50 => 'Plata fina',
-      200 => 'Cazador de infrecuentes',
-      _ => 'Plata a espuertas',
+    title: (t, g) => switch (g) {
+      10 => t.achInfrecuentes10,
+      50 => t.achInfrecuentes50,
+      200 => t.achInfrecuentes200,
+      _ => t.achInfrecuentes500,
     },
-    description: (g) =>
-        'Ten ${g.toStringAsFixed(0)} cartas infrecuentes distintas.',
+    description: (t, g) => t.achInfrecuentesDesc(g.toStringAsFixed(0)),
     value: (s) => s.rarity('uncommon'),
   ),
   ..._series(
     id: 'raras',
     category: AchievementCategory.rareza,
     steps: [(5, _b), (25, _s), (100, _g), (300, _m)],
-    title: (g) => switch (g) {
-      5 => 'Suena bien al abrir el sobre',
-      25 => 'Cofre de raras',
-      100 => 'Cien raras y ninguna jugable',
-      _ => 'Cámara acorazada',
+    title: (t, g) => switch (g) {
+      5 => t.achRaras5,
+      25 => t.achRaras25,
+      100 => t.achRaras100,
+      _ => t.achRaras300,
     },
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas raras distintas.',
+    description: (t, g) => t.achRarasDesc(g.toStringAsFixed(0)),
     value: (s) => s.rarity('rare'),
   ),
   ..._series(
     id: 'miticas',
     category: AchievementCategory.rareza,
     steps: [(1, _b), (10, _s), (50, _g), (150, _m)],
-    title: (g) => switch (g) {
-      1 => 'Mi primera mítica',
-      10 => 'Diez míticas',
-      50 => 'Coleccionista mítico',
-      _ => 'Panteón mítico',
+    title: (t, g) => switch (g) {
+      1 => t.achMiticas1,
+      10 => t.achMiticas10,
+      50 => t.achMiticas50,
+      _ => t.achMiticas150,
     },
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas míticas distintas.',
+    description: (t, g) => t.achMiticasDesc(g.toStringAsFixed(0)),
     value: (s) => s.rarity('mythic'),
   ),
 
@@ -445,74 +466,72 @@ final List<Achievement> kAchievements = [
     id: 'blancas',
     category: AchievementCategory.color,
     steps: [(25, _b), (100, _s)],
-    title: (g) => g == 25 ? 'Orden y concierto' : 'Ejército de plata',
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas blancas distintas.',
+    title: (t, g) => g == 25 ? t.achBlancas25 : t.achBlancas100,
+    description: (t, g) => t.achBlancasDesc(g.toStringAsFixed(0)),
     value: (s) => s.color('W'),
   ),
   ..._series(
     id: 'azules',
     category: AchievementCategory.color,
     steps: [(25, _b), (100, _s)],
-    title: (g) => g == 25 ? 'Eso no te lo permito' : 'Torre de marfil',
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas azules distintas.',
+    title: (t, g) => g == 25 ? t.achAzules25 : t.achAzules100,
+    description: (t, g) => t.achAzulesDesc(g.toStringAsFixed(0)),
     value: (s) => s.color('U'),
   ),
   ..._series(
     id: 'negras',
     category: AchievementCategory.color,
     steps: [(25, _b), (100, _s)],
-    title: (g) => g == 25 ? 'Pacto oscuro' : 'Señor de la cripta',
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas negras distintas.',
+    title: (t, g) => g == 25 ? t.achNegras25 : t.achNegras100,
+    description: (t, g) => t.achNegrasDesc(g.toStringAsFixed(0)),
     value: (s) => s.color('B'),
   ),
   ..._series(
     id: 'rojas',
     category: AchievementCategory.color,
     steps: [(25, _b), (100, _s)],
-    title: (g) => g == 25 ? 'A quemarlo todo' : 'Incendio general',
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas rojas distintas.',
+    title: (t, g) => g == 25 ? t.achRojas25 : t.achRojas100,
+    description: (t, g) => t.achRojasDesc(g.toStringAsFixed(0)),
     value: (s) => s.color('R'),
   ),
   ..._series(
     id: 'verdes',
     category: AchievementCategory.color,
     steps: [(25, _b), (100, _s)],
-    title: (g) => g == 25 ? 'Un brote' : 'El bosque entero',
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas verdes distintas.',
+    title: (t, g) => g == 25 ? t.achVerdes25 : t.achVerdes100,
+    description: (t, g) => t.achVerdesDesc(g.toStringAsFixed(0)),
     value: (s) => s.color('G'),
   ),
   ..._series(
     id: 'incoloras',
     category: AchievementCategory.color,
     steps: [(25, _b), (100, _s)],
-    title: (g) => g == 25 ? 'Metal frío' : 'Forja eterna',
-    description: (g) =>
-        'Ten ${g.toStringAsFixed(0)} cartas incoloras distintas.',
+    title: (t, g) => g == 25 ? t.achIncoloras25 : t.achIncoloras100,
+    description: (t, g) => t.achIncolorasDesc(g.toStringAsFixed(0)),
     value: (s) => s.color('C'),
   ),
   ..._series(
     id: 'arcoiris',
     category: AchievementCategory.color,
     steps: [(5, _s)],
-    title: (_) => 'Los cinco colores',
-    description: (_) => 'Ten al menos una carta de cada uno de los 5 colores.',
+    title: (t, _) => t.achArcoiris,
+    description: (t, _) => t.achArcoirisDesc,
     value: (s) => s.colorsPresent,
   ),
   ..._series(
     id: 'multicolor',
     category: AchievementCategory.color,
     steps: [(10, _b), (50, _s)],
-    title: (g) => g == 10 ? 'Mezclando colores' : 'Alianza dorada',
-    description: (g) =>
-        'Ten ${g.toStringAsFixed(0)} cartas multicolor distintas.',
+    title: (t, g) => g == 10 ? t.achMulticolor10 : t.achMulticolor50,
+    description: (t, g) => t.achMulticolorDesc(g.toStringAsFixed(0)),
     value: (s) => s.multicolorCards,
   ),
   ..._series(
     id: 'cincocolores',
     category: AchievementCategory.color,
     steps: [(1, _g)],
-    title: (_) => 'Los cinco de golpe',
-    description: (_) => 'Ten una carta con los cinco colores.',
+    title: (t, _) => t.achCincocolores,
+    description: (t, _) => t.achCincocoloresDesc,
     value: (s) => s.fiveColorCards,
   ),
 
@@ -521,38 +540,36 @@ final List<Achievement> kAchievements = [
     id: 'sets',
     category: AchievementCategory.expansiones,
     steps: [(1, _b), (5, _b), (10, _s), (25, _s), (50, _g)],
-    title: (g) => switch (g) {
-      1 => 'Primera expansión',
-      5 => 'Cinco mundos',
-      10 => 'Viajero de planos',
-      25 => 'Trotamundos',
-      _ => 'Medio multiverso',
+    title: (t, g) => switch (g) {
+      1 => t.achSets1,
+      5 => t.achSets5,
+      10 => t.achSets10,
+      25 => t.achSets25,
+      _ => t.achSets50,
     },
-    description: (g) =>
-        'Ten cartas de ${g.toStringAsFixed(0)} expansiones distintas.',
+    description: (t, g) => t.achSetsDesc(g.toStringAsFixed(0)),
     value: (s) => s.distinctSets,
   ),
   ..._series(
     id: 'setscompletos',
     category: AchievementCategory.expansiones,
     steps: [(1, _g), (3, _g), (10, _m)],
-    title: (g) => switch (g) {
-      1 => 'No falta ni una',
-      3 => 'Tres álbumes enteros',
-      _ => 'Maestro del álbum',
+    title: (t, g) => switch (g) {
+      1 => t.achSetscompletos1,
+      3 => t.achSetscompletos3,
+      _ => t.achSetscompletos10,
     },
-    description: (g) => g == 1
-        ? 'Completa una expansión entera en el Álbum.'
-        : 'Completa ${g.toStringAsFixed(0)} expansiones enteras.',
+    description: (t, g) => g == 1
+        ? t.achSetscompletos1Desc
+        : t.achSetscompletos3Desc(g.toStringAsFixed(0)),
     value: (s) => s.setsCompleted,
   ),
   ..._series(
     id: 'anyos',
     category: AchievementCategory.expansiones,
     steps: [(5, _s), (15, _g)],
-    title: (g) => g == 5 ? 'Cinco años de cartón' : 'Máquina del tiempo',
-    description: (g) =>
-        'Ten cartas de ${g.toStringAsFixed(0)} años de salida distintos.',
+    title: (t, g) => g == 5 ? t.achAnyos5 : t.achAnyos15,
+    description: (t, g) => t.achAnyosDesc(g.toStringAsFixed(0)),
     value: (s) => s.distinctYears,
   ),
 
@@ -569,32 +586,30 @@ final List<Achievement> kAchievements = [
       (10000, _m),
       (25000, _m),
     ],
-    title: (g) => switch (g) {
-      10 => 'Primeros euros',
-      50 => 'La hucha',
-      250 => 'Ahí va la paga',
-      1000 => 'Ahí va todo mi dinero',
-      5000 => 'No se lo digas a nadie',
-      10000 => 'Vale más que mi coche',
-      _ => 'Colección de museo',
+    title: (t, g) => switch (g) {
+      10 => t.achValor10,
+      50 => t.achValor50,
+      250 => t.achValor250,
+      1000 => t.achValor1000,
+      5000 => t.achValor5000,
+      10000 => t.achValor10000,
+      _ => t.achValor25000,
     },
-    description: (g) =>
-        'Que tu colección valga ${g.toStringAsFixed(0)} € o más.',
+    description: (t, g) => t.achValorDesc(g.toStringAsFixed(0)),
     value: (s) => s.totalValue,
   ),
   ..._series(
     id: 'joya',
     category: AchievementCategory.valor,
     steps: [(20, _b), (100, _s), (500, _g), (1000, _m), (2500, _m)],
-    title: (g) => switch (g) {
-      20 => 'Una carta de las buenas',
-      100 => 'La joya de la colección',
-      500 => 'Esta no sale de la funda',
-      1000 => 'Mil euros en una sola funda',
-      _ => 'El santo grial',
+    title: (t, g) => switch (g) {
+      20 => t.achJoya20,
+      100 => t.achJoya100,
+      500 => t.achJoya500,
+      1000 => t.achJoya1000,
+      _ => t.achJoya2500,
     },
-    description: (g) =>
-        'Ten una sola carta que valga ${g.toStringAsFixed(0)} € o más.',
+    description: (t, g) => t.achJoyaDesc(g.toStringAsFixed(0)),
     value: (s) => s.bestCardValue,
   ),
 
@@ -603,42 +618,40 @@ final List<Achievement> kAchievements = [
     id: 'foils',
     category: AchievementCategory.foils,
     steps: [(1, _b), (10, _b), (50, _s), (200, _g), (500, _m), (1000, _m)],
-    title: (g) => switch (g) {
-      1 => 'Primer brillo',
-      10 => 'Destellos',
-      50 => 'Brilla la caja',
-      200 => 'Aquí ya no hay nada mate',
-      500 => 'Todo brilla',
-      _ => 'Fábrica de brillos',
+    title: (t, g) => switch (g) {
+      1 => t.achFoils1,
+      10 => t.achFoils10,
+      50 => t.achFoils50,
+      200 => t.achFoils200,
+      500 => t.achFoils500,
+      _ => t.achFoils1000,
     },
-    description: (g) => 'Ten ${g.toStringAsFixed(0)} cartas foil.',
+    description: (t, g) => t.achFoilsDesc(g.toStringAsFixed(0)),
     value: (s) => s.foilCopies,
   ),
   ..._series(
     id: 'foiljoya',
     category: AchievementCategory.foils,
     steps: [(10, _s), (50, _g), (200, _m)],
-    title: (g) => switch (g) {
-      10 => 'Foil de las buenas',
-      50 => 'Foil de las caras',
-      _ => 'Foil de museo',
+    title: (t, g) => switch (g) {
+      10 => t.achFoiljoya10,
+      50 => t.achFoiljoya50,
+      _ => t.achFoiljoya200,
     },
-    description: (g) =>
-        'Ten una foil que valga ${g.toStringAsFixed(0)} € o más.',
+    description: (t, g) => t.achFoiljoyaDesc(g.toStringAsFixed(0)),
     value: (s) => s.bestFoilValue,
   ),
   ..._series(
     id: 'foilvalor',
     category: AchievementCategory.foils,
     steps: [(50, _b), (250, _s), (1000, _g), (5000, _m)],
-    title: (g) => switch (g) {
-      50 => 'Vitrina que brilla',
-      250 => 'Vitrina cara',
-      1000 => 'Mil euros de brillo',
-      _ => 'Vitrina de museo',
+    title: (t, g) => switch (g) {
+      50 => t.achFoilvalor50,
+      250 => t.achFoilvalor250,
+      1000 => t.achFoilvalor1000,
+      _ => t.achFoilvalor5000,
     },
-    description: (g) =>
-        'Que todas tus foils juntas valgan ${g.toStringAsFixed(0)} € o más.',
+    description: (t, g) => t.achFoilvalorDesc(g.toStringAsFixed(0)),
     value: (s) => s.foilValue,
   ),
 
@@ -647,46 +660,44 @@ final List<Achievement> kAchievements = [
     id: 'mazos',
     category: AchievementCategory.forge,
     steps: [(1, _b), (5, _b), (25, _s)],
-    title: (g) => switch (g) {
-      1 => 'Primer mazo',
-      5 => 'Cinco mazos guardados',
-      _ => 'El taller no para',
+    title: (t, g) => switch (g) {
+      1 => t.achMazos1,
+      5 => t.achMazos5,
+      _ => t.achMazos25,
     },
-    description: (g) =>
-        'Guarda ${g.toStringAsFixed(0)} mazos hechos con Forge.',
+    description: (t, g) => t.achMazosDesc(g.toStringAsFixed(0)),
     value: (s) => s.decksSaved,
   ),
   ..._series(
     id: 'mazoscore',
     category: AchievementCategory.forge,
     steps: [(90, _g)],
-    title: (_) => 'Mazo redondo',
-    description: (_) => 'Genera un mazo con puntuación 90 o más.',
+    title: (t, _) => t.achMazoscore,
+    description: (t, _) => t.achMazoscoreDesc,
     value: (s) => s.bestDeckScore,
   ),
   ..._series(
     id: 'mazocolores',
     category: AchievementCategory.forge,
     steps: [(3, _s), (5, _g)],
-    title: (g) => g == 3 ? 'Tricolor' : 'Arcoíris jugable',
-    description: (g) =>
-        'Guarda un mazo de ${g.toStringAsFixed(0)} colores.',
+    title: (t, g) => g == 3 ? t.achMazocolores3 : t.achMazocolores5,
+    description: (t, g) => t.achMazocoloresDesc(g.toStringAsFixed(0)),
     value: (s) => s.maxDeckColors,
   ),
   ..._series(
     id: 'mazomono',
     category: AchievementCategory.forge,
     steps: [(1, _b)],
-    title: (_) => 'Sin mezclar nada',
-    description: (_) => 'Guarda un mazo de un solo color.',
+    title: (t, _) => t.achMazomono,
+    description: (t, _) => t.achMazomonoDesc,
     value: (s) => s.monoColorDecks,
   ),
   ..._series(
     id: 'mazocommander',
     category: AchievementCategory.forge,
     steps: [(1, _s)],
-    title: (_) => 'Al mando',
-    description: (_) => 'Guarda un mazo de Commander.',
+    title: (t, _) => t.achMazocommander,
+    description: (t, _) => t.achMazocommanderDesc,
     value: (s) => s.commanderDecks,
   ),
 
@@ -695,32 +706,29 @@ final List<Achievement> kAchievements = [
     id: 'escaneadas',
     category: AchievementCategory.escaner,
     steps: [(1, _b), (50, _b), (500, _s), (2000, _g)],
-    title: (g) => switch (g) {
-      1 => 'Primer escaneo',
-      50 => 'Mano rápida',
-      500 => 'Escáner en serie',
-      _ => 'Escaneo hasta dormido',
+    title: (t, g) => switch (g) {
+      1 => t.achEscaneadas1,
+      50 => t.achEscaneadas50,
+      500 => t.achEscaneadas500,
+      _ => t.achEscaneadas2000,
     },
-    description: (g) =>
-        'Escanea ${g.toStringAsFixed(0)} cartas con la cámara o por foto.',
+    description: (t, g) => t.achEscaneadasDesc(g.toStringAsFixed(0)),
     value: (s) => s.cardsScanned,
   ),
   ..._series(
     id: 'foto',
     category: AchievementCategory.escaner,
     steps: [(9, _s), (20, _g)],
-    title: (g) => g == 9 ? 'Página entera de una foto' : 'Veinte de una tacada',
-    description: (g) =>
-        'Reconoce ${g.toStringAsFixed(0)} cartas en una sola foto.',
+    title: (t, g) => g == 9 ? t.achFoto9 : t.achFoto20,
+    description: (t, g) => t.achFotoDesc(g.toStringAsFixed(0)),
     value: (s) => s.bestPhotoCards,
   ),
   ..._series(
     id: 'escaneoperfecto',
     category: AchievementCategory.escaner,
     steps: [(1, _s)],
-    title: (_) => 'Ni una para revisar',
-    description: (_) =>
-        'Escanea una página entera sin que ninguna carta quede para revisar.',
+    title: (t, _) => t.achEscaneoperfecto,
+    description: (t, _) => t.achEscaneoperfectoDesc,
     value: (s) => s.perfectScans,
   ),
 
@@ -729,27 +737,25 @@ final List<Achievement> kAchievements = [
     id: 'dias',
     category: AchievementCategory.dedicacion,
     steps: [(2, _b), (7, _b), (30, _s), (100, _g)],
-    title: (g) => switch (g) {
-      2 => 'Has vuelto',
-      7 => 'Una semana aquí',
-      30 => 'Un mes aquí',
-      _ => 'Cien días aquí',
+    title: (t, g) => switch (g) {
+      2 => t.achDias2,
+      7 => t.achDias7,
+      30 => t.achDias30,
+      _ => t.achDias100,
     },
-    description: (g) =>
-        'Usa ManaForge ${g.toStringAsFixed(0)} días distintos.',
+    description: (t, g) => t.achDiasDesc(g.toStringAsFixed(0)),
     value: (s) => s.activeDays,
   ),
   ..._series(
     id: 'racha',
     category: AchievementCategory.dedicacion,
     steps: [(3, _b), (7, _s), (30, _g)],
-    title: (g) => switch (g) {
-      3 => 'Tres seguidos',
-      7 => 'Semana perfecta',
-      _ => 'Mes sin fallar',
+    title: (t, g) => switch (g) {
+      3 => t.achRacha3,
+      7 => t.achRacha7,
+      _ => t.achRacha30,
     },
-    description: (g) =>
-        'Entra ${g.toStringAsFixed(0)} días seguidos.',
+    description: (t, g) => t.achRachaDesc(g.toStringAsFixed(0)),
     value: (s) => s.longestStreak,
   ),
   ..._series(
@@ -758,8 +764,8 @@ final List<Achievement> kAchievements = [
     steps: [(4, _s)],
     // el nombre viejo ("Mes de compras") mentía: esto no mira lo que compras,
     // mira que vuelvas cuatro semanas seguidas
-    title: (_) => 'Cuatro semanas sin faltar',
-    description: (_) => 'Usa ManaForge 4 semanas seguidas.',
+    title: (t, _) => t.achSemanas,
+    description: (t, _) => t.achSemanasDesc,
     value: (s) => s.weeksInARow,
   ),
 
@@ -768,24 +774,24 @@ final List<Achievement> kAchievements = [
     id: 'carpetas',
     category: AchievementCategory.carpetas,
     steps: [(1, _b), (5, _s)],
-    title: (g) => g == 1 ? 'Empieza el orden' : 'Todo clasificado',
-    description: (g) => 'Crea ${g.toStringAsFixed(0)} carpetas.',
+    title: (t, g) => g == 1 ? t.achCarpetas1 : t.achCarpetas5,
+    description: (t, g) => t.achCarpetasDesc(g.toStringAsFixed(0)),
     value: (s) => s.foldersCreated,
   ),
   ..._series(
     id: 'carpetagrande',
     category: AchievementCategory.carpetas,
     steps: [(100, _s)],
-    title: (_) => 'Carpetón',
-    description: (_) => 'Ten una carpeta con 100 cartas o más.',
+    title: (t, _) => t.achCarpetagrande,
+    description: (t, _) => t.achCarpetagrandeDesc,
     value: (s) => s.biggestFolderCards,
   ),
   ..._series(
     id: 'carpetavalor',
     category: AchievementCategory.carpetas,
     steps: [(100, _g)],
-    title: (_) => 'Esta carpeta no la presto',
-    description: (_) => 'Ten una carpeta que valga 100 € o más.',
+    title: (t, _) => t.achCarpetavalor,
+    description: (t, _) => t.achCarpetavalorDesc,
     value: (s) => s.richestFolderValue,
   ),
 
@@ -794,60 +800,56 @@ final List<Achievement> kAchievements = [
     id: 'tierrasbasicas',
     category: AchievementCategory.curiosidades,
     steps: [(5, _b)],
-    title: (_) => 'Las cinco básicas',
-    description: (_) =>
-        'Ten los cinco tipos de tierra básica (llanura, isla, pantano, '
-        'montaña y bosque).',
+    title: (t, _) => t.achTierrasbasicas,
+    description: (t, _) => t.achTierrasbasicasDesc,
     value: (s) => s.basicLandTypes,
   ),
   ..._series(
     id: 'fuerza',
     category: AchievementCategory.curiosidades,
     steps: [(10, _s)],
-    title: (_) => 'Menudo bicho',
-    description: (_) => 'Ten una criatura de fuerza 10 o más.',
+    title: (t, _) => t.achFuerza,
+    description: (t, _) => t.achFuerzaDesc,
     value: (s) => s.maxPower,
   ),
   ..._series(
     id: 'coste',
     category: AchievementCategory.curiosidades,
     steps: [(10, _b)],
-    title: (_) => 'Esta no la lanzo en la vida',
-    description: (_) => 'Ten una carta de coste convertido 10 o más.',
+    title: (t, _) => t.achCoste,
+    description: (t, _) => t.achCosteDesc,
     value: (s) => s.maxCmc,
   ),
   ..._series(
     id: 'costecero',
     category: AchievementCategory.curiosidades,
     steps: [(1, _b)],
-    title: (_) => 'Gratis',
-    description: (_) => 'Ten una carta de coste 0.',
+    title: (t, _) => t.achCostecero,
+    description: (t, _) => t.achCosteceroDesc,
     value: (s) => s.zeroCostCards,
   ),
   ..._series(
     id: 'tipos',
     category: AchievementCategory.curiosidades,
     steps: [(7, _s)],
-    title: (_) => 'De todo un poco',
-    description: (_) =>
-        'Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, '
-        'un encantamiento, una tierra y un planeswalker.',
+    title: (t, _) => t.achTipos,
+    description: (t, _) => t.achTiposDesc,
     value: (s) => s.typesCollected,
   ),
   ..._series(
     id: 'planeswalkers',
     category: AchievementCategory.curiosidades,
     steps: [(5, _s)],
-    title: (_) => 'Compañía de planeswalkers',
-    description: (_) => 'Ten 5 planeswalkers distintos.',
+    title: (t, _) => t.achPlaneswalkers,
+    description: (t, _) => t.achPlaneswalkersDesc,
     value: (s) => s.type('Planeswalker'),
   ),
   ..._series(
     id: 'noventas',
     category: AchievementCategory.curiosidades,
     steps: [(1, _s)],
-    title: (_) => 'Reliquia de los 90',
-    description: (_) => 'Ten una carta de los años 90.',
+    title: (t, _) => t.achNoventas,
+    description: (t, _) => t.achNoventasDesc,
     value: (s) => s.cardsFrom90s,
     secret: true,
   ),
@@ -855,10 +857,8 @@ final List<Achievement> kAchievements = [
     id: 'idiomas',
     category: AchievementCategory.curiosidades,
     steps: [(1, _b), (25, _s)],
-    title: (g) => g == 1 ? 'Esta no la sé leer' : 'Colección políglota',
-    description: (g) => g == 1
-        ? 'Ten una carta en un idioma que no sea inglés.'
-        : 'Ten 25 cartas en otros idiomas.',
+    title: (t, g) => g == 1 ? t.achIdiomas1 : t.achIdiomas25,
+    description: (t, g) => g == 1 ? t.achIdiomas1Desc : t.achIdiomas25Desc,
     value: (s) => s.foreignCards,
     secret: true,
   ),
@@ -866,8 +866,8 @@ final List<Achievement> kAchievements = [
     id: 'wishlist',
     category: AchievementCategory.curiosidades,
     steps: [(20, _b)],
-    title: (_) => 'La lista de los caprichos',
-    description: (_) => 'Apunta 20 cartas en la wishlist.',
+    title: (t, _) => t.achWishlist,
+    description: (t, _) => t.achWishlistDesc,
     value: (s) => s.wishlistCards,
   ),
 ];

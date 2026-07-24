@@ -588,7 +588,10 @@
   "bkWhy": "Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.",
   "bkSave": "Guardar copia",
   "bkRestoreTitle": "Restaurar una copia",
-  "bkRestoreWarning": "Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.",
+  "bkRestoreWarning": "Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe {palabra}: así no se restaura nada sin querer.",
+  "@bkRestoreWarning": {
+    "placeholders": { "palabra": { "type": "String" } }
+  },
   "bkNoBackups": "Aún no hay copias guardadas en este ordenador.",
   "bkWhich": "Copia a restaurar",
   "bkPickOne": "Elige una copia",
@@ -1301,5 +1304,385 @@
   "pcMonth": "Mes",
   "pcAll": "Todo",
 
-  "vpTapCorrect": "Toca la carta correcta"
+  "vpTapCorrect": "Toca la carta correcta",
+
+  "achCopias1": "La primera de muchas",
+  "achCopias10": "Solo iba a comprar una",
+  "achCopias50": "Ya no caben en la mano",
+  "achCopias100": "Cien y subiendo",
+  "achCopias500": "La caja se queda pequeña",
+  "achCopias1000": "Mil. Y las quiero todas",
+  "achCopias5000": "Esto ya es un almacén",
+  "achCopias10000": "Diez mil, pero yo controlo",
+  "achCopiasDesc": "Ten {n} cartas en tu colección.",
+  "@achCopiasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achDistintas25": "Aquí hay variedad",
+  "achDistintas100": "Cien caras distintas",
+  "achDistintas500": "Media biblioteca",
+  "achDistintas1000": "Enciclopedia andante",
+  "achDistintas2500": "Ya no me las sé todas",
+  "achDistintas5000": "El archivo",
+  "achDistintasDesc": "Ten {n} cartas DISTINTAS (sin contar repetidas).",
+  "@achDistintasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achPlaysets1": "Cuatro iguales",
+  "achPlaysets20": "Veinte playsets, cero mazos",
+  "achPlaysets1Desc": "Ten 4 copias de una misma carta.",
+  "achPlaysets20Desc": "Ten 20 playsets distintos (4 copias de cada uno).",
+  "achComunes10": "Las que nadie quiere",
+  "achComunes50": "El montón de siempre",
+  "achComunes200": "Rey del montón",
+  "achComunes500": "Marea de comunes",
+  "achComunesDesc": "Ten {n} cartas comunes distintas.",
+  "@achComunesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achInfrecuentes10": "Algo mejor que común",
+  "achInfrecuentes50": "Plata fina",
+  "achInfrecuentes200": "Cazador de infrecuentes",
+  "achInfrecuentes500": "Plata a espuertas",
+  "achInfrecuentesDesc": "Ten {n} cartas infrecuentes distintas.",
+  "@achInfrecuentesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achRaras5": "Suena bien al abrir el sobre",
+  "achRaras25": "Cofre de raras",
+  "achRaras100": "Cien raras y ninguna jugable",
+  "achRaras300": "Cámara acorazada",
+  "achRarasDesc": "Ten {n} cartas raras distintas.",
+  "@achRarasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMiticas1": "Mi primera mítica",
+  "achMiticas10": "Diez míticas",
+  "achMiticas50": "Coleccionista mítico",
+  "achMiticas150": "Panteón mítico",
+  "achMiticasDesc": "Ten {n} cartas míticas distintas.",
+  "@achMiticasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achBlancas25": "Orden y concierto",
+  "achBlancas100": "Ejército de plata",
+  "achBlancasDesc": "Ten {n} cartas blancas distintas.",
+  "@achBlancasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achAzules25": "Eso no te lo permito",
+  "achAzules100": "Torre de marfil",
+  "achAzulesDesc": "Ten {n} cartas azules distintas.",
+  "@achAzulesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achNegras25": "Pacto oscuro",
+  "achNegras100": "Señor de la cripta",
+  "achNegrasDesc": "Ten {n} cartas negras distintas.",
+  "@achNegrasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achRojas25": "A quemarlo todo",
+  "achRojas100": "Incendio general",
+  "achRojasDesc": "Ten {n} cartas rojas distintas.",
+  "@achRojasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achVerdes25": "Un brote",
+  "achVerdes100": "El bosque entero",
+  "achVerdesDesc": "Ten {n} cartas verdes distintas.",
+  "@achVerdesDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achIncoloras25": "Metal frío",
+  "achIncoloras100": "Forja eterna",
+  "achIncolorasDesc": "Ten {n} cartas incoloras distintas.",
+  "@achIncolorasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achArcoiris": "Los cinco colores",
+  "achArcoirisDesc": "Ten al menos una carta de cada uno de los 5 colores.",
+  "achMulticolor10": "Mezclando colores",
+  "achMulticolor50": "Alianza dorada",
+  "achMulticolorDesc": "Ten {n} cartas multicolor distintas.",
+  "@achMulticolorDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achCincocolores": "Los cinco de golpe",
+  "achCincocoloresDesc": "Ten una carta con los cinco colores.",
+  "achSets1": "Primera expansión",
+  "achSets5": "Cinco mundos",
+  "achSets10": "Viajero de planos",
+  "achSets25": "Trotamundos",
+  "achSets50": "Medio multiverso",
+  "achSetsDesc": "Ten cartas de {n} expansiones distintas.",
+  "@achSetsDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achSetscompletos1": "No falta ni una",
+  "achSetscompletos3": "Tres álbumes enteros",
+  "achSetscompletos10": "Maestro del álbum",
+  "achSetscompletos1Desc": "Completa una expansión entera en el Álbum.",
+  "achSetscompletos3Desc": "Completa {n} expansiones enteras.",
+  "@achSetscompletos3Desc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achAnyos5": "Cinco años de cartón",
+  "achAnyos15": "Máquina del tiempo",
+  "achAnyosDesc": "Ten cartas de {n} años de salida distintos.",
+  "@achAnyosDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achValor10": "Primeros euros",
+  "achValor50": "La hucha",
+  "achValor250": "Ahí va la paga",
+  "achValor1000": "Ahí va todo mi dinero",
+  "achValor5000": "No se lo digas a nadie",
+  "achValor10000": "Vale más que mi coche",
+  "achValor25000": "Colección de museo",
+  "achValorDesc": "Que tu colección valga {n} € o más.",
+  "@achValorDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achJoya20": "Una carta de las buenas",
+  "achJoya100": "La joya de la colección",
+  "achJoya500": "Esta no sale de la funda",
+  "achJoya1000": "Mil euros en una sola funda",
+  "achJoya2500": "El santo grial",
+  "achJoyaDesc": "Ten una sola carta que valga {n} € o más.",
+  "@achJoyaDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoils1": "Primer brillo",
+  "achFoils10": "Destellos",
+  "achFoils50": "Brilla la caja",
+  "achFoils200": "Aquí ya no hay nada mate",
+  "achFoils500": "Todo brilla",
+  "achFoils1000": "Fábrica de brillos",
+  "achFoilsDesc": "Ten {n} cartas foil.",
+  "@achFoilsDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoiljoya10": "Foil de las buenas",
+  "achFoiljoya50": "Foil de las caras",
+  "achFoiljoya200": "Foil de museo",
+  "achFoiljoyaDesc": "Ten una foil que valga {n} € o más.",
+  "@achFoiljoyaDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoilvalor50": "Vitrina que brilla",
+  "achFoilvalor250": "Vitrina cara",
+  "achFoilvalor1000": "Mil euros de brillo",
+  "achFoilvalor5000": "Vitrina de museo",
+  "achFoilvalorDesc": "Que todas tus foils juntas valgan {n} € o más.",
+  "@achFoilvalorDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMazos1": "Primer mazo",
+  "achMazos5": "Cinco mazos guardados",
+  "achMazos25": "El taller no para",
+  "achMazosDesc": "Guarda {n} mazos hechos con Forge.",
+  "@achMazosDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMazoscore": "Mazo redondo",
+  "achMazoscoreDesc": "Genera un mazo con puntuación 90 o más.",
+  "achMazocolores3": "Tricolor",
+  "achMazocolores5": "Arcoíris jugable",
+  "achMazocoloresDesc": "Guarda un mazo de {n} colores.",
+  "@achMazocoloresDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achMazomono": "Sin mezclar nada",
+  "achMazomonoDesc": "Guarda un mazo de un solo color.",
+  "achMazocommander": "Al mando",
+  "achMazocommanderDesc": "Guarda un mazo de Commander.",
+  "achEscaneadas1": "Primer escaneo",
+  "achEscaneadas50": "Mano rápida",
+  "achEscaneadas500": "Escáner en serie",
+  "achEscaneadas2000": "Escaneo hasta dormido",
+  "achEscaneadasDesc": "Escanea {n} cartas con la cámara o por foto.",
+  "@achEscaneadasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achFoto9": "Página entera de una foto",
+  "achFoto20": "Veinte de una tacada",
+  "achFotoDesc": "Reconoce {n} cartas en una sola foto.",
+  "@achFotoDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achEscaneoperfecto": "Ni una para revisar",
+  "achEscaneoperfectoDesc": "Escanea una página entera sin que ninguna carta quede para revisar.",
+  "achDias2": "Has vuelto",
+  "achDias7": "Una semana aquí",
+  "achDias30": "Un mes aquí",
+  "achDias100": "Cien días aquí",
+  "achDiasDesc": "Usa ManaForge {n} días distintos.",
+  "@achDiasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achRacha3": "Tres seguidos",
+  "achRacha7": "Semana perfecta",
+  "achRacha30": "Mes sin fallar",
+  "achRachaDesc": "Entra {n} días seguidos.",
+  "@achRachaDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achSemanas": "Cuatro semanas sin faltar",
+  "achSemanasDesc": "Usa ManaForge 4 semanas seguidas.",
+  "achCarpetas1": "Empieza el orden",
+  "achCarpetas5": "Todo clasificado",
+  "achCarpetasDesc": "Crea {n} carpetas.",
+  "@achCarpetasDesc": {
+    "placeholders": {"n": {"type": "String"}}
+  },
+  "achCarpetagrande": "Carpetón",
+  "achCarpetagrandeDesc": "Ten una carpeta con 100 cartas o más.",
+  "achCarpetavalor": "Esta carpeta no la presto",
+  "achCarpetavalorDesc": "Ten una carpeta que valga 100 € o más.",
+  "achTierrasbasicas": "Las cinco básicas",
+  "achTierrasbasicasDesc": "Ten los cinco tipos de tierra básica (llanura, isla, pantano, montaña y bosque).",
+  "achFuerza": "Menudo bicho",
+  "achFuerzaDesc": "Ten una criatura de fuerza 10 o más.",
+  "achCoste": "Esta no la lanzo en la vida",
+  "achCosteDesc": "Ten una carta de coste convertido 10 o más.",
+  "achCostecero": "Gratis",
+  "achCosteceroDesc": "Ten una carta de coste 0.",
+  "achTipos": "De todo un poco",
+  "achTiposDesc": "Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, un encantamiento, una tierra y un planeswalker.",
+  "achPlaneswalkers": "Compañía de planeswalkers",
+  "achPlaneswalkersDesc": "Ten 5 planeswalkers distintos.",
+  "achNoventas": "Reliquia de los 90",
+  "achNoventasDesc": "Ten una carta de los años 90.",
+  "achIdiomas1": "Esta no la sé leer",
+  "achIdiomas25": "Colección políglota",
+  "achIdiomas1Desc": "Ten una carta en un idioma que no sea inglés.",
+  "achIdiomas25Desc": "Ten 25 cartas en otros idiomas.",
+  "achWishlist": "La lista de los caprichos",
+  "achWishlistDesc": "Apunta 20 cartas en la wishlist.",
+
+  "achTierBronze": "Bronce",
+  "achTierSilver": "Plata",
+  "achTierGold": "Oro",
+  "achTierMythic": "Mítico",
+  "achCatCollection": "Colección",
+  "achCatRarity": "Rarezas",
+  "achCatColor": "Colores",
+  "achCatSets": "Expansiones",
+  "achCatValue": "Valor",
+  "achCatFoils": "Foils",
+  "achCatForge": "Forge",
+  "achCatScanner": "Escáner",
+  "achCatDedication": "Dedicación",
+  "achCatFolders": "Carpetas",
+  "achCatCuriosities": "Curiosidades",
+  "achRankApprentice": "Aprendiz",
+  "achRankSummoner": "Invocador",
+  "achRankMage": "Mago",
+  "achRankArchmage": "Archimago",
+  "achRankMaster": "Maestro",
+  "achRankPlaneswalker": "Planeswalker",
+
+  "bkConfirmWord": "CONFIRMAR",
+
+  "dbErrCards": "No se pudo descargar la base de cartas (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.",
+  "@dbErrCards": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+  "dbErrHashes": "No se pudo descargar la base de huellas (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.",
+  "@dbErrHashes": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+  "dbErrPrices": "No se pudo descargar el histórico de precios (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.",
+  "@dbErrPrices": {
+    "placeholders": {"codigo": {"type": "String"}}
+  },
+
+  "ddCardCount": "{n} cartas",
+  "@ddCardCount": {
+    "placeholders": {"n": {"type": "int"}}
+  },
+  "ddForgedWith": "Forjado con ManaForge",
+
+  "fxThemeLifegain": "drenaje de vida",
+  "fxThemeSacrifice": "sacrificio",
+  "fxThemeSpells": "hechizos",
+  "fxThemeArtifacts": "artefactos",
+  "fxThemeCounters": "contadores +1/+1",
+  "fxThemeTokens": "enjambre",
+  "fxThemeGraveyard": "cementerio",
+  "fxThemeGoodstuff": "lo mejor de tus cartas",
+  "fxTagLifegain": "Cada punto de vida que ganas es daño para ellos: drena y aguanta.",
+  "fxTagSacrifice": "Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.",
+  "fxTagSpells": "Cada instantáneo cuenta: juega en el turno del rival y castiga.",
+  "fxTagArtifacts": "Monta tu taller: cada artefacto hace más fuertes a los demás.",
+  "fxTagCounters": "Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.",
+  "fxTagTokens": "Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.",
+  "fxTagGraveyard": "Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.",
+  "fxTagAggro": "Sal rápido y pega a la cara: la partida debería acabar pronto.",
+  "fxTagTempo": "Presiona pronto y protege la ventaja con tus hechizos.",
+  "fxTagMidrange": "Cambia bien tus cartas y gana el medio juego con {tema}.",
+  "@fxTagMidrange": {
+    "placeholders": {"tema": {"type": "String"}}
+  },
+  "fxTagControl": "Aguanta, responde a todo y remata cuando la mesa sea tuya.",
+  "fxMidLifegain": "Encadena tus fuentes de vida con los que castigan al rival por ello.",
+  "fxMidSacrifice": "Sacrifica lo barato para robar, drenar o hacer crecer al resto.",
+  "fxMidSpells": "Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.",
+  "fxMidArtifacts": "Despliega artefactos baratos y activa a los que los cuentan.",
+  "fxMidCounters": "Apila contadores en una o dos criaturas y protégelas.",
+  "fxMidTokens": "Genera fichas cada turno y busca los efectos que las hacen mayores.",
+  "fxMidGraveyard": "Muele y descarta con intención: lo que cae al cementerio vuelve.",
+  "fxEndLifegain": "Con la vida alta, cambia a modo agresivo: ellos ya no llegan.",
+  "fxEndSacrifice": "El valor acumulado te da la partida: cada cambio te sale gratis.",
+  "fxEndSpells": "Un par de hechizos en el mismo turno y tus criaturas cierran.",
+  "fxEndArtifacts": "Tu mesa vale el doble que la suya: remata con tus payoffs.",
+  "fxEndCounters": "Una amenaza enorme y protegida acaba la partida en dos golpes.",
+  "fxEndTokens": "Ataca en masa: ningún bloqueo aguanta a todo tu ejército.",
+  "fxEndGraveyard": "Reutiliza tus mejores cartas: juegas con dos manos contra una.",
+  "fxTurns12": "T1-T2",
+  "fxTurns34": "T3-T4",
+  "fxTurns5": "T5+",
+  "fxAggroEarly": "Juega una criatura cada turno, sin excepción.",
+  "fxAggroMid": "Sigue atacando; guarda el daño directo para quitar bloqueadores.",
+  "fxAggroLate": "Remata con todo: aquí deberías cerrar la partida.",
+  "fxTempoEarly": "Amenaza barata y maná abierto cuando puedas.",
+  "fxTempoMid": "Ataca y usa tus hechizos en el turno del rival.",
+  "fxTempoLate": "Protege tus criaturas y cierra por el aire o con daño directo.",
+  "fxMidrangeEarly": "Desarrolla y no regales cartas: cambios de uno por uno buenos.",
+  "fxMidrangeMid": "Despliega tus motores de {tema} y estabiliza la mesa.",
+  "@fxMidrangeMid": {
+    "placeholders": {"tema": {"type": "String"}}
+  },
+  "fxMidrangeLate": "Tus cartas valen más que las suyas: conviértelo en la partida.",
+  "fxControlEarly": "Tierra al turno y responde solo a lo que importa.",
+  "fxControlMid": "Limpia la mesa y roba cartas: el tiempo juega para ti.",
+  "fxControlLate": "Baja una amenaza y protégela hasta el final.",
+  "fxArchetypeAggro": "aggro",
+  "fxArchetypeTempo": "tempo",
+  "fxArchetypeMidrange": "midrange",
+  "fxArchetypeControl": "control",
+  "fxWhyItWorks": "Coste medio {coste}: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva {tierras} tierras — dentro del rango de un mazo {arquetipo}. Hay {criaturas} criaturas para mantener la mesa y {interaccion} cartas de interacción para lo que traiga el rival. El tema ({tema}) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.",
+  "@fxWhyItWorks": {
+    "placeholders": {"coste": {"type": "String"}, "tierras": {"type": "String"}, "arquetipo": {"type": "String"}, "criaturas": {"type": "int"}, "interaccion": {"type": "int"}, "tema": {"type": "String"}}
+  },
+
+  "fxNoLandsRange": "Con esa curva salen {tierras} tierras: fuera del rango sano ({min}-{max}). Ajusta el total de hechizos.",
+  "@fxNoLandsRange": {
+    "placeholders": {"tierras": {"type": "String"}, "min": {"type": "String"}, "max": {"type": "String"}}
+  },
+  "fxNoCards": "Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.",
+  "fxNoProfile": "Esa curva (coste medio {coste} con {tierras} tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.",
+  "@fxNoProfile": {
+    "placeholders": {"coste": {"type": "String"}, "tierras": {"type": "String"}}
+  },
+  "fxNoBasics": "No hay tierras básicas suficientes en la colección para esa curva.",
+  "fxHardRule": "La curva pedida rompe una regla dura: {detalle}",
+  "@fxHardRule": {
+    "placeholders": {"detalle": {"type": "String"}}
+  },
+
+  "tsPresetMonoRed": "Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.",
+  "tsPresetAzorius": "Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.",
+  "tsPresetGolgari": "Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas."
 }

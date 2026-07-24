@@ -232,7 +232,8 @@ class _BackupCardState extends State<BackupCard> {
             Text(t.bkRestoreTitle,
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
-            Text(t.bkRestoreWarning, style: const TextStyle(fontSize: 12.5)),
+            Text(t.bkRestoreWarning(t.bkConfirmWord),
+                style: const TextStyle(fontSize: 12.5)),
             const SizedBox(height: 12),
             if (_autos.isEmpty)
               Text(t.bkNoBackups, style: const TextStyle(fontSize: 12.5))
@@ -296,13 +297,17 @@ String _enumerar(AppLocalizations t, List<String> cosas) {
       '${t.bkAnd}${cosas.last}';
 }
 
-/// La palabra que hay que escribir para restaurar. Escribirla cuesta tres
-/// segundos; restaurar sin querer cuesta la colección entera.
+/// La palabra que hay que escribir para restaurar, en español. Escribirla
+/// cuesta tres segundos; restaurar sin querer cuesta la colección entera.
+///
+/// La que se le pide a la persona sale de las traducciones (`bkConfirmWord`):
+/// pedirle a alguien que escriba "CONFIRMAR" en un idioma que no habla no es
+/// una traba, es un muro. Esta constante se queda para los tests.
 const String kRestoreConfirmWord = 'CONFIRMAR';
 
 /// Pregunta antes de aplicar una copia, diciendo QUÉ trae y qué va a pasar con
-/// lo que hay ahora. Devuelve true solo si el usuario escribe [kRestoreConfirmWord]
-/// y confirma: un clic de más no puede reemplazar una colección.
+/// lo que hay ahora. Devuelve true solo si el usuario escribe la palabra de
+/// confirmación y confirma: un clic de más no puede reemplazar una colección.
 Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
     {List<String> willDelete = const []}) async {
   final t = tr(context);
@@ -313,14 +318,17 @@ Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
   final borrados = <String>{
     for (final store in willDelete) backupStoreName(t, store),
   }.toList();
+  final palabra = t.bkConfirmWord;
   final ok = await showDialog<bool>(
     context: context,
     builder: (context) {
       var escrito = '';
       return StatefulBuilder(
         builder: (context, setSheet) {
+          // en los dos lados: hay idiomas sin mayúsculas, y ahí `toUpperCase`
+          // no hace nada
           final puede =
-              escrito.trim().toUpperCase() == kRestoreConfirmWord;
+              escrito.trim().toUpperCase() == palabra.toUpperCase();
           return AlertDialog(
             title: Text(t.bkConfirmTitle),
             content: Column(
@@ -339,15 +347,15 @@ Future<bool> confirmRestore(BuildContext context, BackupManifest manifest,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
                 const SizedBox(height: 16),
-                Text(t.bkTypeToConfirm(kRestoreConfirmWord),
+                Text(t.bkTypeToConfirm(palabra),
                     style: const TextStyle(fontSize: 12.5)),
                 const SizedBox(height: 6),
                 TextField(
                   autofocus: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
                     isDense: true,
-                    hintText: kRestoreConfirmWord,
+                    hintText: palabra,
                   ),
                   onChanged: (v) => setSheet(() => escrito = v),
                   onSubmitted: (_) {

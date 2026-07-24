@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:manaforge_app/l10n/app_localizations_es.dart';
 import 'package:manaforge_app/services/achievements.dart';
 
 AchievementSnapshot _snap({
@@ -45,6 +46,8 @@ AchievementSnapshot _snap({
       distinctSets: distinctSets,
     );
 
+final _t = AppLocalizationsEs();
+
 void main() {
   test('el catálogo es grande, con ids únicos y metas alcanzables', () {
     expect(kAchievements.length, greaterThanOrEqualTo(70));
@@ -52,8 +55,8 @@ void main() {
     expect(ids.length, kAchievements.length, reason: 'hay ids repetidos');
     for (final a in kAchievements) {
       expect(a.goal, greaterThan(0), reason: '${a.id} tiene meta 0');
-      expect(a.title, isNotEmpty);
-      expect(a.description, isNotEmpty);
+      expect(a.title(_t), isNotEmpty);
+      expect(a.description(_t), isNotEmpty);
     }
   });
 
@@ -117,7 +120,7 @@ void main() {
       expect(l.level, greaterThanOrEqualTo(last));
       expect(l.xpForNext, greaterThan(0));
       expect(l.xpInLevel, lessThan(l.xpForNext));
-      expect(l.title, isNotEmpty);
+      expect(levelTitle(_t, l.level), isNotEmpty);
       last = l.level;
     }
   });
@@ -128,7 +131,7 @@ void main() {
     expect(level, inInclusiveRange(12, 25),
         reason: 'XP total $everything da nivel $level: recalibrar la curva');
     // el rango más alto tiene que poder tocarse con el catálogo de hoy
-    expect(levelFor(everything).title, levelTitle(99),
+    expect(levelTitle(_t, levelFor(everything).level), levelTitle(_t, 99),
         reason: 'el último rango es inalcanzable con $everything XP');
   });
 
@@ -210,7 +213,7 @@ void main() {
     final porSerie = <String, Set<String>>{};
     for (final a in kAchievements) {
       final serie = a.id.substring(0, a.id.lastIndexOf('-'));
-      porSerie.putIfAbsent(serie, () => <String>{}).add(a.title);
+      porSerie.putIfAbsent(serie, () => <String>{}).add(a.title(_t));
     }
     final repetidos = <String>[];
     for (final entry in porSerie.entries) {

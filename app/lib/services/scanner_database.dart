@@ -13,6 +13,7 @@ import 'download_check.dart';
 import 'safe_input.dart';
 
 import '../scanner/hash_index.dart';
+import 'database_download_error.dart';
 
 // El núcleo de matching (HashEntry, ScanMatch, HashIndex) vive en
 // hash_index.dart (sin Flutter). Se re-exporta para que quien importe esta
@@ -65,9 +66,12 @@ class ScannerDatabase {
     try {
       final response = await secureSend(client, Uri.parse(releaseUrl));
       if (response.statusCode != 200) {
-        throw HttpException(
-            'No se pudo descargar la base de huellas (HTTP ${response.statusCode}). '
-            '¿Se ha ejecutado ya el workflow "Build scanner hash database"?');
+        throw DatabaseDownloadError(
+            DownloadedDatabase.scannerHashes,
+            response.statusCode,
+            'No se pudo descargar la base de huellas '
+            '(HTTP ${response.statusCode}). ¿Se ha ejecutado ya el workflow '
+            '"Build scanner hash database"?');
       }
       // ¿publica esta release su SHA-256? Las de antes de 2026-07-22
       // no lo hacen, y en ese caso se baja igual que siempre

@@ -1384,8 +1384,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get bkRestoreTitle => 'Restaurar una copia';
 
   @override
-  String get bkRestoreWarning =>
-      'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.';
+  String bkRestoreWarning(String palabra) {
+    return 'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe $palabra: así no se restaura nada sin querer.';
+  }
 
   @override
   String get bkNoBackups => 'Aún no hay copias guardadas en este ordenador.';
@@ -2852,4 +2853,896 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get vpTapCorrect => 'Toca la carta correcta';
+
+  @override
+  String get achCopias1 => 'La primera de muchas';
+
+  @override
+  String get achCopias10 => 'Solo iba a comprar una';
+
+  @override
+  String get achCopias50 => 'Ya no caben en la mano';
+
+  @override
+  String get achCopias100 => 'Cien y subiendo';
+
+  @override
+  String get achCopias500 => 'La caja se queda pequeña';
+
+  @override
+  String get achCopias1000 => 'Mil. Y las quiero todas';
+
+  @override
+  String get achCopias5000 => 'Esto ya es un almacén';
+
+  @override
+  String get achCopias10000 => 'Diez mil, pero yo controlo';
+
+  @override
+  String achCopiasDesc(String n) {
+    return 'Ten $n cartas en tu colección.';
+  }
+
+  @override
+  String get achDistintas25 => 'Aquí hay variedad';
+
+  @override
+  String get achDistintas100 => 'Cien caras distintas';
+
+  @override
+  String get achDistintas500 => 'Media biblioteca';
+
+  @override
+  String get achDistintas1000 => 'Enciclopedia andante';
+
+  @override
+  String get achDistintas2500 => 'Ya no me las sé todas';
+
+  @override
+  String get achDistintas5000 => 'El archivo';
+
+  @override
+  String achDistintasDesc(String n) {
+    return 'Ten $n cartas DISTINTAS (sin contar repetidas).';
+  }
+
+  @override
+  String get achPlaysets1 => 'Cuatro iguales';
+
+  @override
+  String get achPlaysets20 => 'Veinte playsets, cero mazos';
+
+  @override
+  String get achPlaysets1Desc => 'Ten 4 copias de una misma carta.';
+
+  @override
+  String get achPlaysets20Desc =>
+      'Ten 20 playsets distintos (4 copias de cada uno).';
+
+  @override
+  String get achComunes10 => 'Las que nadie quiere';
+
+  @override
+  String get achComunes50 => 'El montón de siempre';
+
+  @override
+  String get achComunes200 => 'Rey del montón';
+
+  @override
+  String get achComunes500 => 'Marea de comunes';
+
+  @override
+  String achComunesDesc(String n) {
+    return 'Ten $n cartas comunes distintas.';
+  }
+
+  @override
+  String get achInfrecuentes10 => 'Algo mejor que común';
+
+  @override
+  String get achInfrecuentes50 => 'Plata fina';
+
+  @override
+  String get achInfrecuentes200 => 'Cazador de infrecuentes';
+
+  @override
+  String get achInfrecuentes500 => 'Plata a espuertas';
+
+  @override
+  String achInfrecuentesDesc(String n) {
+    return 'Ten $n cartas infrecuentes distintas.';
+  }
+
+  @override
+  String get achRaras5 => 'Suena bien al abrir el sobre';
+
+  @override
+  String get achRaras25 => 'Cofre de raras';
+
+  @override
+  String get achRaras100 => 'Cien raras y ninguna jugable';
+
+  @override
+  String get achRaras300 => 'Cámara acorazada';
+
+  @override
+  String achRarasDesc(String n) {
+    return 'Ten $n cartas raras distintas.';
+  }
+
+  @override
+  String get achMiticas1 => 'Mi primera mítica';
+
+  @override
+  String get achMiticas10 => 'Diez míticas';
+
+  @override
+  String get achMiticas50 => 'Coleccionista mítico';
+
+  @override
+  String get achMiticas150 => 'Panteón mítico';
+
+  @override
+  String achMiticasDesc(String n) {
+    return 'Ten $n cartas míticas distintas.';
+  }
+
+  @override
+  String get achBlancas25 => 'Orden y concierto';
+
+  @override
+  String get achBlancas100 => 'Ejército de plata';
+
+  @override
+  String achBlancasDesc(String n) {
+    return 'Ten $n cartas blancas distintas.';
+  }
+
+  @override
+  String get achAzules25 => 'Eso no te lo permito';
+
+  @override
+  String get achAzules100 => 'Torre de marfil';
+
+  @override
+  String achAzulesDesc(String n) {
+    return 'Ten $n cartas azules distintas.';
+  }
+
+  @override
+  String get achNegras25 => 'Pacto oscuro';
+
+  @override
+  String get achNegras100 => 'Señor de la cripta';
+
+  @override
+  String achNegrasDesc(String n) {
+    return 'Ten $n cartas negras distintas.';
+  }
+
+  @override
+  String get achRojas25 => 'A quemarlo todo';
+
+  @override
+  String get achRojas100 => 'Incendio general';
+
+  @override
+  String achRojasDesc(String n) {
+    return 'Ten $n cartas rojas distintas.';
+  }
+
+  @override
+  String get achVerdes25 => 'Un brote';
+
+  @override
+  String get achVerdes100 => 'El bosque entero';
+
+  @override
+  String achVerdesDesc(String n) {
+    return 'Ten $n cartas verdes distintas.';
+  }
+
+  @override
+  String get achIncoloras25 => 'Metal frío';
+
+  @override
+  String get achIncoloras100 => 'Forja eterna';
+
+  @override
+  String achIncolorasDesc(String n) {
+    return 'Ten $n cartas incoloras distintas.';
+  }
+
+  @override
+  String get achArcoiris => 'Los cinco colores';
+
+  @override
+  String get achArcoirisDesc =>
+      'Ten al menos una carta de cada uno de los 5 colores.';
+
+  @override
+  String get achMulticolor10 => 'Mezclando colores';
+
+  @override
+  String get achMulticolor50 => 'Alianza dorada';
+
+  @override
+  String achMulticolorDesc(String n) {
+    return 'Ten $n cartas multicolor distintas.';
+  }
+
+  @override
+  String get achCincocolores => 'Los cinco de golpe';
+
+  @override
+  String get achCincocoloresDesc => 'Ten una carta con los cinco colores.';
+
+  @override
+  String get achSets1 => 'Primera expansión';
+
+  @override
+  String get achSets5 => 'Cinco mundos';
+
+  @override
+  String get achSets10 => 'Viajero de planos';
+
+  @override
+  String get achSets25 => 'Trotamundos';
+
+  @override
+  String get achSets50 => 'Medio multiverso';
+
+  @override
+  String achSetsDesc(String n) {
+    return 'Ten cartas de $n expansiones distintas.';
+  }
+
+  @override
+  String get achSetscompletos1 => 'No falta ni una';
+
+  @override
+  String get achSetscompletos3 => 'Tres álbumes enteros';
+
+  @override
+  String get achSetscompletos10 => 'Maestro del álbum';
+
+  @override
+  String get achSetscompletos1Desc =>
+      'Completa una expansión entera en el Álbum.';
+
+  @override
+  String achSetscompletos3Desc(String n) {
+    return 'Completa $n expansiones enteras.';
+  }
+
+  @override
+  String get achAnyos5 => 'Cinco años de cartón';
+
+  @override
+  String get achAnyos15 => 'Máquina del tiempo';
+
+  @override
+  String achAnyosDesc(String n) {
+    return 'Ten cartas de $n años de salida distintos.';
+  }
+
+  @override
+  String get achValor10 => 'Primeros euros';
+
+  @override
+  String get achValor50 => 'La hucha';
+
+  @override
+  String get achValor250 => 'Ahí va la paga';
+
+  @override
+  String get achValor1000 => 'Ahí va todo mi dinero';
+
+  @override
+  String get achValor5000 => 'No se lo digas a nadie';
+
+  @override
+  String get achValor10000 => 'Vale más que mi coche';
+
+  @override
+  String get achValor25000 => 'Colección de museo';
+
+  @override
+  String achValorDesc(String n) {
+    return 'Que tu colección valga $n € o más.';
+  }
+
+  @override
+  String get achJoya20 => 'Una carta de las buenas';
+
+  @override
+  String get achJoya100 => 'La joya de la colección';
+
+  @override
+  String get achJoya500 => 'Esta no sale de la funda';
+
+  @override
+  String get achJoya1000 => 'Mil euros en una sola funda';
+
+  @override
+  String get achJoya2500 => 'El santo grial';
+
+  @override
+  String achJoyaDesc(String n) {
+    return 'Ten una sola carta que valga $n € o más.';
+  }
+
+  @override
+  String get achFoils1 => 'Primer brillo';
+
+  @override
+  String get achFoils10 => 'Destellos';
+
+  @override
+  String get achFoils50 => 'Brilla la caja';
+
+  @override
+  String get achFoils200 => 'Aquí ya no hay nada mate';
+
+  @override
+  String get achFoils500 => 'Todo brilla';
+
+  @override
+  String get achFoils1000 => 'Fábrica de brillos';
+
+  @override
+  String achFoilsDesc(String n) {
+    return 'Ten $n cartas foil.';
+  }
+
+  @override
+  String get achFoiljoya10 => 'Foil de las buenas';
+
+  @override
+  String get achFoiljoya50 => 'Foil de las caras';
+
+  @override
+  String get achFoiljoya200 => 'Foil de museo';
+
+  @override
+  String achFoiljoyaDesc(String n) {
+    return 'Ten una foil que valga $n € o más.';
+  }
+
+  @override
+  String get achFoilvalor50 => 'Vitrina que brilla';
+
+  @override
+  String get achFoilvalor250 => 'Vitrina cara';
+
+  @override
+  String get achFoilvalor1000 => 'Mil euros de brillo';
+
+  @override
+  String get achFoilvalor5000 => 'Vitrina de museo';
+
+  @override
+  String achFoilvalorDesc(String n) {
+    return 'Que todas tus foils juntas valgan $n € o más.';
+  }
+
+  @override
+  String get achMazos1 => 'Primer mazo';
+
+  @override
+  String get achMazos5 => 'Cinco mazos guardados';
+
+  @override
+  String get achMazos25 => 'El taller no para';
+
+  @override
+  String achMazosDesc(String n) {
+    return 'Guarda $n mazos hechos con Forge.';
+  }
+
+  @override
+  String get achMazoscore => 'Mazo redondo';
+
+  @override
+  String get achMazoscoreDesc => 'Genera un mazo con puntuación 90 o más.';
+
+  @override
+  String get achMazocolores3 => 'Tricolor';
+
+  @override
+  String get achMazocolores5 => 'Arcoíris jugable';
+
+  @override
+  String achMazocoloresDesc(String n) {
+    return 'Guarda un mazo de $n colores.';
+  }
+
+  @override
+  String get achMazomono => 'Sin mezclar nada';
+
+  @override
+  String get achMazomonoDesc => 'Guarda un mazo de un solo color.';
+
+  @override
+  String get achMazocommander => 'Al mando';
+
+  @override
+  String get achMazocommanderDesc => 'Guarda un mazo de Commander.';
+
+  @override
+  String get achEscaneadas1 => 'Primer escaneo';
+
+  @override
+  String get achEscaneadas50 => 'Mano rápida';
+
+  @override
+  String get achEscaneadas500 => 'Escáner en serie';
+
+  @override
+  String get achEscaneadas2000 => 'Escaneo hasta dormido';
+
+  @override
+  String achEscaneadasDesc(String n) {
+    return 'Escanea $n cartas con la cámara o por foto.';
+  }
+
+  @override
+  String get achFoto9 => 'Página entera de una foto';
+
+  @override
+  String get achFoto20 => 'Veinte de una tacada';
+
+  @override
+  String achFotoDesc(String n) {
+    return 'Reconoce $n cartas en una sola foto.';
+  }
+
+  @override
+  String get achEscaneoperfecto => 'Ni una para revisar';
+
+  @override
+  String get achEscaneoperfectoDesc =>
+      'Escanea una página entera sin que ninguna carta quede para revisar.';
+
+  @override
+  String get achDias2 => 'Has vuelto';
+
+  @override
+  String get achDias7 => 'Una semana aquí';
+
+  @override
+  String get achDias30 => 'Un mes aquí';
+
+  @override
+  String get achDias100 => 'Cien días aquí';
+
+  @override
+  String achDiasDesc(String n) {
+    return 'Usa ManaForge $n días distintos.';
+  }
+
+  @override
+  String get achRacha3 => 'Tres seguidos';
+
+  @override
+  String get achRacha7 => 'Semana perfecta';
+
+  @override
+  String get achRacha30 => 'Mes sin fallar';
+
+  @override
+  String achRachaDesc(String n) {
+    return 'Entra $n días seguidos.';
+  }
+
+  @override
+  String get achSemanas => 'Cuatro semanas sin faltar';
+
+  @override
+  String get achSemanasDesc => 'Usa ManaForge 4 semanas seguidas.';
+
+  @override
+  String get achCarpetas1 => 'Empieza el orden';
+
+  @override
+  String get achCarpetas5 => 'Todo clasificado';
+
+  @override
+  String achCarpetasDesc(String n) {
+    return 'Crea $n carpetas.';
+  }
+
+  @override
+  String get achCarpetagrande => 'Carpetón';
+
+  @override
+  String get achCarpetagrandeDesc => 'Ten una carpeta con 100 cartas o más.';
+
+  @override
+  String get achCarpetavalor => 'Esta carpeta no la presto';
+
+  @override
+  String get achCarpetavalorDesc => 'Ten una carpeta que valga 100 € o más.';
+
+  @override
+  String get achTierrasbasicas => 'Las cinco básicas';
+
+  @override
+  String get achTierrasbasicasDesc =>
+      'Ten los cinco tipos de tierra básica (llanura, isla, pantano, montaña y bosque).';
+
+  @override
+  String get achFuerza => 'Menudo bicho';
+
+  @override
+  String get achFuerzaDesc => 'Ten una criatura de fuerza 10 o más.';
+
+  @override
+  String get achCoste => 'Esta no la lanzo en la vida';
+
+  @override
+  String get achCosteDesc => 'Ten una carta de coste convertido 10 o más.';
+
+  @override
+  String get achCostecero => 'Gratis';
+
+  @override
+  String get achCosteceroDesc => 'Ten una carta de coste 0.';
+
+  @override
+  String get achTipos => 'De todo un poco';
+
+  @override
+  String get achTiposDesc =>
+      'Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, un encantamiento, una tierra y un planeswalker.';
+
+  @override
+  String get achPlaneswalkers => 'Compañía de planeswalkers';
+
+  @override
+  String get achPlaneswalkersDesc => 'Ten 5 planeswalkers distintos.';
+
+  @override
+  String get achNoventas => 'Reliquia de los 90';
+
+  @override
+  String get achNoventasDesc => 'Ten una carta de los años 90.';
+
+  @override
+  String get achIdiomas1 => 'Esta no la sé leer';
+
+  @override
+  String get achIdiomas25 => 'Colección políglota';
+
+  @override
+  String get achIdiomas1Desc => 'Ten una carta en un idioma que no sea inglés.';
+
+  @override
+  String get achIdiomas25Desc => 'Ten 25 cartas en otros idiomas.';
+
+  @override
+  String get achWishlist => 'La lista de los caprichos';
+
+  @override
+  String get achWishlistDesc => 'Apunta 20 cartas en la wishlist.';
+
+  @override
+  String get achTierBronze => 'Bronce';
+
+  @override
+  String get achTierSilver => 'Plata';
+
+  @override
+  String get achTierGold => 'Oro';
+
+  @override
+  String get achTierMythic => 'Mítico';
+
+  @override
+  String get achCatCollection => 'Colección';
+
+  @override
+  String get achCatRarity => 'Rarezas';
+
+  @override
+  String get achCatColor => 'Colores';
+
+  @override
+  String get achCatSets => 'Expansiones';
+
+  @override
+  String get achCatValue => 'Valor';
+
+  @override
+  String get achCatFoils => 'Foils';
+
+  @override
+  String get achCatForge => 'Forge';
+
+  @override
+  String get achCatScanner => 'Escáner';
+
+  @override
+  String get achCatDedication => 'Dedicación';
+
+  @override
+  String get achCatFolders => 'Carpetas';
+
+  @override
+  String get achCatCuriosities => 'Curiosidades';
+
+  @override
+  String get achRankApprentice => 'Aprendiz';
+
+  @override
+  String get achRankSummoner => 'Invocador';
+
+  @override
+  String get achRankMage => 'Mago';
+
+  @override
+  String get achRankArchmage => 'Archimago';
+
+  @override
+  String get achRankMaster => 'Maestro';
+
+  @override
+  String get achRankPlaneswalker => 'Planeswalker';
+
+  @override
+  String get bkConfirmWord => 'CONFIRMAR';
+
+  @override
+  String dbErrCards(String codigo) {
+    return 'No se pudo descargar la base de cartas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+  }
+
+  @override
+  String dbErrHashes(String codigo) {
+    return 'No se pudo descargar la base de huellas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+  }
+
+  @override
+  String dbErrPrices(String codigo) {
+    return 'No se pudo descargar el histórico de precios (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+  }
+
+  @override
+  String ddCardCount(int n) {
+    return '$n cartas';
+  }
+
+  @override
+  String get ddForgedWith => 'Forjado con ManaForge';
+
+  @override
+  String get fxThemeLifegain => 'drenaje de vida';
+
+  @override
+  String get fxThemeSacrifice => 'sacrificio';
+
+  @override
+  String get fxThemeSpells => 'hechizos';
+
+  @override
+  String get fxThemeArtifacts => 'artefactos';
+
+  @override
+  String get fxThemeCounters => 'contadores +1/+1';
+
+  @override
+  String get fxThemeTokens => 'enjambre';
+
+  @override
+  String get fxThemeGraveyard => 'cementerio';
+
+  @override
+  String get fxThemeGoodstuff => 'lo mejor de tus cartas';
+
+  @override
+  String get fxTagLifegain =>
+      'Cada punto de vida que ganas es daño para ellos: drena y aguanta.';
+
+  @override
+  String get fxTagSacrifice =>
+      'Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.';
+
+  @override
+  String get fxTagSpells =>
+      'Cada instantáneo cuenta: juega en el turno del rival y castiga.';
+
+  @override
+  String get fxTagArtifacts =>
+      'Monta tu taller: cada artefacto hace más fuertes a los demás.';
+
+  @override
+  String get fxTagCounters =>
+      'Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.';
+
+  @override
+  String get fxTagTokens =>
+      'Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.';
+
+  @override
+  String get fxTagGraveyard =>
+      'Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.';
+
+  @override
+  String get fxTagAggro =>
+      'Sal rápido y pega a la cara: la partida debería acabar pronto.';
+
+  @override
+  String get fxTagTempo =>
+      'Presiona pronto y protege la ventaja con tus hechizos.';
+
+  @override
+  String fxTagMidrange(String tema) {
+    return 'Cambia bien tus cartas y gana el medio juego con $tema.';
+  }
+
+  @override
+  String get fxTagControl =>
+      'Aguanta, responde a todo y remata cuando la mesa sea tuya.';
+
+  @override
+  String get fxMidLifegain =>
+      'Encadena tus fuentes de vida con los que castigan al rival por ello.';
+
+  @override
+  String get fxMidSacrifice =>
+      'Sacrifica lo barato para robar, drenar o hacer crecer al resto.';
+
+  @override
+  String get fxMidSpells =>
+      'Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.';
+
+  @override
+  String get fxMidArtifacts =>
+      'Despliega artefactos baratos y activa a los que los cuentan.';
+
+  @override
+  String get fxMidCounters =>
+      'Apila contadores en una o dos criaturas y protégelas.';
+
+  @override
+  String get fxMidTokens =>
+      'Genera fichas cada turno y busca los efectos que las hacen mayores.';
+
+  @override
+  String get fxMidGraveyard =>
+      'Muele y descarta con intención: lo que cae al cementerio vuelve.';
+
+  @override
+  String get fxEndLifegain =>
+      'Con la vida alta, cambia a modo agresivo: ellos ya no llegan.';
+
+  @override
+  String get fxEndSacrifice =>
+      'El valor acumulado te da la partida: cada cambio te sale gratis.';
+
+  @override
+  String get fxEndSpells =>
+      'Un par de hechizos en el mismo turno y tus criaturas cierran.';
+
+  @override
+  String get fxEndArtifacts =>
+      'Tu mesa vale el doble que la suya: remata con tus payoffs.';
+
+  @override
+  String get fxEndCounters =>
+      'Una amenaza enorme y protegida acaba la partida en dos golpes.';
+
+  @override
+  String get fxEndTokens =>
+      'Ataca en masa: ningún bloqueo aguanta a todo tu ejército.';
+
+  @override
+  String get fxEndGraveyard =>
+      'Reutiliza tus mejores cartas: juegas con dos manos contra una.';
+
+  @override
+  String get fxTurns12 => 'T1-T2';
+
+  @override
+  String get fxTurns34 => 'T3-T4';
+
+  @override
+  String get fxTurns5 => 'T5+';
+
+  @override
+  String get fxAggroEarly => 'Juega una criatura cada turno, sin excepción.';
+
+  @override
+  String get fxAggroMid =>
+      'Sigue atacando; guarda el daño directo para quitar bloqueadores.';
+
+  @override
+  String get fxAggroLate => 'Remata con todo: aquí deberías cerrar la partida.';
+
+  @override
+  String get fxTempoEarly => 'Amenaza barata y maná abierto cuando puedas.';
+
+  @override
+  String get fxTempoMid => 'Ataca y usa tus hechizos en el turno del rival.';
+
+  @override
+  String get fxTempoLate =>
+      'Protege tus criaturas y cierra por el aire o con daño directo.';
+
+  @override
+  String get fxMidrangeEarly =>
+      'Desarrolla y no regales cartas: cambios de uno por uno buenos.';
+
+  @override
+  String fxMidrangeMid(String tema) {
+    return 'Despliega tus motores de $tema y estabiliza la mesa.';
+  }
+
+  @override
+  String get fxMidrangeLate =>
+      'Tus cartas valen más que las suyas: conviértelo en la partida.';
+
+  @override
+  String get fxControlEarly =>
+      'Tierra al turno y responde solo a lo que importa.';
+
+  @override
+  String get fxControlMid =>
+      'Limpia la mesa y roba cartas: el tiempo juega para ti.';
+
+  @override
+  String get fxControlLate => 'Baja una amenaza y protégela hasta el final.';
+
+  @override
+  String get fxArchetypeAggro => 'aggro';
+
+  @override
+  String get fxArchetypeTempo => 'tempo';
+
+  @override
+  String get fxArchetypeMidrange => 'midrange';
+
+  @override
+  String get fxArchetypeControl => 'control';
+
+  @override
+  String fxWhyItWorks(String coste, String tierras, String arquetipo,
+      int criaturas, int interaccion, String tema) {
+    return 'Coste medio $coste: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva $tierras tierras — dentro del rango de un mazo $arquetipo. Hay $criaturas criaturas para mantener la mesa y $interaccion cartas de interacción para lo que traiga el rival. El tema ($tema) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.';
+  }
+
+  @override
+  String fxNoLandsRange(String tierras, String min, String max) {
+    return 'Con esa curva salen $tierras tierras: fuera del rango sano ($min-$max). Ajusta el total de hechizos.';
+  }
+
+  @override
+  String get fxNoCards =>
+      'Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.';
+
+  @override
+  String fxNoProfile(String coste, String tierras) {
+    return 'Esa curva (coste medio $coste con $tierras tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.';
+  }
+
+  @override
+  String get fxNoBasics =>
+      'No hay tierras básicas suficientes en la colección para esa curva.';
+
+  @override
+  String fxHardRule(String detalle) {
+    return 'La curva pedida rompe una regla dura: $detalle';
+  }
+
+  @override
+  String get tsPresetMonoRed =>
+      'Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.';
+
+  @override
+  String get tsPresetAzorius =>
+      'Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.';
+
+  @override
+  String get tsPresetGolgari =>
+      'Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas.';
 }

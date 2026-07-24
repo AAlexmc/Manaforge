@@ -12,6 +12,7 @@ import 'package:sqlite3/sqlite3.dart';
 import 'markets.dart';
 import 'download_check.dart';
 import 'safe_input.dart';
+import 'database_download_error.dart';
 
 /// Resultado de búsqueda: una carta (nivel Oracle) con su impresión visible.
 class CardHit {
@@ -102,9 +103,12 @@ class CardDatabase {
     try {
       final response = await secureSend(client, Uri.parse(releaseUrl));
       if (response.statusCode != 200) {
-        throw HttpException(
-            'No se pudo descargar la base de datos (HTTP ${response.statusCode}). '
-            '¿Se ha ejecutado ya el workflow "Build card database"?');
+        throw DatabaseDownloadError(
+            DownloadedDatabase.cards,
+            response.statusCode,
+            'No se pudo descargar la base de datos '
+            '(HTTP ${response.statusCode}). ¿Se ha ejecutado ya el workflow '
+            '"Build card database"?');
       }
       // ¿publica esta release su SHA-256? Las de antes de 2026-07-22
       // no lo hacen, y en ese caso se baja igual que siempre

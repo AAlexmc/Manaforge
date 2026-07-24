@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/forge_texts.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/t.dart';
 import 'package:flutter/services.dart';
@@ -116,16 +117,20 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
 
   Map<String, fe.Card> get _pool => widget.pool;
 
-  String _exportText() {
+  String _exportText(AppLocalizations t) {
     final deck = _gen.deck;
-    final buffer = StringBuffer('${deck.name} · 60 cartas\n');
+    // el total se cuenta: un Commander son 100 cartas, no 60, y la cabecera
+    // decía 60 siempre
+    final total = deck.cards.values.fold<int>(0, (a, b) => a + b) +
+        deck.lands.values.fold<int>(0, (a, b) => a + b);
+    final buffer = StringBuffer('${deck.name} · ${t.ddCardCount(total)}\n');
     final sorted = deck.cards.entries.toList()
       ..sort((a, b) => (_pool[a.key]!.cmc).compareTo(_pool[b.key]!.cmc));
     for (final e in sorted) {
       buffer.writeln('${e.value} ${e.key}');
     }
     deck.lands.forEach((name, qty) => buffer.writeln('$qty $name'));
-    buffer.writeln('\nForjado con ManaForge');
+    buffer.writeln('\n${t.ddForgedWith}');
     return buffer.toString();
   }
 
@@ -181,8 +186,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(tr(context).ddReforged)));
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(result.reason!)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(reforgeRefusalText(tr(context), result))));
     }
   }
 
@@ -214,7 +219,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             tooltip: t.ddCopyList,
             icon: const Icon(Icons.copy_all),
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: _exportText()));
+              await Clipboard.setData(ClipboardData(text: _exportText(t)));
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(tr(context).ddListCopied)));
@@ -231,8 +236,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               ColorIdentityDots(colors: deck.colors, size: 16),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(t.ddHeaderSub(fe.themeName(_gen.theme),
-                    deck.archetype.name, nSpells, nLands)),
+                child: Text(t.ddHeaderSub(themeName(t, _gen.theme),
+                    archetypeName(t, deck.archetype), nSpells, nLands)),
               ),
               if (_prices.isNotEmpty)
                 Text('~${_deckValue.toStringAsFixed(2)} €',
@@ -266,7 +271,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                   Text(t.ddGamePlan,
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
-                  for (final (turns, text) in fe.gamePlan(_gen))
+                  for (final (turns, text) in gamePlan(t, _gen))
                     Padding(
                       padding: const EdgeInsets.only(bottom: 6),
                       child: Row(
@@ -357,7 +362,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               title: Text(t.ddWhyWorks,
                   style: const TextStyle(color: MFColors.forge)),
               childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              children: [Text(fe.whyItWorks(_gen, _pool))],
+              children: [Text(whyItWorks(t, _gen, _pool))],
             ),
           ),
           const SizedBox(height: 12),
