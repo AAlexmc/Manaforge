@@ -1381,8 +1381,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bkRestoreTitle => 'Restore a backup';
 
   @override
-  String get bkRestoreWarning =>
-      'Restoring REPLACES your current cards, decks, folders and achievements with the ones in the backup. Pick which, hit the button and type CONFIRM: that way nothing is restored by accident.';
+  String bkRestoreWarning(String palabra) {
+    return 'Restoring REPLACES your cards, decks, folders and achievements with the ones in the backup. Choose which, press the button and type $palabra: that way nothing gets restored by accident.';
+  }
 
   @override
   String get bkNoBackups => 'No backups saved on this computer yet.';
@@ -3482,4 +3483,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get achRankPlaneswalker => 'Planeswalker';
+
+  @override
+  String get bkConfirmWord => 'CONFIRM';
 }

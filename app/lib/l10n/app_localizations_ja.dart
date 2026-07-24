@@ -1361,8 +1361,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bkRestoreTitle => 'Restaurar una copia';
 
   @override
-  String get bkRestoreWarning =>
-      'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.';
+  String bkRestoreWarning(String palabra) {
+    return 'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe $palabra: así no se restaura nada sin querer.';
+  }
 
   @override
   String get bkNoBackups => 'Aún no hay copias guardadas en este ordenador.';
@@ -3464,4 +3465,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get achRankPlaneswalker => 'Planeswalker';
+
+  @override
+  String get bkConfirmWord => 'CONFIRMAR';
 }

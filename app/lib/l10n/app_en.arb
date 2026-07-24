@@ -584,7 +584,10 @@
   "bkWhy": "Your cards, decks, folders and achievements live only on this computer. Save a copy now and then and keep it somewhere else: a drive, the cloud, whatever you like.",
   "bkSave": "Save a backup",
   "bkRestoreTitle": "Restore a backup",
-  "bkRestoreWarning": "Restoring REPLACES your current cards, decks, folders and achievements with the ones in the backup. Pick which, hit the button and type CONFIRM: that way nothing is restored by accident.",
+  "bkRestoreWarning": "Restoring REPLACES your cards, decks, folders and achievements with the ones in the backup. Choose which, press the button and type {palabra}: that way nothing gets restored by accident.",
+  "@bkRestoreWarning": {
+    "placeholders": { "palabra": { "type": "String" } }
+  },
   "bkNoBackups": "No backups saved on this computer yet.",
   "bkWhich": "Backup to restore",
   "bkPickOne": "Pick a backup",
@@ -1574,5 +1577,7 @@
   "achRankMage": "Mage",
   "achRankArchmage": "Archmage",
   "achRankMaster": "Master",
-  "achRankPlaneswalker": "Planeswalker"
+  "achRankPlaneswalker": "Planeswalker",
+
+  "bkConfirmWord": "CONFIRM"
 }

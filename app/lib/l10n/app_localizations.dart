@@ -2313,8 +2313,8 @@ abstract class AppLocalizations {
   /// No description provided for @bkRestoreWarning.
   ///
   /// In es, this message translates to:
-  /// **'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.'**
-  String get bkRestoreWarning;
+  /// **'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe {palabra}: así no se restaura nada sin querer.'**
+  String bkRestoreWarning(String palabra);
 
   /// No description provided for @bkNoBackups.
   ///
@@ -5695,6 +5695,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Planeswalker'**
   String get achRankPlaneswalker;
+
+  /// No description provided for @bkConfirmWord.
+  ///
+  /// In es, this message translates to:
+  /// **'CONFIRMAR'**
+  String get bkConfirmWord;
 }
 
 class _AppLocalizationsDelegate

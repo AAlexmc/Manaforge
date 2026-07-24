@@ -588,7 +588,10 @@
   "bkWhy": "Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.",
   "bkSave": "Guardar copia",
   "bkRestoreTitle": "Restaurar una copia",
-  "bkRestoreWarning": "Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe CONFIRMAR: así no se restaura nada sin querer.",
+  "bkRestoreWarning": "Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe {palabra}: así no se restaura nada sin querer.",
+  "@bkRestoreWarning": {
+    "placeholders": { "palabra": { "type": "String" } }
+  },
   "bkNoBackups": "Aún no hay copias guardadas en este ordenador.",
   "bkWhich": "Copia a restaurar",
   "bkPickOne": "Elige una copia",
@@ -1578,5 +1581,7 @@
   "achRankMage": "Mago",
   "achRankArchmage": "Archimago",
   "achRankMaster": "Maestro",
-  "achRankPlaneswalker": "Planeswalker"
+  "achRankPlaneswalker": "Planeswalker",
+
+  "bkConfirmWord": "CONFIRMAR"
 }
