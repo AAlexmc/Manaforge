@@ -456,99 +456,94 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onbAboutBody => '每个标签页的作用、键盘快捷键、版本和许可证。';
 
   @override
-  String get colStartHere => 'Tu colección empieza aquí';
+  String get colStartHere => '你的收藏从这里开始';
 
   @override
-  String get colNeedDb =>
-      'Primero necesito la base de datos con todas las cartas de Magic (se descarga una vez y luego todo funciona sin internet).';
+  String get colNeedDb => '我先得有包含所有 Magic 卡牌的数据库（只需下载一次，之后全程离线也能用）。';
 
   @override
   String colDownloading(String pct) {
-    return 'Descargando… $pct %';
+    return '下载中… $pct %';
   }
 
   @override
-  String get colDownloadDb => 'Descargar base de datos de cartas';
+  String get colDownloadDb => '下载卡牌数据库';
 
   @override
-  String get colScryfall =>
-      'Datos e imágenes por Scryfall · Sin cuentas, sin pagos: todo queda en tu dispositivo.';
+  String get colScryfall => '数据和图片来自 Scryfall · 无需账号，无需付费：一切都留在你的设备上。';
 
   @override
-  String get colAlbumTooltip => 'Álbum por expansiones';
+  String get colAlbumTooltip => '按系列查看的卡册';
 
   @override
-  String get colImportTooltip => 'Importar CSV de ManaBox';
+  String get colImportTooltip => '导入 ManaBox 的 CSV';
 
   @override
   String colValueLine(int copies, int distinct, String valor) {
-    return '$copies cartas · $distinct distintas$valor';
+    return '$copies 张卡 · $distinct 张不同$valor';
   }
 
   @override
-  String get colAllCards => 'Todas las cartas';
+  String get colAllCards => '全部卡牌';
 
   @override
   String colAllCardsSub(int distinct) {
-    return '$distinct distintas · buscar, filtrar y ordenar';
+    return '$distinct 张不同 · 搜索、筛选和排序';
   }
 
   @override
-  String get colFolders => 'Carpetas';
+  String get colFolders => '文件夹';
 
   @override
-  String get colNewFolder => 'Nueva';
+  String get colNewFolder => '新建';
 
   @override
   String get colNoFolders =>
-      'Aún no tienes carpetas. Sirven para agrupar lo que quieras: \"rares de Aetherdrift\", \"para vender\", \"la caja de arriba\"… Una carta puede estar en varias.';
+      '你还没有文件夹。它们能把任何你想归类的东西分组：“Aetherdrift 的稀有卡”、“待出售”、“最上面那盒”…… 同一张卡可以同时放进好几个文件夹。';
 
   @override
-  String get colCreateFirstFolder => 'Crear la primera carpeta';
+  String get colCreateFirstFolder => '创建第一个文件夹';
 
   @override
-  String get colEmptyTitle => 'Aquí empieza tu colección';
+  String get colEmptyTitle => '你的收藏就从这里起步';
 
   @override
-  String get colEmptyBody =>
-      'Escanea tus cartas con la cámara o importa un CSV de ManaBox. Aparecerán aquí y en el álbum.';
+  String get colEmptyBody => '用摄像头扫描你的卡牌，或导入 ManaBox 的 CSV。它们会出现在这里和卡册里。';
 
   @override
-  String get colImportShort => 'Importar CSV';
+  String get colImportShort => '导入 CSV';
 
   @override
   String acForgetTitle(String carta) {
-    return '¿Ya no tienes $carta?';
+    return '不再拥有 $carta 了？';
   }
 
   @override
-  String get acForgetBody =>
-      'Sale de tu colección y su hueco del álbum vuelve a estar vacío.';
+  String get acForgetBody => '它会从你的收藏中移除，卡册里对应的位置也会重新空出来。';
 
   @override
   String acForgetFolders(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'También sale de las $n carpetas en las que está.',
-      one: 'También sale de la carpeta en la que está.',
+      other: '它也会从所在的 $n 个文件夹中移除。',
+      one: '它也会从所在的那个文件夹中移除。',
     );
     return '$_temp0';
   }
 
   @override
-  String get acForgetDecks =>
-      'Los mazos NO la pierden: se queda en la lista y el mazo te avisa de que te falta.';
+  String get acForgetDecks => '牌组不会丢掉它：它仍留在清单里，牌组会提醒你缺这张。';
 
   @override
-  String get acCancel => 'Cancelar';
+  String get acCancel => '取消';
 
   @override
-  String get acForgetConfirm => 'Ya no la tengo';
+  String get acForgetConfirm => '我不再有它了';
 
   @override
   String acAddedOn(String cuando) {
-    return 'añadida $cuando';
+    return '$cuando 添加';
   }
 
   @override
@@ -556,290 +551,282 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'en $n carpetas',
-      one: 'en 1 carpeta',
+      other: '在 $n 个文件夹里',
+      one: '在 1 个文件夹里',
     );
     return '$_temp0';
   }
 
   @override
-  String get acSearchHint => 'Busca una carta (español o inglés)…';
+  String get acSearchHint => '搜索卡牌（中文或英文）…';
 
   @override
   String acFilteredCount(int visibles, int total) {
-    return '$visibles de $total cartas';
+    return '$total 张卡中的 $visibles 张';
   }
 
   @override
-  String get acMissingFilterData =>
-      ' · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con \"Sustituir\" activado';
+  String get acMissingFilterData => ' · 部分旧卡没有筛选数据：重新导入你的 CSV，并勾选“替换”。';
 
   @override
-  String get acNoneMatch => 'Ninguna carta pasa estos filtros.';
+  String get acNoneMatch => '没有卡牌符合这些筛选条件。';
 
   @override
-  String get acEmptyHint =>
-      'Busca tu primera carta arriba, o vuelve atrás e importa tu CSV de ManaBox.';
+  String get acEmptyHint => '在上方搜索你的第一张卡，或返回导入 ManaBox 的 CSV。';
 
   @override
-  String get onbHowItWorksBody =>
-      'El resumen de qué hace cada pestaña y los atajos de teclado. Si te pierdes, empieza por aquí.';
+  String get onbHowItWorksBody => '各个标签页的功能一览，以及键盘快捷键。要是迷路了，就从这里开始。';
 
   @override
   String get onbVersionBody =>
-      'Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.';
+      '你用的是哪个版本、带来了什么，以及要不要让 App 每天检查一次有没有新版本。它不会自己更新。';
 
   @override
-  String get onbScanSetTitle => 'Set: todas';
+  String get onbScanSetTitle => '系列：全部';
 
   @override
   String get onbScanSetBody =>
-      'Si estás abriendo sobres de UNA expansión, fíjala aquí: el escáner deja de dudar entre las diez reimpresiones de la misma carta.';
+      '如果你正在拆某一个系列的补充包，就在这里锁定它：扫描器就不会在同一张卡的十个重印版本之间来回犹豫了。';
 
   @override
-  String get onbScanModeTitle => 'Rápido o con cuidado';
+  String get onbScanModeTitle => '快速还是仔细';
 
   @override
   String get onbScanModeBody =>
-      'En «Rápido» las cartas claras entran solas y las dudosas quedan marcadas para revisar. En «Con cuidado» se para y te pregunta cuál es.';
+      '在“快速”模式下，清晰的卡自动入库，拿不准的会被标记出来待复核。在“仔细”模式下，遇到拿不准的会停下来问你是哪张。';
 
   @override
-  String get onbScanPhotoTitle => 'Escanear una foto';
+  String get onbScanPhotoTitle => '扫描一张照片';
 
   @override
   String get onbScanPhotoBody =>
-      '¿Sin cámara, o con las cartas ya fotografiadas? Aquí sueltas una foto —con varias cartas si quieres— y las saca igual.';
+      '没有摄像头，或者卡牌已经拍好了？在这里丢进一张照片——里面有好几张卡也行——照样能认出来。';
 
   @override
-  String get tourScanName => 'El escáner';
+  String get tourScanName => '扫描器';
 
   @override
-  String get albNeedDb =>
-      'El álbum necesita la base de datos de cartas (descárgala en Colección).';
+  String get albNeedDb => '卡册需要卡牌数据库（去“收藏”里下载）。';
 
   @override
-  String get albRetry => 'Reintentar';
+  String get albRetry => '重试';
 
   @override
   String get albApproxMode =>
-      'Álbum en modo aproximado: aún no sé qué EDICIÓN exacta tienes de cada carta. Reimporta tu CSV con \"Sustituir mi colección actual\" activado y el álbum se afinará por ilustraciones.';
+      '卡册处于近似模式：我还不知道你每张卡具体是哪个版本。重新导入你的 CSV 并勾选“替换我当前的收藏”，卡册就会按插画精确显示。';
 
   @override
-  String get albSearchSet => 'Busca una expansión…';
+  String get albSearchSet => '搜索一个系列…';
 
   @override
-  String get albOnlyMine => 'Con cartas mías';
+  String get albOnlyMine => '含我的卡';
 
   @override
-  String get albSortProgress => 'Más completadas';
+  String get albSortProgress => '完成度最高';
 
   @override
-  String get albSortNewest => 'Más nuevas';
+  String get albSortNewest => '最新';
 
   @override
-  String get albSortOldest => 'Más antiguas';
+  String get albSortOldest => '最旧';
 
   @override
-  String get albSortName => 'Por nombre';
+  String get albSortName => '按名称';
 
   @override
-  String get albYearAll => 'Año: todos';
+  String get albYearAll => '年份：全部';
 
   @override
-  String get albLetterAll => 'Todas';
+  String get albLetterAll => '全部';
 
   @override
-  String get albNoSets => 'Ninguna expansión coincide con el filtro.';
+  String get albNoSets => '没有系列符合筛选条件。';
 
   @override
   String albSetProgress(int owned, int total) {
-    return '$owned/$total cartas';
+    return '$owned/$total 张卡';
   }
 
   @override
-  String get albComplete => ' · ✓ ¡completa!';
+  String get albComplete => ' · ✓ 已集齐！';
 
   @override
   String albLoadError(String error) {
-    return 'No pude cargar el set: $error';
+    return '无法加载该系列：$error';
   }
 
   @override
   String albSearchIn(String set) {
-    return 'Buscar en $set…';
+    return '在 $set 中搜索…';
   }
 
   @override
-  String get albOnlyMissing => 'Solo las que faltan';
+  String get albOnlyMissing => '只看缺的';
 
   @override
-  String get albWithVariants => 'Con variantes';
+  String get albWithVariants => '含变体';
 
   @override
-  String get albYouHaveItAll => '✓ Lo tienes entero';
+  String get albYouHaveItAll => '✓ 你已集齐';
 
   @override
   String albMissingCount(int n) {
-    return 'Te faltan $n · ';
+    return '还差 $n 张 · ';
   }
 
   @override
   String albWithoutPrice(int n) {
-    return ' ($n sin precio)';
+    return '（$n 张无价格）';
   }
 
   @override
   String albVisibleOf(int visibles, int total) {
-    return '$visibles de $total';
+    return '$total 张中的 $visibles 张';
   }
 
   @override
-  String get albNoCardsNamed => 'Ninguna carta con ese nombre aquí.';
+  String get albNoCardsNamed => '这里没有叫这个名字的卡。';
 
   @override
-  String get fdNewFolder => 'Nueva carpeta';
+  String get fdNewFolder => '新建文件夹';
 
   @override
-  String get fdEditFolder => 'Editar carpeta';
+  String get fdEditFolder => '编辑文件夹';
 
   @override
-  String get fdName => 'Nombre';
+  String get fdName => '名称';
 
   @override
-  String get fdNameHint => 'Rares de Aetherdrift, Para vender…';
+  String get fdNameHint => 'Aetherdrift 的稀有卡、待出售…';
 
   @override
-  String get fdColor => 'Color';
+  String get fdColor => '颜色';
 
   @override
-  String get fdIcon => 'Icono';
+  String get fdIcon => '图标';
 
   @override
-  String get fdCreate => 'Crear';
+  String get fdCreate => '创建';
 
   @override
-  String get fdSave => 'Guardar';
+  String get fdSave => '保存';
 
   @override
-  String get fdDefaultName => 'Carpeta';
+  String get fdDefaultName => '文件夹';
 
   @override
   String fdDeleteTitle(String nombre) {
-    return '¿Borrar \"$nombre\"?';
+    return '删除“$nombre”？';
   }
 
   @override
-  String get fdDeleteBody =>
-      'Se borra solo la carpeta: las cartas siguen en tu colección.';
+  String get fdDeleteBody => '只删除文件夹本身：卡牌仍留在你的收藏里。';
 
   @override
-  String get fdDelete => 'Borrar';
+  String get fdDelete => '删除';
 
   @override
-  String get fdGone => 'Esta carpeta ya no existe.';
+  String get fdGone => '这个文件夹已经不存在了。';
 
   @override
-  String get fdEditTooltip => 'Editar nombre, color e icono';
+  String get fdEditTooltip => '编辑名称、颜色和图标';
 
   @override
-  String get fdDeleteTooltip => 'Borrar carpeta';
+  String get fdDeleteTooltip => '删除文件夹';
 
   @override
-  String get fdAddRemove => 'Añadir o quitar';
+  String get fdAddRemove => '添加或移除';
 
   @override
   String fdCounts(int distintas, int copias) {
-    return '$distintas cartas distintas · $copias copias';
+    return '$distintas 张不同的卡 · $copias 张';
   }
 
   @override
   String fdPassFilter(int n) {
-    return ' · $n pasan el filtro';
+    return ' · $n 张通过筛选';
   }
 
   @override
-  String get fdRoughValue => ' · valor orientativo';
+  String get fdRoughValue => ' · 参考价值';
 
   @override
   String fdMissing(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other:
-          '$n cartas ya no están en tu colección (siguen apuntadas por si vuelven).',
-      one: '1 carta ya no está en tu colección (sigue apuntada por si vuelve).',
+      other: '有 $n 张卡已不在你的收藏里（仍记着，以防它们回来）。',
+      one: '有 1 张卡已不在你的收藏里（仍记着，以防它回来）。',
     );
     return '$_temp0';
   }
 
   @override
-  String get fdRemoveThem => 'Quitarlas';
+  String get fdRemoveThem => '移除它们';
 
   @override
-  String get fdNoneMatch => 'Ninguna carta de la carpeta pasa estos filtros.';
+  String get fdNoneMatch => '文件夹里没有卡牌符合这些筛选条件。';
 
   @override
-  String get fdEmpty =>
-      'Carpeta vacía. Dale a \"Añadir o quitar\" y marca las cartas que quieres meter.';
+  String get fdEmpty => '空文件夹。点“添加或移除”，勾选你想放进来的卡。';
 
   @override
   String fdCopies(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n copias',
-      one: '1 copia',
+      other: '$n 张',
+      one: '1 张',
     );
     return '$_temp0';
   }
 
   @override
-  String get fdRemoveFromFolder => 'Quitar de la carpeta';
+  String get fdRemoveFromFolder => '从文件夹移除';
 
   @override
-  String get fpPickCards => 'Elige las cartas';
+  String get fpPickCards => '选择卡牌';
 
   @override
   String fpSaveCount(int n) {
-    return 'Guardar ($n)';
+    return '保存（$n）';
   }
 
   @override
-  String get fpFilterByName => 'Filtra por nombre…';
+  String get fpFilterByName => '按名称筛选…';
 
   @override
   String fpVisibleCards(int n) {
-    return '$n cartas a la vista';
+    return '显示 $n 张卡';
   }
 
   @override
-  String get fpSelectAll => 'Marcar todas';
+  String get fpSelectAll => '全选';
 
   @override
-  String get fpNoneMatch => 'Ninguna carta pasa estos filtros.';
+  String get fpNoneMatch => '没有卡牌符合这些筛选条件。';
 
   @override
-  String get fgMsgReading => 'Leyendo tu colección…';
+  String get fgMsgReading => '正在读取你的收藏…';
 
   @override
-  String get fgMsgCurve => 'Calculando la curva de maná…';
+  String get fgMsgCurve => '正在计算法术力曲线…';
 
   @override
-  String get fgMsgLands => 'Repartiendo tierras…';
+  String get fgMsgLands => '正在分配地…';
 
   @override
-  String get fgMsgSynergy => 'Buscando sinergias…';
+  String get fgMsgSynergy => '正在寻找协同…';
 
   @override
-  String get fgMsgPlan => 'Escribiendo tu plan de juego…';
+  String get fgMsgPlan => '正在写你的战术方案…';
 
   @override
-  String get fgNeedDbForSets =>
-      'Necesito la base de cartas para listar las expansiones: Ajustes → descargar la base.';
+  String get fgNeedDbForSets => '我需要卡牌数据库才能列出各系列：设置 → 下载数据库。';
 
   @override
   String fgDbError(String error) {
-    return 'No pude leer la base de datos de cartas: $error';
+    return '无法读取卡牌数据库：$error';
   }
 
   @override
@@ -847,97 +834,90 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: ' en esas $n expansiones',
-      one: ' en esa expansión',
+      other: ' 在那 $n 个系列里',
+      one: ' 在那个系列里',
     );
     return '$_temp0';
   }
 
   @override
   String fgNoCommander(String donde) {
-    return 'No me sale un Commander legal$donde: hacen falta un comandante legendario y ~62 cartas DISTINTAS dentro de su identidad (es singleton), más básicas suficientes. Prueba otro formato, otras expansiones o amplía la colección.';
+    return '我没法凑出一副合法的 Commander$donde：需要一位传奇指挥官，加上其颜色标识内约 62 张不同的卡（单张制），外加足够的基本地。换个赛制、换些系列，或者扩充收藏试试。';
   }
 
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
-    return 'Con las cartas de este pool no me sale ningún mazo completo $formato que cumpla mis reglas (tierras suficientes y curva sana)$donde. $consejo Antes que darte un mazo defectuoso, prefiero avisarte.';
+    return '用这个卡池里的卡，我凑不出任何一副符合我规则（地够、曲线健康）的完整 $formato 牌组$donde。$consejo 与其给你一副有缺陷的牌组，我宁愿先告诉你。';
   }
 
   @override
-  String get fgOf60 => 'de 60';
+  String get fgOf60 => '/ 60';
 
   @override
   String fgLegalIn(String formato) {
-    return 'LEGAL en $formato';
+    return '在 $formato 中合法';
   }
 
   @override
-  String get fgTipMoreSets => 'Prueba con más expansiones o quita filtros.';
+  String get fgTipMoreSets => '试试增加系列，或去掉筛选条件。';
 
   @override
-  String get fgTipMoreCards =>
-      'Añade más cartas — sobre todo de tus colores principales — o marca \"incluir cartas que no tengo\".';
+  String get fgTipMoreCards => '多加些卡——尤其是你主色的卡——或者勾选“包含我没有的卡”。';
 
   @override
-  String get fgPitch =>
-      'Mazos completos y jugables con las cartas que ya tienes. Sin comprar nada.';
+  String get fgPitch => '用你已有的卡，组出完整、能打的牌组。不用买任何东西。';
 
   @override
-  String get fgTeaserCount => 'cartas para tu primer mazo';
+  String get fgTeaserCount => '张卡可组你的第一副牌组';
 
   @override
-  String get fgTeaserMissing => 'Hacer un mazo con cartas que no tengo';
+  String get fgTeaserMissing => '用我没有的卡也组一副';
 
   @override
-  String get fgBasics => 'Cuento con tierras básicas sueltas';
+  String get fgBasics => '假定我有零散的基本地';
 
   @override
-  String get fgBasicsSub =>
-      'Casi todo el mundo tiene básicas de mazos de inicio; desactívalo para usar SOLO las básicas de tu colección.';
+  String get fgBasicsSub => '几乎每个人都有初学者套牌里的基本地；关掉它就只用你收藏中的基本地。';
 
   @override
-  String get fgFormat => 'Formato de juego';
+  String get fgFormat => '游戏赛制';
 
   @override
   String get fgCasual60 => 'Casual 60';
 
   @override
-  String get fgCommanderNote =>
-      '100 cartas · singleton · comandante legendario de tu colección · identidad de color respetada.';
+  String get fgCommanderNote => '100 张卡 · 单张制 · 用你收藏里的传奇指挥官 · 遵守颜色标识。';
 
   @override
-  String get fgCasualNote =>
-      '60 cartas, sin restricción de legalidad: todo vale.';
+  String get fgCasualNote => '60 张卡，不限合法性：什么都能用。';
 
   @override
   String fgFormatNote(String formato) {
-    return '60 cartas usando SOLO tus cartas legales en $formato.';
+    return '60 张卡，只用你在 $formato 中合法的卡。';
   }
 
   @override
-  String get fgWhereFrom => '¿De dónde salen las cartas?';
+  String get fgWhereFrom => '卡从哪儿来？';
 
   @override
-  String get fgPickSets => 'Elegir expansiones';
+  String get fgPickSets => '选择系列';
 
   @override
-  String get fgChangeSets => 'Cambiar expansiones';
+  String get fgChangeSets => '更换系列';
 
   @override
-  String get fgNeedOneSet =>
-      'Elige al menos una expansión: sin filtro serían las ~30.000 cartas de Magic.';
+  String get fgNeedOneSet => '至少选一个系列：不筛选的话就是 Magic 全部约 30,000 张卡。';
 
   @override
-  String get fgNoSetsNote =>
-      'Sin elegir expansiones, Forge usa toda tu colección.';
+  String get fgNoSetsNote => '不选系列时，Forge 会用你的全部收藏。';
 
   @override
   String fgFromSetsAny(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Cartas de $n expansiones, tengas o no.',
-      one: 'Cartas de 1 expansión, tengas o no.',
+      other: '$n 个系列的卡，不管你有没有。',
+      one: '1 个系列的卡，不管你有没有。',
     );
     return '$_temp0';
   }
@@ -947,84 +927,82 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Solo tus cartas de $n expansiones — no toda la colección.',
-      one: 'Solo tus cartas de 1 expansión — no toda la colección.',
+      other: '只用你在 $n 个系列里的卡——不是整个收藏。',
+      one: '只用你在 1 个系列里的卡——不是整个收藏。',
     );
     return '$_temp0';
   }
 
   @override
   String get fgNoPrintingData =>
-      'Tu colección no guarda la edición de cada carta, así que filtrar por expansión dejaría fuera casi todo. Reimporta tu CSV con \"Sustituir\" y vuelve.';
+      '你的收藏没有记录每张卡的版本，所以按系列筛选几乎会把所有卡都排除掉。重新导入你的 CSV 并勾选“替换”，再回来。';
 
   @override
-  String get fgIncludeMissing => 'Incluir cartas que no tengo';
+  String get fgIncludeMissing => '包含我没有的卡';
 
   @override
   String get fgIncludeMissingSub =>
-      'Forge deja de limitarse a tu colección y usa TODO lo impreso en esas expansiones; luego te dice cuántas cartas te faltan y cuánto costarían.';
+      'Forge 不再局限于你的收藏，而是用这些系列印过的所有卡；之后会告诉你缺多少张、要花多少钱。';
 
   @override
-  String get fgYourTaste => 'A tu gusto (opcional)';
+  String get fgYourTaste => '按你的喜好（可选）';
 
   @override
-  String get fgArchetypeAuto => 'Arquetipo: auto';
+  String get fgArchetypeAuto => '原型：自动';
 
   @override
-  String get fgPricePerCard => 'Precio por carta:';
+  String get fgPricePerCard => '每张卡价格：';
 
   @override
-  String get fgMin => 'mín €';
+  String get fgMin => '最低 €';
 
   @override
-  String get fgMax => 'máx €';
+  String get fgMax => '最高 €';
 
   @override
-  String get fgCardYear => 'Año de la carta:';
+  String get fgCardYear => '卡牌年份：';
 
   @override
-  String get fgFrom => 'desde';
+  String get fgFrom => '从';
 
   @override
-  String get fgTo => 'hasta';
+  String get fgTo => '到';
 
   @override
-  String get fgYearNeedsDb =>
-      'El filtro por año necesita la base de datos actualizada: Ajustes → Volver a descargar la base de datos.';
+  String get fgYearNeedsDb => '按年份筛选需要最新的数据库：设置 → 重新下载数据库。';
 
   @override
-  String get fgNoColorsNote =>
-      'Sin elegir colores, Forge prueba todas las combinaciones.';
+  String get fgNoColorsNote => '不选颜色时，Forge 会尝试所有组合。';
 
   @override
   String fgColorsNote(String colores) {
-    return 'Solo mazos $colores (y sus combinaciones).';
+    return '只组 $colores 的牌组（及其组合）。';
   }
 
   @override
   String get fgMissingNote =>
-      'Este mazo puede llevar cartas que NO tienes: cada propuesta dice cuántas te faltan y lo que costarían (precio de Cardmarket).';
+      '这副牌组可能含有你没有的卡：每个方案都会说明你缺多少张、要花多少钱（Cardmarket 价格）。';
 
   @override
   String fgOnlyYoursNote(int n) {
-    return 'Forge solo usa tus $n cartas. Nunca inventa copias que no tienes.';
+    return 'Forge 只用你的 $n 张卡。绝不会凭空造出你没有的卡。';
   }
 
   @override
-  String get fgForgeMissing => 'Forjar mazos (con lo que me falte)';
+  String get fgForgeMissing => '铸造牌组（连我缺的一起）';
 
   @override
-  String get fgForgeMine => 'Forjar mis mazos';
+  String get fgForgeMine => '铸造我的牌组';
 
   @override
-  String get fgTestMode => 'Modo Test: vence a un mazo del meta';
+  String get fgTestMode => '测试模式：击败一副环境热门牌组';
 
   @override
-  String get fgOffline => 'Todo se calcula en tu dispositivo, sin internet';
+  String get fgOffline => '全部在你的设备上计算，无需联网';
 
   @override
   String fgForgingWith(int n) {
-    return 'Estás forjando con $n cartas: esto tarda unos segundos. La ventana sigue viva.';
+    return '你正在用 $n 张卡铸造：这要花几秒钟。窗口没有卡住。';
   }
 
   @override
@@ -1032,490 +1010,476 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n mazos listos para jugar',
-      one: '1 mazo listo para jugar',
+      other: '$n 副牌组已可上场',
+      one: '1 副牌组已可上场',
     );
     return '$_temp0';
   }
 
   @override
-  String get fgSwipeMissing =>
-      'Con cartas que aún no tienes · desliza para comparar';
+  String get fgSwipeMissing => '含你还没有的卡 · 滑动对比';
 
   @override
-  String get fgSwipeMine =>
-      'Hechos solo con tus cartas · desliza para comparar';
+  String get fgSwipeMine => '只用你的卡组成 · 滑动对比';
 
   @override
-  String get fgHaveAll => '✓ Tienes todas las cartas';
+  String get fgHaveAll => '✓ 你拥有全部卡牌';
 
   @override
   String fgShortfall(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Te faltan $n cartas',
-      one: 'Te falta 1 carta',
+      other: '你还差 $n 张卡',
+      one: '你还差 1 张卡',
     );
     return '$_temp0';
   }
 
   @override
-  String get fgSeeDeck => 'Ver mazo completo';
+  String get fgSeeDeck => '查看完整牌组';
 
   @override
-  String get fgReforge => 'Reforjar';
+  String get fgReforge => '重铸';
 
   @override
   String mkAlertOne(String carta, String precio, String objetivo) {
-    return '🔔 ¡$carta está a $precio (tu objetivo: $objetivo)!';
+    return '🔔 $carta 现在 $precio（你的目标价：$objetivo）！';
   }
 
   @override
   String mkAlertMany(int n) {
-    return '🔔 ¡$n cartas de tu wishlist han caído a su precio objetivo!';
+    return '🔔 你心愿单里有 $n 张卡已跌到目标价！';
   }
 
   @override
-  String get mkTellMeWhenDrops => 'Avísame cuando baje';
+  String get mkTellMeWhenDrops => '降价时通知我';
 
   @override
-  String get mkTargetPrice => 'Precio objetivo';
+  String get mkTargetPrice => '目标价';
 
   @override
   String mkNow(String precio) {
-    return 'Ahora: $precio';
+    return '现在：$precio';
   }
 
   @override
-  String get mkUpdated => '✓ Precios y cartas actualizados';
+  String get mkUpdated => '✓ 价格和卡牌已更新';
 
   @override
   String mkUpdateFailed(String error) {
-    return 'No pude actualizar: $error';
+    return '无法更新：$error';
   }
 
   @override
-  String get mkHistoryReady =>
-      '✓ Histórico de precios listo: las gráficas ya enseñan los últimos meses';
+  String get mkHistoryReady => '✓ 价格历史已就绪：图表现在能显示最近几个月了';
 
   @override
   String mkHistoryFailed(String error) {
-    return 'No pude traer el histórico (el que ya tenías sigue intacto): $error';
+    return '无法获取历史数据（你原有的仍然完好）：$error';
   }
 
   @override
   String get mkHistoryLocal =>
-      'Histórico de precios: solo el que ManaForge apunta a diario en tu equipo. Tráete los últimos ~90 días reales de Cardmarket (≈4 MB).';
+      '价格历史：目前只有 ManaForge 每天在你设备上记录的那部分。把 Cardmarket 最近约 90 天的真实数据拉下来（≈4 MB）。';
 
   @override
   String mkHistoryReal(String desde, String hasta) {
-    return 'Histórico real de Cardmarket del $desde al $hasta, y desde ahí lo que apunta ManaForge.';
+    return '从 $desde 到 $hasta 的 Cardmarket 真实历史，之后就是 ManaForge 自己记录的。';
   }
 
   @override
-  String get mkFetchHistory => 'Traer histórico';
+  String get mkFetchHistory => '获取历史数据';
 
   @override
-  String get mkCollectionValue => 'Valor de tu colección · Cardmarket';
+  String get mkCollectionValue => '你收藏的价值 · Cardmarket';
 
   @override
   String mkCardsCount(int n) {
-    return '$n cartas';
+    return '$n 张卡';
   }
 
   @override
-  String get mkApproxSuffix => ' · valor orientativo';
+  String get mkApproxSuffix => ' · 参考价值';
 
   @override
   String mkBulkPrices(String fecha) {
-    return 'Precios Cardmarket del $fecha (Scryfall)';
+    return '$fecha 的 Cardmarket 价格（Scryfall）';
   }
 
   @override
   String mkNoData(String error) {
-    return 'Mercado sin datos: descarga la base de datos en Colección. ($error)';
+    return '市场暂无数据：去“收藏”里下载数据库。（$error）';
   }
 
   @override
   String mkSetsHeader(int n) {
-    return 'EXPANSIONES ($n)';
+    return '系列（$n）';
   }
 
   @override
-  String get mkPrevious => 'Anteriores';
+  String get mkPrevious => '上一批';
 
   @override
-  String get mkNext => 'Siguientes';
+  String get mkNext => '下一批';
 
   @override
-  String get mkSearchHint => 'Busca el precio de cualquier carta…';
+  String get mkSearchHint => '查任意卡牌的价格…';
 
   @override
-  String get mkRemoveFromWishlist => 'Quitar de la wishlist';
+  String get mkRemoveFromWishlist => '从心愿单移除';
 
   @override
-  String get mkAddToWishlist => 'A la wishlist: avísame cuando baje';
+  String get mkAddToWishlist => '加入心愿单：降价时通知我';
 
   @override
-  String get mkYourWishlist => 'TU WISHLIST';
+  String get mkYourWishlist => '你的心愿单';
 
   @override
   String mkTargetAtMost(String precio) {
-    return 'objetivo ≤ $precio';
+    return '目标 ≤ $precio';
   }
 
   @override
-  String get mkAtPrice => '¡a precio!';
+  String get mkAtPrice => '已到价！';
 
   @override
-  String get mkChangeTarget => 'Cambiar precio objetivo';
+  String get mkChangeTarget => '修改目标价';
 
   @override
-  String get mkTopCards => 'TUS CARTAS MÁS VALIOSAS';
+  String get mkTopCards => '你最值钱的卡';
 
   @override
-  String get mkImportToSeeValue => 'Importa tu colección para ver su valor.';
+  String get mkImportToSeeValue => '导入你的收藏来查看它的价值。';
 
   @override
   String mkSetCards(int n) {
-    return ' · $n cartas';
+    return ' · $n 张卡';
   }
 
   @override
-  String get wlEmpty =>
-      'Búscalas en Mercado y toca el marcador para que te avise cuando bajen a tu precio.';
+  String get wlEmpty => '去“市场”里搜索它们，点一下书签，降到你的价位时就会通知你。';
 
   @override
   String wlAtPriceCount(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other:
-          '🔔 $n cartas de tu wishlist están a tu precio objetivo o por debajo.',
-      one: '🔔 1 carta de tu wishlist está a tu precio objetivo o por debajo.',
+      other: '🔔 你心愿单里有 $n 张卡已到或低于目标价。',
+      one: '🔔 你心愿单里有 1 张卡已到或低于目标价。',
     );
     return '$_temp0';
   }
 
   @override
-  String get mpMtgoTix => 'Precios de MTGO en tix (cartas digitales)';
+  String get mpMtgoTix => 'MTGO 的 tix 价格（数字卡牌）';
 
   @override
-  String get mpNoDataYet =>
-      'Sin datos todavía: actualiza el histórico de precios en Mercado';
+  String get mpNoDataYet => '暂无数据：去“市场”更新价格历史';
 
   @override
   String get mpMtgoNote =>
-      'Precios de MTGO en tix: son cartas digitales, no valen para tasar tu colección de papel. Inicio, carpetas y logros siguen en Cardmarket (€).';
+      'MTGO 的 tix 价格：这是数字卡牌，不能用来给你的实体收藏估价。首页、文件夹和成就仍以 Cardmarket（€）计价。';
 
   @override
   String mpMarketNote(String mercado, String moneda) {
-    return 'Precios de $mercado en $moneda. Inicio, carpetas y logros siguen valorando en Cardmarket (€): las divisas no se convierten.';
+    return '$mercado 以 $moneda 计的价格。首页、文件夹和成就仍以 Cardmarket（€）估价：货币不做换算。';
   }
 
   @override
-  String get mkUpdate => 'Actualizar';
+  String get mkUpdate => '更新';
 
   @override
-  String get mkApproxValue =>
-      ' · valor aproximado (reimporta con \"Sustituir\" para precios por edición)';
+  String get mkApproxValue => ' · 近似价值（重新导入时勾选“替换”以获得按版本的价格）';
 
   @override
-  String get mkExactPrintings => ' · por tus ediciones exactas';
+  String get mkExactPrintings => ' · 按你的确切版本';
 
   @override
   String mkNowSuffix(String precio) {
-    return ' · ahora $precio';
+    return ' · 现在 $precio';
   }
 
   @override
-  String get wlNothingYet => 'Aún no tienes cartas en la wishlist.';
+  String get wlNothingYet => '你的心愿单里还没有卡。';
 
   @override
-  String get stDbUpdated => '✓ Base de datos actualizada';
+  String get stDbUpdated => '✓ 数据库已更新';
 
   @override
   String stUpdateFailed(String error) {
-    return 'No se pudo actualizar: $error';
+    return '无法更新：$error';
   }
 
   @override
-  String get stCardDb => 'Base de datos de cartas';
+  String get stCardDb => '卡牌数据库';
 
   @override
-  String get stCardDbWhy =>
-      'Vuelve a descargarla para tener cartas nuevas, precios frescos y las funciones que piden datos recientes (como el filtro por año en Forge).';
+  String get stCardDbWhy => '重新下载它，就能拿到新卡、新价格，以及那些需要最新数据的功能（比如 Forge 里的按年份筛选）。';
 
   @override
-  String get stDownloadDbAgain => 'Volver a descargar la base de datos';
+  String get stDownloadDbAgain => '重新下载数据库';
 
   @override
-  String get stAppearance => 'Apariencia';
+  String get stAppearance => '外观';
 
   @override
-  String get stData => 'Datos';
+  String get stData => '数据';
 
   @override
-  String get stTheApp => 'La app';
+  String get stTheApp => 'App';
 
   @override
   String get stCredits =>
-      'Datos e imágenes de cartas por Scryfall. Magic: The Gathering es propiedad de Wizards of the Coast; proyecto de fans al amparo de su Fan Content Policy.';
+      '卡牌数据和图片来自 Scryfall。Magic: The Gathering 归 Wizards of the Coast 所有；本项目是依据其粉丝内容政策（Fan Content Policy）制作的粉丝项目。';
 
   @override
-  String get stEditHome => 'Editar inicio';
+  String get stEditHome => '编辑首页';
 
   @override
-  String get stEditHomeSub => 'Elige qué secciones se ven y en qué orden';
+  String get stEditHomeSub => '选择显示哪些板块以及顺序';
 
   @override
-  String get ehLevel => 'Tu nivel';
+  String get ehLevel => '你的等级';
 
   @override
-  String get ehShortcuts => 'Accesos rápidos';
+  String get ehShortcuts => '快捷入口';
 
   @override
-  String get ehSummary => 'Resumen de la colección';
+  String get ehSummary => '收藏概览';
 
   @override
-  String get ehRecent => 'Vistas recientemente';
+  String get ehRecent => '最近查看';
 
   @override
-  String get ehDecks => 'Tus mazos';
+  String get ehDecks => '你的牌组';
 
   @override
-  String get ehMeta => 'El meta ahora';
+  String get ehMeta => '当前环境';
 
   @override
-  String get ehNewSets => 'Expansiones nuevas';
+  String get ehNewSets => '新系列';
 
   @override
-  String get ehGems => 'Tus joyas';
+  String get ehGems => '你的珍藏';
 
   @override
-  String get ehHelp =>
-      'Arrastra para ordenar y usa el interruptor para elegir qué ves en Inicio. Una sección encendida solo sale si tiene algo que enseñar.';
+  String get ehHelp => '拖动可排序，用开关选择首页显示什么。开启的板块只有在有内容可显示时才会出现。';
 
   @override
-  String get ehSection => 'Sección';
+  String get ehSection => '板块';
 
   @override
-  String get bkNoData => 'No encuentro tus datos.';
+  String get bkNoData => '找不到你的数据。';
 
   @override
   String bkSaved(String resumen) {
-    return '✓ Copia guardada · $resumen';
+    return '✓ 备份已保存 · $resumen';
   }
 
   @override
   String bkSaveFailed(String error) {
-    return 'No he podido guardarla: $error';
+    return '无法保存：$error';
   }
 
   @override
-  String get bkFileName => 'Copia de ManaForge';
+  String get bkFileName => 'ManaForge 备份';
 
   @override
   String bkRestoreFailed(String error) {
-    return 'No he podido restaurarla: $error';
+    return '无法恢复：$error';
   }
 
   @override
   String bkRestoredNoPrevious(String resumen, String error) {
-    return '✓ Restaurado · $resumen. OJO: no he podido guardar lo que tenías antes ($error).';
+    return '✓ 已恢复 · $resumen。注意：我没能保存你之前的数据（$error）。';
   }
 
   @override
   String bkRestored(String resumen) {
-    return '✓ Restaurado · $resumen. Lo que tenías antes está guardado en la carpeta backups.';
+    return '✓ 已恢复 · $resumen。你之前的数据已保存在 backups 文件夹里。';
   }
 
   @override
-  String get bkRestoring => 'Restaurando tu copia…';
+  String get bkRestoring => '正在恢复你的备份…';
 
   @override
-  String get bkTitle => 'Copia de seguridad';
+  String get bkTitle => '备份';
 
   @override
-  String get bkWhy =>
-      'Tus cartas, mazos, carpetas y logros viven solo en este ordenador. Guarda una copia de vez en cuando y déjala en otro sitio: un disco, la nube, lo que quieras.';
+  String get bkWhy => '你的卡牌、牌组、文件夹和成就只存在这台电脑上。时不时保存一份备份，放到别处：硬盘、云端，随你。';
 
   @override
-  String get bkSave => 'Guardar copia';
+  String get bkSave => '保存备份';
 
   @override
-  String get bkRestoreTitle => 'Restaurar una copia';
+  String get bkRestoreTitle => '恢复一份备份';
 
   @override
   String bkRestoreWarning(String palabra) {
-    return 'Restaurar REEMPLAZA tus cartas, mazos, carpetas y logros de ahora por los de la copia. Elige cuál, dale al botón y escribe $palabra: así no se restaura nada sin querer.';
+    return '恢复会用备份里的数据替换你现在的卡牌、牌组、文件夹和成就。选好一份，点按钮，然后输入 $palabra：这样就不会误恢复。';
   }
 
   @override
-  String get bkNoBackups => 'Aún no hay copias guardadas en este ordenador.';
+  String get bkNoBackups => '这台电脑上还没有保存过备份。';
 
   @override
-  String get bkWhich => 'Copia a restaurar';
+  String get bkWhich => '要恢复的备份';
 
   @override
-  String get bkPickOne => 'Elige una copia';
+  String get bkPickOne => '选择一份备份';
 
   @override
-  String get bkRestorePicked => 'Restaurar la copia elegida';
+  String get bkRestorePicked => '恢复所选备份';
 
   @override
-  String get bkAutoNote =>
-      'Guardo una copia automática cada semana (las cinco últimas) y otra justo antes de cada restaurar.';
+  String get bkAutoNote => '我每周自动保存一份备份（保留最近五份），并在每次恢复前再存一份。';
 
   @override
-  String get bkFromFile => 'Restaurar de un archivo';
+  String get bkFromFile => '从文件恢复';
 
   @override
-  String get bkConfirmTitle => '¿Restaurar esta copia?';
+  String get bkConfirmTitle => '恢复这份备份？';
 
   @override
   String get bkConfirmBody =>
-      'Esto reemplaza tu colección, mazos, carpetas y logros de ahora por los de esa copia. Antes de hacerlo guardo lo que tienes en la carpeta backups, por si quieres volver.';
+      '这会用那份备份替换你现在的收藏、牌组、文件夹和成就。动手之前，我会先把你现有的数据存进 backups 文件夹，以便你反悔。';
 
   @override
   String bkWillDelete(String cosas) {
-    return 'Esa copia no trae $cosas: al restaurarla, eso se borra.';
+    return '那份备份里没有 $cosas：恢复后，这些会被删除。';
   }
 
   @override
   String bkTypeToConfirm(String palabra) {
-    return 'Escribe $palabra para poder seguir:';
+    return '输入 $palabra 才能继续：';
   }
 
   @override
-  String get bkAnd => ' y ';
+  String get bkAnd => ' 和 ';
 
   @override
-  String get ehReset => 'Restablecer';
+  String get ehReset => '重置';
 
   @override
   String bkOfDate(String cuando, String resumen) {
-    return 'Copia del $cuando · $resumen.';
+    return '$cuando 的备份 · $resumen。';
   }
 
   @override
-  String get lsNoCamera => 'No encuentro ninguna cámara.';
+  String get lsNoCamera => '找不到任何摄像头。';
 
   @override
-  String get lsCameraGone =>
-      'La cámara se ha desconectado a media sesión. Revisa el cable y dale a Reintentar.';
+  String get lsCameraGone => '摄像头在扫描中途断开了。检查一下线缆，然后点重试。';
 
   @override
-  String get lsFrameCard => 'Encuadra la carta dentro del marco';
+  String get lsFrameCard => '把卡牌放进取景框里';
 
   @override
-  String get lsNoCardThere => 'No veo ninguna carta ahí';
+  String get lsNoCardThere => '那里没看到卡牌';
 
   @override
   String lsAddedToCollection(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '✓ $n cartas a la colección',
-      one: '✓ 1 carta a la colección',
+      other: '✓ $n 张卡已入收藏',
+      one: '✓ 1 张卡已入收藏',
     );
     return '$_temp0';
   }
 
   @override
   String lsAndToFolder(String carpeta) {
-    return ', y a \"$carpeta\"';
+    return '，并加入“$carpeta”';
   }
 
   @override
-  String get lsTitle => 'Escanear en vivo';
+  String get lsTitle => '实时扫描';
 
   @override
-  String get lsQuickTip =>
-      'Rápido: las cartas claras entran solas; las dudosas, marcadas para revisar.';
+  String get lsQuickTip => '快速：清晰的卡自动入库；拿不准的会被标记待复核。';
 
   @override
-  String get lsCarefulTip =>
-      'Con cuidado: las dudosas se paran y te preguntan cuál es.';
+  String get lsCarefulTip => '仔细：拿不准的会停下来问你是哪张。';
 
   @override
-  String get lsQuick => 'Rápido';
+  String get lsQuick => '快速';
 
   @override
-  String get lsCareful => 'Con cuidado';
+  String get lsCareful => '仔细';
 
   @override
   String lsThisSession(int n) {
-    return '$n esta sesión';
+    return '本次 $n 张';
   }
 
   @override
-  String get lsScanPhotoTooltip => 'Escanear una foto suelta';
+  String get lsScanPhotoTooltip => '扫描单张照片';
 
   @override
-  String get lsStartingCamera => 'Encendiendo la cámara…';
+  String get lsStartingCamera => '正在开启摄像头…';
 
   @override
-  String get lsCantUseCamera => 'No puedo usar la cámara';
+  String get lsCantUseCamera => '无法使用摄像头';
 
   @override
-  String get lsCameraUnavailable => 'Cámara no disponible.';
+  String get lsCameraUnavailable => '摄像头不可用。';
 
   @override
-  String get lsScanPhoto => 'Escanear una foto';
+  String get lsScanPhoto => '扫描一张照片';
 
   @override
   String lsPlusOneSame(String carta, int n) {
-    return '+1 igual · $carta (×$n)';
+    return '+1 张相同 · $carta（×$n）';
   }
 
   @override
   String lsAlreadyOnTable(String carta) {
-    return 'Ya está en la mesa: $carta · retírala y vuelve a ponerla, o toca \"+1 igual\"';
+    return '已经在桌上了：$carta · 把它拿开再放回，或点“+1 张相同”';
   }
 
   @override
   String lsSeeing(String carta) {
-    return 'Viendo: $carta';
+    return '正在识别：$carta';
   }
 
   @override
-  String get lsPassACard => 'Pasa una carta por delante de la cámara…';
+  String get lsPassACard => '把一张卡放到摄像头前…';
 
   @override
   String lsIsThis(String carta) {
-    return '¿Es $carta? No estoy seguro — toca para elegir.';
+    return '是 $carta 吗？我不太确定——点一下来选择。';
   }
 
   @override
-  String get lsNotThisOne => 'No es esta — cambiar versión';
+  String get lsNotThisOne => '不是这张——更换版本';
 
   @override
-  String get lsRetry => 'Reintentar';
+  String get lsRetry => '重试';
 
   @override
-  String get scBadImage => 'No pude leer esa imagen (¿es una foto válida?)';
+  String get scBadImage => '无法读取这张图片（它是有效照片吗？）';
 
   @override
   String scAddedOne(String carta, String set, String numero) {
-    return '✓ $carta ($set #$numero)';
+    return '✓ $carta（$set #$numero）';
   }
 
   @override
-  String get scNoFolder => 'Sin carpeta';
+  String get scNoFolder => '不放文件夹';
 
   @override
   String scAlsoTo(String carpeta) {
-    return 'Y además a: $carpeta';
+    return '并额外加入：$carpeta';
   }
 
   @override
-  String get scLookingForCard => 'Buscando la carta en la foto…';
+  String get scLookingForCard => '正在照片里寻找卡牌…';
 
   @override
   String scRecognising(int hechas, int total) {
-    return 'Reconociendo… $hechas/$total';
+    return '识别中… $hechas/$total';
   }
 
   @override
@@ -1523,394 +1487,383 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n 张卡',
+      one: '1 张卡',
     );
-    return '$_temp0 · $copias en total';
+    return '$_temp0 · 共 $copias 张';
   }
 
   @override
   String scToReview(int n) {
-    return '$n para revisar (tócalas)';
+    return '$n 张待复核（点一下）';
   }
 
   @override
   String scUnknown(int n) {
-    return '$n sin reconocer (toca para elegir a mano)';
+    return '$n 张未识别（点一下手动选择）';
   }
 
   @override
-  String get scNothingRecognised =>
-      'No reconocí ninguna carta en esas fotos. Prueba con mejor luz o menos reflejo.';
+  String get scNothingRecognised => '这些照片里我一张卡都没认出来。换个更好的光线，或减少反光试试。';
 
   @override
   String scAddN(int n) {
-    return 'Añadir $n a la colección';
+    return '把 $n 张加入收藏';
   }
 
   @override
-  String get scDropPhotos => 'Suelta aquí las fotos de tus cartas';
+  String get scDropPhotos => '把你的卡牌照片拖到这里';
 
   @override
   String get scDropExplain =>
-      'Una o varias a la vez — y si una foto trae VARIAS cartas (una página del álbum, la mesa llena), las saco todas y las junto en una lista para que revises y añadas las que quieras. Vale foto del móvil o escaneo.';
+      '一次一张或多张——如果一张照片里有好几张卡（卡册的一页、摆满的桌面），我会把它们全部认出来，汇成一份清单，供你复核并挑选要加入的。手机照片或扫描件都行。';
 
   @override
-  String get scPickPhotos => 'Elegir fotos';
+  String get scPickPhotos => '选择照片';
 
   @override
-  String get scMatchHigh => 'coincidencia alta';
+  String get scMatchHigh => '匹配度高';
 
   @override
-  String get scMatchMedium => 'coincidencia media';
+  String get scMatchMedium => '匹配度中';
 
   @override
-  String get scMatchLow => 'coincidencia baja';
+  String get scMatchLow => '匹配度低';
 
   @override
-  String get scAddToCollection => 'Añadir a la colección';
+  String get scAddToCollection => '加入收藏';
 
   @override
-  String get scSeeOptions => 'No es esta — ver opciones';
+  String get scSeeOptions => '不是这张——查看选项';
 
   @override
-  String get scScanAnother => 'Escanear otra';
+  String get scScanAnother => '扫描下一张';
 
   @override
-  String get scNotSure => 'No estoy seguro';
+  String get scNotSure => '我不太确定';
 
   @override
-  String get scWhichIsIt => '¿Cuál es?';
+  String get scWhichIsIt => '是哪一张？';
 
   @override
-  String get scNoneQuiteFits =>
-      'Ninguna encaja del todo. ¿Es alguna de estas? Si no, prueba otra foto con mejor luz.';
+  String get scNoneQuiteFits => '没有一张完全对得上。是这几张里的某张吗？如果不是，换张光线更好的照片试试。';
 
   @override
-  String get scNoEdges =>
-      'No vi los bordes de la carta, así que he usado la imagen entera. Estos son los parecidos:';
+  String get scNoEdges => '我没看清卡牌的边缘，所以用了整张图片。以下是相近的候选：';
 
   @override
-  String get scCropped =>
-      'Esto es lo que he recortado. Los candidatos, por parecido:';
+  String get scCropped => '这是我裁剪出的部分。候选项按相似度排列：';
 
   @override
-  String get scDiscard => 'Descartar y escanear otra';
+  String get scDiscard => '丢弃并扫描下一张';
 
   @override
-  String get suCardsName => 'Cartas y precios';
+  String get suCardsName => '卡牌与价格';
 
   @override
-  String get suCardsWhat => 'catálogo completo de Scryfall';
+  String get suCardsWhat => 'Scryfall 完整目录';
 
   @override
-  String get suHistoryName => 'Histórico de precios';
+  String get suHistoryName => '价格历史';
 
   @override
-  String get suHistoryWhat => '~90 días de Cardmarket';
+  String get suHistoryWhat => 'Cardmarket 约 90 天';
 
   @override
-  String get suHashesName => 'Huellas del escáner';
+  String get suHashesName => '扫描指纹库';
 
   @override
-  String get suHashesWhat => 'para reconocer por foto';
+  String get suHashesWhat => '用于照片识别';
 
   @override
   String suUpToDate(String fecha) {
-    return 'al día ($fecha)';
+    return '最新（$fecha）';
   }
 
   @override
-  String get suUpdated => 'actualizado';
+  String get suUpdated => '已更新';
 
   @override
   String suUpdatedWithDate(String fecha) {
-    return 'actualizado ($fecha)';
+    return '已更新（$fecha）';
   }
 
   @override
-  String get suFailedOffline => 'no he podido traerla (sin conexión)';
+  String get suFailedOffline => '没能获取（无网络连接）';
 
   @override
-  String get suKeepingOld => 'sigo con la que tenías';
+  String get suKeepingOld => '继续用你原有的';
 
   @override
-  String get suNeedMissing => 'falta, la traigo';
+  String get suNeedMissing => '缺失，正在获取';
 
   @override
-  String get suNeedStale => 'hay una nueva';
+  String get suNeedStale => '有新版本';
 
   @override
-  String get suNeedFresh => 'al día';
+  String get suNeedFresh => '最新';
 
   @override
-  String get suAllUpToDate => 'Todo al día. Entrando…';
+  String get suAllUpToDate => '全部最新。正在进入…';
 
   @override
-  String get suUpdatingCards => 'Poniendo al día tus cartas y precios…';
+  String get suUpdatingCards => '正在更新你的卡牌和价格…';
 
   @override
-  String get suChecking => 'Comprobando si hay novedades…';
+  String get suChecking => '正在检查有没有更新…';
 
   @override
-  String get suNoDownloadNote =>
-      'Lo que ya está al día no se descarga. Dentro de la app puedes forzar cualquier actualización.';
+  String get suNoDownloadNote => '已经是最新的就不会下载。在 App 里你可以强制执行任意更新。';
 
   @override
-  String get suEnter => 'Entrar';
+  String get suEnter => '进入';
 
   @override
-  String get suEnterNow => 'Entrar ya';
+  String get suEnterNow => '立即进入';
 
   @override
   String icBadFile(String error) {
-    return 'No pude leer el archivo: $error';
+    return '无法读取文件：$error';
   }
 
   @override
-  String get icNotCsv =>
-      'Eso no parece un CSV — suelta un archivo .csv o .txt.';
+  String get icNotCsv => '这看起来不是 CSV——请拖入 .csv 或 .txt 文件。';
 
   @override
-  String get icTitle => 'Importar colección';
+  String get icTitle => '导入收藏';
 
   @override
   String get icExplain =>
-      'Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:';
+      '把你的 ManaBox CSV 拖到这里（Moxfield、Archidekt，或任何带 Name 和 Quantity 列的 CSV 也行），用按钮选择它，或手动粘贴内容：';
 
   @override
-  String get icPickFile => 'Elegir archivo…';
+  String get icPickFile => '选择文件…';
 
   @override
   String icImported(int cartas, int copias) {
-    return '✓ $cartas cartas ($copias copias) añadidas a tu colección.';
+    return '✓ $cartas 张卡（$copias 张）已加入你的收藏。';
   }
 
   @override
-  String get icReplaceMine => 'Sustituir mi colección actual';
+  String get icReplaceMine => '替换我当前的收藏';
 
   @override
-  String get icReplaceWhy =>
-      'Actívalo al reimportar tu CSV completo: evita duplicar cantidades y afina el álbum por ediciones.';
+  String get icReplaceWhy => '重新导入完整 CSV 时勾选它：避免数量翻倍，并让卡册按版本精确显示。';
 
   @override
   String icImporting(int hechas, int total) {
-    return 'Importando $hechas de $total cartas…';
+    return '正在导入 $total 张卡中的 $hechas 张…';
   }
 
   @override
-  String get icDropHere => 'Suelta tu CSV aquí';
+  String get icDropHere => '把你的 CSV 拖到这里';
 
   @override
   String icTokensIgnored(int n) {
-    return '\n• $n tokens/emblemas ignorados (no van en mazos, todo bien).';
+    return '\n• 已忽略 $n 个衍生物/纹章（它们不进牌组，没关系）。';
   }
 
   @override
   String icUnrecognized(String lista, String mas) {
-    return '\n✗ Sin reconocer: $lista$mas';
+    return '\n✗ 未识别：$lista$mas';
   }
 
   @override
   String get icNoPurchasePrice =>
-      '\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").';
+      '\n• CSV 里没有购入价：不会有盈亏（ManaBox 会把它导出在“Purchase price”列）。';
 
   @override
   String icWithPurchasePrice(int n) {
-    return '\n• $n copias con precio de compra: ya puedes ver el P&L en Mercado.';
+    return '\n• $n 张带购入价：现在可以在“市场”里看盈亏了。';
   }
 
   @override
-  String get icImporting2 => 'Importando…';
+  String get icImporting2 => '正在导入…';
 
   @override
-  String get icImport => 'Importar';
+  String get icImport => '导入';
 
   @override
   String dkDeleted(String nombre) {
-    return 'Mazo \"$nombre\" borrado';
+    return '牌组“$nombre”已删除';
   }
 
   @override
-  String get dkUndo => 'DESHACER';
+  String get dkUndo => '撤销';
 
   @override
   String dkOpenFailed(String error) {
-    return 'No pude abrir el mazo (¿está descargada la base de datos?): $error';
+    return '无法打开牌组（数据库下载了吗？）：$error';
   }
 
   @override
-  String get dkMyDecks => 'Mis mazos';
+  String get dkMyDecks => '我的牌组';
 
   @override
-  String get dkEmpty =>
-      'Aquí vivirán los mazos que guardes desde Forge (botón de guardar en el detalle del mazo).';
+  String get dkEmpty => '你从 Forge 保存的牌组会出现在这里（在牌组详情页里点保存按钮）。';
 
   @override
   String dkSavedCount(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n guardados',
-      one: '1 guardado',
+      other: '已保存 $n 副',
+      one: '已保存 1 副',
     );
     return '$_temp0';
   }
 
   @override
   String dkSubtitle(String arquetipo, int hechizos, int tierras, String fecha) {
-    return '$arquetipo · $hechizos hechizos + $tierras tierras · guardado el $fecha';
+    return '$arquetipo · $hechizos 张法术 + $tierras 张地 · 保存于 $fecha';
   }
 
   @override
-  String get dkDeleteTooltip => 'Borrar mazo';
+  String get dkDeleteTooltip => '删除牌组';
 
   @override
-  String get ddSaved => '✓ Mazo guardado — lo tienes en la pestaña Mazos';
+  String get ddSaved => '✓ 牌组已保存——在“牌组”标签页里能找到';
 
   @override
-  String get ddReforged => '✓ Mazo reforjado a tu curva — lista actualizada';
+  String get ddReforged => '✓ 牌组已按你的曲线重铸——清单已更新';
 
   @override
-  String get ddSaveToMyDecks => 'Guardar en Mis mazos';
+  String get ddSaveToMyDecks => '保存到我的牌组';
 
   @override
-  String get ddCopyList => 'Copiar lista (Moxfield/Arena)';
+  String get ddCopyList => '复制清单（Moxfield/Arena）';
 
   @override
-  String get ddListCopied =>
-      '✓ Lista copiada — pégala en Moxfield, Arena o Discord';
+  String get ddListCopied => '✓ 清单已复制——粘贴到 Moxfield、Arena 或 Discord';
 
   @override
   String ddHeaderSub(String tema, String arquetipo, int hechizos, int tierras) {
-    return '$tema · $arquetipo · $hechizos hechizos + $tierras tierras';
+    return '$tema · $arquetipo · $hechizos 张法术 + $tierras 张地';
   }
 
   @override
-  String get ddHaveAll => '✓ Tienes todas las cartas';
+  String get ddHaveAll => '✓ 你拥有全部卡牌';
 
   @override
   String ddMissing(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other:
-          '⚠ Te faltan $n cartas de este mazo — siguen en la lista, no se han borrado',
-      one:
-          '⚠ Te falta 1 carta de este mazo — sigue en la lista, no se ha borrado',
+      other: '⚠ 这副牌组你还差 $n 张卡——它们仍在清单里，没有被删除',
+      one: '⚠ 这副牌组你还差 1 张卡——它仍在清单里，没有被删除',
     );
     return '$_temp0';
   }
 
   @override
-  String get ddGamePlan => 'Tu plan de juego';
+  String get ddGamePlan => '你的战术方案';
 
   @override
-  String get ddManaCurve => 'Curva de maná';
+  String get ddManaCurve => '法术力曲线';
 
   @override
-  String get ddEditCurve => 'Editar curva';
+  String get ddEditCurve => '编辑曲线';
 
   @override
   String ddDragBars(int hechizos, int tierras) {
-    return 'Arrastra las barras ↑↓ · $hechizos hechizos → $tierras tierras';
+    return '上下拖动柱状条 ↑↓ · $hechizos 张法术 → $tierras 张地';
   }
 
   @override
-  String get ddReforgeCurve => 'Reforjar con esta curva';
+  String get ddReforgeCurve => '按这条曲线重铸';
 
   @override
   String ddCurveSummary(int tierras, int hechizos, String coste) {
-    return '⛰ $tierras tierras · ✦ $hechizos hechizos · Ø coste $coste';
+    return '⛰ $tierras 张地 · ✦ $hechizos 张法术 · Ø 费用 $coste';
   }
 
   @override
-  String get ddWhyWorks => '¿Por qué este mazo funciona?';
+  String get ddWhyWorks => '这副牌组为什么行得通？';
 
   @override
   String ddLands(int n) {
-    return 'TIERRAS ($n)';
+    return '地（$n）';
   }
 
   @override
   String ddDeckTotal(String precio) {
-    return 'Total del mazo: ~$precio €';
+    return '牌组总价：约 $precio €';
   }
 
   @override
-  String get ddCheapestPrice => 'precio de la edición más barata (Cardmarket)';
+  String get ddCheapestPrice => '最便宜版本的价格（Cardmarket）';
 
   @override
   String ddSomeNoPrice(int n) {
-    return '$n sin precio conocido · edición más barata (Cardmarket)';
+    return '$n 张无已知价格 · 最便宜版本（Cardmarket）';
   }
 
   @override
-  String get ddInstants => 'Instantáneos';
+  String get ddInstants => '瞬间';
 
   @override
-  String get ddTypeCreatures => 'Criaturas';
+  String get ddTypeCreatures => '生物';
 
   @override
-  String get ddTypeSorceries => 'Conjuros';
+  String get ddTypeSorceries => '法术';
 
   @override
-  String get ddTypeEnchantments => 'Encantamientos';
+  String get ddTypeEnchantments => '结界';
 
   @override
-  String get ddTypeArtifacts => 'Artefactos';
+  String get ddTypeArtifacts => '神器';
 
   @override
-  String get ddTypeOther => 'Otros';
+  String get ddTypeOther => '其他';
 
   @override
-  String get ddOutOfRange => '  (fuera del rango sano 20-27)';
+  String get ddOutOfRange => '  （超出健康区间 20-27）';
 
   @override
-  String get acRecalcTitle => '¿Recalcular logros?';
+  String get acRecalcTitle => '重新计算成就？';
 
   @override
   String get acRecalcBody =>
-      'Se vuelven a mirar tus cartas y se quitan los logros que hoy no se cumplan. Sirve para arreglar los que se dieron por error; si has vendido cartas, también perderás esos.';
+      '会重新检查你的卡牌，并移除如今已不满足条件的成就。可以用来修正那些误发的成就；如果你卖过卡，那些成就也会一并失去。';
 
   @override
-  String get acRecalc => 'Recalcular';
+  String get acRecalc => '重新计算';
 
   @override
-  String get acAllFine => 'Todo cuadraba: no se ha quitado ningún logro.';
+  String get acAllFine => '一切都对得上：没有移除任何成就。';
 
   @override
   String acRemovedN(int n) {
-    return 'Quitados $n logros que ya no se cumplen.';
+    return '已移除 $n 个不再满足条件的成就。';
   }
 
   @override
-  String get acTitle => 'Logros';
+  String get acTitle => '成就';
 
   @override
-  String get acRecalcTooltip => 'Recalcular con mis cartas de ahora';
+  String get acRecalcTooltip => '用我现在的卡牌重新计算';
 
   @override
-  String get acCertsTooltip => 'Certificados';
+  String get acCertsTooltip => '证书';
 
   @override
   String acUnlockedOf(int hechos, int total, int xp) {
-    return '$hechos de $total logros · $xp XP';
+    return '$total 个成就中已达成 $hechos 个 · $xp XP';
   }
 
   @override
   String acLevelLine(int nivel, int xp, int siguiente) {
-    return 'Nivel $nivel · faltan $xp XP para el $siguiente';
+    return '$nivel 级 · 还差 $xp XP 升到 $siguiente';
   }
 
   @override
-  String get acIMissing => 'Me faltan';
+  String get acIMissing => '我还缺';
 
   @override
-  String get acSecret => 'Logro secreto';
+  String get acSecret => '隐藏成就';
 
   @override
-  String get acSecretDesc => 'Se descubre solo cuando lo consigues.';
+  String get acSecretDesc => '只有达成时才会揭晓。';
 
   @override
   String acProgressLine(String progreso, String tier, int xp) {
@@ -1919,97 +1872,96 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String acDoneLine(String fecha, String tier, int xp) {
-    return '✓ Conseguido$fecha · $tier · $xp XP';
+    return '✓ 已达成$fecha · $tier · $xp XP';
   }
 
   @override
   String acOnDate(String fecha) {
-    return ' el $fecha';
+    return ' 于 $fecha';
   }
 
   @override
   String acLevelUp(int nivel) {
-    return '¡Nivel $nivel!';
+    return '$nivel 级达成！';
   }
 
   @override
   String acLevelUpBody(String titulo, int hechos, int total) {
-    return 'Ya eres $titulo. Llevas $hechos de $total logros.';
+    return '你现在是$titulo了。你已达成 $total 个成就中的 $hechos 个。';
   }
 
   @override
-  String get acOk => 'Vale';
+  String get acOk => '好';
 
   @override
-  String get acSeeAchievements => 'Ver logros';
+  String get acSeeAchievements => '查看成就';
 
   @override
   String acToast(String titulo, String mas, int xp) {
-    return '🏆 ¡Logro! $titulo$mas · +$xp XP';
+    return '🏆 成就达成！$titulo$mas · +$xp XP';
   }
 
   @override
   String acAndMore(int n) {
-    return ' (y $n más)';
+    return '（还有 $n 个）';
   }
 
   @override
   String ceNeedDb(String error) {
-    return 'Para los de expansión hace falta la base de datos de cartas ($error)';
+    return '系列相关的证书需要卡牌数据库（$error）';
   }
 
   @override
-  String get ceWhoseName => '¿A nombre de quién?';
+  String get ceWhoseName => '署谁的名？';
 
   @override
-  String get ceCollectorName => 'Tu nombre de coleccionista';
+  String get ceCollectorName => '你的收藏者名字';
 
   @override
-  String get ceInNameOf => 'A nombre de…';
+  String get ceInNameOf => '署名给…';
 
   @override
-  String get ceEmptyWithData =>
-      'Todavía no tienes ninguna expansión completa. Cuando completes una entera en el Álbum, aquí saldrá tu certificado para descargar.';
+  String get ceEmptyWithData => '你还没有集齐任何一个完整系列。当你在卡册里集齐一整个系列时，这里就会出现可下载的证书。';
 
   @override
   String get ceEmptyNoData =>
-      'Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV de ManaBox (trae el Scryfall ID).';
+      '要给一个系列发证书，得知道你卡牌的确切版本：重新导入你的 ManaBox CSV（它带有 Scryfall ID）。';
 
   @override
-  String get ceNothingSaved => 'No se guardó nada.';
+  String get ceNothingSaved => '什么都没保存。';
 
   @override
   String ceSavedTo(String ruta) {
-    return '✓ Certificado guardado en $ruta';
+    return '✓ 证书已保存到 $ruta';
   }
 
   @override
   String ceSaveFailed(String error) {
-    return 'No se pudo guardar: $error';
+    return '无法保存：$error';
   }
 
   @override
-  String get cePickFirstCard => 'Elegir la carta con la que empecé';
+  String get cePickFirstCard => '选择我入坑的第一张卡';
 
   @override
-  String get ceChangeFirstCard => 'Cambiar la carta con la que empecé';
+  String get ceChangeFirstCard => '更换我入坑的第一张卡';
 
   @override
-  String get ceDownloadPng => 'Descargar PNG';
+  String get ceDownloadPng => '下载 PNG';
 
   @override
-  String get cdNotFound => 'No encuentro esta carta en la base de datos.';
+  String get cdNotFound => '在数据库里找不到这张卡。';
 
   @override
   String cdLoadFailed(String error) {
-    return 'No pude cargar la ficha: $error';
+    return '无法加载卡牌详情：$error';
   }
 
   @override
-  String get cdPrev => 'Anterior (←)';
+  String get cdPrev => '上一张 (←)';
 
   @override
-  String get cdNext => 'Siguiente (→)';
+  String get cdNext => '下一张 (→)';
 
   @override
   String cdPosition(int pos, int total) {
@@ -2017,12 +1969,12 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get cdCardNotFound => 'Carta no encontrada';
+  String get cdCardNotFound => '未找到卡牌';
 
   @override
   String cdPaid(
       String total, String divisa, int qty, String copias, String unidad) {
-    return 'Pagaste $total$divisa por $qty $copias ($unidad cada una)';
+    return '你为 $qty $copias 付了 $total$divisa（每张 $unidad）';
   }
 
   @override
@@ -2030,8 +1982,8 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'copias',
-      one: 'copia',
+      other: '张',
+      one: '张',
     );
     return '$_temp0';
   }
@@ -2041,33 +1993,33 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '✓ Tienes $n copias en tu colección',
-      one: '✓ Tienes 1 copia en tu colección',
+      other: '✓ 你的收藏里有 $n 张',
+      one: '✓ 你的收藏里有 1 张',
     );
     return '$_temp0';
   }
 
   @override
-  String get cdNotOwned => 'No tienes esta carta (todavía).';
+  String get cdNotOwned => '你还没有这张卡（暂时）。';
 
   @override
   String cdNoPrice(String mercado) {
-    return 'Sin precio de esta carta en $mercado.';
+    return '$mercado 上没有这张卡的价格。';
   }
 
   @override
   String cdVersions(int n) {
-    return 'VERSIONES ($n)';
+    return '版本（$n）';
   }
 
   @override
   String cdNoPerPrinting(String mercado) {
-    return 'sin precio por edición en $mercado';
+    return '$mercado 上没有按版本的价格';
   }
 
   @override
   String cdPricesNormalFoil(String mercado, String moneda) {
-    return 'precios $mercado ($moneda) · normal / foil';
+    return '$mercado 价格（$moneda） · 普通 / foil';
   }
 
   @override
@@ -2077,276 +2029,264 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String cdYouHaveX(int n) {
-    return 'tienes x$n';
+    return '你有 x$n';
   }
 
   @override
-  String get smMythic => 'Mítica';
+  String get smMythic => '秘稀';
 
   @override
-  String get smRare => 'Rara';
+  String get smRare => '稀有';
 
   @override
-  String get smUncommon => 'Infrecuente';
+  String get smUncommon => '非普通';
 
   @override
-  String get smCommon => 'Común';
+  String get smCommon => '普通';
 
   @override
   String smLoadFailed(String error) {
-    return 'No pude cargar el set: $error';
+    return '无法加载该系列：$error';
   }
 
   @override
-  String get smSearchInSet => 'Busca en la expansión…';
+  String get smSearchInSet => '在系列中搜索…';
 
   @override
-  String get smRarityAll => 'Rareza: todas';
+  String get smRarityAll => '稀有度：全部';
 
   @override
-  String get smPriceDown => 'Precio ↓';
+  String get smPriceDown => '价格 ↓';
 
   @override
-  String get smPriceUp => 'Precio ↑';
+  String get smPriceUp => '价格 ↑';
 
   @override
-  String get smNumber => 'Número';
+  String get smNumber => '编号';
 
   @override
-  String get smOnlyMine => 'Solo las mías';
+  String get smOnlyMine => '只看我的';
 
   @override
   String smCardsCount(int n) {
-    return '$n cartas';
+    return '$n 张卡';
   }
 
   @override
   String smNoPerPrinting(String mercado) {
-    return '$mercado: sin precio por edición';
+    return '$mercado：没有按版本的价格';
   }
 
   @override
   String smListedValue(String mercado) {
-    return 'valor listado ($mercado): ';
+    return '标示价值（$mercado）：  ';
   }
 
   @override
   String pnPaidVsToday(String pagado, String hoy) {
-    return 'Pagaste $pagado · hoy valen $hoy';
+    return '你付了 $pagado · 如今价值 $hoy';
   }
 
   @override
   String get pnNoPnl =>
-      'Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.';
+      '没有购入价就没有盈亏。导入带“Purchase price”列的 ManaBox CSV，它就会出现在这里。';
 
   @override
   String pnOverAll(int n) {
-    return 'sobre las $n copias de tu colección';
+    return '基于你收藏中的 $n 张';
   }
 
   @override
   String pnOverSome(int conprecio, int total) {
-    return 'sobre $conprecio de $total copias (las demás no tienen precio de compra apuntado)';
+    return '基于 $total 张中的 $conprecio 张（其余没有记录购入价）';
   }
 
   @override
   String pnNoTodayPrice(int n) {
-    return '$n copias compradas no tienen precio de hoy en la base: fuera de la cuenta';
+    return '有 $n 张已购入的卡在数据库里没有今日价格：不计入统计';
   }
 
   @override
   String pnOtherCurrency(String importe, String moneda) {
-    return 'también pagaste $importe $moneda, que no se convierte';
+    return '你还付了 $importe $moneda，这部分不做换算';
   }
 
   @override
   String pnAssumedCurrency(int n, String moneda) {
-    return '$n copias sin divisa en el CSV: se suponen $moneda';
+    return '有 $n 张在 CSV 里没有货币：按 $moneda 计';
   }
 
   @override
-  String get pcTitle => 'Evolución del precio';
+  String get pcTitle => '价格走势';
 
   @override
-  String get pcNoHistory => 'Todavía sin historial de precio de esta carta.';
+  String get pcNoHistory => '这张卡还没有价格历史。';
 
   @override
   String pcTodayPrice(String precio) {
-    return 'Precio de hoy: $precio €. La gráfica aparece en cuanto haya varios días.';
+    return '今日价格：$precio €。等积累了几天的数据，图表就会出现。';
   }
 
   @override
   String get pcExplain =>
-      'ManaForge apunta el precio de cada carta que miras o tienes, día a día. Para arrancar con los últimos meses reales de Cardmarket, trae el histórico desde Mercado.';
+      'ManaForge 会逐日记录你查看或拥有的每张卡的价格。想以 Cardmarket 最近几个月的真实数据开个头，就去“市场”拉取历史。';
 
   @override
   String pcRange(String min, String max, int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n días',
-      one: '1 día',
+      other: '$n 天',
+      one: '1 天',
     );
-    return 'mín $min € · máx $max € · $_temp0';
+    return '最低 $min € · 最高 $max € · $_temp0';
   }
 
   @override
-  String get spWhichSets => '¿De qué expansiones?';
+  String get spWhichSets => '从哪些系列？';
 
   @override
-  String get spSearchHint => 'Buscar por nombre o código (BLB, MH3…)';
+  String get spSearchHint => '按名称或代码搜索（BLB、MH3…）';
 
   @override
-  String get spOnlyMine => 'Solo las mías';
+  String get spOnlyMine => '只看我的';
 
   @override
   String spClearN(int n) {
-    return 'Quitar las $n';
+    return '清除这 $n 个';
   }
 
   @override
-  String get spNoneNamed =>
-      'Ninguna expansión con ese nombre. Quita \"Solo las mías\" para ver todas.';
+  String get spNoneNamed => '没有叫这个名字的系列。取消“只看我的”来查看全部。';
 
   @override
   String spSetLine(String set, int n) {
-    return '$set · $n cartas';
+    return '$set · $n 张卡';
   }
 
   @override
-  String get spNoFilter => 'Sin filtro de expansión';
+  String get spNoFilter => '不按系列筛选';
 
   @override
   String spUseN(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Usar $n expansiones',
-      one: 'Usar 1 expansión',
+      other: '使用 $n 个系列',
+      one: '使用 1 个系列',
     );
     return '$_temp0';
   }
 
   @override
   String slLockedTo(String set) {
-    return 'Solo busco cartas del set $set. Tócalo para cambiar o quitar el bloqueo.';
+    return '我只在系列 $set 里找卡。点一下可更换或解除锁定。';
   }
 
   @override
-  String get slLockHint =>
-      'Bloquea un set para escanear una caja/precon: el escáner solo buscará dentro de él y clava la edición.';
+  String get slLockHint => '锁定一个系列来扫描一整盒/预组：扫描器只在其中查找，并精确锁定版本。';
 
   @override
   String slSetIs(String set) {
-    return 'Set: $set';
+    return '系列：$set';
   }
 
   @override
-  String get slSetAll => 'Set: todas';
+  String get slSetAll => '系列：全部';
 
   @override
-  String get slLockTitle => 'Bloquear edición';
+  String get slLockTitle => '锁定版本';
 
   @override
-  String get slLockBody =>
-      'Escribe el código del set (p. ej. AER, MH3, LCI) para escanear una caja entera: solo se buscarán cartas de ese set.';
+  String get slLockBody => '输入系列代码（例如 AER、MH3、LCI）来扫描一整盒：只会查找该系列的卡。';
 
   @override
-  String get slSetCode => 'Código de set';
+  String get slSetCode => '系列代码';
 
   @override
-  String get slClearLock => 'Quitar bloqueo';
+  String get slClearLock => '解除锁定';
 
   @override
   String get stHintQuick =>
-      'Pasa cartas por delante: las claras se apuntan solas aquí (las copias iguales suman ×N). Las dudosas, marcadas para revisar. Al terminar, confirmas todas.';
+      '把卡从摄像头前划过：清晰的会自动记在这里（相同的会累加 ×N）。拿不准的会被标记待复核。完事后，一次性确认全部。';
 
   @override
-  String get stHintCareful =>
-      'Pasa cartas por delante: las claras se apuntan solas; las dudosas te preguntan cuál es. Al terminar, confirmas todas.';
+  String get stHintCareful => '把卡从摄像头前划过：清晰的会自动记下；拿不准的会问你是哪张。完事后，一次性确认全部。';
 
   @override
   String stAddN(int n) {
-    return 'Añadir $n a la colección';
+    return '把 $n 张加入收藏';
   }
 
   @override
   String stAddNAndFolder(int n, String carpeta) {
-    return 'Añadir $n a la colección y a $carpeta';
+    return '把 $n 张加入收藏并加入 $carpeta';
   }
 
   @override
-  String get stOneLess => 'Una menos';
+  String get stOneLess => '减一张';
 
   @override
-  String get stAnotherSame => 'Otra igual';
+  String get stAnotherSame => '再来一张相同';
 
   @override
-  String get stOnTable => 'en mesa';
+  String get stOnTable => '在桌上';
 
   @override
   String cdLastData(String fecha) {
-    return ' (último dato: $fecha)';
+    return '（最新数据：$fecha）';
   }
 
   @override
-  String get slLockButton => 'Bloquear';
+  String get slLockButton => '锁定';
 
   @override
-  String get wn030Headline =>
-      'Forge por expansiones, precio de compra y avisos de versión';
+  String get wn030Headline => '按系列使用 Forge、购入价，以及版本更新提醒';
 
   @override
   String get wn030Forge =>
-      'Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.';
+      'Forge：选择卡从哪些系列出。如果你打开“包含我没有的卡”，它会用所选的全部卡组来搭牌，并告诉你缺多少张、要花多少钱。';
 
   @override
   String get wn030Pnl =>
-      'Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.';
+      '购入价与盈亏：如果你的 ManaBox CSV 带有“Purchase price”，“市场”会告诉你付了多少、如今值多少，以及差额。货币不会混算。';
 
   @override
-  String get wn030PhotoFolder =>
-      'Escanear por foto también deja elegir carpeta, como el escáner en vivo.';
+  String get wn030PhotoFolder => '照片扫描现在也能选文件夹，跟实时扫描一样。';
 
   @override
-  String get wn030Album =>
-      'Álbum: lo que te falta de cada expansión, con lo que costaría.';
+  String get wn030Album => '卡册：每个系列你还缺什么，以及补齐要花多少钱。';
 
   @override
   String get wn030Background =>
-      'Fondo de pantalla: pon detrás la imagen que quieras, con velo regulable, y elige el color de las tarjetas y de la letra para que encima se siga leyendo.';
+      '壁纸：背景可以放你喜欢的任意图片，蒙版浓淡可调，还能选卡片和文字的颜色，让内容在上面依然清晰。';
 
   @override
-  String get wn030Window =>
-      'La ventana se abre donde la dejaste, del tamaño que la dejaste.';
+  String get wn030Window => '窗口会在你上次关闭的位置、以上次的大小打开。';
 
   @override
   String get wn030Achievements =>
-      'Los logros ya no se llaman como el criterio, se llaman como el momento: \"Ahí va todo mi dinero\", \"Cien raras y ninguna jugable\".';
+      '成就不再以达成条件命名，而是以那个瞬间命名：“钱都砸进去了”、“一百张稀有，没一张能打”。';
 
   @override
-  String get wn030Update =>
-      'La app avisa cuando hay versión nueva (no se actualiza sola) y comprueba la huella SHA-256 de las bases que se descarga.';
+  String get wn030Update => '有新版本时 App 会提醒（但不会自己更新），并会校验它下载的数据库的 SHA-256 指纹。';
 
   @override
-  String get wn030Shortcuts =>
-      'Atajos de teclado: Ctrl+1…7, Ctrl+E, Ctrl+F, Ctrl+, y Escape.';
+  String get wn030Shortcuts => '键盘快捷键：Ctrl+1…7、Ctrl+E、Ctrl+F、Ctrl+, 和 Escape。';
 
   @override
-  String get wn030Linux =>
-      'En Linux, un instalador deja ManaForge en el menú de aplicaciones con su icono.';
+  String get wn030Linux => '在 Linux 上，安装程序会把 ManaForge 连同图标放进应用菜单。';
 
   @override
-  String get wn030License =>
-      'Licencia PolyForm Noncommercial: compártela y tócala lo que quieras, pero no se vende.';
+  String get wn030License => 'PolyForm Noncommercial 许可证：随你分享、随你折腾，但不得出售。';
 
   @override
   String bkSumCards(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n 张卡',
+      one: '1 张卡',
     );
     return '$_temp0';
   }
@@ -2356,8 +2296,8 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n mazos',
-      one: '1 mazo',
+      other: '$n 副牌组',
+      one: '1 副牌组',
     );
     return '$_temp0';
   }
@@ -2367,8 +2307,8 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n carpetas',
-      one: '1 carpeta',
+      other: '$n 个文件夹',
+      one: '1 个文件夹',
     );
     return '$_temp0';
   }
@@ -2378,1231 +2318,1181 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n logros',
-      one: '1 logro',
+      other: '$n 个成就',
+      one: '1 个成就',
     );
     return '$_temp0';
   }
 
   @override
-  String get bkSumEmpty => 'copia vacía';
+  String get bkSumEmpty => '空备份';
 
   @override
-  String get bkStoreCollection => 'tu colección';
+  String get bkStoreCollection => '你的收藏';
 
   @override
-  String get bkStoreFolders => 'tus carpetas';
+  String get bkStoreFolders => '你的文件夹';
 
   @override
-  String get bkStoreDecks => 'tus mazos';
+  String get bkStoreDecks => '你的牌组';
 
   @override
-  String get bkStoreAchievements => 'tus logros';
+  String get bkStoreAchievements => '你的成就';
 
   @override
-  String get bkStoreWishlist => 'tu lista de deseos';
+  String get bkStoreWishlist => '你的心愿单';
 
   @override
-  String get bkStoreCertificates => 'tus certificados';
+  String get bkStoreCertificates => '你的证书';
 
   @override
-  String get bkStoreMarket => 'tu mercado preferido';
+  String get bkStoreMarket => '你偏好的市场';
 
   @override
-  String get bkStoreRecents => 'las cartas vistas hace poco';
+  String get bkStoreRecents => '最近查看过的卡';
 
   @override
-  String get bkStoreValueHistory => 'el historial del valor';
+  String get bkStoreValueHistory => '价值历史';
 
   @override
-  String get bkStorePriceHistory => 'el historial de precios';
+  String get bkStorePriceHistory => '价格历史';
 
   @override
-  String get bkKindAuto => 'automática';
+  String get bkKindAuto => '自动';
 
   @override
-  String get bkKindPreRestore => 'antes de restaurar';
+  String get bkKindPreRestore => '恢复前';
 
   @override
-  String get bkErrFileTooBig =>
-      'Ese fichero es demasiado grande para ser una copia de ManaForge.';
+  String get bkErrFileTooBig => '这个文件太大了，不像是 ManaForge 的备份。';
 
   @override
-  String get bkErrExpandTooBig =>
-      'Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.';
+  String get bkErrExpandTooBig => '这份备份解开后太大了：看起来不是真正的 ManaForge 备份。';
 
   @override
-  String get bkErrNotABackup =>
-      'Ese fichero no es una copia de seguridad de ManaForge.';
+  String get bkErrNotABackup => '这个文件不是 ManaForge 的备份。';
 
   @override
-  String get bkErrNewerVersion =>
-      'Esa copia la hizo una versión más nueva de ManaForge. Actualiza la app y vuelve a intentarlo.';
+  String get bkErrNewerVersion => '这份备份是更新版的 ManaForge 做的。请先升级 App 再重试。';
 
   @override
-  String get bkErrIncomplete => 'Esa copia está incompleta: no trae tus datos.';
+  String get bkErrIncomplete => '这份备份不完整：里面没有你的数据。';
 
   @override
   String bkErrDamaged(String almacen) {
-    return 'Esa copia está dañada: $almacen no se puede leer.';
+    return '这份备份已损坏：无法读取 $almacen。';
   }
 
   @override
   String bkErrWriteFailed(String error) {
-    return 'No he podido escribir en la carpeta de datos, así que no he tocado nada: $error';
+    return '我无法写入数据文件夹，所以什么都没动：$error';
   }
 
   @override
   String bkErrHalfDoneNoPrevious(String escritos, String total, String error) {
-    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). No tengo copia previa de lo que había. Detalle: $error';
+    return '恢复只进行了一半（$total 个文件里写了 $escritos 个）。我没有此前数据的备份。详情：$error';
   }
 
   @override
   String bkErrHalfDonePrevious(
       String escritos, String total, String ruta, String error) {
-    return 'El restaurar se ha quedado a medias ($escritos de $total ficheros). Para volver atrás, restaura $ruta. Detalle: $error';
+    return '恢复只进行了一半（$total 个文件里写了 $escritos 个）。要退回去，请恢复 $ruta。详情：$error';
   }
 
   @override
-  String get siImportTooBig =>
-      'Ese archivo es demasiado grande para ser una lista de cartas.';
+  String get siImportTooBig => '这个文件太大了，不像是卡牌清单。';
 
   @override
-  String get siInsecureDownload =>
-      'La descarga acabó en una dirección insegura y se ha cancelado.';
+  String get siInsecureDownload => '下载指向了一个不安全的地址，已取消。';
 
   @override
-  String get siRedirectNowhere =>
-      'La descarga redirige a ninguna parte y se ha cancelado.';
+  String get siRedirectNowhere => '下载重定向到了空地址，已取消。';
 
   @override
-  String get siTooManyRedirects =>
-      'La descarga da demasiadas vueltas y se ha cancelado.';
+  String get siTooManyRedirects => '下载重定向次数过多，已取消。';
 
   @override
-  String get siDownloadTooBig =>
-      'La descarga es mucho más grande de lo que debería y se ha cancelado.';
+  String get siDownloadTooBig => '下载的体积远超应有大小，已取消。';
 
   @override
-  String get siBadHash =>
-      'Lo descargado no coincide con la huella publicada en GitHub. No se ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.';
+  String get siBadHash => '下载的内容与 GitHub 上公布的指纹不符。什么都没安装。再试一次；如果一直这样，请反馈。';
 
   @override
-  String get siBackgroundNotImage =>
-      'Elige una imagen (.jpg, .png o .webp) como fondo.';
+  String get siBackgroundNotImage => '请选一张图片（.jpg、.png 或 .webp）作为背景。';
 
   @override
-  String get siBackgroundTooBig =>
-      'Esa imagen es demasiado grande para usarla de fondo.';
+  String get siBackgroundTooBig => '这张图片太大了，没法用作背景。';
 
   @override
-  String get bgImages => 'Imágenes';
+  String get bgImages => '图片';
 
   @override
   String bgImageFailed(String error) {
-    return 'No pude usar esa imagen: $error';
+    return '无法使用这张图片：$error';
   }
 
   @override
-  String get bgLowContrast =>
-      'Poca diferencia con la tarjeta: la letra se ajustará sola para que se lea.';
+  String get bgLowContrast => '与卡片的对比太弱：文字会自动调整以保证可读。';
 
   @override
-  String get bgChipColor => 'Color de las pestañas';
+  String get bgChipColor => '标签颜色';
 
   @override
-  String get bgIconColor => 'Color de los iconos';
+  String get bgIconColor => '图标颜色';
 
   @override
-  String get bgUseThis => 'Usar este';
+  String get bgUseThis => '用这个';
 
   @override
   String get camGstreamerMissing =>
-      'GStreamer no está instalado. Instálalo con:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good';
+      'GStreamer 没有安装。用这个命令安装：\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good';
 
   @override
   String camNoImage(String dispositivo, String codigo, String detalle) {
-    return 'La cámara $dispositivo no da imagen (gst-launch salió con $codigo).\n$detalle';
+    return '摄像头 $dispositivo 没有画面（gst-launch 退出码 $codigo）。\n$detalle';
   }
 
   @override
   String camNoFrames(String dispositivo) {
-    return 'La cámara $dispositivo no ha dado ningún frame en 6 s.';
+    return '摄像头 $dispositivo 在 6 秒内没有输出任何一帧。';
   }
 
   @override
-  String get camNoCameras =>
-      'No encuentro ninguna cámara (/dev/video*). ¿Está conectada? Comprueba con `lsusb` que el sistema la ve.';
+  String get camNoCameras => '找不到任何摄像头（/dev/video*）。它连接好了吗？用 `lsusb` 确认系统能看到它。';
 
   @override
   String camNoneWorked(String detalle) {
-    return 'Ninguna cámara dio imagen:\n$detalle';
+    return '没有任何摄像头能出画面：\n$detalle';
   }
 
   @override
-  String get bkRestoreAction => 'Restaurar';
+  String get bkRestoreAction => '恢复';
 
   @override
-  String get fpUnselect => 'Desmarcar';
+  String get fpUnselect => '取消选择';
 
   @override
-  String get stClear => 'Vaciar';
+  String get stClear => '清空';
 
   @override
-  String get tlRemove => 'Quitar';
+  String get tlRemove => '移除';
 
   @override
-  String get tlUnrecognized => 'Sin reconocer';
+  String get tlUnrecognized => '未识别';
 
   @override
-  String get tlNothingAlike => 'nada parecido en la base — re-foto o quitar';
+  String get tlNothingAlike => '数据库里没有相近的——重拍或移除';
 
   @override
-  String get tlTapToPick => 'toca para elegir a mano entre parecidas';
+  String get tlTapToPick => '点一下在相近项里手动选择';
 
   @override
-  String get lsQuantity => 'Cantidad';
+  String get lsQuantity => '数量';
 
   @override
-  String get scPhotos => 'Fotos';
+  String get scPhotos => '照片';
 
   @override
-  String get ftWhichFolder => '¿En qué carpeta las quieres?';
+  String get ftWhichFolder => '你想把它们放进哪个文件夹？';
 
   @override
-  String get ftWhichFolderSub =>
-      'Entran en tu colección igual; la carpeta es solo una etiqueta para encontrarlas luego.';
+  String get ftWhichFolderSub => '它们照样会进你的收藏；文件夹只是个标签，方便你以后找到它们。';
 
   @override
-  String get ftNone => 'Ninguna';
+  String get ftNone => '无';
 
   @override
   String ftCards(int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n cartas',
-      one: '1 carta',
+      other: '$n 张卡',
+      one: '1 张卡',
     );
     return '$_temp0';
   }
 
   @override
-  String get ftNewFolderEllipsis => 'Carpeta nueva…';
+  String get ftNewFolderEllipsis => '新建文件夹…';
 
   @override
-  String get ftNewFolder => 'Carpeta nueva';
+  String get ftNewFolder => '新建文件夹';
 
   @override
-  String get ftNewFolderHint => 'Caja de la tienda, Para vender…';
+  String get ftNewFolderHint => '店里那盒、待出售…';
 
   @override
-  String get sgTitle => 'El ojo del escáner';
+  String get sgTitle => '扫描器之眼';
 
   @override
-  String get sgWhy =>
-      'Para reconocer cartas sin internet necesito la base de huellas visuales (~12 MB): la firma del arte de cada ilustración de Magic. Se descarga una vez.';
+  String get sgWhy => '要在没有网络时识别卡牌，我需要视觉指纹库（约 12 MB）：Magic 每张插画的画面特征。只需下载一次。';
 
   @override
-  String get sgDownload => 'Descargar base de huellas';
+  String get sgDownload => '下载指纹库';
 
   @override
-  String get cmFullCard => 'Ver ficha completa (precios y legalidad)';
+  String get cmFullCard => '查看完整卡牌详情（价格与合法性）';
 
   @override
-  String get cmSwipeHint =>
-      'arrastra o usa ← → para pasar · toca fuera para cerrar';
+  String get cmSwipeHint => '拖动或用 ← → 翻页 · 点外部关闭';
 
   @override
-  String get cmTapOutHint => 'toca fuera para cerrar';
+  String get cmTapOutHint => '点外部关闭';
 
   @override
-  String get fcTitle => '¿Con qué carta empezaste?';
+  String get fcTitle => '你是从哪张卡入坑的？';
 
   @override
-  String get fcRemove => 'Quitar';
+  String get fcRemove => '移除';
 
   @override
-  String get fcSearchHint => 'Buscar en tu colección';
+  String get fcSearchHint => '在你的收藏里搜索';
 
   @override
-  String get fcNoMatch => 'No encuentro ninguna carta con eso.';
+  String get fcNoMatch => '找不到符合的卡。';
 
   @override
-  String get acNoneWithFilters => 'Nada por aquí con estos filtros.';
+  String get acNoneWithFilters => '在这些筛选条件下这里什么都没有。';
 
   @override
-  String get acAll => 'Todos';
+  String get acAll => '全部';
 
   @override
-  String get tsTitle => 'Modo Test — vence al meta';
+  String get tsTitle => '测试模式——击败环境';
 
   @override
   String get tsIntro =>
-      'Elige contra qué mazo del meta quieres jugar. ManaForge construye mazos con TUS cartas, simula cientos de partidas contra él y se queda con el que más gana — probando además cambios de carta uno a uno para afinarlo.';
+      '选一副你想对抗的环境热门牌组。ManaForge 会用你的卡搭出牌组，对它模拟数百局对局，留下胜率最高的那副——并逐张试换卡牌来微调它。';
 
   @override
-  String get tsLoadingMeta => 'Cargando meta…';
+  String get tsLoadingMeta => '正在加载环境…';
 
   @override
-  String get tsLocalPresets => 'Presets locales (sin conexión)';
+  String get tsLocalPresets => '本地预设（离线）';
 
   @override
-  String get tsNoDeckToFace =>
-      'Con las cartas actuales no me sale ningún mazo completo que enfrentar. Añade más cartas y vuelve a intentarlo.';
+  String get tsNoDeckToFace => '用现有的卡我搭不出任何一副完整的牌组来对抗。多加些卡再试。';
 
   @override
   String tsSimFailed(String error) {
-    return 'No pude simular: $error';
+    return '无法模拟：$error';
   }
 
   @override
   String tsFormatShare(String formato, String cuota) {
-    return '$formato · $cuota del meta';
+    return '$formato · 占环境 $cuota';
   }
 
   @override
-  String get tsSimulating =>
-      'Simulando partidas… (unos segundos; todo en tu equipo)';
+  String get tsSimulating => '正在模拟对局…（几秒钟；全部在你的设备上进行）';
 
   @override
   String tsFindBest(String meta) {
-    return 'Buscar mi mejor mazo contra $meta';
+    return '找出我对抗 $meta 的最佳牌组';
   }
 
   @override
   String get tsHonesty =>
-      'Honestidad: la simulación entiende colores de maná, mulligans, evasión (volar, arrollar, toque mortal…), removal instantáneo y contramagia — pero no el texto completo de cada carta. El porcentaje sirve para COMPARAR tus mazos entre sí, no como predicción exacta.';
+      '老实说：模拟能理解法术力颜色、调度、闪避（飞行、践踏、死触…）、瞬间去除和反击——但不理解每张卡的完整规则文字。这个百分比是用来在你自己的牌组之间做比较的，不是精确预测。';
 
   @override
   String tsChampion(String meta) {
-    return 'Tu campeón contra $meta';
+    return '你对抗 $meta 的冠军牌组';
   }
 
   @override
   String tsWinRateLine(int mazos, int partidas) {
-    return 'de victorias estimadas · $mazos mazos probados · $partidas partidas por mazo';
+    return '预估胜率 · 试了 $mazos 副牌组 · 每副 $partidas 局';
   }
 
   @override
-  String get tsNoDominant =>
-      'Ningún mazo de tu colección domina este enfrentamiento — este es el que mejor pelea. Mira sus debilidades en el detalle.';
+  String get tsNoDominant => '你收藏里没有哪副牌组能碾压这个对局——这是打得最好的一副。在详情里看看它的弱点。';
 
   @override
-  String get tsSeeDeck => 'Ver mazo completo (y guardarlo)';
+  String get tsSeeDeck => '查看完整牌组（并保存）';
 
   @override
   String hsLevelLine(int hechos, int total, int xp, int nivel) {
-    return '$hechos/$total logros · $xp XP para el nivel $nivel';
+    return '$hechos/$total 个成就 · 距 $nivel 级还差 $xp XP';
   }
 
   @override
-  String get hsForgeDecks => 'Forjar mazos';
+  String get hsForgeDecks => '铸造牌组';
 
   @override
-  String get hsTestYourself => '⚔ ponte a prueba';
+  String get hsTestYourself => '⚔ 检验自己';
 
   @override
-  String get bgCustom => 'A medida';
+  String get bgCustom => '自定义';
 
   @override
-  String get bgPickCustom => 'Elegir un color a medida';
+  String get bgPickCustom => '选择自定义颜色';
 
   @override
-  String get bgCustomColor => 'Color a medida';
+  String get bgCustomColor => '自定义颜色';
 
   @override
-  String get bgSampleTab => 'Rojo';
+  String get bgSampleTab => '红色';
 
   @override
-  String get cfSortRecent => 'Recién añadidas';
+  String get cfSortRecent => '最近添加';
 
   @override
-  String get cfSortAlpha => 'Nombre A-Z';
+  String get cfSortAlpha => '名称 A-Z';
 
   @override
-  String get cfSortCmc => 'Coste';
+  String get cfSortCmc => '费用';
 
   @override
-  String get cfSortQty => 'Cantidad';
+  String get cfSortQty => '数量';
 
   @override
-  String get cfSortBy => 'Ordenar por';
+  String get cfSortBy => '排序方式';
 
   @override
-  String get cfSort => 'Orden';
+  String get cfSort => '排序';
 
   @override
-  String get cfClear => 'Limpiar';
+  String get cfClear => '清除';
 
   @override
-  String get cfCost => 'Coste';
+  String get cfCost => '费用';
 
   @override
-  String get cfCostAll => 'Coste: todos';
+  String get cfCostAll => '费用：全部';
 
   @override
   String cfCostN(String n) {
-    return 'Coste $n';
+    return '费用 $n';
   }
 
   @override
-  String get cfType => 'Tipo';
+  String get cfType => '类别';
 
   @override
-  String get cfTypeAll => 'Tipo: todos';
+  String get cfTypeAll => '类别：全部';
 
   @override
-  String get cfTypeCreature => 'Criaturas';
+  String get cfTypeCreature => '生物';
 
   @override
-  String get cfTypeInstant => 'Instantáneos';
+  String get cfTypeInstant => '瞬间';
 
   @override
-  String get cfTypeSorcery => 'Conjuros';
+  String get cfTypeSorcery => '法术';
 
   @override
-  String get cfTypeArtifact => 'Artefactos';
+  String get cfTypeArtifact => '神器';
 
   @override
-  String get cfTypeEnchantment => 'Encantamientos';
+  String get cfTypeEnchantment => '结界';
 
   @override
-  String get cfTypeLand => 'Tierras';
+  String get cfTypeLand => '地';
 
   @override
-  String get cfPower => 'Ataque';
+  String get cfPower => '力量';
 
   @override
-  String get cfPowerAll => 'Ataque: todos';
+  String get cfPowerAll => '力量：全部';
 
   @override
   String cfPowerMin(int n) {
-    return 'Ataque ≥ $n';
+    return '力量 ≥ $n';
   }
 
   @override
-  String get cfToughness => 'Defensa';
+  String get cfToughness => '防御力';
 
   @override
-  String get cfToughnessAll => 'Defensa: todos';
+  String get cfToughnessAll => '防御力：全部';
 
   @override
   String cfToughnessMin(int n) {
-    return 'Defensa ≥ $n';
+    return '防御力 ≥ $n';
   }
 
   @override
-  String get cfNoDate => 'sin fecha';
+  String get cfNoDate => '无日期';
 
   @override
-  String get cfToday => 'hoy';
+  String get cfToday => '今天';
 
   @override
-  String get cfYesterday => 'ayer';
+  String get cfYesterday => '昨天';
 
   @override
   String cfDaysAgo(int n) {
-    return 'hace $n días';
+    return '$n 天前';
   }
 
   @override
-  String get pcWeek => 'Semana';
+  String get pcWeek => '周';
 
   @override
-  String get pcMonth => 'Mes';
+  String get pcMonth => '月';
 
   @override
-  String get pcAll => 'Todo';
+  String get pcAll => '全部';
 
   @override
-  String get vpTapCorrect => 'Toca la carta correcta';
+  String get vpTapCorrect => '点一下正确的那张卡';
 
   @override
-  String get achCopias1 => 'La primera de muchas';
+  String get achCopias1 => '万里长征第一张';
 
   @override
-  String get achCopias10 => 'Solo iba a comprar una';
+  String get achCopias10 => '本来只想买一张';
 
   @override
-  String get achCopias50 => 'Ya no caben en la mano';
+  String get achCopias50 => '一手都抓不下了';
 
   @override
-  String get achCopias100 => 'Cien y subiendo';
+  String get achCopias100 => '一百张，还在涨';
 
   @override
-  String get achCopias500 => 'La caja se queda pequeña';
+  String get achCopias500 => '盒子不够装了';
 
   @override
-  String get achCopias1000 => 'Mil. Y las quiero todas';
+  String get achCopias1000 => '一千张，还想要更多';
 
   @override
-  String get achCopias5000 => 'Esto ya es un almacén';
+  String get achCopias5000 => '这已经是个仓库了';
 
   @override
-  String get achCopias10000 => 'Diez mil, pero yo controlo';
+  String get achCopias10000 => '一万张，但我拿捏得住';
 
   @override
   String achCopiasDesc(String n) {
-    return 'Ten $n cartas en tu colección.';
+    return '收藏里拥有 $n 张卡。';
   }
 
   @override
-  String get achDistintas25 => 'Aquí hay variedad';
+  String get achDistintas25 => '花样开始多了';
 
   @override
-  String get achDistintas100 => 'Cien caras distintas';
+  String get achDistintas100 => '一百张不重样';
 
   @override
-  String get achDistintas500 => 'Media biblioteca';
+  String get achDistintas500 => '半座图书馆';
 
   @override
-  String get achDistintas1000 => 'Enciclopedia andante';
+  String get achDistintas1000 => '行走的百科全书';
 
   @override
-  String get achDistintas2500 => 'Ya no me las sé todas';
+  String get achDistintas2500 => '我已经记不全了';
 
   @override
-  String get achDistintas5000 => 'El archivo';
+  String get achDistintas5000 => '活体档案库';
 
   @override
   String achDistintasDesc(String n) {
-    return 'Ten $n cartas DISTINTAS (sin contar repetidas).';
+    return '拥有 $n 张不同的卡（不算重复的）。';
   }
 
   @override
-  String get achPlaysets1 => 'Cuatro iguales';
+  String get achPlaysets1 => '四张一套';
 
   @override
-  String get achPlaysets20 => 'Veinte playsets, cero mazos';
+  String get achPlaysets20 => '二十套齐活，一副牌组没有';
 
   @override
-  String get achPlaysets1Desc => 'Ten 4 copias de una misma carta.';
+  String get achPlaysets1Desc => '拥有同一张卡的 4 张。';
 
   @override
-  String get achPlaysets20Desc =>
-      'Ten 20 playsets distintos (4 copias de cada uno).';
+  String get achPlaysets20Desc => '拥有 20 套不同的四张组（每套 4 张）。';
 
   @override
-  String get achComunes10 => 'Las que nadie quiere';
+  String get achComunes10 => '没人稀罕的那些';
 
   @override
-  String get achComunes50 => 'El montón de siempre';
+  String get achComunes50 => '老一堆的常客';
 
   @override
-  String get achComunes200 => 'Rey del montón';
+  String get achComunes200 => '杂牌堆之王';
 
   @override
-  String get achComunes500 => 'Marea de comunes';
+  String get achComunes500 => '普通卡的海洋';
 
   @override
   String achComunesDesc(String n) {
-    return 'Ten $n cartas comunes distintas.';
+    return '拥有 $n 张不同的普通卡。';
   }
 
   @override
-  String get achInfrecuentes10 => 'Algo mejor que común';
+  String get achInfrecuentes10 => '比普通稍强一点';
 
   @override
-  String get achInfrecuentes50 => 'Plata fina';
+  String get achInfrecuentes50 => '上好的银子';
 
   @override
-  String get achInfrecuentes200 => 'Cazador de infrecuentes';
+  String get achInfrecuentes200 => '非普通猎手';
 
   @override
-  String get achInfrecuentes500 => 'Plata a espuertas';
+  String get achInfrecuentes500 => '银子成堆';
 
   @override
   String achInfrecuentesDesc(String n) {
-    return 'Ten $n cartas infrecuentes distintas.';
+    return '拥有 $n 张不同的非普通卡。';
   }
 
   @override
-  String get achRaras5 => 'Suena bien al abrir el sobre';
+  String get achRaras5 => '拆包时的好声音';
 
   @override
-  String get achRaras25 => 'Cofre de raras';
+  String get achRaras25 => '稀有卡宝箱';
 
   @override
-  String get achRaras100 => 'Cien raras y ninguna jugable';
+  String get achRaras100 => '一百张稀有，没一张能打';
 
   @override
-  String get achRaras300 => 'Cámara acorazada';
+  String get achRaras300 => '稀有卡金库';
 
   @override
   String achRarasDesc(String n) {
-    return 'Ten $n cartas raras distintas.';
+    return '拥有 $n 张不同的稀有卡。';
   }
 
   @override
-  String get achMiticas1 => 'Mi primera mítica';
+  String get achMiticas1 => '我的第一张秘稀';
 
   @override
-  String get achMiticas10 => 'Diez míticas';
+  String get achMiticas10 => '十张秘稀';
 
   @override
-  String get achMiticas50 => 'Coleccionista mítico';
+  String get achMiticas50 => '秘稀收藏家';
 
   @override
-  String get achMiticas150 => 'Panteón mítico';
+  String get achMiticas150 => '秘稀万神殿';
 
   @override
   String achMiticasDesc(String n) {
-    return 'Ten $n cartas míticas distintas.';
+    return '拥有 $n 张不同的秘稀卡。';
   }
 
   @override
-  String get achBlancas25 => 'Orden y concierto';
+  String get achBlancas25 => '秩序井然';
 
   @override
-  String get achBlancas100 => 'Ejército de plata';
+  String get achBlancas100 => '白银军团';
 
   @override
   String achBlancasDesc(String n) {
-    return 'Ten $n cartas blancas distintas.';
+    return '拥有 $n 张不同的白色卡。';
   }
 
   @override
-  String get achAzules25 => 'Eso no te lo permito';
+  String get achAzules25 => '这个可不许你过';
 
   @override
-  String get achAzules100 => 'Torre de marfil';
+  String get achAzules100 => '象牙塔';
 
   @override
   String achAzulesDesc(String n) {
-    return 'Ten $n cartas azules distintas.';
+    return '拥有 $n 张不同的蓝色卡。';
   }
 
   @override
-  String get achNegras25 => 'Pacto oscuro';
+  String get achNegras25 => '黑暗契约';
 
   @override
-  String get achNegras100 => 'Señor de la cripta';
+  String get achNegras100 => '墓穴之主';
 
   @override
   String achNegrasDesc(String n) {
-    return 'Ten $n cartas negras distintas.';
+    return '拥有 $n 张不同的黑色卡。';
   }
 
   @override
-  String get achRojas25 => 'A quemarlo todo';
+  String get achRojas25 => '烧个精光';
 
   @override
-  String get achRojas100 => 'Incendio general';
+  String get achRojas100 => '全面大火';
 
   @override
   String achRojasDesc(String n) {
-    return 'Ten $n cartas rojas distintas.';
+    return '拥有 $n 张不同的红色卡。';
   }
 
   @override
-  String get achVerdes25 => 'Un brote';
+  String get achVerdes25 => '冒了个芽';
 
   @override
-  String get achVerdes100 => 'El bosque entero';
+  String get achVerdes100 => '整片森林';
 
   @override
   String achVerdesDesc(String n) {
-    return 'Ten $n cartas verdes distintas.';
+    return '拥有 $n 张不同的绿色卡。';
   }
 
   @override
-  String get achIncoloras25 => 'Metal frío';
+  String get achIncoloras25 => '冷冰冰的金属';
 
   @override
-  String get achIncoloras100 => 'Forja eterna';
+  String get achIncoloras100 => '永恒熔炉';
 
   @override
   String achIncolorasDesc(String n) {
-    return 'Ten $n cartas incoloras distintas.';
+    return '拥有 $n 张不同的无色卡。';
   }
 
   @override
-  String get achArcoiris => 'Los cinco colores';
+  String get achArcoiris => '五色齐聚';
 
   @override
-  String get achArcoirisDesc =>
-      'Ten al menos una carta de cada uno de los 5 colores.';
+  String get achArcoirisDesc => '五种颜色每种至少拥有一张卡。';
 
   @override
-  String get achMulticolor10 => 'Mezclando colores';
+  String get achMulticolor10 => '开始调色了';
 
   @override
-  String get achMulticolor50 => 'Alianza dorada';
+  String get achMulticolor50 => '黄金同盟';
 
   @override
   String achMulticolorDesc(String n) {
-    return 'Ten $n cartas multicolor distintas.';
+    return '拥有 $n 张不同的多色卡。';
   }
 
   @override
-  String get achCincocolores => 'Los cinco de golpe';
+  String get achCincocolores => '五色于一身';
 
   @override
-  String get achCincocoloresDesc => 'Ten una carta con los cinco colores.';
+  String get achCincocoloresDesc => '拥有一张同时具备五种颜色的卡。';
 
   @override
-  String get achSets1 => 'Primera expansión';
+  String get achSets1 => '第一个系列';
 
   @override
-  String get achSets5 => 'Cinco mundos';
+  String get achSets5 => '五个世界';
 
   @override
-  String get achSets10 => 'Viajero de planos';
+  String get achSets10 => '位面旅人';
 
   @override
-  String get achSets25 => 'Trotamundos';
+  String get achSets25 => '环球浪人';
 
   @override
-  String get achSets50 => 'Medio multiverso';
+  String get achSets50 => '半个多元宇宙';
 
   @override
   String achSetsDesc(String n) {
-    return 'Ten cartas de $n expansiones distintas.';
+    return '拥有来自 $n 个不同系列的卡。';
   }
 
   @override
-  String get achSetscompletos1 => 'No falta ni una';
+  String get achSetscompletos1 => '一张不缺';
 
   @override
-  String get achSetscompletos3 => 'Tres álbumes enteros';
+  String get achSetscompletos3 => '三本卡册全满';
 
   @override
-  String get achSetscompletos10 => 'Maestro del álbum';
+  String get achSetscompletos10 => '卡册大师';
 
   @override
-  String get achSetscompletos1Desc =>
-      'Completa una expansión entera en el Álbum.';
+  String get achSetscompletos1Desc => '在卡册里集齐一整个系列。';
 
   @override
   String achSetscompletos3Desc(String n) {
-    return 'Completa $n expansiones enteras.';
+    return '集齐 $n 个完整系列。';
   }
 
   @override
-  String get achAnyos5 => 'Cinco años de cartón';
+  String get achAnyos5 => '五年的卡片光阴';
 
   @override
-  String get achAnyos15 => 'Máquina del tiempo';
+  String get achAnyos15 => '时光机';
 
   @override
   String achAnyosDesc(String n) {
-    return 'Ten cartas de $n años de salida distintos.';
+    return '拥有来自 $n 个不同发行年份的卡。';
   }
 
   @override
-  String get achValor10 => 'Primeros euros';
+  String get achValor10 => '第一笔欧元';
 
   @override
-  String get achValor50 => 'La hucha';
+  String get achValor50 => '小猪存钱罐';
 
   @override
-  String get achValor250 => 'Ahí va la paga';
+  String get achValor250 => '工资就这么没了';
 
   @override
-  String get achValor1000 => 'Ahí va todo mi dinero';
+  String get achValor1000 => '钱都砸进去了';
 
   @override
-  String get achValor5000 => 'No se lo digas a nadie';
+  String get achValor5000 => '别跟任何人说';
 
   @override
-  String get achValor10000 => 'Vale más que mi coche';
+  String get achValor10000 => '比我的车还值钱';
 
   @override
-  String get achValor25000 => 'Colección de museo';
+  String get achValor25000 => '博物馆级收藏';
 
   @override
   String achValorDesc(String n) {
-    return 'Que tu colección valga $n € o más.';
+    return '让你的收藏价值达到 $n € 或以上。';
   }
 
   @override
-  String get achJoya20 => 'Una carta de las buenas';
+  String get achJoya20 => '一张好货';
 
   @override
-  String get achJoya100 => 'La joya de la colección';
+  String get achJoya100 => '收藏里的明珠';
 
   @override
-  String get achJoya500 => 'Esta no sale de la funda';
+  String get achJoya500 => '这张绝不脱套';
 
   @override
-  String get achJoya1000 => 'Mil euros en una sola funda';
+  String get achJoya1000 => '一张套里的一千欧';
 
   @override
-  String get achJoya2500 => 'El santo grial';
+  String get achJoya2500 => '圣杯到手';
 
   @override
   String achJoyaDesc(String n) {
-    return 'Ten una sola carta que valga $n € o más.';
+    return '拥有单张价值达 $n € 或以上的卡。';
   }
 
   @override
-  String get achFoils1 => 'Primer brillo';
+  String get achFoils1 => '第一道闪光';
 
   @override
-  String get achFoils10 => 'Destellos';
+  String get achFoils10 => '闪闪发亮';
 
   @override
-  String get achFoils50 => 'Brilla la caja';
+  String get achFoils50 => '整盒都在发光';
 
   @override
-  String get achFoils200 => 'Aquí ya no hay nada mate';
+  String get achFoils200 => '这里再没有不亮的了';
 
   @override
-  String get achFoils500 => 'Todo brilla';
+  String get achFoils500 => '全员发光';
 
   @override
-  String get achFoils1000 => 'Fábrica de brillos';
+  String get achFoils1000 => '闪光制造厂';
 
   @override
   String achFoilsDesc(String n) {
-    return 'Ten $n cartas foil.';
+    return '拥有 $n 张 foil 卡。';
   }
 
   @override
-  String get achFoiljoya10 => 'Foil de las buenas';
+  String get achFoiljoya10 => '闪的是好货';
 
   @override
-  String get achFoiljoya50 => 'Foil de las caras';
+  String get achFoiljoya50 => '闪的是贵货';
 
   @override
-  String get achFoiljoya200 => 'Foil de museo';
+  String get achFoiljoya200 => '博物馆级 foil';
 
   @override
   String achFoiljoyaDesc(String n) {
-    return 'Ten una foil que valga $n € o más.';
+    return '拥有一张价值达 $n € 或以上的 foil 卡。';
   }
 
   @override
-  String get achFoilvalor50 => 'Vitrina que brilla';
+  String get achFoilvalor50 => '会发光的展柜';
 
   @override
-  String get achFoilvalor250 => 'Vitrina cara';
+  String get achFoilvalor250 => '昂贵的展柜';
 
   @override
-  String get achFoilvalor1000 => 'Mil euros de brillo';
+  String get achFoilvalor1000 => '一千欧的闪光';
 
   @override
-  String get achFoilvalor5000 => 'Vitrina de museo';
+  String get achFoilvalor5000 => '博物馆级展柜';
 
   @override
   String achFoilvalorDesc(String n) {
-    return 'Que todas tus foils juntas valgan $n € o más.';
+    return '让你所有 foil 卡加起来价值达 $n € 或以上。';
   }
 
   @override
-  String get achMazos1 => 'Primer mazo';
+  String get achMazos1 => '第一副牌组';
 
   @override
-  String get achMazos5 => 'Cinco mazos guardados';
+  String get achMazos5 => '存了五副牌组';
 
   @override
-  String get achMazos25 => 'El taller no para';
+  String get achMazos25 => '作坊连轴转';
 
   @override
   String achMazosDesc(String n) {
-    return 'Guarda $n mazos hechos con Forge.';
+    return '保存 $n 副用 Forge 做的牌组。';
   }
 
   @override
-  String get achMazoscore => 'Mazo redondo';
+  String get achMazoscore => '完美牌组';
 
   @override
-  String get achMazoscoreDesc => 'Genera un mazo con puntuación 90 o más.';
+  String get achMazoscoreDesc => '生成一副评分 90 或以上的牌组。';
 
   @override
-  String get achMazocolores3 => 'Tricolor';
+  String get achMazocolores3 => '三色牌组';
 
   @override
-  String get achMazocolores5 => 'Arcoíris jugable';
+  String get achMazocolores5 => '能打的彩虹';
 
   @override
   String achMazocoloresDesc(String n) {
-    return 'Guarda un mazo de $n colores.';
+    return '保存一副 $n 色牌组。';
   }
 
   @override
-  String get achMazomono => 'Sin mezclar nada';
+  String get achMazomono => '纯色不掺';
 
   @override
-  String get achMazomonoDesc => 'Guarda un mazo de un solo color.';
+  String get achMazomonoDesc => '保存一副单色牌组。';
 
   @override
-  String get achMazocommander => 'Al mando';
+  String get achMazocommander => '指挥官上任';
 
   @override
-  String get achMazocommanderDesc => 'Guarda un mazo de Commander.';
+  String get achMazocommanderDesc => '保存一副 Commander 牌组。';
 
   @override
-  String get achEscaneadas1 => 'Primer escaneo';
+  String get achEscaneadas1 => '第一次扫描';
 
   @override
-  String get achEscaneadas50 => 'Mano rápida';
+  String get achEscaneadas50 => '手速惊人';
 
   @override
-  String get achEscaneadas500 => 'Escáner en serie';
+  String get achEscaneadas500 => '流水线扫描';
 
   @override
-  String get achEscaneadas2000 => 'Escaneo hasta dormido';
+  String get achEscaneadas2000 => '闭着眼都能扫';
 
   @override
   String achEscaneadasDesc(String n) {
-    return 'Escanea $n cartas con la cámara o por foto.';
+    return '用摄像头或照片扫描 $n 张卡。';
   }
 
   @override
-  String get achFoto9 => 'Página entera de una foto';
+  String get achFoto9 => '一拍整整一页';
 
   @override
-  String get achFoto20 => 'Veinte de una tacada';
+  String get achFoto20 => '一次拿下二十张';
 
   @override
   String achFotoDesc(String n) {
-    return 'Reconoce $n cartas en una sola foto.';
+    return '在一张照片里识别 $n 张卡。';
   }
 
   @override
-  String get achEscaneoperfecto => 'Ni una para revisar';
+  String get achEscaneoperfecto => '一张都不用复核';
 
   @override
-  String get achEscaneoperfectoDesc =>
-      'Escanea una página entera sin que ninguna carta quede para revisar.';
+  String get achEscaneoperfectoDesc => '扫描一整页，没有一张卡需要复核。';
 
   @override
-  String get achDias2 => 'Has vuelto';
+  String get achDias2 => '你又回来了';
 
   @override
-  String get achDias7 => 'Una semana aquí';
+  String get achDias7 => '来了一周';
 
   @override
-  String get achDias30 => 'Un mes aquí';
+  String get achDias30 => '来了一个月';
 
   @override
-  String get achDias100 => 'Cien días aquí';
+  String get achDias100 => '来了一百天';
 
   @override
   String achDiasDesc(String n) {
-    return 'Usa ManaForge $n días distintos.';
+    return '在 $n 个不同的日子里使用 ManaForge。';
   }
 
   @override
-  String get achRacha3 => 'Tres seguidos';
+  String get achRacha3 => '连来三天';
 
   @override
-  String get achRacha7 => 'Semana perfecta';
+  String get achRacha7 => '完美一周';
 
   @override
-  String get achRacha30 => 'Mes sin fallar';
+  String get achRacha30 => '整月不断卡';
 
   @override
   String achRachaDesc(String n) {
-    return 'Entra $n días seguidos.';
+    return '连续 $n 天进入。';
   }
 
   @override
-  String get achSemanas => 'Cuatro semanas sin faltar';
+  String get achSemanas => '四周从不缺席';
 
   @override
-  String get achSemanasDesc => 'Usa ManaForge 4 semanas seguidas.';
+  String get achSemanasDesc => '连续 4 周使用 ManaForge。';
 
   @override
-  String get achCarpetas1 => 'Empieza el orden';
+  String get achCarpetas1 => '开始收拾了';
 
   @override
-  String get achCarpetas5 => 'Todo clasificado';
+  String get achCarpetas5 => '全部归类完毕';
 
   @override
   String achCarpetasDesc(String n) {
-    return 'Crea $n carpetas.';
+    return '创建 $n 个文件夹。';
   }
 
   @override
-  String get achCarpetagrande => 'Carpetón';
+  String get achCarpetagrande => '超大文件夹';
 
   @override
-  String get achCarpetagrandeDesc => 'Ten una carpeta con 100 cartas o más.';
+  String get achCarpetagrandeDesc => '拥有一个含 100 张卡或以上的文件夹。';
 
   @override
-  String get achCarpetavalor => 'Esta carpeta no la presto';
+  String get achCarpetavalor => '这个文件夹概不外借';
 
   @override
-  String get achCarpetavalorDesc => 'Ten una carpeta que valga 100 € o más.';
+  String get achCarpetavalorDesc => '拥有一个价值 100 € 或以上的文件夹。';
 
   @override
-  String get achTierrasbasicas => 'Las cinco básicas';
+  String get achTierrasbasicas => '五种基本地';
 
   @override
-  String get achTierrasbasicasDesc =>
-      'Ten los cinco tipos de tierra básica (llanura, isla, pantano, montaña y bosque).';
+  String get achTierrasbasicasDesc => '拥有全部五种基本地（平原、海岛、沼泽、山脉和树林）。';
 
   @override
-  String get achFuerza => 'Menudo bicho';
+  String get achFuerza => '好大一只怪';
 
   @override
-  String get achFuerzaDesc => 'Ten una criatura de fuerza 10 o más.';
+  String get achFuerzaDesc => '拥有一个力量 10 或以上的生物。';
 
   @override
-  String get achCoste => 'Esta no la lanzo en la vida';
+  String get achCoste => '这辈子都别想施放';
 
   @override
-  String get achCosteDesc => 'Ten una carta de coste convertido 10 o más.';
+  String get achCosteDesc => '拥有一张总法术力费用 10 或以上的卡。';
 
   @override
-  String get achCostecero => 'Gratis';
+  String get achCostecero => '白嫖';
 
   @override
-  String get achCosteceroDesc => 'Ten una carta de coste 0.';
+  String get achCosteceroDesc => '拥有一张费用为 0 的卡。';
 
   @override
-  String get achTipos => 'De todo un poco';
+  String get achTipos => '样样都来点';
 
   @override
-  String get achTiposDesc =>
-      'Ten al menos una criatura, un instantáneo, un conjuro, un artefacto, un encantamiento, una tierra y un planeswalker.';
+  String get achTiposDesc => '至少各拥有一张生物、瞬间、法术、神器、结界、地和鹏洛客。';
 
   @override
-  String get achPlaneswalkers => 'Compañía de planeswalkers';
+  String get achPlaneswalkers => '鹏洛客小队';
 
   @override
-  String get achPlaneswalkersDesc => 'Ten 5 planeswalkers distintos.';
+  String get achPlaneswalkersDesc => '拥有 5 个不同的鹏洛客。';
 
   @override
-  String get achNoventas => 'Reliquia de los 90';
+  String get achNoventas => '九十年代的遗物';
 
   @override
-  String get achNoventasDesc => 'Ten una carta de los años 90.';
+  String get achNoventasDesc => '拥有一张九十年代的卡。';
 
   @override
-  String get achIdiomas1 => 'Esta no la sé leer';
+  String get achIdiomas1 => '这张我看不懂';
 
   @override
-  String get achIdiomas25 => 'Colección políglota';
+  String get achIdiomas25 => '多语种收藏';
 
   @override
-  String get achIdiomas1Desc => 'Ten una carta en un idioma que no sea inglés.';
+  String get achIdiomas1Desc => '拥有一张非英语的卡。';
 
   @override
-  String get achIdiomas25Desc => 'Ten 25 cartas en otros idiomas.';
+  String get achIdiomas25Desc => '拥有 25 张其他语言的卡。';
 
   @override
-  String get achWishlist => 'La lista de los caprichos';
+  String get achWishlist => '任性心愿单';
 
   @override
-  String get achWishlistDesc => 'Apunta 20 cartas en la wishlist.';
+  String get achWishlistDesc => '在心愿单里记下 20 张卡。';
 
   @override
-  String get achTierBronze => 'Bronce';
+  String get achTierBronze => '青铜';
 
   @override
-  String get achTierSilver => 'Plata';
+  String get achTierSilver => '白银';
 
   @override
-  String get achTierGold => 'Oro';
+  String get achTierGold => '黄金';
 
   @override
-  String get achTierMythic => 'Mítico';
+  String get achTierMythic => '秘稀';
 
   @override
-  String get achCatCollection => 'Colección';
+  String get achCatCollection => '收藏';
 
   @override
-  String get achCatRarity => 'Rarezas';
+  String get achCatRarity => '稀有度';
 
   @override
-  String get achCatColor => 'Colores';
+  String get achCatColor => '颜色';
 
   @override
-  String get achCatSets => 'Expansiones';
+  String get achCatSets => '系列';
 
   @override
-  String get achCatValue => 'Valor';
+  String get achCatValue => '价值';
 
   @override
-  String get achCatFoils => 'Foils';
+  String get achCatFoils => 'Foil';
 
   @override
   String get achCatForge => 'Forge';
 
   @override
-  String get achCatScanner => 'Escáner';
+  String get achCatScanner => '扫描器';
 
   @override
-  String get achCatDedication => 'Dedicación';
+  String get achCatDedication => '投入';
 
   @override
-  String get achCatFolders => 'Carpetas';
+  String get achCatFolders => '文件夹';
 
   @override
-  String get achCatCuriosities => 'Curiosidades';
+  String get achCatCuriosities => '趣味';
 
   @override
-  String get achRankApprentice => 'Aprendiz';
+  String get achRankApprentice => '学徒';
 
   @override
-  String get achRankSummoner => 'Invocador';
+  String get achRankSummoner => '咒法师';
 
   @override
-  String get achRankMage => 'Mago';
+  String get achRankMage => '法师';
 
   @override
-  String get achRankArchmage => 'Archimago';
+  String get achRankArchmage => '大法师';
 
   @override
-  String get achRankMaster => 'Maestro';
+  String get achRankMaster => '宗师';
 
   @override
-  String get achRankPlaneswalker => 'Planeswalker';
+  String get achRankPlaneswalker => '鹏洛客';
 
   @override
-  String get bkConfirmWord => 'CONFIRMAR';
+  String get bkConfirmWord => 'CONFIRM';
 
   @override
   String dbErrCards(String codigo) {
-    return 'No se pudo descargar la base de cartas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return '无法下载卡牌数据库（HTTP $codigo）。过一会儿再试。';
   }
 
   @override
   String dbErrHashes(String codigo) {
-    return 'No se pudo descargar la base de huellas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return '无法下载指纹库（HTTP $codigo）。过一会儿再试。';
   }
 
   @override
   String dbErrPrices(String codigo) {
-    return 'No se pudo descargar el histórico de precios (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return '无法下载价格历史（HTTP $codigo）。过一会儿再试。';
   }
 
   @override
   String ddCardCount(int n) {
-    return '$n cartas';
+    return '$n 张卡';
   }
 
   @override
-  String get ddForgedWith => 'Forjado con ManaForge';
+  String get ddForgedWith => '用 ManaForge 铸造';
 
   @override
-  String get fxThemeLifegain => 'drenaje de vida';
+  String get fxThemeLifegain => '生命汲取';
 
   @override
-  String get fxThemeSacrifice => 'sacrificio';
+  String get fxThemeSacrifice => '牺牲';
 
   @override
-  String get fxThemeSpells => 'hechizos';
+  String get fxThemeSpells => '咒语';
 
   @override
-  String get fxThemeArtifacts => 'artefactos';
+  String get fxThemeArtifacts => '神器';
 
   @override
-  String get fxThemeCounters => 'contadores +1/+1';
+  String get fxThemeCounters => '+1/+1 指示物';
 
   @override
-  String get fxThemeTokens => 'enjambre';
+  String get fxThemeTokens => '衍生物大军';
 
   @override
-  String get fxThemeGraveyard => 'cementerio';
+  String get fxThemeGraveyard => '坟场';
 
   @override
-  String get fxThemeGoodstuff => 'lo mejor de tus cartas';
+  String get fxThemeGoodstuff => '精华好牌';
 
   @override
-  String get fxTagLifegain =>
-      'Cada punto de vida que ganas es daño para ellos: drena y aguanta.';
+  String get fxTagLifegain => '你回的每点生命都是对手的伤害：汲取、扛住。';
 
   @override
-  String get fxTagSacrifice =>
-      'Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.';
+  String get fxTagSacrifice => '你的生物死了更值钱：牺牲它们，收取过路费。';
 
   @override
-  String get fxTagSpells =>
-      'Cada instantáneo cuenta: juega en el turno del rival y castiga.';
+  String get fxTagSpells => '每个瞬间都算数：在对手回合出手，狠狠惩罚。';
 
   @override
-  String get fxTagArtifacts =>
-      'Monta tu taller: cada artefacto hace más fuertes a los demás.';
+  String get fxTagArtifacts => '搭起你的作坊：每个神器都让其他神器更强。';
 
   @override
-  String get fxTagCounters =>
-      'Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.';
+  String get fxTagCounters => '+1/+1 指示物：让你的生物一路长到无人能挡。';
 
   @override
-  String get fxTagTokens =>
-      'Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.';
+  String get fxTagTokens => '用衍生物淹没战场：他们有一个，你有五个。';
 
   @override
-  String get fxTagGraveyard =>
-      'Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.';
+  String get fxTagGraveyard => '坟场就是你的第二只手：填满它，回收最好的牌。';
 
   @override
-  String get fxTagAggro =>
-      'Sal rápido y pega a la cara: la partida debería acabar pronto.';
+  String get fxTagAggro => '抢开局、直接打脸：这局该速战速决。';
 
   @override
-  String get fxTagTempo =>
-      'Presiona pronto y protege la ventaja con tus hechizos.';
+  String get fxTagTempo => '早早施压，用你的咒语守住优势。';
 
   @override
   String fxTagMidrange(String tema) {
-    return 'Cambia bien tus cartas y gana el medio juego con $tema.';
+    return '打好每一次换牌，靠 $tema 赢下中局。';
   }
 
   @override
-  String get fxTagControl =>
-      'Aguanta, responde a todo y remata cuando la mesa sea tuya.';
+  String get fxTagControl => '扛住，见招拆招，等战场归你再收尾。';
 
   @override
-  String get fxMidLifegain =>
-      'Encadena tus fuentes de vida con los que castigan al rival por ello.';
+  String get fxMidLifegain => '把你的回血来源和那些借此惩罚对手的牌串起来。';
 
   @override
-  String get fxMidSacrifice =>
-      'Sacrifica lo barato para robar, drenar o hacer crecer al resto.';
+  String get fxMidSacrifice => '牺牲廉价单位来抽牌、汲取，或让其余生物长大。';
 
   @override
-  String get fxMidSpells =>
-      'Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.';
+  String get fxMidSpells => '留着法术力：你每施放一个咒语，生物就会长大。';
 
   @override
-  String get fxMidArtifacts =>
-      'Despliega artefactos baratos y activa a los que los cuentan.';
+  String get fxMidArtifacts => '铺开廉价神器，激活那些数神器的牌。';
 
   @override
-  String get fxMidCounters =>
-      'Apila contadores en una o dos criaturas y protégelas.';
+  String get fxMidCounters => '把指示物堆到一两个生物上，然后保护它们。';
 
   @override
-  String get fxMidTokens =>
-      'Genera fichas cada turno y busca los efectos que las hacen mayores.';
+  String get fxMidTokens => '每回合产出衍生物，再找能让它们变强的效果。';
 
   @override
-  String get fxMidGraveyard =>
-      'Muele y descarta con intención: lo que cae al cementerio vuelve.';
+  String get fxMidGraveyard => '有目的地磨牌、弃牌：落进坟场的东西还会回来。';
 
   @override
-  String get fxEndLifegain =>
-      'Con la vida alta, cambia a modo agresivo: ellos ya no llegan.';
+  String get fxEndLifegain => '生命值一高，就切进攻模式：他们已经追不上了。';
 
   @override
-  String get fxEndSacrifice =>
-      'El valor acumulado te da la partida: cada cambio te sale gratis.';
+  String get fxEndSacrifice => '攒下的价值帮你赢下这局：每次换牌你都不亏。';
 
   @override
-  String get fxEndSpells =>
-      'Un par de hechizos en el mismo turno y tus criaturas cierran.';
+  String get fxEndSpells => '同一回合甩出两三个咒语，你的生物就能收尾。';
 
   @override
-  String get fxEndArtifacts =>
-      'Tu mesa vale el doble que la suya: remata con tus payoffs.';
+  String get fxEndArtifacts => '你的战场价值是对手的两倍：用你的收益牌收尾。';
 
   @override
-  String get fxEndCounters =>
-      'Una amenaza enorme y protegida acaba la partida en dos golpes.';
+  String get fxEndCounters => '一个又大又受保护的威胁，两下就能结束战斗。';
 
   @override
-  String get fxEndTokens =>
-      'Ataca en masa: ningún bloqueo aguanta a todo tu ejército.';
+  String get fxEndTokens => '全军压上：没有哪道防线挡得住你整支大军。';
 
   @override
-  String get fxEndGraveyard =>
-      'Reutiliza tus mejores cartas: juegas con dos manos contra una.';
+  String get fxEndGraveyard => '反复利用你最好的牌：你等于用两只手打对手一只手。';
 
   @override
   String get fxTurns12 => 'T1-T2';
@@ -3614,48 +3504,42 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fxTurns5 => 'T5+';
 
   @override
-  String get fxAggroEarly => 'Juega una criatura cada turno, sin excepción.';
+  String get fxAggroEarly => '每回合都下一个生物，绝不例外。';
 
   @override
-  String get fxAggroMid =>
-      'Sigue atacando; guarda el daño directo para quitar bloqueadores.';
+  String get fxAggroMid => '继续进攻；留着直伤去清掉阻挡者。';
 
   @override
-  String get fxAggroLate => 'Remata con todo: aquí deberías cerrar la partida.';
+  String get fxAggroLate => '倾巢收尾：到这儿你就该结束战斗了。';
 
   @override
-  String get fxTempoEarly => 'Amenaza barata y maná abierto cuando puedas.';
+  String get fxTempoEarly => '下个廉价威胁，能留法术力就留着。';
 
   @override
-  String get fxTempoMid => 'Ataca y usa tus hechizos en el turno del rival.';
+  String get fxTempoMid => '进攻，并在对手回合施放你的咒语。';
 
   @override
-  String get fxTempoLate =>
-      'Protege tus criaturas y cierra por el aire o con daño directo.';
+  String get fxTempoLate => '保护好生物，靠飞行或直伤收尾。';
 
   @override
-  String get fxMidrangeEarly =>
-      'Desarrolla y no regales cartas: cambios de uno por uno buenos.';
+  String get fxMidrangeEarly => '稳步铺场，别白送牌：做好一换一。';
 
   @override
   String fxMidrangeMid(String tema) {
-    return 'Despliega tus motores de $tema y estabiliza la mesa.';
+    return '铺开你的 $tema 引擎，稳住战场。';
   }
 
   @override
-  String get fxMidrangeLate =>
-      'Tus cartas valen más que las suyas: conviértelo en la partida.';
+  String get fxMidrangeLate => '你的牌比对手的更值：把这点转化成胜局。';
 
   @override
-  String get fxControlEarly =>
-      'Tierra al turno y responde solo a lo que importa.';
+  String get fxControlEarly => '每回合按时下地，只回应真正要紧的东西。';
 
   @override
-  String get fxControlMid =>
-      'Limpia la mesa y roba cartas: el tiempo juega para ti.';
+  String get fxControlMid => '清场、抽牌：时间站在你这边。';
 
   @override
-  String get fxControlLate => 'Baja una amenaza y protégela hasta el final.';
+  String get fxControlLate => '下一个威胁，护着它到最后。';
 
   @override
   String get fxArchetypeAggro => 'aggro';
@@ -3672,41 +3556,36 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String fxWhyItWorks(String coste, String tierras, String arquetipo,
       int criaturas, int interaccion, String tema) {
-    return 'Coste medio $coste: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva $tierras tierras — dentro del rango de un mazo $arquetipo. Hay $criaturas criaturas para mantener la mesa y $interaccion cartas de interacción para lo que traiga el rival. El tema ($tema) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.';
+    return '平均费用 $coste：按 Karsten 法则（费用 3.0 时 24 张地，每 ±0.5 增减 ±1 张），这副牌组带 $tierras 张地——正落在一副 $arquetipo 牌组的区间里。有 $criaturas 个生物守住战场，还有 $interaccion 张互动牌应对对手打出的东西。主题（$tema）把你的协同聚拢在一起：主题的部件见得越多，每一件就越强。';
   }
 
   @override
   String fxNoLandsRange(String tierras, String min, String max) {
-    return 'Con esa curva salen $tierras tierras: fuera del rango sano ($min-$max). Ajusta el total de hechizos.';
+    return '按这条曲线会得到 $tierras 张地：超出了健康区间（$min-$max）。调整一下法术总数。';
   }
 
   @override
-  String get fxNoCards =>
-      'Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.';
+  String get fxNoCards => '你的收藏里这些颜色的卡不够填满这条曲线。试试减少法术，或换些费用。';
 
   @override
   String fxNoProfile(String coste, String tierras) {
-    return 'Esa curva (coste medio $coste con $tierras tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.';
+    return '这条曲线（平均费用 $coste、$tierras 张地）不符合任何健康配置：便宜的牌组要更少的地，昂贵的要更多。把两者靠拢一些。';
   }
 
   @override
-  String get fxNoBasics =>
-      'No hay tierras básicas suficientes en la colección para esa curva.';
+  String get fxNoBasics => '收藏里没有足够的基本地来支撑这条曲线。';
 
   @override
   String fxHardRule(String detalle) {
-    return 'La curva pedida rompe una regla dura: $detalle';
+    return '你要求的曲线违反了一条硬规则：$detalle';
   }
 
   @override
-  String get tsPresetMonoRed =>
-      'Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.';
+  String get tsPresetMonoRed => '廉价生物加直击面部的伤害：跟不上节奏的话，4-5 回合就把你打死。';
 
   @override
-  String get tsPresetAzorius =>
-      'Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.';
+  String get tsPresetAzorius => '反击、扫场加抽牌：拖长对局，用寥寥几张终结牌取胜。';
 
   @override
-  String get tsPresetGolgari =>
-      'Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas.';
+  String get tsPresetGolgari => '一换一、高效生物加黑色去除：靠牌张质量赢下长局。';
 }
