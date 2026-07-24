@@ -3513,255 +3513,258 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String dbErrCards(String codigo) {
-    return 'No se pudo descargar la base de cartas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return 'Die Kartendatenbank ließ sich nicht herunterladen (HTTP $codigo). Probier es später nochmal.';
   }
 
   @override
   String dbErrHashes(String codigo) {
-    return 'No se pudo descargar la base de huellas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return 'Die Fingerabdruck-Datenbank ließ sich nicht herunterladen (HTTP $codigo). Probier es später nochmal.';
   }
 
   @override
   String dbErrPrices(String codigo) {
-    return 'No se pudo descargar el histórico de precios (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return 'Der Preisverlauf ließ sich nicht herunterladen (HTTP $codigo). Probier es später nochmal.';
   }
 
   @override
   String ddCardCount(int n) {
-    return '$n cartas';
+    return '$n Karten';
   }
 
   @override
-  String get ddForgedWith => 'Forjado con ManaForge';
+  String get ddForgedWith => 'Geschmiedet mit ManaForge';
 
   @override
-  String get fxThemeLifegain => 'drenaje de vida';
+  String get fxThemeLifegain => 'Lebensdrain';
 
   @override
-  String get fxThemeSacrifice => 'sacrificio';
+  String get fxThemeSacrifice => 'Opfern';
 
   @override
-  String get fxThemeSpells => 'hechizos';
+  String get fxThemeSpells => 'Zauber';
 
   @override
-  String get fxThemeArtifacts => 'artefactos';
+  String get fxThemeArtifacts => 'Artefakte';
 
   @override
-  String get fxThemeCounters => 'contadores +1/+1';
+  String get fxThemeCounters => '+1/+1-Marken';
 
   @override
-  String get fxThemeTokens => 'enjambre';
+  String get fxThemeTokens => 'Schwarm';
 
   @override
-  String get fxThemeGraveyard => 'cementerio';
+  String get fxThemeGraveyard => 'Friedhof';
 
   @override
-  String get fxThemeGoodstuff => 'lo mejor de tus cartas';
+  String get fxThemeGoodstuff => 'das Beste aus deinen Karten';
 
   @override
   String get fxTagLifegain =>
-      'Cada punto de vida que ganas es daño para ellos: drena y aguanta.';
+      'Jeder Lebenspunkt, den du dazubekommst, ist Schaden für sie: zapf ab und halt durch.';
 
   @override
   String get fxTagSacrifice =>
-      'Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.';
+      'Deine Kreaturen sind tot mehr wert: opfere sie und kassier ab.';
 
   @override
   String get fxTagSpells =>
-      'Cada instantáneo cuenta: juega en el turno del rival y castiga.';
+      'Jeder Spontanzauber zählt: spiel im Zug des Gegners und bestraf ihn.';
 
   @override
   String get fxTagArtifacts =>
-      'Monta tu taller: cada artefacto hace más fuertes a los demás.';
+      'Bau deine Werkstatt auf: jedes Artefakt macht die anderen stärker.';
 
   @override
   String get fxTagCounters =>
-      'Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.';
+      '+1/+1-Marken: deine Kreaturen wachsen, bis keiner mehr rankommt.';
 
   @override
   String get fxTagTokens =>
-      'Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.';
+      'Flute das Board mit Spielsteinen: wo sie einen haben, hast du fünf.';
 
   @override
   String get fxTagGraveyard =>
-      'Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.';
+      'Dein Friedhof ist deine zweite Hand: füll ihn und recycle das Beste.';
 
   @override
   String get fxTagAggro =>
-      'Sal rápido y pega a la cara: la partida debería acabar pronto.';
+      'Schnell rauskommen und aufs Gesicht: die Partie sollte früh vorbei sein.';
 
   @override
   String get fxTagTempo =>
-      'Presiona pronto y protege la ventaja con tus hechizos.';
+      'Früh Druck machen und den Vorsprung mit deinen Zaubern schützen.';
 
   @override
   String fxTagMidrange(String tema) {
-    return 'Cambia bien tus cartas y gana el medio juego con $tema.';
+    return 'Trade deine Karten gut und gewinn das Midgame über $tema.';
   }
 
   @override
   String get fxTagControl =>
-      'Aguanta, responde a todo y remata cuando la mesa sea tuya.';
+      'Halt durch, hab auf alles eine Antwort und mach den Sack zu, wenn dir das Board gehört.';
 
   @override
   String get fxMidLifegain =>
-      'Encadena tus fuentes de vida con los que castigan al rival por ello.';
+      'Verkette deine Lebensquellen mit den Karten, die den Gegner dafür bestrafen.';
 
   @override
   String get fxMidSacrifice =>
-      'Sacrifica lo barato para robar, drenar o hacer crecer al resto.';
+      'Opfere das Billige, um zu ziehen, zu drainen oder den Rest wachsen zu lassen.';
 
   @override
   String get fxMidSpells =>
-      'Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.';
+      'Lass Mana offen: deine Kreaturen wachsen mit jedem Zauber, den du wirkst.';
 
   @override
   String get fxMidArtifacts =>
-      'Despliega artefactos baratos y activa a los que los cuentan.';
+      'Leg billige Artefakte raus und schalt die frei, die sie zählen.';
 
   @override
   String get fxMidCounters =>
-      'Apila contadores en una o dos criaturas y protégelas.';
+      'Stapel Marken auf ein oder zwei Kreaturen und beschütz sie.';
 
   @override
   String get fxMidTokens =>
-      'Genera fichas cada turno y busca los efectos que las hacen mayores.';
+      'Mach jeden Zug Spielsteine und such die Effekte, die sie größer machen.';
 
   @override
   String get fxMidGraveyard =>
-      'Muele y descarta con intención: lo que cae al cementerio vuelve.';
+      'Mille und wirf mit Absicht ab: was im Friedhof landet, kommt zurück.';
 
   @override
   String get fxEndLifegain =>
-      'Con la vida alta, cambia a modo agresivo: ellos ya no llegan.';
+      'Mit hohem Leben schaltest du auf Angriff: da kommen sie nicht mehr hin.';
 
   @override
   String get fxEndSacrifice =>
-      'El valor acumulado te da la partida: cada cambio te sale gratis.';
+      'Der angehäufte Wert holt dir die Partie: jeder Trade ist für dich gratis.';
 
   @override
   String get fxEndSpells =>
-      'Un par de hechizos en el mismo turno y tus criaturas cierran.';
+      'Zwei Zauber im selben Zug und deine Kreaturen machen den Sack zu.';
 
   @override
   String get fxEndArtifacts =>
-      'Tu mesa vale el doble que la suya: remata con tus payoffs.';
+      'Dein Board ist doppelt so viel wert wie seins: beende es mit deinen Payoffs.';
 
   @override
   String get fxEndCounters =>
-      'Una amenaza enorme y protegida acaba la partida en dos golpes.';
+      'Eine riesige, geschützte Bedrohung beendet die Partie in zwei Angriffen.';
 
   @override
   String get fxEndTokens =>
-      'Ataca en masa: ningún bloqueo aguanta a todo tu ejército.';
+      'Greif in Masse an: kein Block hält deine ganze Armee auf.';
 
   @override
   String get fxEndGraveyard =>
-      'Reutiliza tus mejores cartas: juegas con dos manos contra una.';
+      'Nutze deine besten Karten doppelt: du spielst mit zwei Händen gegen eine.';
 
   @override
-  String get fxTurns12 => 'T1-T2';
+  String get fxTurns12 => 'Z1-Z2';
 
   @override
-  String get fxTurns34 => 'T3-T4';
+  String get fxTurns34 => 'Z3-Z4';
 
   @override
-  String get fxTurns5 => 'T5+';
+  String get fxTurns5 => 'Z5+';
 
   @override
-  String get fxAggroEarly => 'Juega una criatura cada turno, sin excepción.';
+  String get fxAggroEarly => 'Jeden Zug eine Kreatur, ohne Ausnahme.';
 
   @override
   String get fxAggroMid =>
-      'Sigue atacando; guarda el daño directo para quitar bloqueadores.';
+      'Weiter angreifen; heb den Direktschaden auf, um Blocker wegzuräumen.';
 
   @override
-  String get fxAggroLate => 'Remata con todo: aquí deberías cerrar la partida.';
+  String get fxAggroLate => 'Alles rein: hier solltest du die Partie zumachen.';
 
   @override
-  String get fxTempoEarly => 'Amenaza barata y maná abierto cuando puedas.';
+  String get fxTempoEarly =>
+      'Billige Bedrohung, und Mana offen lassen, wann immer es geht.';
 
   @override
-  String get fxTempoMid => 'Ataca y usa tus hechizos en el turno del rival.';
+  String get fxTempoMid =>
+      'Angreifen und deine Zauber im Zug des Gegners einsetzen.';
 
   @override
   String get fxTempoLate =>
-      'Protege tus criaturas y cierra por el aire o con daño directo.';
+      'Beschütz deine Kreaturen und mach es über die Luft oder mit Direktschaden zu.';
 
   @override
   String get fxMidrangeEarly =>
-      'Desarrolla y no regales cartas: cambios de uno por uno buenos.';
+      'Entwickle dein Board und verschenk keine Karten: gute Eins-zu-eins-Trades.';
 
   @override
   String fxMidrangeMid(String tema) {
-    return 'Despliega tus motores de $tema y estabiliza la mesa.';
+    return 'Bring deine Motoren für $tema ins Spiel und stabilisier das Board.';
   }
 
   @override
   String get fxMidrangeLate =>
-      'Tus cartas valen más que las suyas: conviértelo en la partida.';
+      'Deine Karten sind mehr wert als seine: mach daraus die Partie.';
 
   @override
   String get fxControlEarly =>
-      'Tierra al turno y responde solo a lo que importa.';
+      'Jeden Zug ein Land, und antworte nur auf das, was zählt.';
 
   @override
   String get fxControlMid =>
-      'Limpia la mesa y roba cartas: el tiempo juega para ti.';
+      'Räum das Board ab und zieh Karten: die Zeit spielt für dich.';
 
   @override
-  String get fxControlLate => 'Baja una amenaza y protégela hasta el final.';
+  String get fxControlLate =>
+      'Leg eine Bedrohung nach und beschütz sie bis zum Schluss.';
 
   @override
-  String get fxArchetypeAggro => 'aggro';
+  String get fxArchetypeAggro => 'Aggro';
 
   @override
-  String get fxArchetypeTempo => 'tempo';
+  String get fxArchetypeTempo => 'Tempo';
 
   @override
-  String get fxArchetypeMidrange => 'midrange';
+  String get fxArchetypeMidrange => 'Midrange';
 
   @override
-  String get fxArchetypeControl => 'control';
+  String get fxArchetypeControl => 'Control';
 
   @override
   String fxWhyItWorks(String coste, String tierras, String arquetipo,
       int criaturas, int interaccion, String tema) {
-    return 'Coste medio $coste: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva $tierras tierras — dentro del rango de un mazo $arquetipo. Hay $criaturas criaturas para mantener la mesa y $interaccion cartas de interacción para lo que traiga el rival. El tema ($tema) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.';
+    return 'Durchschnittskosten $coste: Nach Karstens Regel (24 Länder bei Kosten 3.0, ±1 pro ±0.5) spielt dieses Deck $tierras Länder — im Rahmen eines $arquetipo-Decks. Dazu $criaturas Kreaturen, um das Board zu halten, und $interaccion Interaktionskarten für alles, was der Gegner bringt. Das Thema ($tema) bündelt deine Synergien: je mehr Teile des Themas du siehst, desto stärker wird jedes einzelne.';
   }
 
   @override
   String fxNoLandsRange(String tierras, String min, String max) {
-    return 'Con esa curva salen $tierras tierras: fuera del rango sano ($min-$max). Ajusta el total de hechizos.';
+    return 'Mit dieser Kurve kommen $tierras Länder raus: außerhalb des gesunden Bereichs ($min-$max). Pass die Gesamtzahl der Zauber an.';
   }
 
   @override
   String get fxNoCards =>
-      'Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.';
+      'Deine Sammlung hat nicht genug Karten in diesen Farben, um diese Kurve zu füllen. Probier weniger Zauber oder andere Kosten.';
 
   @override
   String fxNoProfile(String coste, String tierras) {
-    return 'Esa curva (coste medio $coste con $tierras tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.';
+    return 'Diese Kurve (Durchschnittskosten $coste mit $tierras Ländern) passt in kein gesundes Profil: ein billiges Deck will weniger Länder, ein teures will mehr. Bring beides näher zusammen.';
   }
 
   @override
   String get fxNoBasics =>
-      'No hay tierras básicas suficientes en la colección para esa curva.';
+      'In der Sammlung sind nicht genug Standardländer für diese Kurve.';
 
   @override
   String fxHardRule(String detalle) {
-    return 'La curva pedida rompe una regla dura: $detalle';
+    return 'Die gewünschte Kurve bricht eine harte Regel: $detalle';
   }
 
   @override
   String get tsPresetMonoRed =>
-      'Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.';
+      'Billige Kreaturen und Schaden aufs Gesicht: Es killt dich in 4-5 Zügen, wenn du das Tempo nicht mithältst.';
 
   @override
   String get tsPresetAzorius =>
-      'Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.';
+      'Gegenzauber, Massenentfernung und Kartenziehen: Es zieht die Partie in die Länge und gewinnt mit ein paar Finishern.';
 
   @override
   String get tsPresetGolgari =>
-      'Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas.';
+      'Eins-zu-eins-Trades, effiziente Kreaturen und schwarzes Removal: Es gewinnt das lange Spiel über Kartenqualität.';
 }
