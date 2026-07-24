@@ -272,7 +272,7 @@ List<String> storesToDelete(BackupManifest manifest,
     [
       for (final name in present)
         if (kBackupStores.contains(name) && !manifest.stores.contains(name))
-          if (kBackupStoreKeys.contains(name)) name
+          name
     ];
 
 /// Qué almacenes del usuario hay ahora mismo en disco (para poder decirle cuál
@@ -284,22 +284,6 @@ Future<List<String>> presentStores(Directory dataDir) async {
   }
   return out;
 }
-
-/// Los almacenes que se saben nombrar en cristiano (para decir qué se borra).
-/// El texto sale de [backupStoreName]; aquí solo está la lista.
-const Set<String> kBackupStoreKeys = {
-  'collection.json',
-  'folders.json',
-  'decks.json',
-  'achievements.json',
-  'wishlist.json',
-  'certificates.json',
-  'market.json',
-  'recents.json',
-  'value_history.json',
-  'price_history.jsonl',
-  'price_history.json',
-};
 
 /// Nombre humano de cada almacén, para poder decir qué se borra. Los dos
 /// historiales de precios (`.json` y `.jsonl`) son la misma cosa para quien
