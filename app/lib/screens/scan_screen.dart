@@ -4,6 +4,8 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../l10n/t.dart';
 import 'package:image/image.dart' as img;
 
 import '../scanner/card_detector.dart';
@@ -205,6 +207,8 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Future<void> _scanFile(XFile file) async {
+    // el texto se coge ANTES del await: luego la pantalla puede estar muerta
+    final mensajeFotoIlegible = tr(context).scBadImage;
     setState(() {
       _processing = true;
       _error = null;
@@ -218,7 +222,7 @@ class _ScanScreenState extends State<ScanScreen> {
       final bytes = await file.readAsBytes();
       final outcomes = await compute(processScanPhotoAll, bytes);
       if (outcomes.isEmpty) {
-        throw Exception('No pude leer esa imagen (¿es una foto válida?)');
+        throw Exception(mensajeFotoIlegible);
       }
       if (outcomes.length > 1) {
         // una foto con VARIAS cartas (página de álbum): a la bandeja
@@ -391,10 +395,8 @@ class _ScanScreenState extends State<ScanScreen> {
       _batch = null;
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(carpeta == null
-          ? '✓ $added carta${added == 1 ? '' : 's'} a la colección'
-          : '✓ $added carta${added == 1 ? '' : 's'} a la colección, '
-              'y a "${carpeta.name}"'),
+      content: Text(tr(context).lsAddedToCollection(added) +
+          (carpeta == null ? '' : tr(context).lsAndToFolder(carpeta.name))),
       duration: const Duration(milliseconds: 1400),
     ));
   }
@@ -416,18 +418,19 @@ class _ScanScreenState extends State<ScanScreen> {
       _showAll = false;
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('✓ ${entry.name} '
-          '(${entry.setCode.toUpperCase()} #${entry.collectorNumber})'
-          '${carpeta == null ? '' : ', y a "${carpeta.name}"'}'),
+      content: Text(tr(context).scAddedOne(entry.name,
+              entry.setCode.toUpperCase(), entry.collectorNumber) +
+          (carpeta == null ? '' : tr(context).lsAndToFolder(carpeta.name))),
       duration: const Duration(milliseconds: 1200),
     ));
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Escanear'),
+        title: Text(t.tabScan),
         actions: [
           if (widget.folders != null)
             Padding(
@@ -447,8 +450,8 @@ class _ScanScreenState extends State<ScanScreen> {
                               : Icons.folder,
                           size: 18),
                       label: Text(carpeta == null
-                          ? 'Sin carpeta'
-                          : 'Y además a: ${carpeta.name}'),
+                          ? t.scNoFolder
+                          : t.scAlsoTo(carpeta.name)),
                       onPressed: _pickFolder,
                     );
                   },
@@ -463,7 +466,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 child: Chip(
                   avatar: const Icon(Icons.check_circle,
                       size: 16, color: MFColors.success),
-                  label: Text('$_sessionCount esta sesión'),
+                  label: Text(t.lsThisSession(_sessionCount)),
                   visualDensity: VisualDensity.compact,
                 ),
               ),
@@ -504,13 +507,13 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget _buildBody() {
     if (_batch != null) return _buildBatch();
     if (_processing) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 12),
-            Text('Buscando la carta en la foto…'),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 12),
+            Text(tr(context).scLookingForCard),
           ],
         ),
       );
@@ -521,6 +524,7 @@ class _ScanScreenState extends State<ScanScreen> {
   /// Revisión del lote: mientras procesa muestra el progreso; al terminar,
   /// la lista de cartas reconocidas para quitar las que no quieras y añadir.
   Widget _buildBatch() {
+    final t = tr(context);
     final tray = _batch!;
     final review = tray.lines.where((l) => l.needsReview).length;
     final unknown = tray.lines.where((l) => l.unrecognized).length;
@@ -536,20 +540,16 @@ class _ScanScreenState extends State<ScanScreen> {
                   children: [
                     Text(
                       _batchProcessing
-                          ? 'Reconociendo… $_batchDone/$_batchTotal'
-                          : '${tray.lines.length} carta'
-                              '${tray.lines.length == 1 ? '' : 's'} · '
-                              '${tray.totalQty} en total',
+                          ? t.scRecognising(_batchDone, _batchTotal)
+                          : t.scTrayCount(tray.lines.length, tray.totalQty),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     if (!_batchProcessing && review > 0)
-                      Text('$review para revisar (tócalas)',
+                      Text(t.scToReview(review),
                           style: const TextStyle(
                               fontSize: 12.5, color: MFColors.warning)),
                     if (!_batchProcessing && unknown > 0)
-                      Text(
-                          '$unknown sin reconocer (toca para elegir '
-                          'a mano)',
+                      Text(t.scUnknown(unknown),
                           style: TextStyle(
                               fontSize: 12.5,
                               color: Theme.of(context).colorScheme.error)),
@@ -565,12 +565,11 @@ class _ScanScreenState extends State<ScanScreen> {
           ),
         ),
         if (tray.lines.isEmpty && !_batchProcessing)
-          const Expanded(
+          Expanded(
             child: Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('No reconocí ninguna carta en esas fotos. '
-                    'Prueba con mejor luz o menos reflejo.',
+                padding: const EdgeInsets.all(24),
+                child: Text(t.scNothingRecognised,
                     textAlign: TextAlign.center),
               ),
             ),
@@ -595,13 +594,13 @@ class _ScanScreenState extends State<ScanScreen> {
                       ? null
                       : _confirmBatch,
                   icon: const Icon(Icons.playlist_add_check),
-                  label: Text('Añadir ${tray.totalQty} a la colección'),
+                  label: Text(t.scAddN(tray.totalQty)),
                 ),
               ),
               const SizedBox(width: 10),
               OutlinedButton(
                 onPressed: () => setState(() => _batch = null),
-                child: const Text('Cancelar'),
+                child: Text(t.acCancel),
               ),
             ],
           ),
@@ -642,21 +641,18 @@ class _ScanScreenState extends State<ScanScreen> {
                 size: 64,
                 color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 16),
-            Text('Suelta aquí las fotos de tus cartas',
+            Text(tr(context).scDropPhotos,
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            const Text(
-              'Una o varias a la vez — y si una foto trae VARIAS cartas '
-              '(una página del álbum, la mesa llena), las saco todas y las '
-              'junto en una lista para que revises y añadas las que quieras. '
-              'Vale foto del móvil o escaneo.',
+            Text(
+              tr(context).scDropExplain,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             FilledButton.tonalIcon(
               onPressed: _pickPhotos,
               icon: const Icon(Icons.photo_library_outlined),
-              label: const Text('Elegir fotos'),
+              label: Text(tr(context).scPickPhotos),
             ),
             if (_error != null)
               Padding(
@@ -673,9 +669,10 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   String _confidenceLabel(int distance) {
-    if (distance <= 14) return 'coincidencia alta';
-    if (distance <= 26) return 'coincidencia media';
-    return 'coincidencia baja';
+    final t = tr(context);
+    if (distance <= 14) return t.scMatchHigh;
+    if (distance <= 26) return t.scMatchMedium;
+    return t.scMatchLow;
   }
 
   Future<void> _editLock() async {
@@ -738,7 +735,7 @@ class _ScanScreenState extends State<ScanScreen> {
         FilledButton.icon(
           onPressed: _confirmSelected,
           icon: const Icon(Icons.add),
-          label: const Text('Añadir a la colección'),
+          label: Text(tr(context).scAddToCollection),
         ),
         const SizedBox(height: 10),
         Row(
@@ -747,13 +744,13 @@ class _ScanScreenState extends State<ScanScreen> {
             TextButton.icon(
               onPressed: () => setState(() => _showAll = true),
               icon: const Icon(Icons.unfold_more, size: 18),
-              label: const Text('No es esta — ver opciones'),
+              label: Text(tr(context).scSeeOptions),
             ),
             const SizedBox(width: 8),
             TextButton.icon(
               onPressed: _reset,
               icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('Escanear otra'),
+              label: Text(tr(context).scScanAnother),
             ),
           ],
         ),
@@ -788,18 +785,15 @@ class _ScanScreenState extends State<ScanScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(unsure ? 'No estoy seguro' : '¿Cuál es?',
+                  Text(unsure ? tr(context).scNotSure : tr(context).scWhichIsIt,
                       style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 4),
                   Text(
                     unsure
-                        ? 'Ninguna encaja del todo. ¿Es alguna de estas? Si '
-                            'no, prueba otra foto con mejor luz.'
+                        ? tr(context).scNoneQuiteFits
                         : outcome?.usedFallback == true
-                            ? 'No vi los bordes de la carta, así que he usado '
-                                'la imagen entera. Estos son los parecidos:'
-                            : 'Esto es lo que he recortado. Los candidatos, '
-                                'por parecido:',
+                            ? tr(context).scNoEdges
+                            : tr(context).scCropped,
                     style: const TextStyle(fontSize: 12.5),
                   ),
                 ],
@@ -834,13 +828,13 @@ class _ScanScreenState extends State<ScanScreen> {
         FilledButton.icon(
           onPressed: _confirmSelected,
           icon: const Icon(Icons.add),
-          label: const Text('Añadir a la colección'),
+          label: Text(tr(context).scAddToCollection),
         ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
           onPressed: _reset,
           icon: const Icon(Icons.refresh),
-          label: const Text('Descartar y escanear otra'),
+          label: Text(tr(context).scDiscard),
         ),
       ],
     );

@@ -2393,6 +2393,306 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Copia del {cuando} · {resumen}.'**
   String bkOfDate(String cuando, String resumen);
+
+  /// No description provided for @lsNoCamera.
+  ///
+  /// In es, this message translates to:
+  /// **'No encuentro ninguna cámara.'**
+  String get lsNoCamera;
+
+  /// No description provided for @lsCameraGone.
+  ///
+  /// In es, this message translates to:
+  /// **'La cámara se ha desconectado a media sesión. Revisa el cable y dale a Reintentar.'**
+  String get lsCameraGone;
+
+  /// No description provided for @lsFrameCard.
+  ///
+  /// In es, this message translates to:
+  /// **'Encuadra la carta dentro del marco'**
+  String get lsFrameCard;
+
+  /// No description provided for @lsNoCardThere.
+  ///
+  /// In es, this message translates to:
+  /// **'No veo ninguna carta ahí'**
+  String get lsNoCardThere;
+
+  /// No description provided for @lsAddedToCollection.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{✓ 1 carta a la colección} other{✓ {n} cartas a la colección}}'**
+  String lsAddedToCollection(int n);
+
+  /// No description provided for @lsAndToFolder.
+  ///
+  /// In es, this message translates to:
+  /// **', y a \"{carpeta}\"'**
+  String lsAndToFolder(String carpeta);
+
+  /// No description provided for @lsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear en vivo'**
+  String get lsTitle;
+
+  /// No description provided for @lsQuickTip.
+  ///
+  /// In es, this message translates to:
+  /// **'Rápido: las cartas claras entran solas; las dudosas, marcadas para revisar.'**
+  String get lsQuickTip;
+
+  /// No description provided for @lsCarefulTip.
+  ///
+  /// In es, this message translates to:
+  /// **'Con cuidado: las dudosas se paran y te preguntan cuál es.'**
+  String get lsCarefulTip;
+
+  /// No description provided for @lsQuick.
+  ///
+  /// In es, this message translates to:
+  /// **'Rápido'**
+  String get lsQuick;
+
+  /// No description provided for @lsCareful.
+  ///
+  /// In es, this message translates to:
+  /// **'Con cuidado'**
+  String get lsCareful;
+
+  /// No description provided for @lsThisSession.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} esta sesión'**
+  String lsThisSession(int n);
+
+  /// No description provided for @lsScanPhotoTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear una foto suelta'**
+  String get lsScanPhotoTooltip;
+
+  /// No description provided for @lsStartingCamera.
+  ///
+  /// In es, this message translates to:
+  /// **'Encendiendo la cámara…'**
+  String get lsStartingCamera;
+
+  /// No description provided for @lsCantUseCamera.
+  ///
+  /// In es, this message translates to:
+  /// **'No puedo usar la cámara'**
+  String get lsCantUseCamera;
+
+  /// No description provided for @lsCameraUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'Cámara no disponible.'**
+  String get lsCameraUnavailable;
+
+  /// No description provided for @lsScanPhoto.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear una foto'**
+  String get lsScanPhoto;
+
+  /// No description provided for @lsPlusOneSame.
+  ///
+  /// In es, this message translates to:
+  /// **'+1 igual · {carta} (×{n})'**
+  String lsPlusOneSame(String carta, int n);
+
+  /// No description provided for @lsAlreadyOnTable.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya está en la mesa: {carta} · retírala y vuelve a ponerla, o toca \"+1 igual\"'**
+  String lsAlreadyOnTable(String carta);
+
+  /// No description provided for @lsSeeing.
+  ///
+  /// In es, this message translates to:
+  /// **'Viendo: {carta}'**
+  String lsSeeing(String carta);
+
+  /// No description provided for @lsPassACard.
+  ///
+  /// In es, this message translates to:
+  /// **'Pasa una carta por delante de la cámara…'**
+  String get lsPassACard;
+
+  /// No description provided for @lsIsThis.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Es {carta}? No estoy seguro — toca para elegir.'**
+  String lsIsThis(String carta);
+
+  /// No description provided for @lsNotThisOne.
+  ///
+  /// In es, this message translates to:
+  /// **'No es esta — cambiar versión'**
+  String get lsNotThisOne;
+
+  /// No description provided for @lsRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get lsRetry;
+
+  /// No description provided for @scBadImage.
+  ///
+  /// In es, this message translates to:
+  /// **'No pude leer esa imagen (¿es una foto válida?)'**
+  String get scBadImage;
+
+  /// No description provided for @scAddedOne.
+  ///
+  /// In es, this message translates to:
+  /// **'✓ {carta} ({set} #{numero})'**
+  String scAddedOne(String carta, String set, String numero);
+
+  /// No description provided for @scNoFolder.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin carpeta'**
+  String get scNoFolder;
+
+  /// No description provided for @scAlsoTo.
+  ///
+  /// In es, this message translates to:
+  /// **'Y además a: {carpeta}'**
+  String scAlsoTo(String carpeta);
+
+  /// No description provided for @scLookingForCard.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando la carta en la foto…'**
+  String get scLookingForCard;
+
+  /// No description provided for @scRecognising.
+  ///
+  /// In es, this message translates to:
+  /// **'Reconociendo… {hechas}/{total}'**
+  String scRecognising(int hechas, int total);
+
+  /// No description provided for @scTrayCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 carta}other{{n} cartas}} · {copias} en total'**
+  String scTrayCount(int n, int copias);
+
+  /// No description provided for @scToReview.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} para revisar (tócalas)'**
+  String scToReview(int n);
+
+  /// No description provided for @scUnknown.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} sin reconocer (toca para elegir a mano)'**
+  String scUnknown(int n);
+
+  /// No description provided for @scNothingRecognised.
+  ///
+  /// In es, this message translates to:
+  /// **'No reconocí ninguna carta en esas fotos. Prueba con mejor luz o menos reflejo.'**
+  String get scNothingRecognised;
+
+  /// No description provided for @scAddN.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir {n} a la colección'**
+  String scAddN(int n);
+
+  /// No description provided for @scDropPhotos.
+  ///
+  /// In es, this message translates to:
+  /// **'Suelta aquí las fotos de tus cartas'**
+  String get scDropPhotos;
+
+  /// No description provided for @scDropExplain.
+  ///
+  /// In es, this message translates to:
+  /// **'Una o varias a la vez — y si una foto trae VARIAS cartas (una página del álbum, la mesa llena), las saco todas y las junto en una lista para que revises y añadas las que quieras. Vale foto del móvil o escaneo.'**
+  String get scDropExplain;
+
+  /// No description provided for @scPickPhotos.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir fotos'**
+  String get scPickPhotos;
+
+  /// No description provided for @scMatchHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'coincidencia alta'**
+  String get scMatchHigh;
+
+  /// No description provided for @scMatchMedium.
+  ///
+  /// In es, this message translates to:
+  /// **'coincidencia media'**
+  String get scMatchMedium;
+
+  /// No description provided for @scMatchLow.
+  ///
+  /// In es, this message translates to:
+  /// **'coincidencia baja'**
+  String get scMatchLow;
+
+  /// No description provided for @scAddToCollection.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir a la colección'**
+  String get scAddToCollection;
+
+  /// No description provided for @scSeeOptions.
+  ///
+  /// In es, this message translates to:
+  /// **'No es esta — ver opciones'**
+  String get scSeeOptions;
+
+  /// No description provided for @scScanAnother.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear otra'**
+  String get scScanAnother;
+
+  /// No description provided for @scNotSure.
+  ///
+  /// In es, this message translates to:
+  /// **'No estoy seguro'**
+  String get scNotSure;
+
+  /// No description provided for @scWhichIsIt.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cuál es?'**
+  String get scWhichIsIt;
+
+  /// No description provided for @scNoneQuiteFits.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna encaja del todo. ¿Es alguna de estas? Si no, prueba otra foto con mejor luz.'**
+  String get scNoneQuiteFits;
+
+  /// No description provided for @scNoEdges.
+  ///
+  /// In es, this message translates to:
+  /// **'No vi los bordes de la carta, así que he usado la imagen entera. Estos son los parecidos:'**
+  String get scNoEdges;
+
+  /// No description provided for @scCropped.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto es lo que he recortado. Los candidatos, por parecido:'**
+  String get scCropped;
+
+  /// No description provided for @scDiscard.
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar y escanear otra'**
+  String get scDiscard;
 }
 
 class _AppLocalizationsDelegate

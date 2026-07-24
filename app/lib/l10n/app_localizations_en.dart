@@ -1430,4 +1430,202 @@ class AppLocalizationsEn extends AppLocalizations {
   String bkOfDate(String cuando, String resumen) {
     return 'Backup from $cuando · $resumen.';
   }
+
+  @override
+  String get lsNoCamera => 'I can\'t find any camera.';
+
+  @override
+  String get lsCameraGone =>
+      'The camera dropped out mid-session. Check the cable and hit Try again.';
+
+  @override
+  String get lsFrameCard => 'Line the card up inside the frame';
+
+  @override
+  String get lsNoCardThere => 'I don\'t see a card there';
+
+  @override
+  String lsAddedToCollection(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '✓ $n cards into the collection',
+      one: '✓ 1 card into the collection',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lsAndToFolder(String carpeta) {
+    return ', and into \"$carpeta\"';
+  }
+
+  @override
+  String get lsTitle => 'Live scan';
+
+  @override
+  String get lsQuickTip =>
+      'Fast: clear cards go in on their own; doubtful ones get flagged for review.';
+
+  @override
+  String get lsCarefulTip =>
+      'Careful: doubtful ones stop and ask you which card it is.';
+
+  @override
+  String get lsQuick => 'Fast';
+
+  @override
+  String get lsCareful => 'Careful';
+
+  @override
+  String lsThisSession(int n) {
+    return '$n this session';
+  }
+
+  @override
+  String get lsScanPhotoTooltip => 'Scan a single photo';
+
+  @override
+  String get lsStartingCamera => 'Waking the camera up…';
+
+  @override
+  String get lsCantUseCamera => 'I can\'t use the camera';
+
+  @override
+  String get lsCameraUnavailable => 'Camera unavailable.';
+
+  @override
+  String get lsScanPhoto => 'Scan a photo';
+
+  @override
+  String lsPlusOneSame(String carta, int n) {
+    return '+1 same · $carta (×$n)';
+  }
+
+  @override
+  String lsAlreadyOnTable(String carta) {
+    return 'Already on the table: $carta · take it away and put it back, or tap \"+1 same\"';
+  }
+
+  @override
+  String lsSeeing(String carta) {
+    return 'Seeing: $carta';
+  }
+
+  @override
+  String get lsPassACard => 'Hold a card up to the camera…';
+
+  @override
+  String lsIsThis(String carta) {
+    return 'Is this $carta? I\'m not sure — tap to choose.';
+  }
+
+  @override
+  String get lsNotThisOne => 'Not this one — change printing';
+
+  @override
+  String get lsRetry => 'Try again';
+
+  @override
+  String get scBadImage => 'Couldn\'t read that image (is it a valid photo?)';
+
+  @override
+  String scAddedOne(String carta, String set, String numero) {
+    return '✓ $carta ($set #$numero)';
+  }
+
+  @override
+  String get scNoFolder => 'No folder';
+
+  @override
+  String scAlsoTo(String carpeta) {
+    return 'And also into: $carpeta';
+  }
+
+  @override
+  String get scLookingForCard => 'Looking for the card in the photo…';
+
+  @override
+  String scRecognising(int hechas, int total) {
+    return 'Recognising… $hechas/$total';
+  }
+
+  @override
+  String scTrayCount(int n, int copias) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n cards',
+      one: '1 card',
+    );
+    return '$_temp0 · $copias in total';
+  }
+
+  @override
+  String scToReview(int n) {
+    return '$n to review (tap them)';
+  }
+
+  @override
+  String scUnknown(int n) {
+    return '$n not recognised (tap to pick by hand)';
+  }
+
+  @override
+  String get scNothingRecognised =>
+      'I didn\'t recognise a single card in those photos. Try better light or less glare.';
+
+  @override
+  String scAddN(int n) {
+    return 'Add $n to the collection';
+  }
+
+  @override
+  String get scDropPhotos => 'Drop your card photos here';
+
+  @override
+  String get scDropExplain =>
+      'One or many at a time — and if a photo has SEVERAL cards (an album page, a full table), I pull them all out and put them in one list for you to review and add whichever you want. A phone photo or a scan both work.';
+
+  @override
+  String get scPickPhotos => 'Pick photos';
+
+  @override
+  String get scMatchHigh => 'strong match';
+
+  @override
+  String get scMatchMedium => 'fair match';
+
+  @override
+  String get scMatchLow => 'weak match';
+
+  @override
+  String get scAddToCollection => 'Add to the collection';
+
+  @override
+  String get scSeeOptions => 'Not this one — see options';
+
+  @override
+  String get scScanAnother => 'Scan another';
+
+  @override
+  String get scNotSure => 'I\'m not sure';
+
+  @override
+  String get scWhichIsIt => 'Which one is it?';
+
+  @override
+  String get scNoneQuiteFits =>
+      'None of them quite fits. Is it one of these? If not, try another photo with better light.';
+
+  @override
+  String get scNoEdges =>
+      'I couldn\'t see the card\'s edges, so I used the whole image. These are the closest:';
+
+  @override
+  String get scCropped =>
+      'This is what I cropped. The candidates, by likeness:';
+
+  @override
+  String get scDiscard => 'Discard and scan another';
 }

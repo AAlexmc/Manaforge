@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../l10n/t.dart';
 import 'package:flutter/services.dart';
 
 import '../scanner/burst_controller.dart';
@@ -193,10 +195,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       }
       return;
     }
+    final sinCamara = tr(context).lsNoCamera;
     try {
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
-        throw CameraException('sin_camara', 'No encuentro ninguna cámara.');
+        throw CameraException('sin_camara', sinCamara);
       }
       final controller = CameraController(cameras.first,
           ResolutionPreset.high,
@@ -237,8 +240,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     _timer = null;
     _stopLinuxCam();
     setState(() {
-      _cameraError = 'La cámara se ha desconectado a media sesión. '
-          'Revisa el cable y dale a Reintentar.';
+      _cameraError = tr(context).lsCameraGone;
     });
   }
 
@@ -337,8 +339,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
         sinCarta++;
         setState(() => _lastSeenName = null);
         setState(() => _noCardHint = outcome.usedFallback
-            ? 'Encuadra la carta dentro del marco'
-            : 'No veo ninguna carta ahí');
+            ? tr(context).lsFrameCard
+            : tr(context).lsNoCardThere);
         if (sinCarta >= 2) return;
         continue;
       }
@@ -447,10 +449,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     });
     final n = result.copies;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(carpeta == null
-          ? '✓ $n carta${n == 1 ? '' : 's'} a la colección'
-          : '✓ $n carta${n == 1 ? '' : 's'} a la colección, '
-              'y a "${carpeta.name}"'),
+      content: Text(tr(context).lsAddedToCollection(n) +
+          (carpeta == null ? '' : tr(context).lsAndToFolder(carpeta.name))),
       duration: const Duration(milliseconds: 1400),
     ));
   }
@@ -481,9 +481,10 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = tr(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Escanear en vivo'),
+        title: Text(t.lsTitle),
         actions: [
           KeyedSubtree(
             key: widget.setKey,
@@ -493,16 +494,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Tooltip(
-                message: _quickMode
-                    ? 'Rápido: las cartas claras entran solas; las dudosas, '
-                        'marcadas para revisar.'
-                    : 'Con cuidado: las dudosas se paran y te preguntan cuál es.',
+                message: _quickMode ? t.lsQuickTip : t.lsCarefulTip,
                 child: KeyedSubtree(
                   key: widget.modoKey,
                   child: FilterChip(
                     avatar: Icon(_quickMode ? Icons.bolt : Icons.verified_user,
                         size: 16),
-                    label: Text(_quickMode ? 'Rápido' : 'Con cuidado'),
+                    label: Text(_quickMode ? t.lsQuick : t.lsCareful),
                     selected: _quickMode,
                     visualDensity: VisualDensity.compact,
                     onSelected: (v) => setState(() => _quickMode = v),
@@ -516,13 +514,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
               child: Chip(
                 avatar: const Icon(Icons.check_circle,
                     size: 16, color: MFColors.success),
-                label: Text('$_sessionCount esta sesión'),
+                label: Text(t.lsThisSession(_sessionCount)),
                 visualDensity: VisualDensity.compact,
               ),
             ),
           IconButton(
             key: widget.fotoKey,
-            tooltip: 'Escanear una foto suelta',
+            tooltip: t.lsScanPhotoTooltip,
             icon: const Icon(Icons.photo_library_outlined),
             onPressed: () => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -547,14 +545,15 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   }
 
   Widget _buildLive() {
+    final t = tr(context);
     if (_starting) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 12),
-            Text('Encendiendo la cámara…'),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 12),
+            Text(t.lsStartingCamera),
           ],
         ),
       );
@@ -570,11 +569,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
             children: [
               const Icon(Icons.videocam_off_outlined, size: 56),
               const SizedBox(height: 12),
-              Text('No puedo usar la cámara',
+              Text(t.lsCantUseCamera,
                   style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
               Text(
-                _cameraError ?? 'Cámara no disponible.',
+                _cameraError ?? t.lsCameraUnavailable,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12.5),
               ),
@@ -585,7 +584,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                   FilledButton.tonalIcon(
                     onPressed: _startCamera,
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Reintentar'),
+                    label: Text(t.lsRetry),
                   ),
                   FilledButton.icon(
                     onPressed: () =>
@@ -601,7 +600,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                       ),
                     ),
                     icon: const Icon(Icons.photo_library_outlined),
-                    label: const Text('Escanear una foto'),
+                    label: Text(t.lsScanPhoto),
                   ),
                 ],
               ),
@@ -657,8 +656,11 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                   child: ActionChip(
                     avatar: const Icon(Icons.control_point_duplicate,
                         size: 18),
-                    label: Text(
-                        '+1 igual · ${_hitCache[_lastAdded!.chosen.entry.scryfallId]?.printedName ?? _lastAdded!.chosen.entry.name} (×${_lastAdded!.qty})'),
+                    label: Text(t.lsPlusOneSame(
+                        _hitCache[_lastAdded!.chosen.entry.scryfallId]
+                                ?.printedName ??
+                            _lastAdded!.chosen.entry.name,
+                        _lastAdded!.qty)),
                     onPressed: () {
                       setState(() => _lastAdded!.qty++);
                       _feedback(soft: true);
@@ -680,12 +682,9 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                     child: Text(
                       _lastSeenName != null
                           ? (_alreadyOnTable
-                              ? 'Ya está en la mesa: $_lastSeenName · '
-                                  'retírala y vuelve a ponerla, o toca '
-                                  '"+1 igual"'
-                              : 'Viendo: $_lastSeenName')
-                          : _noCardHint ??
-                              'Pasa una carta por delante de la cámara…',
+                              ? t.lsAlreadyOnTable(_lastSeenName!)
+                              : t.lsSeeing(_lastSeenName!))
+                          : _noCardHint ?? t.lsPassACard,
                       style: const TextStyle(
                           color: Colors.white, fontSize: 12.5),
                     ),
@@ -756,8 +755,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  '¿Es ${hit?.printedName ?? entry.name}? No estoy seguro — '
-                  'toca para elegir.',
+                  tr(context).lsIsThis(hit?.printedName ?? entry.name),
                   style: const TextStyle(color: Colors.black87, fontSize: 13),
                 ),
               ),
@@ -844,7 +842,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
                   const SizedBox(height: 12),
                   OutlinedButton.icon(
                     icon: const Icon(Icons.swap_horiz),
-                    label: const Text('No es esta — cambiar versión'),
+                    label: Text(tr(context).lsNotThisOne),
                     onPressed: () async {
                       final picked = await _pickVersion(line);
                       if (picked != null) {

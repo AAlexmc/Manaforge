@@ -612,5 +612,98 @@
   "bkOfDate": "Copia del {cuando} · {resumen}.",
   "@bkOfDate": {
     "placeholders": { "cuando": { "type": "String" }, "resumen": { "type": "String" } }
-  }
+  },
+
+  "lsNoCamera": "No encuentro ninguna cámara.",
+  "lsCameraGone": "La cámara se ha desconectado a media sesión. Revisa el cable y dale a Reintentar.",
+  "lsFrameCard": "Encuadra la carta dentro del marco",
+  "lsNoCardThere": "No veo ninguna carta ahí",
+  "lsAddedToCollection": "{n, plural, =1{✓ 1 carta a la colección} other{✓ {n} cartas a la colección}}",
+  "@lsAddedToCollection": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "lsAndToFolder": ", y a \"{carpeta}\"",
+  "@lsAndToFolder": {
+    "placeholders": { "carpeta": { "type": "String" } }
+  },
+  "lsTitle": "Escanear en vivo",
+  "lsQuickTip": "Rápido: las cartas claras entran solas; las dudosas, marcadas para revisar.",
+  "lsCarefulTip": "Con cuidado: las dudosas se paran y te preguntan cuál es.",
+  "lsQuick": "Rápido",
+  "lsCareful": "Con cuidado",
+  "lsThisSession": "{n} esta sesión",
+  "@lsThisSession": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "lsScanPhotoTooltip": "Escanear una foto suelta",
+  "lsStartingCamera": "Encendiendo la cámara…",
+  "lsCantUseCamera": "No puedo usar la cámara",
+  "lsCameraUnavailable": "Cámara no disponible.",
+  "lsScanPhoto": "Escanear una foto",
+  "lsPlusOneSame": "+1 igual · {carta} (×{n})",
+  "@lsPlusOneSame": {
+    "placeholders": { "carta": { "type": "String" }, "n": { "type": "int" } }
+  },
+  "lsAlreadyOnTable": "Ya está en la mesa: {carta} · retírala y vuelve a ponerla, o toca \"+1 igual\"",
+  "@lsAlreadyOnTable": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "lsSeeing": "Viendo: {carta}",
+  "@lsSeeing": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "lsPassACard": "Pasa una carta por delante de la cámara…",
+  "lsIsThis": "¿Es {carta}? No estoy seguro — toca para elegir.",
+  "@lsIsThis": {
+    "placeholders": { "carta": { "type": "String" } }
+  },
+  "lsNotThisOne": "No es esta — cambiar versión",
+  "lsRetry": "Reintentar",
+  "scBadImage": "No pude leer esa imagen (¿es una foto válida?)",
+  "scAddedOne": "✓ {carta} ({set} #{numero})",
+  "@scAddedOne": {
+    "placeholders": { "carta": { "type": "String" }, "set": { "type": "String" }, "numero": { "type": "String" } }
+  },
+  "scNoFolder": "Sin carpeta",
+  "scAlsoTo": "Y además a: {carpeta}",
+  "@scAlsoTo": {
+    "placeholders": { "carpeta": { "type": "String" } }
+  },
+  "scLookingForCard": "Buscando la carta en la foto…",
+  "scRecognising": "Reconociendo… {hechas}/{total}",
+  "@scRecognising": {
+    "placeholders": { "hechas": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "scTrayCount": "{n, plural, =1{1 carta}other{{n} cartas}} · {copias} en total",
+  "@scTrayCount": {
+    "placeholders": { "n": { "type": "int" }, "copias": { "type": "int" } }
+  },
+  "scToReview": "{n} para revisar (tócalas)",
+  "@scToReview": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "scUnknown": "{n} sin reconocer (toca para elegir a mano)",
+  "@scUnknown": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "scNothingRecognised": "No reconocí ninguna carta en esas fotos. Prueba con mejor luz o menos reflejo.",
+  "scAddN": "Añadir {n} a la colección",
+  "@scAddN": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "scDropPhotos": "Suelta aquí las fotos de tus cartas",
+  "scDropExplain": "Una o varias a la vez — y si una foto trae VARIAS cartas (una página del álbum, la mesa llena), las saco todas y las junto en una lista para que revises y añadas las que quieras. Vale foto del móvil o escaneo.",
+  "scPickPhotos": "Elegir fotos",
+  "scMatchHigh": "coincidencia alta",
+  "scMatchMedium": "coincidencia media",
+  "scMatchLow": "coincidencia baja",
+  "scAddToCollection": "Añadir a la colección",
+  "scSeeOptions": "No es esta — ver opciones",
+  "scScanAnother": "Escanear otra",
+  "scNotSure": "No estoy seguro",
+  "scWhichIsIt": "¿Cuál es?",
+  "scNoneQuiteFits": "Ninguna encaja del todo. ¿Es alguna de estas? Si no, prueba otra foto con mejor luz.",
+  "scNoEdges": "No vi los bordes de la carta, así que he usado la imagen entera. Estos son los parecidos:",
+  "scCropped": "Esto es lo que he recortado. Los candidatos, por parecido:",
+  "scDiscard": "Descartar y escanear otra"
 }
