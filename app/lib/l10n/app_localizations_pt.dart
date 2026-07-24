@@ -3500,17 +3500,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String dbErrCards(String codigo) {
-    return 'No se pudo descargar la base de cartas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return 'Não foi possível baixar o banco de cartas (HTTP $codigo). Tente de novo daqui a pouco.';
   }
 
   @override
   String dbErrHashes(String codigo) {
-    return 'No se pudo descargar la base de huellas (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return 'Não foi possível baixar o banco de impressões digitais (HTTP $codigo). Tente de novo daqui a pouco.';
   }
 
   @override
   String dbErrPrices(String codigo) {
-    return 'No se pudo descargar el histórico de precios (HTTP $codigo). Vuelve a intentarlo dentro de un rato.';
+    return 'Não foi possível baixar o histórico de preços (HTTP $codigo). Tente de novo daqui a pouco.';
   }
 
   @override
@@ -3519,132 +3519,132 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get ddForgedWith => 'Forjado con ManaForge';
+  String get ddForgedWith => 'Forjado com ManaForge';
 
   @override
-  String get fxThemeLifegain => 'drenaje de vida';
+  String get fxThemeLifegain => 'dreno de vida';
 
   @override
-  String get fxThemeSacrifice => 'sacrificio';
+  String get fxThemeSacrifice => 'sacrifício';
 
   @override
-  String get fxThemeSpells => 'hechizos';
+  String get fxThemeSpells => 'mágicas';
 
   @override
-  String get fxThemeArtifacts => 'artefactos';
+  String get fxThemeArtifacts => 'artefatos';
 
   @override
-  String get fxThemeCounters => 'contadores +1/+1';
+  String get fxThemeCounters => 'marcadores +1/+1';
 
   @override
-  String get fxThemeTokens => 'enjambre';
+  String get fxThemeTokens => 'enxame';
 
   @override
-  String get fxThemeGraveyard => 'cementerio';
+  String get fxThemeGraveyard => 'cemitério';
 
   @override
-  String get fxThemeGoodstuff => 'lo mejor de tus cartas';
+  String get fxThemeGoodstuff => 'o melhor das suas cartas';
 
   @override
   String get fxTagLifegain =>
-      'Cada punto de vida que ganas es daño para ellos: drena y aguanta.';
+      'Cada ponto de vida que você ganha é dano pra eles: drene e aguente.';
 
   @override
   String get fxTagSacrifice =>
-      'Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.';
+      'Suas criaturas valem mais mortas: sacrifique e cobre o pedágio.';
 
   @override
   String get fxTagSpells =>
-      'Cada instantáneo cuenta: juega en el turno del rival y castiga.';
+      'Cada mágica instantânea conta: jogue no turno do adversário e castigue.';
 
   @override
   String get fxTagArtifacts =>
-      'Monta tu taller: cada artefacto hace más fuertes a los demás.';
+      'Monte a sua oficina: cada artefato deixa os outros mais fortes.';
 
   @override
   String get fxTagCounters =>
-      'Contadores +1/+1: tus criaturas crecen hasta ser inalcanzables.';
+      'Marcadores +1/+1: suas criaturas crescem até ninguém alcançar.';
 
   @override
   String get fxTagTokens =>
-      'Inunda la mesa de fichas: donde ellos tienen una, tú tienes cinco.';
+      'Inunde a mesa de fichas: onde eles têm uma, você tem cinco.';
 
   @override
   String get fxTagGraveyard =>
-      'Tu cementerio es tu segunda mano: llénalo y recicla lo mejor.';
+      'Seu cemitério é a sua segunda mão: encha ele e recicle o melhor.';
 
   @override
   String get fxTagAggro =>
-      'Sal rápido y pega a la cara: la partida debería acabar pronto.';
+      'Saia rápido e bata na cara: essa partida tem que acabar cedo.';
 
   @override
   String get fxTagTempo =>
-      'Presiona pronto y protege la ventaja con tus hechizos.';
+      'Pressione cedo e proteja a vantagem com as suas mágicas.';
 
   @override
   String fxTagMidrange(String tema) {
-    return 'Cambia bien tus cartas y gana el medio juego con $tema.';
+    return 'Troque bem as suas cartas e ganhe o meio de jogo com $tema.';
   }
 
   @override
   String get fxTagControl =>
-      'Aguanta, responde a todo y remata cuando la mesa sea tuya.';
+      'Aguente, responda a tudo e finalize quando a mesa for sua.';
 
   @override
   String get fxMidLifegain =>
-      'Encadena tus fuentes de vida con los que castigan al rival por ello.';
+      'Encadeie suas fontes de vida com as cartas que castigam o adversário por isso.';
 
   @override
   String get fxMidSacrifice =>
-      'Sacrifica lo barato para robar, drenar o hacer crecer al resto.';
+      'Sacrifique o que é barato para comprar, drenar ou fazer o resto crescer.';
 
   @override
   String get fxMidSpells =>
-      'Guarda maná abierto: tus criaturas crecen con cada hechizo que lanzas.';
+      'Deixe mana aberto: suas criaturas crescem a cada mágica que você conjura.';
 
   @override
   String get fxMidArtifacts =>
-      'Despliega artefactos baratos y activa a los que los cuentan.';
+      'Baixe artefatos baratos e ligue os que contam artefatos.';
 
   @override
   String get fxMidCounters =>
-      'Apila contadores en una o dos criaturas y protégelas.';
+      'Empilhe marcadores em uma ou duas criaturas e proteja elas.';
 
   @override
   String get fxMidTokens =>
-      'Genera fichas cada turno y busca los efectos que las hacen mayores.';
+      'Gere fichas todo turno e procure os efeitos que deixam elas maiores.';
 
   @override
   String get fxMidGraveyard =>
-      'Muele y descarta con intención: lo que cae al cementerio vuelve.';
+      'Moa e descarte de propósito: o que cai no cemitério volta.';
 
   @override
   String get fxEndLifegain =>
-      'Con la vida alta, cambia a modo agresivo: ellos ya no llegan.';
+      'Com a vida alta, vire para o modo agressivo: eles não chegam mais lá.';
 
   @override
   String get fxEndSacrifice =>
-      'El valor acumulado te da la partida: cada cambio te sale gratis.';
+      'O valor acumulado te dá a partida: cada troca sai de graça pra você.';
 
   @override
   String get fxEndSpells =>
-      'Un par de hechizos en el mismo turno y tus criaturas cierran.';
+      'Duas mágicas no mesmo turno e suas criaturas fecham o jogo.';
 
   @override
   String get fxEndArtifacts =>
-      'Tu mesa vale el doble que la suya: remata con tus payoffs.';
+      'Sua mesa vale o dobro da deles: finalize com os seus payoffs.';
 
   @override
   String get fxEndCounters =>
-      'Una amenaza enorme y protegida acaba la partida en dos golpes.';
+      'Uma ameaça enorme e protegida acaba a partida em dois ataques.';
 
   @override
   String get fxEndTokens =>
-      'Ataca en masa: ningún bloqueo aguanta a todo tu ejército.';
+      'Ataque em massa: nenhum bloqueio segura o seu exército inteiro.';
 
   @override
   String get fxEndGraveyard =>
-      'Reutiliza tus mejores cartas: juegas con dos manos contra una.';
+      'Reutilize suas melhores cartas: você joga com duas mãos contra uma.';
 
   @override
   String get fxTurns12 => 'T1-T2';
@@ -3656,48 +3656,48 @@ class AppLocalizationsPt extends AppLocalizations {
   String get fxTurns5 => 'T5+';
 
   @override
-  String get fxAggroEarly => 'Juega una criatura cada turno, sin excepción.';
+  String get fxAggroEarly => 'Jogue uma criatura por turno, sem exceção.';
 
   @override
   String get fxAggroMid =>
-      'Sigue atacando; guarda el daño directo para quitar bloqueadores.';
+      'Continue atacando; guarde o dano direto para tirar bloqueadores.';
 
   @override
-  String get fxAggroLate => 'Remata con todo: aquí deberías cerrar la partida.';
+  String get fxAggroLate => 'Vá com tudo: é aqui que você fecha a partida.';
 
   @override
-  String get fxTempoEarly => 'Amenaza barata y maná abierto cuando puedas.';
+  String get fxTempoEarly => 'Ameaça barata e mana aberto sempre que der.';
 
   @override
-  String get fxTempoMid => 'Ataca y usa tus hechizos en el turno del rival.';
+  String get fxTempoMid => 'Ataque e use suas mágicas no turno do adversário.';
 
   @override
   String get fxTempoLate =>
-      'Protege tus criaturas y cierra por el aire o con daño directo.';
+      'Proteja suas criaturas e feche pelo ar ou no dano direto.';
 
   @override
   String get fxMidrangeEarly =>
-      'Desarrolla y no regales cartas: cambios de uno por uno buenos.';
+      'Desenvolva e não dê cartas de graça: trocas de um por um bem feitas.';
 
   @override
   String fxMidrangeMid(String tema) {
-    return 'Despliega tus motores de $tema y estabiliza la mesa.';
+    return 'Baixe seus motores de $tema e estabilize a mesa.';
   }
 
   @override
   String get fxMidrangeLate =>
-      'Tus cartas valen más que las suyas: conviértelo en la partida.';
+      'Suas cartas valem mais que as deles: transforme isso na partida.';
 
   @override
   String get fxControlEarly =>
-      'Tierra al turno y responde solo a lo que importa.';
+      'Um terreno por turno e responda só ao que importa.';
 
   @override
   String get fxControlMid =>
-      'Limpia la mesa y roba cartas: el tiempo juega para ti.';
+      'Limpe a mesa e compre cartas: o tempo joga a seu favor.';
 
   @override
-  String get fxControlLate => 'Baja una amenaza y protégela hasta el final.';
+  String get fxControlLate => 'Baixe uma ameaça e proteja ela até o fim.';
 
   @override
   String get fxArchetypeAggro => 'aggro';
@@ -3714,41 +3714,41 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String fxWhyItWorks(String coste, String tierras, String arquetipo,
       int criaturas, int interaccion, String tema) {
-    return 'Coste medio $coste: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva $tierras tierras — dentro del rango de un mazo $arquetipo. Hay $criaturas criaturas para mantener la mesa y $interaccion cartas de interacción para lo que traiga el rival. El tema ($tema) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.';
+    return 'Custo médio $coste: pela regra de Karsten (24 terrenos com custo 3.0, ±1 a cada ±0.5), este deck leva $tierras terrenos — dentro da faixa de um deck $arquetipo. Tem $criaturas criaturas para segurar a mesa e $interaccion cartas de interação para o que o adversário trouxer. O tema ($tema) concentra as suas sinergias: quanto mais peças do tema você vir, mais forte fica cada uma.';
   }
 
   @override
   String fxNoLandsRange(String tierras, String min, String max) {
-    return 'Con esa curva salen $tierras tierras: fuera del rango sano ($min-$max). Ajusta el total de hechizos.';
+    return 'Com essa curva saem $tierras terrenos: fora da faixa saudável ($min-$max). Ajuste o total de mágicas.';
   }
 
   @override
   String get fxNoCards =>
-      'Tu colección no tiene suficientes cartas de estos colores para llenar esa curva. Prueba con menos hechizos o con otros costes.';
+      'Sua coleção não tem cartas suficientes dessas cores para preencher essa curva. Tente com menos mágicas ou com outros custos.';
 
   @override
   String fxNoProfile(String coste, String tierras) {
-    return 'Esa curva (coste medio $coste con $tierras tierras) no encaja en ningún perfil sano: un mazo barato quiere menos tierras y uno caro quiere más. Acércalos.';
+    return 'Essa curva (custo médio $coste com $tierras terrenos) não encaixa em nenhum perfil saudável: um deck barato quer menos terrenos e um caro quer mais. Aproxime os dois.';
   }
 
   @override
   String get fxNoBasics =>
-      'No hay tierras básicas suficientes en la colección para esa curva.';
+      'Não há terrenos básicos suficientes na coleção para essa curva.';
 
   @override
   String fxHardRule(String detalle) {
-    return 'La curva pedida rompe una regla dura: $detalle';
+    return 'A curva pedida quebra uma regra dura: $detalle';
   }
 
   @override
   String get tsPresetMonoRed =>
-      'Criaturas baratas y daño a la cara: te mata en 4-5 turnos si no aguantas el ritmo.';
+      'Criaturas baratas e dano na cara: te mata em 4-5 turnos se você não segurar o ritmo.';
 
   @override
   String get tsPresetAzorius =>
-      'Contramagia, barreduras y robo: alarga la partida y gana con pocos finalizadores.';
+      'Contramágicas, varreduras e compra de cartas: alonga a partida e ganha com poucos finalizadores.';
 
   @override
   String get tsPresetGolgari =>
-      'Cambios de uno por uno, criaturas eficientes y removal negro: gana el juego largo por calidad de cartas.';
+      'Trocas de um por um, criaturas eficientes e removal preto: ganha o jogo longo na qualidade das cartas.';
 }
