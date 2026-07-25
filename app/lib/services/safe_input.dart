@@ -52,6 +52,10 @@ enum InputRejectedCode {
   /// La imagen de fondo es demasiado grande.
   backgroundTooBig,
 
+  /// La foto que se suelta en el escáner pesa mucho más de lo que puede
+  /// pesar una foto de carta de verdad.
+  scanTooBig,
+
   /// Cualquier otro: se enseña [InputRejected.message] tal cual.
   other,
 }
@@ -67,6 +71,7 @@ String inputRejectedText(AppLocalizations t, InputRejected e) =>
       InputRejectedCode.badHash => t.siBadHash,
       InputRejectedCode.backgroundNotImage => t.siBackgroundNotImage,
       InputRejectedCode.backgroundTooBig => t.siBackgroundTooBig,
+      InputRejectedCode.scanTooBig => t.siScanTooBig,
       InputRejectedCode.other => e.message,
     };
 
@@ -81,6 +86,19 @@ void ensureImportFileSize(int bytes) {
     throw const InputRejected(
         'Ese archivo es demasiado grande para ser una lista de cartas.',
         code: InputRejectedCode.importTooBig);
+  }
+}
+
+/// Tope de una foto que se suelta en el escáner. Mismo criterio que el
+/// fondo de pantalla (25 MB): una foto de carta de verdad no se acerca ni de
+/// lejos; el tope está para no leer a memoria un vídeo o una imagen de disco
+/// enorme soltada por error.
+const int kMaxScanFileBytes = 25 * 1024 * 1024;
+
+void ensureScanFileSize(int bytes) {
+  if (bytes > kMaxScanFileBytes) {
+    throw const InputRejected('Esa foto es demasiado grande para reconocerla.',
+        code: InputRejectedCode.scanTooBig);
   }
 }
 
@@ -180,7 +198,8 @@ String? safeCardImageUrl(String? url) {
 /// TROZOS, y un trozo puede ser de cualquier tamaño. El tope entonces no
 /// existe. Esto corta de verdad, y devuelve null si se pasa: media respuesta
 /// no es una respuesta.
-Future<String?> readCappedBody(http.StreamedResponse response, int maxBytes) async {
+Future<String?> readCappedBody(
+    http.StreamedResponse response, int maxBytes) async {
   final buffer = <int>[];
   await for (final chunk in response.stream) {
     buffer.addAll(chunk);

@@ -22,12 +22,16 @@ import 'whats_new_dialog.dart';
 /// silencio sería peor.
 Future<void> openReleasePage(BuildContext context, AppRelease release) async {
   // segunda comprobación, aquí mismo: lo que se abre viene de un JSON de
-  // fuera y esto es lo último antes de lanzarlo al sistema
-  if (!release.pageUrl.startsWith(kRepoUrlPrefix)) return;
+  // fuera y esto es lo último antes de lanzarlo al sistema. Se valida sobre
+  // la URI YA PARSEADA (ver safeReleaseUri) y se lanza ESA, sin volver a
+  // parsear el texto crudo: `Uri.parse` normaliza los `..`, así que
+  // comprobar el texto y parsear aparte dejaría colar lo mismo que
+  // safeReleaseUri existe para evitar.
+  final uri = safeReleaseUri(release.pageUrl);
+  if (uri == null) return;
   var abierto = false;
   try {
-    abierto = await launchUrl(Uri.parse(release.pageUrl),
-        mode: LaunchMode.externalApplication);
+    abierto = await launchUrl(uri, mode: LaunchMode.externalApplication);
   } catch (_) {
     abierto = false;
   }
@@ -36,11 +40,11 @@ Future<void> openReleasePage(BuildContext context, AppRelease release) async {
     context: context,
     builder: (context) => AlertDialog(
       title: Text(tr(context).downloadTitle),
-      content: SelectableText(release.pageUrl),
+      content: SelectableText(uri.toString()),
       actions: [
         TextButton(
           onPressed: () {
-            Clipboard.setData(ClipboardData(text: release.pageUrl));
+            Clipboard.setData(ClipboardData(text: uri.toString()));
             Navigator.of(context).pop();
           },
           child: Text(tr(context).downloadCopyLink),
@@ -90,10 +94,8 @@ class _UpdateBannerState extends State<UpdateBanner> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(t.versionThereIs(release.version),
-                          style:
-                              const TextStyle(fontWeight: FontWeight.bold)),
-                      Text(
-                          t.versionNotAuto(widget.checker.currentVersion),
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(t.versionNotAuto(widget.checker.currentVersion),
                           style: const TextStyle(fontSize: 11.5)),
                     ],
                   ),
@@ -212,8 +214,7 @@ class _UpdateSettingsCardState extends State<UpdateSettingsCard> {
                         ? const SizedBox(
                             width: 16,
                             height: 16,
-                            child:
-                                CircularProgressIndicator(strokeWidth: 2))
+                            child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.refresh, size: 18),
                     label: Text(t.versionCheckNow),
                   ),

@@ -13,6 +13,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'json_store_io.dart';
+import 'safe_input.dart';
 
 class WishItem {
   final String oracleId;
@@ -53,7 +54,9 @@ class WishItem {
         oracleId: json['oracleId'] as String,
         name: json['name'] as String,
         printedName: json['printedName'] as String?,
-        imageSmall: json['imageSmall'] as String?,
+        // las URLs se filtran al LEER: este fichero puede venir de una copia
+        // restaurada que te haya pasado otra persona
+        imageSmall: safeCardImageUrl(json['imageSmall'] as String?),
         colors: json['colors'] as String? ?? '',
         targetPrice: (json['targetPrice'] as num).toDouble(),
         lastPrice: (json['lastPrice'] as num?)?.toDouble(),
@@ -119,8 +122,7 @@ class WishlistStore extends ChangeNotifier {
   Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
-    await writeJsonFile(
-        file, jsonEncode([for (final i in items) i.toJson()]));
+    await writeJsonFile(file, jsonEncode([for (final i in items) i.toJson()]));
   }
 
   void add(WishItem item) {

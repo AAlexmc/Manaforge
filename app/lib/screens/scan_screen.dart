@@ -17,6 +17,7 @@ import '../services/achievements_controller.dart';
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/folder_store.dart';
+import '../services/safe_input.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
@@ -25,6 +26,17 @@ import '../widgets/scanner_db_gate.dart';
 import '../widgets/set_lock.dart';
 import '../widgets/tray_list.dart';
 import '../widgets/version_picker.dart';
+
+/// Extensiones que se aceptan como foto: el picker de fichero solo enseña
+/// estas, y arrastrar-y-soltar tiene que aplicar el MISMO filtro (si no,
+/// soltar cualquier cosa la manda derecha al pipeline de reconocimiento).
+const _photoExtensions = ['jpg', 'jpeg', 'png', 'webp', 'bmp'];
+
+/// ¿Tiene [name] pinta de foto? Por extensión, igual que el picker.
+bool looksLikePhotoFile(String name) {
+  final lower = name.toLowerCase();
+  return _photoExtensions.any((ext) => lower.endsWith('.$ext'));
+}
 
 /// Escáner de cartas, fase B: suelta una FOTO de una carta y ManaForge la
 /// reconoce — detección de contornos, rectificación de perspectiva, huella
@@ -171,8 +183,6 @@ class _ScanScreenState extends State<ScanScreen> {
   int _batchTotal = 0;
   final Map<String, CardHit?> _hitCache = {};
 
-  static const _photoExtensions = ['jpg', 'jpeg', 'png', 'webp', 'bmp'];
-
   @override
   void initState() {
     super.initState();
@@ -220,6 +230,9 @@ class _ScanScreenState extends State<ScanScreen> {
       _showAll = false;
     });
     try {
+      // el tamaño se mira ANTES de leerlo: soltar un vídeo o una imagen de
+      // disco enorme por error no debe cargarlo entero a memoria
+      ensureScanFileSize(await file.length());
       final bytes = await file.readAsBytes();
       final outcomes = await compute(processScanPhotoAll, bytes);
       if (outcomes.isEmpty) {
@@ -254,6 +267,20 @@ class _ScanScreenState extends State<ScanScreen> {
           _confidence = decision.confidence;
           _processing = false;
         });
+      }
+    } on InputRejected catch (e) {
+      if (mounted) {
+        final mensaje = inputRejectedText(tr(context), e);
+        setState(() {
+          _processing = false;
+          _error = mensaje;
+        });
+        // el rechazo tiene que verse SIEMPRE: si ya hay una bandeja o
+        // candidatos delante, el `_error` de _buildDropZone() no se pinta
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(mensaje),
+          duration: const Duration(milliseconds: 1800),
+        ));
       }
     } catch (e) {
       if (mounted) {
@@ -306,8 +333,7 @@ class _ScanScreenState extends State<ScanScreen> {
     final index = await widget.scanner.loadIndex();
     final perCard = <(List<ScanMatch>, Uint8List?)>[];
     for (final o in outcomes) {
-      final (matches, _) = index.bestGroupMatches(
-          o.signatures, o.altSignatures,
+      final (matches, _) = index.bestGroupMatches(o.signatures, o.altSignatures,
           lockSet: _lockSet,
           ownedPrintings: widget.collection.printingQty.keys.toSet());
       perCard.add((matches, o.artPng));
@@ -340,21 +366,30 @@ class _ScanScreenState extends State<ScanScreen> {
     try {
       final index = await widget.scanner.loadIndex();
       final perPhoto = <(List<ScanMatch>, Uint8List?)>[];
+      // fotos que no llegan a entrar (demasiado grandes o ilegibles): se
+      // cuentan para avisar al terminar, no desaparecen en silencio
+      var saltadas = 0;
       for (final f in files) {
         try {
+          // el tamaño se mira ANTES de leerla: una foto de más en el lote
+          // no debe cargar a memoria un fichero enorme
+          ensureScanFileSize(await f.length());
           final bytes = await f.readAsBytes();
           // cada foto puede traer VARIAS cartas (página de álbum)
           final outcomes = await compute(processScanPhotoAll, bytes);
+          if (outcomes.isEmpty) saltadas++; // foto ilegible: ni una carta
           for (final outcome in outcomes) {
             final (matches, _) = index.bestGroupMatches(
                 outcome.signatures, outcome.altSignatures,
                 lockSet: _lockSet,
-          ownedPrintings: widget.collection.printingQty.keys.toSet());
+                ownedPrintings: widget.collection.printingQty.keys.toSet());
             perPhoto.add((matches, outcome.artPng));
             await _precache(matches);
           }
         } catch (_) {
-          // una foto ilegible no debe tumbar el lote entero
+          // una foto ilegible o demasiado grande no debe tumbar el lote
+          // entero
+          saltadas++;
         }
         if (!mounted) return;
         setState(() => _batchDone++);
@@ -365,6 +400,12 @@ class _ScanScreenState extends State<ScanScreen> {
           _batch = buildBatchTray(perPhoto);
           _batchProcessing = false;
         });
+        if (saltadas > 0) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(tr(context).scSkipped(saltadas)),
+            duration: const Duration(milliseconds: 2200),
+          ));
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -409,7 +450,8 @@ class _ScanScreenState extends State<ScanScreen> {
     _addOwned(entry, c.hit, 1);
     // misma regla que la bandeja: etiquetar DESPUÉS de guardar
     final carpeta = _folder;
-    tagScanned(widget.folders, carpeta?.id, {c.hit?.oracleId ?? entry.oracleId});
+    tagScanned(
+        widget.folders, carpeta?.id, {c.hit?.oracleId ?? entry.oracleId});
     widget.achievements?.recordScan(copies: 1, distinct: 1);
     setState(() {
       _sessionCount++;
@@ -419,8 +461,8 @@ class _ScanScreenState extends State<ScanScreen> {
       _showAll = false;
     });
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(tr(context).scAddedOne(entry.name,
-              entry.setCode.toUpperCase(), entry.collectorNumber) +
+      content: Text(tr(context).scAddedOne(
+              entry.name, entry.setCode.toUpperCase(), entry.collectorNumber) +
           (carpeta == null ? '' : tr(context).lsAndToFolder(carpeta.name))),
       duration: const Duration(milliseconds: 1200),
     ));
@@ -487,7 +529,21 @@ class _ScanScreenState extends State<ScanScreen> {
       onDragExited: (_) => setState(() => _dragging = false),
       onDragDone: (detail) {
         setState(() => _dragging = false);
-        final files = detail.files;
+        // mismo filtro que el picker: soltar cualquier cosa no la manda al
+        // pipeline de reconocimiento
+        final files =
+            detail.files.where((f) => looksLikePhotoFile(f.name)).toList();
+        // rechazo TOTAL o PARCIAL (2 fotos buenas + 1 .exe, p. ej.): se
+        // avisa siempre, con SnackBar además del `_error` de la pantalla
+        // vacía — ese `_error` no se pinta si ya hay bandeja o candidatos
+        // delante
+        if (files.length != detail.files.length) {
+          setState(() => _error = tr(context).scBadImage);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(tr(context).scBadImage),
+            duration: const Duration(milliseconds: 1800),
+          ));
+        }
         if (files.isEmpty) return;
         if (files.length == 1) {
           _scanFile(files.first);
@@ -570,8 +626,7 @@ class _ScanScreenState extends State<ScanScreen> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
-                child: Text(t.scNothingRecognised,
-                    textAlign: TextAlign.center),
+                child: Text(t.scNothingRecognised, textAlign: TextAlign.center),
               ),
             ),
           )
@@ -627,8 +682,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   Future<int?> _pickVersion(TrayLine line) {
     return showVersionPicker(context,
-        choices: versionChoicesFrom(line, _hitCache),
-        selected: line.selected);
+        choices: versionChoicesFrom(line, _hitCache), selected: line.selected);
   }
 
   Widget _buildDropZone() {
@@ -639,8 +693,7 @@ class _ScanScreenState extends State<ScanScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.add_a_photo_outlined,
-                size: 64,
-                color: Theme.of(context).colorScheme.primary),
+                size: 64, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 16),
             Text(tr(context).scDropPhotos,
                 style: Theme.of(context).textTheme.titleLarge),
@@ -660,8 +713,8 @@ class _ScanScreenState extends State<ScanScreen> {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(_error!,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.error)),
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.error)),
               ),
           ],
         ),
@@ -728,8 +781,8 @@ class _ScanScreenState extends State<ScanScreen> {
           child: Text(
             '${entry.setCode.toUpperCase()} #${entry.collectorNumber}'
             '  ·  ${_confidenceLabel(best.match.distance)}',
-            style: TextStyle(
-                color: Theme.of(context).textTheme.bodySmall?.color),
+            style:
+                TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
           ),
         ),
         const SizedBox(height: 24),
@@ -816,10 +869,10 @@ class _ScanScreenState extends State<ScanScreen> {
                   name: _candidates[i].match.entry.name),
               title: Text(_candidates[i].hit?.printedName ??
                   _candidates[i].match.entry.name),
-              subtitle: Text(
-                  '${_candidates[i].match.entry.setCode.toUpperCase()} '
-                  '#${_candidates[i].match.entry.collectorNumber} · '
-                  '${_confidenceLabel(_candidates[i].match.distance)}'),
+              subtitle:
+                  Text('${_candidates[i].match.entry.setCode.toUpperCase()} '
+                      '#${_candidates[i].match.entry.collectorNumber} · '
+                      '${_confidenceLabel(_candidates[i].match.distance)}'),
               trailing: i == _selected
                   ? const Icon(Icons.check_circle, color: MFColors.success)
                   : const Icon(Icons.radio_button_unchecked),

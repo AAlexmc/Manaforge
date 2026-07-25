@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:manaforge_app/services/wishlist_store.dart';
 
-WishItem _item(String oracle, String name, double target) => WishItem(
-    oracleId: oracle, name: name, colors: '', targetPrice: target);
+WishItem _item(String oracle, String name, double target) =>
+    WishItem(oracleId: oracle, name: name, colors: '', targetPrice: target);
 
 void main() {
   test('añadir, contener, quitar y listar ordenado por nombre', () {
@@ -70,5 +70,30 @@ void main() {
     expect(back.targetPrice, 2.5);
     expect(back.lastPrice, 3.0);
     expect(back.alerted, isTrue);
+  });
+
+  group('WishItem.fromJson filtra la imagen (copia restaurada de otro)', () {
+    test('URL fuera de Scryfall se queda sin imagen, no la pide', () {
+      final item = WishItem.fromJson(const {
+        'oracleId': 'o1',
+        'name': 'Bolt',
+        'imageSmall': 'http://evil/x.png',
+        'colors': 'R',
+        'targetPrice': 2.5,
+      });
+      expect(item.imageSmall, isNull);
+    });
+
+    test('URL legítima de Scryfall se conserva', () {
+      const url = 'https://cards.scryfall.io/small/front/a/b/abc.jpg';
+      final item = WishItem.fromJson({
+        'oracleId': 'o1',
+        'name': 'Bolt',
+        'imageSmall': url,
+        'colors': 'R',
+        'targetPrice': 2.5,
+      });
+      expect(item.imageSmall, url);
+    });
   });
 }

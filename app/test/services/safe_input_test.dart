@@ -16,6 +16,14 @@ void main() {
           throwsA(isA<InputRejected>()));
       expect(() => ensureImportFileSize(2 * 1024 * 1024), returnsNormally);
     });
+
+    test('una foto descomunal para el escáner no se llega a leer', () {
+      expect(
+          () => ensureScanFileSize(kMaxScanFileBytes + 1),
+          throwsA(isA<InputRejected>()
+              .having((e) => e.code, 'code', InputRejectedCode.scanTooBig)));
+      expect(() => ensureScanFileSize(2 * 1024 * 1024), returnsNormally);
+    });
   });
 
   group('descargas', () {
@@ -47,8 +55,7 @@ void main() {
         return http.Response('no deberías haber llegado aquí', 200);
       });
 
-      expect(
-          () => secureSend(client, Uri.parse('https://github.com/x.gz')),
+      expect(() => secureSend(client, Uri.parse('https://github.com/x.gz')),
           throwsA(isA<InputRejected>()));
     });
 
@@ -76,8 +83,7 @@ void main() {
       final client = MockClient((req) async => http.Response('', 302,
           headers: {'location': 'https://vueltas.example/otra'}));
 
-      expect(
-          () => secureSend(client, Uri.parse('https://vueltas.example/x')),
+      expect(() => secureSend(client, Uri.parse('https://vueltas.example/x')),
           throwsA(isA<InputRejected>()));
     });
   });
@@ -134,17 +140,18 @@ void main() {
         () async {
       // `stream.take(64 * 1024)` limitaba a 64.000 TROZOS, no a 64 KB: un
       // solo trozo de 10 MB pasaba el "tope" tan tranquilo
-      final body =
-          await readCappedBody(_respuesta([List.filled(10 * 1024 * 1024, 65)]),
-              64 * 1024);
+      final body = await readCappedBody(
+          _respuesta([List.filled(10 * 1024 * 1024, 65)]), 64 * 1024);
 
       expect(body, isNull);
     });
 
     test('bytes que no son UTF-8 no revientan', () async {
-      final body = await readCappedBody(_respuesta([
-        [0xC3, 0x28, 0xA0]
-      ]), 1024);
+      final body = await readCappedBody(
+          _respuesta([
+            [0xC3, 0x28, 0xA0]
+          ]),
+          1024);
 
       expect(body, isNotNull);
     });

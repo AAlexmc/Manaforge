@@ -77,6 +77,11 @@ class MetaDeckService {
   static const url =
       'https://raw.githubusercontent.com/AAlexmc/Manaforge/main/data/meta_decks.json';
 
+  /// Solo para tests: cliente HTTP.
+  final http.Client Function()? clientFactory;
+
+  MetaDeckService({this.clientFactory});
+
   Future<File?> _cacheFile() async {
     try {
       final dir = await getApplicationSupportDirectory();
@@ -100,7 +105,7 @@ class MetaDeckService {
     final cache = await _cacheFile();
     // red primero: el meta se actualiza editando el JSON del repo y debe
     // verse al momento; la caché queda como salvavidas sin conexión
-    final client = http.Client();
+    final client = clientFactory?.call() ?? http.Client();
     try {
       // por secureSend, como el resto de lo que se baja: package:http sigue
       // las redirecciones a donde le digan, incluido bajar a http en claro
@@ -112,18 +117,24 @@ class MetaDeckService {
         final body = await readCappedBody(response, kMaxMetaDecksBytes);
         if (body != null) {
           final result = _parse(body, online: true);
-          // solo se cachea lo que se ha podido leer: nunca basura
-          await cache?.writeAsString(body);
-          return result;
+          // un feed sin NINGÚN mazo es tan inútil como no tener red: cae a
+          // los presets en vez de dejar Modo Test sin nada que elegir
+          if (result.decks.isNotEmpty) {
+            // solo se cachea lo que se ha podido leer: nunca basura
+            await cache?.writeAsString(body);
+            return result;
+          }
         }
       }
-    } catch (_) {/* sin red: fallback */
+    } catch (_) {
+      /* sin red: fallback */
     } finally {
       client.close();
     }
     if (cache != null && await cache.exists()) {
       try {
-        return _parse(await cache.readAsString(), online: true);
+        final result = _parse(await cache.readAsString(), online: true);
+        if (result.decks.isNotEmpty) return result;
       } catch (_) {/* caché corrupta */}
     }
     // sin `source`: no hay feed que citar y el texto ("presets locales") lo

@@ -1524,6 +1524,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String scSkipped(int n) {
+    return '已跳过 $n 张照片（太大或无法读取）';
+  }
+
+  @override
   String get scNothingRecognised => '这些照片里我一张卡都没认出来。换个更好的光线，或减少反光试试。';
 
   @override
@@ -2445,6 +2450,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get siBackgroundTooBig => '这张图片太大了，没法用作背景。';
+
+  @override
+  String get siScanTooBig => '这张照片太大了，没法识别。';
 
   @override
   String get bgImages => '图片';

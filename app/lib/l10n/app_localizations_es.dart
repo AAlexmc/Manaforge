@@ -1594,6 +1594,17 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String scSkipped(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n fotos saltadas (demasiado grandes o ilegibles)',
+      one: '1 foto saltada (demasiado grande o ilegible)',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get scNothingRecognised =>
       'No reconocí ninguna carta en esas fotos. Prueba con mejor luz o menos reflejo.';
 
@@ -2551,6 +2562,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get siBackgroundTooBig =>
       'Esa imagen es demasiado grande para usarla de fondo.';
+
+  @override
+  String get siScanTooBig => 'Esa foto es demasiado grande para reconocerla.';
 
   @override
   String get bgImages => 'Imágenes';

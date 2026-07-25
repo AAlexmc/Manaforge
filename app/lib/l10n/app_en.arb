@@ -691,6 +691,10 @@
   "@scUnknown": {
     "placeholders": { "n": { "type": "int" } }
   },
+  "scSkipped": "{n, plural, =1{1 photo skipped (too big or unreadable)}other{{n} photos skipped (too big or unreadable)}}",
+  "@scSkipped": {
+    "placeholders": { "n": { "type": "int" } }
+  },
   "scNothingRecognised": "I didn't recognise a single card in those photos. Try better light or less glare.",
   "scAddN": "Add {n} to the collection",
   "@scAddN": {
@@ -1155,6 +1159,7 @@
   "siBadHash": "What was downloaded doesn't match the fingerprint published on GitHub. Nothing has been installed. Try again; if it keeps happening, say so.",
   "siBackgroundNotImage": "Pick an image (.jpg, .png or .webp) as your background.",
   "siBackgroundTooBig": "That image is too big to use as a background.",
+  "siScanTooBig": "That photo is too big to recognise.",
 
   "bgImages": "Images",
   "bgImageFailed": "I couldn't use that image: {error}",
