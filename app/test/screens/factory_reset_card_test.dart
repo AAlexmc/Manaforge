@@ -103,4 +103,55 @@ void main() {
     expect(dones, 0);
     expect(find.textContaining('NO se ha borrado nada'), findsOneWidget);
   });
+
+  /// Los tres flujos de abajo comparten los dos primeros diálogos (ELIMINAR
+  /// + CONFIRMAR); solo cambia qué hace `wipe` y qué pasa después.
+  Future<void> _hastaElBorrado(WidgetTester tester) async {
+    await tester.tap(find.text('Borrar todo'));
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), 'ELIMINAR');
+    await tester.pump();
+    await tester.tap(find.text('Continuar'));
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), 'CONFIRMAR');
+    await tester.pump();
+    await tester.tap(find.text('Borrar definitivamente'));
+    await tester.pump(); // arranca el trabajo
+    await tester.pump(); // la barrera se cierra
+  }
+
+  testWidgets(
+      'éxito con `failed` no vacío: enseña qué queda y llama a onDone tras '
+      'cerrar el diálogo', (tester) async {
+    await tester.pumpWidget(carta(
+        wipe: () async => const FactoryResetReport(
+            backupFile: null,
+            deleted: ['collection.json'],
+            failed: ['decks.json', 'wishlist.json'])));
+    await _hastaElBorrado(tester);
+
+    expect(find.textContaining('decks.json, wishlist.json'), findsOneWidget);
+    expect(dones, 0); // el diálogo sigue abierto: onDone todavía no
+
+    await tester.tap(find.text('Entendido'));
+    await tester.pump();
+
+    expect(dones, 1);
+  });
+
+  testWidgets('FactoryResetHalfDone: enseña el aviso y SÍ llama a onDone',
+      (tester) async {
+    await tester.pumpWidget(carta(
+        wipe: () async =>
+            throw FactoryResetHalfDone(Exception('fondo roto'))));
+    await _hastaElBorrado(tester);
+
+    expect(find.textContaining('a medias'), findsOneWidget);
+    expect(dones, 0);
+
+    await tester.tap(find.text('Entendido'));
+    await tester.pump();
+
+    expect(dones, 1);
+  });
 }

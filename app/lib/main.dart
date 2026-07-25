@@ -407,15 +407,20 @@ class _HomeShellState extends State<HomeShell> {
 
   /// Reset de fábrica: copia previa, cerrar los sqlite (en Windows un handle
   /// abierto bloquea el borrado), limpiar el fondo (en memoria y sus ficheros,
-  /// ANTES del barrido para que no re-escriba nada después) y barrer. El
-  /// session bump lo dispara la tarjeta vía onRestored al terminar.
+  /// ANTES del barrido para que no re-escriba nada después) y barrer. Toda la
+  /// orquestación (incluido el reintento si algo queda `failed`) vive en
+  /// `factoryReset` (services/factory_reset.dart), testeable sin UI. El
+  /// session bump lo dispara la tarjeta vía onDone al terminar.
   Future<FactoryResetReport> _factoryReset() async {
     final dir = await getApplicationSupportDirectory();
-    final copia = await preResetBackup(dir); // si falla, aborta sin tocar nada
-    _db.close();
-    _prices.close();
-    await widget.background.clear();
-    return wipeDataDir(dir, backup: copia);
+    return factoryReset(
+      dir,
+      closeDbs: () {
+        _db.close();
+        _prices.close();
+      },
+      clearBackground: () => widget.background.resetAll(),
+    );
   }
 
   /// Abre el escáner en vivo. Vive en la barra de abajo, no dentro de

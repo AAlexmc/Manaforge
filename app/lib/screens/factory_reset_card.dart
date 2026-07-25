@@ -99,6 +99,12 @@ class _FactoryResetCardState extends State<FactoryResetCard> {
   /// `BackupCard._conLaAppQuieta`, backup_screen.dart): la barrera se cierra
   /// en el `finally`, es decir SIEMPRE antes de que quien llama siga adelante
   /// y dispare `onDone`.
+  ///
+  /// El `pop` NO se guarda con `mounted`: si la tarjeta se desmonta mientras
+  /// [action] corre, la barrera (`canPop: false`) se queda huérfana y congela
+  /// la app entera si nadie la cierra. `Navigator.of` con la key del
+  /// diálogo (no `context`, que ya no sirve) puede fallar si la propia app se
+  /// ha desmontado entera; ahí ya no hay nada que cerrar.
   Future<T> _conLaAppQuieta<T>(Future<T> Function() action) async {
     final navigator = Navigator.of(context, rootNavigator: true);
     unawaited(showDialog<void>(
@@ -118,8 +124,26 @@ class _FactoryResetCardState extends State<FactoryResetCard> {
     try {
       return await action();
     } finally {
-      if (mounted) navigator.pop();
+      try {
+        navigator.pop();
+      } catch (_) {/* ya no hay nada que cerrar: la app se ha desmontado */}
     }
+  }
+
+  Future<void> _avisoSimple(String texto) async {
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        content: Text(texto),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(tr(dialogContext).onbGotIt),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _flujo() async {
@@ -141,20 +165,37 @@ class _FactoryResetCardState extends State<FactoryResetCard> {
       _busy = true;
       _error = null;
     });
+
+    FactoryResetReport report;
     try {
-      await _conLaAppQuieta(widget.wipe);
-      if (!mounted) return;
-      setState(() => _busy = false);
-      widget.onDone();
-    } catch (e) {
+      report = await _conLaAppQuieta(widget.wipe);
+    } on BackupError catch (e) {
+      // la copia previa ha fallado: nada se ha borrado, la tarjeta sigue
+      // viva y NO se avisa a onDone (no hay session bump que hacer)
       if (!mounted) return;
       final t2 = tr(context);
       setState(() {
         _busy = false;
-        _error =
-            t2.rfBackupFailed(e is BackupError ? backupErrorText(t2, e) : '$e');
+        _error = t2.rfBackupFailed(backupErrorText(t2, e));
       });
+      return;
+    } on FactoryResetHalfDone catch (_) {
+      // se quedó a medias EN CALIENTE (bases cerradas, fondo limpiado o
+      // barrido a mitad): la app tiene que reconstruirse sí o sí, así que
+      // onDone se llama ANTES de cualquier `if (!mounted) return` de aquí
+      // abajo — si la tarjeta ya se ha desmontado, el aviso se salta, pero
+      // el bump no
+      await _avisoSimple(t.rfHalfDone);
+      widget.onDone();
+      return;
     }
+
+    if (report.failed.isNotEmpty) {
+      await _avisoSimple(t.rfPartial(report.failed.join(', ')));
+    }
+    widget.onDone();
+    if (!mounted) return;
+    setState(() => _busy = false);
   }
 
   @override
