@@ -316,6 +316,12 @@ class _HomeShellState extends State<HomeShell> {
   /// Si ya se vio el tour de bienvenida (las burbujas sobre la barra).
   final _onboarding = OnboardingPreference();
 
+  /// El tour de bienvenida tocaba lanzarse mientras `StartupScreen` seguía
+  /// delante (`!_started`): las burbujas señalarían huecos de una pantalla
+  /// que el usuario aún no ve. Se pospone hasta que `onReady` deja pasar a la
+  /// app de verdad.
+  bool _tourBienvenidaPendiente = false;
+
   /// GlobalKeys de los botones que los tours señalan.
   final _tourKeys = TourKeys();
 
@@ -378,8 +384,14 @@ class _HomeShellState extends State<HomeShell> {
       // y el tour de bienvenida, DESPUÉS de idioma y novedades para no
       // amontonar cosas encima. Solo la primera vez.
       await _onboarding.load();
-      if (mounted && !_onboarding.seen) {
+      if (!mounted || _onboarding.seen) return;
+      // si `StartupScreen` sigue delante, lanzarlo ahora lo pintaría sobre
+      // una pantalla que no es la app: se apunta y `onReady` lo dispara en
+      // cuanto se entra de verdad
+      if (_started) {
         _lanzarTour(kTours.first);
+      } else {
+        _tourBienvenidaPendiente = true;
       }
     });
   }
@@ -584,7 +596,17 @@ class _HomeShellState extends State<HomeShell> {
         sources: defaultUpdateSources(
             t: tr(context), db: _db, prices: _prices, scanner: _scanner),
         collection: _collection,
-        onReady: () => setState(() => _started = true),
+        onReady: () {
+          setState(() => _started = true);
+          if (_tourBienvenidaPendiente) {
+            _tourBienvenidaPendiente = false;
+            // un frame para que se pinte la app de verdad (Inicio y su
+            // barra) antes de medir dónde van las burbujas
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _lanzarTour(kTours.first);
+            });
+          }
+        },
       );
     }
     final screens = [
