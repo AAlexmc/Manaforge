@@ -68,3 +68,24 @@ List<ValuePoint> collectionValueSeries({
   }
   return out;
 }
+
+/// Pega la cola de fotos locales detrás de la serie histórica. Devuelve la
+/// curva y la fecha de la COSTURA (el último punto histórico) si de verdad
+/// quedó mezcla de fuentes: el histórico va por carta (mínimo por oracle) y
+/// las fotos locales por edición exacta, así que el tramo que las une puede
+/// dar un salto que es cambio de fuente, no mercado — quien pinte deltas no
+/// debe calcularlos a caballo de esa fecha.
+(List<ValuePoint>, String?) stitchValueCurve(
+    List<ValuePoint> real, List<ValuePoint> local) {
+  if (real.length < 2) return (local, null);
+  final ultimo = real.last.date;
+  final cola =
+      local.where((p) => p.date.compareTo(ultimo) > 0).toList();
+  return ([...real, ...cola], cola.isEmpty ? null : ultimo);
+}
+
+/// ¿El tramo [prevDate]→[lastDate] cruza la costura? (ver [stitchValueCurve])
+bool cruzaCostura(String? costura, String prevDate, String lastDate) =>
+    costura != null &&
+    lastDate.compareTo(costura) > 0 &&
+    prevDate.compareTo(costura) <= 0;

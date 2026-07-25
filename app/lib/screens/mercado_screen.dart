@@ -71,6 +71,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
   PnL? _pnl;
   List<ValuedCard> _top = const [];
   List<ValuePoint> _points = const [];
+
+  /// Fecha del último punto HISTÓRICO cuando la curva mezcla fuentes
+  /// (histórico + fotos locales); null si no hay mezcla. Ver
+  /// [stitchValueCurve].
+  String? _costura;
   Map<String, List<PricePoint>> _cardHistory = const {};
   (String, String)? _historyCovered; // tramo del histórico descargado
   bool _historyDownloading = false;
@@ -274,10 +279,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
           await widget.prices.seriesFor(qty.keys, market: Market.cardmarket);
       final real =
           collectionValueSeries(qtyByOracle: qty, seriesByOracle: series);
-      if (real.length < 2) return local;
-      final ultimo = real.last.date;
-      return [...real, ...local.where((p) => p.date.compareTo(ultimo) > 0)];
+      final (curva, costura) = stitchValueCurve(real, local);
+      _costura = costura;
+      return curva;
     } catch (_) {
+      _costura = null;
       return local; // sin histórico: lo de siempre
     }
   }
@@ -534,8 +540,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
   /// mercado.
   (double, double)? _delta() {
     if (_points.length < 2) return null;
-    final prev = _points[_points.length - 2].value;
-    final diff = _points.last.value - prev;
+    final anterior = _points[_points.length - 2];
+    final actual = _points.last;
+    // y NUNCA a caballo de la costura histórico↔local: esa diferencia es el
+    // cambio de fuente (por carta vs por edición), no el mercado — salía una
+    // subida verde falsa el primer día con foto local
+    if (cruzaCostura(_costura, anterior.date, actual.date)) return null;
+    final prev = anterior.value;
+    final diff = actual.value - prev;
     final pct = prev == 0 ? 0.0 : diff / prev * 100;
     return (diff, pct);
   }

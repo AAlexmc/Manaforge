@@ -4,6 +4,7 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/collection_value_series.dart';
 import 'package:manaforge_app/services/price_history.dart';
+import 'package:manaforge_app/services/value_history.dart';
 
 void main() {
   test('suma el precio de cada día por las copias que tienes', () {
@@ -149,5 +150,42 @@ void main() {
     );
 
     expect(serie.every((p) => p.cards == 5), isTrue);
+  });
+
+  test('la costura solo existe si de verdad queda cola local', () {
+    const real = [
+      ValuePoint('2026-07-01', 10, 5),
+      ValuePoint('2026-07-02', 11, 5),
+    ];
+    const local = [
+      ValuePoint('2026-07-02', 99, 5), // mismo día: no entra
+      ValuePoint('2026-07-03', 25, 5),
+    ];
+    final (curva, costura) = stitchValueCurve(real, local);
+    expect(curva.map((p) => p.date),
+        ['2026-07-01', '2026-07-02', '2026-07-03']);
+    expect(costura, '2026-07-02');
+
+    // sin cola local, no hay mezcla ni costura
+    final (sola, sinCostura) = stitchValueCurve(real, const []);
+    expect(sola, real);
+    expect(sinCostura, isNull);
+
+    // histórico insuficiente: manda lo local, sin costura
+    final (soloLocal, tampoco) =
+        stitchValueCurve(const [ValuePoint('2026-07-01', 10, 5)], local);
+    expect(soloLocal, local);
+    expect(tampoco, isNull);
+  });
+
+  test('cruzaCostura: solo el tramo que une las dos fuentes', () {
+    // el salto histórico(02)→local(03) es cambio de fuente: sin delta
+    expect(cruzaCostura('2026-07-02', '2026-07-02', '2026-07-03'), isTrue);
+    // dos puntos locales seguidos: delta normal
+    expect(cruzaCostura('2026-07-02', '2026-07-03', '2026-07-04'), isFalse);
+    // dos históricos: delta normal
+    expect(cruzaCostura('2026-07-02', '2026-07-01', '2026-07-02'), isFalse);
+    // sin mezcla no hay costura que cruzar
+    expect(cruzaCostura(null, '2026-07-02', '2026-07-03'), isFalse);
   });
 }
