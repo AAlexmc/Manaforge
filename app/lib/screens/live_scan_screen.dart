@@ -197,6 +197,17 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
       }
       return;
     }
+    // el plugin `camera` no tiene implementación macOS: availableCameras()
+    // lanzaría un MissingPluginException crudo a la cara del usuario (y el
+    // tour empuja esta pantalla solo). Mensaje limpio y a la ruta de foto,
+    // que en macOS sí funciona (file_selector + drag&drop)
+    if (Platform.isMacOS) {
+      setState(() {
+        _starting = false;
+        _cameraError = tr(context).lsMacUsePhoto;
+      });
+      return;
+    }
     final sinCamara = tr(context).lsNoCamera;
     try {
       final cameras = await availableCameras();

@@ -89,8 +89,8 @@ Ve a [**Releases**](https://github.com/AAlexmc/Manaforge/releases) y baja el zip
 
 | Sistema | Qué hacer |
 |---|---|
-| **Windows** | Descomprime y abre `manaforge.exe`. La primera vez Windows avisa de que no conoce el programa: *Más información → Ejecutar de todas formas* (no está firmado; el código está aquí para que lo mires). |
-| **macOS** | Descomprime y, la primera vez, **clic derecho sobre la app → Abrir**. Con doble clic macOS no deja abrir apps sin firmar. |
+| **Windows** | Descomprime y, dentro de la carpeta `ManaForge`, abre `manaforge.exe`. La primera vez Windows avisa de que no conoce el programa: *Más información → Ejecutar de todas formas* (no está firmado; el código está aquí para que lo mires). |
+| **macOS** | Descomprime y ábrela una vez (dará un aviso); después ve a *Ajustes del Sistema → Privacidad y seguridad → Abrir de todos modos*. (Desde macOS 15 el clic derecho → Abrir ya no se salta el aviso.) |
 | **Linux** | Descomprime y, dentro de la carpeta `ManaForge`, ejecuta `./manaforge`. Para que salga en el menú de aplicaciones con su icono: `./instalar.sh` (lo deja todo en `~/.local`, sin sudo; se quita con `./instalar.sh --desinstalar`). |
 
 **Comprobar lo que has bajado**: cada release publica `SHA256SUMS.txt` con la huella de los tres zips. En Linux o macOS, `sha256sum -c SHA256SUMS.txt` (o `shasum -a 256 -c`); en Windows, `Get-FileHash ManaForge-Windows.zip`.
@@ -109,7 +109,7 @@ cd Manaforge/app
 flutter run -d linux     # o -d windows / -d macos
 ```
 
-El envoltorio de Linux y el `pubspec.lock` están en el repo, así que se compila tal cual. Para Windows y macOS, la primera vez: `flutter create . --platforms=windows --project-name manaforge_app`.
+Los envoltorios nativos de Linux, Windows y macOS y el `pubspec.lock` están en el repo, así que se compila tal cual en los tres.
 
 ## 🔧 Cómo está hecho
 

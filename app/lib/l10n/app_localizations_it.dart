@@ -1478,6 +1478,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get lsMacUsePhoto =>
+      'La cámara en vivo aún no está disponible en macOS. Usa «Escanear desde foto»: funciona igual de bien.';
+
+  @override
   String get lsNoCamera => 'Non trovo nessuna fotocamera.';
 
   @override

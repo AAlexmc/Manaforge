@@ -624,6 +624,7 @@
     "placeholders": { "cuando": { "type": "String" }, "resumen": { "type": "String" } }
   },
 
+  "lsMacUsePhoto": "Live camera is not available on macOS yet. Use \"Scan from photo\" instead — it works just as well.",
   "lsNoCamera": "I can't find any camera.",
   "lsCameraGone": "The camera dropped out mid-session. Check the cable and hit Try again.",
   "lsFrameCard": "Line the card up inside the frame",

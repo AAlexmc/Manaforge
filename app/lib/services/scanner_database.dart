@@ -99,7 +99,9 @@ class ScannerDatabase {
       sink = null;
       await gzFile.openRead().transform(gzip.decoder).pipe(tmpFile.openWrite());
       _index = null;
-      await tmpFile.rename(dbFile.path);
+      // con reintento: un loadIndex() en vuelo (escaneando mientras se
+      // actualiza) mantiene el sqlite abierto y en Windows bloquea el rename
+      await renameDownloaded(tmpFile, dbFile.path);
       yield 1.0;
     } finally {
       client.close();

@@ -629,6 +629,7 @@
     "placeholders": { "cuando": { "type": "String" }, "resumen": { "type": "String" } }
   },
 
+  "lsMacUsePhoto": "La cámara en vivo aún no está disponible en macOS. Usa «Escanear desde foto»: funciona igual de bien.",
   "lsNoCamera": "No encuentro ninguna cámara.",
   "lsCameraGone": "La cámara se ha desconectado a media sesión. Revisa el cable y dale a Reintentar.",
   "lsFrameCard": "Encuadra la carta dentro del marco",

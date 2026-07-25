@@ -32,3 +32,23 @@ jobs:
       - run: cd app && flutter pub get
       - run: cd app && flutter analyze --no-fatal-infos
       - run: cd app && flutter test
+  # Solo COMPILA (sin tests: la suite tiene supuestos unix). Sin esto, el
+  # primer fallo de compilación nativo de Windows/macOS aparecería con el tag
+  # de release ya publicado — y bloquearía también el zip de Linux.
+  build-desktop:
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+      - run: cd app && flutter pub get
+      - run: cd app && flutter build windows --release
+        if: runner.os == 'Windows'
+      - run: cd app && flutter build macos --release
+        if: runner.os == 'macOS'

@@ -2460,6 +2460,12 @@ abstract class AppLocalizations {
   /// **'Copia del {cuando} · {resumen}.'**
   String bkOfDate(String cuando, String resumen);
 
+  /// No description provided for @lsMacUsePhoto.
+  ///
+  /// In es, this message translates to:
+  /// **'La cámara en vivo aún no está disponible en macOS. Usa «Escanear desde foto»: funciona igual de bien.'**
+  String get lsMacUsePhoto;
+
   /// No description provided for @lsNoCamera.
   ///
   /// In es, this message translates to:

@@ -124,7 +124,7 @@ class PriceSeriesDatabase {
       await gzFile.openRead().transform(gzip.decoder).pipe(tmpFile.openWrite());
       // solo ahora se sustituye la buena (rename es atómico en POSIX)
       close();
-      await tmpFile.rename(dbFile.path);
+      await renameDownloaded(tmpFile, dbFile.path);
       yield 1.0;
     } finally {
       client.close();
@@ -143,12 +143,18 @@ class PriceSeriesDatabase {
 
   /// Cierra la base (al traer una nueva, o al terminar).
   void close() {
+    _cierres++; // un _doOpen() en vuelo ya no puede re-cachear su handle
     _db?.dispose();
     _db = null;
     _opening = null;
     _startDate = null;
     _covered = null;
   }
+
+  /// Sube en cada [close]. Sin esto, un `_doOpen()` que estuviera esperando
+  /// en un await reabría la base JUSTO entre el close() y el rename de
+  /// `download()` — en Windows eso es sharing violation y descarga tirada.
+  int _cierres = 0;
 
   Future<Database?> _open() {
     final cached = _db;
@@ -159,6 +165,7 @@ class PriceSeriesDatabase {
   }
 
   Future<Database?> _doOpen() async {
+    final gen = _cierres;
     Database? db;
     try {
       final file = await _dbFile();
@@ -180,6 +187,12 @@ class PriceSeriesDatabase {
                 r['provider'] as String
             }
           : const {'cardmarket'};
+      if (gen != _cierres) {
+        // un close() (re-descarga) nos pisó mientras abríamos: soltar el
+        // handle en vez de cachearlo; la siguiente consulta reabrirá la nueva
+        db.dispose();
+        return null;
+      }
       _db = db;
       return db;
     } catch (_) {

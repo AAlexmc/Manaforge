@@ -16,11 +16,18 @@ jobs:
         with: { persist-credentials: false }
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { channel: stable }
-      - run: cd app && flutter create . --platforms=windows --project-name manaforge_app
+      # la capa nativa windows/ está COMMITEADA (entitlements, nombres y
+      # parches de window_manager editados a mano): nada de regenerarla aquí
+      - run: cd app && flutter pub get
       # el icono NO se genera solo: sin esto el .exe sale con el logo de Flutter
       - run: cd app && dart run flutter_launcher_icons
       - run: cd app && flutter build windows --release
-      - run: Compress-Archive -Path app/build/windows/x64/runner/Release/* -DestinationPath ManaForge-Windows.zip
+      # dentro de una carpeta ManaForge, como el zip de Linux: "extraer aquí"
+      # no puede sembrar 30 ficheros por la carpeta de descargas
+      - run: |
+          New-Item -ItemType Directory ManaForge | Out-Null
+          Copy-Item app/build/windows/x64/runner/Release/* ManaForge -Recurse
+          Compress-Archive -Path ManaForge -DestinationPath ManaForge-Windows.zip
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with: { name: ManaForge-Windows, path: ManaForge-Windows.zip }
@@ -31,10 +38,14 @@ jobs:
         with: { persist-credentials: false }
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { channel: stable }
-      - run: cd app && flutter create . --platforms=macos --project-name manaforge_app
+      # la capa nativa macos/ está COMMITEADA (sandbox con red y ficheros,
+      # bundle id definitivo, parche de window_manager): nada de regenerarla
+      - run: cd app && flutter pub get
       - run: cd app && dart run flutter_launcher_icons
       - run: cd app && flutter build macos --release
-      - run: cd app/build/macos/Build/Products/Release && zip -qry $GITHUB_WORKSPACE/ManaForge-macOS.zip *.app
+      # ditto, no zip: preserva atributos y firma ad-hoc del bundle — un .app
+      # "dañado" al desempaquetar no se puede abrir ni con "Abrir de todos modos"
+      - run: cd app/build/macos/Build/Products/Release && ditto -c -k --sequesterRsrc --keepParent ManaForge.app $GITHUB_WORKSPACE/ManaForge-macOS.zip
       - uses: actions/upload-artifact@v4
         with: { name: ManaForge-macOS, path: ManaForge-macOS.zip }
   linux:
@@ -45,7 +56,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { channel: stable }
-      - run: cd app && flutter create . --platforms=linux --project-name manaforge_app
+      - run: cd app && flutter pub get
       - run: cd app && flutter build linux --release
       # Linux no mete el icono en el binario: la app se enseña en el menú con
       # un .desktop y unos PNG. Van dentro del zip, y los instala instalar.sh
@@ -87,8 +98,8 @@ jobs:
             echo
             echo "| Sistema | Qué hacer |"
             echo "|---|---|"
-            echo "| **Windows** | Abre \`manaforge.exe\`. La primera vez: *Más información → Ejecutar de todas formas* (no está firmado). |"
-            echo "| **macOS** | La primera vez, **clic derecho sobre la app → Abrir**. Con doble clic macOS no deja abrir apps sin firmar. |"
+            echo "| **Windows** | Descomprime y, dentro de la carpeta \`ManaForge\`, abre \`manaforge.exe\`. La primera vez: *Más información → Ejecutar de todas formas* (no está firmado). |"
+            echo "| **macOS** | Ábrela una vez (dará un aviso) y después: *Ajustes del Sistema → Privacidad y seguridad → Abrir de todos modos*. (Desde macOS 15 ya no vale el clic derecho → Abrir.) |"
             echo "| **Linux** | Descomprime y, dentro de la carpeta \`ManaForge\`, ejecuta \`./manaforge\`. Para tenerla en el menú de aplicaciones con su icono: \`./instalar.sh\` (todo en \`~/.local\`, sin sudo; se quita con \`./instalar.sh --desinstalar\`). |"
             echo
             echo "La primera vez la app se baja ~36 MB de datos (cartas, precios e huellas del escáner) enseñando el progreso. Después funciona sin conexión."
