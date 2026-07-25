@@ -35,6 +35,13 @@ final Uri kReleasesApi = Uri.parse(
 /// Toda dirección que la app pueda abrir tiene que empezar por aquí.
 const String kRepoUrlPrefix = 'https://github.com/AAlexmc/Manaforge/';
 
+/// Buzón de sugerencias: la página de "issue nuevo" con las plantillas.
+const String kSuggestionsUrl = '${kRepoUrlPrefix}issues/new/choose';
+
+/// Donativos: ancla estable del README (`<a id="donativos">`); pasa por la
+/// misma guarda que las releases porque vive dentro del repo.
+const String kDonationsUrl = '$kRepoUrlPrefix#donativos';
+
 /// Uri de referencia para [safeReleaseUri]: mismo esquema, host y camino que
 /// [kRepoUrlPrefix], pero ya troceados para comparar campo a campo.
 final Uri _kRepoUri = Uri.parse(kRepoUrlPrefix);

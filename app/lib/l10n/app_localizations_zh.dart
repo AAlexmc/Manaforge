@@ -1239,6 +1239,20 @@ class AppLocalizationsZh extends AppLocalizations {
       '卡牌数据和图片来自 Scryfall。Magic: The Gathering 归 Wizards of the Coast 所有；本项目是依据其粉丝内容政策（Fan Content Policy）制作的粉丝项目。';
 
   @override
+  String get stSuggestions => 'Buzón de sugerencias';
+
+  @override
+  String get stSuggestionsSub =>
+      '¿Una idea o un fallo? Cuéntalo en GitHub — hay plantilla y se rellena en un minuto.';
+
+  @override
+  String get stDonate => 'Apoyar el proyecto';
+
+  @override
+  String get stDonateSub =>
+      'La app es gratis y sin anuncios. Si te sirve y quieres invitar a un café, aquí se explica cómo.';
+
+  @override
   String get stEditHome => '编辑首页';
 
   @override

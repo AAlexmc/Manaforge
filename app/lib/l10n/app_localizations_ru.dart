@@ -1322,6 +1322,20 @@ class AppLocalizationsRu extends AppLocalizations {
       'Данные и изображения карт от Scryfall. Magic: The Gathering принадлежит Wizards of the Coast; фанатский проект в рамках их Fan Content Policy.';
 
   @override
+  String get stSuggestions => 'Buzón de sugerencias';
+
+  @override
+  String get stSuggestionsSub =>
+      '¿Una idea o un fallo? Cuéntalo en GitHub — hay plantilla y se rellena en un minuto.';
+
+  @override
+  String get stDonate => 'Apoyar el proyecto';
+
+  @override
+  String get stDonateSub =>
+      'La app es gratis y sin anuncios. Si te sirve y quieres invitar a un café, aquí se explica cómo.';
+
+  @override
   String get stEditHome => 'Настроить Главную';
 
   @override

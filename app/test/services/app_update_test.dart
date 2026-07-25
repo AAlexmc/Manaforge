@@ -141,6 +141,14 @@ void main() {
       expect(safeReleaseUri(url), Uri.parse(url));
     });
 
+    test('los enlaces fijos de Ajustes (buzón y donativos) pasan la guarda',
+        () {
+      // si un día cambian y la guarda los rechaza, las tarjetas de Ajustes
+      // se quedarían mudas sin que nada avisara
+      expect(safeReleaseUri(kSuggestionsUrl), Uri.parse(kSuggestionsUrl));
+      expect(safeReleaseUri(kDonationsUrl), Uri.parse(kDonationsUrl));
+    });
+
     test('un ".." que normaliza fuera del repo se rechaza', () {
       expect(
           safeReleaseUri('https://github.com/AAlexmc/Manaforge/../../evil/repo'

@@ -2172,6 +2172,30 @@ abstract class AppLocalizations {
   /// **'Datos e imágenes de cartas por Scryfall. Magic: The Gathering es propiedad de Wizards of the Coast; proyecto de fans al amparo de su Fan Content Policy.'**
   String get stCredits;
 
+  /// No description provided for @stSuggestions.
+  ///
+  /// In es, this message translates to:
+  /// **'Buzón de sugerencias'**
+  String get stSuggestions;
+
+  /// No description provided for @stSuggestionsSub.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Una idea o un fallo? Cuéntalo en GitHub — hay plantilla y se rellena en un minuto.'**
+  String get stSuggestionsSub;
+
+  /// No description provided for @stDonate.
+  ///
+  /// In es, this message translates to:
+  /// **'Apoyar el proyecto'**
+  String get stDonate;
+
+  /// No description provided for @stDonateSub.
+  ///
+  /// In es, this message translates to:
+  /// **'La app es gratis y sin anuncios. Si te sirve y quieres invitar a un café, aquí se explica cómo.'**
+  String get stDonateSub;
+
   /// No description provided for @stEditHome.
   ///
   /// In es, this message translates to:
