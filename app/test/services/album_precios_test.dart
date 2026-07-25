@@ -96,4 +96,20 @@ void main() {
     expect(cards, isNotEmpty);
     expect(cards.every((c) => c.price == null), isTrue);
   });
+
+  test('cambiar de mercado NO cambia el arte: la fila del álbum es la misma',
+      () async {
+    final db = CardDatabase(dataDir: _dbConPrecios());
+
+    final euros = await db.setCards('aer', market: Market.cardmarket);
+    final dolares = await db.setCards('aer', market: Market.tcgplayer);
+
+    final orniEur = euros.firstWhere((c) => c.collectorNumber == '167');
+    final orniUsd = dolares.firstWhere((c) => c.collectorNumber == '167');
+    // preferencia inglesa determinista: siempre la impresión 'en'
+    expect(orniEur.printedName, 'Ornithopter');
+    expect(orniUsd.printedName, orniEur.printedName,
+        reason: 'con dos agregados en el GROUP BY la fila era arbitraria '
+            'y el arte podía cambiar con el mercado');
+  });
 }

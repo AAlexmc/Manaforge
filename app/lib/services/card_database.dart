@@ -529,17 +529,28 @@ extension AlbumQueries on CardDatabase {
     // CAST obligatorio: los precios se guardan como TEXTO (así los da
     // Scryfall). Sin él, sqlite devuelve un String —y la pantalla revienta—
     // y además MIN compararía textos, donde "10.00" es menor que "9.00".
+    // El precio va en SUBCONSULTA (mínimo entre idiomas de ese número) y la
+    // fila que pone el arte se elige con una ventana determinista: con dos
+    // agregados en el mismo GROUP BY, sqlite elegía una fila arbitraria y
+    // cambiar de mercado podía cambiar el ARTE del álbum.
     final priceSel = priceCol == null
         ? 'NULL AS price'
-        : 'MIN(CAST(p.$priceCol AS REAL)) AS price';
+        : '(SELECT MIN(CAST(q.$priceCol AS REAL)) FROM printings q '
+            'WHERE q.set_code = p.set_code '
+            'AND q.collector_number = p.collector_number) AS price';
     final rows = db.select('''
-      SELECT p.oracle_id, p.collector_number, p.printed_name, p.image_small,
-             p.image_normal, c.name, c.colors, c.type_line, $priceSel,
-             MIN(CASE WHEN p.lang = 'en' THEN 0 ELSE 1 END) AS pref
-      FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
-      WHERE p.set_code = ?1
-      GROUP BY p.collector_number
-      ORDER BY CAST(p.collector_number AS INTEGER), p.collector_number
+      SELECT * FROM (
+        SELECT p.oracle_id, p.collector_number, p.printed_name,
+               p.image_small, p.image_normal, c.name, c.colors, c.type_line,
+               $priceSel,
+               ROW_NUMBER() OVER (
+                 PARTITION BY p.collector_number
+                 ORDER BY (p.lang = 'en') DESC, p.lang, p.scryfall_id
+               ) AS rn
+        FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
+        WHERE p.set_code = ?1
+      ) WHERE rn = 1
+      ORDER BY CAST(collector_number AS INTEGER), collector_number
     ''', [setCode]);
     return [
       for (final r in rows)
