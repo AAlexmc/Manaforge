@@ -36,6 +36,9 @@ Directory _dbConDosSets() {
       "'U','Instant','Counter','','','[]','{}')");
   db.execute("INSERT INTO cards VALUES ('o3','Llanowar Elves','{G}',1,'G',"
       "'G','Creature — Elf','Tap: add G','1','1','[]','{}')");
+  db.execute("INSERT INTO cards VALUES ('o4','Brazen Borrower','{1}{U}',2,'U',"
+      "'U','Creature — Faerie Wizard // Instant — Adventure',"
+      "'Flying','3','1','[\"Flying\"]','{}')");
   // o1 sale en blb y en kld; o2 solo en blb; o3 solo en kld
   db.execute("INSERT INTO printings VALUES ('s1','o1','blb','Bloomburrow',"
       "'72','en','Shock','common',null,null,null,'0.10','2024-08-02')");
@@ -136,6 +139,18 @@ void main() {
 
       expect(pool.keys.toSet(), {'Shock', 'Llanowar Elves'});
       expect(pool['Shock']!.qty, 4);
+    });
+
+    test('subtipos de la cara delantera y keywords de la columna JSON',
+        () async {
+      final db = CardDatabase(dataDir: _dbConDosSets());
+
+      final pool = await db.buildPool({'o4': 1}, assumeBasics: false);
+
+      final card = pool['Brazen Borrower']!;
+      expect(card.types, ['Creature']);
+      expect(card.subtypes, ['Faerie', 'Wizard']); // la cara Adventure no contamina
+      expect(card.keywords, ['flying']);
     });
   });
 }

@@ -3,6 +3,26 @@ import 'package:test/test.dart';
 
 /// Tests espejo de `engine-reference/tests/test_acceptance.py`.
 void main() {
+  group('Card', () {
+    test('subtypes y keywords viajan y hasKeyword cae al oracle si faltan',
+        () {
+      final c = Card.fromJson('Siren Lookout', {
+        'qty': 1, 'mana_cost': '{2}{U}', 'cmc': 3, 'colors': 'U',
+        'types': ['Creature'], 'subtypes': ['Siren', 'Pirate'],
+        'oracle': 'Flying\nWhen Siren Lookout enters…',
+        'keywords': ['flying', 'explore'], 'power': 1, 'toughness': 2,
+      });
+      expect(c.subtypes, ['Siren', 'Pirate']);
+      expect(c.hasKeyword('flying'), isTrue);
+      expect(c.hasKeyword('trample'), isFalse);
+      final sinKw = Card.fromJson('X', {
+        'qty': 1, 'cmc': 1, 'types': ['Creature'],
+        'oracle': 'First strike',
+      });
+      expect(sinKw.hasKeyword('first strike'), isTrue); // fallback regex
+    });
+  });
+
   group('ManaCurve', () {
     test('manaValue', () {
       expect(ManaCurve.manaValue('{2}{U}{U}'), 4);
