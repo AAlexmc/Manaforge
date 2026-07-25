@@ -139,6 +139,10 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     custom: prefs.cardCustomColor,
                     customActivo: prefs.cardIsCustom,
                     onCustom: prefs.setCardColorCustom,
+                    swatches: prefs.savedSwatches,
+                    onSwatch: prefs.setCardColorCustom,
+                    onSwatchDelete: prefs.removeSwatch,
+                    onSaveSwatch: prefs.addSwatch,
                   ),
                   const SizedBox(height: 12),
                   Text(t.backgroundTextColor,
@@ -152,30 +156,46 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
                     custom: prefs.textCustomColor,
                     customActivo: prefs.textIsCustom,
                     onCustom: (c) => _ponerLetra(context, prefs, c),
+                    swatches: prefs.savedSwatches,
+                    onSwatch: (c) => _ponerLetra(context, prefs, c),
+                    onSwatchDelete: prefs.removeSwatch,
+                    onSaveSwatch: prefs.addSwatch,
                   ),
                   const SizedBox(height: 12),
                   Text(t.bgChipColor, style: const TextStyle(fontSize: 12)),
                   const SizedBox(height: 6),
                   _Muestras(
-                    paleta: const [],
+                    paleta: kCardColors,
+                    matchByColor: true,
                     elegido: null,
                     porDefecto: t.backgroundColorDefault,
-                    onElegir: (_) => prefs.setChipColor(null),
+                    onElegir: (id) => prefs.setChipColor(
+                        id == null ? null : _colorDelId(kCardColors, id)),
                     custom: prefs.chipColor,
                     customActivo: prefs.chipColor != null,
                     onCustom: prefs.setChipColor,
+                    swatches: prefs.savedSwatches,
+                    onSwatch: prefs.setChipColor,
+                    onSwatchDelete: prefs.removeSwatch,
+                    onSaveSwatch: prefs.addSwatch,
                   ),
                   const SizedBox(height: 12),
                   Text(t.bgIconColor, style: const TextStyle(fontSize: 12)),
                   const SizedBox(height: 6),
                   _Muestras(
-                    paleta: const [],
+                    paleta: kCardColors,
+                    matchByColor: true,
                     elegido: null,
                     porDefecto: t.backgroundColorDefault,
-                    onElegir: (_) => prefs.setIconColor(null),
+                    onElegir: (id) => prefs.setIconColor(
+                        id == null ? null : _colorDelId(kCardColors, id)),
                     custom: prefs.iconColor,
                     customActivo: prefs.iconColor != null,
                     onCustom: prefs.setIconColor,
+                    swatches: prefs.savedSwatches,
+                    onSwatch: prefs.setIconColor,
+                    onSwatchDelete: prefs.removeSwatch,
+                    onSaveSwatch: prefs.addSwatch,
                   ),
                   const SizedBox(height: 12),
                   Text(t.backgroundCardOpacity,
@@ -203,6 +223,11 @@ class _BackgroundSettingsCardState extends State<BackgroundSettingsCard> {
   }
 }
 
+/// Un color de [paleta] por su id, o el primero si no está (no debería
+/// pasar: el id sale de la propia paleta al elegir el preset).
+Color _colorDelId(List<NamedColor> paleta, String id) =>
+    paleta.firstWhere((c) => c.id == id, orElse: () => paleta.first).color;
+
 /// Fila de círculos de color. El primero es "el de siempre" y se pinta con un
 /// aspa: elegir color es opcional y tiene que poder deshacerse.
 ///
@@ -220,6 +245,17 @@ class _Muestras extends StatelessWidget {
   final bool customActivo;
   final void Function(Color) onCustom;
 
+  /// Pestañas/iconos no recuerdan un id de preset propio (solo guardan un
+  /// hex): ahí un preset "elegido" se reconoce por coincidir con el color a
+  /// medida, no por id.
+  final bool matchByColor;
+
+  /// La paleta guardada a mano, compartida por las cuatro filas.
+  final List<Color> swatches;
+  final void Function(Color) onSwatch;
+  final void Function(Color) onSwatchDelete;
+  final void Function(Color) onSaveSwatch;
+
   const _Muestras({
     required this.paleta,
     required this.elegido,
@@ -228,12 +264,27 @@ class _Muestras extends StatelessWidget {
     required this.custom,
     required this.customActivo,
     required this.onCustom,
+    required this.swatches,
+    required this.onSwatch,
+    required this.onSwatchDelete,
+    required this.onSaveSwatch,
+    this.matchByColor = false,
   });
+
+  bool _presetSeleccionado(NamedColor c) =>
+      matchByColor ? custom == c.color : !customActivo && elegido == c.id;
 
   @override
   Widget build(BuildContext context) {
     // "el de siempre" solo está elegido si NO hay preset NI color a medida
-    final sinElegir = elegido == null && !customActivo;
+    final sinElegir =
+        matchByColor ? custom == null : (elegido == null && !customActivo);
+    // si el color puesto ya lo representa otro círculo de la fila (una
+    // muestra guardada, o un preset en las filas por color), el círculo
+    // custom se apaga: dos círculos marcados a la vez confunden
+    final representado = custom != null &&
+        (swatches.contains(custom) ||
+            (matchByColor && paleta.any((c) => c.color == custom)));
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -244,17 +295,61 @@ class _Muestras extends StatelessWidget {
         for (final c in paleta)
           _circulo(context,
               color: c.color,
-              seleccionado: !customActivo && elegido == c.id,
+              seleccionado: _presetSeleccionado(c),
               nombre: c.id,
               onTap: () => onElegir(c.id)),
+        for (final s in swatches)
+          _circuloMuestra(context,
+              color: s,
+              seleccionado: custom == s,
+              onTap: () => onSwatch(s),
+              onLongPress: () => _confirmarBorrarMuestra(context, s, onSwatchDelete)),
         _CirculoCustom(
           color: custom,
-          activo: customActivo,
+          activo: customActivo && !representado,
           onTap: () => _elegirColor(
-              context, custom ?? (paleta.isEmpty ? Colors.grey : paleta.first.color),
-              onCustom),
+              context,
+              custom ?? (paleta.isEmpty ? Colors.grey : paleta.first.color),
+              onCustom,
+              onSaveSwatch),
         ),
       ],
+    );
+  }
+
+  /// Como [_circulo], pero con anillo del [ColorScheme.tertiary]: distingue
+  /// de un vistazo lo guardado a mano de los presets de la paleta.
+  Widget _circuloMuestra(BuildContext context,
+      {required Color color,
+      required bool seleccionado,
+      required VoidCallback onTap,
+      required VoidCallback onLongPress}) {
+    final anillo = Theme.of(context).colorScheme.tertiary;
+    final nombre = tr(context).bgSwatchTip;
+    return Tooltip(
+      message: nombre,
+      child: Semantics(
+        button: true,
+        selected: seleccionado,
+        label: nombre,
+        child: InkWell(
+          onTap: onTap,
+          onLongPress: onLongPress,
+          customBorder: const CircleBorder(),
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              // puesta vs no puesta tiene que verse de un vistazo: mismo
+              // color de anillo, pero grosores bien separados
+              border:
+                  Border.all(color: anillo, width: seleccionado ? 4 : 1.5),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -349,9 +444,10 @@ class _CirculoCustom extends StatelessWidget {
 }
 
 /// Abre el selector de color (área HSV + tono + RGB/hex). Si se confirma,
-/// devuelve el color por [onOk].
-Future<void> _elegirColor(
-    BuildContext context, Color inicial, void Function(Color) onOk) async {
+/// devuelve el color por [onOk]. "Guardar como muestra" hace lo mismo Y
+/// además lo añade a la paleta guardada, por [onSave].
+Future<void> _elegirColor(BuildContext context, Color inicial,
+    void Function(Color) onOk, void Function(Color) onSave) async {
   var sel = inicial;
   final ok = await showDialog<bool>(
     context: context,
@@ -371,6 +467,13 @@ Future<void> _elegirColor(
         TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text(tr(ctx).acCancel)),
+        TextButton(
+            onPressed: () {
+              onOk(sel);
+              onSave(sel);
+              Navigator.pop(ctx);
+            },
+            child: Text(tr(ctx).bgSaveSwatch)),
         FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(tr(ctx).bgUseThis)),
@@ -378,6 +481,28 @@ Future<void> _elegirColor(
     ),
   );
   if (ok == true) onOk(sel);
+}
+
+/// Pulsación larga sobre una muestra: confirmación ligera antes de borrar.
+Future<void> _confirmarBorrarMuestra(
+    BuildContext context, Color color, void Function(Color) onSwatchDelete) async {
+  final t = tr(context);
+  final ok = await showDialog<bool>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(t.bgSwatchDeleteTitle),
+      content: Text(t.bgSwatchDeleteBody),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(t.acCancel)),
+        FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(t.acDelete)),
+      ],
+    ),
+  );
+  if (ok == true) onSwatchDelete(color);
 }
 
 /// Cómo queda una tarjeta con los colores elegidos, encima del fondo de
@@ -445,11 +570,10 @@ class _Vistazo extends StatelessWidget {
                           child: Text(tr(context).bgSampleTab,
                               style: TextStyle(
                                   fontSize: 11,
-                                  color: ThemeData.estimateBrightnessForColor(
-                                              chip) ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)),
+                                  // la MISMA cuenta que hace el tema
+                                  // (mf_theme, labelStyle del chip): el
+                                  // vistazo enseña lo que la app pinta
+                                  color: toneLegible(chip, letra))),
                         ),
                         const Spacer(),
                         // un icono de muestra, con su color

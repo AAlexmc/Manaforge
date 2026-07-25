@@ -398,4 +398,114 @@ void main() {
     expect(otro.hasImage, isFalse);
     expect(otro.cardColorId, isNull);
   });
+
+  test('los cinco presets maná nuevos están en la paleta sin duplicar ids',
+      () {
+    for (final id in ['isla', 'pantano', 'montana', 'oro', 'incoloro']) {
+      expect(kCardColors.where((c) => c.id == id), hasLength(1));
+    }
+    final ids = kCardColors.map((c) => c.id).toList();
+    expect(ids.toSet().length, ids.length);
+  });
+
+  test('una muestra guardada sobrevive a cerrar la app', () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.addSwatch(const Color(0xFF59F7FF));
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+
+    expect(otro.savedSwatches, [const Color(0xFF59F7FF)]);
+  });
+
+  test('añadir la misma muestra dos veces no la duplica', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+
+    await prefs.addSwatch(const Color(0xFF59F7FF));
+    await prefs.addSwatch(const Color(0xFF59F7FF));
+
+    expect(prefs.savedSwatches, [const Color(0xFF59F7FF)]);
+  });
+
+  test('la novena muestra tira la más vieja (tope 8)', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    final colores = List.generate(9, (i) => Color(0xFF000000 + i * 0x10101));
+
+    for (final c in colores) {
+      await prefs.addSwatch(c);
+    }
+
+    expect(prefs.savedSwatches, hasLength(8));
+    expect(prefs.savedSwatches, isNot(contains(colores.first)));
+    expect(prefs.savedSwatches.last, colores.last);
+  });
+
+  test('removeSwatch() la quita y persiste', () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.addSwatch(const Color(0xFF59F7FF));
+    await uno.addSwatch(const Color(0xFF102030));
+
+    await uno.removeSwatch(const Color(0xFF59F7FF));
+
+    expect(uno.savedSwatches, [const Color(0xFF102030)]);
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+    expect(otro.savedSwatches, [const Color(0xFF102030)]);
+  });
+
+  test('una entrada no-hex en swatchesHex se descarta, el resto entra',
+      () async {
+    File(p.join(datos.path, 'background.json')).writeAsStringSync(jsonEncode(
+        {'swatchesHex': ['#59F7FF', 'no-es-hex', '#ZZZZZZ', '#102030']}));
+
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.load();
+
+    expect(prefs.savedSwatches,
+        [const Color(0xFF59F7FF), const Color(0xFF102030)]);
+  });
+
+  test('un fichero con más de 8 muestras (o repetidas) queda en 8 únicas',
+      () async {
+    final doce =
+        List.generate(12, (i) => '#0000${(10 + i).toRadixString(16).padLeft(2, '0').toUpperCase()}');
+    File(p.join(datos.path, 'background.json')).writeAsStringSync(jsonEncode(
+        {'swatchesHex': [...doce, doce.first]}));
+
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.load();
+
+    expect(prefs.savedSwatches, hasLength(8));
+    expect(prefs.savedSwatches.toSet(), hasLength(8));
+  });
+
+  test('la lectura en segundo plano no pisa una muestra recién guardada',
+      () async {
+    File(p.join(datos.path, 'background.json')).writeAsStringSync(
+        jsonEncode({'swatchesHex': ['#102030']}));
+
+    final prefs = BackgroundPreference(dataDir: datos);
+    // el usuario guarda con la lectura de arranque aún EN VUELO: gane quien
+    // gane la carrera, la fusión conserva las dos
+    final lectura = prefs.load();
+    await prefs.addSwatch(const Color(0xFF59F7FF));
+    await lectura;
+
+    expect(prefs.savedSwatches, contains(const Color(0xFF59F7FF)));
+    expect(prefs.savedSwatches, contains(const Color(0xFF102030)));
+  });
+
+  test('resetAll() también vacía las muestras guardadas', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.addSwatch(const Color(0xFF59F7FF));
+
+    await prefs.resetAll();
+
+    expect(prefs.savedSwatches, isEmpty);
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+    expect(otro.savedSwatches, isEmpty);
+  });
 }

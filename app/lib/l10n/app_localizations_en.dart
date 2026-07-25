@@ -574,6 +574,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get acCancel => 'Cancel';
 
   @override
+  String get acDelete => 'Delete';
+
+  @override
   String get acForgetConfirm => 'I no longer have it';
 
   @override
@@ -2599,6 +2602,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bgUseThis => 'Use this one';
+
+  @override
+  String get bgSaveSwatch => 'Save as swatch';
+
+  @override
+  String get bgSwatchTip => 'Saved swatch';
+
+  @override
+  String get bgSwatchDeleteTitle => 'Delete this swatch?';
+
+  @override
+  String get bgSwatchDeleteBody =>
+      'It\'s removed from your saved palette. You can save it again anytime.';
 
   @override
   String get camGstreamerMissing =>

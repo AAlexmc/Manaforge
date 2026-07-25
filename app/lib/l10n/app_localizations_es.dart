@@ -575,6 +575,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get acCancel => 'Cancelar';
 
   @override
+  String get acDelete => 'Borrar';
+
+  @override
   String get acForgetConfirm => 'Ya no la tengo';
 
   @override
@@ -2603,6 +2606,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get bgUseThis => 'Usar este';
+
+  @override
+  String get bgSaveSwatch => 'Guardar como muestra';
+
+  @override
+  String get bgSwatchTip => 'Muestra guardada';
+
+  @override
+  String get bgSwatchDeleteTitle => '¿Borrar esta muestra?';
+
+  @override
+  String get bgSwatchDeleteBody =>
+      'Se quita de tu paleta guardada. Puedes volver a guardarla cuando quieras.';
 
   @override
   String get camGstreamerMissing =>

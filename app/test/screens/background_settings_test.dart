@@ -68,8 +68,9 @@ void main() {
     expect(find.text('Rojo'), findsOneWidget);
     expect(find.byIcon(Icons.star_rounded), findsOneWidget);
 
-    // el círculo del color 'vino' de las tarjetas
-    await tester.tap(find.bySemanticsLabel('vino'));
+    // el círculo del color 'vino' de las tarjetas (el mismo preset sale
+    // ahora también en pestañas e iconos, así que hay que ser específico)
+    await tester.tap(find.bySemanticsLabel('vino').first);
     await tester.pump();
 
     expect(prefs.cardColorId, 'vino');

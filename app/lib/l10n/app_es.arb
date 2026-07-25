@@ -220,6 +220,7 @@
   },
   "acForgetDecks": "Los mazos NO la pierden: se queda en la lista y el mazo te avisa de que te falta.",
   "acCancel": "Cancelar",
+  "acDelete": "Borrar",
   "acForgetConfirm": "Ya no la tengo",
   "acAddedOn": "añadida {cuando}",
   "@acAddedOn": {
@@ -1180,6 +1181,10 @@
   "bgChipColor": "Color de las pestañas",
   "bgIconColor": "Color de los iconos",
   "bgUseThis": "Usar este",
+  "bgSaveSwatch": "Guardar como muestra",
+  "bgSwatchTip": "Muestra guardada",
+  "bgSwatchDeleteTitle": "¿Borrar esta muestra?",
+  "bgSwatchDeleteBody": "Se quita de tu paleta guardada. Puedes volver a guardarla cuando quieras.",
 
   "camGstreamerMissing": "GStreamer no está instalado. Instálalo con:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good",
   "camNoImage": "La cámara {dispositivo} no da imagen (gst-launch salió con {codigo}).\n{detalle}",

@@ -85,16 +85,22 @@ ThemeData mfThemeSobreFondo(ThemeData base,
       iconTheme: tema.iconTheme.copyWith(color: safeText),
     );
   }
-  // las pestañas (chips): el color elegido tiñe la seleccionada y su borde
+  // las pestañas (chips): el color elegido tiñe la seleccionada y su borde.
+  // La LETRA de la seleccionada pasa por la guarda de contraste: un preset
+  // claro (hueso) con letra clara del tema quedaría ilegible, y el vistazo
+  // de Ajustes hace esta misma cuenta para enseñar lo que de verdad se pinta
   if (chip != null) {
+    final letraChip =
+        toneLegible(chip, safeText ?? tema.colorScheme.onSurface);
     tema = tema.copyWith(
       chipTheme: tema.chipTheme.copyWith(
         selectedColor: chip,
         side: BorderSide(color: chip.withValues(alpha: 0.7)),
-        checkmarkColor:
-            ThemeData.estimateBrightnessForColor(chip) == Brightness.dark
-                ? Colors.white
-                : Colors.black,
+        checkmarkColor: letraChip,
+        labelStyle: WidgetStateTextStyle.resolveWith((states) =>
+            states.contains(WidgetState.selected)
+                ? TextStyle(color: letraChip)
+                : const TextStyle()),
       ),
     );
   }
