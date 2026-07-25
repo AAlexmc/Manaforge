@@ -163,6 +163,8 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
           oracleByPrintings: cachedOwners,
           oraclePrices: widget.db.pricesForOracles,
           printingPrices: widget.db.pricesForPrintings,
+          foilQty: widget.collection.foilPrintings,
+          foilPrices: widget.db.foilPricesForPrintings,
         );
       }
       final total = await computeCollectionValue(
@@ -172,6 +174,8 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
         oraclePrices: widget.db.pricesForOracles,
         printingPrices: widget.db.pricesForPrintings,
         printingOwner: widget.collection.printingOwner,
+        foilQty: widget.collection.foilPrintings,
+        foilPrices: widget.db.foilPricesForPrintings,
       );
       if (mounted && token == _valuesToken) {
         setState(() {

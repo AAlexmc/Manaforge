@@ -183,6 +183,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
         oraclePrices: widget.db.pricesForOracles,
         printingPrices: widget.db.pricesForPrintings,
         printingOwner: widget.collection.printingOwner,
+        foilQty: widget.collection.foilPrintings,
+        foilPrices: widget.db.foilPricesForPrintings,
       );
       final total = valuation.total;
       final valued = valuation.valued;

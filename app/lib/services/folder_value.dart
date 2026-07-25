@@ -24,6 +24,8 @@ Future<CollectionValuation> computeFolderValue({
   required Future<Map<String, double>> Function(Iterable<String>) oraclePrices,
   required Future<Map<String, double>> Function(Iterable<String>)
       printingPrices,
+  Map<String, int>? foilQty,
+  Future<Map<String, double>> Function(Iterable<String>)? foilPrices,
 }) async {
   final mine = cards.where((c) => folderCardIds.contains(c.oracleId)).toList();
   if (mine.isEmpty) {
@@ -32,10 +34,16 @@ Future<CollectionValuation> computeFolderValue({
   }
   var printings = const <String, int>{};
   var owners = const <String, String>{};
+  var foils = const <String, int>{};
   if (byPrinting && printingQty.isNotEmpty) {
     owners = await oracleByPrintings(printingQty.keys);
     printings = {
       for (final e in printingQty.entries)
+        if (folderCardIds.contains(owners[e.key])) e.key: e.value,
+    };
+    // mismas foils que la colección, recortadas a la carpeta
+    foils = {
+      for (final e in (foilQty ?? const <String, int>{}).entries)
         if (folderCardIds.contains(owners[e.key])) e.key: e.value,
     };
   }
@@ -50,6 +58,8 @@ Future<CollectionValuation> computeFolderValue({
     oraclePrices: oraclePrices,
     printingPrices: printingPrices,
     printingOwner: owners,
+    foilQty: foils,
+    foilPrices: foilPrices,
   );
 }
 
@@ -67,4 +77,6 @@ Future<CollectionValuation> folderValue({
       oracleByPrintings: db.oracleByPrintings,
       oraclePrices: db.pricesForOracles,
       printingPrices: db.pricesForPrintings,
+      foilQty: collection.foilPrintings,
+      foilPrices: db.foilPricesForPrintings,
     );
