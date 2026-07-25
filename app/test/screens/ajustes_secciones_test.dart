@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/screens/screens.dart';
 import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/factory_reset.dart';
 import 'package:manaforge_app/services/home_layout_prefs.dart';
 import 'package:manaforge_app/services/language_prefs.dart';
 
@@ -76,5 +77,23 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.text('Base de datos de cartas'), findsOneWidget);
+  });
+
+  testWidgets('la seccion Datos lleva el reset de fabrica al final',
+      (tester) async {
+    tester.view.physicalSize = const Size(1200, 2400);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(appDePrueba(
+      home: AjustesScreen(
+        db: _sinBase(),
+        onRestored: () {},
+        onFactoryReset: () async => const FactoryResetReport(
+            backupFile: null, deleted: [], failed: []),
+      ),
+    ));
+    await tester.tap(find.text('Datos'));
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.scrollUntilVisible(find.text('Reset de fábrica'), 200);
+    expect(find.text('Reset de fábrica'), findsOneWidget);
   });
 }

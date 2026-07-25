@@ -2489,6 +2489,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bkKindPreRestore => 'before restoring';
 
   @override
+  String get bkKindPreReset => 'before factory reset';
+
+  @override
   String get bkErrFileTooBig =>
       'That file is far too big to be a ManaForge backup.';
 
@@ -3525,6 +3528,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bkConfirmWord => 'CONFIRM';
+
+  @override
+  String get rfTitle => 'Factory reset';
+
+  @override
+  String get rfIntro =>
+      'Returns the app to a fresh install: no collection, no decks, no downloaded databases.';
+
+  @override
+  String get rfButton => 'Erase everything';
+
+  @override
+  String get rfConfirmTitle1 => 'Erase all data?';
+
+  @override
+  String get rfWillDelete =>
+      'This will erase: your collection, decks, folders, achievements, certificates, wishlist, value history, settings and backgrounds, and the downloaded card, price and fingerprint databases.';
+
+  @override
+  String get rfBackupFirst =>
+      'Before anything is erased, an automatic backup will be saved; you can restore it from Settings → Data.';
+
+  @override
+  String rfTypeWord(String palabra) {
+    return 'Type $palabra to continue.';
+  }
+
+  @override
+  String get rfDeleteWord => 'DELETE';
+
+  @override
+  String get rfContinueAction => 'Continue';
+
+  @override
+  String get rfConfirmTitle2 => 'Last confirmation';
+
+  @override
+  String get rfConfirmBody2 =>
+      'This erases all your data on this device. The only way back is restoring the backup being saved now.';
+
+  @override
+  String get rfEraseAction => 'Erase for good';
+
+  @override
+  String get rfWorking => 'Erasing data… don\'t close the app.';
+
+  @override
+  String rfBackupFailed(String motivo) {
+    return 'The backup could not be saved, so NOTHING was erased. $motivo';
+  }
+
+  @override
+  String rfPartial(String cosas) {
+    return 'Some items could not be erased: $cosas. You can retry from Settings after restarting.';
+  }
+
+  @override
+  String get rfHalfDone =>
+      'The erase was left half done. The app will return to the startup screen; if anything remains, retry the reset.';
 
   @override
   String dbErrCards(String codigo) {

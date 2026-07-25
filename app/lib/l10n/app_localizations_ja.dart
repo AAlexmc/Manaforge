@@ -2404,6 +2404,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bkKindPreRestore => '復元前';
 
   @override
+  String get bkKindPreReset => 'antes del reset de fábrica';
+
+  @override
   String get bkErrFileTooBig => 'そのファイルは、ManaForgeのバックアップにしては大きすぎます。';
 
   @override
@@ -3423,6 +3426,65 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get bkConfirmWord => 'CONFIRM';
+
+  @override
+  String get rfTitle => 'Reset de fábrica';
+
+  @override
+  String get rfIntro =>
+      'Deja la app como recién instalada: sin colección, sin mazos y sin bases descargadas.';
+
+  @override
+  String get rfButton => 'Borrar todo';
+
+  @override
+  String get rfConfirmTitle1 => '¿Borrar todos los datos?';
+
+  @override
+  String get rfWillDelete =>
+      'Se borrarán: la colección, los mazos, las carpetas, los logros, los certificados, la lista de deseos, el historial de valor, los ajustes y fondos, y las bases descargadas de cartas, precios y huellas.';
+
+  @override
+  String get rfBackupFirst =>
+      'Antes de borrar nada se guardará una copia de seguridad automática; podrás restaurarla desde Ajustes → Datos.';
+
+  @override
+  String rfTypeWord(String palabra) {
+    return 'Escribe $palabra para continuar.';
+  }
+
+  @override
+  String get rfDeleteWord => 'ELIMINAR';
+
+  @override
+  String get rfContinueAction => 'Continuar';
+
+  @override
+  String get rfConfirmTitle2 => 'Última confirmación';
+
+  @override
+  String get rfConfirmBody2 =>
+      'Esto borra todos tus datos de este equipo. Solo podrás volver atrás restaurando la copia que se guarda ahora.';
+
+  @override
+  String get rfEraseAction => 'Borrar definitivamente';
+
+  @override
+  String get rfWorking => 'Borrando los datos… no cierres la app.';
+
+  @override
+  String rfBackupFailed(String motivo) {
+    return 'No se pudo guardar la copia previa, así que NO se ha borrado nada. $motivo';
+  }
+
+  @override
+  String rfPartial(String cosas) {
+    return 'No se pudo borrar todo. Queda: $cosas. Puedes reintentarlo desde Ajustes tras reiniciar.';
+  }
+
+  @override
+  String get rfHalfDone =>
+      'El borrado se quedó a medias. La app volverá a la pantalla de arranque; si algo sigue ahí, reintenta el reset.';
 
   @override
   String dbErrCards(String codigo) {

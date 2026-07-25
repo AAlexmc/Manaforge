@@ -20,6 +20,7 @@ import 'services/collection_store.dart';
 import 'services/language_prefs.dart';
 import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
+import 'services/factory_reset.dart';
 import 'services/onboarding_prefs.dart';
 import 'services/tours.dart';
 import 'services/folder_store.dart';
@@ -315,6 +316,12 @@ class _HomeShellState extends State<HomeShell> {
   /// Si ya se vio el tour de bienvenida (las burbujas sobre la barra).
   final _onboarding = OnboardingPreference();
 
+  /// El tour de bienvenida tocaba lanzarse mientras `StartupScreen` seguía
+  /// delante (`!_started`): las burbujas señalarían huecos de una pantalla
+  /// que el usuario aún no ve. Se pospone hasta que `onReady` deja pasar a la
+  /// app de verdad.
+  bool _tourBienvenidaPendiente = false;
+
   /// GlobalKeys de los botones que los tours señalan.
   final _tourKeys = TourKeys();
 
@@ -377,8 +384,14 @@ class _HomeShellState extends State<HomeShell> {
       // y el tour de bienvenida, DESPUÉS de idioma y novedades para no
       // amontonar cosas encima. Solo la primera vez.
       await _onboarding.load();
-      if (mounted && !_onboarding.seen) {
+      if (!mounted || _onboarding.seen) return;
+      // si `StartupScreen` sigue delante, lanzarlo ahora lo pintaría sobre
+      // una pantalla que no es la app: se apunta y `onReady` lo dispara en
+      // cuanto se entra de verdad
+      if (_started) {
         _lanzarTour(kTours.first);
+      } else {
+        _tourBienvenidaPendiente = true;
       }
     });
   }
@@ -402,6 +415,24 @@ class _HomeShellState extends State<HomeShell> {
       await autoBackupIfStale(await getApplicationSupportDirectory());
     } catch (_) {/* sin copia automática esta vez; se reintenta al siguiente
       arranque */}
+  }
+
+  /// Reset de fábrica: copia previa, cerrar los sqlite (en Windows un handle
+  /// abierto bloquea el borrado), limpiar el fondo (en memoria y sus ficheros,
+  /// ANTES del barrido para que no re-escriba nada después) y barrer. Toda la
+  /// orquestación (incluido el reintento si algo queda `failed`) vive en
+  /// `factoryReset` (services/factory_reset.dart), testeable sin UI. El
+  /// session bump lo dispara la tarjeta vía onDone al terminar.
+  Future<FactoryResetReport> _factoryReset() async {
+    final dir = await getApplicationSupportDirectory();
+    return factoryReset(
+      dir,
+      closeDbs: () {
+        _db.close();
+        _prices.close();
+      },
+      clearBackground: () => widget.background.resetAll(),
+    );
   }
 
   /// Abre el escáner en vivo. Vive en la barra de abajo, no dentro de
@@ -565,7 +596,17 @@ class _HomeShellState extends State<HomeShell> {
         sources: defaultUpdateSources(
             t: tr(context), db: _db, prices: _prices, scanner: _scanner),
         collection: _collection,
-        onReady: () => setState(() => _started = true),
+        onReady: () {
+          setState(() => _started = true);
+          if (_tourBienvenidaPendiente) {
+            _tourBienvenidaPendiente = false;
+            // un frame para que se pinte la app de verdad (Inicio y su
+            // barra) antes de medir dónde van las burbujas
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _lanzarTour(kTours.first);
+            });
+          }
+        },
       );
     }
     final screens = [
@@ -629,6 +670,7 @@ class _HomeShellState extends State<HomeShell> {
       AjustesScreen(
           db: _db,
           onRestored: widget.onRestored,
+          onFactoryReset: _factoryReset,
           updates: _updates,
           background: widget.background,
           language: widget.language,
