@@ -12,6 +12,8 @@
 /// huella está y se comprueba.
 library;
 
+import 'dart:io';
+
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
@@ -82,4 +84,20 @@ void ensureSha256({required String? expected, required Digest actual}) {
       'Lo descargado no coincide con la huella publicada en GitHub. No se '
       'ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.',
       code: InputRejectedCode.badHash);
+}
+
+/// Sustituye la base buena por la recién descargada. En Windows un handle
+/// abierto (una consulta que reabra justo ahora) bloquea el rename con
+/// sharing violation: reintento corto antes de rendirse — rendirse a la
+/// primera tiraba la descarga entera a la papelera.
+Future<void> renameDownloaded(File tmp, String destino) async {
+  for (var intento = 0; ; intento++) {
+    try {
+      await tmp.rename(destino);
+      return;
+    } on FileSystemException {
+      if (intento >= 3) rethrow;
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+    }
+  }
 }

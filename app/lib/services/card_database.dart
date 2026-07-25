@@ -137,7 +137,7 @@ class CardDatabase {
       // descompresión en streaming (la DB puede ocupar cientos de MB)
       await gzFile.openRead().transform(gzip.decoder).pipe(tmpFile.openWrite());
       close(); // soltar el archivo (Windows lo bloquea)
-      await tmpFile.rename(dbFile.path);
+      await renameDownloaded(tmpFile, dbFile.path);
       yield 1.0;
     } finally {
       client.close();
@@ -159,9 +159,15 @@ class CardDatabase {
   /// Cierra la conexión (necesario antes de re-descargar la DB en Windows,
   /// que bloquea archivos abiertos).
   void close() {
+    _cierres++; // un _open() en vuelo ya no puede re-cachear su handle
     _db?.dispose();
     _db = null;
   }
+
+  /// Sube en cada [close]. Sin esto, un `_open()` esperando en su await
+  /// reabría la base JUSTO entre el close() y el rename de `download()` —
+  /// en Windows eso es sharing violation y descarga tirada.
+  int _cierres = 0;
 
   /// ¿La DB descargada tiene fecha de salida? (schema v2; si no, el filtro
   /// por año no está disponible hasta actualizar la DB en Ajustes).
@@ -176,10 +182,22 @@ class CardDatabase {
   }
 
   Future<Database> _open() async {
-    if (_db != null) return _db!;
-    final file = await _dbFile();
-    _db = sqlite3.open(file.path, mode: OpenMode.readOnly);
-    return _db!;
+    // reintenta si un close() (re-descarga) pisa la apertura a mitad: el
+    // handle recién abierto se suelta para no bloquear el rename, y a la
+    // vuelta se abre ya la base nueva
+    for (var intento = 0; ; intento++) {
+      final cached = _db;
+      if (cached != null) return cached;
+      final gen = _cierres;
+      final file = await _dbFile();
+      final db = sqlite3.open(file.path, mode: OpenMode.readOnly);
+      if (gen == _cierres || intento >= 10) {
+        _db = db;
+        return db;
+      }
+      db.dispose();
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
   }
 
   /// Búsqueda por nombre en inglés o nombre impreso (español incluido).
