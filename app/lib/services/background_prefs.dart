@@ -59,7 +59,16 @@ const List<NamedColor> kCardColors = [
   NamedColor('bosque', Color(0xFF122A1E)),
   NamedColor('vino', Color(0xFF2E1216)),
   NamedColor('forja', Color(0xFF241833)),
+  NamedColor('isla', Color(0xFF16324F)),
+  NamedColor('pantano', Color(0xFF191320)),
+  NamedColor('montana', Color(0xFF381713)),
+  NamedColor('oro', Color(0xFF3A2E12)),
+  NamedColor('incoloro', Color(0xFF26262B)),
 ];
+
+/// Tope de muestras guardadas (paleta "tuya", del color a medida). Al llegar
+/// la novena cae la más vieja: es un atajo rápido, no un archivo sin fin.
+const int kMaxSwatches = 8;
 
 /// Colores de la letra cuando hay fondo puesto.
 const List<NamedColor> kTextColors = [
@@ -122,6 +131,10 @@ class BackgroundPreference extends ChangeNotifier {
   // del tema.
   Color? _chipColor;
   Color? _iconColor;
+  // paleta "tuya": muestras guardadas a mano, compartidas por las cuatro
+  // filas (tarjetas, letra, pestañas, iconos). Orden de llegada: la primera
+  // en salir si se llena es la más vieja (índice 0).
+  final List<Color> _swatches = [];
   double _cardOpacity = kDefaultCardOpacity;
   Future<void>? _loading;
 
@@ -163,6 +176,10 @@ class BackgroundPreference extends ChangeNotifier {
 
   /// Cuánto tapan las tarjetas al fondo (0..1).
   double get cardOpacity => _cardOpacity;
+
+  /// La paleta guardada a mano (inmutable: quien la lee no puede mutar el
+  /// estado por detrás).
+  List<Color> get savedSwatches => List.unmodifiable(_swatches);
 
   /// Mientras se lee el disco se comparte la ESPERA, no un booleano puesto de
   /// antemano (que hacía que un segundo `load()` simultáneo volviese sin
@@ -243,6 +260,20 @@ class BackgroundPreference extends ChangeNotifier {
       if (chipHex is String) _chipColor = _parseHex(chipHex);
       final iconHex = decoded['iconColorHex'];
       if (iconHex is String) _iconColor = _parseHex(iconHex);
+      // cada entrada se valida por separado: una muestra manipulada no tira
+      // abajo a las demás, solo se descarta ella
+      final swatches = decoded['swatchesHex'];
+      if (swatches is List) {
+        final validas = <Color>[];
+        for (final s in swatches) {
+          if (s is! String) continue;
+          final c = _parseHex(s);
+          if (c != null) validas.add(c);
+        }
+        _swatches
+          ..clear()
+          ..addAll(validas.take(kMaxSwatches));
+      }
       final opacidad = decoded['cardOpacity'];
       if (opacidad is num) {
         _cardOpacity =
@@ -339,6 +370,7 @@ class BackgroundPreference extends ChangeNotifier {
     _textCustom = null;
     _chipColor = null;
     _iconColor = null;
+    _swatches.clear();
     _cardOpacity = kDefaultCardOpacity;
     notifyListeners();
     await _save();
@@ -410,6 +442,25 @@ class BackgroundPreference extends ChangeNotifier {
     await _save();
   }
 
+  /// Guarda [color] en la paleta. Duplicado (mismo color ya guardado) no se
+  /// re-añade. Al pasar de [kMaxSwatches] cae la más vieja.
+  Future<void> addSwatch(Color color) async {
+    if (_swatches.contains(color)) return;
+    _swatches.add(color);
+    if (_swatches.length > kMaxSwatches) _swatches.removeAt(0);
+    notifyListeners();
+    await _save();
+  }
+
+  /// Quita [color] de la paleta guardada, si estaba.
+  Future<void> removeSwatch(Color color) async {
+    final antes = _swatches.length;
+    _swatches.removeWhere((c) => c == color);
+    if (_swatches.length == antes) return; // no había nada que quitar
+    notifyListeners();
+    await _save();
+  }
+
   Future<void> setCardOpacity(double value) async {
     final nuevo = value.clamp(kMinCardOpacity, kMaxCardOpacity);
     if (nuevo == _cardOpacity) return;
@@ -460,6 +511,8 @@ class BackgroundPreference extends ChangeNotifier {
             if (_textCustom != null) 'textColorHex': _hex(_textCustom!),
             if (_chipColor != null) 'chipColorHex': _hex(_chipColor!),
             if (_iconColor != null) 'iconColorHex': _hex(_iconColor!),
+            if (_swatches.isNotEmpty)
+              'swatchesHex': _swatches.map(_hex).toList(),
             'cardOpacity': _cardOpacity,
           }));
     } catch (_) {
