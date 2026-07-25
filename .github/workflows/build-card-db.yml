@@ -27,7 +27,9 @@ jobs:
           URI=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['download_uri'])")
           DATE=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['updated_at'][:10])")
           echo "BULK_DATE=$DATE" >> "$GITHUB_ENV"
-          curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" -H "Accept: */*" "$URI" -o bulk.json
+          # "--" separa opciones de la URL: una URI que empezara por "-" no se
+          # puede interpretar como opción de curl
+          curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" -H "Accept: */*" -o bulk.json -- "$URI"
           ls -lh bulk.json
       - name: Construir SQLite
         run: |
