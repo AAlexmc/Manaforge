@@ -348,4 +348,54 @@ void main() {
     expect(prefs.hasImage, isTrue);
     expect(prefs.image!.path, legado.path);
   });
+
+  test('resetAll() vuelve todo a los valores de fábrica, en memoria',
+      () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.select(_imagen('fondo.png'));
+    await prefs.setDim(0.5);
+    await prefs.setCardColor('noche');
+    await prefs.setTextColor('dorado');
+    await prefs.setCardColorCustom(const Color(0xFF123456));
+    await prefs.setChipColor(const Color(0xFF4FB878));
+    await prefs.setIconColor(const Color(0xFFE0CC8A));
+    await prefs.setCardOpacity(0.5);
+
+    await prefs.resetAll();
+
+    expect(prefs.hasImage, isFalse);
+    expect(prefs.dim, kDefaultDim);
+    expect(prefs.cardColorId, isNull);
+    expect(prefs.textColorId, isNull);
+    expect(prefs.cardColor, isNull);
+    expect(prefs.textColor, isNull);
+    expect(prefs.chipColor, isNull);
+    expect(prefs.iconColor, isNull);
+    expect(prefs.cardOpacity, kDefaultCardOpacity);
+  });
+
+  test('resetAll() borra la imagen de fondo del disco', () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.select(_imagen('fondo.png'));
+    final copia = prefs.image!.path;
+
+    await prefs.resetAll();
+
+    expect(File(copia).existsSync(), isFalse);
+  });
+
+  test('tras resetAll(), un load() posterior no arrastra nada de antes',
+      () async {
+    final uno = BackgroundPreference(dataDir: datos);
+    await uno.select(_imagen('fondo.png'));
+    await uno.setCardColor('noche');
+
+    await uno.resetAll();
+
+    final otro = BackgroundPreference(dataDir: datos);
+    await otro.load();
+
+    expect(otro.hasImage, isFalse);
+    expect(otro.cardColorId, isNull);
+  });
 }

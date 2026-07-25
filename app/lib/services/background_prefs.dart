@@ -313,6 +313,31 @@ class BackgroundPreference extends ChangeNotifier {
     }
   }
 
+  /// Reset de fábrica: TODO vuelve al valor de fábrica, en memoria (imagen,
+  /// colores, oscurecido y opacidad), y la copia de la imagen se borra del
+  /// disco como en [clear]. Puede escribir `background.json` con los valores
+  /// por defecto — si quien llama va a barrer la carpeta justo después, ese
+  /// fichero también desaparece.
+  Future<void> resetAll() async {
+    final anterior = _image;
+    _image = null;
+    _dim = kDefaultDim;
+    _cardColorId = null;
+    _textColorId = null;
+    _cardCustom = null;
+    _textCustom = null;
+    _chipColor = null;
+    _iconColor = null;
+    _cardOpacity = kDefaultCardOpacity;
+    notifyListeners();
+    await _save();
+    if (anterior != null && await anterior.exists()) {
+      try {
+        await anterior.delete();
+      } catch (_) {/* la preferencia ya está quitada, que es lo que importa */}
+    }
+  }
+
   Future<void> setDim(double value) async {
     final nuevo = value.clamp(kMinDim, kMaxDim);
     if (nuevo == _dim) return;
