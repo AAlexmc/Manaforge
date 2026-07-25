@@ -27,22 +27,25 @@ Resultado = estado de primer arranque: próximo alzado pregunta idioma, enseña 
 StartupScreen descarga bases. En caliente (sin cerrar la app): mismo mecanismo que
 restaurar — `_session++` tira `HomeShell`, `_started=false` → StartupScreen re-descarga.
 
-## Orden de operaciones (servicio `services/factory_reset.dart`)
+## Orden de operaciones (servicio `services/factory_reset.dart`, dos mitades)
 
-1. **Copia previa**: `writeBackupFile(dataDir, prefix: 'pre-reset')`.
-   - `BackupError.noData` (no hay nada que copiar) → se salta la copia y sigue.
-   - CUALQUIER otro error → **aborta sin borrar nada** y la UI enseña el error.
-2. **Borrado**: iterar `dataDir.list()`, saltar `backups`, borrar recursivo lo demás.
+1. `preResetBackup(dataDir)` → `writeBackupFile(prefix: 'pre-reset')`.
+   - `BackupError.noData` (no hay nada que copiar) → devuelve null y se sigue.
+   - CUALQUIER otro error → **lanza y no se borra nada** (la UI enseña el error).
+2. `wipeDataDir(dataDir)`: iterar `dataDir.list()`, saltar `backups`, borrar recursivo.
    Fallos individuales se acumulan y se reportan (no abortan el resto).
 3. Devuelve `FactoryResetReport { backupFile, deleted, failed }`.
 
-Lógica pura sobre `Directory` (sin plugins) → testeable como `backup.dart`.
+En dos mitades porque entre copia y borrado `HomeShell` cierra los sqlite y limpia el
+fondo: si la copia falla, se aborta ANTES de tocar nada. Lógica pura sobre `Directory`
+(sin plugins) → testeable como `backup.dart`.
 
 ## Handles sqlite — cerrar ANTES de borrar (crítico Windows)
 
-`CardDatabase.close()` y `PriceSeriesDatabase.close()` existen; **añadir
-`ScannerDatabase.close()`** (hoy no lo tiene). En Windows un sqlite abierto bloquea el
-`delete()`. El cierre lo orquesta `HomeShell` antes de llamar al servicio.
+`CardDatabase.close()` y `PriceSeriesDatabase.close()` existen y las llama `HomeShell`
+entre copia y borrado. `ScannerDatabase` NO mantiene handle (loadIndex/updatedDate
+abren y `dispose()` en finally) → no necesita close. En Windows un sqlite abierto
+bloquea el `delete()`.
 
 ## UI — `FactoryResetCard` (`screens/factory_reset_card.dart`)
 
@@ -63,13 +66,19 @@ Lógica pura sobre `Directory` (sin plugins) → testeable como `backup.dart`.
 
 ## Cableado en `main.dart`
 
-Nuevo callback `onFactoryReset` en paralelo a `onRestored`:
+SIN plomería nueva en `_ManaForgeAppState`: se reusa `onRestored` (ya hace
+`resetSharedStores()` + `_tour.value = null` + `_session++`, exactamente lo necesario).
 
-- `HomeShell`: cierra `_db`/`_prices`/`_scanner`, `await factoryReset(dataDir)`,
-  burbujea arriba.
-- `_ManaForgeAppState`: `_background.clear()` (en memoria; sus ficheros ya borrados,
-  `clear()` tolera ausencia), `resetSharedStores()`, `_tour.value = null`,
-  `setState(() => _session++)`.
+- `HomeShell._factoryReset()`: `preResetBackup(dir)` (aborta aquí si falla) →
+  `_db.close()` + `_prices.close()` → `widget.background.clear()` (en memoria + sus
+  ficheros, ANTES del barrido para que no re-escriba nada después) →
+  `wipeDataDir(dir)`.
+- `FactoryResetCard` hace el trabajo bajo barrera modal, la CIERRA, y solo entonces
+  llama `onDone` (= `onRestored`): un diálogo `canPop:false` vivo durante el session
+  bump dejaría la app congelada (mismo orden que el flujo de restaurar).
+- Tras el bump: `_started=false` → StartupScreen re-descarga; tarjeta muerta → el
+  feedback de éxito ES la pantalla de arranque (no hace falta status). El status solo
+  se enseña en aborto (la tarjeta sigue viva).
 - Idioma: fichero borrado (primer arranque real preguntará), pero el objeto en memoria
   conserva el locale esta sesión → la UI sigue legible tras el reset. Decisión a favor
   de usabilidad; no se re-escribe el fichero salvo que el usuario cambie idioma.
