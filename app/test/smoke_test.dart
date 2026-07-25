@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/main.dart';
 import 'package:manaforge_app/services/background_prefs.dart';
+import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/language_prefs.dart';
 
 void main() {
@@ -13,15 +14,21 @@ void main() {
 
     // las preferencias se cargan ANTES y con runAsync: piden la carpeta de
     // datos por el canal de plataforma, y ese canal no avanza dentro del
-    // reloj falso de testWidgets (la carga se quedaría a medias para siempre)
+    // reloj falso de testWidgets (la carga se quedaría a medias para siempre).
+    // La colección entra igual: HomeShell espera su `load()` de verdad (ya no
+    // vuelve vacío mientras StartupScreen sigue leyendo), así que sin
+    // precargarla aquí ese `await` no terminaría nunca dentro del test.
     final idioma = LanguagePreference();
     final fondo = BackgroundPreference();
+    final coleccion = CollectionStore();
     await tester.runAsync(() async {
       await idioma.load();
       await fondo.load();
+      await coleccion.load();
     });
 
-    await tester.pumpWidget(ManaForgeApp(language: idioma, background: fondo));
+    await tester.pumpWidget(ManaForgeApp(
+        language: idioma, background: fondo, collection: coleccion));
     await tester.pump(const Duration(milliseconds: 100));
 
     // pantalla de arranque: sin carpeta de datos (tests) no hay nada que

@@ -110,7 +110,8 @@ class FolderStore extends ChangeNotifier {
   FolderStore({this.dataDir});
 
   final List<CardFolder> _folders = [];
-  bool _loaded = false;
+  Future<void>? _loading;
+  bool _cargado = false;
   int _lastMicros = 0;
 
   /// La creada más recientemente, primero.
@@ -136,12 +137,28 @@ class FolderStore extends ChangeNotifier {
     }
   }
 
-  /// Carga las carpetas. Se parsea a una lista local y una carpeta con algún
-  /// campo raro se SALTA en vez de tirar todas: las carpetas las ha hecho el
-  /// usuario a mano y no se recuperan de ningún sitio.
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Memoizado en [_loading]: con un `bool` marcado ANTES de leer, un segundo
+  /// `load()` mientras el primero seguía en el disco volvía con la lista
+  /// vacía en vez de esperar a la lectura de verdad.
+  ///
+  /// Una vez leído ([_cargado]), un `load()` posterior devuelve un futuro
+  /// NUEVO en vez de reutilizar [_loading]: ese futuro nació en la zona de
+  /// quien llamó primero, y esperarlo desde otra (el reloj falso de
+  /// `testWidgets`) no vuelve.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  /// Se parsea a una lista local y una carpeta con algún campo raro se SALTA
+  /// en vez de tirar todas: las carpetas las ha hecho el usuario a mano y no
+  /// se recuperan de ningún sitio.
+  Future<void> _leer() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {

@@ -60,7 +60,14 @@ class ManaForgeApp extends StatefulWidget {
   final BackgroundPreference? background;
   final LanguagePreference? language;
 
-  const ManaForgeApp({super.key, this.background, this.language});
+  /// Solo para tests: colección YA cargada (mismo motivo que arriba —
+  /// `getApplicationSupportDirectory` no completa en el reloj falso, así que
+  /// el `load()` que lanza `HomeShell` internamente no termina nunca si el
+  /// test no la precarga con `runAsync` y la pasa hecha).
+  final CollectionStore? collection;
+
+  const ManaForgeApp(
+      {super.key, this.background, this.language, this.collection});
 
   @override
   State<ManaForgeApp> createState() => _ManaForgeAppState();
@@ -178,6 +185,7 @@ class _ManaForgeAppState extends State<ManaForgeApp> {
             key: ValueKey(_session),
             background: _background,
             language: _language,
+            collection: widget.collection,
             tour: _tour,
             onRestored: () {
               // los dos almacenes compartidos NO se recrean con la app: si no
@@ -206,6 +214,9 @@ class HomeShell extends StatefulWidget {
   /// Idioma, por lo mismo.
   final LanguagePreference language;
 
+  /// Solo para tests: colección YA cargada (ver `ManaForgeApp.collection`).
+  final CollectionStore? collection;
+
   /// Dónde se deja el tour que hay que enseñar. Lo pinta el `builder` del
   /// MaterialApp, por encima del Navigator (ver `_ManaForgeAppState._tour`).
   final ValueNotifier<TourRequest?> tour;
@@ -215,6 +226,7 @@ class HomeShell extends StatefulWidget {
       required this.onRestored,
       required this.background,
       required this.language,
+      this.collection,
       required this.tour});
 
   @override
@@ -278,7 +290,7 @@ class _HomeShellState extends State<HomeShell> {
 
   bool _started = false; // false = pantalla de arranque (puesta al día)
   final _db = CardDatabase();
-  final _collection = CollectionStore();
+  late final _collection = widget.collection ?? CollectionStore();
   final _decks = DeckStore();
   final _folders = FolderStore();
   final _scanner = ScannerDatabase();
@@ -350,7 +362,9 @@ class _HomeShellState extends State<HomeShell> {
     // y si el que ha cambiado es ESTE ejecutable, contar qué trae. Después
     // del primer frame: antes no hay ni Navigator donde enseñarlo
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _collection.load();
+      // un fallo de disco al leer la colección no puede llevarse por delante
+      // el diálogo de idioma, las novedades y el tour: sin colección se sigue
+      await _collection.load().catchError((_) {});
       if (!mounted) return;
       // primero el idioma (es CÓMO se lee todo lo demás), y solo la primera
       // vez; después se cambia en Ajustes

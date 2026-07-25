@@ -100,7 +100,8 @@ class DeckStore extends ChangeNotifier {
   DeckStore({this.dataDir});
 
   final List<SavedDeck> _decks = [];
-  bool _loaded = false;
+  Future<void>? _loading;
+  bool _cargado = false;
 
   List<SavedDeck> get decks => List.unmodifiable(_decks);
 
@@ -113,19 +114,44 @@ class DeckStore extends ChangeNotifier {
     }
   }
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Memoizado en [_loading]: con un `bool` marcado ANTES de leer, un segundo
+  /// `load()` mientras el primero seguía en el disco volvía con la lista
+  /// vacía en vez de esperar a la lectura de verdad.
+  ///
+  /// Una vez leído ([_cargado]), un `load()` posterior devuelve un futuro
+  /// NUEVO en vez de reutilizar [_loading]: ese futuro nació en la zona de
+  /// quien llamó primero, y esperarlo desde otra (el reloj falso de
+  /// `testWidgets`) no vuelve.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  /// Se parsea a una lista local PRIMERO (saltando cada mazo que no cuadre,
+  /// no el fichero entero) y solo al final se vuelca al estado: un mazo con
+  /// un campo raro no puede llevarse los demás por delante.
+  Future<void> _leer() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
       final list = jsonDecode(await file.readAsString()) as List<dynamic>;
+      final decks = <SavedDeck>[];
+      for (final item in list) {
+        if (item is! Map<String, dynamic>) continue;
+        try {
+          decks.add(SavedDeck.fromJson(item));
+        } catch (_) {
+          continue; // un mazo con un campo raro no se lleva los demás
+        }
+      }
       _decks
         ..clear()
-        ..addAll([
-          for (final item in list)
-            SavedDeck.fromJson(item as Map<String, dynamic>)
-        ]);
+        ..addAll(decks);
       notifyListeners();
     } catch (_) {
       // archivo corrupto: apartarlo con otro nombre y arrancar vacío. Si se

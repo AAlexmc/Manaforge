@@ -31,34 +31,26 @@ Future<CollectionValuation> computeFolderValue({
         total: 0, valued: [], approximate: false);
   }
   var printings = const <String, int>{};
-  var covered = <String>{};
+  var owners = const <String, String>{};
   if (byPrinting && printingQty.isNotEmpty) {
-    final owners = await oracleByPrintings(printingQty.keys);
+    owners = await oracleByPrintings(printingQty.keys);
     printings = {
       for (final e in printingQty.entries)
         if (folderCardIds.contains(owners[e.key])) e.key: e.value,
     };
-    covered = {
-      for (final key in printings.keys)
-        if (owners[key] != null) owners[key]!
-    };
   }
-  final value = await computeCollectionValue(
+  // mismo criterio que computeCollectionValue (y no uno propio aparte que
+  // pueda descuadrarse de él): copias CONOCIDAS por carta, sumando SUS
+  // impresiones, no solo "tiene alguna" — una carta con qty 3 y una sola
+  // edición apuntada sigue sin ser exacta.
+  return computeCollectionValue(
     cards: mine,
     byPrinting: byPrinting,
     printingQty: printings,
     oraclePrices: oraclePrices,
     printingPrices: printingPrices,
+    printingOwner: owners,
   );
-  // una carta añadida a mano desde el buscador no tiene edición conocida: no
-  // suma nada al valor por edición, así que el total se marca orientativo en
-  // vez de enseñar un 0,00 € que parece exacto
-  final missing = mine.any((c) => !covered.contains(c.oracleId));
-  if (!value.approximate && missing) {
-    return CollectionValuation(
-        total: value.total, valued: value.valued, approximate: true);
-  }
-  return value;
 }
 
 /// Atajo con la base de cartas y la colección de verdad.

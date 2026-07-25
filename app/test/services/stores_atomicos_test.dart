@@ -76,6 +76,26 @@ void main() {
           reason: 'se puede recuperar a mano: no se borra');
       expect(file.existsSync(), isFalse);
     });
+
+    test('un mazo con un campo raro no se lleva los demás por delante',
+        () async {
+      // regresión: `_decks..clear()..addAll([for (...) fromJson(...)])`
+      // limpiaba la lista ANTES de evaluar el comprensión de lista; si un
+      // mazo a mitad reventaba, los buenos (antes Y después) se perdían
+      final dir = _tmpDir();
+      final file = File(p.join(dir.path, 'decks.json'));
+      await file.writeAsString(jsonEncode([
+        _deck('d1').toJson(),
+        {'id': 'd-malo'}, // sin name/cards/lands: fromJson revienta
+        _deck('d3').toJson(),
+      ]));
+
+      final store = DeckStore(dataDir: dir);
+      await store.load();
+
+      expect(store.decks.map((d) => d.id), ['d1', 'd3']);
+      expect(File('${file.path}.roto').existsSync(), isFalse);
+    });
   });
 
   group('lista de deseos', () {
@@ -103,6 +123,23 @@ void main() {
 
       expect(File('${file.path}.roto').existsSync(), isTrue);
     });
+
+    test('un item con un campo raro no se lleva los demás de la lista',
+        () async {
+      final dir = _tmpDir();
+      final file = File(p.join(dir.path, 'wishlist.json'));
+      await file.writeAsString(jsonEncode([
+        _wish('o1', 'Bolt').toJson(),
+        {'oracleId': 'o-malo'}, // sin targetPrice: fromJson revienta
+        _wish('o3', 'Zur').toJson(),
+      ]));
+
+      final store = WishlistStore(dataDir: dir);
+      await store.load();
+
+      expect(store.items.map((i) => i.oracleId).toSet(), {'o1', 'o3'});
+      expect(File('${file.path}.roto').existsSync(), isFalse);
+    });
   });
 
   group('cartas vistas hace poco', () {
@@ -129,6 +166,23 @@ void main() {
       await store.load();
 
       expect(File('${file.path}.roto').existsSync(), isTrue);
+    });
+
+    test('una carta con un campo raro no se lleva las demás vistas',
+        () async {
+      final dir = _tmpDir();
+      final file = File(p.join(dir.path, 'recents.json'));
+      await file.writeAsString(jsonEncode([
+        const RecentCard(oracleId: 'c1', name: 'Buena').toJson(),
+        {'o': 'c-malo'}, // sin 'n': fromJson revienta
+        const RecentCard(oracleId: 'c3', name: 'También buena').toJson(),
+      ]));
+
+      final store = RecentsStore(dataDir: dir);
+      await store.load();
+
+      expect(store.cards.map((c) => c.oracleId), ['c1', 'c3']);
+      expect(File('${file.path}.roto').existsSync(), isFalse);
     });
   });
 

@@ -163,13 +163,26 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   Future<void> _load() async {
     try {
+      final byPrinting = widget.collection.hasPrintingData;
+      final printingQty = widget.collection.printingQty;
+      // colecciones de antes de esta versión saben qué impresiones tienen
+      // pero no de quién es cada una (`printingOwner` sale vacío): sin este
+      // backfill, el valor salía marcado aproximado (~) aquí aunque
+      // Colección, que sí hace este mismo prólogo, lo enseñara exacto
+      if (byPrinting && printingQty.isNotEmpty) {
+        final owners = await widget.db.oracleByPrintings(printingQty.keys);
+        if (owners.isNotEmpty) {
+          widget.collection.backfillPrintingOwners(owners);
+        }
+      }
       // fórmula compartida con Home (services/collection_value.dart)
       final valuation = await computeCollectionValue(
         cards: widget.collection.cards,
-        byPrinting: widget.collection.hasPrintingData,
-        printingQty: widget.collection.printingQty,
+        byPrinting: byPrinting,
+        printingQty: printingQty,
         oraclePrices: widget.db.pricesForOracles,
         printingPrices: widget.db.pricesForPrintings,
+        printingOwner: widget.collection.printingOwner,
       );
       final total = valuation.total;
       final valued = valuation.valued;

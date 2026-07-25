@@ -55,6 +55,65 @@ void main() {
     expect(v.valued.map((c) => c.oracleId).toList(), ['o1', 'o2']);
   });
 
+  group('printingOwner: aproximado si alguna carta no tiene edición conocida',
+      () {
+    // o1 tiene dos ediciones conocidas (aer|100, m25|60); o2 no tiene
+    // ninguna (se añadió desde el buscador sin printingKey)
+    const owner = {'aer|100': 'o1', 'm25|60': 'o1'};
+
+    test('sin pasar printingOwner, se mantiene el criterio antiguo',
+        () async {
+      final v = await computeCollectionValue(
+        cards: cards,
+        byPrinting: true,
+        printingQty: printingQty,
+        oraclePrices: oracleFn,
+        printingPrices: printingFn,
+      );
+      expect(v.approximate, isFalse);
+    });
+
+    test('con printingOwner, una carta sin cobertura marca aproximado',
+        () async {
+      final v = await computeCollectionValue(
+        cards: cards, // o1 cubierta, o2 no
+        byPrinting: true,
+        printingQty: printingQty,
+        oraclePrices: oracleFn,
+        printingPrices: printingFn,
+        printingOwner: owner,
+      );
+      expect(v.approximate, isTrue);
+    });
+
+    test('con TODAS las cartas cubiertas, no aproximado', () async {
+      final v = await computeCollectionValue(
+        cards: [_card('o1', 'Bolt', 2)],
+        byPrinting: true,
+        printingQty: printingQty,
+        oraclePrices: oracleFn,
+        printingPrices: printingFn,
+        printingOwner: owner,
+      );
+      expect(v.approximate, isFalse);
+    });
+
+    test(
+        'la cobertura cuenta COPIAS, no "tiene alguna impresión": 3 copias '
+        'con solo 1 conocida sigue siendo aproximado', () async {
+      final v = await computeCollectionValue(
+        cards: [_card('o1', 'Bolt', 3)], // tienes 3 copias
+        byPrinting: true,
+        printingQty: const {'aer|100': 1}, // pero solo 1 impresión conocida
+        oraclePrices: oracleFn,
+        printingPrices: printingFn,
+        printingOwner: const {'aer|100': 'o1'},
+      );
+      expect(v.approximate, isTrue,
+          reason: 'las otras 2 copias no tienen edición conocida');
+    });
+  });
+
   test('colección vacía: total 0 y lista vacía', () async {
     final v = await computeCollectionValue(
       cards: const [],

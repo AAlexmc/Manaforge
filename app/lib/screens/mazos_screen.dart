@@ -60,8 +60,18 @@ class _MazosScreenState extends State<MazosScreen> {
     if (_opening) return;
     setState(() => _opening = true);
     try {
-      // pool = colección actual + las cartas del mazo (por si ya no las tienes)
-      final pool = await widget.db.buildPool(widget.collection.qtyByOracle);
+      // pool = colección actual + las cartas del mazo (por si ya no las
+      // tienes). Las básicas se asumen "gratis" (decisión de producto,
+      // coherente con Forge — forge_screen.dart: `assumeBasics: true`), y
+      // CUÁNTAS depende del formato: `SavedDeck` no lo guarda, así que se
+      // infiere por el tamaño total del mazo (~100 cartas = Commander, 40
+      // básicas asumidas; si no, 25 — mismo umbral que ya usa la cabecera
+      // del detalle para saber que un Commander no son 60 cartas). Sin
+      // esto, "cuántas te faltan" podía decir un número distinto al que
+      // Forge acababa de decir al generar el mazo.
+      final totalCartas = saved.totalSpells + saved.totalLands;
+      final pool = await widget.db.buildPool(widget.collection.qtyByOracle,
+          assumeBasics: true, basicsQty: totalCartas >= 100 ? 40 : 25);
       // lo que tienes DE VERDAD, antes de rellenar el pool con las cartas que
       // ya no tienes (esas entran con la cantidad que pide el mazo)
       final propias = {for (final e in pool.entries) e.key: e.value.qty};

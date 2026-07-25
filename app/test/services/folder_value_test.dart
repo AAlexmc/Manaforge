@@ -67,6 +67,30 @@ void main() {
     expect(v.approximate, isTrue);
   });
 
+  test(
+      'copias conocidas insuficientes marcan la carpeta como aproximada '
+      '(mismo criterio que computeCollectionValue)', () async {
+    final soloParcial = [_card('d', qty: 3)];
+    Future<Map<String, String>> ownerD(Iterable<String> keys) async =>
+        {'aer|9': 'd'};
+    Future<Map<String, double>> priceD(Iterable<String> keys) async =>
+        {'aer|9': 2.0};
+    Future<Map<String, double>> oracleD(Iterable<String> ids) async =>
+        {'d': 1.5};
+
+    final v = await computeFolderValue(
+      folderCardIds: {'d'},
+      cards: soloParcial,
+      byPrinting: true,
+      printingQty: const {'aer|9': 1}, // solo 1 de las 3 copias conocida
+      oracleByPrintings: ownerD,
+      oraclePrices: oracleD,
+      printingPrices: priceD,
+    );
+    expect(v.approximate, isTrue,
+        reason: 'las otras 2 copias de "d" no tienen edición conocida');
+  });
+
   test('carpeta vacía o con cartas que ya no tienes vale 0', () async {
     final v = await computeFolderValue(
       folderCardIds: {'fantasma'},

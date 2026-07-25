@@ -60,4 +60,25 @@ void main() {
     expect(list, hasLength(1));
     expect((list.first as Map)['v'], anyOf(10, 20));
   });
+
+  test(
+      'el historial queda ordenado por fecha aunque venga desordenado del '
+      'disco', () async {
+    // regresión: `record()` recortaba con `removeAt(0)` asumiendo la lista
+    // ya ordenada; un reloj hacia atrás (o un fichero ya desordenado) dejaba
+    // la serie descolocada
+    final file = File('${dir.path}/value_history.json');
+    await file.writeAsString(jsonEncode([
+      {'d': '2026-07-20', 'v': 100.0, 'c': 10},
+      {'d': '2026-07-10', 'v': 90.0, 'c': 9},
+      {'d': '2026-07-15', 'v': 95.0, 'c': 9},
+    ]));
+
+    final history = ValueHistory(dataDir: dir);
+    final result = await history.record(200.0, 12);
+
+    final dates = result.map((pt) => pt.date).toList();
+    final ordenadas = [...dates]..sort();
+    expect(dates, ordenadas);
+  });
 }

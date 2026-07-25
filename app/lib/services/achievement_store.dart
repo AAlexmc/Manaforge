@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'json_store_io.dart';
+
 /// Contadores que NO se pueden deducir mirando la colección: pasan una vez y
 /// hay que apuntarlos cuando pasan.
 abstract final class AchievementCounters {
@@ -211,12 +213,21 @@ class AchievementStore extends ChangeNotifier {
   Future<void> _load() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
+    // el try cubre SOLO la lectura y el decode: `restore()` no puede
+    // apartar como roto un fichero que se ha leído perfectamente solo
+    // porque algo DESPUÉS del decode (un listener, por ejemplo) revienta
+    Map<String, dynamic>? decoded;
     try {
-      final decoded = jsonDecode(await file.readAsString());
-      if (decoded is Map<String, dynamic>) restore(decoded);
+      final raw = jsonDecode(await file.readAsString());
+      if (raw is Map<String, dynamic>) decoded = raw;
     } catch (_) {
-      // fichero corrupto: empezar de cero es mejor que no arrancar
+      // fichero corrupto: apartarlo con otro nombre en vez de arrancar vacío
+      // y escribirle encima — así no se pierden sin rastro la racha y los
+      // logros desbloqueados
+      await setAsideBroken(file);
+      return;
     }
+    if (decoded != null) restore(decoded);
   }
 
   /// Cola de escrituras: desbloquear varios logros de golpe llamaba a varios
