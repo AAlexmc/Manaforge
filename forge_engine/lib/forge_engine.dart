@@ -6,6 +6,7 @@ library forge_engine;
 
 export 'src/models.dart';
 export 'src/hypergeometric.dart';
+export 'src/lands.dart';
 export 'src/mana_curve.dart';
 export 'src/deck_validator.dart';
 export 'src/classify.dart';
