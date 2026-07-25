@@ -187,14 +187,28 @@ class CardDatabase {
     if (query.trim().length < 2) return const [];
     final db = await _open();
     final like = '%${query.trim()}%';
+    // La impresión que representa a la carta es DETERMINISTA: la más barata
+    // con precio (conservador: añadir desde el buscador no puede apuntar una
+    // Alpha de cientos de euros como "el precio" de la carta), luego las sin
+    // precio; empates por set y número. Antes, el GROUP BY a secas dejaba a
+    // sqlite elegir una impresión arbitraria. price_eur es TEXTO en la base:
+    // sin CAST, '10.00' ordena antes que '9.00'.
     final rows = db.select('''
-      SELECT c.oracle_id, c.name, p.printed_name, p.set_code,
-             p.collector_number, p.image_small, p.image_normal,
-             c.type_line, c.colors, c.mana_cost, c.cmc, c.power, c.toughness
-      FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
-      WHERE c.name LIKE ?1 OR p.printed_name LIKE ?1
-      GROUP BY c.oracle_id
-      ORDER BY length(c.name)
+      SELECT * FROM (
+        SELECT c.oracle_id, c.name, p.printed_name, p.set_code,
+               p.collector_number, p.image_small, p.image_normal,
+               c.type_line, c.colors, c.mana_cost, c.cmc, c.power,
+               c.toughness,
+               ROW_NUMBER() OVER (
+                 PARTITION BY c.oracle_id
+                 ORDER BY (p.price_eur IS NULL),
+                          CAST(p.price_eur AS REAL),
+                          p.set_code, p.collector_number
+               ) AS rn
+        FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
+        WHERE c.name LIKE ?1 OR p.printed_name LIKE ?1
+      ) WHERE rn = 1
+      ORDER BY length(name)
       LIMIT ?2
     ''', [like, limit]);
     return [for (final r in rows) _hitFromRow(r)];
