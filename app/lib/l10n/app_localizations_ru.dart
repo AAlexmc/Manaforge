@@ -2537,7 +2537,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bkKindPreRestore => 'перед восстановлением';
 
   @override
-  String get bkKindPreReset => 'Antes del reset de fábrica';
+  String get bkKindPreReset => 'antes del reset de fábrica';
 
   @override
   String get bkErrFileTooBig => 'Этот файл слишком велик для копии ManaForge.';

@@ -2489,7 +2489,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bkKindPreRestore => 'before restoring';
 
   @override
-  String get bkKindPreReset => 'Before factory reset';
+  String get bkKindPreReset => 'before factory reset';
 
   @override
   String get bkErrFileTooBig =>

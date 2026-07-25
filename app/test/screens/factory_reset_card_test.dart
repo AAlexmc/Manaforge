@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/screens/factory_reset_card.dart';
@@ -153,5 +155,22 @@ void main() {
     await tester.pump();
 
     expect(dones, 1);
+  });
+
+  testWidgets(
+      'un fallo que no es BackupError (disco lleno) tampoco borra nada: '
+      'mensaje visible y el botón sigue vivo', (tester) async {
+    await tester.pumpWidget(carta(
+        wipe: () async =>
+            throw const FileSystemException('disco lleno')));
+    await _hastaElBorrado(tester);
+
+    expect(dones, 0);
+    expect(find.textContaining('NO se ha borrado nada'), findsOneWidget);
+    expect(find.textContaining('disco lleno'), findsOneWidget);
+    // _busy liberado: se puede reintentar sin reconstruir la pantalla
+    final boton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Borrar todo'));
+    expect(boton.onPressed, isNotNull);
   });
 }

@@ -2496,7 +2496,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get bkKindPreRestore => 'antes de restaurar';
 
   @override
-  String get bkKindPreReset => 'Antes del reset de fábrica';
+  String get bkKindPreReset => 'antes del reset de fábrica';
 
   @override
   String get bkErrFileTooBig =>

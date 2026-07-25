@@ -172,6 +172,10 @@ class BackgroundPreference extends ChangeNotifier {
 
   bool _cargado = false;
 
+  /// Sube en [resetAll]: una lectura en vuelo de ANTES del reset no puede
+  /// terminar después y pisar los valores de fábrica con lo del json viejo.
+  int _generacion = 0;
+
   Future<void> _load() async {
     try {
       await _leer();
@@ -181,10 +185,12 @@ class BackgroundPreference extends ChangeNotifier {
   }
 
   Future<void> _leer() async {
+    final gen = _generacion;
     final file = await _prefsFile();
     if (file == null || !await file.exists()) return;
     try {
       final decoded = jsonDecode(await file.readAsString());
+      if (gen != _generacion) return;
       if (decoded is! Map<String, dynamic>) return;
       final ruta = decoded['image'];
       if (ruta is String && ruta.isNotEmpty) {
@@ -199,8 +205,12 @@ class BackgroundPreference extends ChangeNotifier {
             kBackgroundExtensions.contains(p.extension(imagen.path).toLowerCase());
         // y si el fichero ya no está (limpieza de disco), tampoco se arrastra
         // una ruta muerta
-        if (dentro && await imagen.exists()) _image = imagen;
+        if (dentro && await imagen.exists() && gen == _generacion) {
+          _image = imagen;
+        }
       }
+      // tras los await de la imagen, otra comprobación antes de los colores
+      if (gen != _generacion) return;
       final dim = decoded['dim'];
       if (dim is num) _dim = dim.toDouble().clamp(kMinDim, kMaxDim);
       // los colores se guardan por NOMBRE y solo valen si están en la paleta
@@ -319,6 +329,7 @@ class BackgroundPreference extends ChangeNotifier {
   /// por defecto — si quien llama va a barrer la carpeta justo después, ese
   /// fichero también desaparece.
   Future<void> resetAll() async {
+    _generacion++; // invalida cualquier _leer() en vuelo
     final anterior = _image;
     _image = null;
     _dim = kDefaultDim;

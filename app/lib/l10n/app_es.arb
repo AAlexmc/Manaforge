@@ -1134,7 +1134,7 @@
   "bkStorePriceHistory": "el historial de precios",
   "bkKindAuto": "automática",
   "bkKindPreRestore": "antes de restaurar",
-  "bkKindPreReset": "Antes del reset de fábrica",
+  "bkKindPreReset": "antes del reset de fábrica",
   "bkErrFileTooBig": "Ese fichero es demasiado grande para ser una copia de ManaForge.",
   "bkErrExpandTooBig": "Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.",
   "bkErrNotABackup": "Ese fichero no es una copia de seguridad de ManaForge.",

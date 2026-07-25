@@ -2392,7 +2392,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bkKindPreRestore => '恢复前';
 
   @override
-  String get bkKindPreReset => 'Antes del reset de fábrica';
+  String get bkKindPreReset => 'antes del reset de fábrica';
 
   @override
   String get bkErrFileTooBig => '这个文件太大了，不像是 ManaForge 的备份。';

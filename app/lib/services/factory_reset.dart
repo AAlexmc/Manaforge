@@ -21,6 +21,11 @@ class FactoryResetReport {
 
   /// Ficheros `.roto` (datos rescatables, no basura) que se han movido a
   /// `backups/` en vez de borrarse. No cuentan como `deleted`.
+  ///
+  /// Hoy es informativo (lo leen los tests, no la UI): los `.roto` en
+  /// `backups/` no salen en la lista de Restaurar (solo `.mfbak`) ni rotan —
+  /// se quedan para rescate a mano. Un reset es raro; si algún día se
+  /// acumulan, tocará enseñarlos o ponerles tope.
   final List<String> rescued;
 
   const FactoryResetReport(

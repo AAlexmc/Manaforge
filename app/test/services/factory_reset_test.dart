@@ -173,6 +173,15 @@ void main() {
       addTearDown(() async {
         await Process.run('chmod', ['0700', bloqueada.path]);
       });
+      // root ignora el chmod (contenedores CI): si aún se puede escribir
+      // dentro, el escenario no se puede montar y el test no aplica
+      try {
+        File(p.join(bloqueada.path, 'sonda.txt')).writeAsStringSync('x');
+        markTestSkipped('chmod no frena a este usuario (¿root?)');
+        return;
+      } on FileSystemException {
+        // bien: la carpeta está bloqueada de verdad
+      }
 
       var closes = 0;
       final report = await factoryReset(dir,

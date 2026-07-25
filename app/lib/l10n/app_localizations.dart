@@ -3946,7 +3946,7 @@ abstract class AppLocalizations {
   /// No description provided for @bkKindPreReset.
   ///
   /// In es, this message translates to:
-  /// **'Antes del reset de fábrica'**
+  /// **'antes del reset de fábrica'**
   String get bkKindPreReset;
 
   /// No description provided for @bkErrFileTooBig.

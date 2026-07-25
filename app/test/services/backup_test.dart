@@ -291,7 +291,40 @@ void main() {
     expect(backupLabel(File('/x/pre-restore-2026-07-21-201500.mfbak'), t),
         startsWith('antes de restaurar · 21/07/2026'));
     expect(backupLabel(File('/x/pre-reset-2026-07-21-201500.mfbak'), t),
-        startsWith('Antes del reset de fábrica · 21/07/2026'));
+        startsWith('antes del reset de fábrica · 21/07/2026'));
+  });
+
+  test(
+      'un .mfbak intruso sin sello no descuadra el orden ni la rotación: '
+      'cuenta como el más viejo', () async {
+    final dir = _dataDir({'collection.json': '{"cards":[]}'});
+    final backups = Directory(p.join(dir.path, 'backups'))
+      ..createSync(recursive: true);
+    // tres con sello y un intruso (gestor de ficheros / "conflicted copy")
+    for (final nombre in [
+      'pre-restore-2026-01-01-000000.mfbak',
+      'auto-2026-12-01-000000.mfbak',
+      'auto-2026-07-21-201500 (copia).mfbak',
+      'pre-reset-2026-06-01-000000.mfbak',
+    ]) {
+      File(p.join(backups.path, nombre)).writeAsStringSync('x');
+    }
+    final nombres = (await listBackups(dir))
+        .map((f) => p.basename(f.path))
+        .toList();
+    // orden total por fecha, intruso al final — da igual cómo enumere el disco
+    expect(nombres, [
+      'auto-2026-12-01-000000.mfbak',
+      'pre-reset-2026-06-01-000000.mfbak',
+      'pre-restore-2026-01-01-000000.mfbak',
+      'auto-2026-07-21-201500 (copia).mfbak',
+    ]);
+    // y la rotación nunca se lleva una con sello por culpa del intruso
+    await rotateBackupsWithPrefix(dir, 'auto', keep: 1);
+    expect(
+        File(p.join(backups.path, 'auto-2026-12-01-000000.mfbak'))
+            .existsSync(),
+        isTrue);
   });
 
   test(

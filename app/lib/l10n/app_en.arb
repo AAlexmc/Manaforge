@@ -1129,7 +1129,7 @@
   "bkStorePriceHistory": "your price history",
   "bkKindAuto": "automatic",
   "bkKindPreRestore": "before restoring",
-  "bkKindPreReset": "Before factory reset",
+  "bkKindPreReset": "before factory reset",
   "bkErrFileTooBig": "That file is far too big to be a ManaForge backup.",
   "bkErrExpandTooBig": "That backup is far too big once unpacked: it doesn't look like a real ManaForge backup.",
   "bkErrNotABackup": "That file is not a ManaForge backup.",

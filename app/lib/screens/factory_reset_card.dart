@@ -100,14 +100,13 @@ class _FactoryResetCardState extends State<FactoryResetCard> {
   /// en el `finally`, es decir SIEMPRE antes de que quien llama siga adelante
   /// y dispare `onDone`.
   ///
-  /// El `pop` NO se guarda con `mounted`: si la tarjeta se desmonta mientras
-  /// [action] corre, la barrera (`canPop: false`) se queda huérfana y congela
-  /// la app entera si nadie la cierra. `Navigator.of` con la key del
-  /// diálogo (no `context`, que ya no sirve) puede fallar si la propia app se
-  /// ha desmontado entera; ahí ya no hay nada que cerrar.
+  /// La barrera se quita POR IDENTIDAD (removeRoute de la ruta concreta), no
+  /// con un `pop()` a ciegas que cerraría lo que hubiera encima. Y sin guarda
+  /// de `mounted`: si la tarjeta se desmonta mientras [action] corre, una
+  /// barrera `canPop: false` huérfana congelaría la app entera.
   Future<T> _conLaAppQuieta<T>(Future<T> Function() action) async {
     final navigator = Navigator.of(context, rootNavigator: true);
-    unawaited(showDialog<void>(
+    final barrera = DialogRoute<void>(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => PopScope(
@@ -120,20 +119,24 @@ class _FactoryResetCardState extends State<FactoryResetCard> {
           ]),
         ),
       ),
-    ));
+    );
+    unawaited(navigator.push(barrera));
     try {
       return await action();
     } finally {
       try {
-        navigator.pop();
+        if (barrera.isActive) navigator.removeRoute(barrera);
       } catch (_) {/* ya no hay nada que cerrar: la app se ha desmontado */}
     }
   }
 
   Future<void> _avisoSimple(String texto) async {
     if (!mounted) return;
+    // la única salida es el botón: un toque fuera no puede saltarse un aviso
+    // de "quedó a medias" justo antes del session bump
     await showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
         content: Text(texto),
         actions: [
@@ -187,6 +190,20 @@ class _FactoryResetCardState extends State<FactoryResetCard> {
       // el bump no
       await _avisoSimple(t.rfHalfDone);
       widget.onDone();
+      return;
+    } catch (e) {
+      // cualquier otra cosa es un fallo ANTES de tocar el disco:
+      // `preResetBackup` corre fuera del try de `factoryReset`, así que sus
+      // FileSystemException (disco lleno, permisos, un fichero llamado
+      // `backups`) llegan aquí crudas. Nada se ha borrado: mensaje, botón
+      // vivo y sin onDone. Sin esta cola el fallo era silencioso y `_busy`
+      // dejaba el botón apagado para siempre.
+      if (!mounted) return;
+      final t2 = tr(context);
+      setState(() {
+        _busy = false;
+        _error = t2.rfBackupFailed('$e');
+      });
       return;
     }
 

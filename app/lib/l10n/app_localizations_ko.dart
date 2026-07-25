@@ -2423,7 +2423,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get bkKindPreRestore => '복원 직전';
 
   @override
-  String get bkKindPreReset => 'Antes del reset de fábrica';
+  String get bkKindPreReset => 'antes del reset de fábrica';
 
   @override
   String get bkErrFileTooBig => '그 파일은 ManaForge 백업이라기엔 너무 커요.';

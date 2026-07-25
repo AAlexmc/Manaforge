@@ -672,16 +672,17 @@ Future<List<File>> _backupsWithPrefix(Directory dir, String? prefix) async {
   // (`auto-`, `pre-restore-`, `pre-reset-`) no ordenan igual alfabéticamente
   // que cronológicamente, y mezclarlos (como hace `listBackups`) sacaba copias
   // más nuevas por detrás de una más vieja con un prefijo que empezara antes
+  // Un nombre sin sello reconocible cuenta como "el más viejo": mirar unas
+  // veces la fecha y otras el nombre rompía la transitividad del comparador,
+  // y con ella el orden pasaba a depender de cómo enumera el disco — y la
+  // rotación (que borra por posición) podía llevarse una copia recién escrita.
   files.sort((a, b) {
     final nombreA = p.basename(a.path);
     final nombreB = p.basename(b.path);
-    final selloA = _stampOf(nombreA);
-    final selloB = _stampOf(nombreB);
-    if (selloA != null && selloB != null && selloA != selloB) {
-      return selloB.compareTo(selloA);
-    }
-    // empate (o alguno sin sello reconocible): por el nombre, como antes
-    return nombreB.compareTo(nombreA);
+    final selloA = _stampOf(nombreA) ?? DateTime.utc(0);
+    final selloB = _stampOf(nombreB) ?? DateTime.utc(0);
+    final porFecha = selloB.compareTo(selloA);
+    return porFecha != 0 ? porFecha : nombreB.compareTo(nombreA);
   });
   return files;
 }
