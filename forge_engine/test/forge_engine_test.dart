@@ -41,7 +41,15 @@ void main() {
       expect(hybrid['G'], 2);
     });
 
-    test('fórmula de Karsten: coste medio 3.0 sin fuentes baratas → 24 tierras',
+    // Reescrito (v2 tierras por probabilidad): antes este test fijaba un
+    // número mágico ("coste medio 3.0 -> 24 tierras" de la fórmula vieja).
+    // Ahora la fórmula elige, DENTRO del rango del arquetipo, el n que
+    // maximiza P(caídas) - 0.5*P(inundación); con este pool (coste medio 3.0,
+    // sin fuentes baratas) el máximo cae en 25 (el tope de midrange), que
+    // sigue dentro del rango de la vieja fórmula (23-25) — no es un mazo
+    // distinto, es el mismo pool con un n de tierras distinto y justificado.
+    test(
+        'las tierras elegidas maximizan P(caídas) - 0.5*P(inundación) en su rango',
         () {
       final cards = <String, int>{};
       final pool = <String, Card>{};
@@ -57,7 +65,49 @@ void main() {
             types: const ['Creature'],
             oracle: '');
       }
-      expect(ManaCurve.recommendedLands(cards, pool, Archetype.midrange), 24);
+      final n = ManaCurve.recommendedLands(cards, pool, Archetype.midrange);
+      expect(n, inInclusiveRange(23, 25));
+      double util(int k) =>
+          pLandDrops(k, 60, 4) - 0.5 * hypergeomAtLeast(60, k, 4 + 8, 4 + 3);
+      for (var k = 23; k <= 25; k++) {
+        expect(util(n) + 1e-12, greaterThanOrEqualTo(util(k)));
+      }
+    });
+
+    test('aggro barato elige menos tierras que control caro', () {
+      final cheapCards = <String, int>{};
+      final cheapPool = <String, Card>{};
+      for (var i = 0; i < 20; i++) {
+        final name = 'Barata $i';
+        cheapCards[name] = 1;
+        cheapPool[name] = Card(
+            name: name,
+            qty: 1,
+            manaCost: '{R}',
+            cmc: 1,
+            colors: 'R',
+            types: const ['Creature'],
+            oracle: '');
+      }
+      final expensiveCards = <String, int>{};
+      final expensivePool = <String, Card>{};
+      for (var i = 0; i < 20; i++) {
+        final name = 'Cara $i';
+        expensiveCards[name] = 1;
+        expensivePool[name] = Card(
+            name: name,
+            qty: 1,
+            manaCost: '{4}{U}{U}',
+            cmc: 6,
+            colors: 'U',
+            types: const ['Creature'],
+            oracle: '');
+      }
+      expect(
+        ManaCurve.recommendedLands(cheapCards, cheapPool, Archetype.aggro),
+        lessThan(ManaCurve.recommendedLands(
+            expensiveCards, expensivePool, Archetype.control)),
+      );
     });
   });
 

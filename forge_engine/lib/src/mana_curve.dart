@@ -1,4 +1,13 @@
+import 'hypergeometric.dart';
 import 'models.dart';
+
+/// Turno al que cada arquetipo necesita haber caído tierra sí o sí.
+const Map<String, int> landDropTurn = {
+  'aggro': 3,
+  'tempo': 4,
+  'midrange': 4,
+  'control': 5,
+};
 
 /// Matemática de la curva de maná — espejo 1:1 de `engine-reference/forge/curve.py`.
 class ManaCurve {
@@ -57,16 +66,31 @@ class ManaCurve {
     return count;
   }
 
-  /// Tierras recomendadas: 24 en coste medio 3.0, ±1 por cada ±0.5, menos
-  /// descuento por fuentes baratas; acotado al rango del arquetipo.
+  /// Tierras recomendadas: semilla Karsten (24 en coste medio 3.0, ±1 por
+  /// cada ±0.5, menos descuento por fuentes baratas) para desempatar, pero el
+  /// número final es el que maximiza P(caer tierra a tiempo) - 0.5*P(inundación)
+  /// dentro del rango del arquetipo.
   static int recommendedLands(
       Map<String, int> cards, Map<String, Card> pool, Archetype archetype) {
     final avg = averageCmc(cards, pool);
     final raw = 24 + (avg - 3.0) * 2 - cheapSources(cards, pool) / 3.5;
-    final rounded = raw.round();
-    if (rounded < archetype.landMin) return archetype.landMin;
-    if (rounded > archetype.landMax) return archetype.landMax;
-    return rounded;
+    final t = landDropTurn[archetype.name]!;
+    double util(int n) =>
+        pLandDrops(n, deckSize, t) -
+        0.5 *
+            hypergeomAtLeast(
+                deckSize, n, t + 8, t + 3); // inundación: >=t+3 tierras al turno t+2
+    var best = archetype.landMin;
+    var bestU = double.negativeInfinity;
+    for (var n = archetype.landMin; n <= archetype.landMax; n++) {
+      var u = util(n);
+      u -= (n - raw).abs() * 0.001; // desempate estable hacia la semilla Karsten
+      if (u > bestU) {
+        bestU = u;
+        best = n;
+      }
+    }
+    return best;
   }
 
   /// Histograma de curva por CMC (agrupa 7+).

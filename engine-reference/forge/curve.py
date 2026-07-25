@@ -9,7 +9,12 @@ from __future__ import annotations
 import re
 from collections import Counter
 
+from .hypergeometric import hypergeom_at_least, p_land_drops
+
 MANA_SYMBOL = re.compile(r"\{([^}]+)\}")
+
+# Turno al que cada arquetipo necesita haber caído tierra sí o sí.
+LAND_DROP_TURN = {"aggro": 3, "tempo": 4, "midrange": 4, "control": 5}
 
 # Rangos de tierras por arquetipo para mazos de 60 (min, max)
 LAND_RANGES = {
@@ -75,11 +80,24 @@ def cheap_sources(cards: dict[str, int], pool: dict) -> int:
 
 
 def recommended_lands(cards: dict[str, int], pool: dict, archetype: str) -> int:
-    """Número de tierras recomendado (regla de Karsten, acotado por arquetipo)."""
+    """Nº de tierras: semilla Karsten para desempatar, pero el número final es
+    el que maximiza P(caer tierra a tiempo) - 0.5*P(inundación) dentro del
+    rango del arquetipo."""
     avg = average_cmc(cards, pool)
     raw = 24 + (avg - 3.0) * 2 - cheap_sources(cards, pool) / 3.5
+    t = LAND_DROP_TURN[archetype]
+
+    def util(n: int) -> float:
+        # inundación: >=t+3 tierras al turno t+2
+        return p_land_drops(n, DECK_SIZE, t) - 0.5 * hypergeom_at_least(DECK_SIZE, n, t + 8, t + 3)
+
     lo, hi = LAND_RANGES[archetype]
-    return max(lo, min(hi, round(raw)))
+    best, best_u = lo, float("-inf")
+    for n in range(lo, hi + 1):
+        u = util(n) - abs(n - raw) * 0.001  # desempate estable hacia la semilla Karsten
+        if u > best_u:
+            best, best_u = n, u
+    return best
 
 
 def curve_histogram(cards: dict[str, int], pool: dict, cap: int = 7) -> dict[int, int]:
