@@ -536,6 +536,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get acCancel => '取消';
 
   @override
+  String get acDelete => 'Borrar';
+
+  @override
   String get acForgetConfirm => '我不再有它了';
 
   @override
@@ -2490,6 +2493,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get bgUseThis => '用这个';
+
+  @override
+  String get bgSaveSwatch => 'Guardar como muestra';
+
+  @override
+  String get bgSwatchTip => 'Muestra guardada';
+
+  @override
+  String get bgSwatchDeleteTitle => '¿Borrar esta muestra?';
+
+  @override
+  String get bgSwatchDeleteBody =>
+      'Se quita de tu paleta guardada. Puedes volver a guardarla cuando quieras.';
 
   @override
   String get camGstreamerMissing =>

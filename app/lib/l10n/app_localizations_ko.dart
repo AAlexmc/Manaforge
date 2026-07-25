@@ -551,6 +551,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get acCancel => '취소';
 
   @override
+  String get acDelete => 'Borrar';
+
+  @override
   String get acForgetConfirm => '이제 없어요';
 
   @override
@@ -2523,6 +2526,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get bgUseThis => '이걸로 쓰기';
+
+  @override
+  String get bgSaveSwatch => 'Guardar como muestra';
+
+  @override
+  String get bgSwatchTip => 'Muestra guardada';
+
+  @override
+  String get bgSwatchDeleteTitle => '¿Borrar esta muestra?';
+
+  @override
+  String get bgSwatchDeleteBody =>
+      'Se quita de tu paleta guardada. Puedes volver a guardarla cuando quieras.';
 
   @override
   String get camGstreamerMissing =>

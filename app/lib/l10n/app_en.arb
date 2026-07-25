@@ -216,6 +216,7 @@
   },
   "acForgetDecks": "Decks do NOT lose it: it stays in the list and the deck tells you it's missing.",
   "acCancel": "Cancel",
+  "acDelete": "Delete",
   "acForgetConfirm": "I no longer have it",
   "acAddedOn": "added {cuando}",
   "@acAddedOn": {
@@ -1175,6 +1176,10 @@
   "bgChipColor": "Tab colour",
   "bgIconColor": "Icon colour",
   "bgUseThis": "Use this one",
+  "bgSaveSwatch": "Save as swatch",
+  "bgSwatchTip": "Saved swatch",
+  "bgSwatchDeleteTitle": "Delete this swatch?",
+  "bgSwatchDeleteBody": "It's removed from your saved palette. You can save it again anytime.",
 
   "camGstreamerMissing": "GStreamer isn't installed. Install it with:\nsudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good",
   "camNoImage": "Camera {dispositivo} gives no image (gst-launch exited with {codigo}).\n{detalle}",

@@ -1080,6 +1080,12 @@ abstract class AppLocalizations {
   /// **'Cancelar'**
   String get acCancel;
 
+  /// No description provided for @acDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar'**
+  String get acDelete;
+
   /// No description provided for @acForgetConfirm.
   ///
   /// In es, this message translates to:
@@ -4117,6 +4123,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Usar este'**
   String get bgUseThis;
+
+  /// No description provided for @bgSaveSwatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar como muestra'**
+  String get bgSaveSwatch;
+
+  /// No description provided for @bgSwatchTip.
+  ///
+  /// In es, this message translates to:
+  /// **'Muestra guardada'**
+  String get bgSwatchTip;
+
+  /// No description provided for @bgSwatchDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Borrar esta muestra?'**
+  String get bgSwatchDeleteTitle;
+
+  /// No description provided for @bgSwatchDeleteBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se quita de tu paleta guardada. Puedes volver a guardarla cuando quieras.'**
+  String get bgSwatchDeleteBody;
 
   /// No description provided for @camGstreamerMissing.
   ///

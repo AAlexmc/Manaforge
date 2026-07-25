@@ -579,6 +579,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get acCancel => 'Annuler';
 
   @override
+  String get acDelete => 'Borrar';
+
+  @override
   String get acForgetConfirm => 'Je ne l\'ai plus';
 
   @override
@@ -2620,6 +2623,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bgUseThis => 'Utiliser celle-ci';
+
+  @override
+  String get bgSaveSwatch => 'Guardar como muestra';
+
+  @override
+  String get bgSwatchTip => 'Muestra guardada';
+
+  @override
+  String get bgSwatchDeleteTitle => '¿Borrar esta muestra?';
+
+  @override
+  String get bgSwatchDeleteBody =>
+      'Se quita de tu paleta guardada. Puedes volver a guardarla cuando quieras.';
 
   @override
   String get camGstreamerMissing =>
