@@ -1594,6 +1594,23 @@
 
   "bkConfirmWord": "CONFIRM",
 
+  "rfTitle": "Factory reset",
+  "rfIntro": "Returns the app to a fresh install: no collection, no decks, no downloaded databases.",
+  "rfButton": "Erase everything",
+  "rfConfirmTitle1": "Erase all data?",
+  "rfWillDelete": "This will erase: your collection, decks, folders, achievements, certificates, wishlist, value history, settings and backgrounds, and the downloaded card, price and fingerprint databases.",
+  "rfBackupFirst": "Before anything is erased, an automatic backup will be saved; you can restore it from Settings → Data.",
+  "rfTypeWord": "Type {palabra} to continue.",
+  "@rfTypeWord": { "placeholders": { "palabra": { "type": "String" } } },
+  "rfDeleteWord": "DELETE",
+  "rfContinueAction": "Continue",
+  "rfConfirmTitle2": "Last confirmation",
+  "rfConfirmBody2": "This erases all your data on this device. The only way back is restoring the backup being saved now.",
+  "rfEraseAction": "Erase for good",
+  "rfWorking": "Erasing data… don't close the app.",
+  "rfBackupFailed": "The backup could not be saved, so NOTHING was erased. {motivo}",
+  "@rfBackupFailed": { "placeholders": { "motivo": { "type": "String" } } },
+
   "dbErrCards": "The card database couldn't be downloaded (HTTP {codigo}). Try again in a while.",
   "@dbErrCards": {
     "placeholders": {"codigo": {"type": "String"}}

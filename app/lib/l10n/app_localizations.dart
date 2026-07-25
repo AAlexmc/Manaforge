@@ -5762,6 +5762,90 @@ abstract class AppLocalizations {
   /// **'CONFIRMAR'**
   String get bkConfirmWord;
 
+  /// No description provided for @rfTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Reset de fábrica'**
+  String get rfTitle;
+
+  /// No description provided for @rfIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'Deja la app como recién instalada: sin colección, sin mazos y sin bases descargadas.'**
+  String get rfIntro;
+
+  /// No description provided for @rfButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar todo'**
+  String get rfButton;
+
+  /// No description provided for @rfConfirmTitle1.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Borrar todos los datos?'**
+  String get rfConfirmTitle1;
+
+  /// No description provided for @rfWillDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Se borrarán: la colección, los mazos, las carpetas, los logros, los certificados, la lista de deseos, el historial de valor, los ajustes y fondos, y las bases descargadas de cartas, precios y huellas.'**
+  String get rfWillDelete;
+
+  /// No description provided for @rfBackupFirst.
+  ///
+  /// In es, this message translates to:
+  /// **'Antes de borrar nada se guardará una copia de seguridad automática; podrás restaurarla desde Ajustes → Datos.'**
+  String get rfBackupFirst;
+
+  /// No description provided for @rfTypeWord.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe {palabra} para continuar.'**
+  String rfTypeWord(String palabra);
+
+  /// No description provided for @rfDeleteWord.
+  ///
+  /// In es, this message translates to:
+  /// **'ELIMINAR'**
+  String get rfDeleteWord;
+
+  /// No description provided for @rfContinueAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get rfContinueAction;
+
+  /// No description provided for @rfConfirmTitle2.
+  ///
+  /// In es, this message translates to:
+  /// **'Última confirmación'**
+  String get rfConfirmTitle2;
+
+  /// No description provided for @rfConfirmBody2.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto borra todos tus datos de este equipo. Solo podrás volver atrás restaurando la copia que se guarda ahora.'**
+  String get rfConfirmBody2;
+
+  /// No description provided for @rfEraseAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar definitivamente'**
+  String get rfEraseAction;
+
+  /// No description provided for @rfWorking.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrando los datos… no cierres la app.'**
+  String get rfWorking;
+
+  /// No description provided for @rfBackupFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar la copia previa, así que NO se ha borrado nada. {motivo}'**
+  String rfBackupFailed(String motivo);
+
   /// No description provided for @dbErrCards.
   ///
   /// In es, this message translates to:

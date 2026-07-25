@@ -3442,6 +3442,56 @@ class AppLocalizationsKo extends AppLocalizations {
   String get bkConfirmWord => 'CONFIRM';
 
   @override
+  String get rfTitle => 'Reset de fábrica';
+
+  @override
+  String get rfIntro =>
+      'Deja la app como recién instalada: sin colección, sin mazos y sin bases descargadas.';
+
+  @override
+  String get rfButton => 'Borrar todo';
+
+  @override
+  String get rfConfirmTitle1 => '¿Borrar todos los datos?';
+
+  @override
+  String get rfWillDelete =>
+      'Se borrarán: la colección, los mazos, las carpetas, los logros, los certificados, la lista de deseos, el historial de valor, los ajustes y fondos, y las bases descargadas de cartas, precios y huellas.';
+
+  @override
+  String get rfBackupFirst =>
+      'Antes de borrar nada se guardará una copia de seguridad automática; podrás restaurarla desde Ajustes → Datos.';
+
+  @override
+  String rfTypeWord(String palabra) {
+    return 'Escribe $palabra para continuar.';
+  }
+
+  @override
+  String get rfDeleteWord => 'ELIMINAR';
+
+  @override
+  String get rfContinueAction => 'Continuar';
+
+  @override
+  String get rfConfirmTitle2 => 'Última confirmación';
+
+  @override
+  String get rfConfirmBody2 =>
+      'Esto borra todos tus datos de este equipo. Solo podrás volver atrás restaurando la copia que se guarda ahora.';
+
+  @override
+  String get rfEraseAction => 'Borrar definitivamente';
+
+  @override
+  String get rfWorking => 'Borrando los datos… no cierres la app.';
+
+  @override
+  String rfBackupFailed(String motivo) {
+    return 'No se pudo guardar la copia previa, así que NO se ha borrado nada. $motivo';
+  }
+
+  @override
   String dbErrCards(String codigo) {
     return '카드 데이터베이스를 내려받지 못했어요 (HTTP $codigo). 잠시 뒤에 다시 시도하세요.';
   }
