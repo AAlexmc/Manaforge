@@ -245,9 +245,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _sectionTitle(String title) => Padding(
+  // .toUpperCase() aquí y no en cada llamada: no-op en CJK, mayúsculas
+  // correctas en alfabetos latino/cirílico sin repetirlo en cada sitio.
+  // [suffix] no pasa por mayúsculas: es atribución del feed (nombre propio +
+  // fecha), no un título de sección.
+  Widget _sectionTitle(String title, {String? suffix}) => Padding(
         padding: const EdgeInsets.only(top: 18, bottom: 8),
-        child: Text(title,
+        child: Text(
+            '${title.toUpperCase()}${suffix == null ? '' : ' · $suffix'}',
             style: Theme.of(context)
                 .textTheme
                 .labelLarge
@@ -333,17 +338,19 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!hasCollection) return const [];
     final a = widget.achievements;
     return [
-      _sectionTitle('RESUMEN'),
+      _sectionTitle(tr(context).ehSummary),
       Wrap(
         spacing: 8,
         runSpacing: 8,
         children: [
-          _statCell('${widget.collection.totalCopies}', 'cartas'),
-          _statCell('${widget.collection.distinctCards}', 'distintas'),
+          _statCell('${widget.collection.totalCopies}', tr(context).ehStatCards),
           _statCell(
-              _value == null ? '—' : '${_value!.toStringAsFixed(0)} €', 'valor'),
-          _statCell('${widget.decks.decks.length}', 'mazos'),
-          _statCell('${a.unlockedCount}/${a.totalCount}', 'logros'),
+              '${widget.collection.distinctCards}', tr(context).ehStatDistinct),
+          _statCell(_value == null ? '—' : '${_value!.toStringAsFixed(0)} €',
+              tr(context).ehStatValue),
+          _statCell('${widget.decks.decks.length}', tr(context).ehStatDecks),
+          _statCell('${a.unlockedCount}/${a.totalCount}',
+              tr(context).ehStatAchievements),
         ],
       ),
     ];
@@ -371,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _recientes(List<RecentCard> recents) {
     if (recents.isEmpty) return const [];
     return [
-      _sectionTitle('VISTAS RECIENTEMENTE'),
+      _sectionTitle(tr(context).ehRecent),
       _strip(
         height: 140,
         child: ListView.builder(
@@ -401,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _mazos(List<SavedDeck> decks) {
     if (decks.isEmpty) return const [];
     return [
-      _sectionTitle('TUS MAZOS'),
+      _sectionTitle(tr(context).ehDecks),
       _strip(
         height: 92,
         child: ListView.builder(
@@ -451,7 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _metaBloque() {
     if (_meta.isEmpty) return const [];
     return [
-      _sectionTitle('EL META AHORA · $_metaSource'),
+      _sectionTitle(tr(context).ehMeta, suffix: _metaSource),
       _strip(
         height: 96,
         child: ListView.builder(
@@ -516,7 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _expansiones() {
     if (_sets.isEmpty) return const [];
     return [
-      _sectionTitle('EXPANSIONES NUEVAS'),
+      _sectionTitle(tr(context).ehNewSets),
       _strip(
         height: 110,
         child: ListView.builder(
@@ -544,7 +551,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _joyas() {
     if (_jewels.isEmpty) return const [];
     return [
-      _sectionTitle('TUS JOYAS'),
+      _sectionTitle(tr(context).ehGems),
       _strip(
         height: 150,
         child: ListView.builder(

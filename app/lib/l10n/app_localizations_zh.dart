@@ -1144,6 +1144,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mkChangeTarget => '修改目标价';
 
   @override
+  String mkNoPriceIn(String market) {
+    return '$market 无价格';
+  }
+
+  @override
+  String get mkPerUnit => '/张';
+
+  @override
   String get mkTopCards => '你最值钱的卡';
 
   @override
@@ -1259,6 +1267,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ehGems => '你的珍藏';
+
+  @override
+  String get ehStatCards => '张';
+
+  @override
+  String get ehStatDistinct => '张不同';
+
+  @override
+  String get ehStatValue => '价值';
+
+  @override
+  String get ehStatDecks => '套牌';
+
+  @override
+  String get ehStatAchievements => '成就';
 
   @override
   String get ehHelp => '拖动可排序，用开关选择首页显示什么。开启的板块只有在有内容可显示时才会出现。';
@@ -2235,6 +2258,9 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get cdLegalities => '赛制合法性';
+
+  @override
   String get slLockButton => '锁定';
 
   @override
@@ -2482,6 +2508,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tlTapToPick => '点一下在相近项里手动选择';
+
+  @override
+  String get tlReview => '待确认';
 
   @override
   String get lsQuantity => '数量';

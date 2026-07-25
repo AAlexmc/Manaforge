@@ -1156,6 +1156,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get mkChangeTarget => '目標価格を変更';
 
   @override
+  String mkNoPriceIn(String market) {
+    return '$market に価格なし';
+  }
+
+  @override
+  String get mkPerUnit => '/枚';
+
+  @override
   String get mkTopCards => 'あなたの最も価値のあるカード';
 
   @override
@@ -1271,6 +1279,21 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ehGems => 'あなたの逸品';
+
+  @override
+  String get ehStatCards => '枚';
+
+  @override
+  String get ehStatDistinct => '種類';
+
+  @override
+  String get ehStatValue => '価値';
+
+  @override
+  String get ehStatDecks => 'デッキ';
+
+  @override
+  String get ehStatAchievements => '実績';
 
   @override
   String get ehHelp =>
@@ -2247,6 +2270,9 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get cdLegalities => 'リーガル';
+
+  @override
   String get slLockButton => 'ロック';
 
   @override
@@ -2498,6 +2524,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tlTapToPick => 'タップして似ているものから手動で選ぶ';
+
+  @override
+  String get tlReview => '要確認';
 
   @override
   String get lsQuantity => '数量';

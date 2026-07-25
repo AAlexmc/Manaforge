@@ -1211,6 +1211,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get mkChangeTarget => 'Zielpreis ändern';
 
   @override
+  String mkNoPriceIn(String market) {
+    return 'kein Preis bei $market';
+  }
+
+  @override
+  String get mkPerUnit => '/Stk.';
+
+  @override
   String get mkTopCards => 'DEINE WERTVOLLSTEN KARTEN';
 
   @override
@@ -1334,6 +1342,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ehGems => 'Deine Schätze';
+
+  @override
+  String get ehStatCards => 'Karten';
+
+  @override
+  String get ehStatDistinct => 'verschiedene';
+
+  @override
+  String get ehStatValue => 'Wert';
+
+  @override
+  String get ehStatDecks => 'Decks';
+
+  @override
+  String get ehStatAchievements => 'Erfolge';
 
   @override
   String get ehHelp =>
@@ -2337,6 +2360,9 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get cdLegalities => 'Legalität';
+
+  @override
   String get slLockButton => 'Sperren';
 
   @override
@@ -2607,6 +2633,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tlTapToPick => 'tipp an, um von Hand aus den Ähnlichen zu wählen';
+
+  @override
+  String get tlReview => 'prüfen';
 
   @override
   String get lsQuantity => 'Anzahl';

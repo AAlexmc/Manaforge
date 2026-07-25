@@ -836,7 +836,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
                   title: Text(card.printedName ?? card.name),
                   subtitle: Text(
                       'x${card.qty} · '
-                      '${_priceOf(card.oracleId, fallbackEur: card.unitPrice) ?? 'sin precio en ${_market.label}'}/ud'),
+                      '${_priceOf(card.oracleId, fallbackEur: card.unitPrice) ?? t.mkNoPriceIn(_market.label)}'
+                      '${t.mkPerUnit}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

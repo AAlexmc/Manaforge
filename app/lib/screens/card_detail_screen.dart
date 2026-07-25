@@ -442,7 +442,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                       ),
                     PriceChart(points: _history, currentPrice: _todayPrice),
                     const SizedBox(height: 12),
-                    Text('LEGALIDADES',
+                    Text(tr(context).cdLegalities.toUpperCase(),
                         style: Theme.of(context)
                             .textTheme
                             .labelLarge

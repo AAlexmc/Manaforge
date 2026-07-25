@@ -2022,6 +2022,18 @@ abstract class AppLocalizations {
   /// **'Cambiar precio objetivo'**
   String get mkChangeTarget;
 
+  /// No description provided for @mkNoPriceIn.
+  ///
+  /// In es, this message translates to:
+  /// **'sin precio en {market}'**
+  String mkNoPriceIn(String market);
+
+  /// No description provided for @mkPerUnit.
+  ///
+  /// In es, this message translates to:
+  /// **'/ud'**
+  String get mkPerUnit;
+
   /// No description provided for @mkTopCards.
   ///
   /// In es, this message translates to:
@@ -2219,6 +2231,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Tus joyas'**
   String get ehGems;
+
+  /// No description provided for @ehStatCards.
+  ///
+  /// In es, this message translates to:
+  /// **'cartas'**
+  String get ehStatCards;
+
+  /// No description provided for @ehStatDistinct.
+  ///
+  /// In es, this message translates to:
+  /// **'distintas'**
+  String get ehStatDistinct;
+
+  /// No description provided for @ehStatValue.
+  ///
+  /// In es, this message translates to:
+  /// **'valor'**
+  String get ehStatValue;
+
+  /// No description provided for @ehStatDecks.
+  ///
+  /// In es, this message translates to:
+  /// **'mazos'**
+  String get ehStatDecks;
+
+  /// No description provided for @ehStatAchievements.
+  ///
+  /// In es, this message translates to:
+  /// **'logros'**
+  String get ehStatAchievements;
 
   /// No description provided for @ehHelp.
   ///
@@ -3709,6 +3751,12 @@ abstract class AppLocalizations {
   /// **' (último dato: {fecha})'**
   String cdLastData(String fecha);
 
+  /// No description provided for @cdLegalities.
+  ///
+  /// In es, this message translates to:
+  /// **'Legalidades'**
+  String get cdLegalities;
+
   /// No description provided for @slLockButton.
   ///
   /// In es, this message translates to:
@@ -4099,6 +4147,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'toca para elegir a mano entre parecidas'**
   String get tlTapToPick;
+
+  /// No description provided for @tlReview.
+  ///
+  /// In es, this message translates to:
+  /// **'revisar'**
+  String get tlReview;
 
   /// No description provided for @lsQuantity.
   ///

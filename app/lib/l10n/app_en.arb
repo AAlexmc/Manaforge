@@ -501,6 +501,8 @@
   },
   "mkAtPrice": "at your price!",
   "mkChangeTarget": "Change the target price",
+  "mkNoPriceIn": "no price on {market}",
+  "mkPerUnit": "/ea",
   "mkTopCards": "YOUR MOST VALUABLE CARDS",
   "mkImportToSeeValue": "Import your collection to see what it's worth.",
   "mkSetCards": " · {n} cards",
@@ -554,6 +556,11 @@
   "ehMeta": "The meta right now",
   "ehNewSets": "New sets",
   "ehGems": "Your gems",
+  "ehStatCards": "cards",
+  "ehStatDistinct": "distinct",
+  "ehStatValue": "value",
+  "ehStatDecks": "decks",
+  "ehStatAchievements": "achievements",
   "ehHelp": "Drag to reorder and use the switch to pick what you see on Home. A section that's on only shows up if it has something to show.",
   "ehSection": "Section",
   "bkNoData": "I can't find your data.",
@@ -1072,6 +1079,7 @@
   "@cdLastData": {
     "placeholders": { "fecha": { "type": "String" } }
   },
+  "cdLegalities": "Legalities",
 
   "slLockButton": "Lock",
 
@@ -1182,6 +1190,7 @@
   "tlUnrecognized": "Not recognised",
   "tlNothingAlike": "nothing like it in the database — retake the photo or remove it",
   "tlTapToPick": "tap to pick by hand from the look-alikes",
+  "tlReview": "review",
   "lsQuantity": "Quantity",
   "scPhotos": "Photos",
 

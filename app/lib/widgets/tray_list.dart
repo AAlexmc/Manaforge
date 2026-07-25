@@ -70,8 +70,8 @@ class TrayList extends StatelessWidget {
                 color: MFColors.warning.withValues(alpha: 0.18),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Text('revisar',
-                  style: TextStyle(
+              child: Text(tr(context).tlReview,
+                  style: const TextStyle(
                       fontSize: 11,
                       color: MFColors.warning,
                       fontWeight: FontWeight.w600)),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/painting.dart' show HSLColor;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/theme/contrast.dart';
 
@@ -41,6 +42,52 @@ void main() {
 
   test('legibleOn conserva el alfa del color pedido', () {
     final ajustado = legibleOn(const Color(0xFFF0F0F0), const Color(0x80FAFAFA));
+    expect(ajustado.a, closeTo(0x80 / 255, 0.005));
+  });
+
+  test('toneLegible conserva el matiz: rojo sobre piedra se aclara, no salta '
+      'a blanco', () {
+    const piedra = Color(0xFF2A2723);
+    const rojo = Color(0xFFF44336);
+    expect(esLegible(rojo, piedra), isFalse,
+        reason: 'de partida el rojo NO se lee sobre la tarjeta piedra');
+
+    final ajustado = toneLegible(piedra, rojo);
+
+    expect(esLegible(ajustado, piedra), isTrue);
+    expect(ajustado, isNot(_blanco));
+    final hueOriginal = HSLColor.fromColor(rojo).hue;
+    final hueAjustado = HSLColor.fromColor(ajustado).hue;
+    expect((hueAjustado - hueOriginal).abs(), lessThanOrEqualTo(2));
+  });
+
+  test('toneLegible respeta el color si ya se lee', () {
+    const piedra = Color(0xFF2A2723);
+    const dorado = Color(0xFFE0CC8A); // ya legible sobre piedra
+    expect(toneLegible(piedra, dorado), dorado);
+  });
+
+  test('toneLegible con letra oscura sobre tarjeta clara: se oscurece '
+      'conservando el matiz', () {
+    const hueso = Color(0xFFF2EFE9);
+    const rojo = Color(0xFFF44336);
+    expect(esLegible(rojo, hueso), isFalse);
+
+    final ajustado = toneLegible(hueso, rojo);
+
+    expect(esLegible(ajustado, hueso), isTrue);
+    expect(ajustado, isNot(_negro));
+    final hueOriginal = HSLColor.fromColor(rojo).hue;
+    final hueAjustado = HSLColor.fromColor(ajustado).hue;
+    expect((hueAjustado - hueOriginal).abs(), lessThanOrEqualTo(2));
+    // se oscurece: la claridad baja respecto al rojo de partida
+    expect(HSLColor.fromColor(ajustado).lightness,
+        lessThan(HSLColor.fromColor(rojo).lightness));
+  });
+
+  test('toneLegible conserva el alfa del color pedido', () {
+    const piedra = Color(0xFF2A2723);
+    final ajustado = toneLegible(piedra, const Color(0x80F44336));
     expect(ajustado.a, closeTo(0x80 / 255, 0.005));
   });
 }

@@ -505,6 +505,9 @@
   },
   "mkAtPrice": "¡a precio!",
   "mkChangeTarget": "Cambiar precio objetivo",
+  "mkNoPriceIn": "sin precio en {market}",
+  "@mkNoPriceIn": {"placeholders": {"market": {"type": "String"}}},
+  "mkPerUnit": "/ud",
   "mkTopCards": "TUS CARTAS MÁS VALIOSAS",
   "mkImportToSeeValue": "Importa tu colección para ver su valor.",
   "mkSetCards": " · {n} cartas",
@@ -558,6 +561,11 @@
   "ehMeta": "El meta ahora",
   "ehNewSets": "Expansiones nuevas",
   "ehGems": "Tus joyas",
+  "ehStatCards": "cartas",
+  "ehStatDistinct": "distintas",
+  "ehStatValue": "valor",
+  "ehStatDecks": "mazos",
+  "ehStatAchievements": "logros",
   "ehHelp": "Arrastra para ordenar y usa el interruptor para elegir qué ves en Inicio. Una sección encendida solo sale si tiene algo que enseñar.",
   "ehSection": "Sección",
   "bkNoData": "No encuentro tus datos.",
@@ -1076,6 +1084,7 @@
   "@cdLastData": {
     "placeholders": { "fecha": { "type": "String" } }
   },
+  "cdLegalities": "Legalidades",
 
   "slLockButton": "Bloquear",
 
@@ -1186,6 +1195,7 @@
   "tlUnrecognized": "Sin reconocer",
   "tlNothingAlike": "nada parecido en la base — re-foto o quitar",
   "tlTapToPick": "toca para elegir a mano entre parecidas",
+  "tlReview": "revisar",
   "lsQuantity": "Cantidad",
   "scPhotos": "Fotos",
 

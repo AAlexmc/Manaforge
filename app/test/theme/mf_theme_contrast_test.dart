@@ -6,6 +6,20 @@ import 'package:manaforge_app/theme/mf_theme.dart';
 void main() {
   final base = mfTheme(Brightness.light);
 
+  test('letra roja ilegible sobre tarjeta piedra: se aclara, no salta a '
+      'blanco (el vistazo y la app tienen que enseñar lo mismo)', () {
+    const piedra = Color(0xFF2A2723);
+    const rojo = Color(0xFFF44336);
+    final tema = mfThemeSobreFondo(base, card: piedra, text: rojo);
+
+    final letra = tema.textTheme.bodyLarge!.color!;
+    expect(esLegible(letra, piedra), isTrue);
+    final hueOriginal = HSLColor.fromColor(rojo).hue;
+    final hueAjustado = HSLColor.fromColor(letra).hue;
+    expect((hueAjustado - hueOriginal).abs(), lessThanOrEqualTo(2),
+        reason: 'conserva el matiz rojo, no salta a blanco/negro');
+  });
+
   test('letra ilegible sobre la tarjeta se ajusta a color legible', () {
     // tarjeta casi blanca + letra casi blanca: combinación ilegible
     final tema = mfThemeSobreFondo(base,

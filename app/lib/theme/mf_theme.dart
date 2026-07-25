@@ -52,17 +52,19 @@ ThemeData mfThemeSobreFondo(ThemeData base,
   final fondoTarjeta = (card ?? base.colorScheme.surface)
       .withValues(alpha: cardOpacity.clamp(0, 1));
   // Red de seguridad: la letra y los iconos van SOBRE la tarjeta, así que si
-  // el color a medida no se lee (p. ej. letra clara sobre tarjeta clara)
-  // salta a blanco/negro legible. El aviso al usuario lo da la pantalla de
-  // Ajustes; aquí solo garantizamos que nunca se renderiza ilegible.
+  // el color a medida no se lee (p. ej. letra clara sobre tarjeta clara) se
+  // ajusta a un tono legible conservando el matiz elegido (nunca salta a un
+  // color distinto salvo que ni blanco ni negro lleguen). El aviso al
+  // usuario lo da la pantalla de Ajustes; aquí solo garantizamos que nunca
+  // se renderiza ilegible.
   final fondoLetra = card ?? base.colorScheme.surface;
   // la barra inferior NO se pinta con la tarjeta: lleva su propio color
   // (tabBar*), que no cambia con el fondo. Los iconos de la barra hay que
   // contrastarlos con ESE color, no con el de la tarjeta.
   final fondoBarra = base.navigationBarTheme.backgroundColor ?? fondoLetra;
-  final safeText = text == null ? null : legibleOn(fondoLetra, text);
-  final safeIcon = icon == null ? null : legibleOn(fondoLetra, icon);
-  final safeIconBarra = icon == null ? null : legibleOn(fondoBarra, icon);
+  final safeText = text == null ? null : toneLegible(fondoLetra, text);
+  final safeIcon = icon == null ? null : toneLegible(fondoLetra, icon);
+  final safeIconBarra = icon == null ? null : toneLegible(fondoBarra, icon);
   var tema = base.copyWith(
     scaffoldBackgroundColor: Colors.transparent,
     canvasColor: Colors.transparent,

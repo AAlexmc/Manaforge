@@ -265,25 +265,39 @@ class BackgroundPreference extends ChangeNotifier {
     }
     final dir = await _dir();
     if (dir == null) return; // sin carpeta de datos (tests): no hay dónde
-    final destino = File(p.join(dir.path, 'background$ext'));
+    // nombre ÚNICO por elección (no siempre "background$ext"): el ImageCache
+    // de Flutter usa el PATH como clave, así que elegir otra imagen del mismo
+    // formato con el mismo nombre de siempre seguiría sirviendo la vieja ya
+    // decodificada aunque el fichero de disco cambiase
+    final destino = File(p.join(
+        dir.path, 'background_${DateTime.now().microsecondsSinceEpoch}$ext'));
     // copia a un temporal y rename: si la app muere copiando, no se queda un
     // fondo a medias que luego no se puede pintar
     final tmp = File('${destino.path}.tmp');
     await source.copy(tmp.path);
     await tmp.rename(destino.path);
-    // el fondo anterior, si era de otro formato, sobra
-    for (final otra in kBackgroundExtensions) {
-      if (otra == ext) continue;
-      final vieja = File(p.join(dir.path, 'background$otra'));
-      if (await vieja.exists()) {
-        try {
-          await vieja.delete();
-        } catch (_) {/* si no se puede borrar, tampoco pasa nada */}
-      }
-    }
+    // se guarda ANTES de barrer lo viejo: si la app muere entre medias, el
+    // JSON ya apunta al fichero nuevo (que existe) y nunca a uno que se
+    // acaba de borrar
     _image = destino;
     notifyListeners();
     await _save();
+    // el fondo anterior sobra, sea cual sea su nombre: el legado
+    // "background.jpg", una copia única de una elección de antes, o un
+    // ".tmp" huérfano de una copia que se cortó a medias
+    final prefsPath = (await _prefsFile())?.path;
+    await for (final entrada in dir.list()) {
+      if (entrada is! File) continue;
+      if (entrada.path == destino.path || entrada.path == prefsPath) continue;
+      final nombre = p.basename(entrada.path);
+      final extension = p.extension(entrada.path).toLowerCase();
+      if (!nombre.startsWith('background')) continue;
+      if (kBackgroundExtensions.contains(extension) || nombre.endsWith('.tmp')) {
+        try {
+          await entrada.delete();
+        } catch (_) {/* si no se puede borrar, tampoco pasa nada */}
+      }
+    }
   }
 
   /// Quita el fondo y borra la copia.
