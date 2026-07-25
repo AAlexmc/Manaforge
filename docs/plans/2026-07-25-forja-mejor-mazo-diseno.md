@@ -129,6 +129,28 @@ tribu. Compite con los temas mecánicos por peso, mismo circuito.
   `curveNeed` (su coste real es el de la reanimación); el coste medio del validador se calcula
   igual que hoy (regla dura intacta — el arquetipo saldrá midrange/control por rangos).
 
+### 4c. Estilo elegido por el usuario (pedido 26-07)
+
+Selector **«Estilo»** en Forge: el usuario elige QUÉ quiere jugar y Forge construye el
+mejor mazo posible de ese estilo (con su colección o con «incluir cartas que no tengo»).
+
+- Motor: `themeOverride` en `generateDeck`/`generateProposals` (análogo a
+  `archetypeOverride`). Con override, el tema no se detecta: se fuerza, y el gate de
+  `minPayoffCopies` no aplica (mejor-esfuerzo — el score de consistencia ya dice si el
+  resultado es flojo). Si el pool no tiene NI UN miembro/payoff del estilo → propuestas
+  vacías (mensaje existente de "no sale mazo").
+- UI: dropdown/bottom-sheet «Estilo» con: **Auto** (detección, defecto) · **8 temas
+  mecánicos** (vidas, sacrificio, hechizos, artefactos, contadores, fichas, cementerio,
+  reanimator) · **24 tribus populares** (fuentes: Draftsim/Aetherhub/MonoColorMagic):
+  Elfos, Duendes (Goblins), Zombies, Vampiros, Dragones, Ángeles, Demonios, Dinosaurios,
+  Hadas, Tritones (Merfolk), Humanos, Espíritus, Fragmentados (Slivers), Magos,
+  Caballeros, Guerreros, Soldados, Felinos, Perros, Ratas, Piratas, Elementales,
+  Gigantes, Pícaros.
+- El valor que viaja al motor es el subtipo EN INGLÉS (`tribal:Elf`); el nombre mostrado
+  se traduce (24+8 claves × 10 idiomas, método i18n rodado).
+- El motor tribal es dinámico (cualquier subtipo con masa crítica): la lista de la UI es
+  curación, no límite del motor.
+
 ## Fase 5 — Espejo Python (`engine-reference/`)
 
 Regla del repo: si divergen, manda Python. Las fases 1, 2 y 4 tocan núcleo → espejo 1:1 en
