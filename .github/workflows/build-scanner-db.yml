@@ -27,7 +27,9 @@ jobs:
           curl -sf -H "User-Agent: ManaForge-CI/1.0" -H "Accept: application/json" \
             https://api.scryfall.com/bulk-data/default-cards -o bulkmeta.json
           URI=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['download_uri'])")
-          curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" "$URI" -o bulk.json
+          # "--" separa opciones de la URL: una URI que empezara por "-" no se
+          # puede interpretar como opción de curl
+          curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" -o bulk.json -- "$URI"
       - name: Calcular huellas del arte (incremental, educado con el CDN)
         run: python3 scripts/build_hash_db.py bulk.json manaforge_hashes.sqlite
       - name: Publicar release scanner-db-latest
