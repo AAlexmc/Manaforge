@@ -64,24 +64,94 @@ bloquea el `delete()`.
 - Contrato: `FactoryResetCard({required Future<FactoryResetReport> Function() onReset})`
   — la tarjeta solo pone diálogos/estado/errores; el trabajo lo hace el callback.
 
-## Cableado en `main.dart`
+## Cableado en `main.dart` (revisado tras revisión de reviewer, 2026-07-25 tarde)
 
 SIN plomería nueva en `_ManaForgeAppState`: se reusa `onRestored` (ya hace
 `resetSharedStores()` + `_tour.value = null` + `_session++`, exactamente lo necesario).
 
-- `HomeShell._factoryReset()`: `preResetBackup(dir)` (aborta aquí si falla) →
-  `_db.close()` + `_prices.close()` → `widget.background.clear()` (en memoria + sus
-  ficheros, ANTES del barrido para que no re-escriba nada después) →
-  `wipeDataDir(dir)`.
-- `FactoryResetCard` hace el trabajo bajo barrera modal, la CIERRA, y solo entonces
-  llama `onDone` (= `onRestored`): un diálogo `canPop:false` vivo durante el session
-  bump dejaría la app congelada (mismo orden que el flujo de restaurar).
-- Tras el bump: `_started=false` → StartupScreen re-descarga; tarjeta muerta → el
-  feedback de éxito ES la pantalla de arranque (no hace falta status). El status solo
-  se enseña en aborto (la tarjeta sigue viva).
-- Idioma: fichero borrado (primer arranque real preguntará), pero el objeto en memoria
-  conserva el locale esta sesión → la UI sigue legible tras el reset. Decisión a favor
-  de usabilidad; no se re-escribe el fichero salvo que el usuario cambie idioma.
+La orquestación real vive en el SERVICIO, no en `HomeShell`, para poder testear el
+aborto y el orden sin UI:
+
+```dart
+Future<FactoryResetReport> factoryReset(
+  Directory dataDir, {
+  required void Function() closeDbs,
+  required Future<void> Function() clearBackground,
+  DateTime? now,
+})
+```
+
+Compone: `preResetBackup(dataDir, now: now)` (si lanza, se propaga TAL CUAL y nada más
+corre) → envuelto en un try que convierte CUALQUIER fallo posterior en
+`FactoryResetHalfDone` (la copia ya está a salvo; el resto puede haberse quedado a
+medias): `closeDbs()` → `await clearBackground()` → `wipeDataDir()` → si
+`report.failed` no queda vacío, una SEGUNDA pasada (`closeDbs()` otra vez +
+`wipeDataDir()` de nuevo; lo que siga fallando se acumula como `failed` final).
+
+`HomeShell._factoryReset()` queda en:
+
+```dart
+Future<FactoryResetReport> _factoryReset() async {
+  final dir = await getApplicationSupportDirectory();
+  return factoryReset(dir,
+      closeDbs: () { _db.close(); _prices.close(); },
+      clearBackground: () => widget.background.resetAll());
+}
+```
+
+`widget.background.resetAll()` sustituye a `clear()`: además de quitar la imagen,
+devuelve TODOS los campos de apariencia (colores, oscurecido, opacidad de tarjetas) a
+su valor de fábrica en memoria.
+
+`FactoryResetCard` hace el trabajo bajo barrera modal (la barrera se cierra en el
+`finally`, SIN guardar `mounted` y envuelta en try/catch: si la tarjeta se desmonta
+mientras corre el trabajo, un `canPop:false` huérfano congelaría la app) y separa el
+catch en tres caminos:
+
+- `BackupError` (falló la copia, nada tocado): status `rfBackupFailed` en la propia
+  tarjeta, `onDone` NO se llama.
+- `FactoryResetHalfDone` (se quedó a medias en caliente): `AlertDialog` simple
+  (`rfHalfDone`) y DESPUÉS `onDone` — la app tiene que reconstruirse sí o sí.
+- Éxito con `report.failed` no vacío: `AlertDialog` (`rfPartial`, con la lista unida
+  por comas) y DESPUÉS `onDone`.
+- Éxito limpio: `onDone` directo, como antes.
+
+En los tres casos con `onDone`, se llama ANTES de cualquier `if (!mounted) return` /
+`setState` final: el closure de `onDone` apunta al estado de `_ManaForgeAppState`, que
+sobrevive aunque la tarjeta muera; un desmontaje entre barrido y aviso no puede dejar
+el disco borrado sin el session bump.
+
+Tras el bump: `_started=false` → StartupScreen re-descarga.
+
+### `.roto` rescatados y copias `pre-reset`
+
+`wipeDataDir` NO borra los `.roto` (almacenes ilegibles apartados por
+`setAsideBroken`): son datos rescatables, y se MUEVEN a `backups/` (colisión →
+sufijo `-2`, `-3`…). Cuentan en `FactoryResetReport.rescued`, no en `deleted`.
+
+La copia `pre-reset-*` se enseña en Restaurar con su propio texto (`bkKindPreReset`,
+"Antes del reset de fábrica") y rota a `kKeepPreRestore` (20) igual que las
+`pre-restore-*`. `listBackups` ordena por la FECHA del sello del nombre (no por el
+nombre entero): con tres prefijos distintos mezclados, ordenar por `basename` sacaba
+una copia más nueva por detrás de una más vieja con un prefijo que alfabéticamente
+va antes.
+
+### Tour de bienvenida diferido a `onReady`
+
+El tour de bienvenida se lanzaba en el `postFrameCallback` de `initState`
+independientemente de `_started`: si `_onboarding.load()` terminaba antes que
+`StartupScreen` saliera, las burbujas salían pintadas sobre la pantalla de arranque
+(pasa justo después de un reset, con las bases recién borradas y StartupScreen
+tardando en re-descargar). Ahora, si `!_started` en ese punto, se apunta
+`_tourBienvenidaPendiente = true` en vez de lanzarlo; el `onReady` de `StartupScreen`
+(el mismo que pone `_started = true`) lo dispara con un `postFrameCallback` extra si
+había quedado pendiente.
+
+### Idioma
+
+Fichero borrado (primer arranque real preguntará), pero el objeto en memoria
+conserva el locale esta sesión → la UI sigue legible tras el reset. Decisión a favor
+de usabilidad; no se re-escribe el fichero salvo que el usuario cambie idioma.
 
 ## i18n
 
