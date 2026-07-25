@@ -72,7 +72,8 @@ class WishlistStore extends ChangeNotifier {
   WishlistStore({this.dataDir});
 
   final Map<String, WishItem> _items = {}; // por oracleId
-  bool _loaded = false;
+  Future<void>? _loading;
+  bool _cargado = false;
 
   List<WishItem> get items {
     final list = _items.values.toList()
@@ -91,18 +92,45 @@ class WishlistStore extends ChangeNotifier {
     }
   }
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Memoizado en [_loading]: con un `bool` marcado ANTES de leer, un segundo
+  /// `load()` mientras el primero seguía en el disco volvía con la lista
+  /// vacía en vez de esperar a la lectura de verdad.
+  ///
+  /// Una vez leído ([_cargado]), un `load()` posterior devuelve un futuro
+  /// NUEVO en vez de reutilizar [_loading]: ese futuro nació en la zona de
+  /// quien llamó primero, y esperarlo desde otra (el reloj falso de
+  /// `testWidgets`) no vuelve.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  /// Se parsea a un mapa local PRIMERO (saltando cada item que no cuadre, no
+  /// el fichero entero) y solo al final se vuelca al estado: un item con un
+  /// campo raro no puede llevarse los demás por delante.
+  Future<void> _leer() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
       final decoded = jsonDecode(await file.readAsString()) as List<dynamic>;
-      _items.clear();
+      final items = <String, WishItem>{};
       for (final item in decoded) {
-        final wish = WishItem.fromJson(item as Map<String, dynamic>);
-        _items[wish.oracleId] = wish;
+        if (item is! Map<String, dynamic>) continue;
+        try {
+          final wish = WishItem.fromJson(item);
+          items[wish.oracleId] = wish;
+        } catch (_) {
+          continue; // un item con un campo raro no se lleva los demás
+        }
       }
+      _items
+        ..clear()
+        ..addAll(items);
       notifyListeners();
     } catch (_) {
       // archivo corrupto: apartarlo con otro nombre en vez de arrancar vacío

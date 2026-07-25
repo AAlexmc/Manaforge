@@ -171,6 +171,7 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
         printingQty: printingQty,
         oraclePrices: widget.db.pricesForOracles,
         printingPrices: widget.db.pricesForPrintings,
+        printingOwner: widget.collection.printingOwner,
       );
       if (mounted && token == _valuesToken) {
         setState(() {

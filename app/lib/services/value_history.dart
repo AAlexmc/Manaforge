@@ -68,7 +68,10 @@ class ValueHistory {
     final today = '${now.year}-${two(now.month)}-${two(now.day)}';
     final history = List<ValuePoint>.from(await load())
       ..removeWhere((pt) => pt.date == today)
-      ..add(ValuePoint(today, value, cards));
+      ..add(ValuePoint(today, value, cards))
+      // el reloj hacia atrás (o un fichero ya desordenado) no puede descolocar
+      // la serie: se recorta por el FRENTE asumiendo orden ascendente
+      ..sort((a, b) => a.date.compareTo(b.date));
     while (history.length > _maxPoints) {
       history.removeAt(0);
     }

@@ -111,19 +111,25 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
   }
 
   void _add(CardHit hit) {
-    widget.collection.add(OwnedCard(
-      oracleId: hit.oracleId,
-      name: hit.name,
-      printedName: hit.printedName,
-      imageSmall: hit.imageSmall,
-      imageNormal: hit.imageNormal,
-      colors: hit.colors,
-      typeLine: hit.typeLine,
-      cmc: hit.cmc,
-      power: hit.power,
-      toughness: hit.toughness,
-      qty: 1,
-    ));
+    widget.collection.add(
+      OwnedCard(
+        oracleId: hit.oracleId,
+        name: hit.name,
+        printedName: hit.printedName,
+        imageSmall: hit.imageSmall,
+        imageNormal: hit.imageNormal,
+        colors: hit.colors,
+        typeLine: hit.typeLine,
+        cmc: hit.cmc,
+        power: hit.power,
+        toughness: hit.toughness,
+        qty: 1,
+      ),
+      // sin esto, la carta añadida desde el buscador no tenía edición
+      // conocida: valía 0 € para siempre y sin marcar el total como
+      // aproximado (~)
+      printingKey: hit.printingKey,
+    );
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('✓ ${hit.printedName ?? hit.name}'),
       duration: const Duration(milliseconds: 900),

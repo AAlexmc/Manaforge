@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'certificates.dart';
+import 'json_store_io.dart';
 
 /// Cuándo conseguiste cada certificado y a nombre de quién sale.
 ///
@@ -106,12 +107,21 @@ class CertificateStore extends ChangeNotifier {
   Future<void> _load() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
+    // el try cubre SOLO la lectura y el decode: `restore()` no puede
+    // apartar como roto un fichero que se ha leído perfectamente solo
+    // porque algo DESPUÉS del decode (un listener, por ejemplo) revienta
+    Map<String, dynamic>? decoded;
     try {
-      final decoded = jsonDecode(await file.readAsString());
-      if (decoded is Map<String, dynamic>) restore(decoded);
+      final raw = jsonDecode(await file.readAsString());
+      if (raw is Map<String, dynamic>) decoded = raw;
     } catch (_) {
-      // fichero corrupto: sin certificados es mejor que no arrancar
+      // fichero corrupto: apartarlo con otro nombre en vez de arrancar vacío
+      // y escribirle encima — el nombre del dueño y los certificados no se
+      // pierden sin rastro
+      await setAsideBroken(file);
+      return;
     }
+    if (decoded != null) restore(decoded);
   }
 
   /// Cola de escrituras (dos guardados a la vez se pisan el temporal).

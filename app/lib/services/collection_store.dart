@@ -185,13 +185,19 @@ class CollectionStore extends ChangeNotifier {
   /// guarda el coste MEDIO por copia: comprar la misma carta dos veces a
   /// precios distintos deja el promedio, que es lo que un P&L necesita.
   final Map<String, PurchaseLot> _paid = {};
-  bool _loaded = false;
+  Future<void>? _loading;
+  bool _cargado = false;
 
   /// ¿Sabemos qué impresiones exactas tiene el usuario? (Colecciones
   /// importadas antes de esta versión no lo saben: reimportar lo arregla.)
   bool get hasPrintingData => _printings.isNotEmpty;
 
   Map<String, int> get printingQty => Map.unmodifiable(_printings);
+
+  /// A qué carta pertenece cada impresión conocida ("set|nº" -> oracleId).
+  /// Sirve para saber si una carta con copias tiene ALGUNA edición asociada:
+  /// sin ninguna, su precio no puede ser exacto (ver `collection_value.dart`).
+  Map<String, String> get printingOwner => Map.unmodifiable(_printingOwner);
 
   Map<String, int> get foilPrintings => Map.unmodifiable(_foils);
 
@@ -340,9 +346,28 @@ class CollectionStore extends ChangeNotifier {
   ///
   /// Si el JSON no se puede leer, se aparta una copia `.roto` antes de
   /// seguir: los datos del usuario no se tiran a la basura en silencio.
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  ///
+  /// Memoizado en [_loading]: con un `bool` marcado ANTES de leer, un segundo
+  /// `load()` mientras el primero seguía en el disco volvía enseguida con la
+  /// colección vacía (y algo que espere a `load()` para decidir cosas, como
+  /// `hasExistingData`, se quedaba con un "no hay nada" falso).
+  ///
+  /// Una vez leído ([_cargado]), un `load()` posterior devuelve un futuro
+  /// NUEVO en vez de reutilizar [_loading]: ese futuro nació en la zona de
+  /// quien llamó primero (p. ej. el `runAsync` de un test), y esperarlo desde
+  /// otra zona (el reloj falso de `testWidgets`) no vuelve — o tarda segundos
+  /// reales en volver, que en una app de verdad son un arranque congelado.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  Future<void> _leer() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     var ok = false;
@@ -538,16 +563,28 @@ class CollectionStore extends ChangeNotifier {
   /// Baja TAMBIÉN las copias por edición: si no, vender una carta la quitaba
   /// de la lista pero su precio seguía sumando en Inicio, Mercado y el total
   /// de Colección (y las foils nunca bajaban).
+  ///
+  /// Al SUBIR, repone la copia de más en la última impresión conocida (ver
+  /// [_restorePrintings]): sin esto, bajar y volver a subir dejaba esa copia
+  /// sin edición asociada, y una impresión sin precio vale 0 € para siempre
+  /// sin que la valoración lo marque como aproximado.
   void setQty(String oracleId, int qty) {
+    final before = _cards[oracleId]?.qty ?? 0;
     if (qty <= 0) {
       _cards.remove(oracleId);
     } else {
       _cards[oracleId]?.qty = qty;
     }
+    final after = qty < 0 ? 0 : qty;
     // el orden importa: _trimPaid necesita saber de quién es cada impresión,
     // y _trimPrintings puede borrar justo esa pista
-    _trimPaid(oracleId, qty < 0 ? 0 : qty);
-    _trimPrintings(oracleId, qty < 0 ? 0 : qty);
+    _trimPaid(oracleId, after);
+    // solo si la carta existe de verdad: _leer puede saltarse una carta mala
+    // y dejar sus impresiones cargadas — reponer ahí crearía copias fantasma
+    if (after > before && _cards.containsKey(oracleId)) {
+      _restorePrintings(oracleId, after - before);
+    }
+    _trimPrintings(oracleId, after);
     notifyListeners();
     _save();
   }
@@ -581,6 +618,20 @@ class CollectionStore extends ChangeNotifier {
             currency: lot.currency);
       }
     }
+  }
+
+  /// Repone [extra] copias en la ÚLTIMA impresión conocida de [oracleId] al
+  /// subir la cantidad: el mismo criterio (por el final) con el que
+  /// [_trimPrintings] recorta al bajarla. Sin ninguna impresión conocida no
+  /// se inventa una: esa carta se queda sin edición hasta que se reimporte.
+  void _restorePrintings(String oracleId, int extra) {
+    final keys = [
+      for (final e in _printingOwner.entries)
+        if (e.value == oracleId) e.key
+    ];
+    if (keys.isEmpty) return;
+    final key = keys.last;
+    _printings[key] = (_printings[key] ?? 0) + extra;
   }
 
   /// Deja las copias por edición de [oracleId] sumando como mucho [qty],

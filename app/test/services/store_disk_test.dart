@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/achievement_store.dart';
+import 'package:manaforge_app/services/certificate_store.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/folder_store.dart';
 
@@ -92,6 +93,35 @@ void main() {
     expect(again.activeDays, 1);
   });
 
+  test('un achievements.json roto se aparta como .roto y no se le escribe '
+      'encima', () async {
+    // regresión: el catch se comía el error sin apartar el fichero, así que
+    // el próximo `_save()` le escribía encima y la racha + 120 logros
+    // desaparecían sin dejar ni el rastro para recuperarlos a mano
+    final file = File('${dir.path}/achievements.json');
+    file.writeAsStringSync('{"unlocked": {"copias-1": "2026-0');
+
+    final store = AchievementStore(dataDir: dir);
+    await store.load();
+
+    expect(store.unlockedAt, isEmpty);
+    expect(File('${file.path}.roto').existsSync(), isTrue);
+    expect(file.existsSync(), isFalse);
+  });
+
+  test('un certificates.json roto se aparta como .roto y no se le escribe '
+      'encima', () async {
+    final file = File('${dir.path}/certificates.json');
+    file.writeAsStringSync('{"earnedAt": {"scan-1": "2026-0');
+
+    final store = CertificateStore(dataDir: dir);
+    await store.load();
+
+    expect(store.earnedAt, isEmpty);
+    expect(File('${file.path}.roto').existsSync(), isTrue);
+    expect(file.existsSync(), isFalse);
+  });
+
   test('una colección vieja aprende de quién es cada edición', () async {
     final store = CollectionStore(dataDir: dir);
     // simula lo importado antes de esta versión: printings sin dueño
@@ -171,5 +201,31 @@ void main() {
     expect(store.totalCopies, 1); // la colección entera sigue ahí
     expect(store.purchases.length, 1); // solo se cae la compra ilegible
     expect(store.purchases[purchaseKey('kld|5', 'EUR')]!.perCopy, 2.0);
+  });
+
+  test('setQty sobre una carta que no existe no crea copias fantasma',
+      () async {
+    // _leer se salta una carta ilegible pero carga printings/printingOwner
+    // enteros: setQty sobre ese oracle huérfano no debe reponer impresiones
+    // de una carta que no tienes
+    final file = File('${dir.path}/collection.json');
+    file.writeAsStringSync(jsonEncode({
+      'cards': [
+        {'oracleId': 'o1', 'name': 'Sol Ring', 'colors': '', 'qty': 1},
+        {'oracleId': 'omala', 'qty': 1}, // sin name: ilegible, se salta
+      ],
+      'printings': {'aer|1': 1, 'kld|9': 1},
+      'printingOwner': {'aer|1': 'o1', 'kld|9': 'omala'},
+    }));
+
+    final store = CollectionStore(dataDir: dir);
+    await store.load();
+    expect(store.totalCopies, 1); // solo o1
+
+    store.setQty('omala', 3);
+    await store.pendingSave;
+    expect(store.printingQty['kld|9'], 1,
+        reason: 'no se reponen impresiones de una carta que no está');
+    expect(store.printingQty.values.fold(0, (a, b) => a + b), 2);
   });
 }

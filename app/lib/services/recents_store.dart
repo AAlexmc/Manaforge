@@ -49,7 +49,8 @@ class RecentsStore extends ChangeNotifier {
 
   static const _max = 24;
   final List<RecentCard> _cards = [];
-  bool _loaded = false;
+  Future<void>? _loading;
+  bool _cargado = false;
 
   List<RecentCard> get cards => List.unmodifiable(_cards);
 
@@ -62,19 +63,43 @@ class RecentsStore extends ChangeNotifier {
     }
   }
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Memoizado en [_loading]: con un `bool` marcado ANTES de leer, un segundo
+  /// `load()` mientras el primero seguía en el disco volvía con la lista
+  /// vacía en vez de esperar a la lectura de verdad.
+  ///
+  /// Una vez leído ([_cargado]), un `load()` posterior devuelve un futuro
+  /// NUEVO en vez de reutilizar [_loading]: ese futuro nació en la zona de
+  /// quien llamó primero, y esperarlo desde otra (el reloj falso de
+  /// `testWidgets`) no vuelve.
+  Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
+
+  Future<void> _load() async {
+    try {
+      await _leer();
+    } finally {
+      _cargado = true;
+    }
+  }
+
+  /// Se parsea a una lista local PRIMERO (saltando cada carta que no cuadre,
+  /// no el fichero entero) y solo al final se vuelca al estado.
+  Future<void> _leer() async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
       final list = jsonDecode(await file.readAsString()) as List<dynamic>;
+      final cards = <RecentCard>[];
+      for (final item in list) {
+        if (item is! Map<String, dynamic>) continue;
+        try {
+          cards.add(RecentCard.fromJson(item));
+        } catch (_) {
+          continue; // una carta con un campo raro no se lleva las demás
+        }
+      }
       _cards
         ..clear()
-        ..addAll([
-          for (final item in list)
-            RecentCard.fromJson(item as Map<String, dynamic>)
-        ]);
+        ..addAll(cards);
       notifyListeners();
     } catch (_) {
       // corrupto: apartarlo, no escribirle encima
@@ -86,7 +111,8 @@ class RecentsStore extends ChangeNotifier {
   /// singleton y NO se recrea con el resto de la app, así que sin esto seguía
   /// con la lista de antes y volvía a escribirla en cuanto abrieras una carta.
   void invalidate() {
-    _loaded = false;
+    _loading = null;
+    _cargado = false;
     _cards.clear();
     notifyListeners();
   }
