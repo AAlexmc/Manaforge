@@ -77,4 +77,111 @@ void main() {
     expect(report.backupFile, copia);
     expect(await copia!.exists(), isTrue);
   });
+
+  test('un .roto se rescata a backups/ en vez de borrarse', () async {
+    final dir = await _dataDir({
+      'collection.json': '{"cards":[]}',
+      'collection.json.roto': 'datos rescatables',
+    });
+    final report = await wipeDataDir(dir);
+    expect(
+        File(p.join(dir.path, 'backups', 'collection.json.roto'))
+            .existsSync(),
+        isTrue);
+    expect(File(p.join(dir.path, 'collection.json.roto')).existsSync(),
+        isFalse);
+    expect(report.rescued, contains('collection.json.roto'));
+    expect(report.deleted, isNot(contains('collection.json.roto')));
+  });
+
+  test('dos .roto con el mismo nombre no se pisan al rescatar', () async {
+    final dir = await _dataDir({'collection.json.roto': 'primero'});
+    await Directory(p.join(dir.path, 'backups')).create();
+    await File(p.join(dir.path, 'backups', 'collection.json.roto'))
+        .writeAsString('ya había uno');
+    final report = await wipeDataDir(dir);
+    expect(
+        await File(p.join(dir.path, 'backups', 'collection.json.roto'))
+            .readAsString(),
+        'ya había uno');
+    final rescatado =
+        File(p.join(dir.path, 'backups', 'collection.json-2.roto'));
+    expect(await rescatado.exists(), isTrue);
+    expect(report.rescued, contains('collection.json-2.roto'));
+  });
+
+  group('factoryReset (orquestación)', () {
+    test('si la copia falla, closeDbs NO se invoca y nada se borra', () async {
+      final dir = await _dataDir({
+        'collection.json': '{"cards":[]}',
+        'backups': 'soy un fichero, no una carpeta',
+      });
+      var closes = 0;
+      await expectLater(
+          factoryReset(dir,
+              closeDbs: () => closes++, clearBackground: () async {}),
+          throwsA(anything));
+      expect(closes, 0);
+      expect(File(p.join(dir.path, 'collection.json')).existsSync(), isTrue);
+    });
+
+    test(
+        'un fallo DESPUÉS de la copia se convierte en FactoryResetHalfDone y '
+        'la copia pre-reset existe', () async {
+      final dir = await _dataDir({'collection.json': '{"cards":[]}'});
+      Object? capturado;
+      try {
+        await factoryReset(dir,
+            closeDbs: () {},
+            clearBackground: () async => throw Exception('fondo roto'));
+      } catch (e) {
+        capturado = e;
+      }
+      expect(capturado, isA<FactoryResetHalfDone>());
+      final copias = Directory(p.join(dir.path, 'backups'))
+          .listSync()
+          .whereType<File>()
+          .where((f) => p.basename(f.path).startsWith('pre-reset-'));
+      expect(copias, isNotEmpty);
+      // nada se ha barrido: la mitad de la copia es la única que ha corrido
+      expect(File(p.join(dir.path, 'collection.json')).existsSync(), isTrue);
+    });
+
+    test('éxito limpio: cierra bases una vez y devuelve el informe',
+        () async {
+      final dir = await _dataDir({'collection.json': '{"cards":[]}'});
+      var closes = 0;
+      var fondoLimpiado = false;
+      final report = await factoryReset(dir,
+          closeDbs: () => closes++,
+          clearBackground: () async => fondoLimpiado = true);
+      expect(closes, 1);
+      expect(fondoLimpiado, isTrue);
+      expect(report.failed, isEmpty);
+      expect(report.deleted, contains('collection.json'));
+    }, skip: Platform.isWindows);
+
+    test(
+        'un fallo de barrido persistente (segunda pasada incluida) se '
+        'devuelve en el informe y no se pierde',
+        () async {
+      final dir = await _dataDir({'collection.json': '{"cards":[]}'});
+      final bloqueada = Directory(p.join(dir.path, 'bloqueada'))
+        ..createSync();
+      File(p.join(bloqueada.path, 'dentro.txt')).writeAsStringSync('x');
+      await Process.run('chmod', ['0500', bloqueada.path]);
+      addTearDown(() async {
+        await Process.run('chmod', ['0700', bloqueada.path]);
+      });
+
+      var closes = 0;
+      final report = await factoryReset(dir,
+          closeDbs: () => closes++, clearBackground: () async {});
+
+      // dos pasadas: la primera y el reintento porque `failed` no venía vacío
+      expect(closes, 2);
+      expect(report.failed, contains('bloqueada'));
+      expect(report.deleted, contains('collection.json'));
+    }, skip: Platform.isWindows);
+  });
 }
