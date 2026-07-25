@@ -533,11 +533,14 @@ extension AlbumQueries on CardDatabase {
     // fila que pone el arte se elige con una ventana determinista: con dos
     // agregados en el mismo GROUP BY, sqlite elegía una fila arbitraria y
     // cambiar de mercado podía cambiar el ARTE del álbum.
+    // VENTANA, no subconsulta correlacionada: printings no tiene índice por
+    // set/número y la subconsulta escaneaba 110k filas POR FILA — 52 s con
+    // The List, colgando el isolate de UI. La ventana da el mismo mínimo
+    // entre idiomas del número (verificado idéntico) a coste de un solo paso.
     final priceSel = priceCol == null
         ? 'NULL AS price'
-        : '(SELECT MIN(CAST(q.$priceCol AS REAL)) FROM printings q '
-            'WHERE q.set_code = p.set_code '
-            'AND q.collector_number = p.collector_number) AS price';
+        : 'MIN(CAST(p.$priceCol AS REAL)) '
+            'OVER (PARTITION BY p.collector_number) AS price';
     final rows = db.select('''
       SELECT * FROM (
         SELECT p.oracle_id, p.collector_number, p.printed_name,

@@ -130,8 +130,9 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
       // aproximado (~). Y sin número de coleccionista, mejor NINGUNA clave
       // que una a medias ('lea|'): esa no casa precio nunca pero tampoco
       // marca el total como aproximado
-      printingKey:
-          hit.collectorNumber.isEmpty ? null : hit.printingKey,
+      printingKey: hit.setCode.isEmpty || hit.collectorNumber.isEmpty
+          ? null
+          : hit.printingKey,
     );
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('✓ ${hit.printedName ?? hit.name}'),

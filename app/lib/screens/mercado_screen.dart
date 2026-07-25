@@ -215,9 +215,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
             )
           : null;
 
+      // NOTA (decisión 25-07): al pasar el total a contar foils a precio
+      // foil, el primer punto tras actualizar puede dar un escalón único
+      // respecto a las fotos viejas (apuntadas a precio normal). Se acepta:
+      // es un salto de una vez y versionar la fórmula en value_history no
+      // compensa.
       final points =
           await _history.record(total, widget.collection.totalCopies);
-      final curva = await _valueCurve(points);
+      final (curva, costura) = await _valueCurve(points);
       final bulkDate = await widget.db.bulkDate();
       final banners =
           _banners.isEmpty ? await widget.db.marketSets() : _banners;
@@ -245,6 +250,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
         _pnl = pnl;
         _top = top;
         _points = curva;
+        // en el MISMO setState que _points: son un par (la costura de una
+        // curva no vale para otra) y _load() puede solaparse
+        _costura = costura;
         _cardHistory = cardHistory;
         _marketPrices = marketPrices;
         _historyCovered = covered;
@@ -268,10 +276,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
   /// puntos, y dos puntos siempre salen en línea recta.
   ///
   /// Si no hay base descargada, se queda con las fotos locales de siempre.
-  Future<List<ValuePoint>> _valueCurve(List<ValuePoint> local) async {
+  Future<(List<ValuePoint>, String?)> _valueCurve(
+      List<ValuePoint> local) async {
     try {
       final qty = widget.collection.qtyByOracle;
-      if (qty.isEmpty) return local;
+      if (qty.isEmpty) return (local, null);
       // el total de la colección es el de Cardmarket, igual que en Inicio y
       // en las carpetas: la curva tiene que ir en la misma moneda que el
       // número grande de arriba
@@ -279,12 +288,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
           await widget.prices.seriesFor(qty.keys, market: Market.cardmarket);
       final real =
           collectionValueSeries(qtyByOracle: qty, seriesByOracle: series);
-      final (curva, costura) = stitchValueCurve(real, local);
-      _costura = costura;
-      return curva;
+      return stitchValueCurve(real, local);
     } catch (_) {
-      _costura = null;
-      return local; // sin histórico: lo de siempre
+      return (local, null); // sin histórico: lo de siempre
     }
   }
 

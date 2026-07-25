@@ -97,6 +97,23 @@ void main() {
         reason: 'sin la generación, la caché vieja (2.5) taparía el log');
   });
 
+  test(
+      'un corrupto leído EN VUELO al invalidar no se aparta: el rename se '
+      'llevaría el fichero recién restaurado', () async {
+    final dir = _tmpDir();
+    final file = File(p.join(dir.path, 'recents.json'));
+    await file.writeAsString('esto no es json');
+    final store = RecentsStore(dataDir: dir);
+
+    final vieja = store.load(); // se queda leyendo el corrupto
+    store.invalidate(); // restaurar se adelanta (y va a reescribir el json)
+    await vieja;
+
+    expect(File('${file.path}.roto').existsSync(), isFalse,
+        reason: 'la lectura vieja ya no manda: no puede apartar nada');
+    expect(file.existsSync(), isTrue);
+  });
+
   test('reiniciar los almacenes compartidos los vacía a los dos', () async {
     final dir = _tmpDir();
     final recents = RecentsStore(dataDir: dir);

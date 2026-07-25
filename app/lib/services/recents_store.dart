@@ -109,8 +109,11 @@ class RecentsStore extends ChangeNotifier {
         ..addAll(cards);
       notifyListeners();
     } catch (_) {
-      // corrupto: apartarlo, no escribirle encima
-      await setAsideBroken(file);
+      // corrupto: apartarlo, no escribirle encima. Pero SOLO si nadie ha
+      // invalidado mientras leíamos: "fichero corrupto" y "restaurar copia"
+      // van correlacionados, y el rename se llevaría el fichero BUENO
+      // recién restaurado
+      if (gen == _generacion) await setAsideBroken(file);
     }
   }
 

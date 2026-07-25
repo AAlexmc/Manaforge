@@ -374,7 +374,11 @@ class _HomeShellState extends State<HomeShell> {
       await _collection.load().catchError((_) {});
       if (!mounted) return;
       if (_started) {
-        await _bienvenida();
+        // mismo frame de cortesía que el camino de onReady: que Inicio y su
+        // barra hagan layout antes de diálogos y de medir burbujas
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          unawaited(_bienvenida());
+        });
       } else {
         // `StartupScreen` sigue delante (el primer arranque descarga
         // MINUTOS): idioma, novedades y tour se aplazan enteros y `onReady`
