@@ -2489,6 +2489,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bkKindPreRestore => 'before restoring';
 
   @override
+  String get bkKindPreReset => 'Before factory reset';
+
+  @override
   String get bkErrFileTooBig =>
       'That file is far too big to be a ManaForge backup.';
 
@@ -3575,6 +3578,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String rfBackupFailed(String motivo) {
     return 'The backup could not be saved, so NOTHING was erased. $motivo';
   }
+
+  @override
+  String rfPartial(String cosas) {
+    return 'Some items could not be erased: $cosas. You can retry from Settings after restarting.';
+  }
+
+  @override
+  String get rfHalfDone =>
+      'The erase was left half done. The app will return to the startup screen; if anything remains, retry the reset.';
 
   @override
   String dbErrCards(String codigo) {

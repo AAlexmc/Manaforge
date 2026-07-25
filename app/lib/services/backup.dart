@@ -645,6 +645,15 @@ Future<void> _rotate(List<File> files, {required int keep}) async {
   }
 }
 
+/// Rota las copias que empiecen por [prefix] hasta dejar [keep], igual que la
+/// rotación de automáticas o de `pre-restore`. Pública para que
+/// `factory_reset.dart` pueda rotar las `pre-reset` con la misma mecánica.
+Future<void> rotateBackupsWithPrefix(Directory dataDir, String prefix,
+    {required int keep}) async {
+  await _rotate(await _backupsWithPrefix(_backupDir(dataDir), prefix),
+      keep: keep);
+}
+
 /// Todas las copias del directorio, de la más nueva a la más vieja.
 Future<List<File>> listBackups(Directory dataDir) =>
     _backupsWithPrefix(_backupDir(dataDir), null);
@@ -659,8 +668,21 @@ Future<List<File>> _backupsWithPrefix(Directory dir, String? prefix) async {
     if (prefix != null && !name.startsWith('$prefix-')) continue;
     files.add(entry);
   }
-  // el sello ordena igual alfabéticamente que cronológicamente
-  files.sort((a, b) => p.basename(b.path).compareTo(p.basename(a.path)));
+  // por la FECHA del sello, no por el nombre entero: prefijos distintos
+  // (`auto-`, `pre-restore-`, `pre-reset-`) no ordenan igual alfabéticamente
+  // que cronológicamente, y mezclarlos (como hace `listBackups`) sacaba copias
+  // más nuevas por detrás de una más vieja con un prefijo que empezara antes
+  files.sort((a, b) {
+    final nombreA = p.basename(a.path);
+    final nombreB = p.basename(b.path);
+    final selloA = _stampOf(nombreA);
+    final selloB = _stampOf(nombreB);
+    if (selloA != null && selloB != null && selloA != selloB) {
+      return selloB.compareTo(selloA);
+    }
+    // empate (o alguno sin sello reconocible): por el nombre, como antes
+    return nombreB.compareTo(nombreA);
+  });
   return files;
 }
 
@@ -668,8 +690,11 @@ Future<List<File>> _backupsWithPrefix(Directory dir, String? prefix) async {
 /// dice nada a nadie.
 String backupLabel(File file, AppLocalizations t) {
   final name = p.basename(file.path);
-  final tipo =
-      name.startsWith('pre-restore-') ? t.bkKindPreRestore : t.bkKindAuto;
+  final tipo = name.startsWith('pre-reset-')
+      ? t.bkKindPreReset
+      : name.startsWith('pre-restore-')
+          ? t.bkKindPreRestore
+          : t.bkKindAuto;
   final stamp = _stampOf(name);
   if (stamp == null) return '$tipo · $name';
   final fecha = stamp.toLocal();

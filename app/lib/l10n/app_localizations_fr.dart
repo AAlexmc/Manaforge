@@ -2508,6 +2508,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bkKindPreRestore => 'avant restauration';
 
   @override
+  String get bkKindPreReset => 'Antes del reset de fábrica';
+
+  @override
   String get bkErrFileTooBig =>
       'Ce fichier est bien trop gros pour être une sauvegarde de ManaForge.';
 
@@ -3601,6 +3604,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String rfBackupFailed(String motivo) {
     return 'No se pudo guardar la copia previa, así que NO se ha borrado nada. $motivo';
   }
+
+  @override
+  String rfPartial(String cosas) {
+    return 'No se pudo borrar todo. Queda: $cosas. Puedes reintentarlo desde Ajustes tras reiniciar.';
+  }
+
+  @override
+  String get rfHalfDone =>
+      'El borrado se quedó a medias. La app volverá a la pantalla de arranque; si algo sigue ahí, reintenta el reset.';
 
   @override
   String dbErrCards(String codigo) {

@@ -3943,6 +3943,12 @@ abstract class AppLocalizations {
   /// **'antes de restaurar'**
   String get bkKindPreRestore;
 
+  /// No description provided for @bkKindPreReset.
+  ///
+  /// In es, this message translates to:
+  /// **'Antes del reset de fábrica'**
+  String get bkKindPreReset;
+
   /// No description provided for @bkErrFileTooBig.
   ///
   /// In es, this message translates to:
@@ -5845,6 +5851,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo guardar la copia previa, así que NO se ha borrado nada. {motivo}'**
   String rfBackupFailed(String motivo);
+
+  /// No description provided for @rfPartial.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo borrar todo. Queda: {cosas}. Puedes reintentarlo desde Ajustes tras reiniciar.'**
+  String rfPartial(String cosas);
+
+  /// No description provided for @rfHalfDone.
+  ///
+  /// In es, this message translates to:
+  /// **'El borrado se quedó a medias. La app volverá a la pantalla de arranque; si algo sigue ahí, reintenta el reset.'**
+  String get rfHalfDone;
 
   /// No description provided for @dbErrCards.
   ///

@@ -290,6 +290,44 @@ void main() {
         startsWith('automática · 21/07/2026'));
     expect(backupLabel(File('/x/pre-restore-2026-07-21-201500.mfbak'), t),
         startsWith('antes de restaurar · 21/07/2026'));
+    expect(backupLabel(File('/x/pre-reset-2026-07-21-201500.mfbak'), t),
+        startsWith('Antes del reset de fábrica · 21/07/2026'));
+  });
+
+  test(
+      'listBackups ordena por fecha del sello, no por nombre: mezclar '
+      'prefijos no descuadra el orden', () async {
+    final dir = _dataDir({'collection.json': '{"cards":[]}'});
+    // "auto-..." va antes que "pre-restore-..." alfabéticamente aunque sea
+    // más reciente: si se ordenara por basename, saldría en el sitio malo
+    await writeBackupFile(dir, prefix: 'pre-restore', now: DateTime.utc(2026, 1, 1));
+    await writeBackupFile(dir, prefix: 'auto', now: DateTime.utc(2026, 6, 1));
+    await writeBackupFile(dir, prefix: 'pre-reset', now: DateTime.utc(2026, 3, 1));
+
+    final copias = await listBackups(dir);
+
+    expect(copias.map((f) => p.basename(f.path)), [
+      'auto-2026-06-01-000000.mfbak',
+      'pre-reset-2026-03-01-000000.mfbak',
+      'pre-restore-2026-01-01-000000.mfbak',
+    ]);
+  });
+
+  test('rotateBackupsWithPrefix deja como mucho `keep` copias de ese prefijo',
+      () async {
+    final dir = _dataDir({'collection.json': '{"cards":[]}'});
+    for (var i = 0; i < 3; i++) {
+      await writeBackupFile(dir,
+          prefix: 'pre-reset', now: DateTime.utc(2026, 1, 1 + i));
+    }
+
+    await rotateBackupsWithPrefix(dir, 'pre-reset', keep: 2);
+
+    final quedan = (await listBackups(dir))
+        .map((f) => p.basename(f.path))
+        .toList();
+    expect(quedan.length, 2);
+    expect(quedan.first, 'pre-reset-2026-01-03-000000.mfbak');
   });
 
   // --- regresiones cazadas en revisión (bugs reales, reproducidos) ---

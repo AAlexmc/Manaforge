@@ -1134,6 +1134,7 @@
   "bkStorePriceHistory": "el historial de precios",
   "bkKindAuto": "automática",
   "bkKindPreRestore": "antes de restaurar",
+  "bkKindPreReset": "Antes del reset de fábrica",
   "bkErrFileTooBig": "Ese fichero es demasiado grande para ser una copia de ManaForge.",
   "bkErrExpandTooBig": "Esa copia es demasiado grande al abrirla: no parece una copia de ManaForge de verdad.",
   "bkErrNotABackup": "Ese fichero no es una copia de seguridad de ManaForge.",
@@ -1615,6 +1616,9 @@
   "rfWorking": "Borrando los datos… no cierres la app.",
   "rfBackupFailed": "No se pudo guardar la copia previa, así que NO se ha borrado nada. {motivo}",
   "@rfBackupFailed": { "placeholders": { "motivo": { "type": "String" } } },
+  "rfPartial": "No se pudo borrar todo. Queda: {cosas}. Puedes reintentarlo desde Ajustes tras reiniciar.",
+  "@rfPartial": { "placeholders": { "cosas": { "type": "String" } } },
+  "rfHalfDone": "El borrado se quedó a medias. La app volverá a la pantalla de arranque; si algo sigue ahí, reintenta el reset.",
 
   "dbErrCards": "No se pudo descargar la base de cartas (HTTP {codigo}). Vuelve a intentarlo dentro de un rato.",
   "@dbErrCards": {

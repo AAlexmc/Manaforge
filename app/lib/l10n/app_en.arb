@@ -1129,6 +1129,7 @@
   "bkStorePriceHistory": "your price history",
   "bkKindAuto": "automatic",
   "bkKindPreRestore": "before restoring",
+  "bkKindPreReset": "Before factory reset",
   "bkErrFileTooBig": "That file is far too big to be a ManaForge backup.",
   "bkErrExpandTooBig": "That backup is far too big once unpacked: it doesn't look like a real ManaForge backup.",
   "bkErrNotABackup": "That file is not a ManaForge backup.",
@@ -1610,6 +1611,9 @@
   "rfWorking": "Erasing data… don't close the app.",
   "rfBackupFailed": "The backup could not be saved, so NOTHING was erased. {motivo}",
   "@rfBackupFailed": { "placeholders": { "motivo": { "type": "String" } } },
+  "rfPartial": "Some items could not be erased: {cosas}. You can retry from Settings after restarting.",
+  "@rfPartial": { "placeholders": { "cosas": { "type": "String" } } },
+  "rfHalfDone": "The erase was left half done. The app will return to the startup screen; if anything remains, retry the reset.",
 
   "dbErrCards": "The card database couldn't be downloaded (HTTP {codigo}). Try again in a while.",
   "@dbErrCards": {

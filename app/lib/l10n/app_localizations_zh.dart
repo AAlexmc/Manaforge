@@ -2392,6 +2392,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bkKindPreRestore => '恢复前';
 
   @override
+  String get bkKindPreReset => 'Antes del reset de fábrica';
+
+  @override
   String get bkErrFileTooBig => '这个文件太大了，不像是 ManaForge 的备份。';
 
   @override
@@ -3453,6 +3456,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String rfBackupFailed(String motivo) {
     return 'No se pudo guardar la copia previa, así que NO se ha borrado nada. $motivo';
   }
+
+  @override
+  String rfPartial(String cosas) {
+    return 'No se pudo borrar todo. Queda: $cosas. Puedes reintentarlo desde Ajustes tras reiniciar.';
+  }
+
+  @override
+  String get rfHalfDone =>
+      'El borrado se quedó a medias. La app volverá a la pantalla de arranque; si algo sigue ahí, reintenta el reset.';
 
   @override
   String dbErrCards(String codigo) {
