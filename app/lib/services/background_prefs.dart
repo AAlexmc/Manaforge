@@ -261,18 +261,18 @@ class BackgroundPreference extends ChangeNotifier {
       final iconHex = decoded['iconColorHex'];
       if (iconHex is String) _iconColor = _parseHex(iconHex);
       // cada entrada se valida por separado: una muestra manipulada no tira
-      // abajo a las demás, solo se descarta ella
+      // abajo a las demás, solo se descarta ella. Y se FUSIONA en vez de
+      // pisar: la lectura corre en segundo plano (main arranca load() sin
+      // esperar) y un clear() aquí podía llevarse una muestra que el usuario
+      // acabara de guardar. También deduplica un fichero editado a mano.
       final swatches = decoded['swatchesHex'];
       if (swatches is List) {
-        final validas = <Color>[];
         for (final s in swatches) {
+          if (_swatches.length >= kMaxSwatches) break;
           if (s is! String) continue;
           final c = _parseHex(s);
-          if (c != null) validas.add(c);
+          if (c != null && !_swatches.contains(c)) _swatches.add(c);
         }
-        _swatches
-          ..clear()
-          ..addAll(validas.take(kMaxSwatches));
       }
       final opacidad = decoded['cardOpacity'];
       if (opacidad is num) {

@@ -279,6 +279,12 @@ class _Muestras extends StatelessWidget {
     // "el de siempre" solo está elegido si NO hay preset NI color a medida
     final sinElegir =
         matchByColor ? custom == null : (elegido == null && !customActivo);
+    // si el color puesto ya lo representa otro círculo de la fila (una
+    // muestra guardada, o un preset en las filas por color), el círculo
+    // custom se apaga: dos círculos marcados a la vez confunden
+    final representado = custom != null &&
+        (swatches.contains(custom) ||
+            (matchByColor && paleta.any((c) => c.color == custom)));
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -300,7 +306,7 @@ class _Muestras extends StatelessWidget {
               onLongPress: () => _confirmarBorrarMuestra(context, s, onSwatchDelete)),
         _CirculoCustom(
           color: custom,
-          activo: customActivo,
+          activo: customActivo && !representado,
           onTap: () => _elegirColor(
               context,
               custom ?? (paleta.isEmpty ? Colors.grey : paleta.first.color),
@@ -336,7 +342,10 @@ class _Muestras extends StatelessWidget {
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              border: Border.all(color: anillo, width: seleccionado ? 3 : 2),
+              // puesta vs no puesta tiene que verse de un vistazo: mismo
+              // color de anillo, pero grosores bien separados
+              border:
+                  Border.all(color: anillo, width: seleccionado ? 4 : 1.5),
             ),
           ),
         ),
@@ -561,11 +570,10 @@ class _Vistazo extends StatelessWidget {
                           child: Text(tr(context).bgSampleTab,
                               style: TextStyle(
                                   fontSize: 11,
-                                  color: ThemeData.estimateBrightnessForColor(
-                                              chip) ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)),
+                                  // la MISMA cuenta que hace el tema
+                                  // (mf_theme, labelStyle del chip): el
+                                  // vistazo enseña lo que la app pinta
+                                  color: toneLegible(chip, letra))),
                         ),
                         const Spacer(),
                         // un icono de muestra, con su color
