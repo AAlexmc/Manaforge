@@ -35,6 +35,42 @@ final Uri kReleasesApi = Uri.parse(
 /// Toda dirección que la app pueda abrir tiene que empezar por aquí.
 const String kRepoUrlPrefix = 'https://github.com/AAlexmc/Manaforge/';
 
+/// Uri de referencia para [safeReleaseUri]: mismo esquema, host y camino que
+/// [kRepoUrlPrefix], pero ya troceados para comparar campo a campo.
+final Uri _kRepoUri = Uri.parse(kRepoUrlPrefix);
+
+/// La dirección de una release, ya parseada, si de verdad es de este
+/// repositorio. `null` si no.
+///
+/// La comparación se hace sobre la URI YA PARSEADA (esquema, host y camino
+/// por separado), NUNCA sobre el texto crudo con `startsWith`: `Uri.parse`
+/// normaliza los `..` del camino, así que un texto que EMPIEZA como toca
+/// puede, ya parseado, apuntar a otro sitio (mismo host, otro repositorio).
+/// Comprobar el texto y lanzar luego un `Uri.parse` aparte deja colar
+/// exactamente eso.
+Uri? safeReleaseUri(String? raw) {
+  if (raw == null) return null;
+  final uri = Uri.tryParse(raw);
+  if (uri == null) return null;
+  if (uri.scheme != _kRepoUri.scheme) return null;
+  if (uri.host != _kRepoUri.host) return null;
+  // puerto explícito distinto del de https, o credenciales en la URL:
+  // `startsWith` los deja pasar igual (van DESPUÉS del host), pero un
+  // puerto raro cambia a dónde va la petición y el `usuario@` se ve tal
+  // cual en el diálogo "copia el enlace" — spoofing visual barato
+  if (uri.hasPort && uri.port != _kRepoUri.port) return null;
+  if (uri.userInfo.isNotEmpty) return null;
+  if (!uri.path.startsWith(_kRepoUri.path)) return null;
+  // `%2f`/`%2e` en el camino: Uri.path NO decodifica `%2f` (se queda tal
+  // cual, así que un segmento como "x%2F..%2F..%2Fevil" sigue "dentro" de
+  // /AAlexmc/Manaforge/ para este `startsWith`), y aunque `%2e` sí se
+  // colapsa aquí, no vale la pena confiar en que todo lo que trate esta URL
+  // después decodifique exactamente igual
+  final lowerPath = uri.path.toLowerCase();
+  if (lowerPath.contains('%2f') || lowerPath.contains('%2e')) return null;
+  return uri;
+}
+
 /// Prefijo de las etiquetas de la APP (las bases usan otras).
 const String kAppTagPrefix = 'app-v';
 
@@ -115,9 +151,11 @@ AppRelease? newestAppRelease(String body) {
     if (tag is! String || !tag.startsWith(kAppTagPrefix)) continue;
     final version = tag.substring(kAppTagPrefix.length).trim();
     if (version.isEmpty) continue;
-    final url = item['html_url'];
-    // la dirección que se va a abrir tiene que ser de ESTE repositorio
-    if (url is! String || !url.startsWith(kRepoUrlPrefix)) continue;
+    // la dirección que se va a abrir tiene que ser de ESTE repositorio: se
+    // valida ya parseada (ver safeReleaseUri)
+    final rawUrl = item['html_url'];
+    final url = safeReleaseUri(rawUrl is String ? rawUrl : null);
+    if (url == null) continue;
     final notas = item['body'];
     final release = AppRelease(
       version: version,
@@ -129,7 +167,7 @@ AppRelease? newestAppRelease(String body) {
               ? '${notas.substring(0, kMaxNotesChars)}…'
               : notas)
           : '',
-      pageUrl: url,
+      pageUrl: url.toString(),
     );
     if (mejor == null || isNewerVersion(release.version, mejor.version)) {
       mejor = release;
@@ -274,12 +312,10 @@ class AppUpdateChecker extends ChangeNotifier {
       // por secureSend y no por client.get: package:http sigue las
       // redirecciones a donde le digan, incluido bajar a http en claro, y sin
       // decirlo. Es la misma regla que usan las descargas de las bases.
-      final response = await secureSend(client, kReleasesApi,
-              headers: const {
-            'Accept': 'application/vnd.github+json',
-            'User-Agent': 'ManaForge',
-          })
-          .timeout(const Duration(seconds: 10));
+      final response = await secureSend(client, kReleasesApi, headers: const {
+        'Accept': 'application/vnd.github+json',
+        'User-Agent': 'ManaForge',
+      }).timeout(const Duration(seconds: 10));
       if (response.statusCode != 200) return _available;
       // tope en BYTES y mientras se lee, no después de tragarse el cuerpo
       // entero en memoria
@@ -287,10 +323,10 @@ class AppUpdateChecker extends ChangeNotifier {
       if (body == null) return _available;
       final release = newestAppRelease(body);
       _lastCheck = ahora;
-      _available = release != null &&
-              isNewerVersion(release.version, currentVersion)
-          ? release
-          : null;
+      _available =
+          release != null && isNewerVersion(release.version, currentVersion)
+              ? release
+              : null;
       notifyListeners();
       await _save();
       return _available;
@@ -320,8 +356,7 @@ class AppUpdateChecker extends ChangeNotifier {
 
   Future<void> _save() {
     final anterior = _fila;
-    final actual =
-        anterior == null ? _write() : anterior.then((_) => _write());
+    final actual = anterior == null ? _write() : anterior.then((_) => _write());
     _fila = actual;
     return actual;
   }

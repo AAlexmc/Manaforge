@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'json_store_io.dart';
+import 'safe_input.dart';
 
 /// Una carta vista recientemente (ficha abierta).
 class RecentCard {
@@ -31,7 +32,9 @@ class RecentCard {
   factory RecentCard.fromJson(Map<String, dynamic> json) => RecentCard(
         oracleId: json['o'] as String,
         name: json['n'] as String,
-        imageNormal: json['i'] as String?,
+        // las URLs se filtran al LEER: este fichero puede venir de una copia
+        // restaurada que te haya pasado otra persona
+        imageNormal: safeCardImageUrl(json['i'] as String?),
         colors: (json['c'] as String?) ?? '',
       );
 }
@@ -109,8 +112,7 @@ class RecentsStore extends ChangeNotifier {
   Future<void> _write() async {
     final file = await _file();
     if (file == null) return;
-    await writeJsonFile(
-        file, jsonEncode([for (final c in _cards) c.toJson()]));
+    await writeJsonFile(file, jsonEncode([for (final c in _cards) c.toJson()]));
   }
 }
 

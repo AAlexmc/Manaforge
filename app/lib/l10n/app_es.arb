@@ -696,6 +696,10 @@
   "@scUnknown": {
     "placeholders": { "n": { "type": "int" } }
   },
+  "scSkipped": "{n, plural, =1{1 foto saltada (demasiado grande o ilegible)}other{{n} fotos saltadas (demasiado grandes o ilegibles)}}",
+  "@scSkipped": {
+    "placeholders": { "n": { "type": "int" } }
+  },
   "scNothingRecognised": "No reconocí ninguna carta en esas fotos. Prueba con mejor luz o menos reflejo.",
   "scAddN": "Añadir {n} a la colección",
   "@scAddN": {
@@ -1160,6 +1164,7 @@
   "siBadHash": "Lo descargado no coincide con la huella publicada en GitHub. No se ha instalado nada. Vuelve a intentarlo; si sigue pasando, avisa.",
   "siBackgroundNotImage": "Elige una imagen (.jpg, .png o .webp) como fondo.",
   "siBackgroundTooBig": "Esa imagen es demasiado grande para usarla de fondo.",
+  "siScanTooBig": "Esa foto es demasiado grande para reconocerla.",
 
   "bgImages": "Imágenes",
   "bgImageFailed": "No pude usar esa imagen: {error}",

@@ -3,6 +3,8 @@
 /// el almacén guarda cuándo lo conseguiste y a nombre de quién.
 library;
 
+import 'safe_input.dart';
+
 /// Id del certificado de bienvenida, el único que enseña la carta con la que
 /// empezaste.
 const String kWelcomeCertificateId = 'bienvenida';
@@ -164,8 +166,12 @@ class FirstCard {
     final name = json['name'];
     if (id is! String || id.isEmpty) return null;
     if (name is! String || name.isEmpty) return null;
+    // la URL se filtra al LEER: este fichero puede venir de una copia
+    // restaurada que te haya pasado otra persona
     final image = json['image'];
     return FirstCard(
-        oracleId: id, name: name, image: image is String ? image : null);
+        oracleId: id,
+        name: name,
+        image: safeCardImageUrl(image is String ? image : null));
   }
 }

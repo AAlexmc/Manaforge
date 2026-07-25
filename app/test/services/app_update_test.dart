@@ -18,19 +18,22 @@ import 'package:manaforge_app/services/app_update.dart';
 String _releases(List<Map<String, dynamic>> items) => jsonEncode(items);
 
 Map<String, dynamic> _release(String tag,
-        {String? url, String? name, String? body, bool draft = false,
+        {String? url,
+        String? name,
+        String? body,
+        bool draft = false,
         bool prerelease = false}) =>
     {
       'tag_name': tag,
-      'html_url': url ?? 'https://github.com/AAlexmc/Manaforge/releases/tag/$tag',
+      'html_url':
+          url ?? 'https://github.com/AAlexmc/Manaforge/releases/tag/$tag',
       'name': name ?? 'ManaForge $tag',
       'body': body ?? 'notas',
       'draft': draft,
       'prerelease': prerelease,
     };
 
-http.Client Function() _clienteQueDevuelve(String body,
-        {int status = 200}) =>
+http.Client Function() _clienteQueDevuelve(String body, {int status = 200}) =>
     () => MockClient((_) async => http.Response(body, status,
         headers: {'content-type': 'application/json; charset=utf-8'}));
 
@@ -102,6 +105,20 @@ void main() {
       expect(release.pageUrl, startsWith(kRepoUrlPrefix));
     });
 
+    test('un ".." que normaliza fuera del repo se descarta entera', () {
+      // en TEXTO empieza como toca, pero Uri.parse normaliza los ".." y
+      // acaba en otro repositorio (mismo host: github.com)
+      final body = _releases([
+        _release('app-v9.9.9',
+            url: 'https://github.com/AAlexmc/Manaforge/../../evil/repo'
+                '/releases'),
+        _release('app-v0.2.0'),
+      ]);
+
+      final release = newestAppRelease(body)!;
+      expect(release.version, '0.2.0');
+    });
+
     test('las notas se recortan: son texto de fuera', () {
       final body = _releases([
         _release('app-v0.2.0', body: 'x' * (kMaxNotesChars + 500)),
@@ -114,6 +131,78 @@ void main() {
       expect(newestAppRelease('{"esto":"no es una lista"}'), isNull);
       expect(newestAppRelease('no soy json'), isNull);
       expect(newestAppRelease('[1, 2, 3]'), isNull);
+    });
+  });
+
+  group('safeReleaseUri: se valida sobre la URI YA PARSEADA', () {
+    test('la URL legítima de una release se acepta', () {
+      const url = 'https://github.com/AAlexmc/Manaforge/releases/tag/'
+          'app-v0.3.0';
+      expect(safeReleaseUri(url), Uri.parse(url));
+    });
+
+    test('un ".." que normaliza fuera del repo se rechaza', () {
+      expect(
+          safeReleaseUri('https://github.com/AAlexmc/Manaforge/../../evil/repo'
+              '/releases'),
+          isNull);
+    });
+
+    test('otro host, o http en vez de https, se rechaza', () {
+      expect(
+          safeReleaseUri('https://evil.example/AAlexmc/Manaforge/x'), isNull);
+      expect(safeReleaseUri('http://github.com/AAlexmc/Manaforge/x'), isNull);
+      expect(safeReleaseUri(null), isNull);
+      expect(safeReleaseUri('no soy una url'), isNull);
+    });
+
+    test('un puerto explícito que no es el de https se rechaza', () {
+      expect(safeReleaseUri('https://github.com:1337/AAlexmc/Manaforge/x'),
+          isNull);
+      // el puerto POR DEFECTO de https, puesto a mano, no es un ataque
+      expect(safeReleaseUri('https://github.com:443/AAlexmc/Manaforge/x'),
+          isNotNull);
+    });
+
+    test('userInfo ("usuario@") se rechaza: se vería en "copia el enlace"', () {
+      expect(safeReleaseUri('https://user@github.com/AAlexmc/Manaforge/x'),
+          isNull);
+    });
+
+    test(
+        '"%2f" en el camino se rechaza (Uri.path lo deja SIN decodificar, '
+        'así que el prefijo no lo caza)', () {
+      // Uri.parse no convierte %2f en '/': el segmento entero
+      // "x%2F..%2F..%2Fevil" queda DENTRO de /AAlexmc/Manaforge/ y el
+      // `startsWith` de más arriba lo deja pasar. Solo esta comprobación
+      // explícita lo para.
+      expect(
+          safeReleaseUri('https://github.com/AAlexmc/Manaforge/'
+              'x%2f..%2f..%2fevil'),
+          isNull);
+      expect(
+          safeReleaseUri('https://github.com/AAlexmc/Manaforge/'
+              'x%2F..%2F..%2Fevil'),
+          isNull);
+    });
+
+    test(
+        '"%2e%2e%2f" en el camino se rechaza: Uri.path decodifica el '
+        'punto (queda ".." literal) pero NO la barra, así que el tramo '
+        'entero no colapsa y lo caza el chequeo de "%2f"', () {
+      expect(
+          safeReleaseUri('https://github.com/AAlexmc/Manaforge/'
+              '%2e%2e%2f/evil'),
+          isNull);
+      expect(
+          safeReleaseUri('https://github.com/AAlexmc/Manaforge/'
+              '%2E%2E%2F/evil'),
+          isNull);
+      // otro % que no sea %2e/%2f (un espacio, p. ej.) no se rechaza
+      expect(
+          safeReleaseUri('https://github.com/AAlexmc/Manaforge/releases/'
+              'tag/v%201'),
+          isNotNull);
     });
   });
 
@@ -156,8 +245,7 @@ void main() {
       final checker = AppUpdateChecker(
         dataDir: dir,
         currentVersion: '0.2.0',
-        clientFactory:
-            _clienteQueDevuelve(_releases([_release('app-v0.3.0')])),
+        clientFactory: _clienteQueDevuelve(_releases([_release('app-v0.3.0')])),
       );
 
       final release = await checker.checkIfDue();
@@ -171,8 +259,7 @@ void main() {
       final checker = AppUpdateChecker(
         dataDir: dir,
         currentVersion: '0.3.0',
-        clientFactory:
-            _clienteQueDevuelve(_releases([_release('app-v0.3.0')])),
+        clientFactory: _clienteQueDevuelve(_releases([_release('app-v0.3.0')])),
       );
 
       expect(await checker.checkIfDue(), isNull);
@@ -185,8 +272,7 @@ void main() {
         currentVersion: '0.2.0',
         clientFactory: () => MockClient((_) async {
           llamadas++;
-          return http.Response(
-              _releases([_release('app-v0.3.0')]), 200);
+          return http.Response(_releases([_release('app-v0.3.0')]), 200);
         }),
       );
 

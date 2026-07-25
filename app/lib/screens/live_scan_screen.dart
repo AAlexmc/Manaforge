@@ -297,7 +297,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     final linux = _linuxCam;
     if (linux != null) return linux.latestJpeg;
     final shot = await _camera!.takePicture();
-    return shot.readAsBytes();
+    // takePicture() deja el JPEG en el temporal del sistema (fuera de
+    // Linux): sin borrarlo, cada foto de la mesa se queda ahí para siempre
+    try {
+      return await shot.readAsBytes();
+    } finally {
+      File(shot.path).delete().ignore();
+    }
   }
 
   /// Una carta acaba de asentarse (o cambiar): hasta 3 intentos de

@@ -1618,6 +1618,17 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String scSkipped(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n фото пропущено (слишком большие или нечитаемые)',
+      one: '1 фото пропущено (слишком большое или нечитаемое)',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get scNothingRecognised =>
       'Не распознал ни одной карты на этих фото. Попробуй лучше свет или меньше бликов.';
 
@@ -2593,6 +2604,9 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get siBackgroundTooBig =>
       'Это изображение слишком большое, чтобы ставить его фоном.';
+
+  @override
+  String get siScanTooBig => 'Это фото слишком большое, чтобы его распознать.';
 
   @override
   String get bgImages => 'Изображения';

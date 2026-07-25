@@ -59,8 +59,7 @@ void main() {
     expect(bienvenida!.kind, CertificateKind.welcome);
   });
 
-  test('la fecha del certificado se sella la PRIMERA vez y no se re-sella',
-      () {
+  test('la fecha del certificado se sella la PRIMERA vez y no se re-sella', () {
     final store = CertificateStore();
     const cert = EarnedCertificate(
         id: 'set:aer',
@@ -157,7 +156,8 @@ void main() {
   // --- La carta con la que empezaste --------------------------------------
 
   test('sin elegir carta, el certificado de bienvenida no enseña ninguna', () {
-    final store = CertificateStore(dataDir: Directory.systemTemp.createTempSync('mfcert'));
+    final store = CertificateStore(
+        dataDir: Directory.systemTemp.createTempSync('mfcert'));
     addTearDown(() => store.dataDir!.deleteSync(recursive: true));
 
     expect(store.firstCard, isNull);
@@ -171,7 +171,7 @@ void main() {
     store.setFirstCard(const FirstCard(
       oracleId: 'abc',
       name: 'Shivan Dragon',
-      image: 'https://cards/shivan.jpg',
+      image: 'https://cards.scryfall.io/normal/front/a/b/shivan.jpg',
     ));
     await store.pendingSave; // esperar el guardado real, no un delay a ojo
 
@@ -180,15 +180,32 @@ void main() {
 
     expect(otra.firstCard?.oracleId, 'abc');
     expect(otra.firstCard?.name, 'Shivan Dragon');
-    expect(otra.firstCard?.image, 'https://cards/shivan.jpg');
+    expect(otra.firstCard?.image,
+        'https://cards.scryfall.io/normal/front/a/b/shivan.jpg');
+  });
+
+  test('FirstCard.fromJson filtra la imagen (copia restaurada de otro)', () {
+    final rara = FirstCard.fromJson(const {
+      'oracleId': 'abc',
+      'name': 'Shivan Dragon',
+      'image': 'http://evil/x.png',
+    });
+    expect(rara?.image, isNull);
+
+    const url = 'https://cards.scryfall.io/normal/front/a/b/shivan.jpg';
+    final legitima = FirstCard.fromJson(const {
+      'oracleId': 'abc',
+      'name': 'Shivan Dragon',
+      'image': url,
+    });
+    expect(legitima?.image, url);
   });
 
   test('se puede quitar la carta elegida', () async {
     final dir = Directory.systemTemp.createTempSync('mfcert');
     addTearDown(() => dir.deleteSync(recursive: true));
     final store = CertificateStore(dataDir: dir);
-    store.setFirstCard(
-        const FirstCard(oracleId: 'abc', name: 'Shivan Dragon'));
+    store.setFirstCard(const FirstCard(oracleId: 'abc', name: 'Shivan Dragon'));
 
     store.setFirstCard(null);
     await store.pendingSave; // esperar el guardado real, no un delay a ojo

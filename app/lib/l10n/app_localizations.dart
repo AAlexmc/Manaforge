@@ -2628,6 +2628,12 @@ abstract class AppLocalizations {
   /// **'{n} sin reconocer (toca para elegir a mano)'**
   String scUnknown(int n);
 
+  /// No description provided for @scSkipped.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 foto saltada (demasiado grande o ilegible)}other{{n} fotos saltadas (demasiado grandes o ilegibles)}}'**
+  String scSkipped(int n);
+
   /// No description provided for @scNothingRecognised.
   ///
   /// In es, this message translates to:
@@ -4039,6 +4045,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Esa imagen es demasiado grande para usarla de fondo.'**
   String get siBackgroundTooBig;
+
+  /// No description provided for @siScanTooBig.
+  ///
+  /// In es, this message translates to:
+  /// **'Esa foto es demasiado grande para reconocerla.'**
+  String get siScanTooBig;
 
   /// No description provided for @bgImages.
   ///

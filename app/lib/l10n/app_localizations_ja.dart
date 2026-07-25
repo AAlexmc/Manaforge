@@ -1536,6 +1536,11 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String scSkipped(int n) {
+    return '$n 枚の写真をスキップしました（大きすぎるか読み取れません）';
+  }
+
+  @override
   String get scNothingRecognised =>
       'それらの写真ではカードを1枚も認識できませんでした。もっと明るく、反射を減らして試してください。';
 
@@ -2460,6 +2465,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get siBackgroundTooBig => 'その画像は背景に使うには大きすぎます。';
+
+  @override
+  String get siScanTooBig => 'その写真は大きすぎて認識できません。';
 
   @override
   String get bgImages => '画像';
