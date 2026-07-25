@@ -20,6 +20,7 @@ import 'services/collection_store.dart';
 import 'services/language_prefs.dart';
 import 'services/market_prefs.dart';
 import 'services/deck_store.dart';
+import 'services/factory_reset.dart';
 import 'services/onboarding_prefs.dart';
 import 'services/tours.dart';
 import 'services/folder_store.dart';
@@ -404,6 +405,19 @@ class _HomeShellState extends State<HomeShell> {
       arranque */}
   }
 
+  /// Reset de fábrica: copia previa, cerrar los sqlite (en Windows un handle
+  /// abierto bloquea el borrado), limpiar el fondo (en memoria y sus ficheros,
+  /// ANTES del barrido para que no re-escriba nada después) y barrer. El
+  /// session bump lo dispara la tarjeta vía onRestored al terminar.
+  Future<FactoryResetReport> _factoryReset() async {
+    final dir = await getApplicationSupportDirectory();
+    final copia = await preResetBackup(dir); // si falla, aborta sin tocar nada
+    _db.close();
+    _prices.close();
+    await widget.background.clear();
+    return wipeDataDir(dir, backup: copia);
+  }
+
   /// Abre el escáner en vivo. Vive en la barra de abajo, no dentro de
   /// Colección: es la acción que más se usa de toda la app.
   void _abrirEscaner() {
@@ -629,6 +643,7 @@ class _HomeShellState extends State<HomeShell> {
       AjustesScreen(
           db: _db,
           onRestored: widget.onRestored,
+          onFactoryReset: _factoryReset,
           updates: _updates,
           background: widget.background,
           language: widget.language,

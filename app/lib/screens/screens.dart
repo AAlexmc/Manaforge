@@ -8,6 +8,7 @@ import '../services/database_download_error.dart';
 import '../services/app_update.dart';
 import '../services/background_prefs.dart';
 import '../services/card_database.dart';
+import '../services/factory_reset.dart';
 import '../l10n/t.dart';
 import '../services/home_layout_prefs.dart';
 import '../services/language_prefs.dart';
@@ -18,6 +19,7 @@ import '../widgets/language_settings.dart';
 import '../widgets/update_notice.dart';
 import 'backup_screen.dart';
 import 'editar_inicio_screen.dart';
+import 'factory_reset_card.dart';
 
 export 'album_screen.dart';
 export 'backup_screen.dart';
@@ -59,6 +61,11 @@ class AjustesScreen extends StatefulWidget {
   /// releerlo todo.
   final VoidCallback onRestored;
 
+  /// Reset de fábrica: copia previa + borrado. Opcional: null → la tarjeta no
+  /// se pinta (tests viejos y sitios sin `getApplicationSupportDirectory`
+  /// siguen intactos).
+  final Future<FactoryResetReport> Function()? onFactoryReset;
+
   /// Keys para que un tour pueda señalar la tarjeta de idioma y la de fondo.
   final Key? idiomaKey;
   final Key? fondoKey;
@@ -86,6 +93,7 @@ class AjustesScreen extends StatefulWidget {
       {super.key,
       required this.db,
       required this.onRestored,
+      this.onFactoryReset,
       this.updates,
       this.background,
       this.language,
@@ -232,6 +240,11 @@ class _AjustesScreenState extends State<AjustesScreen> {
                   child: BackupCard(
                       dataDir: _dataDir, onRestored: widget.onRestored),
                 ),
+                if (widget.onFactoryReset != null)
+                  FactoryResetCard(
+                    wipe: widget.onFactoryReset!,
+                    onDone: widget.onRestored,
+                  ),
               ],
             ),
             const SizedBox(height: 8),
