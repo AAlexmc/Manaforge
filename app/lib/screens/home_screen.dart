@@ -115,12 +115,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _load() async {
     try {
       // misma fórmula que Mercado: que los dos totales SIEMPRE cuadren
+      // (foils incluidas — dejarlas fuera aquí descuadraba Inicio con
+      // Mercado, Colección, carpetas y logros)
       final valuation = await computeCollectionValue(
         cards: widget.collection.cards,
         byPrinting: widget.collection.hasPrintingData,
         printingQty: widget.collection.printingQty,
         oraclePrices: widget.db.pricesForOracles,
         printingPrices: widget.db.pricesForPrintings,
+        foilQty: widget.collection.foilPrintings,
+        foilPrices: widget.db.foilPricesForPrintings,
       );
       final sets = _sets.isEmpty
           ? await widget.db.marketSets(limit: 15)

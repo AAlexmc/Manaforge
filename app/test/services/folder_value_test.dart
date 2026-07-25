@@ -52,6 +52,28 @@ void main() {
     expect(part1 + part2, closeTo(whole, 0.001));
   });
 
+  test('las copias foil valen a precio foil (fallback al normal si no hay)',
+      () async {
+    // 2 copias de aer|1 (3 €), una de ellas foil a 20 €; kld|9 tiene una
+    // foil pero el mercado no publica precio foil → cuenta al normal
+    Future<Map<String, double>> foilPrices(Iterable<String> keys) async =>
+        {for (final k in keys) if (k == 'aer|1') k: 20.0};
+    final v = await computeFolderValue(
+      folderCardIds: {'a', 'b', 'c'},
+      cards: cards,
+      byPrinting: true,
+      printingQty: printingQty,
+      oracleByPrintings: oracles,
+      oraclePrices: byOracle,
+      printingPrices: prices,
+      foilQty: const {'aer|1': 1, 'kld|9': 1},
+      foilPrices: foilPrices,
+    );
+    // aer|1: 1 normal (3) + 1 foil (20); aer|2: 10; kld|9: 1 foil sin
+    // precio foil → 100 normal
+    expect(v.total, closeTo(3.0 + 20.0 + 10.0 + 100.0, 0.001));
+  });
+
   test('sin datos de edición el valor es a nivel carta y aproximado',
       () async {
     final v = await computeFolderValue(

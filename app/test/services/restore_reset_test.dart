@@ -60,6 +60,60 @@ void main() {
         reason: 'la caché vieja reescribiría el log restaurado al compactar');
   });
 
+  test('una lectura EN VUELO al invalidar no repuebla las vistas hace poco',
+      () async {
+    final dir = _tmpDir();
+    final file = File(p.join(dir.path, 'recents.json'));
+    await file.writeAsString('[{"o":"antes","n":"La de antes"}]');
+    final store = RecentsStore(dataDir: dir);
+
+    final vieja = store.load(); // se queda leyendo el fichero de ANTES
+    store.invalidate(); // restaurar se adelanta
+    await file.writeAsString('[{"o":"despues","n":"La restaurada"}]');
+    await vieja; // la lectura vieja termina DESPUÉS
+
+    expect(store.cards, isEmpty,
+        reason: 'la lectura vieja no puede repoblar ni dar por cargado');
+    await store.load();
+    expect(store.cards.single.oracleId, 'despues');
+  });
+
+  test('una lectura EN VUELO al invalidar no re-cachea el historial viejo',
+      () async {
+    final dir = _tmpDir();
+    final file = File(p.join(dir.path, 'price_history.jsonl'));
+    await file.writeAsString('{"o":"sol-ring","d":"2026-01-01","v":2.5}\n');
+    final store = PriceHistoryStore(directory: dir);
+
+    final vieja = store.forCard('sol-ring'); // lectura del log de ANTES
+    // un turno del event loop: la lectura pasa por la cola interna y hay
+    // que dejar que ARRANQUE (capture su generación) antes de invalidar
+    await Future<void>.delayed(Duration.zero);
+    store.invalidate(); // restaurar se adelanta
+    await vieja; // termina después: lo leído no puede quedarse en la caché
+    await file.writeAsString('{"o":"sol-ring","d":"2026-01-01","v":9.9}\n');
+
+    expect((await store.forCard('sol-ring')).single.value, 9.9,
+        reason: 'sin la generación, la caché vieja (2.5) taparía el log');
+  });
+
+  test(
+      'un corrupto leído EN VUELO al invalidar no se aparta: el rename se '
+      'llevaría el fichero recién restaurado', () async {
+    final dir = _tmpDir();
+    final file = File(p.join(dir.path, 'recents.json'));
+    await file.writeAsString('esto no es json');
+    final store = RecentsStore(dataDir: dir);
+
+    final vieja = store.load(); // se queda leyendo el corrupto
+    store.invalidate(); // restaurar se adelanta (y va a reescribir el json)
+    await vieja;
+
+    expect(File('${file.path}.roto').existsSync(), isFalse,
+        reason: 'la lectura vieja ya no manda: no puede apartar nada');
+    expect(file.existsSync(), isTrue);
+  });
+
   test('reiniciar los almacenes compartidos los vacía a los dos', () async {
     final dir = _tmpDir();
     final recents = RecentsStore(dataDir: dir);

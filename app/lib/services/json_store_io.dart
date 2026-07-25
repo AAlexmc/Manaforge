@@ -44,7 +44,13 @@ Future<void> writeJsonFile(File file, String data) async {
 /// puede renombrar, no hay más que hacer (y el almacén arrancará vacío).
 Future<void> setAsideBroken(File file) async {
   try {
-    await file.rename('${file.path}.roto');
+    // una segunda corrupción no puede pisar el rescate de la primera: si ya
+    // hay un `.roto`, el nuevo lleva sufijo (`.2.roto`, `.3.roto`…)
+    var destino = '${file.path}.roto';
+    for (var i = 2; File(destino).existsSync(); i++) {
+      destino = '${file.path}.$i.roto';
+    }
+    await file.rename(destino);
   } catch (_) {/* sin permisos o fichero en uso: se deja como está */}
 }
 

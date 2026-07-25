@@ -71,6 +71,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
   PnL? _pnl;
   List<ValuedCard> _top = const [];
   List<ValuePoint> _points = const [];
+
+  /// Fecha del último punto HISTÓRICO cuando la curva mezcla fuentes
+  /// (histórico + fotos locales); null si no hay mezcla. Ver
+  /// [stitchValueCurve].
+  String? _costura;
   Map<String, List<PricePoint>> _cardHistory = const {};
   (String, String)? _historyCovered; // tramo del histórico descargado
   bool _historyDownloading = false;
@@ -183,6 +188,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
         oraclePrices: widget.db.pricesForOracles,
         printingPrices: widget.db.pricesForPrintings,
         printingOwner: widget.collection.printingOwner,
+        foilQty: widget.collection.foilPrintings,
+        foilPrices: widget.db.foilPricesForPrintings,
       );
       final total = valuation.total;
       final valued = valuation.valued;
@@ -208,9 +215,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
             )
           : null;
 
+      // NOTA (decisión 25-07): al pasar el total a contar foils a precio
+      // foil, el primer punto tras actualizar puede dar un escalón único
+      // respecto a las fotos viejas (apuntadas a precio normal). Se acepta:
+      // es un salto de una vez y versionar la fórmula en value_history no
+      // compensa.
       final points =
           await _history.record(total, widget.collection.totalCopies);
-      final curva = await _valueCurve(points);
+      final (curva, costura) = await _valueCurve(points);
       final bulkDate = await widget.db.bulkDate();
       final banners =
           _banners.isEmpty ? await widget.db.marketSets() : _banners;
@@ -238,6 +250,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
         _pnl = pnl;
         _top = top;
         _points = curva;
+        // en el MISMO setState que _points: son un par (la costura de una
+        // curva no vale para otra) y _load() puede solaparse
+        _costura = costura;
         _cardHistory = cardHistory;
         _marketPrices = marketPrices;
         _historyCovered = covered;
@@ -261,10 +276,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
   /// puntos, y dos puntos siempre salen en línea recta.
   ///
   /// Si no hay base descargada, se queda con las fotos locales de siempre.
-  Future<List<ValuePoint>> _valueCurve(List<ValuePoint> local) async {
+  Future<(List<ValuePoint>, String?)> _valueCurve(
+      List<ValuePoint> local) async {
     try {
       final qty = widget.collection.qtyByOracle;
-      if (qty.isEmpty) return local;
+      if (qty.isEmpty) return (local, null);
       // el total de la colección es el de Cardmarket, igual que en Inicio y
       // en las carpetas: la curva tiene que ir en la misma moneda que el
       // número grande de arriba
@@ -272,11 +288,9 @@ class _MercadoScreenState extends State<MercadoScreen> {
           await widget.prices.seriesFor(qty.keys, market: Market.cardmarket);
       final real =
           collectionValueSeries(qtyByOracle: qty, seriesByOracle: series);
-      if (real.length < 2) return local;
-      final ultimo = real.last.date;
-      return [...real, ...local.where((p) => p.date.compareTo(ultimo) > 0)];
+      return stitchValueCurve(real, local);
     } catch (_) {
-      return local; // sin histórico: lo de siempre
+      return (local, null); // sin histórico: lo de siempre
     }
   }
 
@@ -532,8 +546,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
   /// mercado.
   (double, double)? _delta() {
     if (_points.length < 2) return null;
-    final prev = _points[_points.length - 2].value;
-    final diff = _points.last.value - prev;
+    final anterior = _points[_points.length - 2];
+    final actual = _points.last;
+    // y NUNCA a caballo de la costura histórico↔local: esa diferencia es el
+    // cambio de fuente (por carta vs por edición), no el mercado — salía una
+    // subida verde falsa el primer día con foto local
+    if (cruzaCostura(_costura, anterior.date, actual.date)) return null;
+    final prev = anterior.value;
+    final diff = actual.value - prev;
     final pct = prev == 0 ? 0.0 : diff / prev * 100;
     return (diff, pct);
   }

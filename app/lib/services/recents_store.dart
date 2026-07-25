@@ -73,21 +73,28 @@ class RecentsStore extends ChangeNotifier {
   /// `testWidgets`) no vuelve.
   Future<void> load() => _cargado ? Future.value() : (_loading ??= _load());
 
+  /// Sube en [invalidate]: una lectura en vuelo de ANTES de restaurar no
+  /// puede terminar después, repoblar la lista vieja ni dar el store por
+  /// cargado (con lo que la copia restaurada no se leería nunca).
+  int _generacion = 0;
+
   Future<void> _load() async {
+    final gen = _generacion;
     try {
-      await _leer();
+      await _leer(gen);
     } finally {
-      _cargado = true;
+      if (gen == _generacion) _cargado = true;
     }
   }
 
   /// Se parsea a una lista local PRIMERO (saltando cada carta que no cuadre,
   /// no el fichero entero) y solo al final se vuelca al estado.
-  Future<void> _leer() async {
+  Future<void> _leer(int gen) async {
     final file = await _file();
     if (file == null || !await file.exists()) return;
     try {
       final list = jsonDecode(await file.readAsString()) as List<dynamic>;
+      if (gen != _generacion) return; // un invalidate() nos ha adelantado
       final cards = <RecentCard>[];
       for (final item in list) {
         if (item is! Map<String, dynamic>) continue;
@@ -102,8 +109,11 @@ class RecentsStore extends ChangeNotifier {
         ..addAll(cards);
       notifyListeners();
     } catch (_) {
-      // corrupto: apartarlo, no escribirle encima
-      await setAsideBroken(file);
+      // corrupto: apartarlo, no escribirle encima. Pero SOLO si nadie ha
+      // invalidado mientras leíamos: "fichero corrupto" y "restaurar copia"
+      // van correlacionados, y el rename se llevaría el fichero BUENO
+      // recién restaurado
+      if (gen == _generacion) await setAsideBroken(file);
     }
   }
 
@@ -111,6 +121,7 @@ class RecentsStore extends ChangeNotifier {
   /// singleton y NO se recrea con el resto de la app, así que sin esto seguía
   /// con la lista de antes y volvía a escribirla en cuanto abrieras una carta.
   void invalidate() {
+    _generacion++; // corta cualquier lectura en vuelo
     _loading = null;
     _cargado = false;
     _cards.clear();

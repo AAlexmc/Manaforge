@@ -222,6 +222,10 @@ Future<AchievementSnapshot> gatherSnapshot({
       printingQty: collection.printingQty,
       oraclePrices: db.pricesForOracles,
       printingPrices: db.pricesForPrintings,
+      // misma cuenta foil que Inicio/Mercado: sin esto, la vitrina foil
+      // (a precio foil) podía superar al total (que iba a precio normal)
+      foilQty: collection.foilPrintings,
+      foilPrices: db.foilPricesForPrintings,
     );
     totalValue = valuation.total;
     if (collection.hasPrintingData) {
@@ -265,6 +269,8 @@ Future<AchievementSnapshot> gatherSnapshot({
         oracleByPrintings: (_) async => owners,
         oraclePrices: db.pricesForOracles,
         printingPrices: db.pricesForPrintings,
+        foilQty: collection.foilPrintings,
+        foilPrices: db.foilPricesForPrintings,
       );
       folderValues[f.id] = v.total;
     }

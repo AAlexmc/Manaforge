@@ -46,6 +46,14 @@ Future<CollectionValuation> computeCollectionValue({
   /// marca aproximado en vez de enseñar un total que parece exacto y no lo
   /// es. "Tiene ALGUNA impresión" no basta: hay que cubrir TODAS las copias.
   Map<String, String>? printingOwner,
+
+  /// Copias FOIL por impresión ("set|nº" -> nº de foils, subconjunto de
+  /// [printingQty]). Con [foilPrices], esas copias se valoran a precio foil
+  /// (con fallback al normal si el mercado no lo publica): antes el total
+  /// las contaba a precio normal mientras los logros las contaban a foil, y
+  /// el logro de la vitrina podía superar al total entero.
+  Map<String, int>? foilQty,
+  Future<Map<String, double>> Function(Iterable<String>)? foilPrices,
 }) async {
   double total = 0;
   final valued = <ValuedCard>[];
@@ -53,8 +61,17 @@ Future<CollectionValuation> computeCollectionValue({
 
   if (byPrinting) {
     final prices = await printingPrices(printingQty.keys);
+    final foils = foilQty ?? const <String, int>{};
+    final foilPrecios = (foilPrices != null && foils.isNotEmpty)
+        ? await foilPrices(foils.keys)
+        : const <String, double>{};
     printingQty.forEach((key, qty) {
-      total += (prices[key] ?? 0) * qty;
+      // las foils no pueden pasar de las copias de esa impresión (la
+      // colección ya lo garantiza, pero aquí no se confía)
+      final nFoil = (foils[key] ?? 0).clamp(0, qty);
+      final unitNormal = prices[key] ?? 0;
+      final unitFoil = foilPrecios[key] ?? unitNormal;
+      total += unitNormal * (qty - nFoil) + unitFoil * nFoil;
     });
   }
   for (final c in cards) {

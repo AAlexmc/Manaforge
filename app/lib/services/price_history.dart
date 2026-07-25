@@ -107,10 +107,16 @@ class PriceHistoryStore {
   /// compactar reescribía el log entero con él, borrando lo restaurado. El
   /// proveedor de series base se respeta: eso lo enchufa la app, no el disco.
   void invalidate() {
+    _generacion++; // corta cualquier lectura en vuelo: que no re-cachee
     _cache = null;
     _loading = null;
     _lines = 0;
   }
+
+  /// Sube en [invalidate]: un `_loadFromDisk` en vuelo de ANTES de restaurar
+  /// no puede terminar después y dejar en `_cache` el historial viejo (que la
+  /// siguiente compactación reescribiría encima de lo restaurado).
+  int _generacion = 0;
 
   Future<File?> _file() async {
     try {
@@ -124,17 +130,27 @@ class PriceHistoryStore {
   Future<Map<String, List<PricePoint>>> _load() {
     final cached = _cache;
     if (cached != null) return Future.value(cached);
-    // dedupe del future en vuelo: dos _load() simultáneos comparten mapa
-    return _loading ??= _loadFromDisk().whenComplete(() => _loading = null);
+    // dedupe del future en vuelo: dos _load() simultáneos comparten mapa.
+    // El whenComplete anula SOLO su propio _loading: el de una lectura vieja
+    // (previa a un invalidate) no puede pisar el de la nueva
+    final actual = _loading;
+    if (actual != null) return actual;
+    late final Future<Map<String, List<PricePoint>>> f;
+    f = _loadFromDisk().whenComplete(() {
+      if (identical(_loading, f)) _loading = null;
+    });
+    return _loading = f;
   }
 
   Future<Map<String, List<PricePoint>>> _loadFromDisk() async {
+    final gen = _generacion;
     final out = <String, List<PricePoint>>{};
     var lines = 0;
     final file = await _file();
     if (file != null && !await file.exists()) {
-      final migrated = await _importLegacyJson(file);
+      final migrated = await _importLegacyJson(file, gen);
       if (migrated != null) {
+        if (gen != _generacion) return migrated.$1; // viejo: sin cachear
         _cache = migrated.$1;
         _lines = migrated.$2;
         return migrated.$1;
@@ -167,6 +183,7 @@ class PriceHistoryStore {
         ];
       });
     }
+    if (gen != _generacion) return out; // datos de antes del invalidate()
     _cache = out;
     _lines = lines;
     return out;
@@ -176,7 +193,7 @@ class PriceHistoryStore {
   /// Si está y aún no hay log, se pasa a JSONL y se aparta el original —
   /// los apuntes ya hechos no se pueden recuperar de ninguna otra parte.
   Future<(Map<String, List<PricePoint>>, int)?> _importLegacyJson(
-      File target) async {
+      File target, int gen) async {
     final legacy = File(p.join(p.dirname(target.path), 'price_history.json'));
     if (!await legacy.exists()) return null;
     final data = <String, List<PricePoint>>{};
@@ -201,6 +218,9 @@ class PriceHistoryStore {
         lines++;
       }
     });
+    // último corte antes de tocar DISCO: si un restaurar ha invalidado
+    // mientras se parseaba, el rename pisaría el log recién restaurado
+    if (gen != _generacion) return null;
     final tmp = File('${target.path}.tmp');
     await tmp.writeAsString(buffer.toString());
     await tmp.rename(target.path);
