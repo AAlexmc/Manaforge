@@ -107,10 +107,16 @@ class PriceHistoryStore {
   /// compactar reescribía el log entero con él, borrando lo restaurado. El
   /// proveedor de series base se respeta: eso lo enchufa la app, no el disco.
   void invalidate() {
+    _generacion++; // corta cualquier lectura en vuelo: que no re-cachee
     _cache = null;
     _loading = null;
     _lines = 0;
   }
+
+  /// Sube en [invalidate]: un `_loadFromDisk` en vuelo de ANTES de restaurar
+  /// no puede terminar después y dejar en `_cache` el historial viejo (que la
+  /// siguiente compactación reescribiría encima de lo restaurado).
+  int _generacion = 0;
 
   Future<File?> _file() async {
     try {
@@ -129,12 +135,14 @@ class PriceHistoryStore {
   }
 
   Future<Map<String, List<PricePoint>>> _loadFromDisk() async {
+    final gen = _generacion;
     final out = <String, List<PricePoint>>{};
     var lines = 0;
     final file = await _file();
     if (file != null && !await file.exists()) {
       final migrated = await _importLegacyJson(file);
       if (migrated != null) {
+        if (gen != _generacion) return migrated.$1; // viejo: sin cachear
         _cache = migrated.$1;
         _lines = migrated.$2;
         return migrated.$1;
@@ -167,6 +175,7 @@ class PriceHistoryStore {
         ];
       });
     }
+    if (gen != _generacion) return out; // datos de antes del invalidate()
     _cache = out;
     _lines = lines;
     return out;
