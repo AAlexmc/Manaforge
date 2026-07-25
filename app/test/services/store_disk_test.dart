@@ -11,6 +11,7 @@ import 'package:manaforge_app/services/achievement_store.dart';
 import 'package:manaforge_app/services/certificate_store.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/services/json_store_io.dart';
 
 void main() {
   late Directory dir;
@@ -63,6 +64,22 @@ void main() {
     await store.load();
     expect(store.distinctCards, 0);
     expect(File('${dir.path}/collection.json.roto').existsSync(), isTrue);
+  });
+
+  test('una segunda corrupción no pisa el .roto de la primera', () async {
+    final file = File('${dir.path}/collection.json');
+    file.writeAsStringSync('primera corrupcion');
+    await setAsideBroken(file);
+    file.writeAsStringSync('segunda corrupcion');
+    await setAsideBroken(file);
+
+    expect(File('${file.path}.roto').readAsStringSync(),
+        'primera corrupcion');
+    final rotos = dir
+        .listSync()
+        .where((e) => e.path.endsWith('.roto'))
+        .toList();
+    expect(rotos, hasLength(2));
   });
 
   test('una carpeta con basura no se lleva por delante a las demás',
