@@ -1,5 +1,7 @@
 import 'classify.dart';
 import 'generator.dart';
+import 'lands.dart';
+import 'manabase.dart';
 import 'models.dart';
 
 /// Generador de Commander (EDH): 100 cartas, singleton, comandante
@@ -155,54 +157,57 @@ GeneratedDeck? generateCommanderDeck(
   }
   if (totalChosen < nSpells) return null; // no llegamos a 62 distintas
 
-  // base de maná: básicas repartidas por símbolos (mínimo 6 por color usado)
-  final syms = <String, int>{};
-  void addSyms(String cost, int qty) {
-    final symbol = RegExp(r'\{([^}]+)\}');
-    for (final m in symbol.allMatches(cost)) {
-      final sym = m.group(1)!.toUpperCase();
-      for (final ch in ['W', 'U', 'B', 'R', 'G']) {
-        if (sym.contains(ch)) syms[ch] = (syms[ch] ?? 0) + qty;
+  // base de maná: no-básicas por objetivos Karsten (reusa el clasificador y
+  // el greedy de 60 cartas), escalada a mazo de 100 y singleton (copyCap 1).
+  // Los símbolos del comandante se inyectan sumándolo con peso 2 (se lanza
+  // varias veces a lo largo de la partida, como hacía `addSyms(x2)`).
+  final spellsForMana = <String, int>{...chosen, commanderName: 2};
+  final manabase = buildManaBase(
+      spellsForMana, pool, commander.identity, commanderLands,
+      archetypeName: 'midrange', copyCap: 1, deckSize: commanderDeckSize);
+  if (manabase == null) {
+    return null; // sin fuentes de algún color usado: como antes
+  }
+  final lands = Map<String, int>.from(manabase.lands);
+
+  // suelo de 6 básicas por color usado (comportamiento previo conservado):
+  // si el greedy dejó una básica corta y hay no-básicas para convertir, se
+  // convierten empezando por las peor rankeadas (menos colores, más giradas).
+  var usedColors = manabase.requiredByColor.keys.toList();
+  if (usedColors.isEmpty && identity.isNotEmpty) {
+    usedColors = identity.toList();
+  }
+  if (usedColors.isEmpty) {
+    return null; // comandante incoloro con pool incoloro: fuera de alcance
+  }
+  int worseFirst(String a, String b) {
+    final pa = LandProfile.fromCard(pool[a]!);
+    final pb = LandProfile.fromCard(pool[b]!);
+    final byColors = pa.produces.length.compareTo(pb.produces.length);
+    if (byColors != 0) return byColors;
+    return pb.tapped.index.compareTo(pa.tapped.index);
+  }
+
+  for (final c in usedColors) {
+    final basic = basicForColor[c]!;
+    final owned = pool[basic]?.qty ?? 0;
+    final floor = owned < 6 ? owned : 6;
+    var current = lands[basic] ?? 0;
+    if (current >= floor) continue;
+    final convertible = lands.keys
+        .where((n) => n != basic && !LandProfile.fromCard(pool[n]!).isBasic)
+        .toList()
+      ..sort(worseFirst);
+    for (final name in convertible) {
+      if (current >= floor) break;
+      while (current < floor && (lands[name] ?? 0) > 0) {
+        lands[name] = lands[name]! - 1;
+        if (lands[name] == 0) lands.remove(name);
+        lands[basic] = (lands[basic] ?? 0) + 1;
+        current++;
       }
     }
   }
-
-  chosen.forEach((n, q) => addSyms(cands[n]!.manaCost, q));
-  addSyms(commander.manaCost, 2); // el comandante pesa: se lanza varias veces
-
-  final used =
-      identity.where((c) => (syms[c] ?? 0) > 0).toList();
-  if (used.isEmpty && identity.isNotEmpty) {
-    used.addAll(identity);
-  }
-  final lands = <String, int>{};
-  if (used.isEmpty) {
-    return null; // comandante incoloro con pool incoloro: fuera de alcance
-  }
-  var totalSyms = 0;
-  for (final c in used) {
-    totalSyms += syms[c] ?? 1;
-  }
-  var remaining = commanderLands;
-  for (var i = 0; i < used.length; i++) {
-    final c = used[i];
-    final basic = basicForColor[c]!;
-    final owned = pool[basic]?.qty ?? 0;
-    if (owned <= 0) return null;
-    int n;
-    if (i == used.length - 1) {
-      n = remaining;
-    } else {
-      n = (commanderLands * (syms[c] ?? 1) / totalSyms).round();
-      if (n < 6) n = 6;
-      final reserve = 6 * (used.length - 1 - i);
-      if (n > remaining - reserve) n = remaining - reserve;
-    }
-    if (n > owned) n = owned;
-    lands[basic] = n;
-    remaining -= n;
-  }
-  if (remaining > 0) return null; // sin básicas suficientes
 
   final deck = Deck(
     name: 'Commander · ${commander.name}',

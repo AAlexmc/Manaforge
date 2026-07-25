@@ -11,11 +11,9 @@ from collections import Counter
 from itertools import combinations
 
 from .classify import classify, theme_roles, efficiency, QUOTAS
-from .curve import (LAND_RANGES, AVG_CMC_RANGES, DECK_SIZE, average_cmc,
-                    color_symbols, recommended_lands)
+from .curve import LAND_RANGES, AVG_CMC_RANGES, DECK_SIZE, average_cmc, recommended_lands
+from .manabase import build_mana_base
 from .validator import validate_deck, BASIC_LANDS
-
-BASIC_FOR_COLOR = {"W": "Plains", "U": "Island", "B": "Swamp", "R": "Mountain", "G": "Forest"}
 
 # Perfil de curva objetivo (proporción deseada de hechizos por CMC 1..6+)
 CURVE_TARGET = {
@@ -107,14 +105,14 @@ def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | No
 
     n_spells = DECK_SIZE - n_lands
     chosen = _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells)
-    lands = _mana_base(chosen, pool, colors, n_lands)
-    if lands is None:
+    manabase = _mana_base(chosen, pool, colors, n_lands, archetype)
+    if manabase is None:
         return None
 
     deck = {
         "name": name or f"Forge {colors} {theme}",
         "colors": colors, "archetype": archetype, "theme": theme,
-        "cards": chosen, "lands": lands,
+        "cards": chosen, "lands": manabase.lands,
     }
     return deck if not validate_deck(deck, pool) else None
 
@@ -164,33 +162,11 @@ def _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells) -> di
     return dict(chosen)
 
 
-def _mana_base(cards: dict, pool: dict, colors: str, n_lands: int) -> dict | None:
-    """Básicas proporcionales a los símbolos, mínimo 8 fuentes por color usado."""
-    syms: Counter = Counter()
-    for n, q in cards.items():
-        for c, k in color_symbols(pool[n]["mana_cost"]).items():
-            syms[c] += k * q
-    used = [c for c in colors if syms[c] > 0]
-    if not used:
-        return None
-    total = sum(syms[c] for c in used)
-    lands: dict[str, int] = {}
-    remaining = n_lands
-    for i, c in enumerate(used):
-        basic = BASIC_FOR_COLOR[c]
-        if pool.get(basic, {"qty": 0})["qty"] <= 0:
-            return None  # sin básicas de ese color en la colección
-        if i == len(used) - 1:
-            n = remaining
-        else:
-            n = max(8, round(n_lands * syms[c] / total)) if len(used) > 1 else n_lands
-            n = min(n, remaining - 8 * (len(used) - 1 - i))
-        n = min(n, pool[basic]["qty"])  # nunca más básicas de las poseídas
-        lands[basic] = n
-        remaining -= n
-    if remaining > 0:
-        return None  # la colección no tiene tierras suficientes: avisar, no forzar
-    return lands
+def _mana_base(cards: dict, pool: dict, colors: str, n_lands: int, archetype: str):
+    """Manabase con no-básicas por objetivos Karsten (duales/fetches/taplands
+    del pool antes que básicas de relleno). None si la colección no da (avisar,
+    no forzar). Ver `manabase.py` para el algoritmo completo."""
+    return build_mana_base(cards, pool, colors, n_lands, archetype_name=archetype)
 
 
 def generate_proposals(pool: dict, max_proposals: int = 5) -> list[dict]:
