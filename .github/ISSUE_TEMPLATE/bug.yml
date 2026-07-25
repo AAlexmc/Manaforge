@@ -1,0 +1,41 @@
+name: 🐛 Fallo
+description: Algo no funciona como debería
+title: "[Fallo] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Si el fallo es de **seguridad** (datos, contraseñas, red), no lo publiques aquí: usa el
+        [canal privado de seguridad](https://github.com/AAlexmc/Manaforge/security/advisories/new).
+  - type: textarea
+    id: que-paso
+    attributes:
+      label: ¿Qué ha pasado?
+      placeholder: "Ejemplo: al restaurar una copia, la app se queda en blanco."
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: ¿Cómo se repite?
+      description: Los pasos, uno a uno, desde abrir la app.
+      placeholder: |
+        1. Abrir Ajustes → Datos
+        2. Elegir una copia
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: ¿Qué esperabas que pasara?
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Versión de la app y sistema
+      placeholder: "Ejemplo: 0.3.0 en Linux (o Ajustes → La app → Versión)"
+    validations:
+      required: false

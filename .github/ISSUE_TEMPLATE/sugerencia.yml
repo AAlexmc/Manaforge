@@ -1,0 +1,39 @@
+name: 💡 Sugerencia
+description: Una idea para mejorar ManaForge
+title: "[Sugerencia] "
+labels: ["sugerencia"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¡Gracias por pasarte por el buzón! Cuenta tu idea con tus palabras; no hace falta saber programar.
+  - type: textarea
+    id: idea
+    attributes:
+      label: ¿Qué te gustaría que hiciera la app?
+      description: Describe la idea como se la contarías a un amigo.
+      placeholder: "Ejemplo: me gustaría poder ordenar el álbum por precio."
+    validations:
+      required: true
+  - type: textarea
+    id: motivo
+    attributes:
+      label: ¿Qué problema te resolvería?
+      description: Opcional, pero ayuda mucho a entender el porqué.
+    validations:
+      required: false
+  - type: dropdown
+    id: zona
+    attributes:
+      label: ¿En qué parte de la app encaja?
+      options:
+        - Inicio
+        - Colección / Álbum
+        - Escáner
+        - Forge (montar mazos)
+        - Mazos
+        - Mercado
+        - Ajustes
+        - Otra / no lo sé
+    validations:
+      required: false

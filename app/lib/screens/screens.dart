@@ -331,6 +331,28 @@ class _AjustesScreenState extends State<AjustesScreen> {
                     key: widget.versionKey,
                     child: UpdateSettingsCard(checker: widget.updates!),
                   ),
+                // buzón y donativos: enlaces al repo, por la misma guarda que
+                // las releases (safeReleaseUri) — nunca una URL de fuera
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.lightbulb_outline),
+                    title: Text(t.stSuggestions),
+                    subtitle: Text(t.stSuggestionsSub,
+                        style: const TextStyle(fontSize: 12)),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => openRepoUrl(context, kSuggestionsUrl),
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.volunteer_activism_outlined),
+                    title: Text(t.stDonate),
+                    subtitle: Text(t.stDonateSub,
+                        style: const TextStyle(fontSize: 12)),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => openRepoUrl(context, kDonationsUrl),
+                  ),
+                ),
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),

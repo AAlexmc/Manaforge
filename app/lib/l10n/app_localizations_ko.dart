@@ -1257,6 +1257,20 @@ class AppLocalizationsKo extends AppLocalizations {
       '카드 데이터와 이미지는 Scryfall 제공. Magic: The Gathering은 Wizards of the Coast 소유이며, 이 앱은 Fan Content Policy에 따른 팬 프로젝트예요.';
 
   @override
+  String get stSuggestions => 'Buzón de sugerencias';
+
+  @override
+  String get stSuggestionsSub =>
+      '¿Una idea o un fallo? Cuéntalo en GitHub — hay plantilla y se rellena en un minuto.';
+
+  @override
+  String get stDonate => 'Apoyar el proyecto';
+
+  @override
+  String get stDonateSub =>
+      'La app es gratis y sin anuncios. Si te sirve y quieres invitar a un café, aquí se explica cómo.';
+
+  @override
   String get stEditHome => '홈 편집';
 
   @override

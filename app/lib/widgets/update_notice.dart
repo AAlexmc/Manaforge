@@ -17,17 +17,21 @@ import '../services/whats_new.dart';
 import '../theme/mf_theme.dart';
 import 'whats_new_dialog.dart';
 
-/// Abre la página de la release en el navegador. Si no se puede (sistema sin
+/// Abre la página de la release en el navegador (ver [openRepoUrl]).
+Future<void> openReleasePage(BuildContext context, AppRelease release) =>
+    openRepoUrl(context, release.pageUrl);
+
+/// Abre una página DEL REPO en el navegador. Si no se puede (sistema sin
 /// navegador, permisos), enseña la dirección para copiarla: quedarse en
 /// silencio sería peor.
-Future<void> openReleasePage(BuildContext context, AppRelease release) async {
-  // segunda comprobación, aquí mismo: lo que se abre viene de un JSON de
-  // fuera y esto es lo último antes de lanzarlo al sistema. Se valida sobre
-  // la URI YA PARSEADA (ver safeReleaseUri) y se lanza ESA, sin volver a
-  // parsear el texto crudo: `Uri.parse` normaliza los `..`, así que
-  // comprobar el texto y parsear aparte dejaría colar lo mismo que
-  // safeReleaseUri existe para evitar.
-  final uri = safeReleaseUri(release.pageUrl);
+Future<void> openRepoUrl(BuildContext context, String? url) async {
+  // segunda comprobación, aquí mismo: esto es lo último antes de lanzarlo al
+  // sistema (y en el caso de las releases, la URL viene de un JSON de
+  // fuera). Se valida sobre la URI YA PARSEADA (ver safeReleaseUri) y se
+  // lanza ESA, sin volver a parsear el texto crudo: `Uri.parse` normaliza
+  // los `..`, así que comprobar el texto y parsear aparte dejaría colar lo
+  // mismo que safeReleaseUri existe para evitar.
+  final uri = safeReleaseUri(url);
   if (uri == null) return;
   var abierto = false;
   try {

@@ -1307,6 +1307,20 @@ class AppLocalizationsPt extends AppLocalizations {
       'Dados e imagens das cartas por Scryfall. Magic: The Gathering é propriedade da Wizards of the Coast; projeto de fãs sob a Fan Content Policy deles.';
 
   @override
+  String get stSuggestions => 'Buzón de sugerencias';
+
+  @override
+  String get stSuggestionsSub =>
+      '¿Una idea o un fallo? Cuéntalo en GitHub — hay plantilla y se rellena en un minuto.';
+
+  @override
+  String get stDonate => 'Apoyar el proyecto';
+
+  @override
+  String get stDonateSub =>
+      'La app es gratis y sin anuncios. Si te sirve y quieres invitar a un café, aquí se explica cómo.';
+
+  @override
   String get stEditHome => 'Editar o Início';
 
   @override

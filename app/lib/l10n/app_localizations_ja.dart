@@ -1251,6 +1251,20 @@ class AppLocalizationsJa extends AppLocalizations {
       'カードのデータと画像はScryfall提供。Magic: The GatheringはWizards of the Coastの所有物です。これはそのFan Content Policyに基づくファンプロジェクトです。';
 
   @override
+  String get stSuggestions => 'Buzón de sugerencias';
+
+  @override
+  String get stSuggestionsSub =>
+      '¿Una idea o un fallo? Cuéntalo en GitHub — hay plantilla y se rellena en un minuto.';
+
+  @override
+  String get stDonate => 'Apoyar el proyecto';
+
+  @override
+  String get stDonateSub =>
+      'La app es gratis y sin anuncios. Si te sirve y quieres invitar a un café, aquí se explica cómo.';
+
+  @override
   String get stEditHome => 'ホームを編集';
 
   @override

@@ -97,7 +97,7 @@ Ve a [**Releases**](https://github.com/AAlexmc/Manaforge/releases) y baja el zip
 
 La primera vez la app se baja **~36 MB** de datos (cartas y precios de Scryfall, histórico y huellas del escáner) y te enseña el progreso. A partir de ahí funciona sin conexión.
 
-Luego: **importa tu CSV** de ManaBox, **escanea** cartas con la webcam o una foto, o ve directo a **⚒️ Forge** y monta un mazo con las cartas de una colección concreta aunque aún no tengas ninguna.
+Luego: **importa tu colección** desde un CSV, **escanea** cartas con la webcam o una foto, o ve directo a **⚒️ Forge** y monta un mazo con las cartas de una colección concreta aunque aún no tengas ninguna.
 
 ### ¿Prefieres compilarla?
 
@@ -144,6 +144,15 @@ cd app && flutter test                            # tests de la app
 ## 🤝 Contribuir
 
 Este proyecto quiere ser de la comunidad. Si sabes de Flutter, de visión por computador (¡el escáner te espera!), de teoría de construcción de mazos — o simplemente juegas y tienes ideas — los issues y PRs están abiertos. El código está comentado en español y la CI te avisará si algo se rompe antes de que nadie se enfade.
+
+### 💡 Buzón de sugerencias
+
+No hace falta saber programar: si tienes una idea o has visto un fallo, déjalo en el [buzón de sugerencias](https://github.com/AAlexmc/Manaforge/issues/new/choose) — hay una plantilla para cada cosa y se rellena en un minuto. También se llega desde la propia app: **Ajustes → La app**.
+
+<a id="donativos"></a>
+## 💜 Donativos
+
+ManaForge es gratis y sin anuncios, y va a seguir siéndolo (la [licencia](#-licencia) no permite venderla). Si la app te sirve y quieres invitar a un café, pronto se podrá a través de GitHub Sponsors — el botón **Sponsor** de arriba del repo. Mientras no esté activo, la mejor forma de apoyar es usarla, contar qué mejorarías en el [buzón](https://github.com/AAlexmc/Manaforge/issues/new/choose) y darle una ⭐ al repo.
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 

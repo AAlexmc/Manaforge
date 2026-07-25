@@ -96,4 +96,22 @@ void main() {
     await tester.scrollUntilVisible(find.text('Reset de fábrica'), 200);
     expect(find.text('Reset de fábrica'), findsOneWidget);
   });
+
+  testWidgets('La app trae el buzón de sugerencias y los donativos',
+      (tester) async {
+    tester.view.physicalSize = const Size(1200, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(_ajustes());
+    await tester.pump();
+
+    await tester.tap(find.text('La app'));
+    await tester.pump(const Duration(milliseconds: 500));
+
+    await tester.scrollUntilVisible(find.text('Buzón de sugerencias'), 200);
+    expect(find.text('Buzón de sugerencias'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Apoyar el proyecto'), 200);
+    expect(find.text('Apoyar el proyecto'), findsOneWidget);
+  });
 }
