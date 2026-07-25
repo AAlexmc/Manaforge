@@ -86,6 +86,9 @@ void main() {
     final store = PriceHistoryStore(directory: dir);
 
     final vieja = store.forCard('sol-ring'); // lectura del log de ANTES
+    // un turno del event loop: la lectura pasa por la cola interna y hay
+    // que dejar que ARRANQUE (capture su generación) antes de invalidar
+    await Future<void>.delayed(Duration.zero);
     store.invalidate(); // restaurar se adelanta
     await vieja; // termina después: lo leído no puede quedarse en la caché
     await file.writeAsString('{"o":"sol-ring","d":"2026-01-01","v":9.9}\n');

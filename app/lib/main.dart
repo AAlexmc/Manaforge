@@ -316,11 +316,11 @@ class _HomeShellState extends State<HomeShell> {
   /// Si ya se vio el tour de bienvenida (las burbujas sobre la barra).
   final _onboarding = OnboardingPreference();
 
-  /// El tour de bienvenida tocaba lanzarse mientras `StartupScreen` seguía
-  /// delante (`!_started`): las burbujas señalarían huecos de una pantalla
-  /// que el usuario aún no ve. Se pospone hasta que `onReady` deja pasar a la
-  /// app de verdad.
-  bool _tourBienvenidaPendiente = false;
+  /// La bienvenida (idioma → novedades → tour) tocaba correr mientras
+  /// `StartupScreen` seguía delante (`!_started`): diálogos pintados sobre
+  /// la descarga y burbujas señalando huecos de una pantalla que el usuario
+  /// aún no ve. Se pospone entera hasta que `onReady` deja pasar.
+  bool _bienvenidaPendiente = false;
 
   /// GlobalKeys de los botones que los tours señalan.
   final _tourKeys = TourKeys();
@@ -373,27 +373,32 @@ class _HomeShellState extends State<HomeShell> {
       // el diálogo de idioma, las novedades y el tour: sin colección se sigue
       await _collection.load().catchError((_) {});
       if (!mounted) return;
-      // primero el idioma (es CÓMO se lee todo lo demás), y solo la primera
-      // vez; después se cambia en Ajustes
-      await maybeAskLanguage(context, widget.language);
-      if (!mounted) return;
-      await maybeShowWhatsNew(context,
-          checker: _updates,
-          hasExistingData: _collection.totalCopies > 0);
-      if (!mounted) return;
-      // y el tour de bienvenida, DESPUÉS de idioma y novedades para no
-      // amontonar cosas encima. Solo la primera vez.
-      await _onboarding.load();
-      if (!mounted || _onboarding.seen) return;
-      // si `StartupScreen` sigue delante, lanzarlo ahora lo pintaría sobre
-      // una pantalla que no es la app: se apunta y `onReady` lo dispara en
-      // cuanto se entra de verdad
       if (_started) {
-        _lanzarTour(kTours.first);
+        await _bienvenida();
       } else {
-        _tourBienvenidaPendiente = true;
+        // `StartupScreen` sigue delante (el primer arranque descarga
+        // MINUTOS): idioma, novedades y tour se aplazan enteros y `onReady`
+        // los dispara al entrar de verdad. Antes salían pintados encima de
+        // la descarga, y las novedades se daban por vistas con la colección
+        // aún vacía — gastadas para siempre para quien venía de 0.2.0
+        _bienvenidaPendiente = true;
       }
     });
+  }
+
+  /// Idioma → novedades → tour de bienvenida, en ese orden (el idioma es
+  /// CÓMO se lee todo lo demás; el tour va el último para no amontonar).
+  /// Solo se llama con la app de verdad delante (`_started`).
+  Future<void> _bienvenida() async {
+    if (!mounted) return;
+    await maybeAskLanguage(context, widget.language);
+    if (!mounted) return;
+    await maybeShowWhatsNew(context,
+        checker: _updates, hasExistingData: _collection.totalCopies > 0);
+    if (!mounted) return;
+    await _onboarding.load();
+    if (!mounted || _onboarding.seen) return;
+    _lanzarTour(kTours.first);
   }
 
   @override
@@ -598,12 +603,12 @@ class _HomeShellState extends State<HomeShell> {
         collection: _collection,
         onReady: () {
           setState(() => _started = true);
-          if (_tourBienvenidaPendiente) {
-            _tourBienvenidaPendiente = false;
+          if (_bienvenidaPendiente) {
+            _bienvenidaPendiente = false;
             // un frame para que se pinte la app de verdad (Inicio y su
-            // barra) antes de medir dónde van las burbujas
+            // barra) antes de los diálogos y de medir dónde van las burbujas
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) _lanzarTour(kTours.first);
+              unawaited(_bienvenida());
             });
           }
         },
