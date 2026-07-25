@@ -1221,6 +1221,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get mkChangeTarget => 'Сменить целевую цену';
 
   @override
+  String mkNoPriceIn(String market) {
+    return 'нет цены на $market';
+  }
+
+  @override
+  String get mkPerUnit => '/шт';
+
+  @override
   String get mkTopCards => 'ТВОИ САМЫЕ ЦЕННЫЕ КАРТЫ';
 
   @override
@@ -1342,6 +1350,21 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get ehGems => 'Твои жемчужины';
+
+  @override
+  String get ehStatCards => 'карты';
+
+  @override
+  String get ehStatDistinct => 'уникальных';
+
+  @override
+  String get ehStatValue => 'стоимость';
+
+  @override
+  String get ehStatDecks => 'колоды';
+
+  @override
+  String get ehStatAchievements => 'достижения';
 
   @override
   String get ehHelp =>
@@ -2358,6 +2381,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get cdLegalities => 'Легальность';
+
+  @override
   String get slLockButton => 'Заблокировать';
 
   @override
@@ -2632,6 +2658,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tlTapToPick => 'нажми, чтобы выбрать вручную из похожих';
+
+  @override
+  String get tlReview => 'проверить';
 
   @override
   String get lsQuantity => 'Количество';

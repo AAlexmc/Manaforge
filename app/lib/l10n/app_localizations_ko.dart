@@ -1161,6 +1161,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get mkChangeTarget => '목표가 변경';
 
   @override
+  String mkNoPriceIn(String market) {
+    return '$market 가격 없음';
+  }
+
+  @override
+  String get mkPerUnit => '/장';
+
+  @override
   String get mkTopCards => '가장 값나가는 카드';
 
   @override
@@ -1277,6 +1285,21 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ehGems => '내 보물';
+
+  @override
+  String get ehStatCards => '장';
+
+  @override
+  String get ehStatDistinct => '종';
+
+  @override
+  String get ehStatValue => '가치';
+
+  @override
+  String get ehStatDecks => '덱';
+
+  @override
+  String get ehStatAchievements => '업적';
 
   @override
   String get ehHelp =>
@@ -2263,6 +2286,9 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get cdLegalities => '포맷 적법성';
+
+  @override
   String get slLockButton => '잠그기';
 
   @override
@@ -2516,6 +2542,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get tlTapToPick => '눌러서 비슷한 것 중 직접 고르기';
+
+  @override
+  String get tlReview => '확인 필요';
 
   @override
   String get lsQuantity => '수량';

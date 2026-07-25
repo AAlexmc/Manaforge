@@ -6,6 +6,7 @@
 library;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' show Color;
 
@@ -289,5 +290,62 @@ void main() {
     await otro.load();
 
     expect(otro.dim, 0.8);
+  });
+
+  test('elegir otra imagen del mismo formato cambia el path (ImageCache)',
+      () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+
+    await prefs.select(_imagen('a.jpg'));
+    final primero = prefs.image!.path;
+    await prefs.select(_imagen('b.jpg'));
+    final segundo = prefs.image!.path;
+
+    // el path tiene que cambiar aunque la extensión sea la misma: el
+    // ImageCache de Flutter usa el path como clave, y un path repetido
+    // seguiría sirviendo la imagen vieja ya decodificada
+    expect(segundo, isNot(primero));
+  });
+
+  test('tras elegir otra imagen solo queda un fichero background* en el dir',
+      () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+
+    await prefs.select(_imagen('a.jpg'));
+    await prefs.select(_imagen('b.jpg'));
+
+    final restantes = datos
+        .listSync()
+        .whereType<File>()
+        .where((f) =>
+            p.basename(f.path).startsWith('background') &&
+            kBackgroundExtensions.contains(p.extension(f.path).toLowerCase()))
+        .toList();
+    expect(restantes, hasLength(1));
+    expect(restantes.single.path, prefs.image!.path);
+  });
+
+  test('el barrido de select() nunca se lleva por delante background.json',
+      () async {
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.select(_imagen('a.jpg'));
+
+    await prefs.select(_imagen('b.jpg'));
+
+    expect(File(p.join(datos.path, 'background.json')).existsSync(), isTrue);
+  });
+
+  test('un background.json legado que apunta a background.jpg carga bien',
+      () async {
+    final legado = File(p.join(datos.path, 'background.jpg'))
+      ..writeAsBytesSync(_png);
+    File(p.join(datos.path, 'background.json'))
+        .writeAsStringSync(jsonEncode({'image': legado.path, 'dim': 0.5}));
+
+    final prefs = BackgroundPreference(dataDir: datos);
+    await prefs.load();
+
+    expect(prefs.hasImage, isTrue);
+    expect(prefs.image!.path, legado.path);
   });
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/t.dart';
 import '../services/folder_store.dart';
 
 /// Icono de carpeta a partir de la clave guardada en el JSON. Se resuelve
@@ -71,7 +72,7 @@ class FolderCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                presentCount == 1 ? '1 carta' : '$presentCount cartas',
+                tr(context).ftCards(presentCount),
                 style: const TextStyle(fontSize: 11.5),
               ),
               Text(

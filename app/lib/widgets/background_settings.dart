@@ -390,13 +390,16 @@ class _Vistazo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
-    final letra = prefs.textColor ?? tema.colorScheme.onSurface;
     final cardOpaco = prefs.cardColor ?? tema.colorScheme.surface;
+    // MISMA guarda que aplica el tema (mf_theme.dart): el vistazo tiene que
+    // enseñar EXACTAMENTE lo que la app pinta, no el color crudo elegido.
+    final letra =
+        toneLegible(cardOpaco, prefs.textColor ?? tema.colorScheme.onSurface);
     final tarjeta = cardOpaco.withValues(alpha: prefs.cardOpacity);
     // muestras de pestaña e icono: si no se han elegido, los del tema. El
     // icono se ajusta para leerse sobre la tarjeta, igual que hace el tema.
     final chip = prefs.chipColor ?? tema.colorScheme.primary;
-    final icono = legibleOn(cardOpaco, prefs.iconColor ?? letra);
+    final icono = toneLegible(cardOpaco, prefs.iconColor ?? letra);
     final imagen = prefs.image;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
