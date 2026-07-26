@@ -43,6 +43,14 @@ const int minPayoffCopies = 3;
 /// subtipo (además de `minPayoffCopies` payoffs, como cualquier tema).
 const int minTribeMembers = 12;
 
+/// Guard de `generateDeck` cuando el Estilo forzado es una tribu
+/// (`theme.startsWith('tribal:')`): al menos esta cantidad de copias con
+/// rol 'enabler' (cuerpos reales del subtipo) entre las cartas elegidas
+/// para el mazo — un payoff suelto que solo nombra la tribu no basta (C2).
+/// Menor que `minTribeMembers` porque ese mide el POOL candidato entero;
+/// este mide solo lo que el greedy metió en las 60 cartas finales.
+const int minTribeMembersInDeck = 8;
+
 /// Colores naturales de cada tema (color pie). '' = cualquier color.
 const Map<String, String> themeColors = {
   'lifegain': 'WB',
@@ -299,9 +307,19 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   chosen = _greedyFill(
       cands, rolesByCard, theme, archetypeName, target, ManaCurve.deckSize - nLands);
 
-  if (themeOverride != null &&
-      !chosen.keys.any((n) => rolesByCard[n]?.containsKey(theme) ?? false)) {
-    return null; // ese color no tiene con qué jugar el estilo pedido
+  if (themeOverride != null) {
+    if (theme.startsWith('tribal:')) {
+      // Una tribu exige masa de cuerpos, no un payoff suelto que solo la
+      // nombra (C2): payoffs sin criaturas del subtipo no hacen mazo tribal.
+      var enablerCopies = 0;
+      chosen.forEach((n, q) {
+        if (rolesByCard[n]?[theme] == 'enabler') enablerCopies += q;
+      });
+      if (enablerCopies < minTribeMembersInDeck) return null;
+    } else if (!chosen.keys
+        .any((n) => rolesByCard[n]?.containsKey(theme) ?? false)) {
+      return null; // ese color no tiene con qué jugar el estilo pedido
+    }
   }
 
   final manabase = _manaBase(chosen, pool, colors, nLands, archetypeName);

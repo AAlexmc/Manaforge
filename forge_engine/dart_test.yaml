@@ -1,8 +1,0 @@
-# `dart test` corre todo por defecto, incluidos los `slow` (presupuesto de
-# tiempo, no de corrección — CI los quiere igual). Para saltárselos en local:
-# `dart test --exclude-tags slow`.
-tags:
-  slow:
-    description: >-
-      Tests de presupuesto/rendimiento (simulaciones largas): correctos pero
-      lentos. Sáltalos con --exclude-tags slow si vas con prisa.

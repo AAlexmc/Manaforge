@@ -136,8 +136,13 @@ Iterable<String> _tribalPlurals(String tribeLower) sync* {
 String? tribalRole(Card card, String tribe) {
   final text = card.oracle.toLowerCase();
   final t = tribe.toLowerCase();
-  final mentionsTribe =
-      text.contains(t) || _tribalPlurals(t).any(text.contains);
+  // Frontera de palabra: `contains` crudo confunde "Rat" con "rather",
+  // "Cat" con "duplicate", "Angel" con "changeling", "Elf" con "itself"
+  // (C1) — medido contra la colección real, 21,6% de los payoffs tribales
+  // de las 24 tribus curadas eran falsos positivos por esta subcadena.
+  bool asWord(String form) =>
+      RegExp('\\b' + RegExp.escape(form) + '\\b').hasMatch(text);
+  final mentionsTribe = asWord(t) || _tribalPlurals(t).any(asWord);
   if (mentionsTribe && _tribalPayoffSecondary.hasMatch(text)) {
     return 'payoff';
   }

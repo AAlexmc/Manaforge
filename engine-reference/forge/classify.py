@@ -118,7 +118,12 @@ def tribal_role(card: dict, tribe: str) -> str | None:
     tribu."""
     text = card["oracle"].lower()
     t = tribe.lower()
-    mentions_tribe = t in text or any(p in text for p in _tribal_plurals(t))
+    # Frontera de palabra: `in` crudo confunde "Rat" con "rather", "Cat"
+    # con "duplicate", "Angel" con "changeling", "Elf" con "itself" (C1) —
+    # medido contra la colección real, 21,6% de los payoffs tribales de
+    # las 24 tribus curadas eran falsos positivos por esta subcadena.
+    mentions_tribe = any(re.search(r"\b" + re.escape(f) + r"\b", text)
+                         for f in [t] + _tribal_plurals(t))
     if mentions_tribe and _TRIBAL_PAYOFF_SECONDARY.search(text):
         return "payoff"
     if "Creature" in card["types"] and tribe in card.get("subtypes", []):

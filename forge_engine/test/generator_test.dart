@@ -436,6 +436,42 @@ void main() {
               payoff('Other Goblins you control get +1/+1.'), 'Goblin'),
           'payoff');
     });
+
+    test('tribalRole no confunde subcadenas: rather/rat, duplicate/cat, '
+        'changeling/angel, itself/elf (C1)', () {
+      Card payoff(String oracle) => Card(
+          name: 'Trap',
+          qty: 1,
+          manaCost: '{1}{G}',
+          cmc: 2,
+          colors: 'G',
+          types: const ['Creature'],
+          oracle: oracle);
+      expect(
+          tribalRole(
+              payoff("You may pay 4 life rather than pay this spell's mana "
+                  'cost. Whenever you cast a spell this way, draw a card.'),
+              'Rat'),
+          isNull);
+      expect(
+          tribalRole(
+              payoff('Whenever you duplicate a token, each opponent loses '
+                  '1 life.'),
+              'Cat'),
+          isNull);
+      expect(
+          tribalRole(
+              payoff('Changeling. Whenever this creature attacks, each '
+                  'opponent loses 1 life.'),
+              'Angel'),
+          isNull);
+      expect(
+          tribalRole(
+              payoff('Whenever this creature deals damage to itself, each '
+                  'player draws a card.'),
+              'Elf'),
+          isNull);
+    });
   });
 
   group('selector de Estilo: themeOverride (Task 13b)', () {
@@ -605,7 +641,12 @@ void main() {
           isNotNull);
     });
 
-    // U: nada de elfos.
+    // U: nada de elfos, pero SÍ cartas trampa (item 11): una que un scanner
+    // de subcadena confundiría con payoff de Elf ("itself" contiene "elf"
+    // sin frontera de palabra — C1) y otra con payoff léxicamente REAL
+    // ("Elves" con frontera de palabra) pero sin un solo cuerpo Elf en el
+    // pool (el guard debe rechazar igual — C2). Demuestran los dos bugs a
+    // la vez: el test de abajo falla sin los fixes y pasa con ellos.
     Map<String, Card> poolSinElfos() {
       final p = <String, Card>{
         'Island': const Card(
@@ -616,6 +657,27 @@ void main() {
             colors: '',
             types: ['Basic', 'Land'],
             oracle: '{T}: Add {U}.'),
+        'Reflexive Striker': const Card(
+            name: 'Reflexive Striker',
+            qty: 4,
+            manaCost: '{2}{U}',
+            cmc: 3,
+            colors: 'U',
+            types: ['Creature'],
+            oracle: 'Whenever this creature blocks, it deals damage to '
+                'itself. Each opponent loses 1 life this turn.',
+            power: 2,
+            toughness: 2),
+        'Fake Elf Payoff': const Card(
+            name: 'Fake Elf Payoff',
+            qty: 4,
+            manaCost: '{1}{U}',
+            cmc: 2,
+            colors: 'U',
+            types: ['Creature'],
+            oracle: 'Other Elves you control get +1/+1.',
+            power: 2,
+            toughness: 2),
       };
       const curveCmc = [1, 1, 2, 2, 3, 3, 4, 4, 5];
       for (var i = 0; i < curveCmc.length; i++) {

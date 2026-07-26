@@ -37,6 +37,14 @@ def _candidate_pool(pool: dict, colors: str) -> dict:
 MIN_PAYOFF_COPIES = 3  # sin masa crítica de payoffs no hay tema
 MIN_TRIBE_MEMBERS = 12  # tribu elegible: además del mínimo de payoffs de siempre
 
+# Guard de generate_deck cuando el Estilo forzado es una tribu
+# (theme.startswith("tribal:")): al menos esta cantidad de copias con rol
+# "enabler" (cuerpos reales del subtipo) entre las cartas elegidas para el
+# mazo — un payoff suelto que solo nombra la tribu no basta (C2). Menor que
+# MIN_TRIBE_MEMBERS porque ese mide el POOL candidato entero; este mide
+# solo lo que el greedy metió en las 60 cartas finales.
+MIN_TRIBE_MEMBERS_IN_DECK = 8
+
 # Colores naturales de cada tema (color pie). "" = cualquier color.
 THEME_COLORS = {
     "lifegain": "WB",
@@ -221,9 +229,18 @@ def generate_deck(pool: dict, colors: str, name: str | None = None,
     n_spells = DECK_SIZE - n_lands
     chosen = _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells)
 
-    if theme_override is not None and not any(
-            theme in roles_by_card.get(n, {}) for n in chosen):
-        return None  # ese color no tiene con qué jugar el estilo pedido
+    if theme_override is not None:
+        if theme.startswith("tribal:"):
+            # Una tribu exige masa de cuerpos, no un payoff suelto que solo
+            # la nombra (C2): payoffs sin criaturas del subtipo no hacen
+            # mazo tribal.
+            enabler_copies = sum(
+                q for n, q in chosen.items()
+                if roles_by_card.get(n, {}).get(theme) == "enabler")
+            if enabler_copies < MIN_TRIBE_MEMBERS_IN_DECK:
+                return None
+        elif not any(theme in roles_by_card.get(n, {}) for n in chosen):
+            return None  # ese color no tiene con qué jugar el estilo pedido
 
     manabase = _mana_base(chosen, pool, colors, n_lands, archetype)
     if manabase is None:

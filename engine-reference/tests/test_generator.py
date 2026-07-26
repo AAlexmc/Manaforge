@@ -240,6 +240,25 @@ def test_tribal_role_reconoce_plurales_irregulares_no_solo_el_s_regular():
     assert tribal_role(_payoff_card("Other Goblins you control get +1/+1."), "Goblin") == "payoff"
 
 
+def test_tribal_role_no_confunde_subcadenas_rather_rat_duplicate_cat_changeling_angel_itself_elf():
+    def trap(oracle: str) -> dict:
+        return {"name": "Trap", "qty": 1, "mana_cost": "{1}{G}", "cmc": 2,
+                "colors": "G", "types": ["Creature"], "oracle": oracle}
+
+    assert tribal_role(
+        trap("You may pay 4 life rather than pay this spell's mana cost. "
+             "Whenever you cast a spell this way, draw a card."), "Rat") is None
+    assert tribal_role(
+        trap("Whenever you duplicate a token, each opponent loses 1 life."),
+        "Cat") is None
+    assert tribal_role(
+        trap("Changeling. Whenever this creature attacks, each opponent "
+             "loses 1 life."), "Angel") is None
+    assert tribal_role(
+        trap("Whenever this creature deals damage to itself, each player "
+             "draws a card."), "Elf") is None
+
+
 # --- Task 13b: selector de Estilo (theme_override) ---
 
 def _copias_con_subtipo(pool: dict, deck: dict, subtype: str) -> int:
@@ -322,7 +341,27 @@ def test_override_mecanico_salta_el_gate_de_payoffs_mejor_esfuerzo():
 
 
 def _pool_sin_elfos() -> dict:
-    p = {"Island": _land("Island", "U")}
+    """U: nada de elfos, pero SÍ cartas trampa (item 11): una que un scanner
+    de subcadena confundiría con payoff de Elf ("itself" contiene "elf" sin
+    frontera de palabra — C1) y otra con payoff léxicamente REAL ("Elves"
+    con frontera de palabra) pero sin un solo cuerpo Elf en el pool (el
+    guard debe rechazar igual — C2)."""
+    p = {
+        "Island": _land("Island", "U"),
+        "Reflexive Striker": {
+            "name": "Reflexive Striker", "qty": 4, "mana_cost": "{2}{U}",
+            "cmc": 3, "colors": "U", "types": ["Creature"],
+            "oracle": "Whenever this creature blocks, it deals damage to "
+                      "itself. Each opponent loses 1 life this turn.",
+            "power": 2, "toughness": 2,
+        },
+        "Fake Elf Payoff": {
+            "name": "Fake Elf Payoff", "qty": 4, "mana_cost": "{1}{U}",
+            "cmc": 2, "colors": "U", "types": ["Creature"],
+            "oracle": "Other Elves you control get +1/+1.",
+            "power": 2, "toughness": 2,
+        },
+    }
     for i, cmc in enumerate([1, 2, 2, 2, 3, 3, 4, 4, 5]):
         name = f"Filler {i}"
         p[name] = _creature(name, cmc, "U")
