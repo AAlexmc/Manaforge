@@ -12,7 +12,7 @@
 
 <p align="center">
   <b><a href="#-forge-el-generador-de-mazos">Forge</a></b> ·
-  <b><a href="#-qué-hace-hoy-v02">Funciones</a></b> ·
+  <b><a href="#-qué-hace-hoy">Funciones</a></b> ·
   <b><a href="#-descárgala-y-ábrela">Descargar</a></b> ·
   <b><a href="#-cómo-está-hecho">Arquitectura</a></b> ·
   <b><a href="#-hoja-de-ruta">Hoja de ruta</a></b> ·
@@ -38,6 +38,9 @@ Le das tu colección y te devuelve **mazos completos de 60 cartas**, construidos
 - 🧬 **Sinergias detectadas** — Forge lee las reglas de cada carta y encuentra tus temas: drenaje de vida, sacrificio, artefactos, enjambre, hechizos, contadores…
 - 🗺️ **Plan de juego explicado** — turno a turno, más un *"¿Por qué este mazo funciona?"* plegable para quien quiera la teoría.
 - 🤝 **Reglas de honor** — nunca usa cartas que no tienes, nunca pasa del límite de copias, y antes que generar un mazo defectuoso, te explica el porqué y te propone alternativa.
+- 🎯 **Elige tu estilo** — fuerza una tribu (Elfos, Zombies, Dragones… 24 curadas, y cualquier subtipo con masa) o un tema mecánico, y el motor obedece. En Auto, él detecta el que mejor paga tu colección.
+- ⚔️ **Forja profunda** — antes de enseñarse, las propuestas juegan cientos de partidas entre sí: el orden final pesa cómo rinden de verdad, no solo su puntuación sobre el papel.
+- 🎲 **Probabilidad de verdad** — consistencia (¿robas tus tierras a tiempo?) y curva jugable calculadas con matemáticas hipergeométricas; las tierras no básicas (shocks, checks, fetches) entran por su función real.
 - 📤 **Exportación en un toque** — copia la lista y pégala en Moxfield, MTG Arena o el Discord de tu grupo.
 
 <p align="center">
@@ -47,7 +50,7 @@ Le das tu colección y te devuelve **mazos completos de 60 cartas**, construidos
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 
-## ✨ Qué hace hoy (v0.2)
+## ✨ Qué hace hoy
 
 <table>
   <tr>
@@ -57,31 +60,31 @@ Le das tu colección y te devuelve **mazos completos de 60 cartas**, construidos
     </td>
     <td align="center" width="33%">
       <h3>🔍</h3><b>Búsqueda en<br/>español e inglés</b><br/><br/>
-      <sub>"Elfos de Llanowar" y "Llanowar Elves" llevan a la misma carta, con su imagen y sus reglas al día.</sub>
+      <sub>"Elfos de Llanowar", "elfos de llanowar" sin tildes o "Llanowar Elves": todo lleva a la misma carta. Y con la app en español, mazos y fichas enseñan los nombres en español.</sub>
     </td>
     <td align="center" width="33%">
       <h3>📦</h3><b>Tu colección,<br/>visual y tuya</b><br/><br/>
-      <sub>Añade cartas con cantidades o <b>importa tu colección en CSV</b> desde cualquier otra app en segundos. Todo en local: sin cuentas, sin nube obligatoria.</sub>
+      <sub><b>Escanéalas con la webcam</b> (reconoce la edición exacta por el arte), <b>importa tu CSV</b> desde cualquier otra app o añádelas a mano. Todo en local: sin cuentas, sin nube obligatoria.</sub>
     </td>
   </tr>
   <tr>
     <td align="center">
       <h3>⚒️</h3><b>Forge</b><br/><br/>
-      <sub>Varias propuestas de mazo en un carrusel comparable (arquetipo, colores, mini-curva) y detalle con plan de juego turno a turno.</sub>
+      <sub>Varias propuestas en un carrusel comparable, detalle con plan de juego turno a turno, curva editable que reforja el mazo y Modo Test para enfrentarlo contra otro.</sub>
     </td>
     <td align="center">
       <h3>🌗</h3><b>Diseño cuidado</b><br/><br/>
-      <sub>Tema oscuro por defecto, iconografía de maná propia accesible para daltónicos, microcopys de jugador a jugador.</sub>
+      <sub>Tema oscuro, <b>10 idiomas completos</b>, tours guiados que enseñan la app por dentro, iconografía de maná accesible para daltónicos y microcopys de jugador a jugador.</sub>
     </td>
     <td align="center">
       <h3>🔐</h3><b>Privacidad de serie</b><br/><br/>
-      <sub>Ni analytics, ni tracking, ni "crea tu cuenta". El futuro escáner reconocerá cartas 100 % en tu dispositivo.</sub>
+      <sub>Ni analytics, ni tracking, ni "crea tu cuenta". El escáner reconoce las cartas 100 % en tu dispositivo.</sub>
     </td>
   </tr>
 </table>
 
 > [!NOTE]
-> **En el horno:** escáner de cartas con la cámara ([así funcionará por dentro](docs/reconocimiento-cartas.md)), guardar mazos, precios y valor de colección, trades, legalidades por formato e inglés.
+> **En el horno:** trades entre colecciones, nombres de carta en más idiomas y móviles si la comunidad los pide.
 
 ## 🚀 Descárgala y ábrela
 
@@ -136,10 +139,12 @@ cd app && flutter test                            # tests de la app
 - [x] **Fase 2 — Datos**: pipeline bulk Scryfall → SQLite con release automática mensual
 - [x] **Fase 3 — Generador**: clasificación funcional, temas, puntuación y construcción greedy
 - [x] **Fase 4 — App v0.2**: colección con búsqueda ES/EN, importador CSV, Forge con carrusel y plan de juego
-- [ ] **Fase 5 — Escritorio de primera**: builds automáticas de Windows/macOS/Linux en Releases (workflow listo), guardar mazos, atajos de teclado y ventanas a medida
-- [ ] **Fase 6 — Redondear**: precios y valor de colección, trades, legalidades por formato, inglés
-- [ ] **Fase 7 — Escáner**: huellas perceptuales generadas en CI + webcam/cámara ([diseño listo](docs/reconocimiento-cartas.md))
-- [ ] **Fase 8 — Móviles (si la comunidad los pide)**: Android y iOS/TestFlight — el código ya está listo; solo faltan las cuentas de las tiendas
+- [x] **Fase 5 — Escritorio de primera**: builds automáticas de Windows/macOS/Linux en Releases, guardar mazos, atajos de teclado y ventana que recuerda su sitio
+- [x] **Fase 6 — Redondear**: precios y valor de colección, P&L de compra, legalidades por formato y **10 idiomas completos**
+- [x] **Fase 7 — Escáner**: huellas perceptuales generadas en CI + webcam/foto, 100 % en tu dispositivo ([cómo funciona por dentro](docs/reconocimiento-cartas.md))
+- [x] **Fase 7½ — Forge v2**: manabase probabilística, score por consistencia y curva, temas tribales/reanimator, selector de estilo, forja profunda y nombres de carta en español
+- [ ] **Fase 8 — Trades y comunidad**: intercambios entre colecciones y lo que pida el [buzón](https://github.com/AAlexmc/Manaforge/issues/new/choose)
+- [ ] **Fase 9 — Móviles (si la comunidad los pide)**: Android y iOS/TestFlight — el código ya está listo; solo faltan las cuentas de las tiendas
 
 ## 🤝 Contribuir
 
@@ -152,7 +157,9 @@ No hace falta saber programar: si tienes una idea o has visto un fallo, déjalo 
 <a id="donativos"></a>
 ## 💜 Donativos
 
-ManaForge es gratis y sin anuncios, y va a seguir siéndolo (la [licencia](#-licencia) no permite venderla). Si la app te sirve y quieres invitar a un café, puedes hacerlo por PayPal: **[paypal.me/al3payme](https://paypal.me/al3payme)** (también desde el botón **Sponsor** de arriba del repo). Y si no, la mejor forma de apoyar es usarla, contar qué mejorarías en el [buzón](https://github.com/AAlexmc/Manaforge/issues/new/choose) y darle una ⭐ al repo.
+ManaForge es gratis y sin anuncios, y va a seguir siéndolo (la [licencia](#-licencia) no permite venderla). Pero si Forge te ha montado un mazo que ganó la partida, puedes financiar dos causas nobles: el café que mantiene la forja encendida, y mi rigurosa investigación de campo consistente en abrir *collector boosters* donde jamás —**jamás**— toca nada. Los datos dicen que la próxima rara chetada no va a salir; la esperanza es lo último que se exilia: **[paypal.me/al3payme](https://paypal.me/al3payme)** (también desde el botón **Sponsor** de arriba).
+
+Y si el maná no da para más, la mejor forma de apoyar es usarla, contar qué mejorarías en el [buzón](https://github.com/AAlexmc/Manaforge/issues/new/choose) y darle una ⭐ al repo — las estrellas no se descartan al final del turno.
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 
@@ -169,8 +176,6 @@ Los datos y las imágenes de cartas son de [Scryfall](https://scryfall.com), a q
 - **Sí puedes** usarla en casa, en tu tienda de barrio para tus propias cartas… siempre que no sea para vender la app ni cobrar por ella.
 
 Uso personal, estudio, cacharreo, proyectos de aficionado y organizaciones sin ánimo de lucro: adelante, sin pedir permiso.
-
-> Antes era MIT. Las versiones publicadas bajo MIT siguen siendo MIT para siempre —eso no se puede revocar—; el cambio vale de aquí en adelante. Si necesitas un uso comercial, escribe y hablamos.
 
 Ojo: una licencia con restricción no comercial **no** es "código abierto" en el sentido de la OSI. Es *código a la vista*: puedes leerlo, tocarlo y compartirlo, pero no venderlo.
 
