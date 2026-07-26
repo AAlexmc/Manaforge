@@ -94,14 +94,32 @@ def classify(card: dict) -> set[str]:
 _TRIBAL_PAYOFF_SECONDARY = re.compile(r"other |you control|whenever|each ")
 
 
+def _tribal_plurals(tribe_lower: str) -> list[str]:
+    """Formas plurales plausibles de un subtipo tribal (ya en minúsculas):
+    el +s regular y, para los -f/-fe clásicos de Magic (Elf, Dwarf,
+    Wolf...), el irregular -ves (Elves, Dwarves, Wolves) — el oracle real
+    casi nunca usa "Elfs". Si acaba en s/x/ch/sh también el +es regular
+    (Fox->Foxes)."""
+    forms = [f"{tribe_lower}s"]
+    if tribe_lower.endswith("fe"):
+        forms.append(f"{tribe_lower[:-2]}ves")
+    elif tribe_lower.endswith("f"):
+        forms.append(f"{tribe_lower[:-1]}ves")
+    if tribe_lower.endswith(("s", "x", "ch", "sh")):
+        forms.append(f"{tribe_lower}es")
+    return forms
+
+
 def tribal_role(card: dict, tribe: str) -> str | None:
     """Rol tribal de una carta para una tribu concreta (tribe, el subtipo en
     inglés: "Elf", "Goblin"...). Payoff: menciona la tribu (singular o
-    plural) y trae una palabra de anthem/trigger tribal. Enabler: criatura
-    de ese subtipo — el propio cuerpo de la tribu."""
+    plural, regular o irregular) y trae una palabra de anthem/trigger
+    tribal. Enabler: criatura de ese subtipo — el propio cuerpo de la
+    tribu."""
     text = card["oracle"].lower()
     t = tribe.lower()
-    if (t in text or f"{t}s" in text) and _TRIBAL_PAYOFF_SECONDARY.search(text):
+    mentions_tribe = t in text or any(p in text for p in _tribal_plurals(t))
+    if mentions_tribe and _TRIBAL_PAYOFF_SECONDARY.search(text):
         return "payoff"
     if "Creature" in card["types"] and tribe in card.get("subtypes", []):
         return "enabler"

@@ -110,15 +110,35 @@ Set<String> classify(Card card) {
 
 final _tribalPayoffSecondary = RegExp(r'other |you control|whenever|each ');
 
+/// Formas plurales plausibles de un subtipo tribal (ya en minúsculas): el
+/// +s regular y, para los -f/-fe clásicos de Magic (Elf, Dwarf, Wolf...),
+/// el irregular -ves (Elves, Dwarves, Wolves) — el oracle real casi nunca
+/// usa "Elfs". Si acaba en s/x/ch/sh también el +es regular (Fox->Foxes).
+Iterable<String> _tribalPlurals(String tribeLower) sync* {
+  yield '${tribeLower}s';
+  if (tribeLower.endsWith('fe')) {
+    yield '${tribeLower.substring(0, tribeLower.length - 2)}ves';
+  } else if (tribeLower.endsWith('f')) {
+    yield '${tribeLower.substring(0, tribeLower.length - 1)}ves';
+  }
+  if (tribeLower.endsWith('s') ||
+      tribeLower.endsWith('x') ||
+      tribeLower.endsWith('ch') ||
+      tribeLower.endsWith('sh')) {
+    yield '${tribeLower}es';
+  }
+}
+
 /// Rol tribal de una carta para una tribu concreta ([tribe], el subtipo en
-/// inglés: "Elf", "Goblin"…). Payoff: menciona la tribu (singular o plural)
-/// y trae una palabra de anthem/trigger tribal. Enabler: criatura de ese
-/// subtipo — el propio cuerpo de la tribu.
+/// inglés: "Elf", "Goblin"…). Payoff: menciona la tribu (singular o
+/// plural, regular o irregular) y trae una palabra de anthem/trigger
+/// tribal. Enabler: criatura de ese subtipo — el propio cuerpo de la tribu.
 String? tribalRole(Card card, String tribe) {
   final text = card.oracle.toLowerCase();
   final t = tribe.toLowerCase();
-  if ((text.contains(t) || text.contains('${t}s')) &&
-      _tribalPayoffSecondary.hasMatch(text)) {
+  final mentionsTribe =
+      text.contains(t) || _tribalPlurals(t).any(text.contains);
+  if (mentionsTribe && _tribalPayoffSecondary.hasMatch(text)) {
     return 'payoff';
   }
   if (card.types.contains('Creature') && card.subtypes.contains(tribe)) {

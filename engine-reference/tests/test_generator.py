@@ -4,7 +4,7 @@ import pathlib
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-from forge.classify import classify, theme_roles
+from forge.classify import classify, theme_roles, tribal_role
 from forge.generator import detect_theme, generate_deck, generate_proposals
 from forge.validator import validate_deck
 
@@ -164,7 +164,8 @@ def _copias_del_subtipo(pool: dict, deck: dict, subtype: str) -> int:
 
 def _elf_pool(with_payoff: bool = True) -> dict:
     """Mismo pool que `forge_engine/test/generator_test.dart` (Task 11):
-    14 elfos + 4 payoffs («Other Elf creatures you control get…») en G."""
+    14 elfos + 4 payoffs («Other Elves you control get…», el plural
+    irregular real de Magic) en G."""
     p = {
         "Forest": {
             "name": "Forest", "qty": 30, "mana_cost": "", "cmc": 0, "colors": "",
@@ -182,7 +183,7 @@ def _elf_pool(with_payoff: bool = True) -> dict:
         p["Elvish Chieftain"] = {
             "name": "Elvish Chieftain", "qty": 4, "mana_cost": "{1}{G}", "cmc": 2,
             "colors": "G", "types": ["Creature"], "subtypes": ["Elf"],
-            "oracle": "Other Elf creatures you control get +1/+1.",
+            "oracle": "Other Elves you control get +1/+1.",
             "power": 2, "toughness": 2,
         }
     for i, cmc in enumerate([1, 2, 2, 3, 3, 4]):
@@ -205,3 +206,20 @@ def test_14_elfos_mas_payoffs_en_g_detecta_tribal_elf_y_mete_elfos_de_sobra():
 def test_control_14_elfos_sin_payoffs_no_hacen_tema_tribal():
     deck = generate_deck(_elf_pool(with_payoff=False), "G")
     assert deck is None or deck["theme"] != "tribal:Elf"
+
+
+def _payoff_card(oracle: str) -> dict:
+    return {
+        "name": "Payoff", "qty": 1, "mana_cost": "{1}{G}", "cmc": 2,
+        "colors": "G", "types": ["Creature"], "oracle": oracle,
+    }
+
+
+def test_tribal_role_reconoce_plurales_irregulares_no_solo_el_s_regular():
+    # El literal del brief: "Elves" no contiene "elf" ni "elfs" como
+    # substring (no hay 'f' en "elves"), solo el irregular "-ves" lo pilla.
+    assert tribal_role(_payoff_card("Other Elves you control get +1/+1."), "Elf") == "payoff"
+    assert tribal_role(_payoff_card("Other Dwarves you control get +1/+1."), "Dwarf") == "payoff"
+    assert tribal_role(_payoff_card("Other Wolves you control get +1/+1."), "Wolf") == "payoff"
+    # Regular +s sigue funcionando (no es un caso irregular).
+    assert tribal_role(_payoff_card("Other Goblins you control get +1/+1."), "Goblin") == "payoff"

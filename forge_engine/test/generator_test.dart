@@ -337,7 +337,8 @@ void main() {
       return n;
     }
 
-    // 14 elfos + 4 payoffs («Other Elf creatures you control get…») en G.
+    // 14 elfos + 4 payoffs («Other Elves you control get…», el plural
+    // irregular real de Magic) en G.
     Map<String, Card> elfPool({bool withPayoff = true}) {
       final p = <String, Card>{
         'Forest': const Card(
@@ -373,7 +374,7 @@ void main() {
             colors: 'G',
             types: ['Creature'],
             subtypes: ['Elf'],
-            oracle: 'Other Elf creatures you control get +1/+1.',
+            oracle: 'Other Elves you control get +1/+1.',
             power: 2,
             toughness: 2);
       }
@@ -406,6 +407,34 @@ void main() {
     test('control: 14 elfos SIN payoffs no hacen tema tribal', () {
       final gen = generateDeck(elfPool(withPayoff: false), 'G');
       expect(gen == null || gen.theme != 'tribal:Elf', isTrue);
+    });
+
+    test('tribalRole reconoce plurales irregulares (-f/-fe -> -ves), no '
+        'solo el +s regular', () {
+      Card payoff(String oracle) => Card(
+          name: 'Payoff',
+          qty: 1,
+          manaCost: '{1}{G}',
+          cmc: 2,
+          colors: 'G',
+          types: const ['Creature'],
+          oracle: oracle);
+      // El literal del brief: "Elves" no contiene "elf" ni "elfs" como
+      // substring (no hay 'f' en "elves"), solo el irregular "-ves" lo pilla.
+      expect(tribalRole(payoff('Other Elves you control get +1/+1.'), 'Elf'),
+          'payoff');
+      expect(
+          tribalRole(
+              payoff('Other Dwarves you control get +1/+1.'), 'Dwarf'),
+          'payoff');
+      expect(
+          tribalRole(payoff('Other Wolves you control get +1/+1.'), 'Wolf'),
+          'payoff');
+      // Regular +s sigue funcionando (no es un caso irregular).
+      expect(
+          tribalRole(
+              payoff('Other Goblins you control get +1/+1.'), 'Goblin'),
+          'payoff');
     });
   });
 }
