@@ -402,6 +402,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Damit schlägt Forge auch fehlende Karten vor und sagt dir, wie viele es sind und was sie kosten würden.';
 
   @override
+  String get onbForgeDeepTitle => 'Tiefe Schmiede';
+
+  @override
+  String get onbForgeDeepBody =>
+      'Bevor er dir die Vorschläge zeigt, lässt er sie wirklich gegeneinander spielen: Die Endreihenfolge gewichtet, wie sie abschneiden, nicht nur ihren statischen Score. Schalte es aus, wenn du lieber schnellere Ergebnisse willst.';
+
+  @override
   String get onbForgeGoTitle => 'Schmieden';
 
   @override
@@ -900,6 +907,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
     return 'Mit den Karten aus diesem Pool kriege ich kein vollständiges $formato-Deck hin, das meine Regeln erfüllt (genug Länder und eine gesunde Kurve)$donde. $consejo Statt dir ein kaputtes Deck anzudrehen, sage ich es dir lieber.';
+  }
+
+  @override
+  String fgNoDeckStyle(String estilo) {
+    return 'Mit diesem Stil ($estilo) kommt kein Deck heraus. Probier „Stil: auto“ oder einen anderen Stamm.';
   }
 
   @override

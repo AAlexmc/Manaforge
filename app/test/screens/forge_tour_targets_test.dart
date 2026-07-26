@@ -44,6 +44,7 @@ void main() {
         basicasKey: k.forgeBasicas,
         expansionesKey: k.forgeExpansiones,
         queNoTengoKey: k.forgeQueNoTengo,
+        deepForgeKey: k.forgeDeepForge,
         forjarKey: k.forgeForjar,
         modoTestKey: k.forgeModoTest,
       ),
@@ -54,6 +55,7 @@ void main() {
       'tierras básicas': k.forgeBasicas,
       'expansiones': k.forgeExpansiones,
       'cartas que no tengo': k.forgeQueNoTengo,
+      'forja profunda': k.forgeDeepForge,
       'forjar': k.forgeForjar,
       'Modo Test': k.forgeModoTest,
     };

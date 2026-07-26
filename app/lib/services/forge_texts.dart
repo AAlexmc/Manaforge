@@ -17,7 +17,11 @@ import '../l10n/app_localizations.dart';
 /// (como los nombres de carta — decisión previa) interpolado en la frase.
 String themeName(AppLocalizations t, String theme) {
   if (theme.startsWith('tribal:')) {
-    return t.fxThemeTribal(theme.substring('tribal:'.length));
+    // Enrutado por tribeName (I1): sin esto, la tarjeta de resultado, el
+    // detalle del mazo y Modo Test mostraban el subtipo en inglés crudo
+    // ("tribu de Elf") en vez del nombre traducido — solo el selector y el
+    // chip pasaban por tribeName.
+    return t.fxThemeTribal(tribeName(t, theme.substring('tribal:'.length)));
   }
   return switch (theme) {
     'lifegain' => t.fxThemeLifegain,

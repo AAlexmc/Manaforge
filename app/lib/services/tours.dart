@@ -19,6 +19,7 @@ class TourKeys {
   final forgeBasicas = GlobalKey();
   final forgeExpansiones = GlobalKey();
   final forgeQueNoTengo = GlobalKey();
+  final forgeDeepForge = GlobalKey();
   final forgeForjar = GlobalKey();
   final forgeModoTest = GlobalKey();
   final mercadoSelector = GlobalKey();
@@ -209,6 +210,11 @@ List<TourStep> _pasosForge(AppLocalizations t, TourKeys k) => [
           targetKey: k.forgeQueNoTengo,
           title: t.onbForgeMissingTitle,
           body: t.onbForgeMissingBody),
+      TourStep(
+          goToScreen: _forge,
+          targetKey: k.forgeDeepForge,
+          title: t.onbForgeDeepTitle,
+          body: t.onbForgeDeepBody),
       TourStep(
           goToScreen: _forge,
           targetKey: k.forgeForjar,

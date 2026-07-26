@@ -400,6 +400,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'С этим Forge предлагает и недостающие карты, показывая, сколько их и сколько они стоят.';
 
   @override
+  String get onbForgeDeepTitle => 'Глубокая ковка';
+
+  @override
+  String get onbForgeDeepBody =>
+      'Перед показом предложений он заставляет их по-настоящему сыграть друг с другом: итоговый порядок учитывает реальные результаты, а не только статичный счёт. Отключи, если хочешь более быстрый результат.';
+
+  @override
   String get onbForgeGoTitle => 'Собрать';
 
   @override
@@ -905,6 +912,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
     return 'С картами из этого пула не выходит ни одной полной колоды $formato, которая соблюдает мои правила (достаточно земель и здоровая кривая)$donde. $consejo Лучше предупрежу, чем выдам кривую колоду.';
+  }
+
+  @override
+  String fgNoDeckStyle(String estilo) {
+    return 'С этим Стилем ($estilo) колода не получается. Попробуй «Стиль: авто» или другое племя.';
   }
 
   @override

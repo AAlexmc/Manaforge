@@ -376,6 +376,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onbForgeMissingBody => '开启后 Forge 也会推荐你缺的卡，并告诉你缺几张、要花多少钱。';
 
   @override
+  String get onbForgeDeepTitle => '深度锻造';
+
+  @override
+  String get onbForgeDeepBody =>
+      '在给你看提案之前，它会让它们真正互相对战：最终排序看的是实际表现，不只是静态分数。想要更快的结果可以关掉它。';
+
+  @override
   String get onbForgeGoTitle => '开始打造';
 
   @override
@@ -848,6 +855,11 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
     return '用这个卡池里的卡，我凑不出任何一副符合我规则（地够、曲线健康）的完整 $formato 牌组$donde。$consejo 与其给你一副有缺陷的牌组，我宁愿先告诉你。';
+  }
+
+  @override
+  String fgNoDeckStyle(String estilo) {
+    return '用这个风格（$estilo）做不出牌组。试试“风格：自动”或另一个族群。';
   }
 
   @override

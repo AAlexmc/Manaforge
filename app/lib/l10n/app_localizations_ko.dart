@@ -385,6 +385,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get onbForgeMissingBody => '켜면 없는 카드까지 제안하고, 몇 장이 필요한지와 비용을 알려 줍니다.';
 
   @override
+  String get onbForgeDeepTitle => '딥 포지';
+
+  @override
+  String get onbForgeDeepBody =>
+      '제안을 보여주기 전에 실제로 서로 대결시킵니다. 최종 순위는 정적 점수뿐 아니라 실제 성적을 반영합니다. 더 빠른 결과를 원하면 꺼도 됩니다.';
+
+  @override
   String get onbForgeGoTitle => '만들기';
 
   @override
@@ -864,6 +871,11 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
     return '이 풀의 카드로는 제 규칙(충분한 대지와 건강한 커브)을 만족하는 완성된 $formato 덱이 안 나와요$donde. $consejo 엉성한 덱을 드리느니 미리 알려드릴게요.';
+  }
+
+  @override
+  String fgNoDeckStyle(String estilo) {
+    return '이 스타일($estilo)로는 덱이 나오지 않아요. \"스타일: 자동\" 또는 다른 종족을 시도해 보세요.';
   }
 
   @override

@@ -398,6 +398,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Turn this on and Forge also suggests cards you\'re missing, telling you how many and what they\'d cost.';
 
   @override
+  String get onbForgeDeepTitle => 'Deep forge';
+
+  @override
+  String get onbForgeDeepBody =>
+      'Before showing you the proposals, it makes them actually play against each other: the final order weighs how they perform, not just their static score. Turn it off if you\'d rather have faster results.';
+
+  @override
   String get onbForgeGoTitle => 'Forge';
 
   @override
@@ -895,6 +902,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
     return 'With the cards in this pool I can\'t finish a $formato deck that meets my rules (enough lands and a healthy curve)$donde. $consejo Rather than hand you a broken deck, I\'d rather tell you.';
+  }
+
+  @override
+  String fgNoDeckStyle(String estilo) {
+    return 'With this Style ($estilo) no deck comes out. Try \"Style: auto\" or another tribe.';
   }
 
   @override

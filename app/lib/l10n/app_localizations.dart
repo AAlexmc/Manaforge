@@ -798,6 +798,18 @@ abstract class AppLocalizations {
   /// **'Al activarlo, Forge también propone cartas que te faltan y te dice cuántas son y cuánto costarían.'**
   String get onbForgeMissingBody;
 
+  /// No description provided for @onbForgeDeepTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Forja profunda'**
+  String get onbForgeDeepTitle;
+
+  /// No description provided for @onbForgeDeepBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Antes de enseñarte las propuestas, las hace jugar entre sí de verdad: el orden final pesa cómo rinden, no solo su score estático. Puedes apagarlo si prefieres resultados más rápidos.'**
+  String get onbForgeDeepBody;
+
   /// No description provided for @onbForgeGoTitle.
   ///
   /// In es, this message translates to:
@@ -1571,6 +1583,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Con las cartas de este pool no me sale ningún mazo completo {formato} que cumpla mis reglas (tierras suficientes y curva sana){donde}. {consejo} Antes que darte un mazo defectuoso, prefiero avisarte.'**
   String fgNoDeck(String formato, String donde, String consejo);
+
+  /// No description provided for @fgNoDeckStyle.
+  ///
+  /// In es, this message translates to:
+  /// **'Con este Estilo ({estilo}) no sale mazo. Prueba «Estilo: auto» u otra tribu.'**
+  String fgNoDeckStyle(String estilo);
 
   /// No description provided for @fgOf60.
   ///

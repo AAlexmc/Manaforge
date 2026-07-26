@@ -267,7 +267,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
         _pool = pool;
         _ownedByName = ownedByName;
         if (proposals.isEmpty) {
-          _cantReason = _sinMazoReason();
+          _cantReason = sinMazoReason();
         } else {
           _proposals = proposals;
           _shortfalls = shortfalls;
@@ -284,8 +284,21 @@ class _ForgeScreenState extends State<ForgeScreen> {
     }
   }
 
-  String _sinMazoReason() {
+  /// Por qué la forja no dio ningún mazo. Nombre público a propósito (el
+  /// State es privado, igual que `buildForgeJob`): costura para que un
+  /// widget test afirme sobre el mensaje real sin tener que montar el
+  /// pipeline de generación entero en un isolate.
+  @visibleForTesting
+  String sinMazoReason() {
     final t = tr(context);
+    // Con Estilo forzado, la vía de salida vacía más probable es que ESE
+    // color no tenga con qué jugarlo (generator.dart null-guard tribal/
+    // mecánico) — un mensaje de "compra más cartas" desvía del motivo real
+    // (I2). Se comprueba ANTES que formato/expansiones/colección: aplica
+    // sea cual sea la causa real cuando hay un Estilo forzado puesto.
+    if (_selTheme != null) {
+      return t.fgNoDeckStyle(styleName(t, _selTheme!));
+    }
     final donde = _selSets.isEmpty ? '' : t.fgInThoseSets(_selSets.length);
     if (_format == 'commander') return t.fgNoCommander(donde);
     return t.fgNoDeck(

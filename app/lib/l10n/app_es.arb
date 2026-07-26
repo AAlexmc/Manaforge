@@ -150,6 +150,8 @@
   "onbForgeSetsBody": "Acota de dónde salen las cartas. Sin elegir ninguna, Forge usa toda tu colección.",
   "onbForgeMissingTitle": "Cartas que no tengo",
   "onbForgeMissingBody": "Al activarlo, Forge también propone cartas que te faltan y te dice cuántas son y cuánto costarían.",
+  "onbForgeDeepTitle": "Forja profunda",
+  "onbForgeDeepBody": "Antes de enseñarte las propuestas, las hace jugar entre sí de verdad: el orden final pesa cómo rinden, no solo su score estático. Puedes apagarlo si prefieres resultados más rápidos.",
   "onbForgeGoTitle": "Forjar",
   "onbForgeGoBody": "Este botón hace los mazos. Con muchas expansiones tarda unos segundos.",
   "onbForgeTestTitle": "Modo Test",
@@ -367,6 +369,10 @@
   "fgNoDeck": "Con las cartas de este pool no me sale ningún mazo completo {formato} que cumpla mis reglas (tierras suficientes y curva sana){donde}. {consejo} Antes que darte un mazo defectuoso, prefiero avisarte.",
   "@fgNoDeck": {
     "placeholders": { "formato": { "type": "String" }, "donde": { "type": "String" }, "consejo": { "type": "String" } }
+  },
+  "fgNoDeckStyle": "Con este Estilo ({estilo}) no sale mazo. Prueba «Estilo: auto» u otra tribu.",
+  "@fgNoDeckStyle": {
+    "placeholders": { "estilo": { "type": "String" } }
   },
   "fgOf60": "de 60",
   "fgLegalIn": "LEGAL en {formato}",

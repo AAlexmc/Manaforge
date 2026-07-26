@@ -146,6 +146,8 @@
   "onbForgeSetsBody": "Narrow down where the cards come from. With none selected, Forge uses your whole collection.",
   "onbForgeMissingTitle": "Cards you don't own",
   "onbForgeMissingBody": "Turn this on and Forge also suggests cards you're missing, telling you how many and what they'd cost.",
+  "onbForgeDeepTitle": "Deep forge",
+  "onbForgeDeepBody": "Before showing you the proposals, it makes them actually play against each other: the final order weighs how they perform, not just their static score. Turn it off if you'd rather have faster results.",
   "onbForgeGoTitle": "Forge",
   "onbForgeGoBody": "This button builds the decks. With many sets it takes a few seconds.",
   "onbForgeTestTitle": "Test mode",
@@ -363,6 +365,10 @@
   "fgNoDeck": "With the cards in this pool I can't finish a {formato} deck that meets my rules (enough lands and a healthy curve){donde}. {consejo} Rather than hand you a broken deck, I'd rather tell you.",
   "@fgNoDeck": {
     "placeholders": { "formato": { "type": "String" }, "donde": { "type": "String" }, "consejo": { "type": "String" } }
+  },
+  "fgNoDeckStyle": "With this Style ({estilo}) no deck comes out. Try \"Style: auto\" or another tribe.",
+  "@fgNoDeckStyle": {
+    "placeholders": { "estilo": { "type": "String" } }
   },
   "fgOf60": "60-card",
   "fgLegalIn": "LEGAL in {formato}",

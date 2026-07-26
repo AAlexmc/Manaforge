@@ -385,6 +385,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get onbForgeMissingBody => 'オンにすると足りないカードも提案し、何枚・いくらかかるかを教えます。';
 
   @override
+  String get onbForgeDeepTitle => 'ディープフォージ';
+
+  @override
+  String get onbForgeDeepBody =>
+      '候補を見せる前に、実際に対戦させます。最終順位は静的なスコアだけでなく、実際の勝率を重視します。速さを優先するならオフにできます。';
+
+  @override
   String get onbForgeGoTitle => '鍛える';
 
   @override
@@ -860,6 +867,11 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
     return 'このプールのカードでは、私のルール（十分な土地と健全なカーブ）を満たす完成した $formato デッキが組めません$donde。$consejo 欠陥のあるデッキを渡すくらいなら、お知らせするほうを選びます。';
+  }
+
+  @override
+  String fgNoDeckStyle(String estilo) {
+    return 'このスタイル（$estilo）ではデッキが作れません。「スタイル：自動」か別の種族を試してください。';
   }
 
   @override

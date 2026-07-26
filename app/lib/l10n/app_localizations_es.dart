@@ -399,6 +399,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Al activarlo, Forge también propone cartas que te faltan y te dice cuántas son y cuánto costarían.';
 
   @override
+  String get onbForgeDeepTitle => 'Forja profunda';
+
+  @override
+  String get onbForgeDeepBody =>
+      'Antes de enseñarte las propuestas, las hace jugar entre sí de verdad: el orden final pesa cómo rinden, no solo su score estático. Puedes apagarlo si prefieres resultados más rápidos.';
+
+  @override
   String get onbForgeGoTitle => 'Forjar';
 
   @override
@@ -895,6 +902,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String fgNoDeck(String formato, String donde, String consejo) {
     return 'Con las cartas de este pool no me sale ningún mazo completo $formato que cumpla mis reglas (tierras suficientes y curva sana)$donde. $consejo Antes que darte un mazo defectuoso, prefiero avisarte.';
+  }
+
+  @override
+  String fgNoDeckStyle(String estilo) {
+    return 'Con este Estilo ($estilo) no sale mazo. Prueba «Estilo: auto» u otra tribu.';
   }
 
   @override
