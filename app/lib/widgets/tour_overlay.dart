@@ -275,10 +275,10 @@ class _TourOverlayState extends State<TourOverlay> {
     );
   }
 
-  /// Coloca la burbuja en la mitad de pantalla OPUESTA a la diana, no pegada
-  /// a su borde: pegada, un foco cerca de un extremo (la cabecera de una
-  /// sección, arriba del todo) quedaba tapado por el propio contenido que
-  /// sigue justo debajo de él, encajado entre foco y burbuja.
+  /// Coloca la burbuja en el extremo con MÁS hueco libre (descontando
+  /// insets), no pegada al borde de la diana: pegada, un foco cerca de un
+  /// extremo quedaba tapado por el propio contenido que sigue justo debajo,
+  /// encajado entre foco y burbuja.
   Widget _colocarBurbuja(Rect? foco, double h, double inset, Widget burbuja) {
     if (foco == null) {
       return Center(

@@ -20,22 +20,15 @@ import 'package:manaforge_app/screens/screens.dart';
 import 'package:manaforge_app/services/background_prefs.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/language_prefs.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
 import 'package:manaforge_app/widgets/tour_overlay.dart';
 
 import '../helpers/app_l10n.dart';
+import '../helpers/tour_foco.dart';
 
 CardDatabase _sinBase() =>
     CardDatabase(dataDir: Directory('/ruta/que/no/existe/manaforge'));
 
-/// El indicador (el marco de foco) que pinta el overlay sobre la diana: el
-/// único Container con un borde del color de forja en pantalla.
-Finder _indicadorDeFoco() => find.byWidgetPredicate((w) =>
-    w is Container &&
-    w.decoration is BoxDecoration &&
-    (w.decoration! as BoxDecoration).border != null &&
-    (((w.decoration! as BoxDecoration).border! as Border).top.color ==
-        MFColors.forge));
+
 
 void main() {
   testWidgets(
@@ -99,7 +92,7 @@ void main() {
     expect(find.text('Base de datos de cartas'), findsOneWidget);
 
     final headerRect = tester.getRect(find.byKey(datosKey));
-    final indicador = _indicadorDeFoco();
+    final indicador = indicadorDeFoco();
     expect(indicador, findsOneWidget);
     final focoRect = tester.getRect(indicador);
 
