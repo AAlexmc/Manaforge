@@ -102,6 +102,13 @@ class LandProfile {
     final isBasic =
         card.types.contains('Basic') || _basicNames.contains(card.name);
 
+    // Básicas "de cortesía" de la app: sin oracle ni subtipos. El color
+    // sale del nombre, o la manabase entera se queda sin candidatas.
+    if (produces.isEmpty && isBasic) {
+      final c = _basicTypeColor[card.name.replaceFirst('Snow-Covered ', '')];
+      if (c != null) produces.add(c);
+    }
+
     return LandProfile(
       produces: produces,
       tapped: tapped,

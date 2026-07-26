@@ -84,6 +84,14 @@ def land_profile(card: dict) -> LandProfile:
 
     is_basic = "Basic" in card.get("types", []) or card.get("name") in BASIC_NAMES
 
+    # Básicas "de cortesía" de la app: sin oracle ni subtipos. El color sale
+    # del nombre, o la manabase entera se queda sin candidatas.
+    if not produces and is_basic:
+        color = BASIC_TYPE_COLOR.get(
+            (card.get("name") or "").replace("Snow-Covered ", ""))
+        if color:
+            produces.add(color)
+
     return LandProfile(
         produces=produces,
         tapped=tapped,

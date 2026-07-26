@@ -90,3 +90,13 @@ def test_utility_incolora_queda_utility():
 def test_any_color():
     p = land_profile(_land("Evolving City", "{T}: Add one mana of any color."))
     assert p.produces == {"W", "U", "B", "R", "G"}
+
+
+def test_courtesy_basic_produces_by_name():
+    """Básicas "de cortesía" de la app: sin oracle ni subtipos -> color por nombre."""
+    p = land_profile({"name": "Swamp", "types": ["Basic", "Land"], "oracle": ""})
+    assert p.is_basic
+    assert p.produces == {"B"}
+    snow = land_profile({"name": "Snow-Covered Island",
+                         "types": ["Basic", "Land"], "oracle": ""})
+    assert snow.produces == {"U"}

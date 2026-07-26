@@ -22,6 +22,32 @@ void main() {
     expect(p.tapped, TappedKind.never);
   });
 
+  test('básica de cortesía (sin oracle ni subtipos) produce por nombre', () {
+    // La app fabrica básicas "de cortesía" así (card_database.dart,
+    // assumeBasics): sin oracle y sin subtipos. Si no producen color, la
+    // manabase entera devuelve null en la app real.
+    final cortes = Card(
+        name: 'Swamp',
+        qty: 25,
+        manaCost: '',
+        cmc: 0,
+        colors: '',
+        types: const ['Basic', 'Land'],
+        oracle: '');
+    final p = LandProfile.fromCard(cortes);
+    expect(p.isBasic, isTrue);
+    expect(p.produces, {'B'});
+    final nieve = Card(
+        name: 'Snow-Covered Island',
+        qty: 3,
+        manaCost: '',
+        cmc: 0,
+        colors: '',
+        types: const ['Basic', 'Land'],
+        oracle: '');
+    expect(LandProfile.fromCard(nieve).produces, {'U'});
+  });
+
   test('dual tipada condicional (Fetching Garden)', () {
     final p = LandProfile.fromCard(land(
         'Fetching Garden',
