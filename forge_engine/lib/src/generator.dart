@@ -1,4 +1,5 @@
 import 'classify.dart';
+import 'deck_score.dart';
 import 'mana_curve.dart';
 import 'manabase.dart';
 import 'models.dart';
@@ -60,9 +61,14 @@ class GeneratedDeck {
   final double score;
 
   /// Detalle de la manabase (fuentes por color, objetivo Karsten). Nullable:
-  /// Commander y `reforgeWithCurve` aún no lo rellenan.
+  /// Commander la recalcula aparte tras el suelo de básicas.
   final ManabaseResult? manabase;
-  const GeneratedDeck(this.deck, this.theme, this.score, [this.manabase]);
+
+  /// Desglose del score (eficiencia, consistencia, curva). Nullable: solo
+  /// null si el mazo no llegó a evaluarse (no debería pasar hoy).
+  final DeckEvaluation? eval;
+  const GeneratedDeck(this.deck, this.theme, this.score,
+      [this.manabase, this.eval]);
 }
 
 Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
@@ -201,13 +207,9 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   );
   if (DeckValidator.validate(deck, pool).isNotEmpty) return null;
 
-  var spellCount = 0;
-  var effSum = 0.0;
-  chosen.forEach((n, q) {
-    spellCount += q;
-    effSum += efficiency(pool[n]!) * q;
-  });
-  return GeneratedDeck(deck, theme, effSum / spellCount, manabase);
+  final eval = evaluateDeck(deck, pool, manabase.sourcesByColor,
+      deckSize: ManaCurve.deckSize);
+  return GeneratedDeck(deck, theme, eval.total, manabase, eval);
 }
 
 Map<String, int> _greedyFill(
@@ -449,14 +451,10 @@ ReforgeResult reforgeWithCurve(
         args: [errors.first]);
   }
 
-  var spellCount = 0;
-  var effSum = 0.0;
-  chosen.forEach((n, q) {
-    spellCount += q;
-    effSum += efficiency(pool[n]!) * q;
-  });
+  final eval = evaluateDeck(deck, pool, manabase.sourcesByColor,
+      deckSize: ManaCurve.deckSize);
   return ReforgeResult.ok(
-      GeneratedDeck(deck, theme, effSum / spellCount));
+      GeneratedDeck(deck, theme, eval.total, manabase, eval));
 }
 
 /// Las mejores propuestas entre monocolor y pares de colores.

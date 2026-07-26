@@ -83,6 +83,20 @@ void main() {
     deck.cards.forEach((name, qty) => expect(qty, 1, reason: name));
   });
 
+  test('trae eval con sourcesByColor recalculado tras el suelo de básicas '
+      '(Task 9)', () {
+    final pool = bigPool();
+    final gen = generateCommanderDeck(pool, 'General Bright');
+    expect(gen, isNotNull);
+    expect(gen!.eval, isNotNull);
+    expect(gen.score, closeTo(gen.eval!.total, 1e-9));
+    expect(gen.manabase, isNotNull);
+    // sourcesByColor del manabase final: W es el único color usado, y debe
+    // reflejar las tierras que de verdad quedaron en el mazo (Plains).
+    final wSources = gen.manabase!.sourcesByColor['W'] ?? 0;
+    expect(wSources, gen.deck.lands['Plains']);
+  });
+
   test('propuestas: encuentra al comandante él solo', () {
     final proposals = generateCommanderProposals(bigPool());
     expect(proposals, isNotEmpty);

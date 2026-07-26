@@ -1,4 +1,5 @@
 import 'classify.dart';
+import 'deck_score.dart';
 import 'generator.dart';
 import 'lands.dart';
 import 'manabase.dart';
@@ -220,9 +221,27 @@ GeneratedDeck? generateCommanderDeck(
     return null;
   }
 
-  var effSum = 0.0;
-  chosen.forEach((n, q) => effSum += efficiency(cands[n]!) * q);
-  return GeneratedDeck(deck, theme, effSum / totalChosen);
+  // El suelo de 6 básicas convierte no-básicas después del greedy: el
+  // sourcesByColor de `manabase` queda desactualizado. Se recalcula
+  // recorriendo las tierras finales.
+  final finalSourcesByColor = <String, int>{for (final c in usedColors) c: 0};
+  lands.forEach((name, qty) {
+    final profile = LandProfile.fromCard(pool[name]!);
+    for (final c in finalSourcesByColor.keys) {
+      if (profile.sourceOf(c, commander.identity)) {
+        finalSourcesByColor[c] = finalSourcesByColor[c]! + qty;
+      }
+    }
+  });
+  final finalManabase = ManabaseResult(
+    lands: lands,
+    sourcesByColor: finalSourcesByColor,
+    requiredByColor: manabase.requiredByColor,
+  );
+
+  final eval = evaluateDeck(deck, pool, finalSourcesByColor,
+      deckSize: commanderDeckSize);
+  return GeneratedDeck(deck, theme, eval.total, finalManabase, eval);
 }
 
 /// Las mejores propuestas de Commander: prueba los comandantes legendarios

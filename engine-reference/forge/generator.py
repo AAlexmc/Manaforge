@@ -12,6 +12,7 @@ from itertools import combinations
 
 from .classify import classify, theme_roles, efficiency, QUOTAS
 from .curve import LAND_RANGES, AVG_CMC_RANGES, DECK_SIZE, average_cmc, recommended_lands
+from .deck_score import evaluate_deck
 from .manabase import build_mana_base
 from .validator import validate_deck, BASIC_LANDS
 
@@ -140,6 +141,9 @@ def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | No
         "name": name or f"Forge {colors} {theme}",
         "colors": colors, "archetype": archetype, "theme": theme,
         "cards": chosen, "lands": manabase.lands,
+        # fuentes efectivas por color: las reusa generate_proposals para
+        # puntuar el mazo con evaluate_deck sin repetir el greedy de manabase.
+        "sources_by_color": manabase.sources_by_color,
     }
     return deck if not validate_deck(deck, pool) else None
 
@@ -203,10 +207,9 @@ def generate_proposals(pool: dict, max_proposals: int = 5) -> list[dict]:
     for colors in identities:
         deck = generate_deck(pool, colors)
         if deck:
-            spells = deck["cards"]
-            deck["score"] = sum(
-                efficiency(pool[n]) * q for n, q in spells.items()
-            ) / sum(spells.values())
+            deck["score"] = evaluate_deck(
+                deck, pool, deck["sources_by_color"], deck_size=DECK_SIZE
+            ).total
             proposals.append(deck)
     proposals.sort(key=lambda d: -d["score"])
     return proposals[:max_proposals]
