@@ -10,10 +10,13 @@ import 'package:manaforge_app/main.dart';
 import 'package:manaforge_app/services/background_prefs.dart';
 import 'package:manaforge_app/services/language_prefs.dart';
 
-Future<void> _arrancar(WidgetTester tester) async {
+import '../helpers/tour_foco.dart';
+
+Future<void> _arrancar(WidgetTester tester,
+    {Size size = const Size(1200, 1600)}) async {
   tester.platformDispatcher.localesTestValue = const [Locale('es')];
   addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 
@@ -84,10 +87,49 @@ void main() {
     await _pumps(tester, veces: 12);
     expect(find.text('Versión de ManaForge'), findsWidgets);
 
-    while (find.text('Entendido').evaluate().isEmpty) {
+    for (var i = 0;
+        i < 20 && find.text('Entendido').evaluate().isEmpty;
+        i++) {
       await tester.tap(find.text('Siguiente'));
       await _pumps(tester, veces: 12);
     }
+    expect(find.text('Entendido'), findsOneWidget); // el tour TERMINA
     expect(find.text('Apoyar el proyecto'), findsWidgets); // último paso
+  });
+
+  testWidgets(
+      'en ventana pequeña los 2 pasos nuevos sacan diana de verdad '
+      '(el ListView de Ajustes es perezoso)', (tester) async {
+    // ventana de escritorio pequeña: bastante alto para el arranque, poco
+    // para que el ListView de Ajustes NO construya las tiles del final
+    await _arrancar(tester, size: const Size(800, 600));
+
+    await tester.tap(find.byIcon(Icons.help_outline));
+    await _pumps(tester, veces: 12);
+    // en 600px de alto el menú de guías scrollea: subirlo hasta que la
+    // entrada esté DE VERDAD en pantalla (construida != visible)
+    await tester.dragUntilVisible(find.text('Personalizar la app'),
+        find.byType(ListView).last, const Offset(0, -100));
+    await _pumps(tester, veces: 3);
+    await tester.tap(find.text('Personalizar la app'));
+    await _pumps(tester);
+
+    // el tour de Ajustes tiene 12 paradas; las 2 últimas son las nuevas.
+    // Avanzar hasta la 11 (10 Siguientes desde la 1):
+    for (var i = 0; i < 10; i++) {
+      await tester.tap(find.text('Siguiente'));
+      await _pumps(tester, veces: 14);
+    }
+    expect(find.text('Buzón de sugerencias'), findsWidgets);
+    expect(indicadorDeFoco(), findsOneWidget,
+        reason: 'paso «Buzón de sugerencias» sin diana: la tile perezosa '
+            'no se construyó o la medición falló');
+
+    await tester.tap(find.text('Siguiente'));
+    await _pumps(tester, veces: 14);
+    expect(find.text('Apoyar el proyecto'), findsWidgets);
+    expect(indicadorDeFoco(), findsOneWidget,
+        reason: 'paso «Apoyar el proyecto» sin diana');
+    expect(find.text('Entendido'), findsOneWidget); // última parada
   });
 }

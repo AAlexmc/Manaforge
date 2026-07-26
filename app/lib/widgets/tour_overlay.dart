@@ -132,9 +132,11 @@ class _TourOverlayState extends State<TourOverlay> {
     });
   }
 
-  /// Cuántos frames más se remide tras el scroll, para dar tiempo a que el
-  /// layout termine de asentar (ver comentario en [_medir]).
-  static const int _remedicionesTrasScroll = 10;
+  /// Cuánto tiempo se sigue remidiendo tras el scroll, para dar tiempo a
+  /// que el layout termine de asentar (ver comentario en [_medir]). En
+  /// TIEMPO, no en frames: a 120 Hz un presupuesto de frames se queda en la
+  /// mitad de margen.
+  static const Duration _ventanaRemedicion = Duration(milliseconds: 400);
 
   Future<void> _medir() async {
     final entrada = _i; // si el usuario cambia de paso a media medición, cortar
@@ -154,7 +156,13 @@ class _TourOverlayState extends State<TourOverlay> {
     // empujando cosas por debajo mientras termina su propia animación).
     // Medir una sola vez justo ahí da un rect "rancio": se remide varios
     // frames más y se sigue el rect hasta que deja de moverse.
-    for (var vez = 0; vez < _remedicionesTrasScroll; vez++) {
+    // «Convergió» exige DOS medidas seguidas iguales: con una sola, una
+    // repetición casual a mitad de animación (p. ej. la sección desplegando
+    // aún — isExpanded miente durante la animación) cortaba antes de tiempo
+    // y volvía el rect rancio.
+    final sw = Stopwatch()..start();
+    var igualesSeguidas = 0;
+    while (sw.elapsed < _ventanaRemedicion) {
       await _unFrameMas();
       if (!mounted || _i != entrada) return;
       final fresco = key.currentContext;
@@ -162,7 +170,11 @@ class _TourOverlayState extends State<TourOverlay> {
       final box = fresco.findRenderObject();
       if (box is! RenderBox || !box.hasSize) return;
       final rect = box.localToGlobal(Offset.zero) & box.size;
-      if (rect == _targetRect) return; // ya convergió, no hace falta seguir
+      if (rect == _targetRect) {
+        if (++igualesSeguidas >= 2) return;
+        continue;
+      }
+      igualesSeguidas = 0;
       setState(() => _targetRect = rect);
     }
   }
@@ -275,11 +287,17 @@ class _TourOverlayState extends State<TourOverlay> {
             child: burbuja),
       );
     }
-    final focoAbajo = foco.center.dy > h / 2;
+    // al lado con MÁS hueco libre, no al opuesto del centro: una diana que
+    // ocupa media pantalla (la tarjeta «Cómo funciona») invadiría la mitad
+    // «opuesta» y la burbuja se le montaría encima
+    final insetTop = MediaQuery.viewPaddingOf(context).top;
+    final focoAbajo = foco.top - insetTop > (h - inset) - foco.bottom;
     return Positioned(
       left: 20,
       right: 20,
-      top: focoAbajo ? 20 : null,
+      // el 20 a pelo arriba se metía bajo la barra de estado/notch en
+      // edge-to-edge: el overlay vive fuera de todo SafeArea
+      top: focoAbajo ? insetTop + 20 : null,
       bottom: focoAbajo ? null : inset + 20,
       child: burbuja,
     );
