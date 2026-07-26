@@ -152,7 +152,7 @@ No hace falta saber programar: si tienes una idea o has visto un fallo, déjalo 
 <a id="donativos"></a>
 ## 💜 Donativos
 
-ManaForge es gratis y sin anuncios, y va a seguir siéndolo (la [licencia](#-licencia) no permite venderla). Si la app te sirve y quieres invitar a un café, pronto se podrá a través de GitHub Sponsors — el botón **Sponsor** de arriba del repo. Mientras no esté activo, la mejor forma de apoyar es usarla, contar qué mejorarías en el [buzón](https://github.com/AAlexmc/Manaforge/issues/new/choose) y darle una ⭐ al repo.
+ManaForge es gratis y sin anuncios, y va a seguir siéndolo (la [licencia](#-licencia) no permite venderla). Si la app te sirve y quieres invitar a un café, puedes hacerlo por PayPal: **[paypal.me/al3payme](https://paypal.me/al3payme)** (también desde el botón **Sponsor** de arriba del repo). Y si no, la mejor forma de apoyar es usarla, contar qué mejorarías en el [buzón](https://github.com/AAlexmc/Manaforge/issues/new/choose) y darle una ⭐ al repo.
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 
