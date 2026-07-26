@@ -3565,6 +3565,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fxThemeGraveyard => '墓地';
 
   @override
+  String get fxThemeReanimator => 'リアニメイト';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return '$tribe部族';
+  }
+
+  @override
   String get fxThemeGoodstuff => '選りすぐりの強カード';
 
   @override

@@ -3693,6 +3693,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fxThemeGraveyard => 'cimetière';
 
   @override
+  String get fxThemeReanimator => 'réanimation';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return 'tribu $tribe';
+  }
+
+  @override
   String get fxThemeGoodstuff => 'le meilleur de tes cartes';
 
   @override

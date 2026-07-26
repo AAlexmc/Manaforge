@@ -1004,6 +1004,11 @@
   "fxThemeCounters": "счётчики +1/+1",
   "fxThemeTokens": "рой",
   "fxThemeGraveyard": "кладбище",
+  "fxThemeReanimator": "оживление",
+  "fxThemeTribal": "трайбл {tribe}",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "лучшее из твоих карт",
   "fxTagLifegain": "Каждая набранная жизнь — урон для них: дренируй и держись.",
   "fxTagSacrifice": "Твои существа ценнее мёртвыми: жертвуй ими и собирай дань.",

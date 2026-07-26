@@ -3667,6 +3667,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fxThemeGraveyard => 'graveyard';
 
   @override
+  String get fxThemeReanimator => 'reanimator';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return '$tribe tribal';
+  }
+
+  @override
   String get fxThemeGoodstuff => 'the best of your cards';
 
   @override

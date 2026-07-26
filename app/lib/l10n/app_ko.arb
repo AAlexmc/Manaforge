@@ -1004,6 +1004,11 @@
   "fxThemeCounters": "+1/+1 카운터",
   "fxThemeTokens": "물량",
   "fxThemeGraveyard": "무덤",
+  "fxThemeReanimator": "리애니메이트",
+  "fxThemeTribal": "{tribe} 부족",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "정예 카드",
   "fxTagLifegain": "네가 얻는 생명력 1점이 상대에겐 피해예요: 흡수하고 버텨요.",
   "fxTagSacrifice": "네 생물은 죽어서 더 값져요: 희생시키고 그 대가를 챙겨요.",

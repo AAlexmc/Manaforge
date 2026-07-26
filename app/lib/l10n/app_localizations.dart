@@ -5996,6 +5996,18 @@ abstract class AppLocalizations {
   /// **'cementerio'**
   String get fxThemeGraveyard;
 
+  /// No description provided for @fxThemeReanimator.
+  ///
+  /// In es, this message translates to:
+  /// **'reanimación'**
+  String get fxThemeReanimator;
+
+  /// No description provided for @fxThemeTribal.
+  ///
+  /// In es, this message translates to:
+  /// **'tribu de {tribe}'**
+  String fxThemeTribal(String tribe);
+
   /// No description provided for @fxThemeGoodstuff.
   ///
   /// In es, this message translates to:

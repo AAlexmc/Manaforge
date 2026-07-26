@@ -28,6 +28,10 @@ const Map<String, Map<int, double>> curveTarget = {
 /// Sin masa crítica de payoffs no hay tema.
 const int minPayoffCopies = 3;
 
+/// Tribu elegible: al menos esta cantidad de copias de criaturas del
+/// subtipo (además de `minPayoffCopies` payoffs, como cualquier tema).
+const int minTribeMembers = 12;
+
 /// Colores naturales de cada tema (color pie). '' = cualquier color.
 const Map<String, String> themeColors = {
   'lifegain': 'WB',
@@ -91,9 +95,25 @@ Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
       e.value.colors.split('').toSet().difference(allowed).isEmpty));
 }
 
+/// Copias de criaturas por subtipo entre las candidatas: la masa tribal
+/// cruda, antes de mirar quién la aprovecha.
+Map<String, int> _tribeMemberCopies(Map<String, Card> cands) {
+  final out = <String, int>{};
+  cands.forEach((_, card) {
+    if (!card.types.contains('Creature')) return;
+    for (final subtype in card.subtypes) {
+      out[subtype] = (out[subtype] ?? 0) + card.qty;
+    }
+  });
+  return out;
+}
+
 /// Tema dominante y rol de cada carta. Un tema solo es elegible con
 /// >= minPayoffCopies copias de payoffs en estos colores. [colors] desempata
 /// por color pie: un tema natural de la identidad pesa 1.25x, uno ajeno 0.8x.
+/// Las tribus ('tribal:<Subtipo>') compiten con los temas mecánicos: no
+/// llevan multiplicador de color (son de cualquier color) y además del
+/// mínimo de payoffs piden >= minTribeMembers criaturas del subtipo.
 (String, Map<String, Map<String, String>>) detectTheme(
     Map<String, Card> cands, {String colors = ''}) {
   final mult = _themeColorMultiplier(colors);
@@ -113,6 +133,23 @@ Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
       }
     });
   });
+
+  _tribeMemberCopies(cands).forEach((tribe, members) {
+    if (members < minTribeMembers) return;
+    final theme = 'tribal:$tribe';
+    var payoffs = 0;
+    cands.forEach((name, card) {
+      final role = tribalRole(card, tribe);
+      if (role == null) return;
+      rolesByCard[name]![theme] = role;
+      if (role == 'payoff') payoffs += card.qty;
+    });
+    if (payoffs >= minPayoffCopies) {
+      payoffCopies[theme] = payoffs;
+      weights[theme] = payoffs * 3.0 + members * 1.0;
+    }
+  });
+
   String best = 'goodstuff';
   var bestWeight = -1.0;
   weights.forEach((theme, w) {

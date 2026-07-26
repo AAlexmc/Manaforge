@@ -1004,6 +1004,11 @@
   "fxThemeCounters": "+1/+1カウンター",
   "fxThemeTokens": "スウォーム",
   "fxThemeGraveyard": "墓地",
+  "fxThemeReanimator": "リアニメイト",
+  "fxThemeTribal": "{tribe}部族",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "選りすぐりの強カード",
   "fxTagLifegain": "得たライフ1点1点が相手へのダメージ：吸い取って、耐えしのげ。",
   "fxTagSacrifice": "あなたのクリーチャーは死んでこそ価値がある：生け贄に捧げて、通行料を取り立てろ。",

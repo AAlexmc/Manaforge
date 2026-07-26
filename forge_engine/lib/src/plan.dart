@@ -10,6 +10,8 @@ import 'generator.dart';
 /// escribirlos.
 
 /// Los temas que sabe detectar el motor, en el orden en que se nombran.
+/// Las tribus ('tribal:<Subtipo>') no entran aquí: el subtipo es dinámico,
+/// no un tema fijo — `forge_texts.dart` las reconoce por prefijo.
 const List<String> kThemes = [
   'lifegain',
   'sacrifice',
@@ -18,6 +20,7 @@ const List<String> kThemes = [
   'counters',
   'tokens',
   'graveyard',
+  'reanimator',
   'goodstuff',
 ];
 

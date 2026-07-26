@@ -326,4 +326,86 @@ void main() {
       expect(DeckValidator.validate(gen.deck, pool), isEmpty);
     });
   });
+
+  group('temas tribales (Task 11)', () {
+    int copiasDelSubtipo(
+        Map<String, Card> pool, Deck deck, String subtype) {
+      var n = 0;
+      deck.cards.forEach((name, qty) {
+        if ((pool[name]?.subtypes ?? const []).contains(subtype)) n += qty;
+      });
+      return n;
+    }
+
+    // 14 elfos + 4 payoffs («Other Elf creatures you control get…») en G.
+    Map<String, Card> elfPool({bool withPayoff = true}) {
+      final p = <String, Card>{
+        'Forest': const Card(
+            name: 'Forest',
+            qty: 30,
+            manaCost: '',
+            cmc: 0,
+            colors: '',
+            types: ['Basic', 'Land'],
+            oracle: '{T}: Add {G}.'),
+      };
+      const elfQty = [4, 4, 3, 3];
+      for (var i = 0; i < elfQty.length; i++) {
+        final name = 'Elf Warrior $i';
+        p[name] = Card(
+            name: name,
+            qty: elfQty[i],
+            manaCost: '{G}',
+            cmc: 1,
+            colors: 'G',
+            types: const ['Creature'],
+            subtypes: const ['Elf'],
+            oracle: '',
+            power: 1,
+            toughness: 1);
+      }
+      if (withPayoff) {
+        p['Elvish Chieftain'] = const Card(
+            name: 'Elvish Chieftain',
+            qty: 4,
+            manaCost: '{1}{G}',
+            cmc: 2,
+            colors: 'G',
+            types: ['Creature'],
+            subtypes: ['Elf'],
+            oracle: 'Other Elf creatures you control get +1/+1.',
+            power: 2,
+            toughness: 2);
+      }
+      const curveCmc = [1, 2, 2, 3, 3, 4];
+      for (var i = 0; i < curveCmc.length; i++) {
+        final cmc = curveCmc[i];
+        final name = 'Filler Beast $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{$cmc}',
+            cmc: cmc,
+            colors: 'G',
+            types: const ['Creature'],
+            oracle: '',
+            power: cmc,
+            toughness: cmc);
+      }
+      return p;
+    }
+
+    test('14 elfos + payoffs en G detecta tribal:Elf y mete elfos de sobra',
+        () {
+      final pool = elfPool();
+      final gen = generateDeck(pool, 'G')!;
+      expect(gen.theme, 'tribal:Elf');
+      expect(copiasDelSubtipo(pool, gen.deck, 'Elf'), greaterThanOrEqualTo(10));
+    });
+
+    test('control: 14 elfos SIN payoffs no hacen tema tribal', () {
+      final gen = generateDeck(elfPool(withPayoff: false), 'G');
+      expect(gen == null || gen.theme != 'tribal:Elf', isTrue);
+    });
+  });
 }

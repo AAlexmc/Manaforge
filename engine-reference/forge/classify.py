@@ -91,6 +91,23 @@ def classify(card: dict) -> set[str]:
     return tags
 
 
+_TRIBAL_PAYOFF_SECONDARY = re.compile(r"other |you control|whenever|each ")
+
+
+def tribal_role(card: dict, tribe: str) -> str | None:
+    """Rol tribal de una carta para una tribu concreta (tribe, el subtipo en
+    inglés: "Elf", "Goblin"...). Payoff: menciona la tribu (singular o
+    plural) y trae una palabra de anthem/trigger tribal. Enabler: criatura
+    de ese subtipo — el propio cuerpo de la tribu."""
+    text = card["oracle"].lower()
+    t = tribe.lower()
+    if (t in text or f"{t}s" in text) and _TRIBAL_PAYOFF_SECONDARY.search(text):
+        return "payoff"
+    if "Creature" in card["types"] and tribe in card.get("subtypes", []):
+        return "enabler"
+    return None
+
+
 def theme_roles(card: dict) -> dict[str, str]:
     """Para cada tema, si la carta es 'payoff' o 'enabler' de ese tema."""
     text = card["oracle"].lower()

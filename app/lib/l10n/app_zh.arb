@@ -1004,6 +1004,11 @@
   "fxThemeCounters": "+1/+1 指示物",
   "fxThemeTokens": "衍生物大军",
   "fxThemeGraveyard": "坟场",
+  "fxThemeReanimator": "复生",
+  "fxThemeTribal": "{tribe}部落",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "精华好牌",
   "fxTagLifegain": "你回的每点生命都是对手的伤害：汲取、扛住。",
   "fxTagSacrifice": "你的生物死了更值钱：牺牲它们，收取过路费。",

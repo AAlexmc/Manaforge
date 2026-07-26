@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections import Counter
 from itertools import combinations
 
-from .classify import classify, theme_roles, efficiency, QUOTAS
+from .classify import classify, theme_roles, tribal_role, efficiency, QUOTAS
 from .curve import LAND_RANGES, AVG_CMC_RANGES, DECK_SIZE, average_cmc, recommended_lands
 from .deck_score import evaluate_deck
 from .manabase import build_mana_base
@@ -35,6 +35,7 @@ def _candidate_pool(pool: dict, colors: str) -> dict:
 
 
 MIN_PAYOFF_COPIES = 3  # sin masa crítica de payoffs no hay tema
+MIN_TRIBE_MEMBERS = 12  # tribu elegible: además del mínimo de payoffs de siempre
 
 # Colores naturales de cada tema (color pie). "" = cualquier color.
 THEME_COLORS = {
@@ -71,6 +72,18 @@ def _theme_color_multiplier(colors: str) -> dict[str, float]:
     return out
 
 
+def _tribe_member_copies(cands: dict) -> dict[str, int]:
+    """Copias de criaturas por subtipo entre las candidatas: la masa tribal
+    cruda, antes de mirar quién la aprovecha."""
+    out: Counter = Counter()
+    for card in cands.values():
+        if "Creature" not in card["types"]:
+            continue
+        for subtype in card.get("subtypes", []):
+            out[subtype] += card["qty"]
+    return dict(out)
+
+
 def detect_theme(cands: dict, colors: str = "") -> tuple[str, dict[str, str]]:
     """Tema dominante y rol de cada carta.
 
@@ -78,7 +91,10 @@ def detect_theme(cands: dict, colors: str = "") -> tuple[str, dict[str, str]]:
     estos colores: los enablers solos no hacen tema (p. ej. artefactos
     incoloros presentes en toda identidad no convierten cualquier mazo en
     'artifacts'). Entre los elegibles gana el de más peso (payoffs x3),
-    desempatado por el color pie de [colors].
+    desempatado por el color pie de [colors]. Las tribus ("tribal:<Subtipo>")
+    compiten con los temas mecánicos: no llevan multiplicador de color (son
+    de cualquier color) y además del mínimo de payoffs piden
+    >= MIN_TRIBE_MEMBERS criaturas del subtipo.
     """
     mult = _theme_color_multiplier(colors)
     weights: dict[str, float] = {}
@@ -94,6 +110,23 @@ def detect_theme(cands: dict, colors: str = "") -> tuple[str, dict[str, str]]:
                 weights[theme] = weights.get(theme, 0.0) + card["qty"] * 3 * m
             else:
                 weights[theme] = weights.get(theme, 0.0) + card["qty"] * m
+
+    for tribe, members in _tribe_member_copies(cands).items():
+        if members < MIN_TRIBE_MEMBERS:
+            continue
+        theme = f"tribal:{tribe}"
+        payoffs = 0
+        for name, card in cands.items():
+            role = tribal_role(card, tribe)
+            if role is None:
+                continue
+            roles_by_card[name][theme] = role
+            if role == "payoff":
+                payoffs += card["qty"]
+        if payoffs >= MIN_PAYOFF_COPIES:
+            payoff_copies[theme] = payoffs
+            weights[theme] = payoffs * 3.0 + members * 1.0
+
     eligible = {t: w for t, w in weights.items()
                 if payoff_copies[t] >= MIN_PAYOFF_COPIES}
     if not eligible:

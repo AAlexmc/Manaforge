@@ -12,18 +12,26 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 import '../l10n/app_localizations.dart';
 
 /// Cómo se llama un tema. Un tema que el motor detecte y aquí no esté se
-/// enseña con su clave: es preferible a no decir nada.
-String themeName(AppLocalizations t, String theme) => switch (theme) {
-      'lifegain' => t.fxThemeLifegain,
-      'sacrifice' => t.fxThemeSacrifice,
-      'spells' => t.fxThemeSpells,
-      'artifacts' => t.fxThemeArtifacts,
-      'counters' => t.fxThemeCounters,
-      'tokens' => t.fxThemeTokens,
-      'graveyard' => t.fxThemeGraveyard,
-      'goodstuff' => t.fxThemeGoodstuff,
-      _ => theme,
-    };
+/// enseña con su clave: es preferible a no decir nada. Las tribus
+/// ('tribal:<Subtipo>') no tienen entrada fija: el subtipo va EN INGLÉS
+/// (como los nombres de carta — decisión previa) interpolado en la frase.
+String themeName(AppLocalizations t, String theme) {
+  if (theme.startsWith('tribal:')) {
+    return t.fxThemeTribal(theme.substring('tribal:'.length));
+  }
+  return switch (theme) {
+    'lifegain' => t.fxThemeLifegain,
+    'sacrifice' => t.fxThemeSacrifice,
+    'spells' => t.fxThemeSpells,
+    'artifacts' => t.fxThemeArtifacts,
+    'counters' => t.fxThemeCounters,
+    'tokens' => t.fxThemeTokens,
+    'graveyard' => t.fxThemeGraveyard,
+    'reanimator' => t.fxThemeReanimator,
+    'goodstuff' => t.fxThemeGoodstuff,
+    _ => theme,
+  };
+}
 
 /// Frase corta del tema, la que cuenta la historia del mazo. Null si el tema
 /// no tiene una propia (entonces habla el arquetipo).

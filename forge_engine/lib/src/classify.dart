@@ -108,6 +108,25 @@ Set<String> classify(Card card) {
   return tags;
 }
 
+final _tribalPayoffSecondary = RegExp(r'other |you control|whenever|each ');
+
+/// Rol tribal de una carta para una tribu concreta ([tribe], el subtipo en
+/// inglés: "Elf", "Goblin"…). Payoff: menciona la tribu (singular o plural)
+/// y trae una palabra de anthem/trigger tribal. Enabler: criatura de ese
+/// subtipo — el propio cuerpo de la tribu.
+String? tribalRole(Card card, String tribe) {
+  final text = card.oracle.toLowerCase();
+  final t = tribe.toLowerCase();
+  if ((text.contains(t) || text.contains('${t}s')) &&
+      _tribalPayoffSecondary.hasMatch(text)) {
+    return 'payoff';
+  }
+  if (card.types.contains('Creature') && card.subtypes.contains(tribe)) {
+    return 'enabler';
+  }
+  return null;
+}
+
 /// Para cada tema, si la carta es 'payoff' o 'enabler' de ese tema.
 Map<String, String> themeRoles(Card card) {
   final text = card.oracle.toLowerCase();

@@ -1656,6 +1656,11 @@
   "fxThemeCounters": "contadores +1/+1",
   "fxThemeTokens": "enjambre",
   "fxThemeGraveyard": "cementerio",
+  "fxThemeReanimator": "reanimación",
+  "fxThemeTribal": "tribu de {tribe}",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "lo mejor de tus cartas",
   "fxTagLifegain": "Cada punto de vida que ganas es daño para ellos: drena y aguanta.",
   "fxTagSacrifice": "Tus criaturas valen más muertas: sacrifícalas y cobra el peaje.",

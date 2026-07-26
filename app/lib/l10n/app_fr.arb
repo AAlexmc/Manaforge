@@ -1004,6 +1004,11 @@
   "fxThemeCounters": "marqueurs +1/+1",
   "fxThemeTokens": "nuée",
   "fxThemeGraveyard": "cimetière",
+  "fxThemeReanimator": "réanimation",
+  "fxThemeTribal": "tribu {tribe}",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "le meilleur de tes cartes",
   "fxTagLifegain": "Chaque point de vie que tu gagnes leur fait mal : draine et tiens bon.",
   "fxTagSacrifice": "Tes créatures valent plus mortes que vivantes : sacrifie-les et encaisse.",

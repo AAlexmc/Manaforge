@@ -1004,6 +1004,11 @@
   "fxThemeCounters": "segnalini +1/+1",
   "fxThemeTokens": "sciame",
   "fxThemeGraveyard": "cimitero",
+  "fxThemeReanimator": "rianimazione",
+  "fxThemeTribal": "tribù {tribe}",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "il meglio delle tue carte",
   "fxTagLifegain": "Ogni punto vita che guadagni è danno per loro: drena e reggi.",
   "fxTagSacrifice": "Le tue creature valgono di più da morte: sacrificale e incassa il pedaggio.",

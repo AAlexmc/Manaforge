@@ -1004,6 +1004,11 @@
   "fxThemeCounters": "+1/+1-Marken",
   "fxThemeTokens": "Schwarm",
   "fxThemeGraveyard": "Friedhof",
+  "fxThemeReanimator": "Reanimation",
+  "fxThemeTribal": "{tribe}-Stamm",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "das Beste aus deinen Karten",
   "fxTagLifegain": "Jeder Lebenspunkt, den du dazubekommst, ist Schaden für sie: zapf ab und halt durch.",
   "fxTagSacrifice": "Deine Kreaturen sind tot mehr wert: opfere sie und kassier ab.",

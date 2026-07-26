@@ -155,3 +155,53 @@ def test_el_validador_sigue_mandando_coste_medio_dentro_del_arquetipo():
     deck = generate_deck(pool, "B")
     assert deck is not None
     assert validate_deck(deck, pool) == []
+
+
+def _copias_del_subtipo(pool: dict, deck: dict, subtype: str) -> int:
+    return sum(qty for name, qty in deck["cards"].items()
+               if subtype in pool[name].get("subtypes", []))
+
+
+def _elf_pool(with_payoff: bool = True) -> dict:
+    """Mismo pool que `forge_engine/test/generator_test.dart` (Task 11):
+    14 elfos + 4 payoffs («Other Elf creatures you control get…») en G."""
+    p = {
+        "Forest": {
+            "name": "Forest", "qty": 30, "mana_cost": "", "cmc": 0, "colors": "",
+            "types": ["Basic", "Land"], "oracle": "{T}: Add {G}.",
+        },
+    }
+    for i, qty in enumerate([4, 4, 3, 3]):
+        name = f"Elf Warrior {i}"
+        p[name] = {
+            "name": name, "qty": qty, "mana_cost": "{G}", "cmc": 1, "colors": "G",
+            "types": ["Creature"], "subtypes": ["Elf"], "oracle": "",
+            "power": 1, "toughness": 1,
+        }
+    if with_payoff:
+        p["Elvish Chieftain"] = {
+            "name": "Elvish Chieftain", "qty": 4, "mana_cost": "{1}{G}", "cmc": 2,
+            "colors": "G", "types": ["Creature"], "subtypes": ["Elf"],
+            "oracle": "Other Elf creatures you control get +1/+1.",
+            "power": 2, "toughness": 2,
+        }
+    for i, cmc in enumerate([1, 2, 2, 3, 3, 4]):
+        name = f"Filler Beast {i}"
+        p[name] = {
+            "name": name, "qty": 4, "mana_cost": "{%d}" % cmc, "cmc": cmc, "colors": "G",
+            "types": ["Creature"], "oracle": "", "power": cmc, "toughness": cmc,
+        }
+    return p
+
+
+def test_14_elfos_mas_payoffs_en_g_detecta_tribal_elf_y_mete_elfos_de_sobra():
+    pool = _elf_pool()
+    deck = generate_deck(pool, "G")
+    assert deck is not None
+    assert deck["theme"] == "tribal:Elf"
+    assert _copias_del_subtipo(pool, deck, "Elf") >= 10
+
+
+def test_control_14_elfos_sin_payoffs_no_hacen_tema_tribal():
+    deck = generate_deck(_elf_pool(with_payoff=False), "G")
+    assert deck is None or deck["theme"] != "tribal:Elf"

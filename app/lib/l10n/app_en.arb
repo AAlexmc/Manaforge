@@ -1651,6 +1651,11 @@
   "fxThemeCounters": "+1/+1 counters",
   "fxThemeTokens": "swarm",
   "fxThemeGraveyard": "graveyard",
+  "fxThemeReanimator": "reanimator",
+  "fxThemeTribal": "{tribe} tribal",
+  "@fxThemeTribal": {
+    "placeholders": {"tribe": {"type": "String"}}
+  },
   "fxThemeGoodstuff": "the best of your cards",
   "fxTagLifegain": "Every life point you gain is damage to them: drain and hold on.",
   "fxTagSacrifice": "Your creatures are worth more dead: sacrifice them and collect the toll.",

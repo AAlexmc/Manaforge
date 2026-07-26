@@ -3545,6 +3545,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fxThemeGraveyard => '坟场';
 
   @override
+  String get fxThemeReanimator => '复生';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return '$tribe部落';
+  }
+
+  @override
   String get fxThemeGoodstuff => '精华好牌';
 
   @override

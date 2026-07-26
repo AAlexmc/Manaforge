@@ -3582,6 +3582,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fxThemeGraveyard => '무덤';
 
   @override
+  String get fxThemeReanimator => '리애니메이트';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return '$tribe 부족';
+  }
+
+  @override
   String get fxThemeGoodstuff => '정예 카드';
 
   @override
