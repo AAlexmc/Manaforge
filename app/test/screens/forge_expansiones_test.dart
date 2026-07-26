@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:forge_engine/forge_engine.dart' as fe;
 import 'package:manaforge_app/screens/forge_screen.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/collection_store.dart';
@@ -124,10 +125,18 @@ void main() {
         of: find.text('Forja profunda'), matching: find.byType(SwitchListTile));
     expect(switchFinder, findsOneWidget);
     expect(tester.widget<SwitchListTile>(switchFinder).value, isTrue);
+    // ForgeJob se construye con el switch: por defecto ON.
+    final state = tester.state(find.byType(ForgeScreen));
+    expect((state as dynamic).buildForgeJob(const <String, fe.Card>{}).deepForge,
+        isTrue);
 
     await tester.tap(find.text('Forja profunda'));
     await tester.pump();
 
     expect(tester.widget<SwitchListTile>(switchFinder).value, isFalse);
+    // y también se construye con el valor apagado tras tocarlo: no es solo
+    // la etiqueta la que cambia, es el ForgeJob de verdad.
+    expect((state as dynamic).buildForgeJob(const <String, fe.Card>{}).deepForge,
+        isFalse);
   });
 }

@@ -94,10 +94,45 @@ class _SimCard {
   });
 
   static final _dmg = RegExp(r'deals? (\d+) damage');
-  static final _mill = RegExp(r'mills? (a card|\d+ cards?)');
+  static final _mill = RegExp(
+      r'mills? (a|one|two|three|four|five|six|seven|eight|nine|ten|\d+) cards?');
+  static const _millNumberWords = {
+    'a': 1,
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
+    'ten': 10,
+  };
   static final _loot = RegExp(r'draws? a card,? then discards? a card');
   static final _reanimate =
       RegExp(r'return .*creature.* from your graveyard to the battlefield');
+
+  /// "mill N cards" PROPIO: el oracle real casi nunca escribe el número en
+  /// dígitos ("mills two cards", no "mills 2 cards"), y "target player
+  /// mills"/"each opponent mills" no es tu tumba — puede llenar la del
+  /// rival. Solo cuenta el mill sin sujeto ajeno en la misma cláusula
+  /// (imperativo "Mill N cards." o "you mill N cards", los templates de
+  /// autotumba reales tipo Stitcher's Supplier).
+  static int _selfMill(String oracle) {
+    for (final clause in oracle.split(RegExp(r'[.\n]'))) {
+      final m = _mill.firstMatch(clause);
+      if (m == null) continue;
+      if (clause.contains('target player') ||
+          clause.contains('target opponent') ||
+          clause.contains('opponent')) {
+        continue; // mill ajeno: no es tu cementerio
+      }
+      final word = m.group(1)!;
+      return _millNumberWords[word] ?? int.parse(word);
+    }
+    return 0;
+  }
 
   factory _SimCard.fromCard(Card c) {
     final tags = classify(c);
@@ -117,12 +152,7 @@ class _SimCard {
       produces = profile.produces;
       entersTapped = profile.tapped == TappedKind.always;
     }
-    var millSelf = 0;
-    final millMatch = _mill.firstMatch(oracle);
-    if (millMatch != null) {
-      final g = millMatch.group(1)!;
-      millSelf = g == 'a card' ? 1 : int.parse(RegExp(r'\d+').firstMatch(g)!.group(0)!);
-    }
+    final millSelf = _selfMill(oracle);
     bool kw(String k) => oracle.contains(k);
     return _SimCard(
       name: c.name,
@@ -383,6 +413,14 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
           if (!_tryCounter(foe, pick)) {
             me.graveyard.remove(target);
             me.board.add(_Permanent(target, sick: !target.haste));
+            // el hechizo de reanimación puede ser él mismo una criatura
+            // (Karmic Guide / Sun Titan: ETB reanima) — si es así, TAMBIÉN
+            // entra en juego. No excluir `reanimates` para criaturas (como
+            // sí hace `isRamp`) porque eso las tiraría a la basura: se
+            // pagarían y desaparecerían sin dejar cuerpo ni target en mesa.
+            if (pick.isCreature) {
+              me.board.add(_Permanent(pick, sick: !pick.haste));
+            }
           }
         }
       }

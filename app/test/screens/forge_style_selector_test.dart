@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:forge_engine/forge_engine.dart' as fe;
 import 'package:manaforge_app/screens/forge_screen.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/collection_store.dart';
@@ -44,7 +45,8 @@ void main() {
     expect(find.text('Estilo: auto'), findsOneWidget);
   });
 
-  testWidgets('elegir Elfos cambia la etiqueta a Elfos', (tester) async {
+  testWidgets('elegir Elfos cambia la etiqueta a Elfos y construye ForgeJob '
+      "con theme == 'tribal:Elf'", (tester) async {
     await _pump(tester, _conCartas(40));
 
     await tester.tap(find.text('Estilo: auto'));
@@ -56,6 +58,10 @@ void main() {
 
     expect(find.text('Elfos'), findsOneWidget); // ahora solo la etiqueta
     expect(find.text('Estilo: auto'), findsNothing);
+    // no solo la etiqueta: el ForgeJob de verdad lleva el tema elegido.
+    final state = tester.state(find.byType(ForgeScreen));
+    final job = (state as dynamic).buildForgeJob(const <String, fe.Card>{});
+    expect(job.theme, 'tribal:Elf');
   });
 
   testWidgets('la hoja también enseña temas mecánicos (p. ej. reanimación)',
@@ -87,6 +93,13 @@ void main() {
         of: find.text('Incluir cartas que no tengo'),
         matching: find.byType(SwitchListTile)));
     expect(incluirSwitch.value, isTrue);
+    // y el ForgeJob de verdad lleva el tema — "incluir cartas que no
+    // tengo" no es un campo de ForgeJob (cambia de qué pool sale, no el
+    // job), así que el flag combinado se ve en dos sitios distintos: el
+    // switch de arriba y el theme del job construido aquí.
+    final state = tester.state(find.byType(ForgeScreen));
+    final job = (state as dynamic).buildForgeJob(const <String, fe.Card>{});
+    expect(job.theme, 'tribal:Elf');
   });
 
   testWidgets('cerrar la hoja sin elegir no resetea el estilo ya puesto',

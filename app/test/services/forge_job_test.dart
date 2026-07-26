@@ -7,18 +7,6 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 import 'package:manaforge_app/services/forge_job.dart';
 
 void main() {
-  fe.Card creature(String name, int cmc, int p, int t, {int qty = 4}) =>
-      fe.Card(
-          name: name,
-          qty: qty,
-          manaCost: '{$cmc}',
-          cmc: cmc,
-          colors: 'R',
-          types: const ['Creature'],
-          oracle: '',
-          power: p,
-          toughness: t);
-
   fe.Card land(String name, {int qty = 24}) => fe.Card(
       name: name,
       qty: qty,
@@ -28,18 +16,46 @@ void main() {
       types: const ['Basic', 'Land'],
       oracle: '');
 
-  final pool = {
-    'Raider': creature('Raider', 1, 2, 1),
-    'Brawler': creature('Brawler', 2, 3, 2),
-    'Crusher': creature('Crusher', 3, 4, 3),
-    'Mountain': land('Mountain', qty: 40),
-  };
+  // >= 30 copias por color Y >= 2 identidades reales (R y G): con solo
+  // Raider/Brawler/Crusher (12 copias) `generateDeck` corta en
+  // totalCopies<30 y las propuestas salen vacías — los tests de abajo
+  // comparaban [] con [], sin probar nada.
+  fe.Card colorCreature(String name, int cmc, String colors) => fe.Card(
+      name: name,
+      qty: 4,
+      manaCost: '{$cmc}',
+      cmc: cmc,
+      colors: colors,
+      types: const ['Creature'],
+      oracle: '',
+      power: cmc,
+      toughness: cmc);
+
+  Map<String, fe.Card> richPool() {
+    final p = <String, fe.Card>{
+      'Mountain': land('Mountain', qty: 40),
+      'Forest': land('Forest', qty: 40),
+    };
+    const curve = [1, 1, 2, 2, 2, 3, 3, 4, 4, 5];
+    for (var i = 0; i < curve.length; i++) {
+      p['R Beast $i'] = colorCreature('R Beast $i', curve[i], 'R');
+      p['G Beast $i'] = colorCreature('G Beast $i', curve[i], 'G');
+    }
+    return p;
+  }
+
+  final pool = richPool();
 
   test('con deepForge=false el orden estático se conserva', () {
-    final sinDeep = runForgeJob(ForgeJob(pool: pool));
+    final sinDeep = runForgeJob(ForgeJob(pool: pool, deepForge: false));
     final proposals = fe.generateProposals(pool);
-    expect(sinDeep.map((g) => g.deck.colors).toList(),
-        proposals.map((g) => g.deck.colors).toList());
+    // con la fixture pobre de antes esto comparaba [] con []: aquí hacen
+    // falta propuestas de verdad (>=2 identidades) para que compare algo.
+    expect(proposals.length, greaterThanOrEqualTo(2));
+    // GeneratedDeck no define `==` (identidad de objeto): comparar por
+    // nombre de mazo, no por la lista de objetos completa.
+    expect(sinDeep.map((g) => g.deck.name).toList(),
+        proposals.map((g) => g.deck.name).toList());
   });
 
   test('con deepForge=true, runForgeJob no revienta y devuelve las mismas '
@@ -47,8 +63,9 @@ void main() {
     final conDeep = runForgeJob(ForgeJob(pool: pool, deepForge: true));
     final proposals = fe.generateProposals(pool);
     expect(conDeep.length, proposals.length);
-    expect(conDeep.map((g) => g.deck.colors).toSet(),
-        proposals.map((g) => g.deck.colors).toSet());
+    expect(conDeep.length, greaterThanOrEqualTo(2));
+    expect(conDeep.map((g) => g.deck.name).toSet(),
+        proposals.map((g) => g.deck.name).toSet());
   });
 
   test('deepForge por defecto es true (el switch de la UI arranca ON)', () {
@@ -94,8 +111,11 @@ void main() {
   });
 
   test('theme null deja decidir al motor (comportamiento de siempre)', () {
-    final proposals =
-        runForgeJob(ForgeJob(pool: pool, deepForge: false));
-    expect(proposals, fe.generateProposals(pool));
+    final proposals = runForgeJob(ForgeJob(pool: pool, deepForge: false));
+    final expected = fe.generateProposals(pool);
+    expect(proposals.length, greaterThanOrEqualTo(2));
+    // GeneratedDeck no define `==`: comparar por nombre, no por objeto.
+    expect(proposals.map((g) => g.deck.name).toList(),
+        expected.map((g) => g.deck.name).toList());
   });
 }

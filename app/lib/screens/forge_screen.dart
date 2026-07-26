@@ -193,6 +193,21 @@ class _ForgeScreenState extends State<ForgeScreen> {
   /// que no es un pool sino un catálogo.
   bool get _canForge => !_includeMissing || _selSets.isNotEmpty;
 
+  /// El `ForgeJob` que `_forge()` mandaría al isolate con el estado ACTUAL
+  /// de los mandos, sin lanzar la generación. Nombre público a propósito
+  /// (el State es privado): es la costura para que un widget test afirme
+  /// sobre el job de verdad (switch de forja profunda, estilo elegido...)
+  /// en vez de solo mirar la etiqueta o el estado visual del control.
+  @visibleForTesting
+  ForgeJob buildForgeJob(Map<String, fe.Card> pool) => ForgeJob(
+        pool: pool,
+        allowedColors: _selColors.isEmpty ? null : _selColors.join(),
+        archetype: _selArchetype,
+        commander: _format == 'commander',
+        deepForge: _deepForge,
+        theme: _selTheme,
+      );
+
   Future<void> _forge() async {
     if (!_canForge) return;
     setState(() {
@@ -227,16 +242,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
       if (mounted) setState(() => _poolSize = pool.length);
       // el trabajo pesado va en otro isolate: con 10 expansiones son ~21 s y
       // en el hilo de la ventana la app se queda colgada
-      final trabajo = compute(
-          runForgeJob,
-          ForgeJob(
-            pool: pool,
-            allowedColors: _selColors.isEmpty ? null : _selColors.join(),
-            archetype: _selArchetype,
-            commander: _format == 'commander',
-            deepForge: _deepForge,
-            theme: _selTheme,
-          ));
+      final trabajo = compute(runForgeJob, buildForgeJob(pool));
       // la pausa corre EN PARALELO al trabajo: es para que la animación
       // cuente su historia, no para hacer esperar de más
       await Future.delayed(const Duration(milliseconds: 2200));
