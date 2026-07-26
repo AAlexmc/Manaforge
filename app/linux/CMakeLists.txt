@@ -97,6 +97,13 @@ install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
 install(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   COMPONENT Runtime)
 
+# Icono de la ventana: el runner lo carga en runtime (my_application.cc) para
+# que el dock no pinte un engranaje genérico cuando la app corre sin el
+# .desktop de instalar.sh. Va al bundle, no al binario.
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/manaforge-256.png"
+  DESTINATION "${INSTALL_BUNDLE_DATA_DIR}/icon" RENAME "manaforge.png"
+  COMPONENT Runtime)
+
 install(FILES "${FLUTTER_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
   COMPONENT Runtime)
 
