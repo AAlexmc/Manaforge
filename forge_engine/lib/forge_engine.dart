@@ -16,3 +16,4 @@ export 'src/commander.dart';
 export 'src/generator.dart';
 export 'src/plan.dart';
 export 'src/simulator.dart';
+export 'src/deep_rank.dart';
