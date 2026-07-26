@@ -38,9 +38,10 @@ MIN_PAYOFF_COPIES = 3  # sin masa crítica de payoffs no hay tema
 MIN_TRIBE_MEMBERS = 12  # tribu elegible: además del mínimo de payoffs de siempre
 
 # Guard de generate_deck cuando el Estilo forzado es una tribu
-# (theme.startswith("tribal:")): al menos esta cantidad de copias con rol
-# "enabler" (cuerpos reales del subtipo) entre las cartas elegidas para el
-# mazo — un payoff suelto que solo nombra la tribu no basta (C2). Menor que
+# (theme.startswith("tribal:")): al menos esta cantidad de copias de
+# CRIATURAS DEL SUBTIPO (por subtypes, no por rol — un lord clasifica
+# "payoff" y aun así es cuerpo) entre las cartas elegidas para el mazo —
+# un payoff suelto que solo nombra la tribu no basta (C2). Menor que
 # MIN_TRIBE_MEMBERS porque ese mide el POOL candidato entero; este mide
 # solo lo que el greedy metió en las 60 cartas finales.
 MIN_TRIBE_MEMBERS_IN_DECK = 8
@@ -233,11 +234,17 @@ def generate_deck(pool: dict, colors: str, name: str | None = None,
         if theme.startswith("tribal:"):
             # Una tribu exige masa de cuerpos, no un payoff suelto que solo
             # la nombra (C2): payoffs sin criaturas del subtipo no hacen
-            # mazo tribal.
-            enabler_copies = sum(
+            # mazo tribal. Los cuerpos se cuentan por SUBTIPO, no por rol:
+            # un lord (criatura de la tribu cuyo texto también es payoff)
+            # clasifica "payoff" en tribal_role — contar solo "enabler"
+            # rechazaría en falso un mazo tribal legítimo cargado de lords.
+            tribe = theme[len("tribal:"):]
+            body_copies = sum(
                 q for n, q in chosen.items()
-                if roles_by_card.get(n, {}).get(theme) == "enabler")
-            if enabler_copies < MIN_TRIBE_MEMBERS_IN_DECK:
+                if (card := cands.get(n)) is not None
+                and "Creature" in card["types"]
+                and tribe in card.get("subtypes", []))
+            if body_copies < MIN_TRIBE_MEMBERS_IN_DECK:
                 return None
         elif not any(theme in roles_by_card.get(n, {}) for n in chosen):
             return None  # ese color no tiene con qué jugar el estilo pedido

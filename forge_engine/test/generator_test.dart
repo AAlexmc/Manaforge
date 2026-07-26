@@ -703,6 +703,65 @@ void main() {
           isNull);
     });
 
+    // G: la tribu entera son lords — criaturas del subtipo cuyo texto
+    // TAMBIÉN es payoff («Other Elves you control…»). tribalRole las
+    // clasifica 'payoff' (ese check va primero), así que un guard que solo
+    // contase rol 'enabler' rechazaría en falso un mazo tribal legítimo:
+    // la masa de cuerpos se cuenta por subtipo, no por rol.
+    Map<String, Card> poolSoloLords() {
+      final p = <String, Card>{
+        'Forest': const Card(
+            name: 'Forest',
+            qty: 40,
+            manaCost: '',
+            cmc: 0,
+            colors: '',
+            types: ['Basic', 'Land'],
+            oracle: '{T}: Add {G}.'),
+      };
+      const lordCmc = [1, 2, 2, 3, 4];
+      for (var i = 0; i < lordCmc.length; i++) {
+        final cmc = lordCmc[i];
+        final name = 'Elf Lord $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{${cmc - 1}}{G}',
+            cmc: cmc,
+            colors: 'G',
+            types: const ['Creature'],
+            subtypes: const ['Elf'],
+            oracle: 'Other Elves you control get +1/+1.',
+            power: cmc,
+            toughness: cmc);
+      }
+      const curveCmc = [1, 2, 3, 3, 4];
+      for (var i = 0; i < curveCmc.length; i++) {
+        final cmc = curveCmc[i];
+        final name = 'Filler Beast $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{$cmc}',
+            cmc: cmc,
+            colors: 'G',
+            types: const ['Creature'],
+            oracle: '',
+            power: cmc,
+            toughness: cmc);
+      }
+      return p;
+    }
+
+    test('lords (cuerpo + texto payoff) cuentan como masa tribal, no se '
+        'rechaza el mazo', () {
+      final pool = poolSoloLords();
+      final gen = generateDeck(pool, 'G', themeOverride: 'tribal:Elf');
+      expect(gen, isNotNull);
+      expect(copiasConSubtipo(pool, gen!.deck, 'Elf'),
+          greaterThanOrEqualTo(minTribeMembersInDeck));
+    });
+
     test('generateProposals propaga themeOverride a todas las identidades',
         () {
       final proposals = generateProposals(poolMixto(),

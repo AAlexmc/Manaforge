@@ -372,6 +372,31 @@ def test_estilo_imposible_en_ese_color_da_none():
     assert generate_deck(_pool_sin_elfos(), "U", theme_override="tribal:Elf") is None
 
 
+def _pool_solo_lords() -> dict:
+    """G: la tribu entera son lords — criaturas del subtipo cuyo texto
+    TAMBIÉN es payoff («Other Elves you control…»). tribal_role las
+    clasifica "payoff" (ese check va primero), así que un guard que solo
+    contase rol "enabler" rechazaría en falso un mazo tribal legítimo: la
+    masa de cuerpos se cuenta por subtipo, no por rol."""
+    p = {"Forest": _land("Forest", "G")}
+    for i, cmc in enumerate([1, 2, 2, 3, 4]):
+        name = f"Elf Lord {i}"
+        p[name] = _creature(name, cmc, "G",
+                            oracle="Other Elves you control get +1/+1.",
+                            subtypes=["Elf"])
+    for i, cmc in enumerate([1, 2, 3, 3, 4]):
+        name = f"Filler Beast {i}"
+        p[name] = _creature(name, cmc, "G")
+    return p
+
+
+def test_lords_cuerpo_mas_texto_payoff_cuentan_como_masa_tribal():
+    pool = _pool_solo_lords()
+    gen = generate_deck(pool, "G", theme_override="tribal:Elf")
+    assert gen is not None
+    assert _copias_con_subtipo(pool, gen, "Elf") >= 8
+
+
 def test_generate_proposals_propaga_theme_override_a_todas_las_identidades():
     proposals = generate_proposals(_pool_mixto(), theme_override="tribal:Elf")
     assert proposals

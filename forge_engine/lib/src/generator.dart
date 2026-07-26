@@ -44,9 +44,10 @@ const int minPayoffCopies = 3;
 const int minTribeMembers = 12;
 
 /// Guard de `generateDeck` cuando el Estilo forzado es una tribu
-/// (`theme.startsWith('tribal:')`): al menos esta cantidad de copias con
-/// rol 'enabler' (cuerpos reales del subtipo) entre las cartas elegidas
-/// para el mazo — un payoff suelto que solo nombra la tribu no basta (C2).
+/// (`theme.startsWith('tribal:')`): al menos esta cantidad de copias de
+/// CRIATURAS DEL SUBTIPO (por `subtypes`, no por rol — un lord clasifica
+/// 'payoff' y aun así es cuerpo) entre las cartas elegidas para el mazo —
+/// un payoff suelto que solo nombra la tribu no basta (C2).
 /// Menor que `minTribeMembers` porque ese mide el POOL candidato entero;
 /// este mide solo lo que el greedy metió en las 60 cartas finales.
 const int minTribeMembersInDeck = 8;
@@ -311,11 +312,21 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
     if (theme.startsWith('tribal:')) {
       // Una tribu exige masa de cuerpos, no un payoff suelto que solo la
       // nombra (C2): payoffs sin criaturas del subtipo no hacen mazo tribal.
-      var enablerCopies = 0;
+      // Los cuerpos se cuentan por SUBTIPO, no por rol: un lord (criatura
+      // de la tribu cuyo texto también es payoff) clasifica 'payoff' en
+      // tribalRole — contar solo 'enabler' rechazaría en falso un mazo
+      // tribal legítimo cargado de lords.
+      final tribe = theme.substring('tribal:'.length);
+      var bodyCopies = 0;
       chosen.forEach((n, q) {
-        if (rolesByCard[n]?[theme] == 'enabler') enablerCopies += q;
+        final card = cands[n];
+        if (card != null &&
+            card.types.contains('Creature') &&
+            card.subtypes.contains(tribe)) {
+          bodyCopies += q;
+        }
       });
-      if (enablerCopies < minTribeMembersInDeck) return null;
+      if (bodyCopies < minTribeMembersInDeck) return null;
     } else if (!chosen.keys
         .any((n) => rolesByCard[n]?.containsKey(theme) ?? false)) {
       return null; // ese color no tiene con qué jugar el estilo pedido
