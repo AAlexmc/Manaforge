@@ -16,6 +16,7 @@ import '../services/forge_job.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/set_picker.dart';
+import '../widgets/style_picker.dart';
 import 'deck_detail_screen.dart';
 import 'test_screen.dart';
 
@@ -42,6 +43,7 @@ class ForgeScreen extends StatefulWidget {
   final Key? queNoTengoKey;
   final Key? forjarKey;
   final Key? modoTestKey;
+  final Key? deepForgeKey;
 
   const ForgeScreen(
       {super.key,
@@ -52,7 +54,8 @@ class ForgeScreen extends StatefulWidget {
       this.expansionesKey,
       this.queNoTengoKey,
       this.forjarKey,
-      this.modoTestKey});
+      this.modoTestKey,
+      this.deepForgeKey});
 
   @override
   State<ForgeScreen> createState() => _ForgeScreenState();
@@ -63,6 +66,10 @@ class _ForgeScreenState extends State<ForgeScreen> {
   // Opciones del jugador: colores, arquetipo, rango de precio y de años
   final Set<String> _selColors = {};
   String? _selArchetype;
+  bool _deepForge = true;
+
+  /// Estilo forzado ('lifegain', 'tribal:Elf', ...), o null para Auto.
+  String? _selTheme;
   String _format = 'casual'; // casual · standard · pioneer · modern ·
   // pauper · legacy · commander
   final _minPriceCtrl = TextEditingController();
@@ -186,6 +193,21 @@ class _ForgeScreenState extends State<ForgeScreen> {
   /// que no es un pool sino un catálogo.
   bool get _canForge => !_includeMissing || _selSets.isNotEmpty;
 
+  /// El `ForgeJob` que `_forge()` mandaría al isolate con el estado ACTUAL
+  /// de los mandos, sin lanzar la generación. Nombre público a propósito
+  /// (el State es privado): es la costura para que un widget test afirme
+  /// sobre el job de verdad (switch de forja profunda, estilo elegido...)
+  /// en vez de solo mirar la etiqueta o el estado visual del control.
+  @visibleForTesting
+  ForgeJob buildForgeJob(Map<String, fe.Card> pool) => ForgeJob(
+        pool: pool,
+        allowedColors: _selColors.isEmpty ? null : _selColors.join(),
+        archetype: _selArchetype,
+        commander: _format == 'commander',
+        deepForge: _deepForge,
+        theme: _selTheme,
+      );
+
   Future<void> _forge() async {
     if (!_canForge) return;
     setState(() {
@@ -220,14 +242,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
       if (mounted) setState(() => _poolSize = pool.length);
       // el trabajo pesado va en otro isolate: con 10 expansiones son ~21 s y
       // en el hilo de la ventana la app se queda colgada
-      final trabajo = compute(
-          runForgeJob,
-          ForgeJob(
-            pool: pool,
-            allowedColors: _selColors.isEmpty ? null : _selColors.join(),
-            archetype: _selArchetype,
-            commander: _format == 'commander',
-          ));
+      final trabajo = compute(runForgeJob, buildForgeJob(pool));
       // la pausa corre EN PARALELO al trabajo: es para que la animación
       // cuente su historia, no para hacer esperar de más
       await Future.delayed(const Duration(milliseconds: 2200));
@@ -252,7 +267,7 @@ class _ForgeScreenState extends State<ForgeScreen> {
         _pool = pool;
         _ownedByName = ownedByName;
         if (proposals.isEmpty) {
-          _cantReason = _sinMazoReason();
+          _cantReason = sinMazoReason();
         } else {
           _proposals = proposals;
           _shortfalls = shortfalls;
@@ -269,8 +284,21 @@ class _ForgeScreenState extends State<ForgeScreen> {
     }
   }
 
-  String _sinMazoReason() {
+  /// Por qué la forja no dio ningún mazo. Nombre público a propósito (el
+  /// State es privado, igual que `buildForgeJob`): costura para que un
+  /// widget test afirme sobre el mensaje real sin tener que montar el
+  /// pipeline de generación entero en un isolate.
+  @visibleForTesting
+  String sinMazoReason() {
     final t = tr(context);
+    // Con Estilo forzado, la vía de salida vacía más probable es que ESE
+    // color no tenga con qué jugarlo (generator.dart null-guard tribal/
+    // mecánico) — un mensaje de "compra más cartas" desvía del motivo real
+    // (I2). Se comprueba ANTES que formato/expansiones/colección: aplica
+    // sea cual sea la causa real cuando hay un Estilo forzado puesto.
+    if (_selTheme != null) {
+      return t.fgNoDeckStyle(styleName(t, _selTheme!));
+    }
     final donde = _selSets.isEmpty ? '' : t.fgInThoseSets(_selSets.length);
     if (_format == 'commander') return t.fgNoCommander(donde);
     return t.fgNoDeck(
@@ -559,7 +587,34 @@ class _ForgeScreenState extends State<ForgeScreen> {
                     onChanged: (v) => setState(() => _selArchetype = v),
                   ),
                 ),
+                const SizedBox(width: 6),
+                ActionChip(
+                  visualDensity: VisualDensity.compact,
+                  avatar: const Icon(Icons.auto_fix_high, size: 16),
+                  label: Text(
+                      _selTheme == null ? t.fgStyleAuto : styleName(t, _selTheme!),
+                      style: const TextStyle(fontSize: 12.5)),
+                  onPressed: () async {
+                    final picked = await showStylePickerSheet(context,
+                        selected: _selTheme);
+                    if (picked == null || !mounted) return; // cerrado sin tocar nada
+                    setState(() => _selTheme = picked.isEmpty ? null : picked);
+                  },
+                ),
               ],
+            ),
+            const SizedBox(height: 4),
+            KeyedSubtree(
+              key: widget.deepForgeKey,
+              child: SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: _deepForge,
+                onChanged: (v) => setState(() => _deepForge = v),
+                title: Text(t.fgDeepForge),
+                subtitle: Text(t.fgDeepForgeHint,
+                    style: const TextStyle(fontSize: 11.5)),
+              ),
             ),
             const SizedBox(height: 10),
             Wrap(

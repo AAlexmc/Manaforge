@@ -660,6 +660,7 @@ class _HomeShellState extends State<HomeShell> {
           basicasKey: _tourKeys.forgeBasicas,
           expansionesKey: _tourKeys.forgeExpansiones,
           queNoTengoKey: _tourKeys.forgeQueNoTengo,
+          deepForgeKey: _tourKeys.forgeDeepForge,
           forjarKey: _tourKeys.forgeForjar,
           modoTestKey: _tourKeys.forgeModoTest),
       MazosScreen(

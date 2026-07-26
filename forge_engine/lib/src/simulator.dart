@@ -17,6 +17,16 @@ import 'models.dart';
 /// vínculo vital, iniciativa, prisa, amenaza), removal instantáneo en el
 /// turno del rival y contramagia de verdad (contrarresta la amenaza gorda).
 ///
+/// v3 — cementerio real: lo que muere (combate, removal, sweeper) o se
+/// descarta (loot) va a la tumba; `mill N` la llena directamente; una gorda
+/// (cmc>=5) reanimable de la tumba se juega si hay hechizo de reanimación
+/// pagable. Tierras: `LandProfile` (fase 1) da colores/tapped reales — una
+/// tierra `entersTapped` no cuenta para maná hasta el turno siguiente.
+///
+/// Solo-Dart, sin espejo Python (igual que el resto de este archivo — ver
+/// cabecera de `generator.dart`): es Modo Test de la app de escritorio, no
+/// parte del motor de generación que sí debe coincidir 1:1 con la referencia.
+///
 /// Sigue siendo una SIMULACIÓN simplificada: sin habilidades activadas ni
 /// texto de reglas completo. El % es comparativo, no una predicción exacta.
 /// Determinista con semilla para poder testearlo.
@@ -46,7 +56,11 @@ class _SimCard {
   final bool firstStrike;
   final bool haste;
   final bool menace;
-  final String landColor; // 'W'..'G', '*' = cualquiera (no básicas), '' no-tierra
+  final Set<String> produces; // colores que da esta tierra (de LandProfile)
+  final bool entersTapped; // LandProfile.tapped == always (conditional cuenta untapped)
+  final int millSelf; // "mill N cards" propio
+  final bool loot; // roba y descarta
+  final bool reanimates; // return ... creature ... graveyard -> battlefield
 
   const _SimCard({
     required this.name,
@@ -72,22 +86,53 @@ class _SimCard {
     required this.firstStrike,
     required this.haste,
     required this.menace,
-    required this.landColor,
+    required this.produces,
+    required this.entersTapped,
+    required this.millSelf,
+    required this.loot,
+    required this.reanimates,
   });
 
   static final _dmg = RegExp(r'deals? (\d+) damage');
-  static const _basicColor = {
-    'Plains': 'W',
-    'Island': 'U',
-    'Swamp': 'B',
-    'Mountain': 'R',
-    'Forest': 'G',
-    'Snow-Covered Plains': 'W',
-    'Snow-Covered Island': 'U',
-    'Snow-Covered Swamp': 'B',
-    'Snow-Covered Mountain': 'R',
-    'Snow-Covered Forest': 'G',
+  static final _mill = RegExp(
+      r'mills? (a|one|two|three|four|five|six|seven|eight|nine|ten|\d+) cards?');
+  static const _millNumberWords = {
+    'a': 1,
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
+    'ten': 10,
   };
+  static final _loot = RegExp(r'draws? a card,? then discards? a card');
+  static final _reanimate =
+      RegExp(r'return .*creature.* from your graveyard to the battlefield');
+
+  /// "mill N cards" PROPIO: el oracle real casi nunca escribe el número en
+  /// dígitos ("mills two cards", no "mills 2 cards"), y "target player
+  /// mills"/"each opponent mills" no es tu tumba — puede llenar la del
+  /// rival. Solo cuenta el mill sin sujeto ajeno en la misma cláusula
+  /// (imperativo "Mill N cards." o "you mill N cards", los templates de
+  /// autotumba reales tipo Stitcher's Supplier).
+  static int _selfMill(String oracle) {
+    for (final clause in oracle.split(RegExp(r'[.\n]'))) {
+      final m = _mill.firstMatch(clause);
+      if (m == null) continue;
+      if (clause.contains('target player') ||
+          clause.contains('target opponent') ||
+          clause.contains('opponent')) {
+        continue; // mill ajeno: no es tu cementerio
+      }
+      final word = m.group(1)!;
+      return _millNumberWords[word] ?? int.parse(word);
+    }
+    return 0;
+  }
 
   factory _SimCard.fromCard(Card c) {
     final tags = classify(c);
@@ -100,10 +145,14 @@ class _SimCard {
     final anyTarget = oracle.contains('any target') ||
         oracle.contains('target player') ||
         oracle.contains('each opponent');
-    var landColor = '';
+    var produces = const <String>{};
+    var entersTapped = false;
     if (c.isLand) {
-      landColor = _basicColor[c.name] ?? '*';
+      final profile = LandProfile.fromCard(c);
+      produces = profile.produces;
+      entersTapped = profile.tapped == TappedKind.always;
     }
+    final millSelf = _selfMill(oracle);
     bool kw(String k) => oracle.contains(k);
     return _SimCard(
       name: c.name,
@@ -122,6 +171,9 @@ class _SimCard {
       burnAnyTarget: anyTarget && burn > 0,
       draws: tags.contains('draw') ? 1 : 0,
       isRamp: tags.contains('ramp') && !c.isCreature,
+      millSelf: millSelf,
+      loot: _loot.hasMatch(oracle),
+      reanimates: _reanimate.hasMatch(oracle),
       flying: kw('flying'),
       reach: kw('reach'),
       trample: kw('trample'),
@@ -130,7 +182,8 @@ class _SimCard {
       firstStrike: kw('first strike') || kw('double strike'),
       haste: kw('haste'),
       menace: kw('menace'),
-      landColor: landColor,
+      produces: produces,
+      entersTapped: entersTapped,
     );
   }
 }
@@ -145,11 +198,21 @@ class _Permanent {
   int get toughness => card.toughness;
 }
 
+/// Una tierra en mesa: los colores que da y si aún no cuenta porque entró
+/// tapped este mismo turno.
+class _LandInPlay {
+  final Set<String> produces;
+  bool tappedNew;
+
+  _LandInPlay(this.produces, {this.tappedNew = false});
+}
+
 class _Player {
   final List<_SimCard> library;
   final List<_SimCard> hand = [];
   final List<_Permanent> board = [];
-  final List<String> lands = []; // color producido por cada tierra en mesa
+  final List<_SimCard> graveyard = [];
+  final List<_LandInPlay> lands = [];
   int life;
   bool usedResponse = false; // una respuesta instantánea por turno rival
 
@@ -161,25 +224,25 @@ class _Player {
     }
   }
 
-  /// ¿Puede pagar este coste con sus tierras (colores incluidos)?
+  /// Maná disponible este turno: las tierras que no acaban de entrar tapped.
+  int get availableMana => lands.where((l) => !l.tappedNew).length;
+
+  /// ¿Puede pagar este coste con sus tierras (colores incluidos)? Empareja
+  /// cada símbolo con la tierra disponible que produce MENOS colores (guarda
+  /// las duales/comodín para lo que de verdad las necesite).
   bool canPay(_SimCard c, int manaLeft) {
     if (c.cmc > manaLeft) return false;
     final syms = ManaCurve.colorSymbols(c.manaCost);
     if (syms.isEmpty) return true;
-    final pool = List<String>.from(lands);
+    final avail = <Set<String>>[
+      for (final l in lands)
+        if (!l.tappedNew) l.produces
+    ]..sort((a, b) => a.length.compareTo(b.length));
     for (final e in syms.entries) {
       for (var k = 0; k < e.value; k++) {
-        final i = pool.indexOf(e.key);
-        if (i >= 0) {
-          pool.removeAt(i);
-        } else {
-          final any = pool.indexOf('*');
-          if (any >= 0) {
-            pool.removeAt(any);
-          } else {
-            return false;
-          }
-        }
+        final i = avail.indexWhere((p) => p.contains(e.key));
+        if (i < 0) return false;
+        avail.removeAt(i);
       }
     }
     return true;
@@ -230,7 +293,7 @@ bool _tryCounter(_Player foe, _SimCard spell) {
   final big = spell.cmc >= 3 || (spell.isCreature && spell.power >= 4);
   if (!big) return false;
   for (final c in foe.hand) {
-    if (c.isCounter && foe.canPay(c, foe.lands.length)) {
+    if (c.isCounter && foe.canPay(c, foe.availableMana)) {
       foe.hand.remove(c);
       foe.usedResponse = true;
       return true;
@@ -248,10 +311,11 @@ void _foeInstantResponse(_Player me, _Player foe) {
   for (final c in foe.hand) {
     final canKill = c.isInstant &&
         (c.isRemoval || (c.burn >= biggest.toughness && c.burn > 0));
-    if (canKill && foe.canPay(c, foe.lands.length)) {
+    if (canKill && foe.canPay(c, foe.availableMana)) {
       foe.hand.remove(c);
       foe.usedResponse = true;
       me.board.remove(biggest);
+      me.graveyard.add(biggest.card);
       return;
     }
   }
@@ -259,6 +323,10 @@ void _foeInstantResponse(_Player me, _Player foe) {
 
 void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
   me.usedResponse = false; // sus respuestas se renuevan en mi turno
+  // las tierras que entraron tapped el turno pasado ya cuentan hoy
+  for (final l in me.lands) {
+    l.tappedNew = false;
+  }
   if (!skipDraw) me.draw();
 
   // tierra del turno: la del color más pedido por la mano
@@ -270,20 +338,28 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
         needed[color] = (needed[color] ?? 0) + k;
       });
     }
-    landsInHand.sort((a, b) =>
-        (needed[b.landColor] ?? (b.landColor == '*' ? 1 : 0))
-            .compareTo(needed[a.landColor] ?? (a.landColor == '*' ? 1 : 0)));
+    int score(_SimCard land) {
+      var s = 0;
+      for (final color in land.produces) {
+        s += needed[color] ?? 0;
+      }
+      if (land.produces.length > 1) s += 1; // flexibilidad desempata
+      return s;
+    }
+
+    landsInHand.sort((a, b) => score(b).compareTo(score(a)));
     final land = landsInHand.first;
     me.hand.remove(land);
-    me.lands.add(land.landColor);
+    me.lands.add(_LandInPlay(land.produces, tappedNew: land.entersTapped));
   }
 
   // fase principal
-  var mana = me.lands.length;
+  var mana = me.availableMana;
   var acted = true;
   while (acted && mana > 0) {
     acted = false;
     _SimCard? pick;
+    var pickRemoved = false;
 
     List<_SimCard> affordable(bool Function(_SimCard) test) => me.hand
         .where((c) => !c.isLand && c.cmc <= mana && me.canPay(c, mana) && test(c))
@@ -296,6 +372,12 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
         foe.board.length >= 3) {
       pick = sweepers.first;
       if (!_tryCounter(foe, pick)) {
+        for (final p in me.board) {
+          me.graveyard.add(p.card);
+        }
+        for (final p in foe.board) {
+          foe.graveyard.add(p.card);
+        }
         me.board.clear();
         foe.board.clear();
       }
@@ -313,6 +395,33 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
           if (usable.isNotEmpty) {
             pick = usable.first;
             foe.board.remove(biggest);
+            foe.graveyard.add(biggest.card);
+          }
+        }
+      }
+    }
+    // 2.5: reanimar una gorda del cementerio si hay alguna digna
+    if (pick == null && me.graveyard.isNotEmpty) {
+      final reanimateSpells = affordable((c) => c.reanimates);
+      if (reanimateSpells.isNotEmpty) {
+        final targets = me.graveyard
+            .where((c) => c.isCreature && c.cmc >= 5)
+            .toList();
+        if (targets.isNotEmpty) {
+          targets.sort((a, b) => b.power.compareTo(a.power));
+          final target = targets.first;
+          pick = reanimateSpells.first;
+          if (!_tryCounter(foe, pick)) {
+            me.graveyard.remove(target);
+            me.board.add(_Permanent(target, sick: !target.haste));
+            // el hechizo de reanimación puede ser él mismo una criatura
+            // (Karmic Guide / Sun Titan: ETB reanima) — si es así, TAMBIÉN
+            // entra en juego. No excluir `reanimates` para criaturas (como
+            // sí hace `isRamp`) porque eso las tiraría a la basura: se
+            // pagarían y desaparecerían sin dejar cuerpo ni target en mesa.
+            if (pick.isCreature) {
+              me.board.add(_Permanent(pick, sick: !pick.haste));
+            }
           }
         }
       }
@@ -337,18 +446,47 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
         if (!_tryCounter(foe, pick)) foe.life -= pick.burn;
       }
     }
-    // 5: robar / rampa
+    // 5: robar / rampa / cementerio (loot, mill)
     if (pick == null) {
-      final utils = affordable((c) => c.draws > 0 || c.isRamp);
+      final utils = affordable(
+          (c) => c.draws > 0 || c.isRamp || c.loot || c.millSelf > 0);
       if (utils.isNotEmpty) {
         pick = utils.first;
+        // Fuera de la mano ANTES de resolver el efecto (M4): si no, el loot
+        // puede escogerse a sí mismo como "peor carta" a descartar (`_expand`
+        // comparte la MISMA instancia entre copias, así que `List.remove` por
+        // identidad borraría el propio loot aquí Y otra vez abajo, comiéndose
+        // dos cartas por una). `pickRemoved` evita que el remove común de
+        // abajo borre una SEGUNDA copia cuando hay 2+ en mano.
+        me.hand.remove(pick);
+        pickRemoved = true;
         if (pick.draws > 0) me.draw(pick.draws);
-        if (pick.isRamp) me.lands.add('*');
+        if (pick.isRamp) me.lands.add(_LandInPlay(const {'W', 'U', 'B', 'R', 'G'}));
+        if (pick.loot) {
+          me.draw(1);
+          if (me.hand.isNotEmpty) {
+            final nonland = me.hand.where((c) => !c.isLand).toList();
+            final candidates = nonland.isNotEmpty ? nonland : me.hand;
+            var worst = candidates.first;
+            for (final c in candidates) {
+              final betterCmc = c.cmc > worst.cmc;
+              final tieCreature = c.cmc == worst.cmc && c.isCreature && !worst.isCreature;
+              if (betterCmc || tieCreature) worst = c;
+            }
+            me.hand.remove(worst);
+            me.graveyard.add(worst);
+          }
+        }
+        if (pick.millSelf > 0) {
+          for (var i = 0; i < pick.millSelf && me.library.isNotEmpty; i++) {
+            me.graveyard.add(me.library.removeLast());
+          }
+        }
       }
     }
 
     if (pick != null) {
-      me.hand.remove(pick);
+      if (!pickRemoved) me.hand.remove(pick);
       mana -= pick.cmc;
       acted = true;
     }
@@ -409,13 +547,17 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
         }
         if (attackerKills) {
           foe.board.remove(blocker);
+          foe.graveyard.add(blocker.card);
           if (a.card.trample) {
             final excess = a.power - blocker.toughness;
             if (excess > 0) foe.life -= excess;
           }
           if (a.card.lifelink) me.life += a.power;
         }
-        if (blockerKills) me.board.remove(a);
+        if (blockerKills) {
+          me.board.remove(a);
+          me.graveyard.add(a.card);
+        }
       }
     }
   }

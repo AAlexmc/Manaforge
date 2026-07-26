@@ -385,6 +385,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get onbForgeMissingBody => '켜면 없는 카드까지 제안하고, 몇 장이 필요한지와 비용을 알려 줍니다.';
 
   @override
+  String get onbForgeDeepTitle => '딥 포지';
+
+  @override
+  String get onbForgeDeepBody =>
+      '제안을 보여주기 전에 실제로 서로 대결시킵니다. 최종 순위는 정적 점수뿐 아니라 실제 성적을 반영합니다. 더 빠른 결과를 원하면 꺼도 됩니다.';
+
+  @override
   String get onbForgeGoTitle => '만들기';
 
   @override
@@ -867,6 +874,11 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String fgNoDeckStyle(String estilo) {
+    return '이 스타일($estilo)로는 덱이 나오지 않아요. \"스타일: 자동\" 또는 다른 종족을 시도해 보세요.';
+  }
+
+  @override
   String get fgOf60 => '/ 60';
 
   @override
@@ -966,6 +978,90 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get fgArchetypeAuto => '아키타입: 자동';
+
+  @override
+  String get fgStyle => '스타일';
+
+  @override
+  String get fgStyleAuto => '스타일: 자동';
+
+  @override
+  String get fgTribeElf => '엘프';
+
+  @override
+  String get fgTribeGoblin => '고블린';
+
+  @override
+  String get fgTribeZombie => '좀비';
+
+  @override
+  String get fgTribeVampire => '흡혈귀';
+
+  @override
+  String get fgTribeDragon => '드래곤';
+
+  @override
+  String get fgTribeAngel => '천사';
+
+  @override
+  String get fgTribeDemon => '악마';
+
+  @override
+  String get fgTribeDinosaur => '공룡';
+
+  @override
+  String get fgTribeFaerie => '요정';
+
+  @override
+  String get fgTribeMerfolk => '인어';
+
+  @override
+  String get fgTribeHuman => '인간';
+
+  @override
+  String get fgTribeSpirit => '정령';
+
+  @override
+  String get fgTribeSliver => '슬리버';
+
+  @override
+  String get fgTribeWizard => '마법사';
+
+  @override
+  String get fgTribeKnight => '기사';
+
+  @override
+  String get fgTribeWarrior => '전사';
+
+  @override
+  String get fgTribeSoldier => '병사';
+
+  @override
+  String get fgTribeCat => '고양이';
+
+  @override
+  String get fgTribeDog => '개';
+
+  @override
+  String get fgTribeRat => '쥐';
+
+  @override
+  String get fgTribePirate => '해적';
+
+  @override
+  String get fgTribeElemental => '정령체';
+
+  @override
+  String get fgTribeGiant => '거인';
+
+  @override
+  String get fgTribeRogue => '도적';
+
+  @override
+  String get fgDeepForge => '딥 포지';
+
+  @override
+  String get fgDeepForgeHint => '제안을 보여주기 전에 실제로 서로 대결시켜 봅니다 (조금 더 기다려야 해요).';
 
   @override
   String get fgPricePerCard => '카드당 가격:';
@@ -3580,6 +3676,14 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get fxThemeGraveyard => '무덤';
+
+  @override
+  String get fxThemeReanimator => '리애니메이트';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return '$tribe 부족';
+  }
 
   @override
   String get fxThemeGoodstuff => '정예 카드';

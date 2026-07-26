@@ -376,6 +376,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get onbForgeMissingBody => '开启后 Forge 也会推荐你缺的卡，并告诉你缺几张、要花多少钱。';
 
   @override
+  String get onbForgeDeepTitle => '深度锻造';
+
+  @override
+  String get onbForgeDeepBody =>
+      '在给你看提案之前，它会让它们真正互相对战：最终排序看的是实际表现，不只是静态分数。想要更快的结果可以关掉它。';
+
+  @override
   String get onbForgeGoTitle => '开始打造';
 
   @override
@@ -851,6 +858,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String fgNoDeckStyle(String estilo) {
+    return '用这个风格（$estilo）做不出牌组。试试“风格：自动”或另一个族群。';
+  }
+
+  @override
   String get fgOf60 => '/ 60';
 
   @override
@@ -949,6 +961,90 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fgArchetypeAuto => '原型：自动';
+
+  @override
+  String get fgStyle => '风格';
+
+  @override
+  String get fgStyleAuto => '风格：自动';
+
+  @override
+  String get fgTribeElf => '精灵';
+
+  @override
+  String get fgTribeGoblin => '地精';
+
+  @override
+  String get fgTribeZombie => '僵尸';
+
+  @override
+  String get fgTribeVampire => '吸血鬼';
+
+  @override
+  String get fgTribeDragon => '龙';
+
+  @override
+  String get fgTribeAngel => '天使';
+
+  @override
+  String get fgTribeDemon => '恶魔';
+
+  @override
+  String get fgTribeDinosaur => '恐龙';
+
+  @override
+  String get fgTribeFaerie => '小仙灵';
+
+  @override
+  String get fgTribeMerfolk => '人鱼';
+
+  @override
+  String get fgTribeHuman => '人类';
+
+  @override
+  String get fgTribeSpirit => '灵魂';
+
+  @override
+  String get fgTribeSliver => '裂片妖';
+
+  @override
+  String get fgTribeWizard => '巫师';
+
+  @override
+  String get fgTribeKnight => '骑士';
+
+  @override
+  String get fgTribeWarrior => '战士';
+
+  @override
+  String get fgTribeSoldier => '士兵';
+
+  @override
+  String get fgTribeCat => '猫';
+
+  @override
+  String get fgTribeDog => '狗';
+
+  @override
+  String get fgTribeRat => '老鼠';
+
+  @override
+  String get fgTribePirate => '海盗';
+
+  @override
+  String get fgTribeElemental => '元素兽';
+
+  @override
+  String get fgTribeGiant => '巨人';
+
+  @override
+  String get fgTribeRogue => '盗贼';
+
+  @override
+  String get fgDeepForge => '深度锻造';
+
+  @override
+  String get fgDeepForgeHint => '在展示方案之前，先让它们真正互相对战一番（会多等一会儿）。';
 
   @override
   String get fgPricePerCard => '每张卡价格：';
@@ -3543,6 +3639,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fxThemeGraveyard => '坟场';
+
+  @override
+  String get fxThemeReanimator => '复生';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return '$tribe部落';
+  }
 
   @override
   String get fxThemeGoodstuff => '精华好牌';

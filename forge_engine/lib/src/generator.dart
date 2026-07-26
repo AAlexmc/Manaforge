@@ -25,8 +25,32 @@ const Map<String, Map<int, double>> curveTarget = {
   'control': {1: .08, 2: .20, 3: .25, 4: .22, 5: .17, 6: .08},
 };
 
+/// Tribus curadas para el selector de Estilo de la UI (el motor acepta
+/// cualquier subtipo vía `themeOverride: 'tribal:<Subtipo>'`, esta lista
+/// es solo la selección corta que se enseña). El valor es el subtipo
+/// Scryfall EN INGLÉS; el nombre visible lo traduce la app.
+const List<String> kUiTribes = [
+  'Elf', 'Goblin', 'Zombie', 'Vampire', 'Dragon', //
+  'Angel', 'Demon', 'Dinosaur', 'Faerie', 'Merfolk', 'Human', 'Spirit',
+  'Sliver', 'Wizard', 'Knight', 'Warrior', 'Soldier', 'Cat', 'Dog', 'Rat',
+  'Pirate', 'Elemental', 'Giant', 'Rogue',
+];
+
 /// Sin masa crítica de payoffs no hay tema.
 const int minPayoffCopies = 3;
+
+/// Tribu elegible: al menos esta cantidad de copias de criaturas del
+/// subtipo (además de `minPayoffCopies` payoffs, como cualquier tema).
+const int minTribeMembers = 12;
+
+/// Guard de `generateDeck` cuando el Estilo forzado es una tribu
+/// (`theme.startsWith('tribal:')`): al menos esta cantidad de copias de
+/// CRIATURAS DEL SUBTIPO (por `subtypes`, no por rol — un lord clasifica
+/// 'payoff' y aun así es cuerpo) entre las cartas elegidas para el mazo —
+/// un payoff suelto que solo nombra la tribu no basta (C2).
+/// Menor que `minTribeMembers` porque ese mide el POOL candidato entero;
+/// este mide solo lo que el greedy metió en las 60 cartas finales.
+const int minTribeMembersInDeck = 8;
 
 /// Colores naturales de cada tema (color pie). '' = cualquier color.
 const Map<String, String> themeColors = {
@@ -37,7 +61,19 @@ const Map<String, String> themeColors = {
   'counters': 'GW',
   'tokens': 'WG',
   'graveyard': 'BG',
+  'reanimator': 'BGU',
 };
+
+/// Máximo de gordas (criaturas caras del tema reanimator) que reciben trato
+/// de enabler puro en `_greedyFill`. Sin tope, un pool cargado de gordas
+/// vaciaría la curva media del arquetipo entero hacia costes altos.
+const int maxReanimatorFatties = 6;
+
+/// Umbral de coste y eficiencia para que una criatura cuente como "gorda"
+/// reanimable: cara y con stats muy por encima de la media (no cualquier
+/// bicho de 5 manas cuela).
+const int reanimatorFattyMinCmc = 5;
+const double reanimatorFattyMinEfficiency = 6.0;
 
 /// Multiplicador de color pie por tema: 1.25 si [colors] solapa con el color
 /// natural del tema, 0.8 si le es ajeno, 1.0 si el tema es de cualquier color
@@ -79,9 +115,25 @@ Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
       e.value.colors.split('').toSet().difference(allowed).isEmpty));
 }
 
+/// Copias de criaturas por subtipo entre las candidatas: la masa tribal
+/// cruda, antes de mirar quién la aprovecha.
+Map<String, int> _tribeMemberCopies(Map<String, Card> cands) {
+  final out = <String, int>{};
+  cands.forEach((_, card) {
+    if (!card.types.contains('Creature')) return;
+    for (final subtype in card.subtypes) {
+      out[subtype] = (out[subtype] ?? 0) + card.qty;
+    }
+  });
+  return out;
+}
+
 /// Tema dominante y rol de cada carta. Un tema solo es elegible con
 /// >= minPayoffCopies copias de payoffs en estos colores. [colors] desempata
 /// por color pie: un tema natural de la identidad pesa 1.25x, uno ajeno 0.8x.
+/// Las tribus ('tribal:<Subtipo>') compiten con los temas mecánicos: no
+/// llevan multiplicador de color (son de cualquier color) y además del
+/// mínimo de payoffs piden >= minTribeMembers criaturas del subtipo.
 (String, Map<String, Map<String, String>>) detectTheme(
     Map<String, Card> cands, {String colors = ''}) {
   final mult = _themeColorMultiplier(colors);
@@ -101,6 +153,23 @@ Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
       }
     });
   });
+
+  _tribeMemberCopies(cands).forEach((tribe, members) {
+    if (members < minTribeMembers) return;
+    final theme = 'tribal:$tribe';
+    var payoffs = 0;
+    cands.forEach((name, card) {
+      final role = tribalRole(card, tribe);
+      if (role == null) return;
+      rolesByCard[name]![theme] = role;
+      if (role == 'payoff') payoffs += card.qty;
+    });
+    if (payoffs >= minPayoffCopies) {
+      payoffCopies[theme] = payoffs;
+      weights[theme] = payoffs * 3.0 + members * 1.0;
+    }
+  });
+
   String best = 'goodstuff';
   var bestWeight = -1.0;
   weights.forEach((theme, w) {
@@ -110,6 +179,23 @@ Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
     }
   });
   return (best, rolesByCard);
+}
+
+/// Roles de cada carta SOLO para [theme], sin la selección multi-tema de
+/// [detectTheme] ni sus umbrales de elegibilidad (mejor-esfuerzo): las
+/// cartas sin rol puntúan sin bonus, el greedy sigue llenando cuotas y
+/// curva igual. Se usa cuando el tema lo elige el jugador (`themeOverride`),
+/// no el motor — `detectTheme` no se llama en ese caso.
+Map<String, Map<String, String>> _rolesForOverride(
+    Map<String, Card> cands, String theme) {
+  final tribe = theme.startsWith('tribal:') ? theme.substring(7) : null;
+  final rolesByCard = <String, Map<String, String>>{};
+  cands.forEach((name, card) {
+    final role =
+        tribe != null ? tribalRole(card, tribe) : themeRoles(card)[theme];
+    rolesByCard[name] = role == null ? const {} : {theme: role};
+  });
+  return rolesByCard;
 }
 
 /// Arquetipo según el perfil del pool disponible.
@@ -157,30 +243,56 @@ Archetype? archetypeFor(double avgCmc, int nLands) {
 }
 
 double _score(Card card, String theme, Map<String, String> roles,
-    Map<int, double> curveNeed, String archetypeName) {
+    Map<int, double> curveNeed, String archetypeName,
+    {bool forceEnablerNoCurvePenalty = false}) {
   var s = efficiency(card, archetype: archetypeName);
-  final role = roles[theme];
+  final role = forceEnablerNoCurvePenalty ? 'enabler' : roles[theme];
   if (role == 'payoff') s += 3.0;
   if (role == 'enabler') s += 1.5;
   final cmc = card.cmc > 6 ? 6 : card.cmc;
-  s += (curveNeed[cmc] ?? 0.0) * 4.0;
+  var curveTerm = curveNeed[cmc] ?? 0.0;
+  if (forceEnablerNoCurvePenalty && curveTerm < 0) curveTerm = 0;
+  s += curveTerm * 4.0;
   return s;
 }
+
+/// Las gordas del tema reanimator no valen por su coste (no se lanzan, se
+/// reaniman): tratarlas de enabler puro y sin castigo de curva, hasta el
+/// tope [maxReanimatorFatties].
+bool _isReanimatorFatty(Card card, String theme, String archetypeName,
+        int fattiesChosen) =>
+    theme == 'reanimator' &&
+    card.types.contains('Creature') &&
+    card.cmc >= reanimatorFattyMinCmc &&
+    efficiency(card, archetype: archetypeName) >= reanimatorFattyMinEfficiency &&
+    fattiesChosen < maxReanimatorFatties;
 
 Archetype _archetypeByName(String name) =>
     Archetype.values.firstWhere((a) => a.name == name);
 
 /// Construye el mejor mazo de 60 para una identidad de color. Null si no da.
 /// [archetypeOverride] fuerza el arquetipo ('aggro'|'tempo'|'midrange'|
-/// 'control') en vez de detectarlo del pool.
+/// 'control') en vez de detectarlo del pool. [themeOverride] fuerza el tema
+/// ('lifegain', 'tribal:Elf', ...) en vez de detectarlo: se salta
+/// `detectTheme` y su gate de `minPayoffCopies` (mejor-esfuerzo — el greedy
+/// prioriza cartas con rol en ese tema si las hay, y si no las hay igual
+/// llena el mazo por eficiencia/curva). Si el mazo resultante no lleva NINGUNA
+/// copia con rol en el tema forzado, ese color no puede jugarlo: null.
 GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
-    {String? name, String? archetypeOverride}) {
+    {String? name, String? archetypeOverride, String? themeOverride}) {
   final cands = _candidatePool(pool, colors);
   var totalCopies = 0;
   cands.forEach((_, c) => totalCopies += c.qty);
   if (totalCopies < 30) return null;
 
-  final (theme, rolesByCard) = detectTheme(cands, colors: colors);
+  final String theme;
+  final Map<String, Map<String, String>> rolesByCard;
+  if (themeOverride != null) {
+    theme = themeOverride;
+    rolesByCard = _rolesForOverride(cands, theme);
+  } else {
+    (theme, rolesByCard) = detectTheme(cands, colors: colors);
+  }
   final archetypeName = archetypeOverride ?? pickArchetype(cands);
   final archetype = _archetypeByName(archetypeName);
   final target = curveTarget[archetypeName]!;
@@ -195,6 +307,31 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   }
   chosen = _greedyFill(
       cands, rolesByCard, theme, archetypeName, target, ManaCurve.deckSize - nLands);
+
+  if (themeOverride != null) {
+    if (theme.startsWith('tribal:')) {
+      // Una tribu exige masa de cuerpos, no un payoff suelto que solo la
+      // nombra (C2): payoffs sin criaturas del subtipo no hacen mazo tribal.
+      // Los cuerpos se cuentan por SUBTIPO, no por rol: un lord (criatura
+      // de la tribu cuyo texto también es payoff) clasifica 'payoff' en
+      // tribalRole — contar solo 'enabler' rechazaría en falso un mazo
+      // tribal legítimo cargado de lords.
+      final tribe = theme.substring('tribal:'.length);
+      var bodyCopies = 0;
+      chosen.forEach((n, q) {
+        final card = cands[n];
+        if (card != null &&
+            card.types.contains('Creature') &&
+            card.subtypes.contains(tribe)) {
+          bodyCopies += q;
+        }
+      });
+      if (bodyCopies < minTribeMembersInDeck) return null;
+    } else if (!chosen.keys
+        .any((n) => rolesByCard[n]?.containsKey(theme) ?? false)) {
+      return null; // ese color no tiene con qué jugar el estilo pedido
+    }
+  }
 
   final manabase = _manaBase(chosen, pool, colors, nLands, archetypeName);
   if (manabase == null) return null;
@@ -255,6 +392,7 @@ Map<String, int> _greedyFill(
   }
 
   var totalChosen = 0;
+  var fattiesChosen = 0;
   while (totalChosen < nSpells) {
     final need = curveNeed();
     final pending = <String>{};
@@ -263,10 +401,14 @@ Map<String, int> _greedyFill(
     });
     String? bestName;
     var bestScore = -1e9;
+    var bestIsFatty = false;
     cands.forEach((n, card) {
       final limit = card.qty < 4 ? card.qty : 4;
       if ((chosen[n] ?? 0) >= limit) return;
-      var s = _score(card, theme, rolesByCard[n]!, need, archetypeName);
+      final isFatty =
+          _isReanimatorFatty(card, theme, archetypeName, fattiesChosen);
+      var s = _score(card, theme, rolesByCard[n]!, need, archetypeName,
+          forceEnablerNoCurvePenalty: isFatty);
       final buckets = bucket(card);
       if (pending.isNotEmpty && !pending.any(buckets.contains)) {
         s -= 3.0; // aún caben, pero prioriza cubrir cuotas
@@ -274,9 +416,11 @@ Map<String, int> _greedyFill(
       if (s > bestScore) {
         bestName = n;
         bestScore = s;
+        bestIsFatty = isFatty;
       }
     });
     if (bestName == null) break;
+    if (bestIsFatty) fattiesChosen += 1;
     chosen[bestName!] = (chosen[bestName!] ?? 0) + 1;
     totalChosen += 1;
     for (final b in bucket(cands[bestName!]!)) {
@@ -460,9 +604,15 @@ ReforgeResult reforgeWithCurve(
 
 /// Las mejores propuestas entre monocolor y pares de colores.
 /// [allowedColors] (p. ej. "WU") limita las identidades a ese subconjunto;
-/// [archetypeOverride] fuerza el arquetipo de todas las propuestas.
+/// [archetypeOverride] fuerza el arquetipo de todas las propuestas;
+/// [themeOverride] fuerza el tema de todas las propuestas (ver
+/// [generateDeck]) — cada identidad que no pueda jugarlo simplemente no
+/// entra en la lista, igual que hoy con cualquier otro "no da mazo sano".
 List<GeneratedDeck> generateProposals(Map<String, Card> pool,
-    {int maxProposals = 5, String? allowedColors, String? archetypeOverride}) {
+    {int maxProposals = 5,
+    String? allowedColors,
+    String? archetypeOverride,
+    String? themeOverride}) {
   const wubrg = ['W', 'U', 'B', 'R', 'G'];
   final singles = allowedColors == null || allowedColors.isEmpty
       ? wubrg
@@ -475,8 +625,8 @@ List<GeneratedDeck> generateProposals(Map<String, Card> pool,
   }
   final proposals = <GeneratedDeck>[];
   for (final colors in identities) {
-    final gen =
-        generateDeck(pool, colors, archetypeOverride: archetypeOverride);
+    final gen = generateDeck(pool, colors,
+        archetypeOverride: archetypeOverride, themeOverride: themeOverride);
     if (gen != null) proposals.add(gen);
   }
   proposals.sort((a, b) => b.score.compareTo(a.score));

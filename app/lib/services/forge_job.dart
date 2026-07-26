@@ -21,19 +21,35 @@ class ForgeJob {
   /// Arquetipo forzado, o null para que lo decida el motor.
   final String? archetype;
 
+  /// Tema/tribu forzado ('lifegain', 'tribal:Elf', ...), o null para que lo
+  /// decida el motor (selector de Estilo). Se ignora en Commander: el
+  /// generador de Commander no tiene override de tema todavía.
+  final String? theme;
+
   /// Commander tiene su propio generador (singleton + identidad de color).
   final bool commander;
+
+  /// Forja profunda: reordena las propuestas por cómo rinden jugando entre
+  /// sí de verdad (round-robin simulado), no solo por su score estático. ON
+  /// por defecto: es la mejora, no la excepción.
+  final bool deepForge;
 
   const ForgeJob({
     required this.pool,
     this.allowedColors,
     this.archetype,
     this.commander = false,
+    this.deepForge = true,
+    this.theme,
   });
 }
 
 /// Función de nivel superior a propósito: `compute` no admite closures.
-List<fe.GeneratedDeck> runForgeJob(ForgeJob job) => job.commander
-    ? fe.generateCommanderProposals(job.pool)
-    : fe.generateProposals(job.pool,
-        allowedColors: job.allowedColors, archetypeOverride: job.archetype);
+List<fe.GeneratedDeck> runForgeJob(ForgeJob job) {
+  if (job.commander) return fe.generateCommanderProposals(job.pool);
+  final proposals = fe.generateProposals(job.pool,
+      allowedColors: job.allowedColors,
+      archetypeOverride: job.archetype,
+      themeOverride: job.theme);
+  return job.deepForge ? fe.rankBySimulation(proposals, job.pool) : proposals;
+}

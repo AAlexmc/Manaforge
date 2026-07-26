@@ -401,6 +401,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Attivandolo, Forge propone anche carte che ti mancano e ti dice quante sono e quanto costerebbero.';
 
   @override
+  String get onbForgeDeepTitle => 'Forgia profonda';
+
+  @override
+  String get onbForgeDeepBody =>
+      'Prima di mostrarti le proposte, le fa davvero giocare tra loro: l\'ordine finale pesa come rendono, non solo il punteggio statico. Disattivalo se preferisci risultati più veloci.';
+
+  @override
   String get onbForgeGoTitle => 'Forgia';
 
   @override
@@ -901,6 +908,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String fgNoDeckStyle(String estilo) {
+    return 'Con questo Stile ($estilo) non esce nessun mazzo. Prova «Stile: auto» o un\'altra tribù.';
+  }
+
+  @override
   String get fgOf60 => 'da 60';
 
   @override
@@ -1007,6 +1019,91 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get fgArchetypeAuto => 'Archetipo: auto';
+
+  @override
+  String get fgStyle => 'Stile';
+
+  @override
+  String get fgStyleAuto => 'Stile: auto';
+
+  @override
+  String get fgTribeElf => 'Elfi';
+
+  @override
+  String get fgTribeGoblin => 'Goblin';
+
+  @override
+  String get fgTribeZombie => 'Zombie';
+
+  @override
+  String get fgTribeVampire => 'Vampiri';
+
+  @override
+  String get fgTribeDragon => 'Draghi';
+
+  @override
+  String get fgTribeAngel => 'Angeli';
+
+  @override
+  String get fgTribeDemon => 'Demoni';
+
+  @override
+  String get fgTribeDinosaur => 'Dinosauri';
+
+  @override
+  String get fgTribeFaerie => 'Fate';
+
+  @override
+  String get fgTribeMerfolk => 'Tritoni';
+
+  @override
+  String get fgTribeHuman => 'Umani';
+
+  @override
+  String get fgTribeSpirit => 'Spiriti';
+
+  @override
+  String get fgTribeSliver => 'Schegge';
+
+  @override
+  String get fgTribeWizard => 'Maghi';
+
+  @override
+  String get fgTribeKnight => 'Cavalieri';
+
+  @override
+  String get fgTribeWarrior => 'Guerrieri';
+
+  @override
+  String get fgTribeSoldier => 'Soldati';
+
+  @override
+  String get fgTribeCat => 'Gatti';
+
+  @override
+  String get fgTribeDog => 'Cani';
+
+  @override
+  String get fgTribeRat => 'Ratti';
+
+  @override
+  String get fgTribePirate => 'Pirati';
+
+  @override
+  String get fgTribeElemental => 'Elementali';
+
+  @override
+  String get fgTribeGiant => 'Giganti';
+
+  @override
+  String get fgTribeRogue => 'Furfanti';
+
+  @override
+  String get fgDeepForge => 'Forgiatura profonda';
+
+  @override
+  String get fgDeepForgeHint =>
+      'Prima di mostrarti le proposte, le fa davvero giocare tra loro (un po\' più di attesa).';
 
   @override
   String get fgPricePerCard => 'Prezzo per carta:';
@@ -3686,6 +3783,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get fxThemeGraveyard => 'cimitero';
+
+  @override
+  String get fxThemeReanimator => 'rianimazione';
+
+  @override
+  String fxThemeTribal(String tribe) {
+    return 'tribù $tribe';
+  }
 
   @override
   String get fxThemeGoodstuff => 'il meglio delle tue carte';

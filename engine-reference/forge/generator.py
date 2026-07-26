@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections import Counter
 from itertools import combinations
 
-from .classify import classify, theme_roles, efficiency, QUOTAS
+from .classify import classify, theme_roles, tribal_role, efficiency, QUOTAS
 from .curve import LAND_RANGES, AVG_CMC_RANGES, DECK_SIZE, average_cmc, recommended_lands
 from .deck_score import evaluate_deck
 from .manabase import build_mana_base
@@ -35,6 +35,16 @@ def _candidate_pool(pool: dict, colors: str) -> dict:
 
 
 MIN_PAYOFF_COPIES = 3  # sin masa crítica de payoffs no hay tema
+MIN_TRIBE_MEMBERS = 12  # tribu elegible: además del mínimo de payoffs de siempre
+
+# Guard de generate_deck cuando el Estilo forzado es una tribu
+# (theme.startswith("tribal:")): al menos esta cantidad de copias de
+# CRIATURAS DEL SUBTIPO (por subtypes, no por rol — un lord clasifica
+# "payoff" y aun así es cuerpo) entre las cartas elegidas para el mazo —
+# un payoff suelto que solo nombra la tribu no basta (C2). Menor que
+# MIN_TRIBE_MEMBERS porque ese mide el POOL candidato entero; este mide
+# solo lo que el greedy metió en las 60 cartas finales.
+MIN_TRIBE_MEMBERS_IN_DECK = 8
 
 # Colores naturales de cada tema (color pie). "" = cualquier color.
 THEME_COLORS = {
@@ -45,7 +55,18 @@ THEME_COLORS = {
     "counters": "GW",
     "tokens": "WG",
     "graveyard": "BG",
+    "reanimator": "BGU",
 }
+
+# Máximo de gordas (criaturas caras del tema reanimator) que reciben trato de
+# enabler puro en _greedy_fill. Sin tope, un pool cargado de gordas vaciaría
+# la curva media del arquetipo entero hacia costes altos.
+MAX_REANIMATOR_FATTIES = 6
+
+# Umbral de coste y eficiencia para que una criatura cuente como "gorda"
+# reanimable: cara y con stats muy por encima de la media.
+REANIMATOR_FATTY_MIN_CMC = 5
+REANIMATOR_FATTY_MIN_EFFICIENCY = 6.0
 
 
 def _theme_color_multiplier(colors: str) -> dict[str, float]:
@@ -60,6 +81,18 @@ def _theme_color_multiplier(colors: str) -> dict[str, float]:
     return out
 
 
+def _tribe_member_copies(cands: dict) -> dict[str, int]:
+    """Copias de criaturas por subtipo entre las candidatas: la masa tribal
+    cruda, antes de mirar quién la aprovecha."""
+    out: Counter = Counter()
+    for card in cands.values():
+        if "Creature" not in card["types"]:
+            continue
+        for subtype in card.get("subtypes", []):
+            out[subtype] += card["qty"]
+    return dict(out)
+
+
 def detect_theme(cands: dict, colors: str = "") -> tuple[str, dict[str, str]]:
     """Tema dominante y rol de cada carta.
 
@@ -67,7 +100,10 @@ def detect_theme(cands: dict, colors: str = "") -> tuple[str, dict[str, str]]:
     estos colores: los enablers solos no hacen tema (p. ej. artefactos
     incoloros presentes en toda identidad no convierten cualquier mazo en
     'artifacts'). Entre los elegibles gana el de más peso (payoffs x3),
-    desempatado por el color pie de [colors].
+    desempatado por el color pie de [colors]. Las tribus ("tribal:<Subtipo>")
+    compiten con los temas mecánicos: no llevan multiplicador de color (son
+    de cualquier color) y además del mínimo de payoffs piden
+    >= MIN_TRIBE_MEMBERS criaturas del subtipo.
     """
     mult = _theme_color_multiplier(colors)
     weights: dict[str, float] = {}
@@ -83,6 +119,23 @@ def detect_theme(cands: dict, colors: str = "") -> tuple[str, dict[str, str]]:
                 weights[theme] = weights.get(theme, 0.0) + card["qty"] * 3 * m
             else:
                 weights[theme] = weights.get(theme, 0.0) + card["qty"] * m
+
+    for tribe, members in _tribe_member_copies(cands).items():
+        if members < MIN_TRIBE_MEMBERS:
+            continue
+        theme = f"tribal:{tribe}"
+        payoffs = 0
+        for name, card in cands.items():
+            role = tribal_role(card, tribe)
+            if role is None:
+                continue
+            roles_by_card[name][theme] = role
+            if role == "payoff":
+                payoffs += card["qty"]
+        if payoffs >= MIN_PAYOFF_COPIES:
+            payoff_copies[theme] = payoffs
+            weights[theme] = payoffs * 3.0 + members * 1.0
+
     eligible = {t: w for t, w in weights.items()
                 if payoff_copies[t] >= MIN_PAYOFF_COPIES}
     if not eligible:
@@ -102,24 +155,67 @@ def pick_archetype(cands: dict) -> str:
 
 
 def score(card: dict, theme: str, roles: dict[str, str], curve_need: dict[int, float],
-          archetype: str) -> float:
+          archetype: str, force_enabler_no_curve_penalty: bool = False) -> float:
     """eficiencia + sinergia con el tema + encaje en la curva que falta."""
     s = efficiency(card, archetype)
-    role = roles.get(theme)
+    role = "enabler" if force_enabler_no_curve_penalty else roles.get(theme)
     if role == "payoff":
         s += 3.0
     elif role == "enabler":
         s += 1.5
-    s += curve_need.get(min(card["cmc"], 6), 0.0) * 4.0
+    curve_term = curve_need.get(min(card["cmc"], 6), 0.0)
+    if force_enabler_no_curve_penalty:
+        curve_term = max(curve_term, 0.0)
+    s += curve_term * 4.0
     return s
 
 
-def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | None:
-    """Construye el mejor mazo de 60 para una identidad de color. None si no da."""
+def _is_reanimator_fatty(card: dict, theme: str, archetype: str, fatties_chosen: int) -> bool:
+    """Las gordas del tema reanimator no valen por su coste (no se lanzan, se
+    reaniman): tratarlas de enabler puro y sin castigo de curva, hasta el
+    tope MAX_REANIMATOR_FATTIES."""
+    return (
+        theme == "reanimator"
+        and "Creature" in card["types"]
+        and card["cmc"] >= REANIMATOR_FATTY_MIN_CMC
+        and efficiency(card, archetype) >= REANIMATOR_FATTY_MIN_EFFICIENCY
+        and fatties_chosen < MAX_REANIMATOR_FATTIES
+    )
+
+
+def _roles_for_override(cands: dict, theme: str) -> dict[str, dict[str, str]]:
+    """Roles de cada carta SOLO para [theme], sin la selección multi-tema de
+    detect_theme ni sus umbrales de elegibilidad (mejor-esfuerzo): las
+    cartas sin rol puntúan sin bonus, el greedy sigue llenando cuotas y
+    curva igual. Se usa cuando el tema lo elige el jugador (theme_override),
+    no el motor — detect_theme no se llama en ese caso."""
+    tribe = theme[len("tribal:"):] if theme.startswith("tribal:") else None
+    roles_by_card: dict[str, dict[str, str]] = {}
+    for name, card in cands.items():
+        role = tribal_role(card, tribe) if tribe is not None else theme_roles(card).get(theme)
+        roles_by_card[name] = {theme: role} if role is not None else {}
+    return roles_by_card
+
+
+def generate_deck(pool: dict, colors: str, name: str | None = None,
+                   theme_override: str | None = None) -> dict | None:
+    """Construye el mejor mazo de 60 para una identidad de color. None si no da.
+
+    theme_override fuerza el tema ("lifegain", "tribal:Elf", ...) en vez de
+    detectarlo: se salta detect_theme y su gate de MIN_PAYOFF_COPIES
+    (mejor-esfuerzo — el greedy prioriza cartas con rol en ese tema si las
+    hay, y si no las hay igual llena el mazo por eficiencia/curva). Si el
+    mazo resultante no lleva NINGUNA copia con rol en el tema forzado, ese
+    color no puede jugarlo: None.
+    """
     cands = _candidate_pool(pool, colors)
     if sum(c["qty"] for c in cands.values()) < 30:
         return None
-    theme, roles_by_card = detect_theme(cands, colors)
+    if theme_override is not None:
+        theme = theme_override
+        roles_by_card = _roles_for_override(cands, theme)
+    else:
+        theme, roles_by_card = detect_theme(cands, colors)
     archetype = pick_archetype(cands)
     target = CURVE_TARGET[archetype]
 
@@ -133,6 +229,26 @@ def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | No
 
     n_spells = DECK_SIZE - n_lands
     chosen = _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells)
+
+    if theme_override is not None:
+        if theme.startswith("tribal:"):
+            # Una tribu exige masa de cuerpos, no un payoff suelto que solo
+            # la nombra (C2): payoffs sin criaturas del subtipo no hacen
+            # mazo tribal. Los cuerpos se cuentan por SUBTIPO, no por rol:
+            # un lord (criatura de la tribu cuyo texto también es payoff)
+            # clasifica "payoff" en tribal_role — contar solo "enabler"
+            # rechazaría en falso un mazo tribal legítimo cargado de lords.
+            tribe = theme[len("tribal:"):]
+            body_copies = sum(
+                q for n, q in chosen.items()
+                if (card := cands.get(n)) is not None
+                and "Creature" in card["types"]
+                and tribe in card.get("subtypes", []))
+            if body_copies < MIN_TRIBE_MEMBERS_IN_DECK:
+                return None
+        elif not any(theme in roles_by_card.get(n, {}) for n in chosen):
+            return None  # ese color no tiene con qué jugar el estilo pedido
+
     manabase = _mana_base(chosen, pool, colors, n_lands, archetype)
     if manabase is None:
         return None
@@ -172,21 +288,26 @@ def _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells) -> di
             out.append("draw")
         return out
 
+    fatties_chosen = 0
     while sum(chosen.values()) < n_spells:
         need = curve_need()
         pending = {b for b, minimum in quotas.items() if counts[b] < minimum}
-        best_name, best_score = None, -1e9
+        best_name, best_score, best_is_fatty = None, -1e9, False
         for n, card in cands.items():
             if chosen[n] >= min(card["qty"], 4):
                 continue
-            s = score(card, theme, roles_by_card[n], need, archetype)
+            is_fatty = _is_reanimator_fatty(card, theme, archetype, fatties_chosen)
+            s = score(card, theme, roles_by_card[n], need, archetype,
+                      force_enabler_no_curve_penalty=is_fatty)
             buckets = bucket(card)
             if pending and not (pending & set(buckets)):
                 s -= 3.0  # aún caben, pero prioriza cubrir cuotas
             if best_score < s:
-                best_name, best_score = n, s
+                best_name, best_score, best_is_fatty = n, s, is_fatty
         if best_name is None:
             break
+        if best_is_fatty:
+            fatties_chosen += 1
         chosen[best_name] += 1
         for b in bucket(cands[best_name]):
             counts[b] += 1
@@ -200,12 +321,16 @@ def _mana_base(cards: dict, pool: dict, colors: str, n_lands: int, archetype: st
     return build_mana_base(cards, pool, colors, n_lands, archetype_name=archetype)
 
 
-def generate_proposals(pool: dict, max_proposals: int = 5) -> list[dict]:
-    """Las mejores propuestas entre monocolor y pares de colores."""
+def generate_proposals(pool: dict, max_proposals: int = 5,
+                        theme_override: str | None = None) -> list[dict]:
+    """Las mejores propuestas entre monocolor y pares de colores.
+    theme_override fuerza el tema de todas las propuestas (ver
+    generate_deck) — cada identidad que no pueda jugarlo simplemente no
+    entra en la lista, igual que hoy con cualquier otro "no da mazo sano"."""
     proposals = []
     identities = list("WUBRG") + ["".join(p) for p in combinations("WUBRG", 2)]
     for colors in identities:
-        deck = generate_deck(pool, colors)
+        deck = generate_deck(pool, colors, theme_override=theme_override)
         if deck:
             deck["score"] = evaluate_deck(
                 deck, pool, deck["sources_by_color"], deck_size=DECK_SIZE

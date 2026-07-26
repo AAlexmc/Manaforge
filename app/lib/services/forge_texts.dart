@@ -12,18 +12,73 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 import '../l10n/app_localizations.dart';
 
 /// Cómo se llama un tema. Un tema que el motor detecte y aquí no esté se
-/// enseña con su clave: es preferible a no decir nada.
-String themeName(AppLocalizations t, String theme) => switch (theme) {
-      'lifegain' => t.fxThemeLifegain,
-      'sacrifice' => t.fxThemeSacrifice,
-      'spells' => t.fxThemeSpells,
-      'artifacts' => t.fxThemeArtifacts,
-      'counters' => t.fxThemeCounters,
-      'tokens' => t.fxThemeTokens,
-      'graveyard' => t.fxThemeGraveyard,
-      'goodstuff' => t.fxThemeGoodstuff,
-      _ => theme,
+/// enseña con su clave: es preferible a no decir nada. Las tribus
+/// ('tribal:<Subtipo>') no tienen entrada fija: el subtipo va EN INGLÉS
+/// (como los nombres de carta — decisión previa) interpolado en la frase.
+String themeName(AppLocalizations t, String theme) {
+  if (theme.startsWith('tribal:')) {
+    // Enrutado por tribeName (I1): sin esto, la tarjeta de resultado, el
+    // detalle del mazo y Modo Test mostraban el subtipo en inglés crudo
+    // ("tribu de Elf") en vez del nombre traducido — solo el selector y el
+    // chip pasaban por tribeName.
+    return t.fxThemeTribal(tribeName(t, theme.substring('tribal:'.length)));
+  }
+  return switch (theme) {
+    'lifegain' => t.fxThemeLifegain,
+    'sacrifice' => t.fxThemeSacrifice,
+    'spells' => t.fxThemeSpells,
+    'artifacts' => t.fxThemeArtifacts,
+    'counters' => t.fxThemeCounters,
+    'tokens' => t.fxThemeTokens,
+    'graveyard' => t.fxThemeGraveyard,
+    'reanimator' => t.fxThemeReanimator,
+    'goodstuff' => t.fxThemeGoodstuff,
+    _ => theme,
+  };
+}
+
+/// Nombre visible de una tribu de `fe.kUiTribes` (el subtipo llega en inglés
+/// desde el motor — el selector de Estilo enseña el nombre traducido, pero
+/// el valor que viaja al motor sigue siendo el subtipo inglés). Si algún día
+/// hay una tribu fuera de la lista curada, se enseña el subtipo tal cual.
+String tribeName(AppLocalizations t, String tribe) => switch (tribe) {
+      'Elf' => t.fgTribeElf,
+      'Goblin' => t.fgTribeGoblin,
+      'Zombie' => t.fgTribeZombie,
+      'Vampire' => t.fgTribeVampire,
+      'Dragon' => t.fgTribeDragon,
+      'Angel' => t.fgTribeAngel,
+      'Demon' => t.fgTribeDemon,
+      'Dinosaur' => t.fgTribeDinosaur,
+      'Faerie' => t.fgTribeFaerie,
+      'Merfolk' => t.fgTribeMerfolk,
+      'Human' => t.fgTribeHuman,
+      'Spirit' => t.fgTribeSpirit,
+      'Sliver' => t.fgTribeSliver,
+      'Wizard' => t.fgTribeWizard,
+      'Knight' => t.fgTribeKnight,
+      'Warrior' => t.fgTribeWarrior,
+      'Soldier' => t.fgTribeSoldier,
+      'Cat' => t.fgTribeCat,
+      'Dog' => t.fgTribeDog,
+      'Rat' => t.fgTribeRat,
+      'Pirate' => t.fgTribePirate,
+      'Elemental' => t.fgTribeElemental,
+      'Giant' => t.fgTribeGiant,
+      'Rogue' => t.fgTribeRogue,
+      _ => tribe,
     };
+
+/// Nombre visible de un estilo forzado ('lifegain', 'tribal:Elf', ...) para
+/// el selector de Estilo: reusa [themeName] para lo mecánico y [tribeName]
+/// para las tribus, sin el envoltorio "tribu de …" de [themeName] (ahí
+/// el nombre solo, tal y como va en la lista del selector).
+String styleName(AppLocalizations t, String style) {
+  if (style.startsWith('tribal:')) {
+    return tribeName(t, style.substring('tribal:'.length));
+  }
+  return themeName(t, style);
+}
 
 /// Frase corta del tema, la que cuenta la historia del mazo. Null si el tema
 /// no tiene una propia (entonces habla el arquetipo).
