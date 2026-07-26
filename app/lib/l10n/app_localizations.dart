@@ -1158,6 +1158,30 @@ abstract class AppLocalizations {
   /// **'Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.'**
   String get onbVersionBody;
 
+  /// No description provided for @onbSuggestionsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Buzón de sugerencias'**
+  String get onbSuggestionsTitle;
+
+  /// No description provided for @onbSuggestionsBody.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Se te ocurre algo, o has visto un fallo? Cuéntalo en GitHub: hay plantilla y se rellena en un minuto.'**
+  String get onbSuggestionsBody;
+
+  /// No description provided for @onbSupportTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Apoyar el proyecto'**
+  String get onbSupportTitle;
+
+  /// No description provided for @onbSupportBody.
+  ///
+  /// In es, this message translates to:
+  /// **'La app es gratis y sin anuncios. Si te ha servido, aquí se explica cómo invitarnos a un café.'**
+  String get onbSupportBody;
+
   /// No description provided for @onbScanSetTitle.
   ///
   /// In es, this message translates to:

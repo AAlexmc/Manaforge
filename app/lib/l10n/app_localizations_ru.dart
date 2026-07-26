@@ -636,6 +636,20 @@ class AppLocalizationsRu extends AppLocalizations {
       'Какая у тебя версия, что в ней есть и хочешь ли, чтобы приложение раз в день проверяло, нет ли новой. Само оно не обновляется.';
 
   @override
+  String get onbSuggestionsTitle => 'Ящик предложений';
+
+  @override
+  String get onbSuggestionsBody =>
+      'Есть идея или нашёл баг? Расскажи на GitHub: там есть шаблон, и это займёт минуту.';
+
+  @override
+  String get onbSupportTitle => 'Поддержать проект';
+
+  @override
+  String get onbSupportBody =>
+      'Приложение бесплатное и без рекламы. Если оно было полезно, вот как угостить нас кофе.';
+
+  @override
   String get onbScanSetTitle => 'Сет: все';
 
   @override

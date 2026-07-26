@@ -132,26 +132,56 @@ class _TourOverlayState extends State<TourOverlay> {
     });
   }
 
+  /// Cuánto tiempo se sigue remidiendo tras el scroll, para dar tiempo a
+  /// que el layout termine de asentar (ver comentario en [_medir]). En
+  /// TIEMPO, no en frames: a 120 Hz un presupuesto de frames se queda en la
+  /// mitad de margen.
+  static const Duration _ventanaRemedicion = Duration(milliseconds: 400);
+
   Future<void> _medir() async {
-    final step = widget.steps[_i];
+    final entrada = _i; // si el usuario cambia de paso a media medición, cortar
+    final step = widget.steps[entrada];
     final key = step.targetKey;
     if (key == null) return;
-    var ctx = key.currentContext;
+    final ctx = key.currentContext;
     if (ctx == null) return;
     // si el botón está en una lista con scroll (Ajustes, Forge…), llevarlo a
     // la vista antes de medir; si no hay scroll, es un no-op
     await Scrollable.ensureVisible(ctx,
         duration: const Duration(milliseconds: 250), alignment: 0.35);
-    if (!mounted) return;
-    // context fresco tras el scroll (el de antes cruzó un await)
-    ctx = key.currentContext;
-    if (ctx == null || !ctx.mounted) return;
-    final box = ctx.findRenderObject();
-    if (box is! RenderBox || !box.hasSize) return;
-    final pos = box.localToGlobal(Offset.zero);
-    if (!mounted) return;
-    setState(() => _targetRect = pos & box.size);
+    if (!mounted || _i != entrada) return;
+    // El Future de arriba se cumple durante el propio tick de la animación
+    // de scroll, un frame antes de que el layout recoja ese último tramo (y,
+    // si el paso acaba de desplegar una sección, esta puede seguir
+    // empujando cosas por debajo mientras termina su propia animación).
+    // Medir una sola vez justo ahí da un rect "rancio": se remide varios
+    // frames más y se sigue el rect hasta que deja de moverse.
+    // «Convergió» exige DOS medidas seguidas iguales: con una sola, una
+    // repetición casual a mitad de animación (p. ej. la sección desplegando
+    // aún — isExpanded miente durante la animación) cortaba antes de tiempo
+    // y volvía el rect rancio.
+    final sw = Stopwatch()..start();
+    var igualesSeguidas = 0;
+    while (sw.elapsed < _ventanaRemedicion) {
+      await _unFrameMas();
+      if (!mounted || _i != entrada) return;
+      final fresco = key.currentContext;
+      if (fresco == null || !fresco.mounted) return;
+      final box = fresco.findRenderObject();
+      if (box is! RenderBox || !box.hasSize) return;
+      final rect = box.localToGlobal(Offset.zero) & box.size;
+      if (rect == _targetRect) {
+        if (++igualesSeguidas >= 2) return;
+        continue;
+      }
+      igualesSeguidas = 0;
+      setState(() => _targetRect = rect);
+    }
   }
+
+  /// Espera a que se pinte un frame más (y a que ese frame exista: si nada
+  /// más lo pide, lo agenda él mismo).
+  Future<void> _unFrameMas() => WidgetsBinding.instance.endOfFrame;
 
   void _siguiente() {
     if (_i >= widget.steps.length - 1) {
@@ -245,7 +275,10 @@ class _TourOverlayState extends State<TourOverlay> {
     );
   }
 
-  /// Coloca la burbuja lejos del foco para no taparlo.
+  /// Coloca la burbuja en el extremo con MÁS hueco libre (descontando
+  /// insets), no pegada al borde de la diana: pegada, un foco cerca de un
+  /// extremo quedaba tapado por el propio contenido que sigue justo debajo,
+  /// encajado entre foco y burbuja.
   Widget _colocarBurbuja(Rect? foco, double h, double inset, Widget burbuja) {
     if (foco == null) {
       return Center(
@@ -254,12 +287,18 @@ class _TourOverlayState extends State<TourOverlay> {
             child: burbuja),
       );
     }
-    final focoAbajo = foco.center.dy > h / 2;
+    // al lado con MÁS hueco libre, no al opuesto del centro: una diana que
+    // ocupa media pantalla (la tarjeta «Cómo funciona») invadiría la mitad
+    // «opuesta» y la burbuja se le montaría encima
+    final insetTop = MediaQuery.viewPaddingOf(context).top;
+    final focoAbajo = foco.top - insetTop > (h - inset) - foco.bottom;
     return Positioned(
       left: 20,
       right: 20,
-      top: focoAbajo ? null : foco.bottom + 16,
-      bottom: focoAbajo ? (h - foco.top + 16) : null,
+      // el 20 a pelo arriba se metía bajo la barra de estado/notch en
+      // edge-to-edge: el overlay vive fuera de todo SafeArea
+      top: focoAbajo ? insetTop + 20 : null,
+      bottom: focoAbajo ? null : inset + 20,
       child: burbuja,
     );
   }

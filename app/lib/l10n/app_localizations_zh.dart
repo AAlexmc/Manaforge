@@ -589,6 +589,18 @@ class AppLocalizationsZh extends AppLocalizations {
       '你用的是哪个版本、带来了什么，以及要不要让 App 每天检查一次有没有新版本。它不会自己更新。';
 
   @override
+  String get onbSuggestionsTitle => '意见箱';
+
+  @override
+  String get onbSuggestionsBody => '有想法，或者发现了问题？去 GitHub 告诉我们，有模板，一分钟就填好。';
+
+  @override
+  String get onbSupportTitle => '支持这个项目';
+
+  @override
+  String get onbSupportBody => '这款应用免费且没有广告。如果对你有帮助，这里是请我们喝杯咖啡的方法。';
+
+  @override
   String get onbScanSetTitle => '系列：全部';
 
   @override

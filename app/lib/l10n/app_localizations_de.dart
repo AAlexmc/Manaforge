@@ -634,6 +634,20 @@ class AppLocalizationsDe extends AppLocalizations {
       'Welche Version du hast, was drin ist, und ob die App einmal am Tag nach einer neuen schauen soll. Sie aktualisiert sich nie von selbst.';
 
   @override
+  String get onbSuggestionsTitle => 'Vorschlagsbox';
+
+  @override
+  String get onbSuggestionsBody =>
+      'Hast du eine Idee oder einen Fehler gefunden? Sag\'s auf GitHub: Es gibt eine Vorlage, dauert eine Minute.';
+
+  @override
+  String get onbSupportTitle => 'Das Projekt unterstützen';
+
+  @override
+  String get onbSupportBody =>
+      'Die App ist kostenlos und werbefrei. Wenn sie dir geholfen hat, hier steht, wie du uns einen Kaffee spendierst.';
+
+  @override
   String get onbScanSetTitle => 'Set: alle';
 
   @override

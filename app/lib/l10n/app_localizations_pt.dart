@@ -632,6 +632,20 @@ class AppLocalizationsPt extends AppLocalizations {
       'Qual versão você tem, o que ela traz, e se você quer que o app dê uma olhada uma vez por dia se tem versão nova. Ele nunca se atualiza sozinho.';
 
   @override
+  String get onbSuggestionsTitle => 'Caixa de sugestões';
+
+  @override
+  String get onbSuggestionsBody =>
+      'Tens uma ideia, ou encontraste um erro? Conta no GitHub: há um modelo e demora um minuto.';
+
+  @override
+  String get onbSupportTitle => 'Apoiar o projeto';
+
+  @override
+  String get onbSupportBody =>
+      'A app é grátis e sem anúncios. Se te foi útil, aqui está como nos pagar um café.';
+
+  @override
   String get onbScanSetTitle => 'Set: todos';
 
   @override

@@ -635,6 +635,20 @@ class AppLocalizationsFr extends AppLocalizations {
       'Quelle version tu as, ce qu\'elle apporte, et si tu veux que l\'app regarde une fois par jour s\'il y en a une nouvelle. Elle ne se met jamais à jour toute seule.';
 
   @override
+  String get onbSuggestionsTitle => 'Boîte à suggestions';
+
+  @override
+  String get onbSuggestionsBody =>
+      'Une idée, ou un bug repéré ? Dis-le sur GitHub : il y a un modèle et ça prend une minute.';
+
+  @override
+  String get onbSupportTitle => 'Soutenir le projet';
+
+  @override
+  String get onbSupportBody =>
+      'L\'app est gratuite et sans pub. Si elle t\'a été utile, voici comment nous offrir un café.';
+
+  @override
   String get onbScanSetTitle => 'Extension : toutes';
 
   @override
