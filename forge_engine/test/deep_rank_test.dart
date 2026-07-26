@@ -111,9 +111,10 @@ void main() {
     final proposals = generateProposals(realPool, maxProposals: 6);
     final sw = Stopwatch()..start();
     rankBySimulation(proposals, realPool);
-    // Medido en esta máquina con games:400 (default post-M5): ~0,96s.
-    // Margen x2 sobre eso para no ser frágil en máquinas más lentas, pero
+    // Medido: ~0,96s en local con games:400 (default post-M5); el runner
+    // de GitHub Actions superó los 2000ms del primer umbral (CI run #453).
+    // Margen ~5x sobre lo medido en local para cubrir runners lentos, pero
     // MUY por debajo de los 15s previos (que no presupuestaban nada real).
-    expect(sw.elapsed.inMilliseconds, lessThan(2000));
+    expect(sw.elapsed.inMilliseconds, lessThan(5000));
   });
 }
