@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/card_names.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 
@@ -99,6 +100,12 @@ void main() {
       expect(hits.single.name, 'Ornithopter', reason: 'query: $q');
     }
     db.close();
+  });
+
+  test('foldForSearch pliega la ñ y las tildes igual que el script', () {
+    expect(foldForSearch('Señor de los muertos vivientes'),
+        'senor de los muertos vivientes');
+    expect(foldForSearch('ORNITÓPTERO'), 'ornitoptero');
   });
 
   test('byScryfallId trae nameEs con v5 y null con v4, sin romper', () async {

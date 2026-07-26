@@ -121,6 +121,11 @@ def main() -> int:
     for a in sys.argv[1:]:
         if a.startswith("--min="):
             min_updated = int(a.split("=", 1)[1])
+        elif a.startswith("--"):
+            # un flag mal escrito («--min 20000», «--minimum=…») dejaría el
+            # suelo de cordura a 0 EN SILENCIO — mejor morir ruidoso
+            print(f"flag desconocido: {a}", file=sys.stderr)
+            return 2
     if len(args) not in (1, 2):
         print(__doc__)
         return 2

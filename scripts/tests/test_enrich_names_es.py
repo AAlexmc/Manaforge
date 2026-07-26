@@ -119,6 +119,12 @@ def test_carta_sin_impresion_es_queda_a_null(tmp_path):
     assert total_es == 2
 
 
+def test_fold_pliega_la_enye(tmp_path):
+    from enrich_names_es import _fold
+    assert _fold("Señor de los muertos vivientes") \
+        == "senor de los muertos vivientes"
+
+
 def test_fold_sin_tildes_y_minusculas(tmp_path):
     db, allcards = _setup(tmp_path)
     enrich(db, allcards)
