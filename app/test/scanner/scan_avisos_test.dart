@@ -37,6 +37,21 @@ Future<DropTarget> _montar(WidgetTester tester) async {
   return tester.widget<DropTarget>(find.byType(DropTarget));
 }
 
+/// El decodificado de fotos corre en hilos REALES: un sleep fijo se queda
+/// corto en un runner lento (flake cazado en CI, run #443). Sondear hasta
+/// que el texto aparece, con margen holgado — en máquina rápida sale en ms.
+Future<void> _esperarTexto(WidgetTester tester, String texto,
+    {Duration margen = const Duration(seconds: 30)}) async {
+  final limite = DateTime.now().add(margen);
+  while (DateTime.now().isBefore(limite)) {
+    await tester.pump();
+    if (find.textContaining(texto).evaluate().isNotEmpty) return;
+    await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 200)));
+  }
+  await tester.pump(); // que el expect del llamador falle con el árbol final
+}
+
 void main() {
   testWidgets(
       'soltar 1 foto buena + 1 que no es foto: avisa aunque la buena '
@@ -54,9 +69,8 @@ void main() {
         localPosition: Offset.zero,
         globalPosition: Offset.zero,
       ));
-      await Future<void>.delayed(const Duration(seconds: 2));
     });
-    await tester.pump();
+    await _esperarTexto(tester, '¿es una foto válida?');
 
     // el rechazo PARCIAL no puede quedar mudo, aunque la foto buena siga
     // reconociéndose
@@ -80,9 +94,8 @@ void main() {
         localPosition: Offset.zero,
         globalPosition: Offset.zero,
       ));
-      await Future<void>.delayed(const Duration(seconds: 2));
     });
-    await tester.pump();
+    await _esperarTexto(tester, '2 cartas');
     expect(find.textContaining('2 cartas'), findsOneWidget);
 
     // con la bandeja delante (_buildBatch(), no _buildDropZone()), soltar
@@ -97,9 +110,8 @@ void main() {
         localPosition: Offset.zero,
         globalPosition: Offset.zero,
       ));
-      await Future<void>.delayed(const Duration(milliseconds: 500));
     });
-    await tester.pump();
+    await _esperarTexto(tester, 'demasiado grande');
 
     expect(find.textContaining('2 cartas'), findsOneWidget); // sigue la bandeja
     expect(find.textContaining('demasiado grande'), findsWidgets);
