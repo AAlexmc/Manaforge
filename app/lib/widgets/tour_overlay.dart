@@ -132,26 +132,44 @@ class _TourOverlayState extends State<TourOverlay> {
     });
   }
 
+  /// Cuántos frames más se remide tras el scroll, para dar tiempo a que el
+  /// layout termine de asentar (ver comentario en [_medir]).
+  static const int _remedicionesTrasScroll = 10;
+
   Future<void> _medir() async {
-    final step = widget.steps[_i];
+    final entrada = _i; // si el usuario cambia de paso a media medición, cortar
+    final step = widget.steps[entrada];
     final key = step.targetKey;
     if (key == null) return;
-    var ctx = key.currentContext;
+    final ctx = key.currentContext;
     if (ctx == null) return;
     // si el botón está en una lista con scroll (Ajustes, Forge…), llevarlo a
     // la vista antes de medir; si no hay scroll, es un no-op
     await Scrollable.ensureVisible(ctx,
         duration: const Duration(milliseconds: 250), alignment: 0.35);
-    if (!mounted) return;
-    // context fresco tras el scroll (el de antes cruzó un await)
-    ctx = key.currentContext;
-    if (ctx == null || !ctx.mounted) return;
-    final box = ctx.findRenderObject();
-    if (box is! RenderBox || !box.hasSize) return;
-    final pos = box.localToGlobal(Offset.zero);
-    if (!mounted) return;
-    setState(() => _targetRect = pos & box.size);
+    if (!mounted || _i != entrada) return;
+    // El Future de arriba se cumple durante el propio tick de la animación
+    // de scroll, un frame antes de que el layout recoja ese último tramo (y,
+    // si el paso acaba de desplegar una sección, esta puede seguir
+    // empujando cosas por debajo mientras termina su propia animación).
+    // Medir una sola vez justo ahí da un rect "rancio": se remide varios
+    // frames más y se sigue el rect hasta que deja de moverse.
+    for (var vez = 0; vez < _remedicionesTrasScroll; vez++) {
+      await _unFrameMas();
+      if (!mounted || _i != entrada) return;
+      final fresco = key.currentContext;
+      if (fresco == null || !fresco.mounted) return;
+      final box = fresco.findRenderObject();
+      if (box is! RenderBox || !box.hasSize) return;
+      final rect = box.localToGlobal(Offset.zero) & box.size;
+      if (rect == _targetRect) return; // ya convergió, no hace falta seguir
+      setState(() => _targetRect = rect);
+    }
   }
+
+  /// Espera a que se pinte un frame más (y a que ese frame exista: si nada
+  /// más lo pide, lo agenda él mismo).
+  Future<void> _unFrameMas() => WidgetsBinding.instance.endOfFrame;
 
   void _siguiente() {
     if (_i >= widget.steps.length - 1) {
@@ -245,7 +263,10 @@ class _TourOverlayState extends State<TourOverlay> {
     );
   }
 
-  /// Coloca la burbuja lejos del foco para no taparlo.
+  /// Coloca la burbuja en la mitad de pantalla OPUESTA a la diana, no pegada
+  /// a su borde: pegada, un foco cerca de un extremo (la cabecera de una
+  /// sección, arriba del todo) quedaba tapado por el propio contenido que
+  /// sigue justo debajo de él, encajado entre foco y burbuja.
   Widget _colocarBurbuja(Rect? foco, double h, double inset, Widget burbuja) {
     if (foco == null) {
       return Center(
@@ -258,8 +279,8 @@ class _TourOverlayState extends State<TourOverlay> {
     return Positioned(
       left: 20,
       right: 20,
-      top: focoAbajo ? null : foco.bottom + 16,
-      bottom: focoAbajo ? (h - foco.top + 16) : null,
+      top: focoAbajo ? 20 : null,
+      bottom: focoAbajo ? null : inset + 20,
       child: burbuja,
     );
   }
