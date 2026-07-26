@@ -157,7 +157,13 @@ No hace falta saber programar: si tienes una idea o has visto un fallo, déjalo 
 <a id="donativos"></a>
 ## 💜 Donativos
 
-ManaForge es gratis y sin anuncios, y va a seguir siéndolo (la [licencia](#-licencia) no permite venderla). Pero si Forge te ha montado un mazo que ganó la partida, puedes financiar dos causas nobles: el café que mantiene la forja encendida, y mi rigurosa investigación de campo consistente en abrir *collector boosters* donde jamás —**jamás**— toca nada. Los datos dicen que la próxima rara chetada no va a salir; la esperanza es lo último que se exilia: **[paypal.me/al3payme](https://paypal.me/al3payme)** (también desde el botón **Sponsor** de arriba).
+ManaForge es gratis y sin anuncios, y va a seguir siéndolo (la [licencia](#-licencia) no permite venderla). Pero si Forge te ha montado un mazo que ganó la partida, puedes financiar dos causas nobles: el café que mantiene la forja encendida, y mi rigurosa investigación de campo consistente en abrir *collector boosters* donde jamás —**jamás**— toca nada. Los datos dicen que la próxima rara chetada no va a salir; la esperanza es lo último que se exilia.
+
+<p align="center">
+  <a href="https://paypal.me/al3payme">
+    <img src="https://img.shields.io/badge/Invitar_a_un_caf%C3%A9-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white" alt="Invitar a un café por PayPal">
+  </a>
+</p>
 
 Y si el maná no da para más, la mejor forma de apoyar es usarla, contar qué mejorarías en el [buzón](https://github.com/AAlexmc/Manaforge/issues/new/choose) y darle una ⭐ al repo — las estrellas no se descartan al final del turno.
 
