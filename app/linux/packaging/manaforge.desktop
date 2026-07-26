@@ -9,4 +9,7 @@ Terminal=false
 Categories=Game;CardGame;
 Keywords=magic;mtg;cartas;colección;mazos;escáner;
 StartupNotify=true
-StartupWMClass=manaforge
+# Debe casar con el WM_CLASS real de la ventana (g_set_prgname(APPLICATION_ID)
+# en my_application.cc) — con "manaforge" a secas el dock no asociaba la
+# ventana al lanzador y pintaba un engranaje genérico.
+StartupWMClass=com.example.manaforge
