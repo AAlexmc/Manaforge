@@ -99,16 +99,21 @@ void main() {
   });
 
   test(
-      'presupuesto: 6 propuestas x 40 partidas < 15 s en esta máquina',
-      () {
-        final raw = jsonDecode(File('../engine-reference/fixtures/pool.json')
-                .readAsStringSync()) as Map<String, dynamic>;
-        final realPool = raw.map((name, json) =>
-            MapEntry(name, Card.fromJson(name, json as Map<String, dynamic>)));
-        final proposals = generateProposals(realPool, maxProposals: 6);
-        final sw = Stopwatch()..start();
-        rankBySimulation(proposals, realPool);
-        expect(sw.elapsed.inSeconds, lessThan(15));
-      },
-      tags: 'slow');
+      'presupuesto: 6 propuestas x games por defecto (400, M5) da un '
+      'presupuesto de verdad, no 15s sobre algo que tarda <1s (M2)', () {
+    final raw = jsonDecode(File('../engine-reference/fixtures/pool.json')
+            .readAsStringSync()) as Map<String, dynamic>;
+    final realPool = raw.map((name, json) =>
+        MapEntry(name, Card.fromJson(name, json as Map<String, dynamic>)));
+    // generateProposals (~1,5s con la colección real) queda FUERA del
+    // Stopwatch a propósito: lo lento de la suite es el generador, no el
+    // round-robin — este test presupuesta solo rankBySimulation.
+    final proposals = generateProposals(realPool, maxProposals: 6);
+    final sw = Stopwatch()..start();
+    rankBySimulation(proposals, realPool);
+    // Medido en esta máquina con games:400 (default post-M5): ~0,96s.
+    // Margen x2 sobre eso para no ser frágil en máquinas más lentas, pero
+    // MUY por debajo de los 15s previos (que no presupuestaban nada real).
+    expect(sw.elapsed.inMilliseconds, lessThan(2000));
+  });
 }

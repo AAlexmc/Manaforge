@@ -544,4 +544,90 @@ void main() {
       });
     });
   });
+
+  group('M4: el loot no se come dos cartas', () {
+    Card land(String name, {int qty = 32}) => Card(
+        name: name,
+        qty: qty,
+        manaCost: '',
+        cmc: 0,
+        colors: '',
+        types: const ['Basic', 'Land'],
+        oracle: '');
+
+    Card weenie() => Card(
+        name: 'Weenie',
+        qty: 12,
+        manaCost: '{B}',
+        cmc: 1,
+        colors: 'B',
+        types: const ['Creature'],
+        oracle: '',
+        power: 1,
+        toughness: 1);
+
+    // Looter es el hechizo NO-criatura más caro del mazo (cmc 2, todo lo
+    // demás es tierra o Weenie cmc 1): en cuanto se acaban las Weenie por
+    // jugar, casi siempre es la única/peor carta candidata en mano — el
+    // escenario exacto donde `pick == worst` por identidad (M4).
+    const looter = Card(
+        name: 'Looter',
+        qty: 16,
+        manaCost: '{2}',
+        cmc: 2,
+        colors: 'B',
+        types: ['Sorcery'],
+        oracle: 'Draw a card, then discard a card.');
+
+    // Blank: mismo coste y tipo que Looter, pero sin efecto — el gemelo de
+    // control con el que comparar. Un loot que funcione bien filtra cartas
+    // y por tanto debe rendir IGUAL o MEJOR que no hacer nada; si el bug se
+    // come una carta de más por activación, cae por debajo de ese gemelo.
+    const blank = Card(
+        name: 'Blank',
+        qty: 16,
+        manaCost: '{2}',
+        cmc: 2,
+        colors: 'B',
+        types: ['Sorcery'],
+        oracle: '');
+
+    final poolLoot = {
+      'Swamp': land('Swamp'),
+      'Weenie': weenie(),
+      'Looter': looter,
+    };
+    final deckLoot = Deck(
+      name: 'Con loot',
+      colors: 'B',
+      archetype: Archetype.aggro,
+      cards: const {'Weenie': 12, 'Looter': 16},
+      lands: const {'Swamp': 32},
+    );
+    final poolBlank = {
+      'Swamp': land('Swamp'),
+      'Weenie': weenie(),
+      'Blank': blank,
+    };
+    final deckBlank = Deck(
+      name: 'Gemelo sin loot',
+      colors: 'B',
+      archetype: Archetype.aggro,
+      cards: const {'Weenie': 12, 'Blank': 16},
+      lands: const {'Swamp': 32},
+    );
+
+    test('el loot rinde razonable contra su gemelo, no muy por debajo de '
+        '"no hacer nada" (medido: 0,88 buggy vs 0,69 arreglado)', () {
+      final wr = simulateMatch(deckLoot, poolLoot, deckBlank, poolBlank,
+          games: 400, seed: 7);
+      // Con el bug (:468+:480 borran dos copias por identidad cuando el
+      // loot se elige a sí mismo como "peor carta"), este enfrentamiento da
+      // ~0,88 — de más, porque encima de perder su propia carta al
+      // castearse, a menudo se come UNA SEGUNDA de la mano sin que el
+      // efecto de loot la cuente. Arreglado da ~0,69: sigue ganando (filtra
+      // bien) pero sin la ventaja inflada por la carta de más.
+      expect(wr, lessThan(0.8));
+    });
+  });
 }

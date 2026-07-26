@@ -359,6 +359,7 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
   while (acted && mana > 0) {
     acted = false;
     _SimCard? pick;
+    var pickRemoved = false;
 
     List<_SimCard> affordable(bool Function(_SimCard) test) => me.hand
         .where((c) => !c.isLand && c.cmc <= mana && me.canPay(c, mana) && test(c))
@@ -451,6 +452,14 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
           (c) => c.draws > 0 || c.isRamp || c.loot || c.millSelf > 0);
       if (utils.isNotEmpty) {
         pick = utils.first;
+        // Fuera de la mano ANTES de resolver el efecto (M4): si no, el loot
+        // puede escogerse a sí mismo como "peor carta" a descartar (`_expand`
+        // comparte la MISMA instancia entre copias, así que `List.remove` por
+        // identidad borraría el propio loot aquí Y otra vez abajo, comiéndose
+        // dos cartas por una). `pickRemoved` evita que el remove común de
+        // abajo borre una SEGUNDA copia cuando hay 2+ en mano.
+        me.hand.remove(pick);
+        pickRemoved = true;
         if (pick.draws > 0) me.draw(pick.draws);
         if (pick.isRamp) me.lands.add(_LandInPlay(const {'W', 'U', 'B', 'R', 'G'}));
         if (pick.loot) {
@@ -477,7 +486,7 @@ void _takeTurn(_Player me, _Player foe, {required bool skipDraw}) {
     }
 
     if (pick != null) {
-      me.hand.remove(pick);
+      if (!pickRemoved) me.hand.remove(pick);
       mana -= pick.cmc;
       acted = true;
     }
