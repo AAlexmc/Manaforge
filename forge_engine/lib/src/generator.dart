@@ -121,8 +121,8 @@ Archetype? archetypeFor(double avgCmc, int nLands) {
 }
 
 double _score(Card card, String theme, Map<String, String> roles,
-    Map<int, double> curveNeed) {
-  var s = efficiency(card);
+    Map<int, double> curveNeed, String archetypeName) {
+  var s = efficiency(card, archetype: archetypeName);
   final role = roles[theme];
   if (role == 'payoff') s += 3.0;
   if (role == 'enabler') s += 1.5;
@@ -234,7 +234,7 @@ Map<String, int> _greedyFill(
     cands.forEach((n, card) {
       final limit = card.qty < 4 ? card.qty : 4;
       if ((chosen[n] ?? 0) >= limit) return;
-      var s = _score(card, theme, rolesByCard[n]!, need);
+      var s = _score(card, theme, rolesByCard[n]!, need, archetypeName);
       final buckets = bucket(card);
       if (pending.isNotEmpty && !pending.any(buckets.contains)) {
         s -= 3.0; // aún caben, pero prioriza cubrir cuotas

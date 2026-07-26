@@ -74,9 +74,10 @@ def pick_archetype(cands: dict) -> str:
     return "midrange"
 
 
-def score(card: dict, theme: str, roles: dict[str, str], curve_need: dict[int, float]) -> float:
+def score(card: dict, theme: str, roles: dict[str, str], curve_need: dict[int, float],
+          archetype: str) -> float:
     """eficiencia + sinergia con el tema + encaje en la curva que falta."""
-    s = efficiency(card)
+    s = efficiency(card, archetype)
     role = roles.get(theme)
     if role == "payoff":
         s += 3.0
@@ -148,7 +149,7 @@ def _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells) -> di
         for n, card in cands.items():
             if chosen[n] >= min(card["qty"], 4):
                 continue
-            s = score(card, theme, roles_by_card[n], need)
+            s = score(card, theme, roles_by_card[n], need, archetype)
             buckets = bucket(card)
             if pending and not (pending & set(buckets)):
                 s -= 3.0  # aún caben, pero prioriza cubrir cuotas

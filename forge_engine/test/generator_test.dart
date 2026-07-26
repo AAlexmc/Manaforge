@@ -102,4 +102,61 @@ void main() {
     expect(result.deck, isNull);
     expect(result.reason, isNotEmpty);
   });
+
+  group('efficiency: pesos de combate (Task 7)', () {
+    Card creature(String name, String oracle,
+            {int power = 2, int toughness = 2, int cmc = 2}) =>
+        Card(
+            name: name,
+            qty: 1,
+            manaCost: '{$cmc}',
+            cmc: cmc,
+            colors: '',
+            types: const ['Creature'],
+            oracle: oracle,
+            power: power,
+            toughness: toughness);
+
+    test('volador vale más que arrollador pequeño a igualdad de stats', () {
+      final flier = creature('Flier', 'Flying');
+      final trampler = creature('Trampler', 'Trample');
+      expect(efficiency(flier), greaterThan(efficiency(trampler)));
+    });
+
+    test('arrollar escala con el poder', () {
+      final bigTrampler =
+          creature('Big Trampler', 'Trample', power: 6, toughness: 6, cmc: 6);
+      final bigReacher =
+          creature('Big Reacher', 'Reach', power: 6, toughness: 6, cmc: 6);
+      expect(efficiency(bigTrampler), greaterThan(efficiency(bigReacher)));
+    });
+
+    test('prisa vale más en aggro', () {
+      final hasty = creature('Hasty', 'Haste');
+      expect(efficiency(hasty, archetype: 'aggro'),
+          greaterThan(efficiency(hasty)));
+    });
+
+    test('tope +2.0: keyword soup no rompe la escala', () {
+      final kitchenSink = creature(
+          'Kitchen Sink',
+          'Flying, double strike, menace, haste, deathtouch, lifelink, '
+          'first strike, vigilance, reach, trample',
+          power: 6,
+          toughness: 6,
+          cmc: 6);
+      expect(efficiency(kitchenSink), lessThanOrEqualTo(10));
+    });
+
+    test('sin columna keywords cae al oracle (double strike cuenta como '
+        'first strike no)', () {
+      final ds = creature('Double Strike Guy', 'Double strike', cmc: 3);
+      final plain =
+          creature('Plain Guy', 'Vanilla creature with no abilities.', cmc: 3);
+      // Solo pesa double strike (0.9): si first strike también contara por
+      // el fallback, la diferencia sería 0.9+0.5.
+      expect(
+          efficiency(ds) - efficiency(plain), closeTo(0.9, 1e-9));
+    });
+  });
 }
