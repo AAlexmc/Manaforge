@@ -1,5 +1,6 @@
 import 'classify.dart';
 import 'mana_curve.dart';
+import 'manabase.dart';
 import 'models.dart';
 import 'deck_validator.dart';
 
@@ -31,7 +32,11 @@ class GeneratedDeck {
   final Deck deck;
   final String theme;
   final double score;
-  const GeneratedDeck(this.deck, this.theme, this.score);
+
+  /// Detalle de la manabase (fuentes por color, objetivo Karsten). Nullable:
+  /// Commander y `reforgeWithCurve` aún no lo rellenan.
+  final ManabaseResult? manabase;
+  const GeneratedDeck(this.deck, this.theme, this.score, [this.manabase]);
 }
 
 Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
@@ -155,15 +160,15 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   chosen = _greedyFill(
       cands, rolesByCard, theme, archetypeName, target, ManaCurve.deckSize - nLands);
 
-  final lands = _manaBase(chosen, pool, colors, nLands);
-  if (lands == null) return null;
+  final manabase = _manaBase(chosen, pool, colors, nLands, archetypeName);
+  if (manabase == null) return null;
 
   final deck = Deck(
     name: name ?? 'Forge $colors $theme',
     colors: colors,
     archetype: archetype,
     cards: chosen,
-    lands: lands,
+    lands: manabase.lands,
   );
   if (DeckValidator.validate(deck, pool).isNotEmpty) return null;
 
@@ -173,7 +178,7 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
     spellCount += q;
     effSum += efficiency(pool[n]!) * q;
   });
-  return GeneratedDeck(deck, theme, effSum / spellCount);
+  return GeneratedDeck(deck, theme, effSum / spellCount, manabase);
 }
 
 Map<String, int> _greedyFill(
@@ -249,46 +254,12 @@ Map<String, int> _greedyFill(
   return chosen;
 }
 
-/// Básicas proporcionales a los símbolos, mínimo 8 fuentes por color usado.
-/// Null si la colección no tiene tierras suficientes (avisar, no forzar).
-Map<String, int>? _manaBase(
-    Map<String, int> cards, Map<String, Card> pool, String colors, int nLands) {
-  final syms = <String, int>{};
-  cards.forEach((n, q) {
-    ManaCurve.colorSymbols(pool[n]!.manaCost).forEach((c, k) {
-      syms[c] = (syms[c] ?? 0) + k * q;
-    });
-  });
-  final used = colors.split('').where((c) => (syms[c] ?? 0) > 0).toList();
-  if (used.isEmpty) return null;
-  var total = 0;
-  for (final c in used) {
-    total += syms[c]!;
-  }
-  final lands = <String, int>{};
-  var remaining = nLands;
-  for (var i = 0; i < used.length; i++) {
-    final c = used[i];
-    final basic = basicForColor[c]!;
-    final owned = pool[basic]?.qty ?? 0;
-    if (owned <= 0) return null; // sin básicas de ese color en la colección
-    int n;
-    if (i == used.length - 1) {
-      n = remaining;
-    } else {
-      n = used.length > 1
-          ? (nLands * syms[c]! / total).round().clamp(8, nLands).toInt()
-          : nLands;
-      final reserve = 8 * (used.length - 1 - i);
-      if (n > remaining - reserve) n = remaining - reserve;
-    }
-    if (n > owned) n = owned; // nunca más básicas de las poseídas
-    lands[basic] = n;
-    remaining -= n;
-  }
-  if (remaining > 0) return null;
-  return lands;
-}
+/// Manabase con no-básicas por objetivos Karsten (duales/fetches/taplands del
+/// pool antes que básicas de relleno). Null si la colección no da (avisar,
+/// no forzar). Ver `manabase.dart` para el algoritmo completo.
+ManabaseResult? _manaBase(Map<String, int> cards, Map<String, Card> pool,
+        String colors, int nLands, String archetypeName) =>
+    buildManaBase(cards, pool, colors, nLands, archetypeName: archetypeName);
 
 /// Resultado de una reforja con curva personalizada: mazo o motivo del "no".
 /// Por qué no se puede reforjar con la curva pedida. El motor es Dart puro y
@@ -427,8 +398,8 @@ ReforgeResult reforgeWithCurve(
         args: [avg.toStringAsFixed(1), '$nLands']);
   }
 
-  final lands = _manaBase(chosen, pool, colors, nLands);
-  if (lands == null) {
+  final manabase = _manaBase(chosen, pool, colors, nLands, archetype.name);
+  if (manabase == null) {
     return const ReforgeResult.no(
         'No hay tierras básicas suficientes en la colección para esa curva.',
         refusal: ReforgeRefusal.notEnoughBasics);
@@ -439,7 +410,7 @@ ReforgeResult reforgeWithCurve(
     colors: colors,
     archetype: archetype,
     cards: chosen,
-    lands: lands,
+    lands: manabase.lands,
   );
   final errors = DeckValidator.validate(deck, pool);
   if (errors.isNotEmpty) {

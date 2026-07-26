@@ -6,12 +6,16 @@ class Card {
   final int cmc;
   final String colors; // "WB", "U", "" para incoloras
   final List<String> types; // ["Creature"], ["Land"], …
+  final List<String> subtypes; // ["Elf","Druid"] — lo de detrás del «—»
   final String oracle;
   final int? power; // null para no-criaturas o poder variable (*)
   final int? toughness;
 
   /// Identidad de color (Commander). Null = usar [colors].
   final String? colorIdentity;
+
+  /// Keywords estructuradas (minúsculas) de la columna JSON de la DB.
+  final List<String> keywords;
 
   const Card({
     required this.name,
@@ -20,10 +24,12 @@ class Card {
     required this.cmc,
     required this.colors,
     required this.types,
+    this.subtypes = const [],
     required this.oracle,
     this.power,
     this.toughness,
     this.colorIdentity,
+    this.keywords = const [],
   });
 
   String get identity => colorIdentity ?? colors;
@@ -38,16 +44,25 @@ class Card {
         cmc: json['cmc'] as int,
         colors: (json['colors'] ?? '') as String,
         types: List<String>.from(json['types'] ?? const []),
+        subtypes: List<String>.from(json['subtypes'] ?? const []),
         oracle: (json['oracle'] ?? '') as String,
         power: _stat(json['power']),
         toughness: _stat(json['toughness']),
         colorIdentity: json['color_identity'] as String?,
+        keywords: List<String>.from(json['keywords'] ?? const [])
+            .map((k) => k.toString().toLowerCase())
+            .toList(),
       );
 
   bool get isLand => types.contains('Land');
   bool get isCreature => types.contains('Creature');
   bool get isLegendaryCreature =>
       isCreature && types.contains('Legendary');
+
+  /// ¿Tiene esta keyword? Si hay [keywords] estructuradas se usan tal cual;
+  /// si no (DB vieja o carta sintética), cae al regex sobre el oracle.
+  bool hasKeyword(String k) =>
+      keywords.isNotEmpty ? keywords.contains(k) : oracle.toLowerCase().contains(k);
 }
 
 /// Arquetipos soportados y sus rangos (aprox. Frank Karsten, mazos de 60).

@@ -374,24 +374,38 @@ class CardDatabase {
     }
     final tooExpensive = excluded;
 
-    fe.Card rowToCard(Row r, int qty) => fe.Card(
-          name: r['name'] as String,
-          qty: qty,
-          manaCost: (r['mana_cost'] as String?) ?? '',
-          cmc: ((r['cmc'] as num?) ?? 0).round(),
-          colors: (r['colors'] as String?) ?? '',
-          colorIdentity: r['color_identity'] as String?,
-          types: ((r['type_line'] as String?) ?? '')
-              .split('—')
-              .first
-              .trim()
-              .split(' ')
-              .where((t) => t.isNotEmpty)
-              .toList(),
-          oracle: (r['oracle_text'] as String?) ?? '',
-          power: int.tryParse((r['power'] as String?) ?? ''),
-          toughness: int.tryParse((r['toughness'] as String?) ?? ''),
-        );
+    List<String> kwList(Row r) {
+      try {
+        return ((jsonDecode((r['keywords'] as String?) ?? '[]') as List))
+            .map((k) => k.toString().toLowerCase())
+            .toList();
+      } catch (_) {
+        return const [];
+      }
+    }
+
+    fe.Card rowToCard(Row r, int qty) {
+      // solo la cara delantera cuenta (cartas de dos caras: type_line trae
+      // "Creature — Faerie Wizard // Instant — Adventure")
+      final face = ((r['type_line'] as String?) ?? '').split('//').first;
+      final parts = face.split('—');
+      return fe.Card(
+        name: r['name'] as String,
+        qty: qty,
+        manaCost: (r['mana_cost'] as String?) ?? '',
+        cmc: ((r['cmc'] as num?) ?? 0).round(),
+        colors: (r['colors'] as String?) ?? '',
+        colorIdentity: r['color_identity'] as String?,
+        types: parts.first.trim().split(' ').where((t) => t.isNotEmpty).toList(),
+        subtypes: parts.length > 1
+            ? parts[1].trim().split(' ').where((t) => t.isNotEmpty).toList()
+            : const [],
+        oracle: (r['oracle_text'] as String?) ?? '',
+        power: int.tryParse((r['power'] as String?) ?? ''),
+        toughness: int.tryParse((r['toughness'] as String?) ?? ''),
+        keywords: kwList(r),
+      );
+    }
 
     bool legalIn(Row r) {
       if (format == null) return true;
@@ -406,11 +420,21 @@ class CardDatabase {
 
     for (final entry in ownedByOracle.entries) {
       if (tooExpensive.contains(entry.key)) continue;
-      final rows = db.select(
-          'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
-          'oracle_text, power, toughness, legalities '
-          'FROM cards WHERE oracle_id = ?1',
-          [entry.key]);
+      List<Row> rows;
+      try {
+        rows = db.select(
+            'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
+            'oracle_text, power, toughness, keywords, legalities '
+            'FROM cards WHERE oracle_id = ?1',
+            [entry.key]);
+      } catch (_) {
+        // DB anterior al schema v4: sin columna keywords.
+        rows = db.select(
+            'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
+            'oracle_text, power, toughness, legalities '
+            'FROM cards WHERE oracle_id = ?1',
+            [entry.key]);
+      }
       if (rows.isEmpty) continue;
       if (!legalIn(rows.first)) continue;
       final card = rowToCard(rows.first, entry.value);

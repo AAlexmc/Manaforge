@@ -41,6 +41,8 @@ void main() {
         toughness: role == 0 ? 2 + i % 3 : null,
       );
     }
+    // oracle real de Plains: el clasificador de tierras (manabase v2) lee la
+    // cláusula "Add {W}" para saber qué produce, ya no basta con el nombre.
     pool['Plains'] = const Card(
       name: 'Plains',
       qty: 40,
@@ -49,7 +51,7 @@ void main() {
       colors: '',
       colorIdentity: '',
       types: ['Basic', 'Land'],
-      oracle: '',
+      oracle: '({T}: Add {W}.)',
     );
     // carta AZUL que jamás debe colarse en identidad W
     pool['Blue Intruder'] = const Card(
