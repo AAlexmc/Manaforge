@@ -105,10 +105,29 @@ def theme_roles(card: dict) -> dict[str, str]:
     return roles
 
 
-def efficiency(card: dict) -> float:
+# Pesos de keywords de combate (sustituye el +0.8 plano). Suma con tope +2.0.
+KW_WEIGHT = {
+    "flying": 1.2, "double strike": 0.9, "menace": 0.8, "haste": 0.7,
+    "deathtouch": 0.6, "lifelink": 0.6, "first strike": 0.5,
+    "vigilance": 0.3, "reach": 0.2, "trample": 0.2,
+}
+
+
+def has_keyword(card: dict, k: str) -> bool:
+    """Si la carta trae keywords estructuradas (columna JSON, minúsculas) se
+    usan tal cual; si no (DB vieja o carta sintética), cae al regex sobre
+    el oracle."""
+    keywords = card.get("keywords") or []
+    if keywords:
+        return k in keywords
+    return k in card["oracle"].lower()
+
+
+def efficiency(card: dict, archetype: str = "") -> float:
     """Puntuación de eficiencia individual (0-10, heurística).
 
     Criaturas: estadísticas respecto al coste. Hechizos: por función y coste.
+    [archetype] sube el peso de la prisa: pegar ya vale más en agresivo.
     """
     cmc = max(card["cmc"], 1)
     score = 5.0
@@ -118,9 +137,20 @@ def efficiency(card: dict) -> float:
         except (TypeError, ValueError):
             pt = cmc * 2  # poder variable (*/*), neutral
         score = 5.0 + (pt - 2 * cmc) * 0.8  # 2*cmc de stats totales = media
-        if re.search(r"flying|deathtouch|lifelink|first strike|menace|trample|haste",
-                     card["oracle"].lower()):
-            score += 0.8
+        kw_bonus = 0.0
+        for k, w in KW_WEIGHT.items():
+            if has_keyword(card, k):
+                if k == "haste" and archetype == "aggro":
+                    w *= 1.5
+                kw_bonus += w
+        try:
+            power_val = int(card.get("power"))
+        except (TypeError, ValueError):
+            power_val = None
+        # arrollar solo paga en gordas: un 6/6 arrollador pega de verdad.
+        if power_val is not None and power_val >= 4 and has_keyword(card, "trample"):
+            kw_bonus += 0.15 * (power_val - 3)
+        score += min(kw_bonus, 2.0)
         if card["oracle"]:
             score += 0.4  # tiene texto: algo hace
     else:

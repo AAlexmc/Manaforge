@@ -64,8 +64,20 @@ final _recursion =
     RegExp(r'return .* from your graveyard to (your hand|the battlefield)');
 final _lifegain = RegExp(r'gains? \d+ life|lifelink');
 final _pump = RegExp(r'target creature gets \+\d+');
-final _keywords = RegExp(
-    r'flying|deathtouch|lifelink|first strike|menace|trample|haste');
+
+/// Pesos de keywords de combate (sustituye el +0.8 plano). Suma con tope +2.0.
+const Map<String, double> kwWeight = {
+  'flying': 1.2,
+  'double strike': 0.9,
+  'menace': 0.8,
+  'haste': 0.7,
+  'deathtouch': 0.6,
+  'lifelink': 0.6,
+  'first strike': 0.5,
+  'vigilance': 0.3,
+  'reach': 0.2,
+  'trample': 0.2,
+};
 
 /// Etiquetas funcionales de una carta: creature, removal, sweeper, burn,
 /// counterspell, draw, ramp, recursion, lifegain, pump, land.
@@ -114,8 +126,9 @@ Map<String, String> themeRoles(Card card) {
   return roles;
 }
 
-/// Puntuación de eficiencia individual (0-10, heurística).
-double efficiency(Card card) {
+/// Puntuación de eficiencia individual (0-10, heurística). [archetype]
+/// sube el peso de la prisa: pegar ya vale más en un mazo agresivo.
+double efficiency(Card card, {String archetype = ''}) {
   final cmc = card.cmc < 1 ? 1 : card.cmc;
   var score = 5.0;
   if (card.types.contains('Creature')) {
@@ -123,7 +136,18 @@ double efficiency(Card card) {
         ? card.power! + card.toughness!
         : cmc * 2; // poder variable (*/*), neutral
     score = 5.0 + (pt - 2 * cmc) * 0.8; // 2*cmc de stats totales = media
-    if (_keywords.hasMatch(card.oracle.toLowerCase())) score += 0.8;
+    var kwBonus = 0.0;
+    kwWeight.forEach((k, w) {
+      if (card.hasKeyword(k)) {
+        if (k == 'haste' && archetype == 'aggro') w *= 1.5;
+        kwBonus += w;
+      }
+    });
+    // arrollar solo paga en gordas: un 6/6 arrollador pega de verdad.
+    if (card.power != null && card.power! >= 4 && card.hasKeyword('trample')) {
+      kwBonus += 0.15 * (card.power! - 3);
+    }
+    score += kwBonus > 2.0 ? 2.0 : kwBonus;
     if (card.oracle.isNotEmpty) score += 0.4; // tiene texto: algo hace
   } else {
     final tags = classify(card);

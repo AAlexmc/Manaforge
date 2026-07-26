@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 from forge.classify import classify, theme_roles
-from forge.generator import generate_deck, generate_proposals
+from forge.generator import detect_theme, generate_deck, generate_proposals
 from forge.validator import validate_deck
 
 FIXTURES = pathlib.Path(__file__).parent.parent / "fixtures"
@@ -53,3 +53,30 @@ def test_generator_respects_scarce_lands():
 def test_proposals_are_distinct_colors():
     proposals = generate_proposals(POOL)
     assert len({d["colors"] for d in proposals}) == len(proposals)
+
+
+def _tied_pool():
+    cands = {}
+    for i in range(3):
+        cands[f"Lifegain Payoff {i}"] = {
+            "name": f"Lifegain Payoff {i}", "qty": 1, "mana_cost": "{2}{W}",
+            "cmc": 3, "colors": "W", "types": ["Creature"],
+            "oracle": "Whenever you gain life, draw a card.",
+        }
+    for i in range(3):
+        cands[f"Spells Payoff {i}"] = {
+            "name": f"Spells Payoff {i}", "qty": 1, "mana_cost": "{1}{U}",
+            "cmc": 2, "colors": "U", "types": ["Creature"],
+            "oracle": "Whenever you cast an instant or sorcery spell, draw a card.",
+        }
+    return cands
+
+
+def test_detect_theme_empate_lifegain_spells_en_wb_gana_lifegain():
+    theme, _ = detect_theme(_tied_pool(), "WB")
+    assert theme == "lifegain"
+
+
+def test_detect_theme_empate_lifegain_spells_en_ur_gana_spells():
+    theme, _ = detect_theme(_tied_pool(), "UR")
+    assert theme == "spells"

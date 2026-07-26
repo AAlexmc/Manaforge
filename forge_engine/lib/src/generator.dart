@@ -1,4 +1,5 @@
 import 'classify.dart';
+import 'deck_score.dart';
 import 'mana_curve.dart';
 import 'manabase.dart';
 import 'models.dart';
@@ -27,6 +28,32 @@ const Map<String, Map<int, double>> curveTarget = {
 /// Sin masa crítica de payoffs no hay tema.
 const int minPayoffCopies = 3;
 
+/// Colores naturales de cada tema (color pie). '' = cualquier color.
+const Map<String, String> themeColors = {
+  'lifegain': 'WB',
+  'sacrifice': 'BR',
+  'spells': 'UR',
+  'artifacts': 'WU',
+  'counters': 'GW',
+  'tokens': 'WG',
+  'graveyard': 'BG',
+};
+
+/// Multiplicador de color pie por tema: 1.25 si [colors] solapa con el color
+/// natural del tema, 0.8 si le es ajeno, 1.0 si el tema es de cualquier color
+/// o no se conocen los colores del mazo todavía.
+Map<String, double> _themeColorMultiplier(String colors) {
+  final out = <String, double>{};
+  themeColors.forEach((theme, natural) {
+    if (natural.isEmpty || colors.isEmpty) {
+      out[theme] = 1.0;
+    } else {
+      out[theme] = natural.split('').any(colors.contains) ? 1.25 : 0.8;
+    }
+  });
+  return out;
+}
+
 /// Mazo generado: el Deck validable + metadatos de la generación.
 class GeneratedDeck {
   final Deck deck;
@@ -34,9 +61,15 @@ class GeneratedDeck {
   final double score;
 
   /// Detalle de la manabase (fuentes por color, objetivo Karsten). Nullable:
-  /// Commander y `reforgeWithCurve` aún no lo rellenan.
+  /// Commander la recalcula aparte tras el suelo de básicas.
   final ManabaseResult? manabase;
-  const GeneratedDeck(this.deck, this.theme, this.score, [this.manabase]);
+
+  /// Desglose del score (eficiencia, consistencia, curva). Nullable DE
+  /// VERDAD: los mazos releídos de disco (`SavedDeck.toGenerated`) y el
+  /// resultado de `optimizeAgainst` no lo llevan. Nunca uses `eval!`.
+  final DeckEvaluation? eval;
+  const GeneratedDeck(this.deck, this.theme, this.score,
+      [this.manabase, this.eval]);
 }
 
 Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
@@ -47,26 +80,29 @@ Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
 }
 
 /// Tema dominante y rol de cada carta. Un tema solo es elegible con
-/// >= minPayoffCopies copias de payoffs en estos colores.
+/// >= minPayoffCopies copias de payoffs en estos colores. [colors] desempata
+/// por color pie: un tema natural de la identidad pesa 1.25x, uno ajeno 0.8x.
 (String, Map<String, Map<String, String>>) detectTheme(
-    Map<String, Card> cands) {
-  final weights = <String, int>{};
+    Map<String, Card> cands, {String colors = ''}) {
+  final mult = _themeColorMultiplier(colors);
+  final weights = <String, double>{};
   final payoffCopies = <String, int>{};
   final rolesByCard = <String, Map<String, String>>{};
   cands.forEach((name, card) {
     final roles = themeRoles(card);
     rolesByCard[name] = roles;
     roles.forEach((theme, role) {
+      final m = mult[theme] ?? 1.0;
       if (role == 'payoff') {
         payoffCopies[theme] = (payoffCopies[theme] ?? 0) + card.qty;
-        weights[theme] = (weights[theme] ?? 0) + card.qty * 3;
+        weights[theme] = (weights[theme] ?? 0) + card.qty * 3 * m;
       } else {
-        weights[theme] = (weights[theme] ?? 0) + card.qty;
+        weights[theme] = (weights[theme] ?? 0) + card.qty * m;
       }
     });
   });
   String best = 'goodstuff';
-  var bestWeight = -1;
+  var bestWeight = -1.0;
   weights.forEach((theme, w) {
     if ((payoffCopies[theme] ?? 0) >= minPayoffCopies && w > bestWeight) {
       best = theme;
@@ -121,8 +157,8 @@ Archetype? archetypeFor(double avgCmc, int nLands) {
 }
 
 double _score(Card card, String theme, Map<String, String> roles,
-    Map<int, double> curveNeed) {
-  var s = efficiency(card);
+    Map<int, double> curveNeed, String archetypeName) {
+  var s = efficiency(card, archetype: archetypeName);
   final role = roles[theme];
   if (role == 'payoff') s += 3.0;
   if (role == 'enabler') s += 1.5;
@@ -144,7 +180,7 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   cands.forEach((_, c) => totalCopies += c.qty);
   if (totalCopies < 30) return null;
 
-  final (theme, rolesByCard) = detectTheme(cands);
+  final (theme, rolesByCard) = detectTheme(cands, colors: colors);
   final archetypeName = archetypeOverride ?? pickArchetype(cands);
   final archetype = _archetypeByName(archetypeName);
   final target = curveTarget[archetypeName]!;
@@ -172,13 +208,9 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   );
   if (DeckValidator.validate(deck, pool).isNotEmpty) return null;
 
-  var spellCount = 0;
-  var effSum = 0.0;
-  chosen.forEach((n, q) {
-    spellCount += q;
-    effSum += efficiency(pool[n]!) * q;
-  });
-  return GeneratedDeck(deck, theme, effSum / spellCount, manabase);
+  final eval = evaluateDeck(deck, pool, manabase.sourcesByColor,
+      deckSize: ManaCurve.deckSize);
+  return GeneratedDeck(deck, theme, eval.total, manabase, eval);
 }
 
 Map<String, int> _greedyFill(
@@ -234,7 +266,7 @@ Map<String, int> _greedyFill(
     cands.forEach((n, card) {
       final limit = card.qty < 4 ? card.qty : 4;
       if ((chosen[n] ?? 0) >= limit) return;
-      var s = _score(card, theme, rolesByCard[n]!, need);
+      var s = _score(card, theme, rolesByCard[n]!, need, archetypeName);
       final buckets = bucket(card);
       if (pending.isNotEmpty && !pending.any(buckets.contains)) {
         s -= 3.0; // aún caben, pero prioriza cubrir cuotas
@@ -327,7 +359,7 @@ ReforgeResult reforgeWithCurve(
         ]);
   }
 
-  final (theme, rolesByCard) = detectTheme(cands);
+  final (theme, rolesByCard) = detectTheme(cands, colors: colors);
 
   // Relleno por huecos de coste: para cada CMC pedido, las mejores cartas de
   // ese coste; si un hueco se queda corto, se cubre con costes vecinos.
@@ -420,14 +452,10 @@ ReforgeResult reforgeWithCurve(
         args: [errors.first]);
   }
 
-  var spellCount = 0;
-  var effSum = 0.0;
-  chosen.forEach((n, q) {
-    spellCount += q;
-    effSum += efficiency(pool[n]!) * q;
-  });
+  final eval = evaluateDeck(deck, pool, manabase.sourcesByColor,
+      deckSize: ManaCurve.deckSize);
   return ReforgeResult.ok(
-      GeneratedDeck(deck, theme, effSum / spellCount));
+      GeneratedDeck(deck, theme, eval.total, manabase, eval));
 }
 
 /// Las mejores propuestas entre monocolor y pares de colores.

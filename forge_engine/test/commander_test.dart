@@ -83,6 +83,99 @@ void main() {
     deck.cards.forEach((name, qty) => expect(qty, 1, reason: name));
   });
 
+  test('trae eval con sourcesByColor recalculado tras el suelo de básicas '
+      '(Task 9)', () {
+    final pool = bigPool();
+    final gen = generateCommanderDeck(pool, 'General Bright');
+    expect(gen, isNotNull);
+    expect(gen!.eval, isNotNull);
+    expect(gen.score, closeTo(gen.eval!.total, 1e-9));
+    expect(gen.manabase, isNotNull);
+    // sourcesByColor del manabase final: W es el único color usado, y debe
+    // reflejar las tierras que de verdad quedaron en el mazo (Plains).
+    final wSources = gen.manabase!.sourcesByColor['W'] ?? 0;
+    expect(wSources, gen.deck.lands['Plains']);
+  });
+
+  test('WB con duales: el suelo de básicas convierte y sourcesByColor se '
+      'recalcula sobre las tierras FINALES (Task 9 review)', () {
+    final pool = <String, Card>{};
+    pool['Duke Grim'] = const Card(
+      name: 'Duke Grim',
+      qty: 1,
+      manaCost: '{W}{B}',
+      cmc: 2,
+      colors: 'WB',
+      colorIdentity: 'WB',
+      types: ['Legendary', 'Creature'],
+      oracle: 'Deathtouch',
+      power: 2,
+      toughness: 2,
+    );
+    // exigencia CC en ambos colores => required alto => el greedy llena casi
+    // todo con duales y deja las básicas cortas => el suelo de 6 convierte.
+    for (var i = 0; i < 70; i++) {
+      final w = i.isEven;
+      final cc = i < 4; // 4 cartas doble símbolo
+      final color = w ? 'W' : 'B';
+      pool['Filler $i'] = Card(
+        name: 'Filler $i',
+        qty: 1,
+        manaCost: cc ? '{$color}{$color}' : '{${1 + i % 4}}{$color}',
+        cmc: cc ? 2 : 2 + i % 4,
+        colors: color,
+        colorIdentity: color,
+        types: i % 5 == 0 ? const ['Creature'] : const ['Instant'],
+        oracle: switch (i % 5) {
+          0 => 'Lifelink',
+          1 => 'Destroy target creature.',
+          2 => 'Draw a card. Draw a card.',
+          3 => '{T}: Add {C}. Search your library for a basic land card.',
+          _ => 'Destroy all creatures.',
+        },
+        power: i % 5 == 0 ? 2 : null,
+        toughness: i % 5 == 0 ? 2 : null,
+      );
+    }
+    for (var i = 0; i < 40; i++) {
+      pool['Dual $i'] = Card(
+        name: 'Dual $i',
+        qty: 1,
+        manaCost: '',
+        cmc: 0,
+        colors: '',
+        types: const ['Land'],
+        oracle: '({T}: Add {W} or {B}.)',
+      );
+    }
+    pool['Plains'] = const Card(
+        name: 'Plains', qty: 6, manaCost: '', cmc: 0, colors: '',
+        types: ['Basic', 'Land'], oracle: '({T}: Add {W}.)');
+    pool['Swamp'] = const Card(
+        name: 'Swamp', qty: 6, manaCost: '', cmc: 0, colors: '',
+        types: ['Basic', 'Land'], oracle: '({T}: Add {B}.)');
+
+    final gen = generateCommanderDeck(pool, 'Duke Grim');
+    expect(gen, isNotNull);
+    final lands = gen!.deck.lands;
+    // la conversión del suelo ocurrió de verdad: duales presentes Y 6+6 básicas
+    expect(lands.keys.any((n) => n.startsWith('Dual')), isTrue);
+    expect(lands['Plains'], 6);
+    expect(lands['Swamp'], 6);
+    // sourcesByColor debe ser el recuento sobre las tierras FINALES (post
+    // conversión), no el del greedy: si fuera el stale, este cuadre falla.
+    for (final c in ['W', 'B']) {
+      var manual = 0;
+      lands.forEach((name, qty) {
+        if (LandProfile.fromCard(pool[name]!).sourceOf(c, 'WB')) manual += qty;
+      });
+      expect(gen.manabase!.sourcesByColor[c], manual,
+          reason: 'fuentes de $c stale tras el suelo de básicas');
+    }
+    expect(gen.eval, isNotNull);
+    expect(gen.score, closeTo(gen.eval!.total, 1e-9));
+  });
+
   test('propuestas: encuentra al comandante él solo', () {
     final proposals = generateCommanderProposals(bigPool());
     expect(proposals, isNotEmpty);
