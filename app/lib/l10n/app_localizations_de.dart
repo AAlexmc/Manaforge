@@ -1011,6 +1011,91 @@ class AppLocalizationsDe extends AppLocalizations {
   String get fgArchetypeAuto => 'Archetyp: auto';
 
   @override
+  String get fgStyle => 'Stil';
+
+  @override
+  String get fgStyleAuto => 'Stil: auto';
+
+  @override
+  String get fgTribeElf => 'Elfen';
+
+  @override
+  String get fgTribeGoblin => 'Goblins';
+
+  @override
+  String get fgTribeZombie => 'Zombies';
+
+  @override
+  String get fgTribeVampire => 'Vampire';
+
+  @override
+  String get fgTribeDragon => 'Drachen';
+
+  @override
+  String get fgTribeAngel => 'Engel';
+
+  @override
+  String get fgTribeDemon => 'Dämonen';
+
+  @override
+  String get fgTribeDinosaur => 'Dinosaurier';
+
+  @override
+  String get fgTribeFaerie => 'Feen';
+
+  @override
+  String get fgTribeMerfolk => 'Meervolk';
+
+  @override
+  String get fgTribeHuman => 'Menschen';
+
+  @override
+  String get fgTribeSpirit => 'Geister';
+
+  @override
+  String get fgTribeSliver => 'Wesenssplitter';
+
+  @override
+  String get fgTribeWizard => 'Zauberer';
+
+  @override
+  String get fgTribeKnight => 'Ritter';
+
+  @override
+  String get fgTribeWarrior => 'Krieger';
+
+  @override
+  String get fgTribeSoldier => 'Soldaten';
+
+  @override
+  String get fgTribeCat => 'Katzen';
+
+  @override
+  String get fgTribeDog => 'Hunde';
+
+  @override
+  String get fgTribeRat => 'Ratten';
+
+  @override
+  String get fgTribePirate => 'Piraten';
+
+  @override
+  String get fgTribeElemental => 'Elementare';
+
+  @override
+  String get fgTribeGiant => 'Riesen';
+
+  @override
+  String get fgTribeRogue => 'Schurken';
+
+  @override
+  String get fgDeepForge => 'Tiefe Schmiede';
+
+  @override
+  String get fgDeepForgeHint =>
+      'Bevor sie dir die Vorschläge zeigt, lässt sie sie wirklich gegeneinander antreten (etwas mehr Wartezeit).';
+
+  @override
   String get fgPricePerCard => 'Preis pro Karte:';
 
   @override

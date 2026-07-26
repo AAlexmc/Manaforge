@@ -174,12 +174,39 @@ def _is_reanimator_fatty(card: dict, theme: str, archetype: str, fatties_chosen:
     )
 
 
-def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | None:
-    """Construye el mejor mazo de 60 para una identidad de color. None si no da."""
+def _roles_for_override(cands: dict, theme: str) -> dict[str, dict[str, str]]:
+    """Roles de cada carta SOLO para [theme], sin la selección multi-tema de
+    detect_theme ni sus umbrales de elegibilidad (mejor-esfuerzo): las
+    cartas sin rol puntúan sin bonus, el greedy sigue llenando cuotas y
+    curva igual. Se usa cuando el tema lo elige el jugador (theme_override),
+    no el motor — detect_theme no se llama en ese caso."""
+    tribe = theme[len("tribal:"):] if theme.startswith("tribal:") else None
+    roles_by_card: dict[str, dict[str, str]] = {}
+    for name, card in cands.items():
+        role = tribal_role(card, tribe) if tribe is not None else theme_roles(card).get(theme)
+        roles_by_card[name] = {theme: role} if role is not None else {}
+    return roles_by_card
+
+
+def generate_deck(pool: dict, colors: str, name: str | None = None,
+                   theme_override: str | None = None) -> dict | None:
+    """Construye el mejor mazo de 60 para una identidad de color. None si no da.
+
+    theme_override fuerza el tema ("lifegain", "tribal:Elf", ...) en vez de
+    detectarlo: se salta detect_theme y su gate de MIN_PAYOFF_COPIES
+    (mejor-esfuerzo — el greedy prioriza cartas con rol en ese tema si las
+    hay, y si no las hay igual llena el mazo por eficiencia/curva). Si el
+    mazo resultante no lleva NINGUNA copia con rol en el tema forzado, ese
+    color no puede jugarlo: None.
+    """
     cands = _candidate_pool(pool, colors)
     if sum(c["qty"] for c in cands.values()) < 30:
         return None
-    theme, roles_by_card = detect_theme(cands, colors)
+    if theme_override is not None:
+        theme = theme_override
+        roles_by_card = _roles_for_override(cands, theme)
+    else:
+        theme, roles_by_card = detect_theme(cands, colors)
     archetype = pick_archetype(cands)
     target = CURVE_TARGET[archetype]
 
@@ -193,6 +220,11 @@ def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | No
 
     n_spells = DECK_SIZE - n_lands
     chosen = _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells)
+
+    if theme_override is not None and not any(
+            theme in roles_by_card.get(n, {}) for n in chosen):
+        return None  # ese color no tiene con qué jugar el estilo pedido
+
     manabase = _mana_base(chosen, pool, colors, n_lands, archetype)
     if manabase is None:
         return None
@@ -265,12 +297,16 @@ def _mana_base(cards: dict, pool: dict, colors: str, n_lands: int, archetype: st
     return build_mana_base(cards, pool, colors, n_lands, archetype_name=archetype)
 
 
-def generate_proposals(pool: dict, max_proposals: int = 5) -> list[dict]:
-    """Las mejores propuestas entre monocolor y pares de colores."""
+def generate_proposals(pool: dict, max_proposals: int = 5,
+                        theme_override: str | None = None) -> list[dict]:
+    """Las mejores propuestas entre monocolor y pares de colores.
+    theme_override fuerza el tema de todas las propuestas (ver
+    generate_deck) — cada identidad que no pueda jugarlo simplemente no
+    entra en la lista, igual que hoy con cualquier otro "no da mazo sano"."""
     proposals = []
     identities = list("WUBRG") + ["".join(p) for p in combinations("WUBRG", 2)]
     for colors in identities:
-        deck = generate_deck(pool, colors)
+        deck = generate_deck(pool, colors, theme_override=theme_override)
         if deck:
             deck["score"] = evaluate_deck(
                 deck, pool, deck["sources_by_color"], deck_size=DECK_SIZE

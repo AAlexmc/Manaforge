@@ -33,6 +33,49 @@ String themeName(AppLocalizations t, String theme) {
   };
 }
 
+/// Nombre visible de una tribu de `fe.kUiTribes` (el subtipo llega en inglés
+/// desde el motor — el selector de Estilo enseña el nombre traducido, pero
+/// el valor que viaja al motor sigue siendo el subtipo inglés). Si algún día
+/// hay una tribu fuera de la lista curada, se enseña el subtipo tal cual.
+String tribeName(AppLocalizations t, String tribe) => switch (tribe) {
+      'Elf' => t.fgTribeElf,
+      'Goblin' => t.fgTribeGoblin,
+      'Zombie' => t.fgTribeZombie,
+      'Vampire' => t.fgTribeVampire,
+      'Dragon' => t.fgTribeDragon,
+      'Angel' => t.fgTribeAngel,
+      'Demon' => t.fgTribeDemon,
+      'Dinosaur' => t.fgTribeDinosaur,
+      'Faerie' => t.fgTribeFaerie,
+      'Merfolk' => t.fgTribeMerfolk,
+      'Human' => t.fgTribeHuman,
+      'Spirit' => t.fgTribeSpirit,
+      'Sliver' => t.fgTribeSliver,
+      'Wizard' => t.fgTribeWizard,
+      'Knight' => t.fgTribeKnight,
+      'Warrior' => t.fgTribeWarrior,
+      'Soldier' => t.fgTribeSoldier,
+      'Cat' => t.fgTribeCat,
+      'Dog' => t.fgTribeDog,
+      'Rat' => t.fgTribeRat,
+      'Pirate' => t.fgTribePirate,
+      'Elemental' => t.fgTribeElemental,
+      'Giant' => t.fgTribeGiant,
+      'Rogue' => t.fgTribeRogue,
+      _ => tribe,
+    };
+
+/// Nombre visible de un estilo forzado ('lifegain', 'tribal:Elf', ...) para
+/// el selector de Estilo: reusa [themeName] para lo mecánico y [tribeName]
+/// para las tribus, sin el envoltorio "tribu de …" de [themeName] (ahí
+/// el nombre solo, tal y como va en la lista del selector).
+String styleName(AppLocalizations t, String style) {
+  if (style.startsWith('tribal:')) {
+    return tribeName(t, style.substring('tribal:'.length));
+  }
+  return themeName(t, style);
+}
+
 /// Frase corta del tema, la que cuenta la historia del mazo. Null si el tema
 /// no tiene una propia (entonces habla el arquetipo).
 String? _themeTagline(AppLocalizations t, String theme) => switch (theme) {

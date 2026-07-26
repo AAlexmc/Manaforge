@@ -116,4 +116,18 @@ void main() {
 
     expect(find.textContaining('Necesito la base de cartas'), findsOneWidget);
   });
+
+  testWidgets('forja profunda: el switch existe y arranca ON', (tester) async {
+    await _pump(tester, _conCartas(40));
+
+    final switchFinder = find.ancestor(
+        of: find.text('Forja profunda'), matching: find.byType(SwitchListTile));
+    expect(switchFinder, findsOneWidget);
+    expect(tester.widget<SwitchListTile>(switchFinder).value, isTrue);
+
+    await tester.tap(find.text('Forja profunda'));
+    await tester.pump();
+
+    expect(tester.widget<SwitchListTile>(switchFinder).value, isFalse);
+  });
 }

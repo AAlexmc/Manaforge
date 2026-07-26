@@ -965,6 +965,90 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fgArchetypeAuto => 'アーキタイプ：自動';
 
   @override
+  String get fgStyle => 'スタイル';
+
+  @override
+  String get fgStyleAuto => 'スタイル：自動';
+
+  @override
+  String get fgTribeElf => 'エルフ';
+
+  @override
+  String get fgTribeGoblin => 'ゴブリン';
+
+  @override
+  String get fgTribeZombie => 'ゾンビ';
+
+  @override
+  String get fgTribeVampire => '吸血鬼';
+
+  @override
+  String get fgTribeDragon => 'ドラゴン';
+
+  @override
+  String get fgTribeAngel => '天使';
+
+  @override
+  String get fgTribeDemon => '悪魔';
+
+  @override
+  String get fgTribeDinosaur => '恐竜';
+
+  @override
+  String get fgTribeFaerie => '妖精';
+
+  @override
+  String get fgTribeMerfolk => 'マーフォーク';
+
+  @override
+  String get fgTribeHuman => '人間';
+
+  @override
+  String get fgTribeSpirit => 'スピリット';
+
+  @override
+  String get fgTribeSliver => 'スリヴァー';
+
+  @override
+  String get fgTribeWizard => 'ウィザード';
+
+  @override
+  String get fgTribeKnight => '騎士';
+
+  @override
+  String get fgTribeWarrior => '戦士';
+
+  @override
+  String get fgTribeSoldier => '兵士';
+
+  @override
+  String get fgTribeCat => '猫';
+
+  @override
+  String get fgTribeDog => '犬';
+
+  @override
+  String get fgTribeRat => 'ネズミ';
+
+  @override
+  String get fgTribePirate => '海賊';
+
+  @override
+  String get fgTribeElemental => 'エレメンタル';
+
+  @override
+  String get fgTribeGiant => '巨人';
+
+  @override
+  String get fgTribeRogue => 'ならず者';
+
+  @override
+  String get fgDeepForge => 'ディープフォージ';
+
+  @override
+  String get fgDeepForgeHint => '提案を見せる前に、実際に対戦させて比べます（少し待ち時間が増えます）。';
+
+  @override
   String get fgPricePerCard => '1枚あたりの価格：';
 
   @override

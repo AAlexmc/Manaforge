@@ -1728,6 +1728,174 @@ abstract class AppLocalizations {
   /// **'Arquetipo: auto'**
   String get fgArchetypeAuto;
 
+  /// No description provided for @fgStyle.
+  ///
+  /// In es, this message translates to:
+  /// **'Estilo'**
+  String get fgStyle;
+
+  /// No description provided for @fgStyleAuto.
+  ///
+  /// In es, this message translates to:
+  /// **'Estilo: auto'**
+  String get fgStyleAuto;
+
+  /// No description provided for @fgTribeElf.
+  ///
+  /// In es, this message translates to:
+  /// **'Elfos'**
+  String get fgTribeElf;
+
+  /// No description provided for @fgTribeGoblin.
+  ///
+  /// In es, this message translates to:
+  /// **'Trasgos'**
+  String get fgTribeGoblin;
+
+  /// No description provided for @fgTribeZombie.
+  ///
+  /// In es, this message translates to:
+  /// **'Zombis'**
+  String get fgTribeZombie;
+
+  /// No description provided for @fgTribeVampire.
+  ///
+  /// In es, this message translates to:
+  /// **'Vampiros'**
+  String get fgTribeVampire;
+
+  /// No description provided for @fgTribeDragon.
+  ///
+  /// In es, this message translates to:
+  /// **'Dragones'**
+  String get fgTribeDragon;
+
+  /// No description provided for @fgTribeAngel.
+  ///
+  /// In es, this message translates to:
+  /// **'Ángeles'**
+  String get fgTribeAngel;
+
+  /// No description provided for @fgTribeDemon.
+  ///
+  /// In es, this message translates to:
+  /// **'Demonios'**
+  String get fgTribeDemon;
+
+  /// No description provided for @fgTribeDinosaur.
+  ///
+  /// In es, this message translates to:
+  /// **'Dinosaurios'**
+  String get fgTribeDinosaur;
+
+  /// No description provided for @fgTribeFaerie.
+  ///
+  /// In es, this message translates to:
+  /// **'Hadas'**
+  String get fgTribeFaerie;
+
+  /// No description provided for @fgTribeMerfolk.
+  ///
+  /// In es, this message translates to:
+  /// **'Tritones'**
+  String get fgTribeMerfolk;
+
+  /// No description provided for @fgTribeHuman.
+  ///
+  /// In es, this message translates to:
+  /// **'Humanos'**
+  String get fgTribeHuman;
+
+  /// No description provided for @fgTribeSpirit.
+  ///
+  /// In es, this message translates to:
+  /// **'Espíritus'**
+  String get fgTribeSpirit;
+
+  /// No description provided for @fgTribeSliver.
+  ///
+  /// In es, this message translates to:
+  /// **'Astillas'**
+  String get fgTribeSliver;
+
+  /// No description provided for @fgTribeWizard.
+  ///
+  /// In es, this message translates to:
+  /// **'Magos'**
+  String get fgTribeWizard;
+
+  /// No description provided for @fgTribeKnight.
+  ///
+  /// In es, this message translates to:
+  /// **'Caballeros'**
+  String get fgTribeKnight;
+
+  /// No description provided for @fgTribeWarrior.
+  ///
+  /// In es, this message translates to:
+  /// **'Guerreros'**
+  String get fgTribeWarrior;
+
+  /// No description provided for @fgTribeSoldier.
+  ///
+  /// In es, this message translates to:
+  /// **'Soldados'**
+  String get fgTribeSoldier;
+
+  /// No description provided for @fgTribeCat.
+  ///
+  /// In es, this message translates to:
+  /// **'Gatos'**
+  String get fgTribeCat;
+
+  /// No description provided for @fgTribeDog.
+  ///
+  /// In es, this message translates to:
+  /// **'Perros'**
+  String get fgTribeDog;
+
+  /// No description provided for @fgTribeRat.
+  ///
+  /// In es, this message translates to:
+  /// **'Ratas'**
+  String get fgTribeRat;
+
+  /// No description provided for @fgTribePirate.
+  ///
+  /// In es, this message translates to:
+  /// **'Piratas'**
+  String get fgTribePirate;
+
+  /// No description provided for @fgTribeElemental.
+  ///
+  /// In es, this message translates to:
+  /// **'Elementales'**
+  String get fgTribeElemental;
+
+  /// No description provided for @fgTribeGiant.
+  ///
+  /// In es, this message translates to:
+  /// **'Gigantes'**
+  String get fgTribeGiant;
+
+  /// No description provided for @fgTribeRogue.
+  ///
+  /// In es, this message translates to:
+  /// **'Pícaros'**
+  String get fgTribeRogue;
+
+  /// No description provided for @fgDeepForge.
+  ///
+  /// In es, this message translates to:
+  /// **'Forja profunda'**
+  String get fgDeepForge;
+
+  /// No description provided for @fgDeepForgeHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Antes de enseñarte las propuestas, las hace jugar entre sí de verdad (te cuesta un poco más de espera).'**
+  String get fgDeepForgeHint;
+
   /// No description provided for @fgPricePerCard.
   ///
   /// In es, this message translates to:

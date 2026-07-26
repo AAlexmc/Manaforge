@@ -16,6 +16,7 @@ import '../services/forge_job.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/set_picker.dart';
+import '../widgets/style_picker.dart';
 import 'deck_detail_screen.dart';
 import 'test_screen.dart';
 
@@ -42,6 +43,7 @@ class ForgeScreen extends StatefulWidget {
   final Key? queNoTengoKey;
   final Key? forjarKey;
   final Key? modoTestKey;
+  final Key? deepForgeKey;
 
   const ForgeScreen(
       {super.key,
@@ -52,7 +54,8 @@ class ForgeScreen extends StatefulWidget {
       this.expansionesKey,
       this.queNoTengoKey,
       this.forjarKey,
-      this.modoTestKey});
+      this.modoTestKey,
+      this.deepForgeKey});
 
   @override
   State<ForgeScreen> createState() => _ForgeScreenState();
@@ -63,6 +66,10 @@ class _ForgeScreenState extends State<ForgeScreen> {
   // Opciones del jugador: colores, arquetipo, rango de precio y de años
   final Set<String> _selColors = {};
   String? _selArchetype;
+  bool _deepForge = true;
+
+  /// Estilo forzado ('lifegain', 'tribal:Elf', ...), o null para Auto.
+  String? _selTheme;
   String _format = 'casual'; // casual · standard · pioneer · modern ·
   // pauper · legacy · commander
   final _minPriceCtrl = TextEditingController();
@@ -227,6 +234,8 @@ class _ForgeScreenState extends State<ForgeScreen> {
             allowedColors: _selColors.isEmpty ? null : _selColors.join(),
             archetype: _selArchetype,
             commander: _format == 'commander',
+            deepForge: _deepForge,
+            theme: _selTheme,
           ));
       // la pausa corre EN PARALELO al trabajo: es para que la animación
       // cuente su historia, no para hacer esperar de más
@@ -559,7 +568,34 @@ class _ForgeScreenState extends State<ForgeScreen> {
                     onChanged: (v) => setState(() => _selArchetype = v),
                   ),
                 ),
+                const SizedBox(width: 6),
+                ActionChip(
+                  visualDensity: VisualDensity.compact,
+                  avatar: const Icon(Icons.auto_fix_high, size: 16),
+                  label: Text(
+                      _selTheme == null ? t.fgStyleAuto : styleName(t, _selTheme!),
+                      style: const TextStyle(fontSize: 12.5)),
+                  onPressed: () async {
+                    final picked = await showStylePickerSheet(context,
+                        selected: _selTheme);
+                    if (picked == null || !mounted) return; // cerrado sin tocar nada
+                    setState(() => _selTheme = picked.isEmpty ? null : picked);
+                  },
+                ),
               ],
+            ),
+            const SizedBox(height: 4),
+            KeyedSubtree(
+              key: widget.deepForgeKey,
+              child: SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: _deepForge,
+                onChanged: (v) => setState(() => _deepForge = v),
+                title: Text(t.fgDeepForge),
+                subtitle: Text(t.fgDeepForgeHint,
+                    style: const TextStyle(fontSize: 11.5)),
+              ),
             ),
             const SizedBox(height: 10),
             Wrap(

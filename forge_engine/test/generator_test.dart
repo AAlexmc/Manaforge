@@ -437,4 +437,218 @@ void main() {
           'payoff');
     });
   });
+
+  group('selector de Estilo: themeOverride (Task 13b)', () {
+    int copiasConSubtipo(Map<String, Card> pool, Deck deck, String subtype) {
+      var n = 0;
+      deck.cards.forEach((name, qty) {
+        if ((pool[name]?.subtypes ?? const []).contains(subtype)) n += qty;
+      });
+      return n;
+    }
+
+    // G: 14 elfos + payoff (masa tribal de sobra) MÁS un tema 'tokens' más
+    // pesado (payoffs y color pie propio): sin override el motor elegiría
+    // 'tokens', no la tribu.
+    Map<String, Card> poolMixto() {
+      final p = <String, Card>{
+        'Forest': const Card(
+            name: 'Forest',
+            qty: 40,
+            manaCost: '',
+            cmc: 0,
+            colors: '',
+            types: ['Basic', 'Land'],
+            oracle: '{T}: Add {G}.'),
+      };
+      const elfQty = [4, 4, 3, 3];
+      for (var i = 0; i < elfQty.length; i++) {
+        final name = 'Elf Warrior $i';
+        p[name] = Card(
+            name: name,
+            qty: elfQty[i],
+            manaCost: '{G}',
+            cmc: 1,
+            colors: 'G',
+            types: const ['Creature'],
+            subtypes: const ['Elf'],
+            oracle: '',
+            power: 1,
+            toughness: 1);
+      }
+      p['Elvish Chieftain'] = const Card(
+          name: 'Elvish Chieftain',
+          qty: 4,
+          manaCost: '{1}{G}',
+          cmc: 2,
+          colors: 'G',
+          types: ['Creature'],
+          subtypes: ['Elf'],
+          oracle: 'Other Elves you control get +1/+1.',
+          power: 2,
+          toughness: 2);
+      for (var i = 0; i < 4; i++) {
+        final name = 'Token Maker $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{2}',
+            cmc: 2,
+            colors: 'G',
+            types: const ['Creature'],
+            oracle:
+                'When this creature enters, create a 1/1 green Elemental creature token.',
+            power: 2,
+            toughness: 2);
+      }
+      for (var i = 0; i < 4; i++) {
+        final name = 'Token Payoff $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{3}{G}',
+            cmc: 4,
+            colors: 'G',
+            types: const ['Creature'],
+            oracle:
+                'Whenever another creature you control enters, you gain 1 life.',
+            power: 3,
+            toughness: 3);
+      }
+      const curveCmc = [1, 2, 3, 3, 4];
+      for (var i = 0; i < curveCmc.length; i++) {
+        final cmc = curveCmc[i];
+        final name = 'Filler Beast $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{$cmc}',
+            cmc: cmc,
+            colors: 'G',
+            types: const ['Creature'],
+            oracle: '',
+            power: cmc,
+            toughness: cmc);
+      }
+      return p;
+    }
+
+    test('sin override, el pool mixto pesa más tokens que tribal:Elf', () {
+      // control: confirma que el peso natural es de verdad otro tema, para
+      // que el test de abajo demuestre que el override lo pisa. Se mira
+      // detectTheme directamente (no generateDeck): con el pool sesgado a
+      // pagar el tema tokens, el arquetipo auto-detectado (aggro) puede no
+      // encajar con esa curva — algo aparte de lo que aquí se prueba.
+      final pool = poolMixto();
+      final cands = Map.fromEntries(
+          pool.entries.where((e) => !e.value.types.contains('Land')));
+      final (theme, _) = detectTheme(cands, colors: 'G');
+      expect(theme, isNot('tribal:Elf'));
+    });
+
+    test('themeOverride tribal fuerza elfos aunque el peso natural sea otro',
+        () {
+      final pool = poolMixto();
+      final gen =
+          generateDeck(pool, 'G', themeOverride: 'tribal:Elf')!;
+      expect(gen.theme, 'tribal:Elf');
+      expect(copiasConSubtipo(pool, gen.deck, 'Elf'), greaterThanOrEqualTo(12));
+    });
+
+    // W: un solo payoff de lifegain con 2 copias — por debajo del mínimo de
+    // 3 que exige detectTheme para elegirlo solo.
+    Map<String, Card> poolPocoLifegain() {
+      final p = <String, Card>{
+        'Plains': const Card(
+            name: 'Plains',
+            qty: 40,
+            manaCost: '',
+            cmc: 0,
+            colors: '',
+            types: ['Basic', 'Land'],
+            oracle: '{T}: Add {W}.'),
+        'Lifegain Payoff': const Card(
+            name: 'Lifegain Payoff',
+            qty: 2,
+            manaCost: '{2}{W}',
+            cmc: 3,
+            colors: 'W',
+            types: ['Creature'],
+            oracle:
+                'Whenever you gain life, put a +1/+1 counter on this creature.',
+            power: 2,
+            toughness: 2),
+      };
+      // suficientes nombres (>= lo que pide un mazo de 60 con esta identidad)
+      // para que el greedy pueda llenar el mazo entero, no solo el tema.
+      const curveCmc = [1, 2, 2, 2, 3, 3, 3, 4, 4, 5];
+      for (var i = 0; i < curveCmc.length; i++) {
+        final cmc = curveCmc[i];
+        final name = 'Filler $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{$cmc}',
+            cmc: cmc,
+            colors: 'W',
+            types: const ['Creature'],
+            oracle: '',
+            power: cmc,
+            toughness: cmc);
+      }
+      return p;
+    }
+
+    test('override mecánico salta el gate de payoffs (mejor-esfuerzo)', () {
+      expect(
+          generateDeck(poolPocoLifegain(), 'W', themeOverride: 'lifegain'),
+          isNotNull);
+    });
+
+    // U: nada de elfos.
+    Map<String, Card> poolSinElfos() {
+      final p = <String, Card>{
+        'Island': const Card(
+            name: 'Island',
+            qty: 40,
+            manaCost: '',
+            cmc: 0,
+            colors: '',
+            types: ['Basic', 'Land'],
+            oracle: '{T}: Add {U}.'),
+      };
+      const curveCmc = [1, 1, 2, 2, 3, 3, 4, 4, 5];
+      for (var i = 0; i < curveCmc.length; i++) {
+        final cmc = curveCmc[i];
+        final name = 'Filler $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{$cmc}',
+            cmc: cmc,
+            colors: 'U',
+            types: const ['Creature'],
+            oracle: '',
+            power: cmc,
+            toughness: cmc);
+      }
+      return p;
+    }
+
+    test('estilo imposible en ese color => null', () {
+      expect(
+          generateDeck(poolSinElfos(), 'U', themeOverride: 'tribal:Elf'),
+          isNull);
+    });
+
+    test('generateProposals propaga themeOverride a todas las identidades',
+        () {
+      final proposals = generateProposals(poolMixto(),
+          allowedColors: 'GW', themeOverride: 'tribal:Elf');
+      expect(proposals, isNotEmpty);
+      for (final gen in proposals) {
+        expect(gen.theme, 'tribal:Elf');
+      }
+    });
+  });
 }

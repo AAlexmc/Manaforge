@@ -968,6 +968,90 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fgArchetypeAuto => '아키타입: 자동';
 
   @override
+  String get fgStyle => '스타일';
+
+  @override
+  String get fgStyleAuto => '스타일: 자동';
+
+  @override
+  String get fgTribeElf => '엘프';
+
+  @override
+  String get fgTribeGoblin => '고블린';
+
+  @override
+  String get fgTribeZombie => '좀비';
+
+  @override
+  String get fgTribeVampire => '흡혈귀';
+
+  @override
+  String get fgTribeDragon => '드래곤';
+
+  @override
+  String get fgTribeAngel => '천사';
+
+  @override
+  String get fgTribeDemon => '악마';
+
+  @override
+  String get fgTribeDinosaur => '공룡';
+
+  @override
+  String get fgTribeFaerie => '요정';
+
+  @override
+  String get fgTribeMerfolk => '인어';
+
+  @override
+  String get fgTribeHuman => '인간';
+
+  @override
+  String get fgTribeSpirit => '정령';
+
+  @override
+  String get fgTribeSliver => '슬리버';
+
+  @override
+  String get fgTribeWizard => '마법사';
+
+  @override
+  String get fgTribeKnight => '기사';
+
+  @override
+  String get fgTribeWarrior => '전사';
+
+  @override
+  String get fgTribeSoldier => '병사';
+
+  @override
+  String get fgTribeCat => '고양이';
+
+  @override
+  String get fgTribeDog => '개';
+
+  @override
+  String get fgTribeRat => '쥐';
+
+  @override
+  String get fgTribePirate => '해적';
+
+  @override
+  String get fgTribeElemental => '정령체';
+
+  @override
+  String get fgTribeGiant => '거인';
+
+  @override
+  String get fgTribeRogue => '도적';
+
+  @override
+  String get fgDeepForge => '딥 포지';
+
+  @override
+  String get fgDeepForgeHint => '제안을 보여주기 전에 실제로 서로 대결시켜 봅니다 (조금 더 기다려야 해요).';
+
+  @override
   String get fgPricePerCard => '카드당 가격:';
 
   @override

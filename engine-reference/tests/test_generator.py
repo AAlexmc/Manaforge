@@ -8,6 +8,21 @@ from forge.classify import classify, theme_roles, tribal_role
 from forge.generator import detect_theme, generate_deck, generate_proposals
 from forge.validator import validate_deck
 
+def _land(name: str, color: str, qty: int = 40) -> dict:
+    return {
+        "name": name, "qty": qty, "mana_cost": "", "cmc": 0, "colors": "",
+        "types": ["Basic", "Land"], "oracle": "{T}: Add {%s}." % color,
+    }
+
+
+def _creature(name: str, cmc: int, colors: str, oracle: str = "",
+              subtypes: list[str] | None = None, qty: int = 4) -> dict:
+    return {
+        "name": name, "qty": qty, "mana_cost": "{%d}" % cmc, "cmc": cmc,
+        "colors": colors, "types": ["Creature"], "subtypes": subtypes or [],
+        "oracle": oracle, "power": cmc, "toughness": cmc,
+    }
+
 FIXTURES = pathlib.Path(__file__).parent.parent / "fixtures"
 POOL = json.loads((FIXTURES / "pool.json").read_text())
 
@@ -223,3 +238,103 @@ def test_tribal_role_reconoce_plurales_irregulares_no_solo_el_s_regular():
     assert tribal_role(_payoff_card("Other Wolves you control get +1/+1."), "Wolf") == "payoff"
     # Regular +s sigue funcionando (no es un caso irregular).
     assert tribal_role(_payoff_card("Other Goblins you control get +1/+1."), "Goblin") == "payoff"
+
+
+# --- Task 13b: selector de Estilo (theme_override) ---
+
+def _copias_con_subtipo(pool: dict, deck: dict, subtype: str) -> int:
+    return sum(qty for name, qty in deck["cards"].items()
+               if subtype in pool[name].get("subtypes", []))
+
+
+def _pool_mixto() -> dict:
+    """G: 14 elfos + payoff (masa tribal de sobra) MÁS un tema 'tokens' más
+    pesado (payoffs y color pie propio): sin override el motor elegiría
+    'tokens', no la tribu."""
+    p = {"Forest": _land("Forest", "G")}
+    for i, qty in enumerate([4, 4, 3, 3]):
+        name = f"Elf Warrior {i}"
+        p[name] = {
+            "name": name, "qty": qty, "mana_cost": "{G}", "cmc": 1, "colors": "G",
+            "types": ["Creature"], "subtypes": ["Elf"], "oracle": "",
+            "power": 1, "toughness": 1,
+        }
+    p["Elvish Chieftain"] = {
+        "name": "Elvish Chieftain", "qty": 4, "mana_cost": "{1}{G}", "cmc": 2,
+        "colors": "G", "types": ["Creature"], "subtypes": ["Elf"],
+        "oracle": "Other Elves you control get +1/+1.",
+        "power": 2, "toughness": 2,
+    }
+    for i in range(4):
+        name = f"Token Maker {i}"
+        p[name] = _creature(name, 2, "G",
+            "When this creature enters, create a 1/1 green Elemental creature token.")
+    for i in range(4):
+        name = f"Token Payoff {i}"
+        p[name] = _creature(name, 4, "G",
+            "Whenever another creature you control enters, you gain 1 life.")
+    for i, cmc in enumerate([1, 2, 3, 3, 4]):
+        name = f"Filler Beast {i}"
+        p[name] = _creature(name, cmc, "G")
+    return p
+
+
+def test_sin_override_el_pool_mixto_pesa_mas_tokens_que_tribal_elf():
+    # control: confirma que el peso natural es de verdad otro tema, para
+    # que el test de abajo demuestre que el override lo pisa.
+    pool = _pool_mixto()
+    cands = {n: c for n, c in pool.items() if "Land" not in c["types"]}
+    theme, _ = detect_theme(cands, "G")
+    assert theme != "tribal:Elf"
+
+
+def test_theme_override_tribal_fuerza_elfos_aunque_el_peso_natural_sea_otro():
+    pool = _pool_mixto()
+    deck = generate_deck(pool, "G", theme_override="tribal:Elf")
+    assert deck is not None
+    assert deck["theme"] == "tribal:Elf"
+    assert _copias_con_subtipo(pool, deck, "Elf") >= 12
+
+
+def _pool_poco_lifegain() -> dict:
+    """W: un solo payoff de lifegain con 2 copias — por debajo del mínimo
+    de 3 que exige detect_theme para elegirlo solo."""
+    p = {
+        "Plains": _land("Plains", "W"),
+        "Lifegain Payoff": {
+            "name": "Lifegain Payoff", "qty": 2, "mana_cost": "{2}{W}", "cmc": 3,
+            "colors": "W", "types": ["Creature"],
+            "oracle": "Whenever you gain life, put a +1/+1 counter on this creature.",
+            "power": 2, "toughness": 2,
+        },
+    }
+    # suficientes nombres para que el greedy pueda llenar el mazo entero,
+    # no solo el tema.
+    for i, cmc in enumerate([1, 2, 2, 2, 3, 3, 3, 4, 4, 5]):
+        name = f"Filler {i}"
+        p[name] = _creature(name, cmc, "W")
+    return p
+
+
+def test_override_mecanico_salta_el_gate_de_payoffs_mejor_esfuerzo():
+    deck = generate_deck(_pool_poco_lifegain(), "W", theme_override="lifegain")
+    assert deck is not None
+
+
+def _pool_sin_elfos() -> dict:
+    p = {"Island": _land("Island", "U")}
+    for i, cmc in enumerate([1, 2, 2, 2, 3, 3, 4, 4, 5]):
+        name = f"Filler {i}"
+        p[name] = _creature(name, cmc, "U")
+    return p
+
+
+def test_estilo_imposible_en_ese_color_da_none():
+    assert generate_deck(_pool_sin_elfos(), "U", theme_override="tribal:Elf") is None
+
+
+def test_generate_proposals_propaga_theme_override_a_todas_las_identidades():
+    proposals = generate_proposals(_pool_mixto(), theme_override="tribal:Elf")
+    assert proposals
+    for deck in proposals:
+        assert deck["theme"] == "tribal:Elf"

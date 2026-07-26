@@ -25,6 +25,17 @@ const Map<String, Map<int, double>> curveTarget = {
   'control': {1: .08, 2: .20, 3: .25, 4: .22, 5: .17, 6: .08},
 };
 
+/// Tribus curadas para el selector de Estilo de la UI (el motor acepta
+/// cualquier subtipo vía `themeOverride: 'tribal:<Subtipo>'`, esta lista
+/// es solo la selección corta que se enseña). El valor es el subtipo
+/// Scryfall EN INGLÉS; el nombre visible lo traduce la app.
+const List<String> kUiTribes = [
+  'Elf', 'Goblin', 'Zombie', 'Vampire', 'Dragon', //
+  'Angel', 'Demon', 'Dinosaur', 'Faerie', 'Merfolk', 'Human', 'Spirit',
+  'Sliver', 'Wizard', 'Knight', 'Warrior', 'Soldier', 'Cat', 'Dog', 'Rat',
+  'Pirate', 'Elemental', 'Giant', 'Rogue',
+];
+
 /// Sin masa crítica de payoffs no hay tema.
 const int minPayoffCopies = 3;
 
@@ -161,6 +172,23 @@ Map<String, int> _tribeMemberCopies(Map<String, Card> cands) {
   return (best, rolesByCard);
 }
 
+/// Roles de cada carta SOLO para [theme], sin la selección multi-tema de
+/// [detectTheme] ni sus umbrales de elegibilidad (mejor-esfuerzo): las
+/// cartas sin rol puntúan sin bonus, el greedy sigue llenando cuotas y
+/// curva igual. Se usa cuando el tema lo elige el jugador (`themeOverride`),
+/// no el motor — `detectTheme` no se llama en ese caso.
+Map<String, Map<String, String>> _rolesForOverride(
+    Map<String, Card> cands, String theme) {
+  final tribe = theme.startsWith('tribal:') ? theme.substring(7) : null;
+  final rolesByCard = <String, Map<String, String>>{};
+  cands.forEach((name, card) {
+    final role =
+        tribe != null ? tribalRole(card, tribe) : themeRoles(card)[theme];
+    rolesByCard[name] = role == null ? const {} : {theme: role};
+  });
+  return rolesByCard;
+}
+
 /// Arquetipo según el perfil del pool disponible.
 String pickArchetype(Map<String, Card> cands) {
   var cheap = 0;
@@ -235,15 +263,27 @@ Archetype _archetypeByName(String name) =>
 
 /// Construye el mejor mazo de 60 para una identidad de color. Null si no da.
 /// [archetypeOverride] fuerza el arquetipo ('aggro'|'tempo'|'midrange'|
-/// 'control') en vez de detectarlo del pool.
+/// 'control') en vez de detectarlo del pool. [themeOverride] fuerza el tema
+/// ('lifegain', 'tribal:Elf', ...) en vez de detectarlo: se salta
+/// `detectTheme` y su gate de `minPayoffCopies` (mejor-esfuerzo — el greedy
+/// prioriza cartas con rol en ese tema si las hay, y si no las hay igual
+/// llena el mazo por eficiencia/curva). Si el mazo resultante no lleva NINGUNA
+/// copia con rol en el tema forzado, ese color no puede jugarlo: null.
 GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
-    {String? name, String? archetypeOverride}) {
+    {String? name, String? archetypeOverride, String? themeOverride}) {
   final cands = _candidatePool(pool, colors);
   var totalCopies = 0;
   cands.forEach((_, c) => totalCopies += c.qty);
   if (totalCopies < 30) return null;
 
-  final (theme, rolesByCard) = detectTheme(cands, colors: colors);
+  final String theme;
+  final Map<String, Map<String, String>> rolesByCard;
+  if (themeOverride != null) {
+    theme = themeOverride;
+    rolesByCard = _rolesForOverride(cands, theme);
+  } else {
+    (theme, rolesByCard) = detectTheme(cands, colors: colors);
+  }
   final archetypeName = archetypeOverride ?? pickArchetype(cands);
   final archetype = _archetypeByName(archetypeName);
   final target = curveTarget[archetypeName]!;
@@ -258,6 +298,11 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   }
   chosen = _greedyFill(
       cands, rolesByCard, theme, archetypeName, target, ManaCurve.deckSize - nLands);
+
+  if (themeOverride != null &&
+      !chosen.keys.any((n) => rolesByCard[n]?.containsKey(theme) ?? false)) {
+    return null; // ese color no tiene con qué jugar el estilo pedido
+  }
 
   final manabase = _manaBase(chosen, pool, colors, nLands, archetypeName);
   if (manabase == null) return null;
@@ -530,9 +575,15 @@ ReforgeResult reforgeWithCurve(
 
 /// Las mejores propuestas entre monocolor y pares de colores.
 /// [allowedColors] (p. ej. "WU") limita las identidades a ese subconjunto;
-/// [archetypeOverride] fuerza el arquetipo de todas las propuestas.
+/// [archetypeOverride] fuerza el arquetipo de todas las propuestas;
+/// [themeOverride] fuerza el tema de todas las propuestas (ver
+/// [generateDeck]) — cada identidad que no pueda jugarlo simplemente no
+/// entra en la lista, igual que hoy con cualquier otro "no da mazo sano".
 List<GeneratedDeck> generateProposals(Map<String, Card> pool,
-    {int maxProposals = 5, String? allowedColors, String? archetypeOverride}) {
+    {int maxProposals = 5,
+    String? allowedColors,
+    String? archetypeOverride,
+    String? themeOverride}) {
   const wubrg = ['W', 'U', 'B', 'R', 'G'];
   final singles = allowedColors == null || allowedColors.isEmpty
       ? wubrg
@@ -545,8 +596,8 @@ List<GeneratedDeck> generateProposals(Map<String, Card> pool,
   }
   final proposals = <GeneratedDeck>[];
   for (final colors in identities) {
-    final gen =
-        generateDeck(pool, colors, archetypeOverride: archetypeOverride);
+    final gen = generateDeck(pool, colors,
+        archetypeOverride: archetypeOverride, themeOverride: themeOverride);
     if (gen != null) proposals.add(gen);
   }
   proposals.sort((a, b) => b.score.compareTo(a.score));

@@ -1019,6 +1019,91 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fgArchetypeAuto => 'Архетип: авто';
 
   @override
+  String get fgStyle => 'Стиль';
+
+  @override
+  String get fgStyleAuto => 'Стиль: авто';
+
+  @override
+  String get fgTribeElf => 'Эльфы';
+
+  @override
+  String get fgTribeGoblin => 'Гоблины';
+
+  @override
+  String get fgTribeZombie => 'Зомби';
+
+  @override
+  String get fgTribeVampire => 'Вампиры';
+
+  @override
+  String get fgTribeDragon => 'Драконы';
+
+  @override
+  String get fgTribeAngel => 'Ангелы';
+
+  @override
+  String get fgTribeDemon => 'Демоны';
+
+  @override
+  String get fgTribeDinosaur => 'Динозавры';
+
+  @override
+  String get fgTribeFaerie => 'Феи';
+
+  @override
+  String get fgTribeMerfolk => 'Мерфолки';
+
+  @override
+  String get fgTribeHuman => 'Люди';
+
+  @override
+  String get fgTribeSpirit => 'Духи';
+
+  @override
+  String get fgTribeSliver => 'Сливеры';
+
+  @override
+  String get fgTribeWizard => 'Волшебники';
+
+  @override
+  String get fgTribeKnight => 'Рыцари';
+
+  @override
+  String get fgTribeWarrior => 'Воины';
+
+  @override
+  String get fgTribeSoldier => 'Солдаты';
+
+  @override
+  String get fgTribeCat => 'Кошки';
+
+  @override
+  String get fgTribeDog => 'Собаки';
+
+  @override
+  String get fgTribeRat => 'Крысы';
+
+  @override
+  String get fgTribePirate => 'Пираты';
+
+  @override
+  String get fgTribeElemental => 'Элементали';
+
+  @override
+  String get fgTribeGiant => 'Великаны';
+
+  @override
+  String get fgTribeRogue => 'Разбойники';
+
+  @override
+  String get fgDeepForge => 'Глубокая ковка';
+
+  @override
+  String get fgDeepForgeHint =>
+      'Перед показом предложений заставляет их реально сыграть друг с другом (займёт чуть больше времени).';
+
+  @override
   String get fgPricePerCard => 'Цена за карту:';
 
   @override
