@@ -35,27 +35,53 @@ def _candidate_pool(pool: dict, colors: str) -> dict:
 
 MIN_PAYOFF_COPIES = 3  # sin masa crítica de payoffs no hay tema
 
+# Colores naturales de cada tema (color pie). "" = cualquier color.
+THEME_COLORS = {
+    "lifegain": "WB",
+    "sacrifice": "BR",
+    "spells": "UR",
+    "artifacts": "WU",
+    "counters": "GW",
+    "tokens": "WG",
+    "graveyard": "BG",
+}
 
-def detect_theme(cands: dict) -> tuple[str, dict[str, str]]:
+
+def _theme_color_multiplier(colors: str) -> dict[str, float]:
+    """1.25 si colors solapa con el color natural del tema, 0.8 si le es
+    ajeno, 1.0 si el tema es de cualquier color o no se conocen los colores."""
+    out: dict[str, float] = {}
+    for theme, natural in THEME_COLORS.items():
+        if not natural or not colors:
+            out[theme] = 1.0
+        else:
+            out[theme] = 1.25 if set(natural) & set(colors) else 0.8
+    return out
+
+
+def detect_theme(cands: dict, colors: str = "") -> tuple[str, dict[str, str]]:
     """Tema dominante y rol de cada carta.
 
     Un tema solo es elegible con >= MIN_PAYOFF_COPIES copias de payoffs en
     estos colores: los enablers solos no hacen tema (p. ej. artefactos
     incoloros presentes en toda identidad no convierten cualquier mazo en
-    'artifacts'). Entre los elegibles gana el de más peso (payoffs x3).
+    'artifacts'). Entre los elegibles gana el de más peso (payoffs x3),
+    desempatado por el color pie de [colors].
     """
-    weights: Counter = Counter()
+    mult = _theme_color_multiplier(colors)
+    weights: dict[str, float] = {}
     payoff_copies: Counter = Counter()
     roles_by_card: dict[str, dict[str, str]] = {}
     for name, card in cands.items():
         roles = theme_roles(card)
         roles_by_card[name] = roles
         for theme, role in roles.items():
+            m = mult.get(theme, 1.0)
             if role == "payoff":
                 payoff_copies[theme] += card["qty"]
-                weights[theme] += card["qty"] * 3
+                weights[theme] = weights.get(theme, 0.0) + card["qty"] * 3 * m
             else:
-                weights[theme] += card["qty"]
+                weights[theme] = weights.get(theme, 0.0) + card["qty"] * m
     eligible = {t: w for t, w in weights.items()
                 if payoff_copies[t] >= MIN_PAYOFF_COPIES}
     if not eligible:
@@ -92,7 +118,7 @@ def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | No
     cands = _candidate_pool(pool, colors)
     if sum(c["qty"] for c in cands.values()) < 30:
         return None
-    theme, roles_by_card = detect_theme(cands)
+    theme, roles_by_card = detect_theme(cands, colors)
     archetype = pick_archetype(cands)
     target = CURVE_TARGET[archetype]
 

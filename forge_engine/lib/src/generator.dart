@@ -27,6 +27,32 @@ const Map<String, Map<int, double>> curveTarget = {
 /// Sin masa crítica de payoffs no hay tema.
 const int minPayoffCopies = 3;
 
+/// Colores naturales de cada tema (color pie). '' = cualquier color.
+const Map<String, String> themeColors = {
+  'lifegain': 'WB',
+  'sacrifice': 'BR',
+  'spells': 'UR',
+  'artifacts': 'WU',
+  'counters': 'GW',
+  'tokens': 'WG',
+  'graveyard': 'BG',
+};
+
+/// Multiplicador de color pie por tema: 1.25 si [colors] solapa con el color
+/// natural del tema, 0.8 si le es ajeno, 1.0 si el tema es de cualquier color
+/// o no se conocen los colores del mazo todavía.
+Map<String, double> _themeColorMultiplier(String colors) {
+  final out = <String, double>{};
+  themeColors.forEach((theme, natural) {
+    if (natural.isEmpty || colors.isEmpty) {
+      out[theme] = 1.0;
+    } else {
+      out[theme] = natural.split('').any(colors.contains) ? 1.25 : 0.8;
+    }
+  });
+  return out;
+}
+
 /// Mazo generado: el Deck validable + metadatos de la generación.
 class GeneratedDeck {
   final Deck deck;
@@ -47,26 +73,29 @@ Map<String, Card> _candidatePool(Map<String, Card> pool, String colors) {
 }
 
 /// Tema dominante y rol de cada carta. Un tema solo es elegible con
-/// >= minPayoffCopies copias de payoffs en estos colores.
+/// >= minPayoffCopies copias de payoffs en estos colores. [colors] desempata
+/// por color pie: un tema natural de la identidad pesa 1.25x, uno ajeno 0.8x.
 (String, Map<String, Map<String, String>>) detectTheme(
-    Map<String, Card> cands) {
-  final weights = <String, int>{};
+    Map<String, Card> cands, {String colors = ''}) {
+  final mult = _themeColorMultiplier(colors);
+  final weights = <String, double>{};
   final payoffCopies = <String, int>{};
   final rolesByCard = <String, Map<String, String>>{};
   cands.forEach((name, card) {
     final roles = themeRoles(card);
     rolesByCard[name] = roles;
     roles.forEach((theme, role) {
+      final m = mult[theme] ?? 1.0;
       if (role == 'payoff') {
         payoffCopies[theme] = (payoffCopies[theme] ?? 0) + card.qty;
-        weights[theme] = (weights[theme] ?? 0) + card.qty * 3;
+        weights[theme] = (weights[theme] ?? 0) + card.qty * 3 * m;
       } else {
-        weights[theme] = (weights[theme] ?? 0) + card.qty;
+        weights[theme] = (weights[theme] ?? 0) + card.qty * m;
       }
     });
   });
   String best = 'goodstuff';
-  var bestWeight = -1;
+  var bestWeight = -1.0;
   weights.forEach((theme, w) {
     if ((payoffCopies[theme] ?? 0) >= minPayoffCopies && w > bestWeight) {
       best = theme;
@@ -144,7 +173,7 @@ GeneratedDeck? generateDeck(Map<String, Card> pool, String colors,
   cands.forEach((_, c) => totalCopies += c.qty);
   if (totalCopies < 30) return null;
 
-  final (theme, rolesByCard) = detectTheme(cands);
+  final (theme, rolesByCard) = detectTheme(cands, colors: colors);
   final archetypeName = archetypeOverride ?? pickArchetype(cands);
   final archetype = _archetypeByName(archetypeName);
   final target = curveTarget[archetypeName]!;
@@ -327,7 +356,7 @@ ReforgeResult reforgeWithCurve(
         ]);
   }
 
-  final (theme, rolesByCard) = detectTheme(cands);
+  final (theme, rolesByCard) = detectTheme(cands, colors: colors);
 
   // Relleno por huecos de coste: para cada CMC pedido, las mejores cartas de
   // ese coste; si un hueco se queda corto, se cubre con costes vecinos.

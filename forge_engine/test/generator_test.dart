@@ -103,6 +103,47 @@ void main() {
     expect(result.reason, isNotEmpty);
   });
 
+  group('detectTheme: color pie desempata (Task 8)', () {
+    Map<String, Card> tiedPool() => {
+          for (var i = 0; i < 3; i++)
+            'Lifegain Payoff $i': Card(
+                name: 'Lifegain Payoff $i',
+                qty: 1,
+                manaCost: '{2}{W}',
+                cmc: 3,
+                colors: 'W',
+                types: const ['Creature'],
+                oracle: 'Whenever you gain life, draw a card.'),
+          for (var i = 0; i < 3; i++)
+            'Spells Payoff $i': Card(
+                name: 'Spells Payoff $i',
+                qty: 1,
+                manaCost: '{1}{U}',
+                cmc: 2,
+                colors: 'U',
+                types: const ['Creature'],
+                oracle: 'Whenever you cast an instant or sorcery spell, '
+                    'draw a card.'),
+        };
+
+    test('empate lifegain/spells: en WB gana lifegain (su color pie)', () {
+      final (theme, _) = detectTheme(tiedPool(), colors: 'WB');
+      expect(theme, 'lifegain');
+    });
+
+    test('empate lifegain/spells: en UR gana spells (su color pie)', () {
+      final (theme, _) = detectTheme(tiedPool(), colors: 'UR');
+      expect(theme, 'spells');
+    });
+
+    test('sin colores, el peso crudo decide (sin multiplicador)', () {
+      final (theme, _) = detectTheme(tiedPool());
+      // pesos crudos empatados (9 y 9): gana el primero en iterar el mapa
+      // (lifegain, declarado antes que spells en _themes).
+      expect(theme, anyOf('lifegain', 'spells'));
+    });
+  });
+
   group('efficiency: pesos de combate (Task 7)', () {
     Card creature(String name, String oracle,
             {int power = 2, int toughness = 2, int cmc = 2}) =>

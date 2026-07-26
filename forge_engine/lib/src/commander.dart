@@ -95,7 +95,7 @@ GeneratedDeck? generateCommanderDeck(
   });
   if (cands.length < 55) return null; // singleton: hacen falta distintas
 
-  final (theme, rolesByCard) = detectTheme(cands);
+  final (theme, rolesByCard) = detectTheme(cands, colors: commander.identity);
 
   // cuotas funcionales EDH (mínimos sobre los ~62 hechizos)
   final quota = <String, int>{
