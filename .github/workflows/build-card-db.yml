@@ -36,6 +36,29 @@ jobs:
           set -euo pipefail
           echo "Diagnóstico del bulk:"; ls -lh bulk.json; head -c 200 bulk.json; echo
           python3 scripts/build_card_db.py bulk.json manaforge_cards.sqlite "$BULK_DATE"
+      - name: Nombres en español (bulk All Cards, en streaming)
+        # Si Scryfall hipa a mitad de los 2,9 GB, la DB se publica igual SIN
+        # nombres (la app degrada a inglés por _hasColumn) — una feature
+        # cosmética no puede comerse la release diaria de precios.
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          # All Cards (~2,9 GB) es el único bulk con todas las lenguas. Se
+          # streamea de curl a python sin tocar el disco del runner: el
+          # script pone cards.name_es (schema v5) para ~83% de las cartas.
+          curl -sf \
+            -H "User-Agent: ManaForge-CI/1.0 (github.com/AAlexmc/Manaforge)" \
+            -H "Accept: application/json" \
+            https://api.scryfall.com/bulk-data/all-cards -o allmeta.json \
+            || { echo "Fallo consultando bulk-data:"; cat allmeta.json || true; exit 1; }
+          URI=$(python3 -c "import json;print(json.load(open('allmeta.json'))['download_uri'])")
+          # --min: suelo de cordura (medido real ~29k) — un bulk vacío o con
+          # la forma cambiada aborta en vez de publicar una v5 sin nombres
+          curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" -H "Accept: */*" -- "$URI" \
+            | python3 scripts/enrich_names_es.py manaforge_cards.sqlite --min=20000
+      - name: Comprimir
+        run: |
+          set -euo pipefail
           gzip -9 manaforge_cards.sqlite
           ls -lh manaforge_cards.sqlite.gz
       - name: Publicar como release card-db-latest

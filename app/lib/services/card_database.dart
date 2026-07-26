@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 
 import 'package:forge_engine/forge_engine.dart' as fe;
+
+import 'card_names.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -19,6 +21,7 @@ class CardHit {
   final String oracleId;
   final String name;
   final String? printedName; // nombre en el idioma de la impresión encontrada
+  final String? nameEs; // nombre en español (schema v5); null en DB v4
   final String setCode;
   final String collectorNumber;
   final String? imageSmall;
@@ -34,6 +37,7 @@ class CardHit {
     required this.oracleId,
     required this.name,
     this.printedName,
+    this.nameEs,
     required this.setCode,
     this.collectorNumber = '',
     this.imageSmall,
@@ -205,6 +209,16 @@ class CardDatabase {
     if (query.trim().length < 2) return const [];
     final db = await _open();
     final like = '%${query.trim()}%';
+    // name_es solo existe desde el schema v5: con la DB vieja la consulta no
+    // puede ni nombrar la columna (SELECT y WHERE se montan condicionales).
+    final hasEs = await _hasColumn('cards', 'name_es');
+    final esCol = hasEs ? 'c.name_es' : 'NULL AS name_es';
+    // la columna plegada (sin tildes, minúsculas) llega con la misma v5;
+    // el LIKE de SQLite solo pliega ASCII, así que «Ornitoptero» u
+    // «ORNITÓPTERO» no casan con name_es a pelo
+    final hasFold = await _hasColumn('cards', 'name_es_fold');
+    final esWhere = (hasEs ? ' OR c.name_es LIKE ?1' : '') +
+        (hasFold ? ' OR c.name_es_fold LIKE ?3' : '');
     // La impresión que representa a la carta es DETERMINISTA: la más barata
     // con precio (conservador: añadir desde el buscador no puede apuntar una
     // Alpha de cientos de euros como "el precio" de la carta), luego las sin
@@ -213,7 +227,7 @@ class CardDatabase {
     // sin CAST, '10.00' ordena antes que '9.00'.
     final rows = db.select('''
       SELECT * FROM (
-        SELECT c.oracle_id, c.name, p.printed_name, p.set_code,
+        SELECT c.oracle_id, c.name, p.printed_name, $esCol, p.set_code,
                p.collector_number, p.image_small, p.image_normal,
                c.type_line, c.colors, c.mana_cost, c.cmc, c.power,
                c.toughness,
@@ -224,11 +238,15 @@ class CardDatabase {
                           p.set_code, p.collector_number
                ) AS rn
         FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
-        WHERE c.name LIKE ?1 OR p.printed_name LIKE ?1
+        WHERE c.name LIKE ?1 OR p.printed_name LIKE ?1$esWhere
       ) WHERE rn = 1
       ORDER BY length(name)
       LIMIT ?2
-    ''', [like, limit]);
+    ''', [
+      like,
+      limit,
+      if (hasFold) '%${foldForSearch(query.trim())}%',
+    ]);
     return [for (final r in rows) _hitFromRow(r)];
   }
 
@@ -236,6 +254,7 @@ class CardDatabase {
         oracleId: r['oracle_id'] as String,
         name: r['name'] as String,
         printedName: r['printed_name'] as String?,
+        nameEs: r['name_es'] as String?,
         setCode: (r['set_code'] as String?) ?? '',
         collectorNumber: (r['collector_number'] as String?) ?? '',
         imageSmall: r['image_small'] as String?,
@@ -251,8 +270,11 @@ class CardDatabase {
   /// Resuelve un Scryfall ID (importador de ManaBox) a su carta Oracle.
   Future<CardHit?> byScryfallId(String scryfallId) async {
     final db = await _open();
+    // mismo SELECT condicional que search(): la DB v4 no tiene name_es
+    final esCol =
+        await _hasColumn('cards', 'name_es') ? 'c.name_es' : 'NULL AS name_es';
     final rows = db.select('''
-      SELECT c.oracle_id, c.name, p.printed_name, p.set_code,
+      SELECT c.oracle_id, c.name, p.printed_name, $esCol, p.set_code,
              p.collector_number, p.image_small, p.image_normal,
              c.type_line, c.colors, c.mana_cost, c.cmc, c.power, c.toughness
       FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
@@ -704,6 +726,7 @@ extension DeckQueries on CardDatabase {
 class CardFullDetail {
   final String oracleId;
   final String name;
+  final String? nameEs; // nombre en español (schema v5); null en DB v4
   final String manaCost;
   final String typeLine;
   final String oracleText;
@@ -715,6 +738,7 @@ class CardFullDetail {
   const CardFullDetail({
     required this.oracleId,
     required this.name,
+    this.nameEs,
     required this.manaCost,
     required this.typeLine,
     required this.oracleText,
@@ -809,15 +833,18 @@ extension MarketQueries on CardDatabase {
   Future<CardFullDetail?> cardDetail(
       {String? oracleId, String? byName}) async {
     final db = await _open();
+    // name_es solo existe desde el schema v5 (mismo patrón que search())
+    final esCol =
+        await _hasColumn('cards', 'name_es') ? 'name_es' : 'NULL AS name_es';
     final rows = oracleId != null
         ? db.select(
-            'SELECT oracle_id, name, mana_cost, type_line, oracle_text, '
-            'colors, power, toughness, legalities FROM cards '
+            'SELECT oracle_id, name, $esCol, mana_cost, type_line, '
+            'oracle_text, colors, power, toughness, legalities FROM cards '
             'WHERE oracle_id = ?1',
             [oracleId])
         : db.select(
-            'SELECT oracle_id, name, mana_cost, type_line, oracle_text, '
-            'colors, power, toughness, legalities FROM cards '
+            'SELECT oracle_id, name, $esCol, mana_cost, type_line, '
+            'oracle_text, colors, power, toughness, legalities FROM cards '
             "WHERE name = ?1 OR name LIKE ?1 || ' //%'",
             [byName]);
     if (rows.isEmpty) return null;
@@ -831,6 +858,7 @@ extension MarketQueries on CardDatabase {
     return CardFullDetail(
       oracleId: r['oracle_id'] as String,
       name: r['name'] as String,
+      nameEs: r['name_es'] as String?,
       manaCost: (r['mana_cost'] as String?) ?? '',
       typeLine: (r['type_line'] as String?) ?? '',
       oracleText: (r['oracle_text'] as String?) ?? '',
@@ -996,6 +1024,32 @@ extension MarketQueries on CardDatabase {
       for (final r in rows) {
         final p = r['p'] as double?;
         if (p != null) out[r['oracle_id'] as String] = p;
+      }
+    }
+    return out;
+  }
+
+  /// Nombre en español (schema v5) de cada carta por su nombre inglés.
+  /// Solo entradas con traducción: lo que no esté en el mapa se enseña en
+  /// inglés. Con la DB v4 (sin columna) devuelve vacío — mismo comportamiento
+  /// que hoy hasta que el usuario re-descargue la base.
+  Future<Map<String, String>> namesEsFor(Iterable<String> names) async {
+    if (!await _hasColumn('cards', 'name_es')) return const {};
+    final db = await _open();
+    final out = <String, String>{};
+    final list = names.toList();
+    const chunkSize = 300;
+    for (var i = 0; i < list.length; i += chunkSize) {
+      final chunk = list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+        'SELECT name, name_es FROM cards '
+        'WHERE name IN ($marks) AND name_es IS NOT NULL',
+        chunk,
+      );
+      for (final r in rows) {
+        out[r['name'] as String] = r['name_es'] as String;
       }
     }
     return out;

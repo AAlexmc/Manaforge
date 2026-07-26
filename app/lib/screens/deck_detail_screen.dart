@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
 import '../services/card_database.dart';
+import '../services/card_names.dart';
 import '../services/deck_shortfall.dart';
 import '../services/deck_store.dart';
 import '../theme/mf_theme.dart';
@@ -53,6 +54,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   Map<int, int> _edited = {};
   Future<Map<String, (String?, String?)>>? _imagesF;
   Map<String, double> _prices = const {};
+  Map<String, String> _namesEs = const {};
 
   @override
   void initState() {
@@ -66,11 +68,22 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
     final db = widget.db;
     if (db == null) return;
     try {
-      final prices = await db.pricesForNames(
-          [..._gen.deck.cards.keys, ..._gen.deck.lands.keys]);
-      if (mounted) setState(() => _prices = prices);
+      final names = [..._gen.deck.cards.keys, ..._gen.deck.lands.keys];
+      final prices = await db.pricesForNames(names);
+      final namesEs = await db.namesEsFor(names);
+      if (mounted) {
+        setState(() {
+          _prices = prices;
+          _namesEs = namesEs;
+        });
+      }
     } catch (_) {/* sin DB: sin precios */}
   }
+
+  /// Nombre que se ENSEÑA en la lista (español si la UI está en es y la DB
+  /// lo trae). La exportación/copia sigue en inglés: no pasa por aquí.
+  String _display(String name) =>
+      cardDisplayName(context, name, nameEs: _namesEs[name]);
 
   /// Copias del mazo que ya NO tienes. El mazo guarda su lista aunque vendas
   /// una carta: aquí se dice la verdad en vez de prometer "tienes todas".
@@ -259,6 +272,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             _DeckImageStrip(
                 gen: _gen,
                 imagesF: _imagesF!,
+                namesEs: _namesEs,
                 onDetails: widget.db == null ? null : _openCardDetail),
           ],
           const SizedBox(height: 16),
@@ -386,7 +400,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                         child: Text('${e.value}',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold))),
-                    Expanded(child: Text(e.key)),
+                    Expanded(child: Text(_display(e.key))),
                     if (_prices[e.key] != null)
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
@@ -417,7 +431,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                       child: Text('${e.value}',
                           style:
                               const TextStyle(fontWeight: FontWeight.bold))),
-                  Expanded(child: Text(e.key)),
+                  Expanded(child: Text(_display(e.key))),
                 ],
               ),
             ),
@@ -472,8 +486,15 @@ class _DeckImageStrip extends StatelessWidget {
   final Future<Map<String, (String?, String?)>> imagesF;
   final void Function(String name)? onDetails;
 
+  /// Español para los pies de las cartas sin imagen (mismo criterio que la
+  /// lista): vacío = inglés.
+  final Map<String, String> namesEs;
+
   const _DeckImageStrip(
-      {required this.gen, required this.imagesF, this.onDetails});
+      {required this.gen,
+      required this.imagesF,
+      this.onDetails,
+      this.namesEs = const {}});
 
   @override
   Widget build(BuildContext context) {
@@ -500,7 +521,10 @@ class _DeckImageStrip extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8),
                 child: GestureDetector(
                   onTap: () => showCardZoom(context,
-                      name: e.key,
+                      // el zoom es pura presentación: nombre traducido como
+                      // el pie; onDetails sigue con la clave inglesa
+                      name: cardDisplayName(context, e.key,
+                          nameEs: namesEs[e.key]),
                       imageUrl: url,
                       onDetails: onDetails == null
                           ? null
@@ -518,7 +542,9 @@ class _DeckImageStrip extends StatelessWidget {
                               ),
                               alignment: Alignment.center,
                               padding: const EdgeInsets.all(6),
-                              child: Text(e.key,
+                              child: Text(
+                                  cardDisplayName(context, e.key,
+                                      nameEs: namesEs[e.key]),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(fontSize: 10)),
                             )
@@ -536,7 +562,9 @@ class _DeckImageStrip extends StatelessWidget {
                                   color: Colors.white10,
                                   alignment: Alignment.center,
                                   padding: const EdgeInsets.all(6),
-                                  child: Text(e.key,
+                                  child: Text(
+                                      cardDisplayName(context, e.key,
+                                          nameEs: namesEs[e.key]),
                                       textAlign: TextAlign.center,
                                       style:
                                           const TextStyle(fontSize: 10)),

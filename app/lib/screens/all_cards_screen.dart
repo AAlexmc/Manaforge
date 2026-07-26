@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/t.dart';
 import '../services/card_database.dart';
+import '../services/card_names.dart';
 import '../services/collection_store.dart';
 import '../services/folder_store.dart';
 import '../services/market_prefs.dart';
@@ -135,7 +136,8 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
           : hit.printingKey,
     );
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('✓ ${hit.printedName ?? hit.name}'),
+      content: Text(
+          '✓ ${cardDisplayName(context, hit.printedName ?? hit.name, nameEs: hit.nameEs)}'),
       duration: const Duration(milliseconds: 900),
     ));
   }
@@ -240,7 +242,9 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                           url: hit.imageSmall,
                           colors: hit.colors,
                           name: hit.name),
-                      title: Text(hit.printedName ?? hit.name),
+                      title: Text(cardDisplayName(
+                          context, hit.printedName ?? hit.name,
+                          nameEs: hit.nameEs)),
                       subtitle: Text(
                           '${hit.typeLine} · ${hit.setCode.toUpperCase()}',
                           maxLines: 1,
