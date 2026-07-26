@@ -1,6 +1,5 @@
 import 'classify.dart';
 import 'hypergeometric.dart';
-import 'mana_curve.dart';
 import 'models.dart';
 
 /// Evaluación de un mazo completo — espejo 1:1 de
