@@ -695,7 +695,9 @@ class _HomeShellState extends State<HomeShell> {
           laAppKey: _tourKeys.ajustesLaApp,
           laAppController: _seccionLaApp,
           comoFuncionaKey: _tourKeys.ajustesComoFunciona,
-          versionKey: _tourKeys.ajustesVersion),
+          versionKey: _tourKeys.ajustesVersion,
+          sugerenciasKey: _tourKeys.ajustesSugerencias,
+          apoyarKey: _tourKeys.ajustesApoyar),
     ];
     // "Escanear" va EN la barra, en el centro: es lo que más se usa y estaba
     // suelto en una esquina de una sola pantalla. No es una pestaña —abre el

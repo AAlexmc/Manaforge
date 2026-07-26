@@ -605,6 +605,20 @@ class AppLocalizationsKo extends AppLocalizations {
       '지금 버전이 뭔지, 뭐가 들었는지, 그리고 새 버전이 있는지 하루 한 번 확인할지 여부. 저절로 업데이트되진 않아요.';
 
   @override
+  String get onbSuggestionsTitle => '제안함';
+
+  @override
+  String get onbSuggestionsBody =>
+      '아이디어가 있거나 버그를 발견했나요? GitHub에 알려주세요. 양식이 있어서 1분이면 됩니다.';
+
+  @override
+  String get onbSupportTitle => '프로젝트 후원하기';
+
+  @override
+  String get onbSupportBody =>
+      '이 앱은 무료이고 광고도 없습니다. 도움이 되셨다면, 커피 한 잔 후원하는 방법은 여기 있습니다.';
+
+  @override
   String get onbScanSetTitle => '세트: 전체';
 
   @override

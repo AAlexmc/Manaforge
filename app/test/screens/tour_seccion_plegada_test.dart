@@ -75,12 +75,19 @@ void main() {
     await _pumps(tester, veces: 14);
     expect(find.text('Cómo funciona'), findsWidgets);
 
-    // 9 cómo funciona · 10 versión (el final del recorrido)
+    // 9 cómo funciona · 10 versión · 11 sugerencias · 12 apoyar el proyecto
+    // (el final del recorrido: no se fija el número, solo que "Siguiente"
+    // sigue habiendo hasta llegar a "Entendido")
     await tester.tap(find.text('Siguiente'));
     await _pumps(tester, veces: 12);
     await tester.tap(find.text('Siguiente'));
     await _pumps(tester, veces: 12);
     expect(find.text('Versión de ManaForge'), findsWidgets);
-    expect(find.text('Entendido'), findsOneWidget); // último paso
+
+    while (find.text('Entendido').evaluate().isEmpty) {
+      await tester.tap(find.text('Siguiente'));
+      await _pumps(tester, veces: 12);
+    }
+    expect(find.text('Apoyar el proyecto'), findsWidgets); // último paso
   });
 }

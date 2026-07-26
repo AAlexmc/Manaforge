@@ -239,6 +239,10 @@
 
   "onbHowItWorksBody": "A summary of what each tab does, plus the keyboard shortcuts. If you get lost, start here.",
   "onbVersionBody": "Which version you're on, what's in it, and whether the app should check once a day for a new one. It never updates itself.",
+  "onbSuggestionsTitle": "Suggestion box",
+  "onbSuggestionsBody": "Got an idea, or found a bug? Tell us on GitHub — there's a template and it takes a minute.",
+  "onbSupportTitle": "Support the project",
+  "onbSupportBody": "The app is free with no ads. If it's been useful, here's how to buy us a coffee.",
 
   "onbScanSetTitle": "Set: all",
   "onbScanSetBody": "If you're opening packs from ONE set, lock it here: the scanner stops hesitating between the ten reprints of the same card.",

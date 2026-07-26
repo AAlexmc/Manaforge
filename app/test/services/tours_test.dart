@@ -145,9 +145,10 @@ void main() {
     final ajustes = kTours.firstWhere((t) => t.id == 'settings');
     final pasos = ajustes.build(t, TourKeys());
     // barra → idioma → aspecto → editar inicio → Datos → base de cartas →
-    // copia de seguridad → La app → cómo funciona → versión
+    // copia de seguridad → La app → cómo funciona → versión → sugerencias →
+    // apoyar el proyecto
     expect(pasos.first.navBarIndex, isNotNull);
-    expect(pasos.length, 10);
+    expect(pasos.length, 12);
     expect(pasos.map((s) => s.prepare).toList().sublist(4), [
       TourPrep.ajustesDatos,
       TourPrep.ajustesDatos,
@@ -155,8 +156,24 @@ void main() {
       TourPrep.ajustesLaApp,
       TourPrep.ajustesLaApp,
       TourPrep.ajustesLaApp,
+      TourPrep.ajustesLaApp,
+      TourPrep.ajustesLaApp,
     ]);
     expect(pasos.last.targetKey, isNotNull);
+  });
+
+  test('el tour de Ajustes señala el buzón de sugerencias y apoyar el '
+      'proyecto', () {
+    final ajustes = kTours.firstWhere((t) => t.id == 'settings');
+    final k = TourKeys();
+    final pasos = ajustes.build(t, k);
+    final sugerencias =
+        pasos.firstWhere((s) => s.targetKey == k.ajustesSugerencias);
+    expect(sugerencias.prepare, TourPrep.ajustesLaApp);
+    expect(sugerencias.goToScreen, isNotNull);
+    final apoyar = pasos.firstWhere((s) => s.targetKey == k.ajustesApoyar);
+    expect(apoyar.prepare, TourPrep.ajustesLaApp);
+    expect(apoyar.goToScreen, isNotNull);
   });
 
   test('ningún paso señala dos sitios a la vez', () {

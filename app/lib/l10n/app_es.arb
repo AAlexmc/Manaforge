@@ -243,6 +243,10 @@
 
   "onbHowItWorksBody": "El resumen de qué hace cada pestaña y los atajos de teclado. Si te pierdes, empieza por aquí.",
   "onbVersionBody": "Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.",
+  "onbSuggestionsTitle": "Buzón de sugerencias",
+  "onbSuggestionsBody": "¿Se te ocurre algo, o has visto un fallo? Cuéntalo en GitHub: hay plantilla y se rellena en un minuto.",
+  "onbSupportTitle": "Apoyar el proyecto",
+  "onbSupportBody": "La app es gratis y sin anuncios. Si te ha servido, aquí se explica cómo invitarnos a un café.",
 
   "onbScanSetTitle": "Set: todas",
   "onbScanSetBody": "Si estás abriendo sobres de UNA expansión, fíjala aquí: el escáner deja de dudar entre las diez reimpresiones de la misma carta.",

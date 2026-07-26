@@ -85,9 +85,12 @@ class AjustesScreen extends StatefulWidget {
   final Key? laAppKey;
   final ExpansibleController? laAppController;
 
-  /// Las dos últimas paradas del tour, dentro de "La app".
+  /// Las últimas paradas del tour, dentro de "La app": cómo funciona, la
+  /// versión, el buzón de sugerencias y apoyar el proyecto.
   final Key? comoFuncionaKey;
   final Key? versionKey;
+  final Key? sugerenciasKey;
+  final Key? apoyarKey;
 
   const AjustesScreen(
       {super.key,
@@ -108,7 +111,9 @@ class AjustesScreen extends StatefulWidget {
       this.laAppKey,
       this.laAppController,
       this.comoFuncionaKey,
-      this.versionKey});
+      this.versionKey,
+      this.sugerenciasKey,
+      this.apoyarKey});
 
   @override
   State<AjustesScreen> createState() => _AjustesScreenState();
@@ -333,24 +338,30 @@ class _AjustesScreenState extends State<AjustesScreen> {
                   ),
                 // buzón y donativos: enlaces al repo, por la misma guarda que
                 // las releases (safeReleaseUri) — nunca una URL de fuera
-                Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.lightbulb_outline),
-                    title: Text(t.stSuggestions),
-                    subtitle: Text(t.stSuggestionsSub,
-                        style: const TextStyle(fontSize: 12)),
-                    trailing: const Icon(Icons.open_in_new, size: 18),
-                    onTap: () => openRepoUrl(context, kSuggestionsUrl),
+                KeyedSubtree(
+                  key: widget.sugerenciasKey,
+                  child: Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.lightbulb_outline),
+                      title: Text(t.stSuggestions),
+                      subtitle: Text(t.stSuggestionsSub,
+                          style: const TextStyle(fontSize: 12)),
+                      trailing: const Icon(Icons.open_in_new, size: 18),
+                      onTap: () => openRepoUrl(context, kSuggestionsUrl),
+                    ),
                   ),
                 ),
-                Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.volunteer_activism_outlined),
-                    title: Text(t.stDonate),
-                    subtitle: Text(t.stDonateSub,
-                        style: const TextStyle(fontSize: 12)),
-                    trailing: const Icon(Icons.open_in_new, size: 18),
-                    onTap: () => openRepoUrl(context, kDonationsUrl),
+                KeyedSubtree(
+                  key: widget.apoyarKey,
+                  child: Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.volunteer_activism_outlined),
+                      title: Text(t.stDonate),
+                      subtitle: Text(t.stDonateSub,
+                          style: const TextStyle(fontSize: 12)),
+                      trailing: const Icon(Icons.open_in_new, size: 18),
+                      onTap: () => openRepoUrl(context, kDonationsUrl),
+                    ),
                   ),
                 ),
                 Card(

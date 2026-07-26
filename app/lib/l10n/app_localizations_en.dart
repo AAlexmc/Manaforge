@@ -630,6 +630,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'Which version you\'re on, what\'s in it, and whether the app should check once a day for a new one. It never updates itself.';
 
   @override
+  String get onbSuggestionsTitle => 'Suggestion box';
+
+  @override
+  String get onbSuggestionsBody =>
+      'Got an idea, or found a bug? Tell us on GitHub — there\'s a template and it takes a minute.';
+
+  @override
+  String get onbSupportTitle => 'Support the project';
+
+  @override
+  String get onbSupportBody =>
+      'The app is free with no ads. If it\'s been useful, here\'s how to buy us a coffee.';
+
+  @override
   String get onbScanSetTitle => 'Set: all';
 
   @override

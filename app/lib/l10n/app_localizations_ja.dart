@@ -603,6 +603,19 @@ class AppLocalizationsJa extends AppLocalizations {
       '今のバージョン、その内容、そしてアプリが1日1回新しいバージョンを確認するかどうか。勝手には更新しません。';
 
   @override
+  String get onbSuggestionsTitle => 'ご意見箱';
+
+  @override
+  String get onbSuggestionsBody =>
+      'アイデアやバグを見つけたら、GitHubで教えてください。テンプレートがあるので1分で書けます。';
+
+  @override
+  String get onbSupportTitle => 'プロジェクトを応援する';
+
+  @override
+  String get onbSupportBody => 'このアプリは無料で広告もありません。役に立ったなら、コーヒーをおごる方法はこちらです。';
+
+  @override
   String get onbScanSetTitle => 'セット：すべて';
 
   @override
