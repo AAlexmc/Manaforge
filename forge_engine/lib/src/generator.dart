@@ -64,8 +64,9 @@ class GeneratedDeck {
   /// Commander la recalcula aparte tras el suelo de básicas.
   final ManabaseResult? manabase;
 
-  /// Desglose del score (eficiencia, consistencia, curva). Nullable: solo
-  /// null si el mazo no llegó a evaluarse (no debería pasar hoy).
+  /// Desglose del score (eficiencia, consistencia, curva). Nullable DE
+  /// VERDAD: los mazos releídos de disco (`SavedDeck.toGenerated`) y el
+  /// resultado de `optimizeAgainst` no lo llevan. Nunca uses `eval!`.
   final DeckEvaluation? eval;
   const GeneratedDeck(this.deck, this.theme, this.score,
       [this.manabase, this.eval]);

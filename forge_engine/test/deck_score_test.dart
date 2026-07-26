@@ -119,4 +119,52 @@ void main() {
       ..sort((a, b) => b.score.compareTo(a.score));
     expect(proposals.first, same(modest));
   });
+
+  test('híbridos: {B/G} se paga con cualquiera de los dos (review PR2)', () {
+    // mismo mazo, misma manabase: la versión híbrida NUNCA puede ser menos
+    // castable que la mono {B}{B} — con fuentes repartidas debe ser MÁS.
+    final poolHybrid = {'Fiend': spell('Fiend', '{B/G}{B/G}', 2, 'BG')};
+    final poolMono = {'Fiend': spell('Fiend', '{B}{B}', 2, 'B')};
+    final deck = Deck(
+      name: 'bg',
+      colors: 'BG',
+      archetype: Archetype.midrange,
+      cards: {'Fiend': 20},
+      lands: {'Swamp': 12, 'Forest': 12},
+    );
+    final sources = {'B': 12, 'G': 12};
+    final hybrid = evaluateDeck(deck, poolHybrid, sources);
+    final mono = evaluateDeck(deck, poolMono, sources);
+    expect(hybrid.consistency, greaterThan(mono.consistency));
+
+    // {2/W} sin fuentes blancas: pagable con genérico, castabilidad 1.0
+    final poolMono2W = {'Feudkiller': spell('Feudkiller', '{2/W}{2/W}', 4, 'W')};
+    final deckB = Deck(
+      name: 'b',
+      colors: 'B',
+      archetype: Archetype.midrange,
+      cards: {'Feudkiller': 20},
+      lands: {'Swamp': 24},
+    );
+    final noW = evaluateDeck(deckB, poolMono2W, {'B': 24, 'W': 0});
+    final fullCast = evaluateDeck(
+        deckB, {'Feudkiller': spell('Feudkiller', '{4}', 4, '')}, {'B': 24});
+    expect(noW.consistency, closeTo(fullCast.consistency, 1e-9));
+  });
+
+  test('coste 0 cuenta como jugada de turno 1 en curve (review PR2)', () {
+    final pool0 = {
+      'Ornithopter': spell('Ornithopter', '{0}', 0, ''),
+    };
+    final deck0 = Deck(
+      name: 'gratis',
+      colors: 'W',
+      archetype: Archetype.aggro,
+      cards: {'Ornithopter': 36},
+      lands: {'Plains': 22},
+    );
+    final eval0 = evaluateDeck(deck0, pool0, {'W': 22});
+    // 36 jugadas de coste <= t para todo t: curve casi perfecta, jamás 0
+    expect(eval0.curve, greaterThan(9.0));
+  });
 }

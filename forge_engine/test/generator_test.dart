@@ -139,8 +139,9 @@ void main() {
     test('sin colores, el peso crudo decide (sin multiplicador)', () {
       final (theme, _) = detectTheme(tiedPool());
       // pesos crudos empatados (9 y 9): gana el primero en iterar el mapa
-      // (lifegain, declarado antes que spells en _themes).
-      expect(theme, anyOf('lifegain', 'spells'));
+      // (lifegain, declarado antes que spells en _themes) — determinista,
+      // y el espejo Python da lo mismo.
+      expect(theme, 'lifegain');
     });
   });
 

@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'classify.dart';
+import 'deck_score.dart';
 import 'deck_validator.dart';
 import 'generator.dart';
+import 'lands.dart';
 import 'mana_curve.dart';
 import 'models.dart';
 
@@ -562,8 +564,25 @@ OptimizeResult? optimizeAgainst(
     }
   }
 
+  // El hill-climbing cambió hechizos: el score de `best` ya no describe a
+  // `current`. Se reevalúa con las fuentes reales de sus tierras.
+  final sources = <String, int>{};
+  for (final c in current.colors.split('')) {
+    var n = 0;
+    current.lands.forEach((name, qty) {
+      final land = pool[name];
+      if (land != null &&
+          LandProfile.fromCard(land).sourceOf(c, current.colors)) {
+        n += qty;
+      }
+    });
+    sources[c] = n;
+  }
+  final finalEval = evaluateDeck(current, pool, sources);
+
   return OptimizeResult(
-    deck: GeneratedDeck(current, best.theme, best.score),
+    deck: GeneratedDeck(
+        current, best.theme, finalEval.total, best.manabase, finalEval),
     winRate: bestRate,
     gamesPerEval: games,
     decksTried: tried,

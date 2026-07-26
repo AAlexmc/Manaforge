@@ -92,3 +92,31 @@ def test_el_ranking_de_propuestas_usa_total_no_solo_media():
         key=lambda p: -p[1],
     )
     assert proposals[0][0] == "modest"
+
+
+def _spell(name, mana_cost, cmc, colors):
+    return {"name": name, "qty": 20, "mana_cost": mana_cost, "cmc": cmc,
+            "colors": colors, "types": ["Creature"], "oracle": "",
+            "power": str(cmc), "toughness": str(cmc)}
+
+
+def test_hybrid_pays_with_either_color():
+    """{B/G} se paga con cualquiera de los dos (review PR2)."""
+    deck = {"cards": {"Fiend": 20}, "lands": {"Swamp": 12, "Forest": 12}}
+    sources = {"B": 12, "G": 12}
+    hybrid = evaluate_deck(deck, {"Fiend": _spell("Fiend", "{B/G}{B/G}", 2, "BG")}, sources)
+    mono = evaluate_deck(deck, {"Fiend": _spell("Fiend", "{B}{B}", 2, "B")}, sources)
+    assert hybrid.consistency > mono.consistency
+
+    deck_b = {"cards": {"Feudkiller": 20}, "lands": {"Swamp": 24}}
+    no_w = evaluate_deck(deck_b, {"Feudkiller": _spell("Feudkiller", "{2/W}{2/W}", 4, "W")},
+                         {"B": 24, "W": 0})
+    full = evaluate_deck(deck_b, {"Feudkiller": _spell("Feudkiller", "{4}", 4, "")}, {"B": 24})
+    assert abs(no_w.consistency - full.consistency) < 1e-9
+
+
+def test_zero_cost_counts_for_curve():
+    """Coste 0 cuenta como jugada de turno 1 en curve (review PR2)."""
+    deck = {"cards": {"Ornithopter": 36}, "lands": {"Plains": 22}}
+    ev = evaluate_deck(deck, {"Ornithopter": _spell("Ornithopter", "{0}", 0, "")}, {"W": 22})
+    assert ev.curve > 9.0
