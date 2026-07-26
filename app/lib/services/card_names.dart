@@ -13,3 +13,25 @@ String cardDisplayName(BuildContext context, String name, {String? nameEs}) {
   }
   return name;
 }
+
+const Map<String, String> _foldMap = {
+  'á': 'a', 'à': 'a', 'ä': 'a', 'â': 'a', //
+  'é': 'e', 'è': 'e', 'ë': 'e', 'ê': 'e',
+  'í': 'i', 'ì': 'i', 'ï': 'i', 'î': 'i',
+  'ó': 'o', 'ò': 'o', 'ö': 'o', 'ô': 'o',
+  'ú': 'u', 'ù': 'u', 'ü': 'u', 'û': 'u',
+  'ñ': 'n', 'ç': 'c',
+};
+
+/// Pliega para buscar: minúsculas y sin diacríticos — espejo del `_fold` de
+/// `scripts/enrich_names_es.py` (que puebla `cards.name_es_fold`), acotado a
+/// lo que trae el español de Magic. «Ornitóptero» y «ORNITOPTERO» buscan lo
+/// mismo; el LIKE de SQLite solo pliega ASCII, por eso existe la columna.
+String foldForSearch(String text) {
+  final sb = StringBuffer();
+  for (final rune in text.toLowerCase().runes) {
+    final ch = String.fromCharCode(rune);
+    sb.write(_foldMap[ch] ?? ch);
+  }
+  return sb.toString();
+}

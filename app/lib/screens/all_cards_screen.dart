@@ -137,7 +137,7 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
     );
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
-          '✓ ${hit.printedName ?? cardDisplayName(context, hit.name, nameEs: hit.nameEs)}'),
+          '✓ ${cardDisplayName(context, hit.printedName ?? hit.name, nameEs: hit.nameEs)}'),
       duration: const Duration(milliseconds: 900),
     ));
   }
@@ -242,8 +242,9 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                           url: hit.imageSmall,
                           colors: hit.colors,
                           name: hit.name),
-                      title: Text(hit.printedName ??
-                          cardDisplayName(context, hit.name, nameEs: hit.nameEs)),
+                      title: Text(cardDisplayName(
+                          context, hit.printedName ?? hit.name,
+                          nameEs: hit.nameEs)),
                       subtitle: Text(
                           '${hit.typeLine} · ${hit.setCode.toUpperCase()}',
                           maxLines: 1,

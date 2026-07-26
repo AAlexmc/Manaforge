@@ -23,6 +23,19 @@ BULK_BASE = [
                        "png": "https://cards.scryfall.io/png/e.png"},
         "prices": {"eur": "0.13"},
     },
+    {   # carta sin impresión española en ALL_CARDS: name_es debe quedar NULL
+        "id": "cccc-1111", "oracle_id": "o-solo-en", "name": "Plain Bear",
+        "lang": "en", "layout": "normal", "set": "fdn", "set_name": "Foundations",
+        "collector_number": "12", "rarity": "common", "cmc": 2.0,
+        "mana_cost": "{1}{G}", "type_line": "Creature — Bear",
+        "oracle_text": "", "power": "2", "toughness": "2",
+        "colors": ["G"], "color_identity": ["G"], "keywords": [],
+        "legalities": {"standard": "legal"},
+        "image_uris": {"small": "https://cards.scryfall.io/small/b.jpg",
+                       "normal": "https://cards.scryfall.io/normal/b.jpg",
+                       "png": "https://cards.scryfall.io/png/b.png"},
+        "prices": {},
+    },
     {
         "id": "bbbb-1111", "oracle_id": "o-room", "name": "Meat Locker // Drowned Diner",
         "lang": "en", "layout": "split", "set": "dsk", "set_name": "Duskmourn",
@@ -94,14 +107,51 @@ def test_dos_caras_une_los_nombres_con_barras(tmp_path):
 
 
 def test_carta_sin_impresion_es_queda_a_null(tmp_path):
-    bulk = _setup(tmp_path)
-    db, allcards = bulk
+    db, allcards = _setup(tmp_path)
     enrich(db, allcards)
     con = sqlite3.connect(db)
-    # o-fantasma no está en la DB; y ninguna carta de la DB se inventa nombre
+    # o-solo-en existe en la DB pero no tiene impresión es: NULL de verdad
+    assert con.execute(
+        "SELECT name_es FROM cards WHERE oracle_id='o-solo-en'"
+    ).fetchone()[0] is None
     total_es = con.execute(
         "SELECT COUNT(*) FROM cards WHERE name_es IS NOT NULL").fetchone()[0]
     assert total_es == 2
+
+
+def test_fold_sin_tildes_y_minusculas(tmp_path):
+    db, allcards = _setup(tmp_path)
+    enrich(db, allcards)
+    con = sqlite3.connect(db)
+    assert con.execute(
+        "SELECT name_es_fold FROM cards WHERE oracle_id='o-elves'"
+    ).fetchone()[0] == "elfos de llanowar"
+    assert con.execute(
+        "SELECT name_es_fold FROM cards WHERE oracle_id='o-room'"
+    ).fetchone()[0] == "camara frigorifica // restaurante anegado"
+
+
+def test_suelo_de_cordura_no_toca_la_db_ni_sube_schema(tmp_path):
+    import pytest
+    db, allcards = _setup(tmp_path)
+    with pytest.raises(SystemExit):
+        enrich(db, allcards, min_updated=10)
+    con = sqlite3.connect(db)
+    assert con.execute(
+        "SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "4"
+    assert con.execute(
+        "SELECT COUNT(*) FROM cards WHERE name_es IS NOT NULL").fetchone()[0] == 0
+
+
+def test_bulk_vacio_no_fabrica_una_v5_hueca(tmp_path):
+    db, _ = _setup(tmp_path)
+    vacio = tmp_path / "vacio.json"
+    vacio.write_text("[]")
+    stats = enrich(db, vacio)
+    assert stats["updated"] == 0
+    con = sqlite3.connect(db)
+    assert con.execute(
+        "SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "4"
 
 
 def test_idempotente_correr_dos_veces_no_cambia_nada(tmp_path):

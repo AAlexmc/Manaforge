@@ -4,6 +4,7 @@ import '../l10n/t.dart';
 import 'package:flutter/services.dart';
 
 import '../services/card_database.dart';
+import '../services/card_names.dart';
 import '../services/collection_store.dart';
 import '../services/market_prefs.dart';
 import '../services/market_prices.dart';
@@ -235,7 +236,9 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     final detail = _detail;
     return Scaffold(
       appBar: AppBar(
-        title: Text(detail?.name ?? tr(context).cdCardNotFound),
+        title: Text(detail == null
+            ? tr(context).cdCardNotFound
+            : cardDisplayName(context, detail.name, nameEs: detail.nameEs)),
         actions: [
           if (_hayLista) ...[
             IconButton(
@@ -337,7 +340,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                     Center(
                       child: GestureDetector(
                         onTap: () => showCardZoom(context,
-                            name: detail.name,
+                            name: cardDisplayName(context, detail.name,
+                                nameEs: detail.nameEs),
                             imageUrl:
                                 hero?.imageNormal ?? hero?.imageSmall,
                             colors: detail.colors),
@@ -347,7 +351,8 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                           child: CardThumb(
                             url: hero?.imageNormal ?? hero?.imageSmall,
                             colors: detail.colors,
-                            name: detail.name,
+                            name: cardDisplayName(context, detail.name,
+                                nameEs: detail.nameEs),
                             width: 240,
                             height: 335,
                             radius: 12,
@@ -359,7 +364,9 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(detail.name,
+                          child: Text(
+                              cardDisplayName(context, detail.name,
+                                  nameEs: detail.nameEs),
                               style: Theme.of(context)
                                   .textTheme
                                   .titleLarge

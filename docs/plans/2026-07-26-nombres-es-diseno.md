@@ -36,9 +36,20 @@ en inglés): añadir SOLO español, sin bulk completo en la app ni DB ×5-7.
   name. TODAS las superficies pasan por él (un sitio que arreglar).
 - Búsqueda: `WHERE c.name LIKE ?1 OR p.printed_name LIKE ?1 OR c.name_es LIKE ?1`
   (si v5).
-- Superficies de esta tanda: deck_detail_screen (la del pantallazo), tarjetas de
-  resultado de Forge, Modo Test. Ficha de carta ya enseña printedName si la impresión
-  es localizada — se le añade el fallback name_es.
+- Superficies de esta tanda: deck_detail_screen (lista, tierras, pies del banner y
+  zoom — la del pantallazo), buscador (filas + snackbar; OJO printed_name nunca es
+  NULL en la DB publicada, el helper envuelve `printedName ?? name`), ficha de carta
+  (título, cuerpo, zoom y placeholder — `CardFullDetail.nameEs`). Forge/Modo Test
+  desembocan en el detalle de mazo.
+- Búsqueda con tildes/mayúsculas: el LIKE de SQLite solo pliega ASCII, así que hay
+  columna `name_es_fold` (minúsculas, sin diacríticos, calculada en el script) y la
+  app pliega la query igual (`foldForSearch`, espejo del `_fold` Python) —
+  «ornitoptero», «ORNITÓPTERO» y «señor/senor» encuentran.
+- Robustez CI: el paso de nombres lleva `continue-on-error` (un hipo de Scryfall en
+  los 2,9 GB no puede comerse la release diaria de precios — la app degrada a inglés)
+  y el script `--min=20000` (suelo de cordura, medido real ~29k: un bulk vacío o con
+  forma cambiada aborta en vez de publicar una «v5» hueca; el bump a v5 además es
+  condicional a que haya nombres).
 
 ## Tests
 - Python: fixture mini-bulk con 2 cartas es + 1 en → enrich pone name_es, idempotente.

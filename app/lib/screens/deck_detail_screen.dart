@@ -521,7 +521,10 @@ class _DeckImageStrip extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8),
                 child: GestureDetector(
                   onTap: () => showCardZoom(context,
-                      name: e.key,
+                      // el zoom es pura presentación: nombre traducido como
+                      // el pie; onDetails sigue con la clave inglesa
+                      name: cardDisplayName(context, e.key,
+                          nameEs: namesEs[e.key]),
                       imageUrl: url,
                       onDetails: onDetails == null
                           ? null

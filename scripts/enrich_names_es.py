@@ -25,11 +25,23 @@ from pathlib import Path
 
 def _iter_cards(source):
     """Itera objetos carta del bulk. Streaming si ijson está instalado."""
+    # el try acota SOLO el import: un ImportError diferido a mitad de stream
+    # no debe caer a json.load sobre un source medio consumido
     try:
         import ijson  # type: ignore
-        yield from ijson.items(source, "item")
     except ImportError:
         yield from json.load(source)
+        return
+    yield from ijson.items(source, "item")
+
+
+def _fold(text: str) -> str:
+    """Minúsculas y sin diacríticos (NFD): «Ornitóptero» -> «ornitoptero»,
+    «Señor» -> «senor». Para que la búsqueda encuentre tecleando sin tildes
+    ni mayúsculas — el LIKE de SQLite solo pliega ASCII."""
+    import unicodedata
+    return "".join(c for c in unicodedata.normalize("NFD", text.lower())
+                   if not unicodedata.combining(c))
 
 
 def _printed_name_es(card: dict) -> str | None:
@@ -44,13 +56,24 @@ def _printed_name_es(card: dict) -> str | None:
     return None
 
 
-def enrich(db_path: Path, bulk_path: Path | None = None) -> dict:
-    """Enriquece la DB. Devuelve contadores para tests/logs."""
+def enrich(db_path: Path, bulk_path: Path | None = None,
+           min_updated: int = 0) -> dict:
+    """Enriquece la DB. Devuelve contadores para tests/logs.
+
+    [min_updated] es un suelo de cordura para CI (medido real: ~29k nombres):
+    si el bulk rinde menos —vacío, forma cambiada, campos renombrados— NO se
+    escribe nada ni se sube el schema, y se sale con error en vez de publicar
+    en verde una «v5» sin traducciones.
+    """
     con = sqlite3.connect(db_path)
     cols = {r[1] for r in con.execute("PRAGMA table_info(cards)")}
     if "name_es" not in cols:
         con.execute("ALTER TABLE cards ADD COLUMN name_es TEXT")
+    if "name_es_fold" not in cols:
+        con.execute("ALTER TABLE cards ADD COLUMN name_es_fold TEXT")
     con.execute("CREATE INDEX IF NOT EXISTS idx_cards_name_es ON cards(name_es)")
+    con.execute(
+        "CREATE INDEX IF NOT EXISTS idx_cards_name_es_fold ON cards(name_es_fold)")
 
     known = {r[0] for r in con.execute("SELECT oracle_id FROM cards")}
     names: dict[str, str] = {}
@@ -74,21 +97,36 @@ def enrich(db_path: Path, bulk_path: Path | None = None) -> dict:
         if bulk_path is not None:
             source.close()
 
-    con.executemany("UPDATE cards SET name_es = ? WHERE oracle_id = ?",
-                    [(v, k) for k, v in names.items()])
-    con.execute("UPDATE meta SET value = '5' WHERE key = 'schema_version'")
+    if len(names) < min_updated:
+        con.close()
+        raise SystemExit(
+            f"solo {len(names)} nombres es (< {min_updated}): bulk sospechoso "
+            "(¿vacío, forma cambiada, campos renombrados?). No toco la DB.")
+
+    con.executemany(
+        "UPDATE cards SET name_es = ?, name_es_fold = ? WHERE oracle_id = ?",
+        [(v, _fold(v), k) for k, v in names.items()])
+    # el bump a v5 solo si de verdad hay traducciones: una pasada vacía no
+    # debe fabricar una «v5» hueca
+    if names:
+        con.execute("UPDATE meta SET value = '5' WHERE key = 'schema_version'")
     con.commit()
     con.close()
     return {"seen": n_seen, "updated": len(names)}
 
 
 def main() -> int:
-    if len(sys.argv) not in (2, 3):
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    min_updated = 0
+    for a in sys.argv[1:]:
+        if a.startswith("--min="):
+            min_updated = int(a.split("=", 1)[1])
+    if len(args) not in (1, 2):
         print(__doc__)
         return 2
-    db = Path(sys.argv[1])
-    bulk = Path(sys.argv[2]) if len(sys.argv) == 3 else None
-    stats = enrich(db, bulk)
+    db = Path(args[0])
+    bulk = Path(args[1]) if len(args) == 2 else None
+    stats = enrich(db, bulk, min_updated=min_updated)
     print(f"objetos leídos: {stats['seen']}  ·  name_es puestos: {stats['updated']}")
     return 0
 

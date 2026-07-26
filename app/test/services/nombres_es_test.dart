@@ -25,7 +25,7 @@ Directory _db({required bool conNameEs}) {
       oracle_id TEXT PRIMARY KEY, name TEXT, mana_cost TEXT, cmc REAL,
       colors TEXT, color_identity TEXT, type_line TEXT, oracle_text TEXT,
       power TEXT, toughness TEXT, keywords TEXT, legalities TEXT
-      ${conNameEs ? ', name_es TEXT' : ''})
+      ${conNameEs ? ', name_es TEXT, name_es_fold TEXT' : ''})
   ''');
   db.execute('''
     CREATE TABLE printings (
@@ -37,9 +37,10 @@ Directory _db({required bool conNameEs}) {
   ''');
   if (conNameEs) {
     db.execute("INSERT INTO cards VALUES ('o1','Ornithopter','{0}',0,'','C',"
-        "'Artifact Creature','','0','2','[]','{}','Ornitóptero')");
+        "'Artifact Creature','','0','2','[]','{}','Ornitóptero',"
+        "'ornitoptero')");
     db.execute("INSERT INTO cards VALUES ('o2','Murder','{1}{B}{B}',3,'B','B',"
-        "'Instant','Destroy target creature.','','','[]','{}',NULL)");
+        "'Instant','Destroy target creature.','','','[]','{}',NULL,NULL)");
   } else {
     db.execute("INSERT INTO cards VALUES ('o1','Ornithopter','{0}',0,'','C',"
         "'Artifact Creature','','0','2','[]','{}')");
@@ -87,5 +88,42 @@ void main() {
     db.close();
     expect(hits, hasLength(1));
     expect(hits.single.nameEs, isNull);
+  });
+
+  test('la búsqueda pliega tildes y mayúsculas: ORNITÓPTERO y Ornitoptero '
+      'encuentran (columna fold)', () async {
+    final db = CardDatabase(dataDir: _db(conNameEs: true));
+    for (final q in ['ORNITÓPTERO', 'Ornitoptero', 'ornitóptero', 'tóptero']) {
+      final hits = await db.search(q);
+      expect(hits, hasLength(1), reason: 'query: $q');
+      expect(hits.single.name, 'Ornithopter', reason: 'query: $q');
+    }
+    db.close();
+  });
+
+  test('byScryfallId trae nameEs con v5 y null con v4, sin romper', () async {
+    final v5 = CardDatabase(dataDir: _db(conNameEs: true));
+    final hit5 = await v5.byScryfallId('s1');
+    v5.close();
+    expect(hit5!.name, 'Ornithopter');
+    expect(hit5.nameEs, 'Ornitóptero');
+
+    final v4 = CardDatabase(dataDir: _db(conNameEs: false));
+    final hit4 = await v4.byScryfallId('s1');
+    v4.close();
+    expect(hit4!.name, 'Ornithopter');
+    expect(hit4.nameEs, isNull);
+  });
+
+  test('cardDetail trae nameEs con v5 y null con v4', () async {
+    final v5 = CardDatabase(dataDir: _db(conNameEs: true));
+    final d5 = await v5.cardDetail(byName: 'Ornithopter');
+    v5.close();
+    expect(d5!.nameEs, 'Ornitóptero');
+
+    final v4 = CardDatabase(dataDir: _db(conNameEs: false));
+    final d4 = await v4.cardDetail(byName: 'Ornithopter');
+    v4.close();
+    expect(d4!.nameEs, isNull);
   });
 }
