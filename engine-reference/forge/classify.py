@@ -50,6 +50,10 @@ THEMES = {
         "payoff": r"delirium|threshold|for each creature card in your graveyard",
         "enabler": r"mill|return .* from your graveyard",
     },
+    "reanimator": {
+        "payoff": r"return .*creature.* from your graveyard to the battlefield|unearth|disturb|embalm|eternalize",
+        "enabler": r"mill (a card|\d+|up to)|surveil \d+|discard(s)? (a|two|three|your hand)",
+    },
 }
 
 

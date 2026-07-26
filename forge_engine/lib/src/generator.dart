@@ -37,7 +37,19 @@ const Map<String, String> themeColors = {
   'counters': 'GW',
   'tokens': 'WG',
   'graveyard': 'BG',
+  'reanimator': 'BGU',
 };
+
+/// Máximo de gordas (criaturas caras del tema reanimator) que reciben trato
+/// de enabler puro en `_greedyFill`. Sin tope, un pool cargado de gordas
+/// vaciaría la curva media del arquetipo entero hacia costes altos.
+const int maxReanimatorFatties = 6;
+
+/// Umbral de coste y eficiencia para que una criatura cuente como "gorda"
+/// reanimable: cara y con stats muy por encima de la media (no cualquier
+/// bicho de 5 manas cuela).
+const int reanimatorFattyMinCmc = 5;
+const double reanimatorFattyMinEfficiency = 6.0;
 
 /// Multiplicador de color pie por tema: 1.25 si [colors] solapa con el color
 /// natural del tema, 0.8 si le es ajeno, 1.0 si el tema es de cualquier color
@@ -157,15 +169,29 @@ Archetype? archetypeFor(double avgCmc, int nLands) {
 }
 
 double _score(Card card, String theme, Map<String, String> roles,
-    Map<int, double> curveNeed, String archetypeName) {
+    Map<int, double> curveNeed, String archetypeName,
+    {bool forceEnablerNoCurvePenalty = false}) {
   var s = efficiency(card, archetype: archetypeName);
-  final role = roles[theme];
+  final role = forceEnablerNoCurvePenalty ? 'enabler' : roles[theme];
   if (role == 'payoff') s += 3.0;
   if (role == 'enabler') s += 1.5;
   final cmc = card.cmc > 6 ? 6 : card.cmc;
-  s += (curveNeed[cmc] ?? 0.0) * 4.0;
+  var curveTerm = curveNeed[cmc] ?? 0.0;
+  if (forceEnablerNoCurvePenalty && curveTerm < 0) curveTerm = 0;
+  s += curveTerm * 4.0;
   return s;
 }
+
+/// Las gordas del tema reanimator no valen por su coste (no se lanzan, se
+/// reaniman): tratarlas de enabler puro y sin castigo de curva, hasta el
+/// tope [maxReanimatorFatties].
+bool _isReanimatorFatty(Card card, String theme, String archetypeName,
+        int fattiesChosen) =>
+    theme == 'reanimator' &&
+    card.types.contains('Creature') &&
+    card.cmc >= reanimatorFattyMinCmc &&
+    efficiency(card, archetype: archetypeName) >= reanimatorFattyMinEfficiency &&
+    fattiesChosen < maxReanimatorFatties;
 
 Archetype _archetypeByName(String name) =>
     Archetype.values.firstWhere((a) => a.name == name);
@@ -255,6 +281,7 @@ Map<String, int> _greedyFill(
   }
 
   var totalChosen = 0;
+  var fattiesChosen = 0;
   while (totalChosen < nSpells) {
     final need = curveNeed();
     final pending = <String>{};
@@ -263,10 +290,14 @@ Map<String, int> _greedyFill(
     });
     String? bestName;
     var bestScore = -1e9;
+    var bestIsFatty = false;
     cands.forEach((n, card) {
       final limit = card.qty < 4 ? card.qty : 4;
       if ((chosen[n] ?? 0) >= limit) return;
-      var s = _score(card, theme, rolesByCard[n]!, need, archetypeName);
+      final isFatty =
+          _isReanimatorFatty(card, theme, archetypeName, fattiesChosen);
+      var s = _score(card, theme, rolesByCard[n]!, need, archetypeName,
+          forceEnablerNoCurvePenalty: isFatty);
       final buckets = bucket(card);
       if (pending.isNotEmpty && !pending.any(buckets.contains)) {
         s -= 3.0; // aún caben, pero prioriza cubrir cuotas
@@ -274,9 +305,11 @@ Map<String, int> _greedyFill(
       if (s > bestScore) {
         bestName = n;
         bestScore = s;
+        bestIsFatty = isFatty;
       }
     });
     if (bestName == null) break;
+    if (bestIsFatty) fattiesChosen += 1;
     chosen[bestName!] = (chosen[bestName!] ?? 0) + 1;
     totalChosen += 1;
     for (final b in bucket(cands[bestName!]!)) {

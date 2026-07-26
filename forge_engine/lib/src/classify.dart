@@ -51,6 +51,12 @@ final Map<String, _Theme> _themes = {
     RegExp(r'delirium|threshold|for each creature card in your graveyard'),
     RegExp(r'mill|return .* from your graveyard'),
   ),
+  'reanimator': _Theme(
+    RegExp(
+        r'return .*creature.* from your graveyard to the battlefield|unearth|disturb|embalm|eternalize'),
+    RegExp(
+        r'mill (a card|\d+|up to)|surveil \d+|discard(s)? (a|two|three|your hand)'),
+  ),
 };
 
 final _removal = RegExp(r'destroy (target|up to)|exile (target|up to)');

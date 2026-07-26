@@ -201,4 +201,129 @@ void main() {
           efficiency(ds) - efficiency(plain), closeTo(0.9, 1e-9));
     });
   });
+
+  group('tema reanimator (Task 10)', () {
+    int copiasCmc5oMas(Map<String, Card> pool, Deck deck) {
+      var n = 0;
+      deck.cards.forEach((name, qty) {
+        if ((pool[name]?.cmc ?? 0) >= 5) n += qty;
+      });
+      return n;
+    }
+
+    // Pool control (interacción+gordas, sin payoff de reanimación) para
+    // hacer control negativo: mismo perfil de arquetipo, distinto tema.
+    Map<String, Card> basePool({bool withPayoff = true}) {
+      final p = <String, Card>{
+        'Swamp': const Card(
+            name: 'Swamp',
+            qty: 30,
+            manaCost: '',
+            cmc: 0,
+            colors: '',
+            types: ['Basic', 'Land'],
+            oracle: '{T}: Add {B}.'),
+        'Charnel Scavenger': const Card(
+            name: 'Charnel Scavenger',
+            qty: 4,
+            manaCost: '{1}{B}',
+            cmc: 2,
+            colors: 'B',
+            types: ['Sorcery'],
+            oracle: 'Discard a card, then mill 3 cards.'),
+        'Read the Bones': const Card(
+            name: 'Read the Bones',
+            qty: 4,
+            manaCost: '{2}{B}',
+            cmc: 3,
+            colors: 'B',
+            types: ['Sorcery'],
+            oracle: 'Draw two cards.'),
+      };
+      if (withPayoff) {
+        p['Raise from the Grave'] = const Card(
+            name: 'Raise from the Grave',
+            qty: 4,
+            manaCost: '{2}{B}',
+            cmc: 3,
+            colors: 'B',
+            types: ['Sorcery'],
+            oracle:
+                'Return target creature card from your graveyard to the battlefield.');
+      }
+      for (var i = 0; i < 3; i++) {
+        final name = 'Grave Titan Clone $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{3}{B}{B}',
+            cmc: 5,
+            colors: 'B',
+            types: const ['Creature'],
+            oracle: '',
+            power: 7,
+            toughness: 7);
+      }
+      for (var i = 0; i < 5; i++) {
+        final name = 'Removal $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{1}{B}',
+            cmc: 2,
+            colors: 'B',
+            types: const ['Instant'],
+            oracle: 'Destroy target creature.');
+      }
+      for (var i = 0; i < 2; i++) {
+        final name = 'Sweeper $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{3}{B}',
+            cmc: 4,
+            colors: 'B',
+            types: const ['Sorcery'],
+            oracle: 'Destroy all creatures.');
+      }
+      const curveCmc = [1, 2, 3, 4];
+      for (var i = 0; i < curveCmc.length; i++) {
+        final cmc = curveCmc[i];
+        final name = 'Filler Creature $i';
+        p[name] = Card(
+            name: name,
+            qty: 4,
+            manaCost: '{$cmc}',
+            cmc: cmc,
+            colors: '',
+            types: const ['Creature'],
+            oracle: '',
+            power: cmc,
+            toughness: cmc);
+      }
+      return p;
+    }
+
+    test(
+        'pool con reanimación+mill+gordas detecta reanimator y mete gordas',
+        () {
+      final pool = basePool();
+      final gen = generateDeck(pool, 'B')!;
+      expect(gen.theme, 'reanimator');
+      expect(copiasCmc5oMas(pool, gen.deck), greaterThanOrEqualTo(4));
+    });
+
+    test(
+        'control negativo: sin hechizos de reanimación las gordas se quedan '
+        'fuera', () {
+      final gen = generateDeck(basePool(withPayoff: false), 'B');
+      expect(gen == null || gen.theme != 'reanimator', isTrue);
+    });
+
+    test('el validador sigue mandando: coste medio dentro del arquetipo', () {
+      final pool = basePool();
+      final gen = generateDeck(pool, 'B')!;
+      expect(DeckValidator.validate(gen.deck, pool), isEmpty);
+    });
+  });
 }

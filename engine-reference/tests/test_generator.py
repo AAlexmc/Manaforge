@@ -80,3 +80,78 @@ def test_detect_theme_empate_lifegain_spells_en_wb_gana_lifegain():
 def test_detect_theme_empate_lifegain_spells_en_ur_gana_spells():
     theme, _ = detect_theme(_tied_pool(), "UR")
     assert theme == "spells"
+
+
+def _reanimator_base_pool(with_payoff: bool = True) -> dict:
+    """Mismo pool que `forge_engine/test/generator_test.dart` (Task 10):
+    interacción+gordas de sobra, y opcionalmente el payoff de reanimación."""
+    p = {
+        "Swamp": {
+            "name": "Swamp", "qty": 30, "mana_cost": "", "cmc": 0, "colors": "",
+            "types": ["Basic", "Land"], "oracle": "{T}: Add {B}.",
+        },
+        "Charnel Scavenger": {
+            "name": "Charnel Scavenger", "qty": 4, "mana_cost": "{1}{B}", "cmc": 2,
+            "colors": "B", "types": ["Sorcery"],
+            "oracle": "Discard a card, then mill 3 cards.",
+        },
+        "Read the Bones": {
+            "name": "Read the Bones", "qty": 4, "mana_cost": "{2}{B}", "cmc": 3,
+            "colors": "B", "types": ["Sorcery"], "oracle": "Draw two cards.",
+        },
+    }
+    if with_payoff:
+        p["Raise from the Grave"] = {
+            "name": "Raise from the Grave", "qty": 4, "mana_cost": "{2}{B}", "cmc": 3,
+            "colors": "B", "types": ["Sorcery"],
+            "oracle": "Return target creature card from your graveyard to the battlefield.",
+        }
+    for i in range(3):
+        name = f"Grave Titan Clone {i}"
+        p[name] = {
+            "name": name, "qty": 4, "mana_cost": "{3}{B}{B}", "cmc": 5, "colors": "B",
+            "types": ["Creature"], "oracle": "", "power": 7, "toughness": 7,
+        }
+    for i in range(5):
+        name = f"Removal {i}"
+        p[name] = {
+            "name": name, "qty": 4, "mana_cost": "{1}{B}", "cmc": 2, "colors": "B",
+            "types": ["Instant"], "oracle": "Destroy target creature.",
+        }
+    for i in range(2):
+        name = f"Sweeper {i}"
+        p[name] = {
+            "name": name, "qty": 4, "mana_cost": "{3}{B}", "cmc": 4, "colors": "B",
+            "types": ["Sorcery"], "oracle": "Destroy all creatures.",
+        }
+    for i, cmc in enumerate([1, 2, 3, 4]):
+        name = f"Filler Creature {i}"
+        p[name] = {
+            "name": name, "qty": 4, "mana_cost": "{%d}" % cmc, "cmc": cmc, "colors": "",
+            "types": ["Creature"], "oracle": "", "power": cmc, "toughness": cmc,
+        }
+    return p
+
+
+def _copias_cmc_5_o_mas(pool: dict, deck: dict) -> int:
+    return sum(qty for name, qty in deck["cards"].items() if pool[name]["cmc"] >= 5)
+
+
+def test_pool_con_reanimacion_mill_gordas_detecta_reanimator_y_mete_gordas():
+    pool = _reanimator_base_pool()
+    deck = generate_deck(pool, "B")
+    assert deck is not None
+    assert deck["theme"] == "reanimator"
+    assert _copias_cmc_5_o_mas(pool, deck) >= 4
+
+
+def test_control_negativo_sin_hechizos_de_reanimacion_las_gordas_se_quedan_fuera():
+    deck = generate_deck(_reanimator_base_pool(with_payoff=False), "B")
+    assert deck is None or deck["theme"] != "reanimator"
+
+
+def test_el_validador_sigue_mandando_coste_medio_dentro_del_arquetipo():
+    pool = _reanimator_base_pool()
+    deck = generate_deck(pool, "B")
+    assert deck is not None
+    assert validate_deck(deck, pool) == []

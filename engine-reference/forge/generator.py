@@ -45,7 +45,18 @@ THEME_COLORS = {
     "counters": "GW",
     "tokens": "WG",
     "graveyard": "BG",
+    "reanimator": "BGU",
 }
+
+# Máximo de gordas (criaturas caras del tema reanimator) que reciben trato de
+# enabler puro en _greedy_fill. Sin tope, un pool cargado de gordas vaciaría
+# la curva media del arquetipo entero hacia costes altos.
+MAX_REANIMATOR_FATTIES = 6
+
+# Umbral de coste y eficiencia para que una criatura cuente como "gorda"
+# reanimable: cara y con stats muy por encima de la media.
+REANIMATOR_FATTY_MIN_CMC = 5
+REANIMATOR_FATTY_MIN_EFFICIENCY = 6.0
 
 
 def _theme_color_multiplier(colors: str) -> dict[str, float]:
@@ -102,16 +113,32 @@ def pick_archetype(cands: dict) -> str:
 
 
 def score(card: dict, theme: str, roles: dict[str, str], curve_need: dict[int, float],
-          archetype: str) -> float:
+          archetype: str, force_enabler_no_curve_penalty: bool = False) -> float:
     """eficiencia + sinergia con el tema + encaje en la curva que falta."""
     s = efficiency(card, archetype)
-    role = roles.get(theme)
+    role = "enabler" if force_enabler_no_curve_penalty else roles.get(theme)
     if role == "payoff":
         s += 3.0
     elif role == "enabler":
         s += 1.5
-    s += curve_need.get(min(card["cmc"], 6), 0.0) * 4.0
+    curve_term = curve_need.get(min(card["cmc"], 6), 0.0)
+    if force_enabler_no_curve_penalty:
+        curve_term = max(curve_term, 0.0)
+    s += curve_term * 4.0
     return s
+
+
+def _is_reanimator_fatty(card: dict, theme: str, archetype: str, fatties_chosen: int) -> bool:
+    """Las gordas del tema reanimator no valen por su coste (no se lanzan, se
+    reaniman): tratarlas de enabler puro y sin castigo de curva, hasta el
+    tope MAX_REANIMATOR_FATTIES."""
+    return (
+        theme == "reanimator"
+        and "Creature" in card["types"]
+        and card["cmc"] >= REANIMATOR_FATTY_MIN_CMC
+        and efficiency(card, archetype) >= REANIMATOR_FATTY_MIN_EFFICIENCY
+        and fatties_chosen < MAX_REANIMATOR_FATTIES
+    )
 
 
 def generate_deck(pool: dict, colors: str, name: str | None = None) -> dict | None:
@@ -172,21 +199,26 @@ def _greedy_fill(cands, roles_by_card, theme, archetype, target, n_spells) -> di
             out.append("draw")
         return out
 
+    fatties_chosen = 0
     while sum(chosen.values()) < n_spells:
         need = curve_need()
         pending = {b for b, minimum in quotas.items() if counts[b] < minimum}
-        best_name, best_score = None, -1e9
+        best_name, best_score, best_is_fatty = None, -1e9, False
         for n, card in cands.items():
             if chosen[n] >= min(card["qty"], 4):
                 continue
-            s = score(card, theme, roles_by_card[n], need, archetype)
+            is_fatty = _is_reanimator_fatty(card, theme, archetype, fatties_chosen)
+            s = score(card, theme, roles_by_card[n], need, archetype,
+                      force_enabler_no_curve_penalty=is_fatty)
             buckets = bucket(card)
             if pending and not (pending & set(buckets)):
                 s -= 3.0  # aún caben, pero prioriza cubrir cuotas
             if best_score < s:
-                best_name, best_score = n, s
+                best_name, best_score, best_is_fatty = n, s, is_fatty
         if best_name is None:
             break
+        if best_is_fatty:
+            fatties_chosen += 1
         chosen[best_name] += 1
         for b in bucket(cands[best_name]):
             counts[b] += 1
