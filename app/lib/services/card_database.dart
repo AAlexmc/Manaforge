@@ -194,6 +194,10 @@ class CardDatabase {
   /// esperar a que el usuario re-descargue.
   void _ensureIndexes(String path) {
     try {
+      // solo sobre una base que EXISTE: abrir en escritura crea el fichero
+      // si falta, e isReady() daría true con una base vacía — el arranque
+      // se saltaría la descarga de verdad
+      if (!File(path).existsSync()) return;
       final rw = sqlite3.open(path); // la única apertura con escritura
       try {
         rw.execute('CREATE INDEX IF NOT EXISTS idx_printings_set_num '

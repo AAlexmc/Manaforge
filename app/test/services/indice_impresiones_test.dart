@@ -86,6 +86,22 @@ void main() {
     expect(_tieneIndice(dir), isFalse);
   });
 
+  test('sin base descargada NO se crea un fichero fantasma', () async {
+    // sqlite3.open en modo escritura CREA el fichero si no existe: si eso
+    // pasara antes de la primera descarga, isReady() daría true con una
+    // base vacía y el arranque se saltaría la descarga de verdad
+    final dir = Directory.systemTemp.createTempSync('mf-indice-vacio');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final db = CardDatabase(dataDir: dir);
+    try {
+      await db.byScryfallId('s1'); // no hay base: reventará, y está bien
+    } catch (_) {}
+    db.close();
+    expect(File(p.join(dir.path, 'manaforge_cards.sqlite')).existsSync(),
+        isFalse, reason: 'crear la base vacía envenena el primer arranque');
+    expect(await db.isReady(), isFalse);
+  });
+
   test('abrir dos veces no duplica ni revienta (IF NOT EXISTS)', () async {
     final dir = _dbSinIndice();
     final db = CardDatabase(dataDir: dir);
