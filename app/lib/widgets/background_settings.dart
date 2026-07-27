@@ -303,7 +303,8 @@ class _Muestras extends StatelessWidget {
               color: s,
               seleccionado: custom == s,
               onTap: () => onSwatch(s),
-              onLongPress: () => _confirmarBorrarMuestra(context, s, onSwatchDelete)),
+              onDelete: () =>
+                  _confirmarBorrarMuestra(context, s, onSwatchDelete)),
         _CirculoCustom(
           color: custom,
           activo: customActivo && !representado,
@@ -323,18 +324,21 @@ class _Muestras extends StatelessWidget {
       {required Color color,
       required bool seleccionado,
       required VoidCallback onTap,
-      required VoidCallback onLongPress}) {
+      required VoidCallback onDelete}) {
     final anillo = Theme.of(context).colorScheme.tertiary;
     final nombre = tr(context).bgSwatchTip;
     return Tooltip(
-      message: nombre,
+      // el tooltip dice CÓMO se borra: con ratón nadie descubre la
+      // pulsación larga, y el clic derecho hay que anunciarlo
+      message: tr(context).bgSwatchHint,
       child: Semantics(
         button: true,
         selected: seleccionado,
         label: nombre,
         child: InkWell(
           onTap: onTap,
-          onLongPress: onLongPress,
+          onLongPress: onDelete,
+          onSecondaryTap: onDelete,
           customBorder: const CircleBorder(),
           child: Container(
             width: 30,

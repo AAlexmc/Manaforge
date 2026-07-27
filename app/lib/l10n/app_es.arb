@@ -1222,6 +1222,7 @@
   "bgUseThis": "Usar este",
   "bgSaveSwatch": "Guardar como muestra",
   "bgSwatchTip": "Muestra guardada",
+  "bgSwatchHint": "Muestra guardada — bórrala con clic derecho o manteniendo pulsado",
   "bgSwatchDeleteTitle": "¿Borrar esta muestra?",
   "bgSwatchDeleteBody": "Se quita de tu paleta guardada. Puedes volver a guardarla cuando quieras.",
 

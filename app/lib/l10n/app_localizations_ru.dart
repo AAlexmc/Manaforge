@@ -2771,6 +2771,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bgSwatchTip => 'Muestra guardada';
 
   @override
+  String get bgSwatchHint =>
+      'Muestra guardada — bórrala con clic derecho o manteniendo pulsado';
+
+  @override
   String get bgSwatchDeleteTitle => '¿Borrar esta muestra?';
 
   @override
