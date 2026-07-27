@@ -50,5 +50,6 @@ jobs:
           gh release delete price-db-latest --yes || true
           sha256sum manaforge_prices.sqlite.gz | tee SHA256SUMS.txt
           gh release create price-db-latest manaforge_prices.sqlite.gz SHA256SUMS.txt \
+            --latest=false \
             --title "Histórico de precios ($PRICE_START → $PRICE_END)" \
             --notes "Serie diaria de precio de Cardmarket por carta (nivel oracle, la edición más barata de cada día), generada de los datos abiertos de MTGJSON. La app la descarga desde Mercado para que las gráficas arranquen con historia. Datos: MTGJSON (CC BY 4.0) · precios de Cardmarket. Cartas: © Wizards of the Coast (Fan Content Policy)."

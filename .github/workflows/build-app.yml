@@ -116,6 +116,7 @@ jobs:
             echo "Windows: \`Get-FileHash ManaForge-Windows.zip\` y compara con la línea de arriba."
           } > notas.md
           gh release create "${GITHUB_REF_NAME}" ManaForge-*.zip SHA256SUMS.txt \
+            --latest \
             --repo "$GITHUB_REPOSITORY" \
             --title "ManaForge ${GITHUB_REF_NAME#app-}" \
             --notes-file notas.md
