@@ -5,6 +5,7 @@ library;
 
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/background_prefs.dart';
@@ -79,6 +80,44 @@ void main() {
     await tester.pump();
 
     expect(prefs.savedSwatches, isEmpty);
+  });
+
+  testWidgets('clic derecho sobre una muestra + Borrar también la quita',
+      (tester) async {
+    // en escritorio nadie descubre la pulsación larga con el ratón: el
+    // clic derecho es el gesto natural para "quitar esto de aquí"
+    final prefs = await conFondo(tester);
+    await tester.runAsync(() => prefs.addSwatch(const Color(0xFF59F7FF)));
+
+    await tester.pumpWidget(tarjeta(prefs));
+
+    await tester.tap(find.bySemanticsLabel('Muestra guardada').first,
+        buttons: kSecondaryButton);
+    await tester.pump();
+
+    expect(find.text('¿Borrar esta muestra?'), findsOneWidget);
+    await tester.tap(find.text('Borrar'));
+    await tester.pump();
+
+    expect(prefs.savedSwatches, isEmpty);
+  });
+
+  testWidgets('el tooltip de la muestra explica cómo borrarla',
+      (tester) async {
+    final prefs = await conFondo(tester);
+    await tester.runAsync(() => prefs.addSwatch(const Color(0xFF59F7FF)));
+
+    await tester.pumpWidget(tarjeta(prefs));
+
+    final tooltip = tester
+        .widget<Tooltip>(find
+            .ancestor(
+                of: find.bySemanticsLabel('Muestra guardada').first,
+                matching: find.byType(Tooltip))
+            .first)
+        .message;
+    expect(tooltip, contains('clic derecho'),
+        reason: 'sin pista, nadie descubre cómo borrar una muestra');
   });
 
   testWidgets('cancelar en la confirmación no borra la muestra',

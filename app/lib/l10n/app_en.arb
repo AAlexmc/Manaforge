@@ -1217,6 +1217,7 @@
   "bgUseThis": "Use this one",
   "bgSaveSwatch": "Save as swatch",
   "bgSwatchTip": "Saved swatch",
+  "bgSwatchHint": "Saved swatch — right-click or long-press to delete",
   "bgSwatchDeleteTitle": "Delete this swatch?",
   "bgSwatchDeleteBody": "It's removed from your saved palette. You can save it again anytime.",
 

@@ -2725,6 +2725,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bgSwatchTip => 'Saved swatch';
 
   @override
+  String get bgSwatchHint =>
+      'Saved swatch — right-click or long-press to delete';
+
+  @override
   String get bgSwatchDeleteTitle => 'Delete this swatch?';
 
   @override

@@ -4352,6 +4352,12 @@ abstract class AppLocalizations {
   /// **'Muestra guardada'**
   String get bgSwatchTip;
 
+  /// No description provided for @bgSwatchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Muestra guardada — bórrala con clic derecho o manteniendo pulsado'**
+  String get bgSwatchHint;
+
   /// No description provided for @bgSwatchDeleteTitle.
   ///
   /// In es, this message translates to:
