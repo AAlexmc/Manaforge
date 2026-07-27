@@ -345,9 +345,10 @@ final List<Tour> kTours = [
           body: t.onbDecksBody),
     ],
   ),
-  // La vuelta completa: antes de cada pantalla, el botón que la abre. Escanear
-  // se queda en "mira este botón": abrirlo encendería la cámara en mitad del
-  // tour.
+  // La vuelta completa: antes de cada pantalla, el botón que la abre. OJO:
+  // este tour SÍ entra al escáner y enciende la cámara a propósito (#65) —
+  // se lanza desde el menú "?", con el usuario ya avisado. El del primer
+  // arranque es [kTourPrimerArranque], que se salta esa entrada.
   Tour(
     id: 'full',
     name: (t) => t.tourFullName,
@@ -425,5 +426,21 @@ final List<Tour> kTours = [
 /// instalar la app no sabe qué hay en cada pestaña — las 5 burbujas de
 /// 'welcome' se quedan cortas y esa primera impresión no vuelve. El
 /// rápido sigue en el menú "?" para repasar.
-Tour get kTourPrimerArranque =>
-    kTours.firstWhere((t) => t.id == 'full', orElse: () => kTours.first);
+///
+/// SIN entrar al escáner: montarlo enciende la cámara y dispara el
+/// permiso del sistema — inaceptable en el minuto 1 tras instalar una
+/// app que presume de privacidad. Su botón en la barra sí se enseña
+/// (el paso navBarIndex se conserva); quien quiera verlo por dentro
+/// tiene el tour de Escanear en el menú "?".
+Tour get kTourPrimerArranque {
+  final full = kTours.firstWhere((t) => t.id == 'full',
+      orElse: () => kTours.first);
+  return Tour(
+    id: 'full-primer-arranque',
+    name: full.name,
+    build: (t, k) => [
+      for (final s in full.build(t, k))
+        if (s.push != TourPush.escaner) s
+    ],
+  );
+}
