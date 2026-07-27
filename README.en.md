@@ -2,7 +2,7 @@
   <img src="docs/assets/banner.svg" alt="ManaForge — Scan your collection. Forge decks with the cards you already own." width="100%">
 </p>
 
-<p align="center"><b>🇬🇧 English</b> · <a href="README.md">🇪🇸 Español</a></p>
+<p align="center"><b>🇬🇧 English</b> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
