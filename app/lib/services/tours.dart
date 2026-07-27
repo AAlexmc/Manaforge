@@ -315,7 +315,8 @@ List<TourStep> _pasosAjustes(AppLocalizations t, TourKeys k) => [
           body: t.onbSupportBody),
     ];
 
-/// El catálogo de tours. El primero ('welcome') es el del primer arranque.
+/// El catálogo de tours. 'welcome' abre el menú "?" como repaso rápido;
+/// el del primer arranque es [kTourPrimerArranque].
 final List<Tour> kTours = [
   Tour(
     id: 'welcome',
@@ -419,3 +420,10 @@ final List<Tour> kTours = [
     ],
   ),
 ];
+
+/// El tour del PRIMER arranque: la vuelta completa. Quien acaba de
+/// instalar la app no sabe qué hay en cada pestaña — las 5 burbujas de
+/// 'welcome' se quedan cortas y esa primera impresión no vuelve. El
+/// rápido sigue en el menú "?" para repasar.
+Tour get kTourPrimerArranque =>
+    kTours.firstWhere((t) => t.id == 'full', orElse: () => kTours.first);

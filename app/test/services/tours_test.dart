@@ -41,6 +41,12 @@ void main() {
     expect(kTours.first.id, 'welcome');
   });
 
+  test('el primer arranque lanza la vuelta COMPLETA, no la rápida', () {
+    // pedido de Ale (27-07): quien acaba de instalar la app debe ver la
+    // vuelta entera, no las 5 burbujas de la barra
+    expect(kTourPrimerArranque.id, 'full');
+  });
+
   test('los ids no se repiten (el menú los usa como identidad)', () {
     final ids = kTours.map((t) => t.id).toList();
     expect(ids.toSet().length, ids.length, reason: 'ids repetidos: $ids');
