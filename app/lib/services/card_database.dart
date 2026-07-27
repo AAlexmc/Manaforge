@@ -166,6 +166,7 @@ class CardDatabase {
     _cierres++; // un _open() en vuelo ya no puede re-cachear su handle
     _db?.dispose();
     _db = null;
+    _indicesMirados = false; // la base re-descargada puede venir sin índice
   }
 
   /// Sube en cada [close]. Sin esto, un `_open()` esperando en su await
@@ -185,6 +186,45 @@ class CardDatabase {
     }
   }
 
+  /// Las bases publicadas hasta la v5 vienen SIN este índice, y todas las
+  /// consultas de precios/datos "por impresión" (Inicio, Mercado, logros)
+  /// filtran por (set_code, collector_number): sin él son full scans de
+  /// ~110k filas, y durante una importación (que recalcula la valoración
+  /// con la colección creciendo) eso es O(n²) — 308 cartas eran minutos.
+  /// Se crea aquí porque arregla también las bases YA descargadas, sin
+  /// esperar a que el usuario re-descargue.
+  /// Ya se miró el índice en este ciclo de apertura. Vuelve a false en
+  /// [close]: una re-descarga trae una base nueva que puede venir sin él.
+  bool _indicesMirados = false;
+
+  void _ensureIndexes(String path) {
+    if (_indicesMirados) return;
+    try {
+      // solo sobre una base que EXISTE: abrir en escritura crea el fichero
+      // si falta, e isReady() daría true con una base vacía — el arranque
+      // se saltaría la descarga de verdad
+      final f = File(path);
+      if (!f.existsSync()) return;
+      // crear el índice ESCRIBE en el fichero y le cambia el mtime, y
+      // downloadedAt() (frescura de la base) ES ese mtime: sin restaurarlo,
+      // el arranque de la migración daría la base por al día y se saltaría
+      // la descarga de ese día
+      final mtime = f.lastModifiedSync();
+      final rw = sqlite3.open(path); // la única apertura con escritura
+      try {
+        rw.execute('CREATE INDEX IF NOT EXISTS idx_printings_set_num '
+            'ON printings(set_code, collector_number)');
+      } finally {
+        rw.dispose();
+      }
+      f.setLastModifiedSync(mtime);
+      _indicesMirados = true;
+    } catch (_) {
+      // solo es rendimiento: sin permiso de escritura (o base rara) la app
+      // sigue en solo-lectura, lenta pero entera
+    }
+  }
+
   Future<Database> _open() async {
     // reintenta si un close() (re-descarga) pisa la apertura a mitad: el
     // handle recién abierto se suelta para no bloquear el rename, y a la
@@ -194,6 +234,10 @@ class CardDatabase {
       if (cached != null) return cached;
       final gen = _cierres;
       final file = await _dbFile();
+      // nunca en plena re-descarga: la apertura en escritura coge lock y
+      // crea -journal justo cuando renameDownloaded() intenta sustituir el
+      // fichero (en Windows, sharing violation y descarga tirada)
+      if (gen == _cierres) _ensureIndexes(file.path);
       final db = sqlite3.open(file.path, mode: OpenMode.readOnly);
       if (gen == _cierres || intento >= 10) {
         _db = db;

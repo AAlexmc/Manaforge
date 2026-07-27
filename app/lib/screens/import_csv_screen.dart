@@ -119,7 +119,6 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
         _total = rows.length;
       });
     }
-    if (_replace) widget.collection.clear();
     // UN sello para todo el lote: si no, cada fila coge su propio instante
     // y la colección acaba ordenada al revés que el CSV
     final at = DateTime.now();
@@ -128,59 +127,65 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
     var withPrice = 0;
     var tokensIgnored = 0;
     final unrecognized = <String>[];
-    for (final row in rows) {
-      final name = row.name;
-      final qty = row.qty;
-      final foil = row.foil;
-      // cada pocas filas se cede el turno para que se pinte un frame: es lo
-      // que convierte una ventana congelada en una barra que avanza
-      if (_done % 25 == 0) {
-        await Future<void>.delayed(Duration.zero);
-        if (!mounted) return;
-        setState(() {});
-      }
-      _done++;
-      final (hit, exactPrinting) = await _resolve(name, row.scryfallId);
-      if (hit == null) {
-        if (looksLikeToken(name, row.setName)) {
-          tokensIgnored += qty;
-        } else {
-          unrecognized.add(name);
+    // todo el CSV dentro de UN lote: cada add() avisaba a todas las
+    // pantallas vivas y cada una recalculaba su valoración contra la base
+    // — por fila. Con el lote, un solo aviso (y guardado) al final.
+    await widget.collection.importBatch(() async {
+      if (_replace) widget.collection.clear();
+      for (final row in rows) {
+        final name = row.name;
+        final qty = row.qty;
+        final foil = row.foil;
+        // cada pocas filas se cede el turno para que se pinte un frame: es
+        // lo que convierte una ventana congelada en una barra que avanza
+        if (_done % 25 == 0) {
+          await Future<void>.delayed(Duration.zero);
+          if (!mounted) return;
+          setState(() {});
         }
-        continue;
-      }
-      widget.collection.add(
-        OwnedCard(
-          oracleId: hit.oracleId,
-          name: hit.name,
-          printedName: hit.printedName,
-          imageSmall: hit.imageSmall,
-          imageNormal: hit.imageNormal,
-          colors: hit.colors,
-          typeLine: hit.typeLine,
-          cmc: hit.cmc,
-          power: hit.power,
-          toughness: hit.toughness,
+        _done++;
+        final (hit, exactPrinting) = await _resolve(name, row.scryfallId);
+        if (hit == null) {
+          if (looksLikeToken(name, row.setName)) {
+            tokensIgnored += qty;
+          } else {
+            unrecognized.add(name);
+          }
+          continue;
+        }
+        widget.collection.add(
+          OwnedCard(
+            oracleId: hit.oracleId,
+            name: hit.name,
+            printedName: hit.printedName,
+            imageSmall: hit.imageSmall,
+            imageNormal: hit.imageNormal,
+            colors: hit.colors,
+            typeLine: hit.typeLine,
+            cmc: hit.cmc,
+            power: hit.power,
+            toughness: hit.toughness,
+            qty: qty,
+          ),
           qty: qty,
-        ),
-        qty: qty,
-        // solo si el CSV traía el Scryfall ID sabemos la edición exacta
-        printingKey: exactPrinting ? hit.printingKey : null,
-        foil: foil,
-        at: at,
-        // reimportar NO re-sella lo que ya tenías: enterraría bajo cientos
-        // de cartas viejas lo que acabas de escanear
-        bump: false,
-        // el precio de compra del CSV es lo único que la app no puede
-        // deducir sola: sin él no hay P&L posible. Entra en la MISMA llamada
-        // para no dar dos avisos por fila.
-        paidPerCopy: row.purchasePrice,
-        paidCurrency: row.currency,
-      );
-      if (row.purchasePrice != null) withPrice += qty;
-      imported++;
-      copies += qty;
-    }
+          // solo si el CSV traía el Scryfall ID sabemos la edición exacta
+          printingKey: exactPrinting ? hit.printingKey : null,
+          foil: foil,
+          at: at,
+          // reimportar NO re-sella lo que ya tenías: enterraría bajo
+          // cientos de cartas viejas lo que acabas de escanear
+          bump: false,
+          // el precio de compra del CSV es lo único que la app no puede
+          // deducir sola: sin él no hay P&L posible. Entra en la MISMA
+          // llamada para no dar dos avisos por fila.
+          paidPerCopy: row.purchasePrice,
+          paidCurrency: row.currency,
+        );
+        if (row.purchasePrice != null) withPrice += qty;
+        imported++;
+        copies += qty;
+      }
+    });
     if (mounted) {
       setState(() {
         _working = false;

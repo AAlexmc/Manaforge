@@ -299,8 +299,7 @@ class CollectionStore extends ChangeNotifier {
     String? currency,
   }) {
     if (!_recordPurchase(base, qty, perCopy, currency)) return;
-    notifyListeners();
-    _save();
+    _notifyAndSave();
   }
 
   /// La cuenta, sin avisar a nadie. Aparte para que importar un CSV no dé
@@ -439,6 +438,42 @@ class CollectionStore extends ChangeNotifier {
     if (ok) notifyListeners();
   }
 
+  /// Lotes de importación en curso (contador: un lote anidado no puede
+  /// "cerrar" el de fuera). Dentro de un lote los cambios NO avisan uno a
+  /// uno: cada aviso hace que TODAS las pantallas vivas del IndexedStack
+  /// (Inicio, Mercado, Álbum, Colección) recalculen contra la base de
+  /// cartas; por fila del CSV eso era O(n²) y 308 cartas = minutos.
+  int _lotes = 0;
+  bool _loteSucio = false;
+
+  /// Corre [fn] (los `add()`/`clear()` del importador) difiriendo los
+  /// avisos: al terminar — también si [fn] revienta a mitad — avisa UNA
+  /// vez, solo si algo cambió. El GUARDADO no se difiere: la cola de
+  /// [_save] ya coalesce escrituras, y cortar la importación a mitad
+  /// (cerrar la ventana, apagón) no debe perder lo ya importado.
+  Future<T> importBatch<T>(Future<T> Function() fn) async {
+    _lotes++;
+    try {
+      return await fn();
+    } finally {
+      _lotes--;
+      if (_lotes == 0 && _loteSucio) {
+        _loteSucio = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  /// Todo cambio de colección sale por aquí: en lote guarda pero calla.
+  void _notifyAndSave() {
+    _save();
+    if (_lotes > 0) {
+      _loteSucio = true;
+      return;
+    }
+    notifyListeners();
+  }
+
   /// Cola de escrituras: importar un CSV llama a `add()` una vez por carta,
   /// y cientos de `writeAsString` a la vez sobre el MISMO fichero se pisan
   /// entre ellas (colección corrupta o a medias).
@@ -527,8 +562,7 @@ class CollectionStore extends ChangeNotifier {
           paidPerCopy,
           paidCurrency);
     }
-    notifyListeners();
-    _save();
+    _notifyAndSave();
   }
 
   /// Rellena el mapa impresión -> carta para las colecciones importadas
@@ -554,8 +588,7 @@ class CollectionStore extends ChangeNotifier {
     _foils.clear();
     _printingOwner.clear();
     _paid.clear();
-    notifyListeners();
-    _save();
+    _notifyAndSave();
   }
 
   /// Cambia la cantidad; a 0 la elimina.
@@ -585,8 +618,7 @@ class CollectionStore extends ChangeNotifier {
       _restorePrintings(oracleId, after - before);
     }
     _trimPrintings(oracleId, after);
-    notifyListeners();
-    _save();
+    _notifyAndSave();
   }
 
   /// Deja apuntadas como mucho [qty] copias compradas de [oracleId]: vender
