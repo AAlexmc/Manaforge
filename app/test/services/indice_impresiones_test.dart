@@ -102,6 +102,21 @@ void main() {
     expect(await db.isReady(), isFalse);
   });
 
+  test('crear el índice NO cambia el mtime de la base', () async {
+    // downloadedAt() (frescura de la base, kCardsMaxAgeDays) ES el mtime
+    // del fichero: si crearlo lo pusiera a "ahora", el arranque de la
+    // migración daría la base por al día y se saltaría la descarga
+    final dir = _dbSinIndice();
+    final file = File(p.join(dir.path, 'manaforge_cards.sqlite'));
+    final antes = DateTime(2026, 7, 20, 12, 0, 0);
+    file.setLastModifiedSync(antes);
+    final db = CardDatabase(dataDir: dir);
+    await db.byScryfallId('s1');
+    db.close();
+    expect(_tieneIndice(dir), isTrue);
+    expect(file.lastModifiedSync(), antes);
+  });
+
   test('abrir dos veces no duplica ni revienta (IF NOT EXISTS)', () async {
     final dir = _dbSinIndice();
     final db = CardDatabase(dataDir: dir);

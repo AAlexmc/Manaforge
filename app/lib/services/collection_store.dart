@@ -438,38 +438,40 @@ class CollectionStore extends ChangeNotifier {
     if (ok) notifyListeners();
   }
 
-  /// Lote de importación en curso: los cambios de dentro no avisan (ni
-  /// guardan) uno a uno. Cada aviso hace que TODAS las pantallas vivas del
-  /// IndexedStack (Inicio, Mercado, Álbum, Colección) recalculen contra la
-  /// base de cartas; por fila del CSV eso era O(n²) y 308 cartas = minutos.
-  bool _enLote = false;
+  /// Lotes de importación en curso (contador: un lote anidado no puede
+  /// "cerrar" el de fuera). Dentro de un lote los cambios NO avisan uno a
+  /// uno: cada aviso hace que TODAS las pantallas vivas del IndexedStack
+  /// (Inicio, Mercado, Álbum, Colección) recalculen contra la base de
+  /// cartas; por fila del CSV eso era O(n²) y 308 cartas = minutos.
+  int _lotes = 0;
   bool _loteSucio = false;
 
-  /// Corre [fn] (los `add()`/`clear()` del importador) sin avisar a nadie,
-  /// y al terminar — también si [fn] revienta a mitad — avisa y guarda UNA
-  /// vez, solo si algo cambió.
+  /// Corre [fn] (los `add()`/`clear()` del importador) difiriendo los
+  /// avisos: al terminar — también si [fn] revienta a mitad — avisa UNA
+  /// vez, solo si algo cambió. El GUARDADO no se difiere: la cola de
+  /// [_save] ya coalesce escrituras, y cortar la importación a mitad
+  /// (cerrar la ventana, apagón) no debe perder lo ya importado.
   Future<T> importBatch<T>(Future<T> Function() fn) async {
-    _enLote = true;
+    _lotes++;
     try {
       return await fn();
     } finally {
-      _enLote = false;
-      if (_loteSucio) {
+      _lotes--;
+      if (_lotes == 0 && _loteSucio) {
         _loteSucio = false;
         notifyListeners();
-        _save();
       }
     }
   }
 
-  /// Todo cambio de colección sale por aquí: en lote se apunta y calla.
+  /// Todo cambio de colección sale por aquí: en lote guarda pero calla.
   void _notifyAndSave() {
-    if (_enLote) {
+    _save();
+    if (_lotes > 0) {
       _loteSucio = true;
       return;
     }
     notifyListeners();
-    _save();
   }
 
   /// Cola de escrituras: importar un CSV llama a `add()` una vez por carta,

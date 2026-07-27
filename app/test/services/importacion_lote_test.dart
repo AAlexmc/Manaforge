@@ -5,8 +5,12 @@
 /// de dentro no avisan y al cerrar el lote sale UN solo aviso (y guardado).
 library;
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/collection_store.dart';
+import 'package:path/path.dart' as p;
 
 OwnedCard _carta(String id) =>
     OwnedCard(oracleId: id, name: id, colors: '', qty: 1);
@@ -71,5 +75,41 @@ void main() {
     final store = CollectionStore();
     final n = await store.importBatch(() async => 42);
     expect(n, 42);
+  });
+
+  test('el disco NO espera al lote: cortar a mitad no pierde lo importado',
+      () async {
+    // cerrar la ventana (o un apagón) a mitad de un CSV de 5000 filas
+    // tiene que dejar en disco lo ya procesado, como pasaba antes del lote
+    final dir = Directory.systemTemp.createTempSync('mf-lote-disco');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final store = CollectionStore(dataDir: dir);
+    await store.importBatch(() async {
+      store.add(_carta('o1'));
+      await store.pendingSave; // la escritura encolada, sin cerrar el lote
+      final file = File(p.join(dir.path, 'collection.json'));
+      expect(file.existsSync(), isTrue,
+          reason: 'a mitad de lote ya tiene que haber colección en disco');
+      final cards =
+          (jsonDecode(file.readAsStringSync()) as Map)['cards'] as List;
+      expect(cards, hasLength(1));
+    });
+  });
+
+  test('un lote anidado no cierra el de fuera', () async {
+    final store = CollectionStore();
+    var avisos = 0;
+    store.addListener(() => avisos++);
+    await store.importBatch(() async {
+      store.add(_carta('o1'));
+      await store.importBatch(() async {
+        store.add(_carta('o2'));
+      });
+      expect(avisos, 0,
+          reason: 'el lote interior no debe soltar los avisos del exterior');
+      store.add(_carta('o3'));
+    });
+    expect(avisos, 1);
+    expect(store.cards.length, 3);
   });
 }
