@@ -41,6 +41,28 @@ void main() {
     expect(kTours.first.id, 'welcome');
   });
 
+  test('el primer arranque lanza la vuelta COMPLETA, no la rápida', () {
+    // pedido de Ale (27-07): quien acaba de instalar la app debe ver la
+    // vuelta entera, no las 5 burbujas de la barra
+    final pantallas = kTourPrimerArranque
+        .build(t, TourKeys())
+        .map((s) => s.goToScreen)
+        .whereType<int>()
+        .toSet();
+    expect(pantallas, {0, 1, 2, 3, 4, 5, 6},
+        reason: 'tiene que pasar por TODAS las pestañas');
+  });
+
+  test('el tour del primer arranque NO enciende la cámara', () {
+    // el tour full entra al escáner (push) y eso monta LiveScanScreen, que
+    // ENCIENDE la cámara y dispara el permiso del sistema: inaceptable en
+    // el minuto 1 tras instalar una app que presume de privacidad. El
+    // botón de Escanear en la barra sí se enseña.
+    final pasos = kTourPrimerArranque.build(t, TourKeys());
+    expect(pasos.any((s) => s.push == TourPush.escaner), isFalse);
+    expect(pasos.any((s) => s.navBarIndex != null), isTrue);
+  });
+
   test('los ids no se repiten (el menú los usa como identidad)', () {
     final ids = kTours.map((t) => t.id).toList();
     expect(ids.toSet().length, ids.length, reason: 'ids repetidos: $ids');

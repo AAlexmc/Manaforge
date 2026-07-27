@@ -402,7 +402,8 @@ class _HomeShellState extends State<HomeShell> {
     if (!mounted) return;
     await _onboarding.load();
     if (!mounted || _onboarding.seen) return;
-    _lanzarTour(kTours.first);
+    // la vuelta completa, no las 5 burbujas: pedido expreso (27-07)
+    _lanzarTour(kTourPrimerArranque);
   }
 
   @override
