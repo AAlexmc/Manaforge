@@ -62,6 +62,10 @@ CREATE TABLE printings (
 );
 CREATE INDEX idx_printings_oracle ON printings(oracle_id);
 CREATE INDEX idx_printings_printed_name ON printings(printed_name);
+-- precios/datos "por impresión" filtran por (set_code, collector_number):
+-- sin este índice son full scans (la app lo crea igual al abrir, pero
+-- mejor que la base ya venga con él)
+CREATE INDEX idx_printings_set_num ON printings(set_code, collector_number);
 """
 
 

@@ -185,6 +185,28 @@ class CardDatabase {
     }
   }
 
+  /// Las bases publicadas hasta la v5 vienen SIN este índice, y todas las
+  /// consultas de precios/datos "por impresión" (Inicio, Mercado, logros)
+  /// filtran por (set_code, collector_number): sin él son full scans de
+  /// ~110k filas, y durante una importación (que recalcula la valoración
+  /// con la colección creciendo) eso es O(n²) — 308 cartas eran minutos.
+  /// Se crea aquí porque arregla también las bases YA descargadas, sin
+  /// esperar a que el usuario re-descargue.
+  void _ensureIndexes(String path) {
+    try {
+      final rw = sqlite3.open(path); // la única apertura con escritura
+      try {
+        rw.execute('CREATE INDEX IF NOT EXISTS idx_printings_set_num '
+            'ON printings(set_code, collector_number)');
+      } finally {
+        rw.dispose();
+      }
+    } catch (_) {
+      // solo es rendimiento: sin permiso de escritura (o base rara) la app
+      // sigue en solo-lectura, lenta pero entera
+    }
+  }
+
   Future<Database> _open() async {
     // reintenta si un close() (re-descarga) pisa la apertura a mitad: el
     // handle recién abierto se suelta para no bloquear el rename, y a la
@@ -194,6 +216,7 @@ class CardDatabase {
       if (cached != null) return cached;
       final gen = _cierres;
       final file = await _dbFile();
+      _ensureIndexes(file.path);
       final db = sqlite3.open(file.path, mode: OpenMode.readOnly);
       if (gen == _cierres || intento >= 10) {
         _db = db;
