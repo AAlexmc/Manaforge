@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — Scansiona la tua collezione. Forgia mazzi con le carte che hai già." width="100%">
+  <img src="../assets/banner.svg" alt="ManaForge — Scansiona la tua collezione. Forgia mazzi con le carte che hai già." width="100%">
 </p>
 
-<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <b>🇮🇹 Italiano</b> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
+<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="../../README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <b>🇮🇹 Italiano</b> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="Database delle carte"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="Licenza PolyForm Noncommercial 1.0.0"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="Licenza PolyForm Noncommercial 1.0.0"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="Desktop multipiattaforma">
   <img src="https://img.shields.io/badge/price-0%20%E2%82%AC%20forever-E06A50?style=flat-square" alt="Gratis per sempre">
 </p>
@@ -26,7 +26,7 @@
 
 Ci siamo passati tutti: una scatola piena di carte uscite da bustine, mazzi introduttivi e cassetti ereditati… e nessuna idea di cosa costruirci. ManaForge è fatta da giocatori, per giocatori: **gratuita, senza pubblicità, senza premium, senza account, e con tutto il codice alla luce del sole.**
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="forge"></a>
 ## ⚒️ Forge: il generatore di mazzi
@@ -34,7 +34,7 @@ Ci siamo passati tutti: una scatola piena di carte uscite da bustine, mazzi intr
 Gli consegni la tua collezione e ti restituisce **mazzi completi da 60 carte**, costruiti come li costruirebbe un giocatore veterano. Ecco come ragiona:
 
 <p align="center">
-  <img src="docs/assets/forge-flow.svg" alt="Collezione → Sinergie → Curva di mana → Validatore → Mazzi con piano di gioco" width="100%">
+  <img src="../assets/forge-flow.svg" alt="Collezione → Sinergie → Curva di mana → Validatore → Mazzi con piano di gioco" width="100%">
 </p>
 
 - 🏔️ **Una curva di mana come si deve** — terre in base all'archetipo, fonti ripartite per simboli di colore, curva validata. Niente mazzi con 15 terre da queste parti.
@@ -51,7 +51,7 @@ Gli consegni la tua collezione e ti restituisce **mazzi completi da 60 carte**, 
 </p>
 <p align="center"><sub><i>La collezione vera da cui è nata ManaForge — il generatore ha trasformato queste carte (e altre 280) in cinque mazzi giocabili.</i></sub></p>
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="features"></a>
 ## ✨ Cosa fa oggi
@@ -124,12 +124,12 @@ I wrapper nativi per Linux, Windows e macOS più il `pubspec.lock` sono nel repo
 
 | Cartella | Cosa ci vive |
 |---|---|
-| [`app/`](app) | L'app Flutter — un unico codice per Windows, macOS e Linux (e un giorno mobile) |
-| [`forge_engine/`](forge_engine) | Il motore dei mazzi in Dart: curva, validatore, classificatore e generatore |
-| [`engine-reference/`](engine-reference) | Lo stesso motore in Python: il **riferimento canonico e testato** dell'algoritmo |
-| [`scripts/`](scripts) | Pipeline dei dati: bulk di Scryfall → SQLite, eseguita solo su GitHub Actions |
-| [`DesignSystem/`](DesignSystem) | Token di design, icone di mana in SVG e specifiche dei componenti |
-| [`docs/`](docs) | Architettura dei dati, l'algoritmo di Forge e il design dello scanner |
+| [`app/`](../../app) | L'app Flutter — un unico codice per Windows, macOS e Linux (e un giorno mobile) |
+| [`forge_engine/`](../../forge_engine) | Il motore dei mazzi in Dart: curva, validatore, classificatore e generatore |
+| [`engine-reference/`](../../engine-reference) | Lo stesso motore in Python: il **riferimento canonico e testato** dell'algoritmo |
+| [`scripts/`](../../scripts) | Pipeline dei dati: bulk di Scryfall → SQLite, eseguita solo su GitHub Actions |
+| [`DesignSystem/`](../../DesignSystem) | Token di design, icone di mana in SVG e specifiche dei componenti |
+| [`docs/`](../../docs) | Architettura dei dati, l'algoritmo di Forge e il design dello scanner |
 
 Due decisioni definiscono il progetto. Uno: **il motore esiste due volte** — Python come specifica eseguibile e testata, Dart come implementazione che gira nell'app; se divergono, vince Python. Due: **il database si costruisce da solo** — un workflow scarica il bulk di Scryfall ogni mese e pubblica la SQLite come [release](https://github.com/AAlexmc/Manaforge/releases/tag/card-db-latest), che l'app scarica al primo avvio.
 
@@ -148,7 +148,7 @@ cd app && flutter test                            # test dell'app
 - [x] **Fase 4 — App v0.2**: collezione con ricerca ES/EN, importatore CSV, Forge con carosello e piano di gioco
 - [x] **Fase 5 — Desktop di prima classe**: build automatiche Windows/macOS/Linux nelle Releases, mazzi salvati, scorciatoie da tastiera e una finestra che ricorda il suo posto
 - [x] **Fase 6 — Rifiniture**: prezzi e valore della collezione, P&L d'acquisto, legalità per formato e **10 lingue complete**
-- [x] **Fase 7 — Scanner**: impronte percettive generate in CI + webcam/foto, 100 % sul dispositivo ([come funziona dentro](docs/reconocimiento-cartas.md))
+- [x] **Fase 7 — Scanner**: impronte percettive generate in CI + webcam/foto, 100 % sul dispositivo ([come funziona dentro](../reconocimiento-cartas.md))
 - [x] **Fase 7½ — Forge v2**: manabase probabilistica, punteggio di consistenza e curva, temi tribali/reanimator, selettore di stile, forgia profonda e nomi delle carte in spagnolo
 - [ ] **Fase 8 — Scambi e comunità**: scambi tra collezioni più tutto quello che chiede la [cassetta dei suggerimenti](https://github.com/AAlexmc/Manaforge/issues/new/choose)
 - [ ] **Fase 9 — Mobile (se la comunità lo chiede)**: Android e iOS/TestFlight — il codice è pronto; mancano solo gli account degli store
@@ -175,7 +175,7 @@ ManaForge è gratuita e senza pubblicità, e resterà così (la [licenza](#licen
 
 E se il tuo mana è tutto TAPpato, il modo migliore di sostenere il progetto è usarlo, raccontarmi cosa miglioreresti nella [cassetta dei suggerimenti](https://github.com/AAlexmc/Manaforge/issues/new/choose) e lasciare una ⭐ al repo — le stelle non si scartano a fine turno.
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 ## 🙏 Crediti e note legali
 
@@ -184,7 +184,7 @@ I dati e le immagini delle carte vengono da [Scryfall](https://scryfall.com), a 
 <a id="license"></a>
 ## 📄 Licenza
 
-[PolyForm Noncommercial 1.0.0](LICENSE). In parole povere:
+[PolyForm Noncommercial 1.0.0](../../LICENSE). In parole povere:
 
 - **Puoi** usarla, copiarla, modificarla, condividerla e pubblicare le tue versioni, all'unica condizione di passare la licenza insieme al codice.
 - **Non puoi** venderla né usarla per fare soldi: niente far pagare l'app o una versione modificata, niente includerla in un prodotto o servizio a pagamento, niente usarla dentro un'azienda per la sua attività commerciale.
@@ -196,9 +196,9 @@ Occhio: una licenza con restrizione non commerciale **non** è «open source» n
 
 <p align="center">
   <sub>Fatto con ❤️ e tanto mana da giocatori da tavolo di cucina</sub><br/><br/>
-  <img src="DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
-  <img src="DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
-  <img src="DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
-  <img src="DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
-  <img src="DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
+  <img src="../../DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
+  <img src="../../DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
+  <img src="../../DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
+  <img src="../../DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
+  <img src="../../DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
 </p>

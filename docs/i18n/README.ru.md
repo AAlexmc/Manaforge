@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — Отсканируй свою коллекцию. Куй колоды из карт, которые у тебя уже есть." width="100%">
+  <img src="../assets/banner.svg" alt="ManaForge — Отсканируй свою коллекцию. Куй колоды из карт, которые у тебя уже есть." width="100%">
 </p>
 
-<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <b>🇷🇺 Русский</b> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
+<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="../../README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <b>🇷🇺 Русский</b> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="База данных карт"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="Лицензия PolyForm Noncommercial 1.0.0"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="Лицензия PolyForm Noncommercial 1.0.0"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="Кроссплатформенный десктоп">
   <img src="https://img.shields.io/badge/price-0%20%E2%82%AC%20forever-E06A50?style=flat-square" alt="Бесплатно навсегда">
 </p>
@@ -26,7 +26,7 @@
 
 Все мы через это проходили: коробка, набитая картами из бустеров, стартовых колод и доставшихся по наследству ящиков… и ни малейшего понятия, что из всего этого собрать. ManaForge сделан игроками для игроков: **бесплатно, без рекламы, без премиума, без аккаунтов и с полностью открытым кодом.**
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="forge"></a>
 ## ⚒️ Forge: генератор колод
@@ -34,7 +34,7 @@
 Отдайте ему свою коллекцию — и он вернёт **полные колоды из 60 карт**, собранные так, как собрал бы их бывалый игрок. Вот как он думает:
 
 <p align="center">
-  <img src="docs/assets/forge-flow.svg" alt="Коллекция → Синергии → Мана-кривая → Валидатор → Колоды с планом игры" width="100%">
+  <img src="../assets/forge-flow.svg" alt="Коллекция → Синергии → Мана-кривая → Валидатор → Колоды с планом игры" width="100%">
 </p>
 
 - 🏔️ **Правильная мана-кривая** — земли под архетип, источники распределены по цветовым символам, кривая проверена. Никаких колод с 15 землями.
@@ -51,7 +51,7 @@
 </p>
 <p align="center"><sub><i>Настоящая коллекция, с которой родился ManaForge — генератор превратил эти карты (и ещё 280) в пять играбельных колод.</i></sub></p>
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="features"></a>
 ## ✨ Что умеет уже сегодня
@@ -124,12 +124,12 @@ flutter run -d linux     # или -d windows / -d macos
 
 | Папка | Что там живёт |
 |---|---|
-| [`app/`](app) | Flutter-приложение — одна кодовая база для Windows, macOS и Linux (а однажды и для мобильных) |
-| [`forge_engine/`](forge_engine) | Движок колод на Dart: кривая, валидатор, классификатор и генератор |
-| [`engine-reference/`](engine-reference) | Тот же движок на Python: **каноничный, покрытый тестами эталон** алгоритма |
-| [`scripts/`](scripts) | Пайплайн данных: bulk Scryfall → SQLite, выполняется только в GitHub Actions |
-| [`DesignSystem/`](DesignSystem) | Дизайн-токены, SVG-иконки маны и спецификации компонентов |
-| [`docs/`](docs) | Архитектура данных, алгоритм Forge и устройство сканера |
+| [`app/`](../../app) | Flutter-приложение — одна кодовая база для Windows, macOS и Linux (а однажды и для мобильных) |
+| [`forge_engine/`](../../forge_engine) | Движок колод на Dart: кривая, валидатор, классификатор и генератор |
+| [`engine-reference/`](../../engine-reference) | Тот же движок на Python: **каноничный, покрытый тестами эталон** алгоритма |
+| [`scripts/`](../../scripts) | Пайплайн данных: bulk Scryfall → SQLite, выполняется только в GitHub Actions |
+| [`DesignSystem/`](../../DesignSystem) | Дизайн-токены, SVG-иконки маны и спецификации компонентов |
+| [`docs/`](../../docs) | Архитектура данных, алгоритм Forge и устройство сканера |
 
 Проект определяют два решения. Первое: **движок существует в двух экземплярах** — Python как исполняемая спецификация с тестами, Dart как реализация, которая едет в приложении; при расхождении прав Python. Второе: **база данных собирает себя сама** — workflow ежемесячно скачивает bulk Scryfall и публикует SQLite как [релиз](https://github.com/AAlexmc/Manaforge/releases/tag/card-db-latest), который приложение забирает при первом запуске.
 
@@ -148,7 +148,7 @@ cd app && flutter test                            # тесты приложен�
 - [x] **Фаза 4 — Приложение v0.2**: коллекция с поиском ES/EN, импорт CSV, Forge с каруселью и планом игры
 - [x] **Фаза 5 — Полноценный десктоп**: автоматические сборки Windows/macOS/Linux в Releases, сохранение колод, горячие клавиши и окно, помнящее своё место
 - [x] **Фаза 6 — Шлифовка**: цены и стоимость коллекции, P&L покупок, легальность по форматам и **10 полных языков**
-- [x] **Фаза 7 — Сканер**: перцептивные отпечатки, генерируемые в CI + веб-камера/фото, 100 % на устройстве ([как это работает изнутри](docs/reconocimiento-cartas.md))
+- [x] **Фаза 7 — Сканер**: перцептивные отпечатки, генерируемые в CI + веб-камера/фото, 100 % на устройстве ([как это работает изнутри](../reconocimiento-cartas.md))
 - [x] **Фаза 7½ — Forge v2**: вероятностная манабаза, оценка по стабильности и кривой, племенные темы и реаниматор, селектор стиля, глубокая ковка и испанские названия карт
 - [ ] **Фаза 8 — Обмены и сообщество**: обмены между коллекциями плюс всё, что попросит [ящик предложений](https://github.com/AAlexmc/Manaforge/issues/new/choose)
 - [ ] **Фаза 9 — Мобильные (если попросит сообщество)**: Android и iOS/TestFlight — код готов; не хватает только аккаунтов в магазинах приложений
@@ -175,7 +175,7 @@ ManaForge бесплатен и без рекламы, и так оно и ос�
 
 А если вся ваша мана уже повёрнута, лучший способ поддержать проект — пользоваться им, рассказать, что бы вы улучшили, в [ящике предложений](https://github.com/AAlexmc/Manaforge/issues/new/choose) и поставить репозиторию ⭐ — звёзды не сбрасываются в конце хода.
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 ## 🙏 Благодарности и юридическое
 
@@ -184,7 +184,7 @@ ManaForge бесплатен и без рекламы, и так оно и ос�
 <a id="license"></a>
 ## 📄 Лицензия
 
-[PolyForm Noncommercial 1.0.0](LICENSE). Простыми словами:
+[PolyForm Noncommercial 1.0.0](../../LICENSE). Простыми словами:
 
 - **Можно** использовать, копировать, изменять, делиться и публиковать свои версии — с единственным условием: передавать лицензию вместе с кодом.
 - **Нельзя** продавать его или зарабатывать на нём: ни брать деньги за приложение или изменённую версию, ни включать его в платный продукт или сервис, ни использовать внутри бизнеса для его коммерческой деятельности.
@@ -196,9 +196,9 @@ ManaForge бесплатен и без рекламы, и так оно и ос�
 
 <p align="center">
   <sub>Сделано с ❤️ и кучей маны игроками за кухонным столом</sub><br/><br/>
-  <img src="DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
-  <img src="DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
-  <img src="DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
-  <img src="DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
-  <img src="DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
+  <img src="../../DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
+  <img src="../../DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
+  <img src="../../DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
+  <img src="../../DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
+  <img src="../../DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
 </p>

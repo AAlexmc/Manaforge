@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — Scanne ta collection. Forge des decks avec les cartes que tu possèdes déjà." width="100%">
+  <img src="../assets/banner.svg" alt="ManaForge — Scanne ta collection. Forge des decks avec les cartes que tu possèdes déjà." width="100%">
 </p>
 
-<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <b>🇫🇷 Français</b> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
+<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="../../README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <b>🇫🇷 Français</b> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="Base de données de cartes"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="Licence PolyForm Noncommercial 1.0.0"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="Licence PolyForm Noncommercial 1.0.0"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="Desktop multiplateforme">
   <img src="https://img.shields.io/badge/price-0%20%E2%82%AC%20forever-E06A50?style=flat-square" alt="Gratuit pour toujours">
 </p>
@@ -26,7 +26,7 @@
 
 On est tous passés par là : une boîte pleine de cartes issues de boosters, de decks de démarrage et de tiroirs hérités… et aucune idée de quoi construire avec. ManaForge est faite par des joueurs, pour des joueurs : **gratuite, sans pub, sans premium, sans compte, et avec tout le code à découvert.**
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="forge"></a>
 ## ⚒️ Forge : le générateur de decks
@@ -34,7 +34,7 @@ On est tous passés par là : une boîte pleine de cartes issues de boosters, de
 Tu lui donnes ta collection et il te rend **des decks complets de 60 cartes**, construits comme le ferait un joueur vétéran. Voilà comment il réfléchit :
 
 <p align="center">
-  <img src="docs/assets/forge-flow.svg" alt="Collection → Synergies → Courbe de mana → Validateur → Decks avec un plan de jeu" width="100%">
+  <img src="../assets/forge-flow.svg" alt="Collection → Synergies → Courbe de mana → Validateur → Decks avec un plan de jeu" width="100%">
 </p>
 
 - 🏔️ **Une vraie courbe de mana** — terrains selon l'archétype, sources réparties par symboles de couleur, courbe validée. Pas de decks à 15 terrains ici.
@@ -51,7 +51,7 @@ Tu lui donnes ta collection et il te rend **des decks complets de 60 cartes**, c
 </p>
 <p align="center"><sub><i>La vraie collection qui a vu naître ManaForge — le générateur a transformé ces cartes (et 280 autres) en cinq decks jouables.</i></sub></p>
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="features"></a>
 ## ✨ Ce qu'elle fait aujourd'hui
@@ -124,12 +124,12 @@ Les wrappers natifs Linux, Windows et macOS ainsi que le `pubspec.lock` sont dan
 
 | Dossier | Ce qui vit là |
 |---|---|
-| [`app/`](app) | L'appli Flutter — un seul code pour Windows, macOS et Linux (et le mobile un de ces jours) |
-| [`forge_engine/`](forge_engine) | Le moteur de decks en Dart : courbe, validateur, classificateur et générateur |
-| [`engine-reference/`](engine-reference) | Le même moteur en Python : la **référence canonique et testée** de l'algorithme |
-| [`scripts/`](scripts) | Pipeline de données : bulk Scryfall → SQLite, exécuté uniquement sur GitHub Actions |
-| [`DesignSystem/`](DesignSystem) | Tokens de design, icônes de mana en SVG et spécifications de composants |
-| [`docs/`](docs) | Architecture des données, algorithme de Forge et conception du scanner |
+| [`app/`](../../app) | L'appli Flutter — un seul code pour Windows, macOS et Linux (et le mobile un de ces jours) |
+| [`forge_engine/`](../../forge_engine) | Le moteur de decks en Dart : courbe, validateur, classificateur et générateur |
+| [`engine-reference/`](../../engine-reference) | Le même moteur en Python : la **référence canonique et testée** de l'algorithme |
+| [`scripts/`](../../scripts) | Pipeline de données : bulk Scryfall → SQLite, exécuté uniquement sur GitHub Actions |
+| [`DesignSystem/`](../../DesignSystem) | Tokens de design, icônes de mana en SVG et spécifications de composants |
+| [`docs/`](../../docs) | Architecture des données, algorithme de Forge et conception du scanner |
 
 Deux décisions définissent le projet. Un : **le moteur existe en double** — Python comme spécification exécutable et testée, Dart comme implémentation embarquée dans l'appli ; s'ils divergent, c'est Python qui a raison. Deux : **la base de données se construit toute seule** — un workflow télécharge le bulk Scryfall chaque mois et publie la SQLite comme [release](https://github.com/AAlexmc/Manaforge/releases/tag/card-db-latest), que l'appli récupère au premier lancement.
 
@@ -148,7 +148,7 @@ cd app && flutter test                            # tests de l'appli
 - [x] **Phase 4 — App v0.2** : collection avec recherche ES/EN, importateur CSV, Forge avec carrousel et plan de jeu
 - [x] **Phase 5 — Desktop de première classe** : builds automatiques Windows/macOS/Linux dans les Releases, decks sauvegardés, raccourcis clavier et une fenêtre qui se souvient de sa place
 - [x] **Phase 6 — Finitions** : prix et valeur de la collection, P&L d'achat, légalités par format et **10 langues complètes**
-- [x] **Phase 7 — Scanner** : empreintes perceptuelles générées en CI + webcam/photo, 100 % sur ton appareil ([comment ça marche à l'intérieur](docs/reconocimiento-cartas.md))
+- [x] **Phase 7 — Scanner** : empreintes perceptuelles générées en CI + webcam/photo, 100 % sur ton appareil ([comment ça marche à l'intérieur](../reconocimiento-cartas.md))
 - [x] **Phase 7½ — Forge v2** : manabase probabiliste, score consistance-et-courbe, thèmes tribal/réanimation, sélecteur de style, forge profonde et noms de cartes en espagnol
 - [ ] **Phase 8 — Échanges et communauté** : trocs entre collections, plus tout ce que demandera la [boîte à idées](https://github.com/AAlexmc/Manaforge/issues/new/choose)
 - [ ] **Phase 9 — Mobile (si la communauté le réclame)** : Android et iOS/TestFlight — le code est prêt ; il ne manque que les comptes des stores
@@ -175,7 +175,7 @@ ManaForge est gratuite et sans pub, et ça va le rester (la [licence](#license) 
 
 Et si ton mana est déjà engagé, la meilleure façon de soutenir le projet, c'est de l'utiliser, de me dire ce que tu améliorerais dans la [boîte à idées](https://github.com/AAlexmc/Manaforge/issues/new/choose) et de mettre une ⭐ au repo — les étoiles ne se défaussent pas à la fin du tour.
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 ## 🙏 Crédits et mentions légales
 
@@ -184,7 +184,7 @@ Les données et les images des cartes viennent de [Scryfall](https://scryfall.co
 <a id="license"></a>
 ## 📄 Licence
 
-[PolyForm Noncommercial 1.0.0](LICENSE). En clair :
+[PolyForm Noncommercial 1.0.0](../../LICENSE). En clair :
 
 - **Tu peux** l'utiliser, la copier, la modifier, la partager et publier tes propres versions, à la seule condition de transmettre la licence avec le code.
 - **Tu ne peux pas** la vendre ni t'en servir pour gagner de l'argent : pas question de faire payer l'appli ou une version modifiée, de l'embarquer dans un produit ou un service payant, ni de l'utiliser au sein d'une entreprise pour son activité commerciale.
@@ -196,9 +196,9 @@ Attention : une licence avec restriction non commerciale n'est **pas** « open s
 
 <p align="center">
   <sub>Fait avec ❤️ et beaucoup de mana par des joueurs de table de cuisine</sub><br/><br/>
-  <img src="DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
-  <img src="DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
-  <img src="DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
-  <img src="DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
-  <img src="DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
+  <img src="../../DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
+  <img src="../../DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
+  <img src="../../DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
+  <img src="../../DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
+  <img src="../../DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
 </p>

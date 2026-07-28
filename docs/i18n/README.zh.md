@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — 扫描你的收藏，用你已经拥有的牌锻造套牌。" width="100%">
+  <img src="../assets/banner.svg" alt="ManaForge — 扫描你的收藏，用你已经拥有的牌锻造套牌。" width="100%">
 </p>
 
-<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <b>🇨🇳 中文</b> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
+<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="../../README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <b>🇨🇳 中文</b> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="牌张数据库"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 许可证"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 许可证"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="跨平台桌面应用">
   <img src="https://img.shields.io/badge/price-0%20%E2%82%AC%20forever-E06A50?style=flat-square" alt="永久免费">
 </p>
@@ -26,7 +26,7 @@
 
 谁都经历过：一箱子来自补充包、新手套牌和亲戚抽屉的牌……却完全不知道能拿它们组什么。ManaForge 由玩家打造、为玩家服务：**免费、无广告、无付费内容、无账号，全部代码公开可查。**
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="forge"></a>
 ## ⚒️ Forge：套牌生成器
@@ -34,7 +34,7 @@
 把收藏交给它，它还你**完整的 60 张套牌**，组法和老玩家如出一辙。它是这样思考的：
 
 <p align="center">
-  <img src="docs/assets/forge-flow.svg" alt="收藏 → 协同 → 法术力曲线 → 校验器 → 带对局计划的套牌" width="100%">
+  <img src="../assets/forge-flow.svg" alt="收藏 → 协同 → 法术力曲线 → 校验器 → 带对局计划的套牌" width="100%">
 </p>
 
 - 🏔️ **像样的法术力曲线** — 地牌数量按原型配置，法术力来源按颜色符号分配，曲线经过校验。这里没有 15 块地的套牌。
@@ -51,7 +51,7 @@
 </p>
 <p align="center"><sub><i>ManaForge 就诞生自这套真实收藏——生成器把这些牌（连同另外 280 张）变成了五套能上桌的套牌。</i></sub></p>
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="features"></a>
 ## ✨ 现在就能做什么
@@ -124,12 +124,12 @@ Linux、Windows 和 macOS 的原生外壳连同 `pubspec.lock` 都在仓库里�
 
 | 文件夹 | 里面住着什么 |
 |---|---|
-| [`app/`](app) | Flutter 应用——一套代码通吃 Windows、macOS 和 Linux（说不定哪天还有移动端） |
-| [`forge_engine/`](forge_engine) | Dart 版套牌引擎：曲线、校验器、分类器和生成器 |
-| [`engine-reference/`](engine-reference) | 同一引擎的 Python 版：算法**经过测试的规范参考** |
-| [`scripts/`](scripts) | 数据管线：Scryfall bulk → SQLite，只在 GitHub Actions 上运行 |
-| [`DesignSystem/`](DesignSystem) | 设计令牌、SVG 法术力图标和组件规格 |
-| [`docs/`](docs) | 数据架构、Forge 算法和扫描器设计 |
+| [`app/`](../../app) | Flutter 应用——一套代码通吃 Windows、macOS 和 Linux（说不定哪天还有移动端） |
+| [`forge_engine/`](../../forge_engine) | Dart 版套牌引擎：曲线、校验器、分类器和生成器 |
+| [`engine-reference/`](../../engine-reference) | 同一引擎的 Python 版：算法**经过测试的规范参考** |
+| [`scripts/`](../../scripts) | 数据管线：Scryfall bulk → SQLite，只在 GitHub Actions 上运行 |
+| [`DesignSystem/`](../../DesignSystem) | 设计令牌、SVG 法术力图标和组件规格 |
+| [`docs/`](../../docs) | 数据架构、Forge 算法和扫描器设计 |
 
 两个决定塑造了整个项目。其一：**引擎存在两份** —— Python 是可执行、带测试的规范，Dart 是随应用出货的实现；两者分歧时，以 Python 为准。其二：**数据库自己构建自己** —— 一个 workflow 每月下载 Scryfall bulk，并把 SQLite 发布为 [release](https://github.com/AAlexmc/Manaforge/releases/tag/card-db-latest)，应用首次启动时下载它。
 
@@ -148,7 +148,7 @@ cd app && flutter test                            # 应用测试
 - [x] **第 4 阶段 — 应用 v0.2**：支持西/英搜索的收藏、CSV 导入器、带轮播和对局计划的 Forge
 - [x] **第 5 阶段 — 一流桌面体验**：Releases 中的 Windows/macOS/Linux 自动构建、套牌保存、键盘快捷键和记住自己位置的窗口
 - [x] **第 6 阶段 — 打磨收尾**：价格与收藏估值、购入盈亏、各赛制合法性和 **10 种完整语言**
-- [x] **第 7 阶段 — 扫描器**：CI 生成的感知指纹 + 摄像头/照片，100 % 本机运行（[内部原理](docs/reconocimiento-cartas.md)）
+- [x] **第 7 阶段 — 扫描器**：CI 生成的感知指纹 + 摄像头/照片，100 % 本机运行（[内部原理](../reconocimiento-cartas.md)）
 - [x] **第 7½ 阶段 — Forge v2**：概率化地基、稳定性加曲线评分、部族/复生主题、风格选择器、深度锻造和西班牙语牌名
 - [ ] **第 8 阶段 — 交换与社区**：收藏之间的牌张交换，外加[意见箱](https://github.com/AAlexmc/Manaforge/issues/new/choose)里大家想要的一切
 - [ ] **第 9 阶段 — 移动端（如果社区想要）**：Android 和 iOS/TestFlight——代码已就绪，只差商店账号
@@ -175,7 +175,7 @@ ManaForge 免费且无广告，并且会一直如此（[许可证](#license)不�
 
 如果你的法术力已经全横置了，支持项目的最好方式就是使用它、到[意见箱](https://github.com/AAlexmc/Manaforge/issues/new/choose)说说你想改进什么，再给仓库一颗 ⭐——星星不会在回合结束时被弃掉。
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 ## 🙏 致谢与法律声明
 
@@ -184,7 +184,7 @@ ManaForge 免费且无广告，并且会一直如此（[许可证](#license)不�
 <a id="license"></a>
 ## 📄 许可证
 
-[PolyForm Noncommercial 1.0.0](LICENSE)。说人话就是：
+[PolyForm Noncommercial 1.0.0](../../LICENSE)。说人话就是：
 
 - **可以**使用、复制、修改、分享并发布你自己的版本，唯一条件是把许可证随代码一起传递。
 - **不可以**出售它或用它赚钱：不能对应用或其修改版收费，不能把它捆进付费产品或服务，也不能在企业里将其用于商业经营。
@@ -196,9 +196,9 @@ ManaForge 免费且无广告，并且会一直如此（[许可证](#license)不�
 
 <p align="center">
   <sub>由厨房餐桌旁的玩家们用 ❤️ 和大量法术力打造</sub><br/><br/>
-  <img src="DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
-  <img src="DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
-  <img src="DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
-  <img src="DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
-  <img src="DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
+  <img src="../../DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
+  <img src="../../DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
+  <img src="../../DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
+  <img src="../../DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
+  <img src="../../DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
 </p>
