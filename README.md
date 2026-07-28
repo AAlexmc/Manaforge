@@ -37,8 +37,8 @@ Todos hemos pasado por esto: una caja llena de cartas de sobres, mazos de inicio
   </a>
 </p>
 
-<p align="center"><i>Clic en la imagen: repaso rápido (2 min) de una colección ya en marcha — escáner, álbum, Forge, Test Mode y Mercado.<br>
-También: <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Tutorial.mp4">🎓 tutorial desde cero (4 min, ×2)</a> · <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Completo_x2.mp4">recorrido completo</a>.</i></p>
+<p align="center"><i>Clic en la imagen y <b>se descarga</b> el repaso rápido (2 min) de una colección ya en marcha — escáner, álbum, Forge, Test Mode y Mercado.<br>
+También para descargar: <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Tutorial.mp4">🎓 tutorial desde cero (4 min, ×2)</a> · <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Completo_x2.mp4">recorrido completo</a>.</i></p>
 
 <p align="center">
   <img src="docs/assets/tutorial-teaser.gif" width="720" alt="El escáner en vivo reconociendo una carta con la webcam">
