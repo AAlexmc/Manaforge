@@ -264,7 +264,7 @@ class _SetMarketScreenState extends State<SetMarketScreen> {
                           style: const TextStyle(fontSize: 11.5)),
                       const Spacer(),
                       Text(
-                          _market.todayColumn == null
+                          !_market.hasTodayPrice
                               ? t.smNoPerPrinting(_market.label)
                               : t.smListedValue(_market.label) +
                                   _euro(totalValue),

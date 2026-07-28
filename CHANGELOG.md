@@ -4,7 +4,7 @@ Historial de cambios de la app ManaForge. Formato basado en
 [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/); las versiones
 siguen [SemVer](https://semver.org/lang/es/) y cada una tiene su
 [Release en GitHub](https://github.com/AAlexmc/Manaforge/releases) con
-binarios y sumas SHA-256.
+binarios (y sumas SHA-256 desde la 0.3.0).
 
 ## [Sin publicar]
 
@@ -35,8 +35,8 @@ binarios y sumas SHA-256.
   temas tribales y reanimator, selector de estilo (24 tribus + temas
   mecánicos) y forja profunda (las propuestas juegan cientos de partidas
   entre sí antes de ordenarse).
-- **10 idiomas completos** y nombres de carta en español en mazos, buscador
-  y fichas.
+- **10 idiomas** (las cadenas más nuevas caen al español) y nombres de carta
+  en español en mazos, buscador y fichas.
 - **Tours guiados**: vuelta completa en el primer arranque y guías por tema
   en el menú "?".
 - **Precios y valor de colección**: valor total, joyas, P&L de compra,
@@ -44,7 +44,8 @@ binarios y sumas SHA-256.
 - **Apariencia**: fondo propio, colores de tarjetas/letra/pestañas/iconos con
   muestras guardadas y paleta de maná.
 - Calidad de vida: reset de fábrica con doble freno, copias de seguridad,
-  buzón de sugerencias, ventana que recuerda su sitio y atajos de teclado.
+  buzón de sugerencias y donativos desde Ajustes, ventana que recuerda su
+  sitio y atajos de teclado.
 
 ### Cambiado
 - Importar CSV pasa de minutos a segundos (índice + importación en lote).

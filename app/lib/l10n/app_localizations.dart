@@ -1350,11 +1350,11 @@ abstract class AppLocalizations {
   /// **' ({n} sin precio)'**
   String albWithoutPrice(int n);
 
-  /// No description provided for @albMarketNoToday.
+  /// No description provided for @albNoPerPrinting.
   ///
   /// In es, this message translates to:
-  /// **'{market} no publica precios por edición — cambia de mercado para verlos'**
-  String albMarketNoToday(String market);
+  /// **'{market} no publica precios por edición — elige otro en la pestaña Mercado'**
+  String albNoPerPrinting(String market);
 
   /// No description provided for @albVisibleOf.
   ///

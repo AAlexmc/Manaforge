@@ -743,8 +743,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String albMarketNoToday(String market) {
-    return '$market doesn\'t publish per-printing prices — switch markets to see them';
+  String albNoPerPrinting(String market) {
+    return '$market doesn\'t publish per-printing prices — pick another in the Market tab';
   }
 
   @override

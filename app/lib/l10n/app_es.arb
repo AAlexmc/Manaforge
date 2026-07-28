@@ -293,8 +293,8 @@
   "@albWithoutPrice": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "albMarketNoToday": "{market} no publica precios por edición — cambia de mercado para verlos",
-  "@albMarketNoToday": {
+  "albNoPerPrinting": "{market} no publica precios por edición — elige otro en la pestaña Mercado",
+  "@albNoPerPrinting": {
     "placeholders": { "market": { "type": "String" } }
   },
   "albVisibleOf": "{visibles} de {total}",

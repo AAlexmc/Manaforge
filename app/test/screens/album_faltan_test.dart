@@ -144,6 +144,16 @@ void main() {
       expect(s, isNot(contains('sin precio)')));
     });
 
+    test('con precio para todo, ni rastro de "(sin precio)"', () {
+      final todasConPrecio = [_c('1', price: 1.00), _c('2', price: 2.00)];
+      final s = missingSummary(
+          missingReport(todasConPrecio, qtyOf: (_) => 0, onlyBase: true),
+          Market.cardmarket,
+          es);
+
+      expect(s, 'Te faltan 2 · 3.00 €');
+    });
+
     test('completo es completo, publique precios el mercado o no', () {
       final s = missingSummary(
           missingReport(set, qtyOf: (_) => 1, onlyBase: true),

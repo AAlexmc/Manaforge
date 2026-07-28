@@ -286,9 +286,12 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "albWithoutPrice": " ({n} without a price)",
-  "albMarketNoToday": "{market} doesn't publish per-printing prices — switch markets to see them",
   "@albWithoutPrice": {
     "placeholders": { "n": { "type": "int" } }
+  },
+  "albNoPerPrinting": "{market} doesn't publish per-printing prices — pick another in the Market tab",
+  "@albNoPerPrinting": {
+    "placeholders": { "market": { "type": "String" } }
   },
   "albVisibleOf": "{visibles} of {total}",
   "@albVisibleOf": {

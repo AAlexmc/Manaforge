@@ -714,8 +714,8 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String albMarketNoToday(String market) {
-    return '$market no publica precios por edición — cambia de mercado para verlos';
+  String albNoPerPrinting(String market) {
+    return '$market no publica precios por edición — elige otro en la pestaña Mercado';
   }
 
   @override

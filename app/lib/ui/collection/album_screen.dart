@@ -740,7 +740,7 @@ MissingReport missingReport(List<AlbumCard> cards,
 String missingSummary(MissingReport r, Market market, AppLocalizations t) {
   if (r.missing == 0) return t.albYouHaveItAll;
   final head = t.albMissingCount(r.missing);
-  if (!market.hasTodayPrice) return head + t.albMarketNoToday(market.label);
+  if (!market.hasTodayPrice) return head + t.albNoPerPrinting(market.label);
   return head +
       formatMoney(r.total, market) +
       (r.withoutPrice > 0 ? t.albWithoutPrice(r.withoutPrice) : '');
