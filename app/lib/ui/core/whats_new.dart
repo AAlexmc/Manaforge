@@ -26,6 +26,15 @@ class VersionNews {
   });
 }
 
+String _headline031(AppLocalizations t) => t.wn031Headline;
+
+List<String> _bullets031(AppLocalizations t) => [
+      t.wn031Album,
+      t.wn031Forge,
+      t.wn031Home,
+      t.wn031Perf,
+    ];
+
 String _headline030(AppLocalizations t) => t.wn030Headline;
 
 List<String> _bullets030(AppLocalizations t) => [
@@ -44,6 +53,11 @@ List<String> _bullets030(AppLocalizations t) => [
 
 /// De la más nueva a la más vieja.
 const List<VersionNews> kWhatsNew = [
+  VersionNews(
+    version: '0.3.1',
+    headline: _headline031,
+    bullets: _bullets031,
+  ),
   VersionNews(
     version: '0.3.0',
     headline: _headline030,

@@ -2408,6 +2408,26 @@ class AppLocalizationsJa extends AppLocalizations {
   String get slLockButton => 'ロック';
 
   @override
+  String get wn031Headline =>
+      'Álbum que habla claro, Forge más cómodo y todo más fluido';
+
+  @override
+  String get wn031Album =>
+      'Álbum: si tu mercado (Card Kingdom, Mana Pool) no publica precio por edición, te lo dice claro en vez de enseñar un \$0.00 mudo.';
+
+  @override
+  String get wn031Forge =>
+      'Forge: al terminar una forja puedes volver a la selección sin perder lo elegido, y el aviso de mazo borrado dura más y se puede cerrar.';
+
+  @override
+  String get wn031Home =>
+      'Inicio: el valor total marca ~ cuando hay cartas sin precio, para no vender certeza donde hay estimación.';
+
+  @override
+  String get wn031Perf =>
+      'Más fluido: álbum, importaciones y búsquedas responden mejor con colecciones grandes.';
+
+  @override
   String get wn030Headline => 'エキスパンション別のForge、購入価格、バージョン通知';
 
   @override

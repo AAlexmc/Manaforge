@@ -1136,6 +1136,11 @@
 
   "slLockButton": "Lock",
 
+  "wn031Headline": "An album that speaks plainly, a comfier Forge, and everything smoother",
+  "wn031Album": "Album: if your market (Card Kingdom, Mana Pool) doesn't publish per-printing prices, it now says so plainly instead of showing a mute $0.00.",
+  "wn031Forge": "Forge: after forging you can go back to your selection without losing it, and the deck-deleted notice lasts longer and can be dismissed.",
+  "wn031Home": "Home: the total value shows ~ when some cards have no price, so an estimate never poses as certainty.",
+  "wn031Perf": "Smoother: album, imports and searches respond better with large collections.",
   "wn030Headline": "Forge by set, purchase price and version alerts",
   "wn030Forge": "Forge: pick which sets the cards come from. And if you turn on \"include cards I don't own\", it builds the deck from the whole chosen set and tells you how many you're missing and what they cost.",
   "wn030Pnl": "Purchase price and P&L: if your ManaBox CSV has \"Purchase price\", Market shows what you paid, what it's worth today and the difference. Currencies are never mixed.",
