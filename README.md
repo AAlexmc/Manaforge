@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <b><a href="#-manaforge-en-4-minutos">Vídeo</a></b> ·
+  <b><a href="#-manaforge-en-2-minutos">Vídeo</a></b> ·
   <b><a href="#-forge-el-generador-de-mazos">Forge</a></b> ·
   <b><a href="#-qué-hace-hoy">Funciones</a></b> ·
   <b><a href="#-descárgala-y-ábrela">Descargar</a></b> ·
