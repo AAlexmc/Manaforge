@@ -10,6 +10,7 @@ import 'package:image/image.dart' as img;
 
 import '../scanner/card_detector.dart';
 import '../scanner/dhash.dart';
+import '../scanner/hit_cache.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
 import '../scanner/tray_commit.dart';
@@ -21,11 +22,10 @@ import '../services/safe_input.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
-import '../widgets/folder_target.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/set_lock.dart';
 import '../widgets/tray_list.dart';
-import '../widgets/version_picker.dart';
+import 'scan_shared.dart';
 
 /// Extensiones que se aceptan como foto: el picker de fichero solo enseña
 /// estas, y arrastrar-y-soltar tiene que aplicar el MISMO filtro (si no,
@@ -189,20 +189,13 @@ class _ScanScreenState extends State<ScanScreen> {
     _folderId = widget.initialFolderId;
   }
 
-  /// La carpeta elegida, si sigue existiendo (se puede borrar desde otra
-  /// pantalla mientras escaneas).
-  CardFolder? get _folder =>
-      _folderId == null ? null : widget.folders?.byId(_folderId!);
+  CardFolder? get _folder => scanFolder(widget.folders, _folderId);
 
   Future<void> _pickFolder() async {
     final folders = widget.folders;
     if (folders == null) return;
-    await folders.load();
-    if (!mounted) return;
-    final elegida = await showFolderTargetSheet(context,
-        folders: folders, selectedId: _folderId);
-    if (elegida == null || !mounted) return; // cerrado sin elegir
-    setState(() => _folderId = elegida.id);
+    await pickScanFolder(
+        context, folders, _folderId, (id) => setState(() => _folderId = id));
   }
 
   Future<void> _pickPhotos() async {
@@ -315,18 +308,8 @@ class _ScanScreenState extends State<ScanScreen> {
         .add(card, qty: qty, printingKey: entry.printingKey, at: at);
   }
 
-  Future<void> _precache(List<ScanMatch> matches) async {
-    for (final m in matches) {
-      if (!_hitCache.containsKey(m.entry.scryfallId)) {
-        try {
-          _hitCache[m.entry.scryfallId] =
-              await widget.db.byScryfallId(m.entry.scryfallId);
-        } catch (_) {
-          _hitCache[m.entry.scryfallId] = null;
-        }
-      }
-    }
-  }
+  Future<void> _precache(List<ScanMatch> matches) =>
+      precacheHits(widget.db, _hitCache, matches);
 
   /// Una foto con varias cartas detectadas: montar la bandeja directamente.
   Future<void> _batchFromOutcomes(List<ScanOutcome> outcomes) async {
@@ -680,10 +663,8 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-  Future<int?> _pickVersion(TrayLine line) {
-    return showVersionPicker(context,
-        choices: versionChoicesFrom(line, _hitCache), selected: line.selected);
-  }
+  Future<int?> _pickVersion(TrayLine line) =>
+      pickScanVersion(context, line, _hitCache);
 
   Widget _buildDropZone() {
     return Center(
@@ -729,11 +710,8 @@ class _ScanScreenState extends State<ScanScreen> {
     return t.scMatchLow;
   }
 
-  Future<void> _editLock() async {
-    final result = await showSetLockDialog(context, _lockSet);
-    if (result == null || !mounted) return; // cancelado
-    setState(() => _lockSet = result.isEmpty ? null : result);
-  }
+  Future<void> _editLock() =>
+      editScanLock(context, _lockSet, (v) => setState(() => _lockSet = v));
 
   void _reset() => setState(() {
         _outcome = null;

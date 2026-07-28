@@ -19,6 +19,7 @@ import '../services/value_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/db_download.dart';
 import '../widgets/pnl_view.dart';
 import '../widgets/market_picker.dart';
 import '../widgets/price_chart.dart';
@@ -184,29 +185,10 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   Future<void> _loadOnce() async {
     try {
-      final byPrinting = widget.collection.hasPrintingData;
-      final printingQty = widget.collection.printingQty;
-      // colecciones de antes de esta versión saben qué impresiones tienen
-      // pero no de quién es cada una (`printingOwner` sale vacío): sin este
-      // backfill, el valor salía marcado aproximado (~) aquí aunque
-      // Colección, que sí hace este mismo prólogo, lo enseñara exacto
-      if (byPrinting && printingQty.isNotEmpty) {
-        final owners = await widget.db.oracleByPrintings(printingQty.keys);
-        if (owners.isNotEmpty) {
-          widget.collection.backfillPrintingOwners(owners);
-        }
-      }
-      // fórmula compartida con Home (services/collection_value.dart)
-      final valuation = await computeCollectionValue(
-        cards: widget.collection.cards,
-        byPrinting: byPrinting,
-        printingQty: printingQty,
-        oraclePrices: widget.db.pricesForOracles,
-        printingPrices: widget.db.pricesForPrintings,
-        printingOwner: widget.collection.printingOwner,
-        foilQty: widget.collection.foilPrintings,
-        foilPrices: widget.db.foilPricesForPrintings,
-      );
+      // fórmula (con backfill de printingOwner incluido) compartida con
+      // Inicio y Colección: services/collection_value.dart
+      final valuation =
+          await collectionValue(db: widget.db, collection: widget.collection);
       final total = valuation.total;
       final valued = valuation.valued;
 
@@ -412,27 +394,31 @@ class _MercadoScreenState extends State<MercadoScreen> {
 
   Future<void> _updateDb() async {
     setState(() => _updateProgress = 0);
-    try {
-      await for (final p in widget.db.download()) {
-        if (mounted) setState(() => _updateProgress = p < 0 ? null : p);
-      }
-      if (mounted) {
-        setState(() => _updateProgress = null);
-        await _load();
+    await runDownload(
+      widget.db.download(),
+      onProgress: (p) {
+        if (mounted) setState(() => _updateProgress = p);
+      },
+      onDone: () async {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(tr(context).mkUpdated)));
+          setState(() => _updateProgress = null);
+          await _load();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(tr(context).mkUpdated)));
+          }
         }
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _updateProgress = null);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(tr(context)
-                    .mkUpdateFailed(downloadErrorText(tr(context), e)))));
-      }
-    }
+      },
+      onError: (e) {
+        if (mounted) {
+          setState(() => _updateProgress = null);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(tr(context)
+                      .mkUpdateFailed(downloadErrorText(tr(context), e)))));
+        }
+      },
+    );
   }
 
   /// Trae los ~90 días de histórico real de Cardmarket (≈4 MB) para TODAS
@@ -445,28 +431,34 @@ class _MercadoScreenState extends State<MercadoScreen> {
       _historyProgress = 0;
     });
     try {
-      await for (final p in widget.prices.download()) {
+      await runDownload(
+        widget.prices.download(),
         // p < 0 = sin Content-Length: barra indeterminada, pero la descarga
         // SIGUE en curso (el botón no debe reaparecer)
-        if (mounted) setState(() => _historyProgress = p < 0 ? null : p);
-      }
-      if (!mounted) return;
-      setState(() => _historyProgress = null);
-      await _load();
-      if (mounted) {
-        setState(() => _historyDownloading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(tr(context).mkHistoryReady)));
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _historyDownloading = false;
-          _historyProgress = null;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(tr(context).mkHistoryFailed('$e'))));
-      }
+        onProgress: (p) {
+          if (mounted) setState(() => _historyProgress = p);
+        },
+        onDone: () async {
+          if (!mounted) return;
+          setState(() => _historyProgress = null);
+          await _load();
+          if (mounted) {
+            setState(() => _historyDownloading = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(tr(context).mkHistoryReady)));
+          }
+        },
+        onError: (e) {
+          if (mounted) {
+            setState(() {
+              _historyDownloading = false;
+              _historyProgress = null;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(tr(context).mkHistoryFailed('$e'))));
+          }
+        },
+      );
     } finally {
       _historyDownloading = false;
     }

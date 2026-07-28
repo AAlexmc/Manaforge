@@ -97,11 +97,20 @@ class AchievementsController extends ChangeNotifier {
       );
       final next =
           evaluateAchievements(snapshot, unlockedAt: progress.unlockedAt);
-      final fresh = [
+      // "before" sintético: lo que YA estaba desbloqueado según lo guardado,
+      // no el `_states` de la última pasada (en frío está vacío y celebraría
+      // de nuevo lo que ya tenías).
+      final wasUnlocked = progress.unlockedAt.keys.toSet();
+      final before = [
         for (final s in next)
-          if (s.unlocked && !progress.unlockedAt.containsKey(s.achievement.id))
-            s.achievement
+          AchievementState(
+            achievement: s.achievement,
+            progress: s.progress,
+            current: s.current,
+            unlocked: wasUnlocked.contains(s.achievement.id),
+          )
       ];
+      final fresh = newlyUnlocked(before: before, after: next);
       if (fresh.isNotEmpty) {
         progress.unlockAll(fresh.map((a) => a.id));
         _toCelebrate.addAll(fresh);

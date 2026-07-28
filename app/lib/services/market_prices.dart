@@ -52,22 +52,6 @@ class MarketPrices {
     return out;
   }
 
-  /// Igual pero solo los números, para lo que ya espera un mapa de precios
-  /// (la valoración de la colección).
-  Future<Map<String, double>> valuesByOracle(
-          Iterable<String> oracleIds, Market market) async =>
-      {
-        for (final e in (await byOracle(oracleIds, market)).entries)
-          e.key: e.value.value
-      };
-
-  /// Precio por edición exacta ("set|nº"). Solo los mercados con precio de
-  /// hoy lo tienen: para los demás se devuelve vacío y quien llame valora a
-  /// nivel carta (y lo marca como aproximado).
-  Future<Map<String, double>> byPrinting(
-          Iterable<String> printingKeys, Market market) =>
-      db.pricesForPrintings(printingKeys, market: market);
-
   /// Serie histórica en el mercado elegido, ya fusionada con lo que la app
   /// apunta a diario (que es de Cardmarket: en otros mercados no se mezcla).
   Future<Map<String, List<PricePoint>>> historyFor(

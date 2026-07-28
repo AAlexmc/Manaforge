@@ -80,6 +80,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   double? _value;
+  bool _approximate = false;
   List<ValuedCard> _jewels = const [];
   List<SetBanner> _sets = const [];
   List<MetaDeck> _meta = const [];
@@ -124,24 +125,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadOnce() async {
     try {
-      // misma fórmula que Mercado: que los dos totales SIEMPRE cuadren
-      // (foils incluidas — dejarlas fuera aquí descuadraba Inicio con
-      // Mercado, Colección, carpetas y logros)
-      final valuation = await computeCollectionValue(
-        cards: widget.collection.cards,
-        byPrinting: widget.collection.hasPrintingData,
-        printingQty: widget.collection.printingQty,
-        oraclePrices: widget.db.pricesForOracles,
-        printingPrices: widget.db.pricesForPrintings,
-        foilQty: widget.collection.foilPrintings,
-        foilPrices: widget.db.foilPricesForPrintings,
-      );
+      // mismo atajo que Mercado y Colección: que los tres totales SIEMPRE
+      // cuadren (backfill de printingOwner incluido — sin él, Inicio no
+      // marcaba aproximado (~) cuando tocaba y Mercado sí)
+      final valuation =
+          await collectionValue(db: widget.db, collection: widget.collection);
       final sets = _sets.isEmpty
           ? await widget.db.marketSets(limit: 15)
           : _sets;
       if (!mounted) return;
       setState(() {
         _value = valuation.total;
+        _approximate = valuation.approximate;
         _jewels = valuation.valued.take(12).toList();
         _sets = sets;
       });
@@ -670,7 +665,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(
                                       _value == null
                                           ? '${widget.collection.totalCopies} cartas'
-                                          : '${_value!.toStringAsFixed(2)} €',
+                                          : '${_approximate ? '~' : ''}'
+                                              '${_value!.toStringAsFixed(2)} €',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineSmall

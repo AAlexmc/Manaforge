@@ -23,6 +23,14 @@ int _ms(int year, int month, int day) =>
 
 final _t = AppLocalizationsEs();
 
+/// El getter `cardsByRecent` no existe en producción (se borró por muerto):
+/// aquí replicamos su semántica con lo que sí usa la app de verdad.
+/// `.reversed` a propósito: `store.cards` ya sale ordenado por nombre y, con
+/// input alfabético, el test del desempate por nombre pasaría aunque el
+/// desempate de [compareByRecent] desapareciera (verde por construcción).
+List<OwnedCard> _byRecent(CollectionStore store) =>
+    store.cards.reversed.toList()..sort(compareByRecent);
+
 void main() {
   group('sortCollection', () {
     test('recientes: la última añadida sale la primera', () {
@@ -121,7 +129,7 @@ void main() {
       final store = CollectionStore();
       store.add(_card('Primera'), at: DateTime(2026, 7, 1));
       store.add(_card('Segunda'), at: DateTime(2026, 7, 20));
-      expect([for (final c in store.cardsByRecent) c.name],
+      expect([for (final c in _byRecent(store)) c.name],
           ['Segunda', 'Primera']);
     });
 
@@ -130,8 +138,8 @@ void main() {
       store.add(_card('Vieja'), at: DateTime(2026, 1, 1));
       store.add(_card('Reciente'), at: DateTime(2026, 7, 1));
       store.add(_card('Vieja'), at: DateTime(2026, 7, 21));
-      expect(store.cardsByRecent.first.name, 'Vieja');
-      expect(store.cardsByRecent.first.qty, 2);
+      expect(_byRecent(store).first.name, 'Vieja');
+      expect(_byRecent(store).first.qty, 2);
     });
 
     test('la fecha sobrevive al guardar y releer', () {
@@ -158,16 +166,16 @@ void main() {
       store.add(_card('Vieja'), at: DateTime(2026, 1, 1));
       store.add(_card('Reciente'), at: DateTime(2026, 7, 1));
       store.setQty('o-Vieja', 5);
-      expect(store.cardsByRecent.first.name, 'Reciente');
+      expect(_byRecent(store).first.name, 'Reciente');
     });
 
     test('añadir una carta no toca la fecha de las demás', () {
       final store = CollectionStore();
       store.add(_card('Primera'), at: DateTime(2026, 7, 1));
-      final antes = store.cardsByRecent.first.addedAt;
+      final antes = _byRecent(store).first.addedAt;
       store.add(_card('Segunda'), at: DateTime(2026, 7, 20));
       final primera =
-          store.cardsByRecent.firstWhere((c) => c.name == 'Primera');
+          _byRecent(store).firstWhere((c) => c.name == 'Primera');
       expect(primera.addedAt, antes);
     });
 
@@ -179,8 +187,8 @@ void main() {
       // el importador vuelve a meter la antigua (bump: false)
       store.add(_card('Antigua'),
           at: DateTime(2026, 7, 21, 23), bump: false);
-      expect(store.cardsByRecent.first.name, 'Escaneada hoy');
-      expect(store.cardsByRecent.last.qty, 2, reason: 'sí suma la copia');
+      expect(_byRecent(store).first.name, 'Escaneada hoy');
+      expect(_byRecent(store).last.qty, 2, reason: 'sí suma la copia');
     });
 
     test('un lote con el mismo sello sale por nombre, no en orden inverso',
@@ -190,7 +198,7 @@ void main() {
       for (final name in ['Zorro', 'Alce', 'Mula']) {
         store.add(_card(name), at: at);
       }
-      expect([for (final c in store.cardsByRecent) c.name],
+      expect([for (final c in _byRecent(store)) c.name],
           ['Alce', 'Mula', 'Zorro']);
     });
 

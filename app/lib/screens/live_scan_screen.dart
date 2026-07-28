@@ -9,6 +9,7 @@ import '../l10n/t.dart';
 import 'package:flutter/services.dart';
 
 import '../scanner/burst_controller.dart';
+import '../scanner/hit_cache.dart';
 import '../scanner/presence_gate.dart';
 import '../scanner/scan_gate.dart';
 import '../scanner/scan_tray.dart';
@@ -21,12 +22,11 @@ import '../services/folder_store.dart';
 import '../services/linux_camera.dart';
 import '../services/scanner_database.dart';
 import '../theme/mf_theme.dart';
-import '../widgets/folder_target.dart';
 import '../widgets/scanner_db_gate.dart';
 import '../widgets/session_tray.dart';
 import '../widgets/set_lock.dart';
-import '../widgets/version_picker.dart';
 import 'scan_screen.dart';
+import 'scan_shared.dart';
 
 /// Escáner en vivo, fase C: la webcam mira la mesa y ManaForge reconoce las
 /// cartas que le pases por delante — sin tocar nada. Cada reconocimiento
@@ -421,19 +421,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   }
 
   /// Precarga las fichas (imagen, nombre impreso) de unos candidatos.
-  Future<void> _precache(List<ScanMatch> candidates) async {
-    for (final m in candidates) {
-      if (!_hitCache.containsKey(m.entry.scryfallId)) {
-        CardHit? hit;
-        try {
-          hit = await widget.db.byScryfallId(m.entry.scryfallId);
-        } catch (_) {
-          hit = null;
-        }
-        _hitCache[m.entry.scryfallId] = hit;
-      }
-    }
-  }
+  Future<void> _precache(List<ScanMatch> candidates) =>
+      precacheHits(widget.db, _hitCache, candidates);
 
   void _feedback({bool soft = false}) {
     try {
@@ -442,11 +431,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     } catch (_) {/* sin sonido en esta plataforma */}
   }
 
-  Future<void> _editLock() async {
-    final result = await showSetLockDialog(context, _lockSet);
-    if (result == null || !mounted) return; // cancelado
-    setState(() => _lockSet = result.isEmpty ? null : result);
-  }
+  Future<void> _editLock() =>
+      editScanLock(context, _lockSet, (v) => setState(() => _lockSet = v));
 
   void _confirmAll() {
     final carpeta = _folder;
@@ -474,20 +460,13 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     ));
   }
 
-  /// La carpeta elegida, si sigue existiendo (se puede borrar desde otra
-  /// pantalla mientras escaneas).
-  CardFolder? get _folder =>
-      _folderId == null ? null : widget.folders?.byId(_folderId!);
+  CardFolder? get _folder => scanFolder(widget.folders, _folderId);
 
   Future<void> _pickFolder() async {
     final folders = widget.folders;
     if (folders == null) return;
-    await folders.load();
-    if (!mounted) return;
-    final elegida = await showFolderTargetSheet(context,
-        folders: folders, selectedId: _folderId);
-    if (elegida == null || !mounted) return; // cerrado sin elegir
-    setState(() => _folderId = elegida.id);
+    await pickScanFolder(
+        context, folders, _folderId, (id) => setState(() => _folderId = id));
   }
 
   @override
@@ -882,13 +861,8 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
     );
   }
 
-  /// Selector de versión entre los candidatos de una línea. Devuelve el
-  /// índice elegido, o null si se cierra sin elegir.
-  Future<int?> _pickVersion(TrayLine line) {
-    return showVersionPicker(context,
-        choices: versionChoicesFrom(line, _hitCache),
-        selected: line.selected);
-  }
+  Future<int?> _pickVersion(TrayLine line) =>
+      pickScanVersion(context, line, _hitCache);
 }
 
 /// Preview de la cámara Linux: repinta el último JPEG del pipeline GStreamer.

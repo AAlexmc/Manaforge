@@ -15,6 +15,7 @@ import '../services/language_prefs.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/app_shortcuts.dart';
 import '../widgets/background_settings.dart';
+import '../widgets/db_download.dart';
 import '../widgets/language_settings.dart';
 import '../widgets/update_notice.dart';
 import 'backup_screen.dart';
@@ -138,25 +139,29 @@ class _AjustesScreenState extends State<AjustesScreen> {
       _progress = 0;
       _status = null;
     });
-    try {
-      await for (final p in widget.db.download()) {
-        if (mounted) setState(() => _progress = p < 0 ? null : p);
-      }
-      if (mounted) {
-        setState(() {
-          _progress = null;
-          _status = tr(context).stDbUpdated;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _progress = null;
-          _status =
-              tr(context).stUpdateFailed(downloadErrorText(tr(context), e));
-        });
-      }
-    }
+    await runDownload(
+      widget.db.download(),
+      onProgress: (p) {
+        if (mounted) setState(() => _progress = p);
+      },
+      onDone: () async {
+        if (mounted) {
+          setState(() {
+            _progress = null;
+            _status = tr(context).stDbUpdated;
+          });
+        }
+      },
+      onError: (e) {
+        if (mounted) {
+          setState(() {
+            _progress = null;
+            _status =
+                tr(context).stUpdateFailed(downloadErrorText(tr(context), e));
+          });
+        }
+      },
+    );
   }
 
   @override
