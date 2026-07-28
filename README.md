@@ -29,15 +29,16 @@ Todos hemos pasado por esto: una caja llena de cartas de sobres, mazos de inicio
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 
-## 🎬 ManaForge en 4 minutos
+## 🎬 ManaForge en 2 minutos
 
 <p align="center">
-  <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Tutorial.mp4">
+  <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Fast.mp4">
     <img src="docs/assets/tutorial-poster.jpg" width="820" alt="Inicio de ManaForge: colección valorada, logros, el meta de torneos y las expansiones nuevas">
   </a>
 </p>
 
-<p align="center"><i>Clic en la imagen para el tutorial completo (4 min, ×2): escanear con la webcam, importar tu CSV, el álbum y Forge.</i></p>
+<p align="center"><i>Clic en la imagen: repaso rápido (2 min) de una colección ya en marcha — escáner, álbum, Forge, Test Mode y Mercado.<br>
+También: <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Tutorial.mp4">🎓 tutorial desde cero (4 min, ×2)</a> · <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Completo_x2.mp4">recorrido completo</a>.</i></p>
 
 <p align="center">
   <img src="docs/assets/tutorial-teaser.gif" width="720" alt="El escáner en vivo reconociendo una carta con la webcam">
