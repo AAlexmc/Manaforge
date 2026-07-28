@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:manaforge_app/l10n/app_localizations.dart';
-import 'package:manaforge_app/widgets/tour_overlay.dart';
+import 'package:manaforge_app/ui/core/tours/tour_overlay.dart';
 
 /// GlobalKeys de los botones que los tours señalan. Viven en HomeShell y se
 /// pasan a las pantallas que los tienen, para poder medir su rectángulo.

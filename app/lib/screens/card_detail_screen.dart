@@ -12,10 +12,10 @@ import 'package:manaforge_app/services/markets.dart';
 import 'package:manaforge_app/services/price_history.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:manaforge_app/services/recents_store.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
-import 'package:manaforge_app/widgets/common.dart';
-import 'package:manaforge_app/widgets/market_picker.dart';
-import 'package:manaforge_app/widgets/price_chart.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
+import 'package:manaforge_app/ui/core/widgets/common.dart';
+import 'package:manaforge_app/ui/core/widgets/market_picker.dart';
+import 'package:manaforge_app/ui/core/widgets/price_chart.dart';
 
 /// Ficha completa de una carta: imagen, reglas, tus copias, legalidades y
 /// precios por edición (normal y foil). El corazón del Mercado.

@@ -7,7 +7,7 @@ import 'package:manaforge_app/services/achievements_controller.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/certificate_store.dart';
 import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/screens/certificados_screen.dart';
 
 /// Color de cada rareza de logro (bronce, plata, oro, mítico).

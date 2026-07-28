@@ -8,9 +8,9 @@ import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/market_prefs.dart';
 import 'package:manaforge_app/services/markets.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
-import 'package:manaforge_app/widgets/common.dart';
-import 'package:manaforge_app/widgets/market_picker.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
+import 'package:manaforge_app/ui/core/widgets/common.dart';
+import 'package:manaforge_app/ui/core/widgets/market_picker.dart';
 import 'package:manaforge_app/screens/card_detail_screen.dart';
 
 /// Mercado de una expansión: todas sus cartas con precio, con filtros

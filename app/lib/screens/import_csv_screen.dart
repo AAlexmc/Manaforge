@@ -9,7 +9,7 @@ import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/safe_input.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 
 /// Importador de colección. Tres vías, de más cómoda a menos:
 /// arrastrar el archivo CSV a la ventana, elegirlo con el botón, o pegar su

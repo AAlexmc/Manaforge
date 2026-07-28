@@ -22,7 +22,7 @@ import 'package:manaforge_app/services/market_prefs.dart';
 import 'package:manaforge_app/services/deck_store.dart';
 import 'package:manaforge_app/services/factory_reset.dart';
 import 'package:manaforge_app/services/onboarding_prefs.dart';
-import 'package:manaforge_app/services/tours.dart';
+import 'package:manaforge_app/ui/core/tours/tours.dart';
 import 'package:manaforge_app/services/folder_store.dart';
 import 'package:manaforge_app/services/home_layout_prefs.dart';
 import 'package:manaforge_app/services/markets.dart';
@@ -33,12 +33,12 @@ import 'package:manaforge_app/services/scanner_database.dart';
 import 'package:manaforge_app/services/window_memory.dart';
 import 'package:manaforge_app/services/window_prefs.dart';
 import 'package:manaforge_app/services/wishlist_store.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
-import 'package:manaforge_app/widgets/app_background.dart';
-import 'package:manaforge_app/widgets/app_shortcuts.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
+import 'package:manaforge_app/ui/core/widgets/app_background.dart';
+import 'package:manaforge_app/ui/core/widgets/app_shortcuts.dart';
 import 'package:manaforge_app/widgets/language_picker_dialog.dart';
-import 'package:manaforge_app/widgets/tour_overlay.dart';
-import 'package:manaforge_app/widgets/whats_new_dialog.dart';
+import 'package:manaforge_app/ui/core/tours/tour_overlay.dart';
+import 'package:manaforge_app/ui/core/widgets/whats_new_dialog.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

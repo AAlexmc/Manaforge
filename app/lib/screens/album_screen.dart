@@ -8,9 +8,9 @@ import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/market_prefs.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:manaforge_app/services/markets.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
-import 'package:manaforge_app/widgets/app_shortcuts.dart';
-import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
+import 'package:manaforge_app/ui/core/widgets/app_shortcuts.dart';
+import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/screens/album_filters.dart';
 import 'package:manaforge_app/screens/card_detail_screen.dart';
 

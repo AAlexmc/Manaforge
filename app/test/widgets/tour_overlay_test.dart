@@ -4,7 +4,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/widgets/tour_overlay.dart';
+import 'package:manaforge_app/ui/core/tours/tour_overlay.dart';
 
 import '../helpers/app_l10n.dart';
 

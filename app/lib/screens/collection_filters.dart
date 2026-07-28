@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/ui/core/widgets/common.dart';
 
 /// Cómo se ordena la lista de la colección.
 enum CollectionSort {

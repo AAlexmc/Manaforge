@@ -20,7 +20,7 @@ import 'package:manaforge_app/screens/screens.dart';
 import 'package:manaforge_app/services/background_prefs.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/language_prefs.dart';
-import 'package:manaforge_app/widgets/tour_overlay.dart';
+import 'package:manaforge_app/ui/core/tours/tour_overlay.dart';
 
 import '../helpers/app_l10n.dart';
 import '../helpers/tour_foco.dart';

@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/app_update.dart';
-import 'package:manaforge_app/services/whats_new.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/ui/core/whats_new.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 
 /// Enseña las novedades si toca, y las da por vistas.
 ///

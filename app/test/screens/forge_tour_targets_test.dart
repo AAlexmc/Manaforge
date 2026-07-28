@@ -13,7 +13,7 @@ import 'package:manaforge_app/screens/forge_screen.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/deck_store.dart';
-import 'package:manaforge_app/services/tours.dart';
+import 'package:manaforge_app/ui/core/tours/tours.dart';
 
 CollectionStore _conCartas(int copias) {
   final store = CollectionStore();

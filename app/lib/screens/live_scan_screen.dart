@@ -21,7 +21,7 @@ import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/folder_store.dart';
 import 'package:manaforge_app/services/linux_camera.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/widgets/scanner_db_gate.dart';
 import 'package:manaforge_app/widgets/session_tray.dart';
 import 'package:manaforge_app/widgets/set_lock.dart';

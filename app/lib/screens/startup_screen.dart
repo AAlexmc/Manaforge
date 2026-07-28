@@ -11,7 +11,7 @@ import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
 import 'package:manaforge_app/services/startup_updates.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 
 /// Las tres bases que ManaForge se descarga, en el orden en que hacen
 /// falta: sin la de cartas no hay app; el histórico y las huellas mejoran

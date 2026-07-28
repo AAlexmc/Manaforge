@@ -13,9 +13,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/app_update.dart';
-import 'package:manaforge_app/services/whats_new.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
-import 'package:manaforge_app/widgets/whats_new_dialog.dart';
+import 'package:manaforge_app/ui/core/whats_new.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
+import 'package:manaforge_app/ui/core/widgets/whats_new_dialog.dart';
 
 /// Abre la página de la release en el navegador (ver [openRepoUrl]).
 Future<void> openReleasePage(BuildContext context, AppRelease release) =>

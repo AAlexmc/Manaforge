@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:manaforge_app/theme/contrast.dart';
+import 'package:manaforge_app/ui/core/themes/contrast.dart';
 
 /// Tokens de color del DesignSystem (DesignSystem/ManaForgeTokens.swift).
 /// Cualquier cambio debe hacerse primero en el handoff y replicarse aquí.

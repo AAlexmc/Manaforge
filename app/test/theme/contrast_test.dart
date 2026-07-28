@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/painting.dart' show HSLColor;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/theme/contrast.dart';
+import 'package:manaforge_app/ui/core/themes/contrast.dart';
 
 const _blanco = Color(0xFFFFFFFF);
 const _negro = Color(0xFF000000);

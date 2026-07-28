@@ -4,8 +4,8 @@ import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/deck_store.dart';
-import 'package:manaforge_app/theme/mf_theme.dart';
-import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
+import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/screens/deck_detail_screen.dart';
 
 /// Mis mazos: los guardados desde Forge. Tocar uno lo abre con todo

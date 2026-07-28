@@ -6,8 +6,8 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations_es.dart';
-import 'package:manaforge_app/services/tours.dart';
-import 'package:manaforge_app/widgets/tour_overlay.dart';
+import 'package:manaforge_app/ui/core/tours/tours.dart';
+import 'package:manaforge_app/ui/core/tours/tour_overlay.dart';
 
 void main() {
   final t = AppLocalizationsEs();
