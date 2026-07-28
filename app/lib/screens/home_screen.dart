@@ -12,6 +12,7 @@ import '../services/deck_store.dart';
 import '../services/home_layout_prefs.dart';
 import '../services/meta_decks.dart';
 import '../services/recents_store.dart';
+import '../services/serial_task.dart';
 import '../theme/mf_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/update_notice.dart';
@@ -84,6 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<MetaDeck> _meta = const [];
   String _metaSource = '';
 
+  /// La colección avisa por línea al confirmar una bandeja: sin esto salían
+  /// N pipelines de valoración a la vez (ver [SerialTask]).
+  final _loadTask = SerialTask();
+
   /// El layout efectivo: el que llega, o uno por defecto en memoria (enseña
   /// todo en el orden de siempre) para que Inicio funcione sin que se lo pasen.
   late final HomeLayoutPreference _layout =
@@ -109,10 +114,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     widget.collection.removeListener(_load);
+    _loadTask.dispose();
     super.dispose();
   }
 
-  Future<void> _load() async {
+  /// Guarda de reentrada: si llega otro aviso mientras esto sigue corriendo,
+  /// no lanza un segundo pipeline en paralelo (ver [SerialTask]).
+  Future<void> _load() => _loadTask.run(_loadOnce);
+
+  Future<void> _loadOnce() async {
     try {
       // misma fórmula que Mercado: que los dos totales SIEMPRE cuadren
       // (foils incluidas — dejarlas fuera aquí descuadraba Inicio con

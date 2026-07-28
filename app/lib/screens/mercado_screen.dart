@@ -7,12 +7,14 @@ import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/collection_value.dart';
 import '../services/collection_value_series.dart';
+import '../services/debouncer.dart';
 import '../services/market_prefs.dart';
 import '../services/market_prices.dart';
 import '../services/markets.dart';
 import '../services/pnl.dart';
 import '../services/price_history.dart';
 import '../services/price_series_database.dart';
+import '../services/serial_task.dart';
 import '../services/value_history.dart';
 import '../services/wishlist_store.dart';
 import '../theme/mf_theme.dart';
@@ -64,6 +66,14 @@ class _MercadoScreenState extends State<MercadoScreen> {
   final _searchCtrl = TextEditingController();
   final _bannerCtrl = ScrollController();
 
+  /// Colección, wishlist y mercado avisan por separado: sin esto, confirmar
+  /// una bandeja de 20 cartas lanzaba 20 pipelines de valoración a la vez.
+  final _loadTask = SerialTask();
+
+  /// El buscador es un `LIKE` sin índice sobre ~110k filas: sin esto, cada
+  /// pulsación era una consulta completa en el hilo de la interfaz.
+  final _searchDebounce = Debouncer();
+
   double? _totalValue;
 
   /// Lo pagado contra lo que vale hoy. null = aún sin calcular o sin
@@ -112,6 +122,8 @@ class _MercadoScreenState extends State<MercadoScreen> {
     widget.collection.removeListener(_load);
     widget.wishlist.removeListener(_onWishlistChanged);
     widget.market.removeListener(_load);
+    _loadTask.dispose();
+    _searchDebounce.dispose();
     _searchCtrl.dispose();
     _bannerCtrl.dispose();
     super.dispose();
@@ -166,7 +178,11 @@ class _MercadoScreenState extends State<MercadoScreen> {
     );
   }
 
-  Future<void> _load() async {
+  /// Guarda de reentrada: si llega otro aviso mientras esto sigue corriendo,
+  /// no lanza un segundo pipeline en paralelo (ver [SerialTask]).
+  Future<void> _load() => _loadTask.run(_loadOnce);
+
+  Future<void> _loadOnce() async {
     try {
       final byPrinting = widget.collection.hasPrintingData;
       final printingQty = widget.collection.printingQty;
@@ -373,6 +389,18 @@ class _MercadoScreenState extends State<MercadoScreen> {
         ],
       ),
     );
+  }
+
+  /// Con <2 letras `search()` devuelve [] sin tocar la DB: se aplica al
+  /// instante (y cancela lo pendiente para no revivir la búsqueda anterior
+  /// 280 ms después de borrar). Con consulta real, debounce.
+  void _onSearchChanged(String q) {
+    if (q.trim().length < 2) {
+      _searchDebounce.cancel();
+      _search(q);
+    } else {
+      _searchDebounce.run(() => _search(q));
+    }
   }
 
   Future<void> _search(String query) async {
@@ -741,7 +769,7 @@ class _MercadoScreenState extends State<MercadoScreen> {
               key: widget.buscarKey,
               child: TextField(
                 controller: _searchCtrl,
-                onChanged: _search,
+                onChanged: _onSearchChanged,
                 decoration: InputDecoration(
                   hintText: t.mkSearchHint,
                   prefixIcon: const Icon(Icons.search),

@@ -4,6 +4,7 @@ import '../l10n/t.dart';
 import '../services/card_database.dart';
 import '../services/card_names.dart';
 import '../services/collection_store.dart';
+import '../services/debouncer.dart';
 import '../services/folder_store.dart';
 import '../services/market_prefs.dart';
 import '../services/price_series_database.dart';
@@ -46,10 +47,27 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
   /// Por defecto, lo recién escaneado arriba: es lo que acabas de hacer.
   CollectionSort _sort = CollectionSort.recent;
 
+  /// El buscador es un `LIKE` sin índice sobre ~110k filas: sin esto, cada
+  /// pulsación era una consulta completa en el hilo de la interfaz.
+  final _searchDebounce = Debouncer();
+
   @override
   void dispose() {
+    _searchDebounce.dispose();
     _searchCtrl.dispose();
     super.dispose();
+  }
+
+  /// Con <2 letras `search()` devuelve [] sin tocar la DB: se aplica al
+  /// instante (y cancela lo pendiente para no revivir la búsqueda anterior
+  /// 280 ms después de borrar). Con consulta real, debounce.
+  void _onSearchChanged(String q) {
+    if (q.trim().length < 2) {
+      _searchDebounce.cancel();
+      _search(q);
+    } else {
+      _searchDebounce.run(() => _search(q));
+    }
   }
 
   Future<void> _search(String query) async {
@@ -185,7 +203,7 @@ class _AllCardsScreenState extends State<AllCardsScreen> {
                       const SizedBox(height: 12),
                       TextField(
                         controller: _searchCtrl,
-                        onChanged: _search,
+                        onChanged: _onSearchChanged,
                         decoration: InputDecoration(
                           hintText: t.acSearchHint,
                           prefixIcon: const Icon(Icons.search),

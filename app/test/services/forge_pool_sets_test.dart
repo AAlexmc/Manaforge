@@ -152,5 +152,131 @@ void main() {
       expect(card.subtypes, ['Faerie', 'Wizard']); // la cara Adventure no contamina
       expect(card.keywords, ['flying']);
     });
+
+    test('DB anterior al schema v4 (sin columna keywords) igual da el pool',
+        () async {
+      final dir = Directory.systemTemp.createTempSync('mf-forge-sin-kw');
+      addTearDown(() {
+        if (dir.existsSync()) dir.deleteSync(recursive: true);
+      });
+      final raw = sqlite3.open(p.join(dir.path, 'manaforge_cards.sqlite'));
+      raw.execute('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
+      raw.execute('''
+        CREATE TABLE cards (
+          oracle_id TEXT PRIMARY KEY, name TEXT, mana_cost TEXT, cmc REAL,
+          colors TEXT, color_identity TEXT, type_line TEXT, oracle_text TEXT,
+          power TEXT, toughness TEXT, legalities TEXT)
+      ''');
+      raw.execute('''
+        CREATE TABLE printings (
+          scryfall_id TEXT PRIMARY KEY, oracle_id TEXT, set_code TEXT,
+          set_name TEXT, collector_number TEXT, lang TEXT, printed_name TEXT,
+          rarity TEXT, image_small TEXT, image_normal TEXT, image_png TEXT,
+          price_eur TEXT, released_at TEXT)
+      ''');
+      raw.execute("INSERT INTO cards VALUES ('o1','Shock','{R}',1,'R','R',"
+          "'Instant','2 damage','','','{}')");
+      raw.execute("INSERT INTO printings VALUES ('s1','o1','blb',"
+          "'Bloomburrow','72','en','Shock','common',null,null,null,'0.10',"
+          "'2024-08-02')");
+      raw.dispose();
+
+      final db = CardDatabase(dataDir: dir);
+
+      final pool = await db.buildPool({'o1': 3}, assumeBasics: false);
+
+      expect(pool['Shock']!.qty, 3);
+      expect(pool['Shock']!.keywords, isEmpty);
+    });
+
+    test('más cartas que el tamaño de un lote: todas entran con su cantidad',
+        () async {
+      final dir = Directory.systemTemp.createTempSync('mf-forge-lote');
+      addTearDown(() {
+        if (dir.existsSync()) dir.deleteSync(recursive: true);
+      });
+      final raw = sqlite3.open(p.join(dir.path, 'manaforge_cards.sqlite'));
+      raw.execute('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
+      raw.execute('''
+        CREATE TABLE cards (
+          oracle_id TEXT PRIMARY KEY, name TEXT, mana_cost TEXT, cmc REAL,
+          colors TEXT, color_identity TEXT, type_line TEXT, oracle_text TEXT,
+          power TEXT, toughness TEXT, keywords TEXT, legalities TEXT)
+      ''');
+      raw.execute('''
+        CREATE TABLE printings (
+          scryfall_id TEXT PRIMARY KEY, oracle_id TEXT, set_code TEXT,
+          set_name TEXT, collector_number TEXT, lang TEXT, printed_name TEXT,
+          rarity TEXT, image_small TEXT, image_normal TEXT, image_png TEXT,
+          price_eur TEXT, released_at TEXT)
+      ''');
+      // más de 400 (el tamaño del lote troceado): confirma que ninguna se
+      // queda fuera y que cada una arrastra la qty que le toca, no la de
+      // cualquier otra
+      const total = 420;
+      final owned = <String, int>{};
+      for (var i = 0; i < total; i++) {
+        final id = 'o$i';
+        raw.execute(
+            'INSERT INTO cards VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+            [id, 'Carta $i', '{R}', 1, 'R', 'R', 'Instant', '', '', '',
+              '[]', '{}']);
+        raw.execute(
+            'INSERT INTO printings VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            ['s$i', id, 'blb', 'Bloomburrow', '$i', 'en', 'Carta $i',
+              'common', null, null, null, '0.10', '2024-08-02']);
+        owned[id] = i + 1;
+      }
+      raw.dispose();
+
+      final db = CardDatabase(dataDir: dir);
+
+      final pool = await db.buildPool(owned, assumeBasics: false);
+
+      expect(pool.keys.length, total);
+      expect(pool['Carta 0']!.qty, 1);
+      expect(pool['Carta 419']!.qty, 420);
+    });
+
+    test('dos oracles con el mismo nombre: gana el orden de la colección, '
+        'no el orden en que sqlite devuelva el IN (...)', () async {
+      // pasa de verdad en la BD publicada (Un-sets: 'Sly Spy' ×6 variantes) y
+      // el orden del pool es observable: rompe empates del generador
+      final dir = Directory.systemTemp.createTempSync('mf-forge-dup');
+      addTearDown(() {
+        if (dir.existsSync()) dir.deleteSync(recursive: true);
+      });
+      final raw = sqlite3.open(p.join(dir.path, 'manaforge_cards.sqlite'));
+      raw.execute('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
+      raw.execute('''
+        CREATE TABLE cards (
+          oracle_id TEXT PRIMARY KEY, name TEXT, mana_cost TEXT, cmc REAL,
+          colors TEXT, color_identity TEXT, type_line TEXT, oracle_text TEXT,
+          power TEXT, toughness TEXT, keywords TEXT, legalities TEXT)
+      ''');
+      raw.execute('''
+        CREATE TABLE printings (
+          scryfall_id TEXT PRIMARY KEY, oracle_id TEXT, set_code TEXT,
+          set_name TEXT, collector_number TEXT, lang TEXT, printed_name TEXT,
+          rarity TEXT, image_small TEXT, image_normal TEXT, image_png TEXT,
+          price_eur TEXT, released_at TEXT)
+      ''');
+      // 'zzz' va ANTES en la colección pero DESPUÉS en orden de oracle_id:
+      // sqlite devuelve el IN (...) ordenado por la clave, no por la lista
+      raw.execute("INSERT INTO cards VALUES ('zzz','Sly Spy','{U}',1,'U','U',"
+          "'Creature — Spy','variante A','1','1','[]','{}')");
+      raw.execute("INSERT INTO cards VALUES ('aaa','Sly Spy','{U}',2,'U','U',"
+          "'Creature — Spy','variante B','2','2','[]','{}')");
+      raw.dispose();
+
+      final db = CardDatabase(dataDir: dir);
+
+      final pool = await db.buildPool({'zzz': 1, 'aaa': 1},
+          assumeBasics: false);
+
+      // semántica de siempre: el último del recorrido de la colección pisa
+      // al anterior en pool[nombre]
+      expect(pool['Sly Spy']!.cmc, 2, reason: "gana 'aaa', el último");
+    });
   });
 }

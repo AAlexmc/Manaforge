@@ -167,7 +167,22 @@ class CardDatabase {
     _db?.dispose();
     _db = null;
     _indicesMirados = false; // la base re-descargada puede venir sin índice
+    // cachés atadas AL HANDLE: la base re-descargada puede traer columnas
+    // o expansiones distintas, así que no sobreviven a un close()
+    _hasColumnCache.clear();
+    _setsCache = null;
   }
+
+  /// [_hasColumn] hace `PRAGMA table_info`: barato, pero se llama varias
+  /// veces por pulsación de búsqueda (×2), por ficha y por versión de
+  /// carta (×3). Memoizado por (tabla, columna); se vacía en [close] porque
+  /// la base puede reemplazarse en caliente (re-descarga).
+  final Map<String, bool> _hasColumnCache = {};
+
+  /// [sets] hace un `GROUP BY` con `COUNT DISTINCT` sobre ~110k impresiones,
+  /// y lo llama cada foto de logros. Igual que [_hasColumnCache], atado al
+  /// handle: se vacía en [close].
+  List<SetInfo>? _setsCache;
 
   /// Sube en cada [close]. Sin esto, un `_open()` esperando en su await
   /// reabría la base JUSTO entre el close() y el rename de `download()` —
@@ -176,15 +191,9 @@ class CardDatabase {
 
   /// ¿La DB descargada tiene fecha de salida? (schema v2; si no, el filtro
   /// por año no está disponible hasta actualizar la DB en Ajustes).
-  Future<bool> supportsYearFilter() async {
-    try {
-      final db = await _open();
-      final rows = db.select('PRAGMA table_info(printings)');
-      return rows.any((r) => r['name'] == 'released_at');
-    } catch (_) {
-      return false;
-    }
-  }
+  /// Delegado en [_hasColumn] para heredar su memo y su invalidación en
+  /// [close]: lo llaman [sets] y buildPool en caminos calientes.
+  Future<bool> supportsYearFilter() => _hasColumn('printings', 'released_at');
 
   /// Las bases publicadas hasta la v5 vienen SIN este índice, y todas las
   /// consultas de precios/datos "por impresión" (Inicio, Mercado, logros)
@@ -484,26 +493,40 @@ class CardDatabase {
       }
     }
 
-    for (final entry in ownedByOracle.entries) {
-      if (tooExpensive.contains(entry.key)) continue;
-      List<Row> rows;
-      try {
-        rows = db.select(
-            'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
-            'oracle_text, power, toughness, keywords, legalities '
-            'FROM cards WHERE oracle_id = ?1',
-            [entry.key]);
-      } catch (_) {
-        // DB anterior al schema v4: sin columna keywords.
-        rows = db.select(
-            'SELECT name, mana_cost, cmc, colors, color_identity, type_line, '
-            'oracle_text, power, toughness, legalities '
-            'FROM cards WHERE oracle_id = ?1',
-            [entry.key]);
+    // una query POR carta poseída (con try/catch de fallback por fila) era
+    // un N+1: con una colección de 2000 cartas, 2000 idas y vueltas a
+    // sqlite. Troceado en IN (...), como el resto de este fichero.
+    final keepIds = [
+      for (final id in ownedByOracle.keys)
+        if (!tooExpensive.contains(id)) id
+    ];
+    // decidido UNA vez, no con un try/catch por fila: DB anterior al
+    // schema v4 no tiene la columna keywords.
+    final keywordsCol =
+        await _hasColumn('cards', 'keywords') ? 'keywords' : 'NULL AS keywords';
+    final rowByOracle = <String, Row>{};
+    for (var i = 0; i < keepIds.length; i += chunkSize) {
+      final chunk = keepIds.sublist(
+          i, i + chunkSize > keepIds.length ? keepIds.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select(
+          'SELECT oracle_id, name, mana_cost, cmc, colors, color_identity, '
+          'type_line, oracle_text, power, toughness, $keywordsCol, legalities '
+          'FROM cards WHERE oracle_id IN ($marks)',
+          chunk);
+      for (final r in rows) {
+        rowByOracle[r['oracle_id'] as String] = r;
       }
-      if (rows.isEmpty) continue;
-      if (!legalIn(rows.first)) continue;
-      final card = rowToCard(rows.first, entry.value);
+    }
+    // el pool se indexa por nombre y su ORDEN es observable: decide qué
+    // variante gana cuando dos oracles comparten nombre (Un-sets) y rompe
+    // empates del generador (candidateNames/rng en el motor). Recorrer
+    // keepIds, no el orden en que sqlite devuelva las filas del IN (...),
+    // que sale por oracle_id.
+    for (final id in keepIds) {
+      final r = rowByOracle[id];
+      if (r == null || !legalIn(r)) continue;
+      final card = rowToCard(r, ownedByOracle[id]!);
       pool[card.name] = card;
     }
     if (assumeBasics) {
@@ -575,7 +598,13 @@ class AlbumCard {
 /// de cada set; las no poseídas se pintan apagadas.
 extension AlbumQueries on CardDatabase {
   /// Todas las expansiones de la base de datos con su nº de cartas.
+  ///
+  /// `GROUP BY` con `COUNT DISTINCT` sobre ~110k impresiones: cada foto de
+  /// logros lo llamaba entero otra vez. Cacheado por apertura de handle
+  /// (ver [CardDatabase.close]): la base solo cambia con una re-descarga.
   Future<List<SetInfo>> sets() async {
+    final cached = _setsCache;
+    if (cached != null) return cached;
     final db = await _open();
     final hasDate = await supportsYearFilter();
     final rows = db.select('''
@@ -587,7 +616,7 @@ extension AlbumQueries on CardDatabase {
       GROUP BY set_code
       ORDER BY set_name
     ''');
-    return [
+    final out = [
       for (final r in rows)
         SetInfo(
           code: r['set_code'] as String,
@@ -596,6 +625,11 @@ extension AlbumQueries on CardDatabase {
           releasedAt: hasDate ? r['rel'] as String? : null,
         )
     ];
+    // inmutable: la caché se comparte por referencia entre todos los
+    // consumidores; un .sort() in-place de uno la corrompería para el resto
+    final frozen = List<SetInfo>.unmodifiable(out);
+    _setsCache = frozen;
+    return frozen;
   }
 
   /// Casillas poseídas por set para un conjunto de oracle IDs (troceado para
@@ -852,12 +886,17 @@ class ValuedCard {
 /// Consultas de mercado: precios, versiones, legalidades y valor.
 extension MarketQueries on CardDatabase {
   Future<bool> _hasColumn(String table, String column) async {
+    final key = '$table.$column';
+    final cached = _hasColumnCache[key];
+    if (cached != null) return cached;
     try {
       final db = await _open();
       final rows = db.select('PRAGMA table_info($table)');
-      return rows.any((r) => r['name'] == column);
+      final has = rows.any((r) => r['name'] == column);
+      _hasColumnCache[key] = has;
+      return has;
     } catch (_) {
-      return false;
+      return false; // sin DB: no cachear un "no" que puede dejar de serlo
     }
   }
 

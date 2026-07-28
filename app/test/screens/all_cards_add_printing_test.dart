@@ -62,7 +62,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     await tester.enterText(find.byType(TextField), 'Lightning Bolt');
-    await tester.pump(const Duration(milliseconds: 50));
+    // el buscador tiene debounce: hay que dejar pasar la pausa antes de que
+    // dispare la consulta
+    await tester.pump(const Duration(milliseconds: 350));
 
     expect(find.text('Lightning Bolt'), findsWidgets);
 
