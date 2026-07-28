@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/services/forge_texts.dart';
+import 'package:manaforge_app/ui/forge/forge_texts.dart';
 
 /// Abre la hoja y devuelve el estilo elegido: cadena vacía para Auto (null
 /// de `themeOverride`), el tema/tribu si se eligió uno, o `null` si se cerró

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
-import 'package:manaforge_app/services/forge_texts.dart';
+import 'package:manaforge_app/ui/forge/forge_texts.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/card_database.dart';
@@ -15,9 +15,9 @@ import 'package:manaforge_app/services/deck_store.dart';
 import 'package:manaforge_app/services/forge_job.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/widgets/set_picker.dart';
-import 'package:manaforge_app/widgets/style_picker.dart';
-import 'package:manaforge_app/screens/deck_detail_screen.dart';
+import 'package:manaforge_app/ui/forge/widgets/set_picker.dart';
+import 'package:manaforge_app/ui/forge/widgets/style_picker.dart';
+import 'package:manaforge_app/ui/decks/deck_detail_screen.dart';
 import 'package:manaforge_app/ui/settings/test_screen.dart';
 
 const _minCardsForForge = 30;

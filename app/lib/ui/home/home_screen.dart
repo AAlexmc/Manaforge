@@ -17,12 +17,12 @@ import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/ui/core/widgets/update_notice.dart';
 import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
-import 'package:manaforge_app/screens/deck_detail_screen.dart';
+import 'package:manaforge_app/ui/decks/deck_detail_screen.dart';
 import 'package:manaforge_app/ui/home/editar_inicio_screen.dart';
 import 'package:manaforge_app/screens/import_csv_screen.dart';
 import 'package:manaforge_app/screens/logros_screen.dart';
-import 'package:manaforge_app/screens/mercado_screen.dart';
-import 'package:manaforge_app/screens/set_market_screen.dart';
+import 'package:manaforge_app/ui/market/mercado_screen.dart';
+import 'package:manaforge_app/ui/market/set_market_screen.dart';
 import 'package:manaforge_app/ui/settings/test_screen.dart';
 
 /// Inicio: el vestíbulo de la forja. Valor de tu colección, accesos rápidos

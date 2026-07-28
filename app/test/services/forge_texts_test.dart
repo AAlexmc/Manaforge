@@ -15,7 +15,7 @@ import 'package:manaforge_app/l10n/app_localizations_ko.dart';
 import 'package:manaforge_app/l10n/app_localizations_pt.dart';
 import 'package:manaforge_app/l10n/app_localizations_ru.dart';
 import 'package:manaforge_app/l10n/app_localizations_zh.dart';
-import 'package:manaforge_app/services/forge_texts.dart';
+import 'package:manaforge_app/ui/forge/forge_texts.dart';
 
 void main() {
   final locales = <String, AppLocalizations>{

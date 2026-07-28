@@ -6,7 +6,7 @@ import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/deck_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/screens/deck_detail_screen.dart';
+import 'package:manaforge_app/ui/decks/deck_detail_screen.dart';
 
 /// Mis mazos: los guardados desde Forge. Tocar uno lo abre con todo
 /// (plan, curva editable, lista) releyendo las cartas de la DB local.

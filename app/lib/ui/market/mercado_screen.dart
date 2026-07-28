@@ -20,12 +20,12 @@ import 'package:manaforge_app/services/wishlist_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/ui/core/widgets/db_download.dart';
-import 'package:manaforge_app/widgets/pnl_view.dart';
+import 'package:manaforge_app/ui/market/widgets/pnl_view.dart';
 import 'package:manaforge_app/ui/core/widgets/market_picker.dart';
 import 'package:manaforge_app/ui/core/widgets/price_chart.dart';
 import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
-import 'package:manaforge_app/screens/set_market_screen.dart';
-import 'package:manaforge_app/screens/wishlist_screen.dart';
+import 'package:manaforge_app/ui/market/set_market_screen.dart';
+import 'package:manaforge_app/ui/market/wishlist_screen.dart';
 
 /// Mercado: el valor de tu colección con evolución local, tus cartas más
 /// valiosas y un buscador de precios de cualquier carta. Precios Cardmarket
