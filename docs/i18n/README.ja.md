@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — コレクションをスキャン。いま持っているカードでデッキを鍛え上げよう。" width="100%">
+  <img src="../assets/banner.svg" alt="ManaForge — コレクションをスキャン。いま持っているカードでデッキを鍛え上げよう。" width="100%">
 </p>
 
-<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <b>🇯🇵 日本語</b> · <a href="README.ko.md">🇰🇷 한국어</a></p>
+<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="../../README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <b>🇯🇵 日本語</b> · <a href="README.ko.md">🇰🇷 한국어</a></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="カードデータベース"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 ライセンス"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 ライセンス"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="クロスプラットフォームのデスクトップアプリ">
   <img src="https://img.shields.io/badge/price-0%20%E2%82%AC%20forever-E06A50?style=flat-square" alt="永久に無料">
 </p>
@@ -26,7 +26,7 @@
 
 誰もが通る道です：ブースターや構築済みデッキ、譲り受けた引き出しでいっぱいのカードの山……なのに、何を組めばいいのかさっぱり分からない。ManaForgeはプレイヤーがプレイヤーのために作りました：**無料、広告なし、課金なし、アカウント不要、コードはすべて公開。**
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="forge"></a>
 ## ⚒️ Forge：デッキジェネレーター
@@ -34,7 +34,7 @@
 コレクションを渡すと、ベテランプレイヤーが組むような**60枚の完成デッキ**が返ってきます。頭の中はこうなっています：
 
 <p align="center">
-  <img src="docs/assets/forge-flow.svg" alt="コレクション → シナジー → マナカーブ → バリデーター → ゲームプラン付きデッキ" width="100%">
+  <img src="../assets/forge-flow.svg" alt="コレクション → シナジー → マナカーブ → バリデーター → ゲームプラン付きデッキ" width="100%">
 </p>
 
 - 🏔️ **ちゃんとしたマナカーブ** — アーキタイプごとの土地枚数、色シンボルに応じたマナ源の配分、検証済みのカーブ。土地15枚のデッキとは無縁です。
@@ -51,7 +51,7 @@
 </p>
 <p align="center"><sub><i>ManaForge誕生のきっかけとなった実際のコレクション — ジェネレーターはこれらのカード（＋280枚）を、遊べるデッキ5つに変えました。</i></sub></p>
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="features"></a>
 ## ✨ いまできること
@@ -124,12 +124,12 @@ Linux・Windows・macOSのネイティブラッパーと `pubspec.lock` はリ�
 
 | フォルダー | 中身 |
 |---|---|
-| [`app/`](app) | Flutterアプリ — Windows・macOS・Linux（いつかはモバイルも）をひとつのコードベースで |
-| [`forge_engine/`](forge_engine) | Dart製デッキエンジン：カーブ、バリデーター、分類器、ジェネレーター |
-| [`engine-reference/`](engine-reference) | 同じエンジンのPython版：アルゴリズムの**テスト済み正準リファレンス** |
-| [`scripts/`](scripts) | データパイプライン：Scryfallバルク → SQLite。GitHub Actions上でのみ実行 |
-| [`DesignSystem/`](DesignSystem) | デザイントークン、SVGマナアイコン、コンポーネント仕様 |
-| [`docs/`](docs) | データアーキテクチャ、Forgeのアルゴリズム、スキャナーの設計 |
+| [`app/`](../../app) | Flutterアプリ — Windows・macOS・Linux（いつかはモバイルも）をひとつのコードベースで |
+| [`forge_engine/`](../../forge_engine) | Dart製デッキエンジン：カーブ、バリデーター、分類器、ジェネレーター |
+| [`engine-reference/`](../../engine-reference) | 同じエンジンのPython版：アルゴリズムの**テスト済み正準リファレンス** |
+| [`scripts/`](../../scripts) | データパイプライン：Scryfallバルク → SQLite。GitHub Actions上でのみ実行 |
+| [`DesignSystem/`](../../DesignSystem) | デザイントークン、SVGマナアイコン、コンポーネント仕様 |
+| [`docs/`](../../docs) | データアーキテクチャ、Forgeのアルゴリズム、スキャナーの設計 |
 
 このプロジェクトを定義する決断がふたつあります。ひとつ：**エンジンは二重に存在する** — Pythonは実行可能でテスト済みの仕様、Dartはアプリに載る実装。食い違ったらPythonが正です。ふたつ：**データベースは自動で組み上がる** — ワークフローが毎月Scryfallバルクをダウンロードし、SQLiteを[release](https://github.com/AAlexmc/Manaforge/releases/tag/card-db-latest)として公開。アプリは初回起動時にそれを取得します。
 
@@ -148,7 +148,7 @@ cd app && flutter test                            # アプリのテスト
 - [x] **フェーズ4 — アプリ v0.2**：ES/EN検索付きコレクション、CSVインポーター、カルーセルとゲームプラン付きForge
 - [x] **フェーズ5 — 一級品のデスクトップ**：ReleasesへのWindows/macOS/Linux自動ビルド、デッキ保存、キーボードショートカット、位置を覚えているウィンドウ
 - [x] **フェーズ6 — 仕上げ**：価格とコレクション評価額、購入損益（P&L）、フォーマット別リーガル判定、**10言語完全対応**
-- [x] **フェーズ7 — スキャナー**：CIで生成する知覚フィンガープリント＋ウェブカメラ/写真、100 %デバイス上で完結（[内部の仕組み](docs/reconocimiento-cartas.md)）
+- [x] **フェーズ7 — スキャナー**：CIで生成する知覚フィンガープリント＋ウェブカメラ/写真、100 %デバイス上で完結（[内部の仕組み](../reconocimiento-cartas.md)）
 - [x] **フェーズ7½ — Forge v2**：確率的マナベース、安定性とカーブのスコア、部族/リアニメイトのテーマ、スタイルセレクター、ディープフォージ、スペイン語カード名
 - [ ] **フェーズ8 — トレードとコミュニティ**：コレクション間の交換、それに[目安箱](https://github.com/AAlexmc/Manaforge/issues/new/choose)に届いた要望あれこれ
 - [ ] **フェーズ9 — モバイル（コミュニティの声があれば）**：AndroidとiOS/TestFlight — コードは準備済み。足りないのはストアのアカウントだけ
@@ -175,7 +175,7 @@ ManaForgeは無料・広告なしで、この先もずっとそのままです�
 
 マナがタップアウト気味でも大丈夫：いちばんの応援はアプリを使うこと、[目安箱](https://github.com/AAlexmc/Manaforge/issues/new/choose)で改善してほしい点を聞かせること、そしてリポジトリに⭐を付けることです — スターはクリンナップ・ステップに捨てなくていいのです。
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 ## 🙏 クレジットと法的事項
 
@@ -184,7 +184,7 @@ ManaForgeは無料・広告なしで、この先もずっとそのままです�
 <a id="license"></a>
 ## 📄 ライセンス
 
-[PolyForm Noncommercial 1.0.0](LICENSE)。平たく言うと：
+[PolyForm Noncommercial 1.0.0](../../LICENSE)。平たく言うと：
 
 - **できること**：使う、コピーする、改変する、共有する、自分のバージョンを公開する。条件はただひとつ、コードと一緒にライセンスも渡すこと。
 - **できないこと**：販売したり、お金儲けに使ったりすること。アプリや改変版への課金も、有料の製品・サービスへの同梱も、企業の営利活動の中での利用もダメです。
@@ -196,9 +196,9 @@ ManaForgeは無料・広告なしで、この先もずっとそのままです�
 
 <p align="center">
   <sub>キッチンテーブルのプレイヤーたちが ❤️ とたっぷりのマナで作りました</sub><br/><br/>
-  <img src="DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
-  <img src="DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
-  <img src="DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
-  <img src="DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
-  <img src="DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
+  <img src="../../DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
+  <img src="../../DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
+  <img src="../../DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
+  <img src="../../DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
+  <img src="../../DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
 </p>

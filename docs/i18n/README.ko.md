@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — 컬렉션을 스캔하세요. 이미 가진 카드로 덱을 벼려내세요." width="100%">
+  <img src="../assets/banner.svg" alt="ManaForge — 컬렉션을 스캔하세요. 이미 가진 카드로 덱을 벼려내세요." width="100%">
 </p>
 
-<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <b>🇰🇷 한국어</b></p>
+<p align="center"><a href="README.en.md">🇬🇧 English</a> · <a href="../../README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <b>🇰🇷 한국어</b></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="카드 데이터베이스"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 라이선스"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 라이선스"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="크로스 플랫폼 데스크톱">
   <img src="https://img.shields.io/badge/price-0%20%E2%82%AC%20forever-E06A50?style=flat-square" alt="영원히 무료">
 </p>
@@ -26,7 +26,7 @@
 
 누구나 겪어 본 일이죠: 부스터에서, 스타터 덱에서, 물려받은 서랍에서 나온 카드가 상자에 한가득… 그런데 뭘 만들어야 할지는 막막한 상황. ManaForge는 플레이어가 플레이어를 위해 만들었습니다: **무료, 광고 없음, 프리미엄 없음, 계정 없음, 그리고 모든 코드 공개.**
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="forge"></a>
 ## ⚒️ Forge: 덱 생성기
@@ -34,7 +34,7 @@
 컬렉션을 건네주면 베테랑 플레이어가 짜는 방식 그대로 **60장 완성 덱**을 돌려줍니다. 머릿속은 이렇게 굴러갑니다:
 
 <p align="center">
-  <img src="docs/assets/forge-flow.svg" alt="컬렉션 → 시너지 → 마나 곡선 → 검증기 → 게임 플랜을 갖춘 덱" width="100%">
+  <img src="../assets/forge-flow.svg" alt="컬렉션 → 시너지 → 마나 곡선 → 검증기 → 게임 플랜을 갖춘 덱" width="100%">
 </p>
 
 - 🏔️ **제대로 된 마나 곡선** — 아키타입별 대지 수, 색 기호에 따라 배분된 마나 원천, 검증된 곡선. 대지 15장짜리 덱은 여기 없습니다.
@@ -51,7 +51,7 @@
 </p>
 <p align="center"><sub><i>ManaForge가 태어난 바로 그 실제 컬렉션 — 생성기는 이 카드들(그리고 280장 더)을 플레이 가능한 덱 다섯 개로 바꿔 놓았습니다.</i></sub></p>
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="features"></a>
 ## ✨ 지금 할 수 있는 것
@@ -124,12 +124,12 @@ Linux, Windows, macOS용 네이티브 래퍼와 `pubspec.lock`이 저장소에 �
 
 | 폴더 | 들어 있는 것 |
 |---|---|
-| [`app/`](app) | Flutter 앱 — Windows, macOS, Linux(언젠가는 모바일까지)를 하나의 코드베이스로 |
-| [`forge_engine/`](forge_engine) | Dart로 짠 덱 엔진: 곡선, 검증기, 분류기, 생성기 |
-| [`engine-reference/`](engine-reference) | 같은 엔진의 Python판: 알고리즘의 **테스트를 갖춘 정본 레퍼런스** |
-| [`scripts/`](scripts) | 데이터 파이프라인: Scryfall 벌크 → SQLite, GitHub Actions에서만 실행 |
-| [`DesignSystem/`](DesignSystem) | 디자인 토큰, SVG 마나 아이콘, 컴포넌트 명세 |
-| [`docs/`](docs) | 데이터 아키텍처, Forge 알고리즘, 스캐너 설계 |
+| [`app/`](../../app) | Flutter 앱 — Windows, macOS, Linux(언젠가는 모바일까지)를 하나의 코드베이스로 |
+| [`forge_engine/`](../../forge_engine) | Dart로 짠 덱 엔진: 곡선, 검증기, 분류기, 생성기 |
+| [`engine-reference/`](../../engine-reference) | 같은 엔진의 Python판: 알고리즘의 **테스트를 갖춘 정본 레퍼런스** |
+| [`scripts/`](../../scripts) | 데이터 파이프라인: Scryfall 벌크 → SQLite, GitHub Actions에서만 실행 |
+| [`DesignSystem/`](../../DesignSystem) | 디자인 토큰, SVG 마나 아이콘, 컴포넌트 명세 |
+| [`docs/`](../../docs) | 데이터 아키텍처, Forge 알고리즘, 스캐너 설계 |
 
 프로젝트를 규정하는 결정은 두 가지입니다. 하나: **엔진은 두 벌 존재합니다** — Python은 실행 가능한 테스트된 명세이고, Dart는 앱에 실려 나가는 구현입니다; 둘이 어긋나면 Python이 이깁니다. 둘: **데이터베이스는 스스로 빌드됩니다** — 워크플로가 매달 Scryfall 벌크를 내려받아 SQLite를 [release](https://github.com/AAlexmc/Manaforge/releases/tag/card-db-latest)로 공개하고, 앱은 첫 실행 때 그것을 내려받습니다.
 
@@ -148,7 +148,7 @@ cd app && flutter test                            # 앱 테스트
 - [x] **4단계 — 앱 v0.2**: ES/EN 검색이 되는 컬렉션, CSV 가져오기, 캐러셀과 게임 플랜을 갖춘 Forge
 - [x] **5단계 — 데스크톱 일등석**: Releases에 올라가는 자동 Windows/macOS/Linux 빌드, 덱 저장, 키보드 단축키, 제 자리를 기억하는 창
 - [x] **6단계 — 마무리 손질**: 가격과 컬렉션 가치, 구매 손익, 포맷별 사용 가능 여부, **완전 지원 10개 언어**
-- [x] **7단계 — 스캐너**: CI에서 생성되는 지각 지문 + 웹캠/사진, 100 % 온디바이스 ([내부 동작 원리](docs/reconocimiento-cartas.md))
+- [x] **7단계 — 스캐너**: CI에서 생성되는 지각 지문 + 웹캠/사진, 100 % 온디바이스 ([내부 동작 원리](../reconocimiento-cartas.md))
 - [x] **7½단계 — Forge v2**: 확률 기반 마나베이스, 일관성·곡선 점수, 부족/리애니메이터 테마, 스타일 선택기, 딥 포지, 스페인어 카드 이름
 - [ ] **8단계 — 트레이드와 커뮤니티**: 컬렉션 간 카드 교환, 그리고 [제안함](https://github.com/AAlexmc/Manaforge/issues/new/choose)에 들어오는 요청들
 - [ ] **9단계 — 모바일 (커뮤니티가 원한다면)**: Android와 iOS/TestFlight — 코드는 준비 완료; 스토어 계정만 없을 뿐
@@ -175,7 +175,7 @@ ManaForge는 무료에 광고도 없고, 앞으로도 그럴 겁니다([라이�
 
 마나가 전부 탭되어 있다면, 프로젝트를 돕는 가장 좋은 방법은 앱을 쓰고, [제안함](https://github.com/AAlexmc/Manaforge/issues/new/choose)에 개선했으면 하는 점을 알려 주고, 저장소에 ⭐를 달아 주는 겁니다 — 별은 턴 종료에 버려지지 않으니까요.
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 ## 🙏 크레딧과 법적 고지
 
@@ -184,7 +184,7 @@ ManaForge는 무료에 광고도 없고, 앞으로도 그럴 겁니다([라이�
 <a id="license"></a>
 ## 📄 라이선스
 
-[PolyForm Noncommercial 1.0.0](LICENSE). 쉽게 말하면:
+[PolyForm Noncommercial 1.0.0](../../LICENSE). 쉽게 말하면:
 
 - **할 수 있는 것** — 사용, 복사, 수정, 공유, 자기만의 버전 공개. 코드와 함께 라이선스를 전달한다는 조건 하나만 지키면 됩니다.
 - **할 수 없는 것** — 판매하거나 돈벌이에 쓰는 일: 앱이나 수정 버전에 요금을 매기는 것도, 유료 제품이나 서비스에 끼워 넣는 것도, 사업체 안에서 상업 활동에 쓰는 것도 안 됩니다.
@@ -196,9 +196,9 @@ ManaForge는 무료에 광고도 없고, 앞으로도 그럴 겁니다([라이�
 
 <p align="center">
   <sub>부엌 식탁 플레이어들이 ❤️와 넉넉한 마나로 만들었습니다</sub><br/><br/>
-  <img src="DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
-  <img src="DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
-  <img src="DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
-  <img src="DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
-  <img src="DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
+  <img src="../../DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
+  <img src="../../DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
+  <img src="../../DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
+  <img src="../../DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
+  <img src="../../DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
 </p>

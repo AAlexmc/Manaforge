@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="ManaForge — Scan your collection. Forge decks with the cards you already own." width="100%">
+  <img src="../assets/banner.svg" alt="ManaForge — Scan your collection. Forge decks with the cards you already own." width="100%">
 </p>
 
-<p align="center"><b>🇬🇧 English</b> · <a href="README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
+<p align="center"><b>🇬🇧 English</b> · <a href="../../README.md">🇪🇸 Español</a> · <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="README.fr.md">🇫🇷 Français</a> · <a href="README.it.md">🇮🇹 Italiano</a> · <a href="README.pt.md">🇵🇹 Português</a> · <a href="README.ru.md">🇷🇺 Русский</a> · <a href="README.zh.md">🇨🇳 中文</a> · <a href="README.ja.md">🇯🇵 日本語</a> · <a href="README.ko.md">🇰🇷 한국어</a></p>
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml"><img src="https://github.com/AAlexmc/Manaforge/actions/workflows/build-card-db.yml/badge.svg" alt="Card database"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 license"></a>
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-PolyForm%20Noncommercial-4FB878?style=flat-square" alt="PolyForm Noncommercial 1.0.0 license"></a>
   <img src="https://img.shields.io/badge/Flutter-Windows%20·%20macOS%20·%20Linux-5A9BD8?style=flat-square&logo=flutter&logoColor=white" alt="Cross-platform desktop">
   <img src="https://img.shields.io/badge/price-0%20%E2%82%AC%20forever-E06A50?style=flat-square" alt="Free forever">
 </p>
@@ -26,7 +26,7 @@
 
 We've all been there: a box full of cards from boosters, starter decks and inherited drawers… and no idea what to build with them. ManaForge is made by players, for players: **free, no ads, no premium, no accounts, and with all the code out in the open.**
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="forge"></a>
 ## ⚒️ Forge: the deck generator
@@ -34,7 +34,7 @@ We've all been there: a box full of cards from boosters, starter decks and inher
 Hand it your collection and it gives you back **complete 60-card decks**, built the way a veteran player would build them. This is how it thinks:
 
 <p align="center">
-  <img src="docs/assets/forge-flow.svg" alt="Collection → Synergies → Mana curve → Validator → Decks with a game plan" width="100%">
+  <img src="../assets/forge-flow.svg" alt="Collection → Synergies → Mana curve → Validator → Decks with a game plan" width="100%">
 </p>
 
 - 🏔️ **A proper mana curve** — lands per archetype, sources split by colour symbols, curve validated. No 15-land decks here.
@@ -51,7 +51,7 @@ Hand it your collection and it gives you back **complete 60-card decks**, built 
 </p>
 <p align="center"><sub><i>The real collection ManaForge was born from — the generator turned these cards (and 280 more) into five playable decks.</i></sub></p>
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 <a id="features"></a>
 ## ✨ What it does today
@@ -124,12 +124,12 @@ The native wrappers for Linux, Windows and macOS plus the `pubspec.lock` are in 
 
 | Folder | What lives there |
 |---|---|
-| [`app/`](app) | The Flutter app — one codebase for Windows, macOS and Linux (and mobile someday) |
-| [`forge_engine/`](forge_engine) | The deck engine in Dart: curve, validator, classifier and generator |
-| [`engine-reference/`](engine-reference) | The same engine in Python: the **canonical, tested reference** for the algorithm |
-| [`scripts/`](scripts) | Data pipeline: Scryfall bulk → SQLite, run only on GitHub Actions |
-| [`DesignSystem/`](DesignSystem) | Design tokens, SVG mana icons and component specs |
-| [`docs/`](docs) | Data architecture, the Forge algorithm and the scanner design |
+| [`app/`](../../app) | The Flutter app — one codebase for Windows, macOS and Linux (and mobile someday) |
+| [`forge_engine/`](../../forge_engine) | The deck engine in Dart: curve, validator, classifier and generator |
+| [`engine-reference/`](../../engine-reference) | The same engine in Python: the **canonical, tested reference** for the algorithm |
+| [`scripts/`](../../scripts) | Data pipeline: Scryfall bulk → SQLite, run only on GitHub Actions |
+| [`DesignSystem/`](../../DesignSystem) | Design tokens, SVG mana icons and component specs |
+| [`docs/`](../../docs) | Data architecture, the Forge algorithm and the scanner design |
 
 Two decisions define the project. One: **the engine exists twice** — Python as an executable, tested specification, Dart as the implementation that ships in the app; if they diverge, Python wins. Two: **the database builds itself** — a workflow downloads the Scryfall bulk every month and publishes the SQLite as a [release](https://github.com/AAlexmc/Manaforge/releases/tag/card-db-latest), which the app downloads on first launch.
 
@@ -148,7 +148,7 @@ cd app && flutter test                            # app tests
 - [x] **Phase 4 — App v0.2**: collection with ES/EN search, CSV importer, Forge with carousel and game plan
 - [x] **Phase 5 — First-class desktop**: automatic Windows/macOS/Linux builds in Releases, saved decks, keyboard shortcuts and a window that remembers its place
 - [x] **Phase 6 — Rounding off**: prices and collection value, purchase P&L, per-format legalities and **10 complete languages**
-- [x] **Phase 7 — Scanner**: perceptual fingerprints generated in CI + webcam/photo, 100 % on-device ([how it works inside](docs/reconocimiento-cartas.md))
+- [x] **Phase 7 — Scanner**: perceptual fingerprints generated in CI + webcam/photo, 100 % on-device ([how it works inside](../reconocimiento-cartas.md))
 - [x] **Phase 7½ — Forge v2**: probabilistic manabase, consistency-and-curve score, tribal/reanimator themes, style selector, deep forge and Spanish card names
 - [ ] **Phase 8 — Trades and community**: swaps between collections plus whatever the [suggestion box](https://github.com/AAlexmc/Manaforge/issues/new/choose) asks for
 - [ ] **Phase 9 — Mobile (if the community asks)**: Android and iOS/TestFlight — the code is ready; only the store accounts are missing
@@ -175,7 +175,7 @@ ManaForge is free and ad-free, and it's going to stay that way (the [license](#l
 
 And if your mana is tapped out, the best way to support the project is to use it, tell me what you'd improve in the [suggestion box](https://github.com/AAlexmc/Manaforge/issues/new/choose) and give the repo a ⭐ — stars aren't discarded at end of turn.
 
-<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+<p align="center"><img src="../assets/divider.svg" width="620" alt=""></p>
 
 ## 🙏 Credits and legal
 
@@ -184,7 +184,7 @@ Card data and imagery come from [Scryfall](https://scryfall.com), to whom we owe
 <a id="license"></a>
 ## 📄 License
 
-[PolyForm Noncommercial 1.0.0](LICENSE). In plain words:
+[PolyForm Noncommercial 1.0.0](../../LICENSE). In plain words:
 
 - **You can** use it, copy it, modify it, share it and publish your own versions, on the sole condition of passing the license along with the code.
 - **You cannot** sell it or use it to make money: no charging for the app or a modified version, no bundling it into a paid product or service, no using it inside a business for its commercial activity.
@@ -196,9 +196,9 @@ Heads-up: a license with a non-commercial restriction is **not** "open source" i
 
 <p align="center">
   <sub>Made with ❤️ and plenty of mana by kitchen-table players</sub><br/><br/>
-  <img src="DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
-  <img src="DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
-  <img src="DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
-  <img src="DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
-  <img src="DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
+  <img src="../../DesignSystem/ManaIcons/mana-white.svg" width="22" alt="W">
+  <img src="../../DesignSystem/ManaIcons/mana-blue.svg" width="22" alt="U">
+  <img src="../../DesignSystem/ManaIcons/mana-black.svg" width="22" alt="B">
+  <img src="../../DesignSystem/ManaIcons/mana-red.svg" width="22" alt="R">
+  <img src="../../DesignSystem/ManaIcons/mana-green.svg" width="22" alt="G">
 </p>
