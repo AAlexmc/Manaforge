@@ -4032,6 +4032,36 @@ abstract class AppLocalizations {
   /// **'Bloquear'**
   String get slLockButton;
 
+  /// No description provided for @wn031Headline.
+  ///
+  /// In es, this message translates to:
+  /// **'Álbum que habla claro, Forge más cómodo y todo más fluido'**
+  String get wn031Headline;
+
+  /// No description provided for @wn031Album.
+  ///
+  /// In es, this message translates to:
+  /// **'Álbum: si tu mercado (Card Kingdom, Mana Pool) no publica precio por edición, te lo dice claro en vez de enseñar un \$0.00 mudo.'**
+  String get wn031Album;
+
+  /// No description provided for @wn031Forge.
+  ///
+  /// In es, this message translates to:
+  /// **'Forge: al terminar una forja puedes volver a la selección sin perder lo elegido, y el aviso de mazo borrado dura más y se puede cerrar.'**
+  String get wn031Forge;
+
+  /// No description provided for @wn031Home.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicio: el valor total marca ~ cuando hay cartas sin precio, para no vender certeza donde hay estimación.'**
+  String get wn031Home;
+
+  /// No description provided for @wn031Perf.
+  ///
+  /// In es, this message translates to:
+  /// **'Más fluido: álbum, importaciones y búsquedas responden mejor con colecciones grandes.'**
+  String get wn031Perf;
+
   /// No description provided for @wn030Headline.
   ///
   /// In es, this message translates to:

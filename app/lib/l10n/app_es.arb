@@ -1141,6 +1141,11 @@
 
   "slLockButton": "Bloquear",
 
+  "wn031Headline": "Álbum que habla claro, Forge más cómodo y todo más fluido",
+  "wn031Album": "Álbum: si tu mercado (Card Kingdom, Mana Pool) no publica precio por edición, te lo dice claro en vez de enseñar un $0.00 mudo.",
+  "wn031Forge": "Forge: al terminar una forja puedes volver a la selección sin perder lo elegido, y el aviso de mazo borrado dura más y se puede cerrar.",
+  "wn031Home": "Inicio: el valor total marca ~ cuando hay cartas sin precio, para no vender certeza donde hay estimación.",
+  "wn031Perf": "Más fluido: álbum, importaciones y búsquedas responden mejor con colecciones grandes.",
   "wn030Headline": "Forge por expansiones, precio de compra y avisos de versión",
   "wn030Forge": "Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.",
   "wn030Pnl": "Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.",

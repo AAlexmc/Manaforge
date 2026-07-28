@@ -8,6 +8,10 @@ binarios (y sumas SHA-256 desde la 0.3.0).
 
 ## [Sin publicar]
 
+Nada aún.
+
+## [0.3.1] — 2026-07-28
+
 ### Cambiado
 - `app/lib` reordenado a la estructura oficial de Flutter (UI por feature,
   datos por tipo): `ui/` + `domain/` + `data/{repositories,services}/` +
@@ -16,6 +20,8 @@ binarios (y sumas SHA-256 desde la 0.3.0).
   marca `~` cuando hay cartas sin precio (#107).
 - Volver a la selección tras forjar; el aviso de mazo borrado dura más y se
   puede cerrar, con colores accesibles en ambos temas (#108).
+- Las 9 traducciones del README viven en `docs/i18n/`; en la raíz queda solo
+  el README en español (#111).
 
 ### Arreglado
 - Rendimiento: álbum sin consultas O(n²), bandeja del escáner en lote,
@@ -62,6 +68,7 @@ binarios (y sumas SHA-256 desde la 0.3.0).
   por expansión, primera versión del generador de mazos (Forge) y pipeline de
   datos con releases mensuales.
 
-[Sin publicar]: https://github.com/AAlexmc/Manaforge/compare/app-v0.3.0...HEAD
+[Sin publicar]: https://github.com/AAlexmc/Manaforge/compare/app-v0.3.1...HEAD
+[0.3.1]: https://github.com/AAlexmc/Manaforge/compare/app-v0.3.0...app-v0.3.1
 [0.3.0]: https://github.com/AAlexmc/Manaforge/compare/app-v0.2.0...app-v0.3.0
 [0.2.0]: https://github.com/AAlexmc/Manaforge/releases/tag/app-v0.2.0

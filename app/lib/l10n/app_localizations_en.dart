@@ -2504,6 +2504,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get slLockButton => 'Lock';
 
   @override
+  String get wn031Headline =>
+      'An album that speaks plainly, a comfier Forge, and everything smoother';
+
+  @override
+  String get wn031Album =>
+      'Album: if your market (Card Kingdom, Mana Pool) doesn\'t publish per-printing prices, it now says so plainly instead of showing a mute \$0.00.';
+
+  @override
+  String get wn031Forge =>
+      'Forge: after forging you can go back to your selection without losing it, and the deck-deleted notice lasts longer and can be dismissed.';
+
+  @override
+  String get wn031Home =>
+      'Home: the total value shows ~ when some cards have no price, so an estimate never poses as certainty.';
+
+  @override
+  String get wn031Perf =>
+      'Smoother: album, imports and searches respond better with large collections.';
+
+  @override
   String get wn030Headline => 'Forge by set, purchase price and version alerts';
 
   @override
