@@ -6,8 +6,8 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/screens/certificados_screen.dart';
-import 'package:manaforge_app/screens/logros_screen.dart';
+import 'package:manaforge_app/ui/achievements/certificados_screen.dart';
+import 'package:manaforge_app/ui/achievements/logros_screen.dart';
 import 'package:manaforge_app/screens/screens.dart';
 import 'package:manaforge_app/services/achievement_store.dart';
 import 'package:manaforge_app/services/app_update.dart';

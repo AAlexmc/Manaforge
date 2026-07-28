@@ -38,9 +38,9 @@ export 'package:manaforge_app/ui/market/wishlist_screen.dart';
 export 'package:manaforge_app/ui/settings/test_screen.dart';
 export 'package:manaforge_app/ui/decks/deck_detail_screen.dart';
 export 'package:manaforge_app/ui/forge/forge_screen.dart';
-export 'package:manaforge_app/screens/import_csv_screen.dart';
-export 'package:manaforge_app/screens/live_scan_screen.dart';
-export 'package:manaforge_app/screens/scan_screen.dart';
+export 'package:manaforge_app/ui/scan/import_csv_screen.dart';
+export 'package:manaforge_app/ui/scan/live_scan_screen.dart';
+export 'package:manaforge_app/ui/scan/scan_screen.dart';
 export 'package:manaforge_app/ui/home/startup_screen.dart';
 
 class AjustesScreen extends StatefulWidget {

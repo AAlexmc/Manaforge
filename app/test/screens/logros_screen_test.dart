@@ -10,7 +10,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/logros_screen.dart';
+import 'package:manaforge_app/ui/achievements/logros_screen.dart';
 import 'package:manaforge_app/services/achievement_store.dart';
 import 'package:manaforge_app/services/achievements.dart';
 import 'package:manaforge_app/services/achievements_controller.dart';

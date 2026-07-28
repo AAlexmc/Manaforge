@@ -9,7 +9,7 @@ import 'package:manaforge_app/scanner/scan_gate.dart';
 import 'package:manaforge_app/scanner/scan_tray.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
-import 'package:manaforge_app/widgets/tray_list.dart';
+import 'package:manaforge_app/ui/scan/widgets/tray_list.dart';
 
 Recognition _rec(String oracle,
         {String set = 'aer',

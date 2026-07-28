@@ -22,11 +22,11 @@ import 'package:manaforge_app/services/folder_store.dart';
 import 'package:manaforge_app/services/linux_camera.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
-import 'package:manaforge_app/widgets/scanner_db_gate.dart';
-import 'package:manaforge_app/widgets/session_tray.dart';
-import 'package:manaforge_app/widgets/set_lock.dart';
-import 'package:manaforge_app/screens/scan_screen.dart';
-import 'package:manaforge_app/screens/scan_shared.dart';
+import 'package:manaforge_app/ui/scan/widgets/scanner_db_gate.dart';
+import 'package:manaforge_app/ui/scan/widgets/session_tray.dart';
+import 'package:manaforge_app/ui/scan/widgets/set_lock.dart';
+import 'package:manaforge_app/ui/scan/scan_screen.dart';
+import 'package:manaforge_app/ui/scan/scan_shared.dart';
 
 /// Escáner en vivo, fase C: la webcam mira la mesa y ManaForge reconoce las
 /// cartas que le pases por delante — sin tocar nada. Cada reconocimiento

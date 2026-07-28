@@ -18,7 +18,7 @@ import 'package:manaforge_app/ui/collection/album_screen.dart';
 import 'package:manaforge_app/ui/collection/all_cards_screen.dart';
 import 'package:manaforge_app/ui/collection/folder_detail_screen.dart';
 import 'package:manaforge_app/ui/collection/folder_pick_screen.dart';
-import 'package:manaforge_app/screens/import_csv_screen.dart';
+import 'package:manaforge_app/ui/scan/import_csv_screen.dart';
 
 // El orden y los filtros viven en collection_filters.dart; se re-exportan
 // porque media app (y sus tests) los importaban desde aquí.

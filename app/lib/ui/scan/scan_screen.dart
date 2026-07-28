@@ -22,10 +22,10 @@ import 'package:manaforge_app/services/safe_input.dart';
 import 'package:manaforge_app/services/scanner_database.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/widgets/scanner_db_gate.dart';
-import 'package:manaforge_app/widgets/set_lock.dart';
-import 'package:manaforge_app/widgets/tray_list.dart';
-import 'package:manaforge_app/screens/scan_shared.dart';
+import 'package:manaforge_app/ui/scan/widgets/scanner_db_gate.dart';
+import 'package:manaforge_app/ui/scan/widgets/set_lock.dart';
+import 'package:manaforge_app/ui/scan/widgets/tray_list.dart';
+import 'package:manaforge_app/ui/scan/scan_shared.dart';
 
 /// Extensiones que se aceptan como foto: el picker de fichero solo enseña
 /// estas, y arrastrar-y-soltar tiene que aplicar el MISMO filtro (si no,

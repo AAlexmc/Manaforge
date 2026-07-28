@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:manaforge_app/scanner/scan_tray.dart' show TrayLine;
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/folder_store.dart';
-import 'package:manaforge_app/widgets/folder_target.dart';
-import 'package:manaforge_app/widgets/set_lock.dart';
-import 'package:manaforge_app/widgets/version_picker.dart';
+import 'package:manaforge_app/ui/scan/widgets/folder_target.dart';
+import 'package:manaforge_app/ui/scan/widgets/set_lock.dart';
+import 'package:manaforge_app/ui/scan/widgets/version_picker.dart';
 
 /// La carpeta elegida, si sigue existiendo (se puede borrar desde otra
 /// pantalla mientras escaneas).

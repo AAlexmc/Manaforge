@@ -19,7 +19,7 @@ import 'package:manaforge_app/services/collection_sets.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/screens/first_card_pick_screen.dart';
+import 'package:manaforge_app/ui/scan/first_card_pick_screen.dart';
 
 // El papel se pinta en el idioma de la app: el certificado solo guarda datos
 // (qué clase es, la fecha ISO, el nombre propio de la expansión) y aquí se le
