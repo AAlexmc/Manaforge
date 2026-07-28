@@ -12,6 +12,7 @@ import '../services/scanner_database.dart';
 import '../services/market_prefs.dart';
 import '../services/price_series_database.dart';
 import '../widgets/app_shortcuts.dart';
+import '../widgets/db_download.dart';
 import '../widgets/folder_tile.dart';
 import 'album_screen.dart';
 import 'all_cards_screen.dart';
@@ -143,14 +144,16 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
     final byPrinting = widget.collection.hasPrintingData;
     final printingQty = widget.collection.printingQty;
     try {
-      final owners = byPrinting && printingQty.isNotEmpty
-          ? await widget.db.oracleByPrintings(printingQty.keys)
-          : const <String, String>{};
-      // de paso, las colecciones viejas aprenden a qué carta pertenece cada
-      // edición (hace falta para que vender baje el valor)
-      if (owners.isNotEmpty) {
-        widget.collection.backfillPrintingOwners(owners);
-      }
+      // collectionValue() ya backfillea printingOwner (colecciones viejas
+      // aprenden de qué carta es cada edición, hace falta para que vender
+      // baje el valor): las carpetas reusan lo aprendido, sin repetir la
+      // consulta a la base.
+      final total =
+          await collectionValue(db: widget.db, collection: widget.collection);
+      // una sola copia del mapa para TODAS las carpetas (printingOwner copia
+      // en cada lectura), y todas ven la misma foto aunque otro listener
+      // backfillee a mitad del bucle
+      final owners = widget.collection.printingOwner;
       Future<Map<String, String>> cachedOwners(Iterable<String> _) async =>
           owners;
       final values = <String, CollectionValuation>{};
@@ -167,16 +170,6 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
           foilPrices: widget.db.foilPricesForPrintings,
         );
       }
-      final total = await computeCollectionValue(
-        cards: cards,
-        byPrinting: byPrinting,
-        printingQty: printingQty,
-        oraclePrices: widget.db.pricesForOracles,
-        printingPrices: widget.db.pricesForPrintings,
-        printingOwner: widget.collection.printingOwner,
-        foilQty: widget.collection.foilPrintings,
-        foilPrices: widget.db.foilPricesForPrintings,
-      );
       if (mounted && token == _valuesToken) {
         setState(() {
           _folderValues = values;
@@ -193,25 +186,29 @@ class _ColeccionScreenState extends State<ColeccionScreen> {
       _downloadProgress = 0;
       _error = null;
     });
-    try {
-      await for (final p in widget.db.download()) {
-        if (mounted) setState(() => _downloadProgress = p < 0 ? null : p);
-      }
-      if (mounted) {
-        setState(() {
-          _dbReady = true;
-          _downloadProgress = null;
-        });
-        _recomputeValues();
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _downloadProgress = null;
-          _error = downloadErrorText(tr(context), e);
-        });
-      }
-    }
+    await runDownload(
+      widget.db.download(),
+      onProgress: (p) {
+        if (mounted) setState(() => _downloadProgress = p);
+      },
+      onDone: () async {
+        if (mounted) {
+          setState(() {
+            _dbReady = true;
+            _downloadProgress = null;
+          });
+          _recomputeValues();
+        }
+      },
+      onError: (e) {
+        if (mounted) {
+          setState(() {
+            _downloadProgress = null;
+            _error = downloadErrorText(tr(context), e);
+          });
+        }
+      },
+    );
   }
 
   Future<void> _newFolder() async {

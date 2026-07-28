@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/database_download_error.dart';
 import '../l10n/t.dart';
 import '../services/scanner_database.dart';
+import 'db_download.dart';
 
 /// Puerta de la base de huellas: si aún no está descargada enseña el
 /// explicador + botón de descarga con progreso; cuando está lista pinta
@@ -36,24 +37,28 @@ class _ScannerDbGateState extends State<ScannerDbGate> {
       _progress = 0;
       _error = null;
     });
-    try {
-      await for (final p in widget.scanner.download()) {
-        if (mounted) setState(() => _progress = p < 0 ? null : p);
-      }
-      if (mounted) {
-        setState(() {
-          _ready = true;
-          _progress = null;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _progress = null;
-          _error = downloadErrorText(tr(context), e);
-        });
-      }
-    }
+    await runDownload(
+      widget.scanner.download(),
+      onProgress: (p) {
+        if (mounted) setState(() => _progress = p);
+      },
+      onDone: () async {
+        if (mounted) {
+          setState(() {
+            _ready = true;
+            _progress = null;
+          });
+        }
+      },
+      onError: (e) {
+        if (mounted) {
+          setState(() {
+            _progress = null;
+            _error = downloadErrorText(tr(context), e);
+          });
+        }
+      },
+    );
   }
 
   @override

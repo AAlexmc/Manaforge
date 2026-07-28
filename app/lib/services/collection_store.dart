@@ -210,11 +210,6 @@ class CollectionStore extends ChangeNotifier {
     return list;
   }
 
-  /// Las más recientemente añadidas primero (lo que acabas de escanear
-  /// arriba del todo).
-  List<OwnedCard> get cardsByRecent =>
-      _cards.values.toList()..sort(compareByRecent);
-
   int get totalCopies =>
       _cards.values.fold(0, (a, c) => a + c.qty);
 

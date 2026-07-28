@@ -337,6 +337,38 @@ class CardDatabase {
     return _hitFromRow(rows.first);
   }
 
+  /// Igual que [byScryfallId] pero de una tacada: el escáner mira hasta 3
+  /// candidatos por carta, y consultarlos uno a uno era una consulta por
+  /// candidato (N+1 por carta escaneada). Los ids que no existan simplemente
+  /// no salen en el mapa.
+  Future<Map<String, CardHit>> byScryfallIds(
+      Iterable<String> scryfallIds) async {
+    final ids = scryfallIds.toSet();
+    if (ids.isEmpty) return const {};
+    final db = await _open();
+    final esCol =
+        await _hasColumn('cards', 'name_es') ? 'c.name_es' : 'NULL AS name_es';
+    final out = <String, CardHit>{};
+    final list = ids.toList();
+    const chunkSize = 400;
+    for (var i = 0; i < list.length; i += chunkSize) {
+      final chunk = list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize);
+      final marks = List.filled(chunk.length, '?').join(',');
+      final rows = db.select('''
+        SELECT p.scryfall_id, c.oracle_id, c.name, p.printed_name, $esCol,
+               p.set_code, p.collector_number, p.image_small, p.image_normal,
+               c.type_line, c.colors, c.mana_cost, c.cmc, c.power, c.toughness
+        FROM printings p JOIN cards c ON c.oracle_id = p.oracle_id
+        WHERE p.scryfall_id IN ($marks)
+      ''', chunk);
+      for (final r in rows) {
+        out[r['scryfall_id'] as String] = _hitFromRow(r);
+      }
+    }
+    return out;
+  }
+
   /// Todas las cartas impresas en esas expansiones, TENGAS O NO, listas para
   /// [buildPool]: {oracleId: copias}. Es el pool del modo "incluir cartas que
   /// no tengo".

@@ -105,3 +105,43 @@ Future<CollectionValuation> computeCollectionValue({
   }
   return CollectionValuation(total: total, valued: valued, approximate: approximate);
 }
+
+/// Atajo con la base de cartas y la colección de verdad: valora la
+/// colección ENTERA con la fórmula canónica.
+///
+/// Antes de valorar, aprende de quién es cada impresión que aún no lo sepa
+/// (colecciones de antes de esta versión saben qué ediciones tienen pero no
+/// de qué carta es cada una) y lo deja guardado en [collection] — el mismo
+/// prólogo que ya hacían Mercado y Colección por su cuenta. Sin este
+/// prólogo el total puede salir marcado aproximado (~) cuando en realidad
+/// ya se puede saber exacto, o al revés: por eso vive aquí y no repetido en
+/// cada pantalla, que es como se descuadraban entre sí.
+Future<CollectionValuation> collectionValue({
+  required CardDatabase db,
+  required CollectionStore collection,
+}) async {
+  final byPrinting = collection.hasPrintingData;
+  final printingQty = collection.printingQty;
+  // solo las impresiones que aún no sabemos de quién son: este helper corre
+  // en cada aviso del store (Inicio, Mercado, Colección, logros a la vez) y
+  // sin el cortocircuito re-barría la colección ENTERA en cada notificación
+  final yaSabidos = collection.printingOwner;
+  final faltan = [
+    for (final k in printingQty.keys)
+      if (!yaSabidos.containsKey(k)) k
+  ];
+  if (byPrinting && faltan.isNotEmpty) {
+    final owners = await db.oracleByPrintings(faltan);
+    if (owners.isNotEmpty) collection.backfillPrintingOwners(owners);
+  }
+  return computeCollectionValue(
+    cards: collection.cards,
+    byPrinting: byPrinting,
+    printingQty: printingQty,
+    oraclePrices: db.pricesForOracles,
+    printingPrices: db.pricesForPrintings,
+    printingOwner: collection.printingOwner,
+    foilQty: collection.foilPrintings,
+    foilPrices: db.foilPricesForPrintings,
+  );
+}

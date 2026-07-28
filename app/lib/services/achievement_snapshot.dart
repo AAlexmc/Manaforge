@@ -216,17 +216,10 @@ Future<AchievementSnapshot> gatherSnapshot({
         ? {for (final s in await db.sets()) s.code: s.total}
         : const <String, int>{};
 
-    final valuation = await computeCollectionValue(
-      cards: cards,
-      byPrinting: collection.hasPrintingData,
-      printingQty: collection.printingQty,
-      oraclePrices: db.pricesForOracles,
-      printingPrices: db.pricesForPrintings,
-      // misma cuenta foil que Inicio/Mercado: sin esto, la vitrina foil
-      // (a precio foil) podía superar al total (que iba a precio normal)
-      foilQty: collection.foilPrintings,
-      foilPrices: db.foilPricesForPrintings,
-    );
+    // mismo atajo que Inicio/Mercado/Colección (con su backfill de
+    // printingOwner incluido): sin la cuenta foil, la vitrina (a precio
+    // foil) podía superar al total (que iba a precio normal)
+    final valuation = await collectionValue(db: db, collection: collection);
     totalValue = valuation.total;
     if (collection.hasPrintingData) {
       // "tu carta más cara" = la EDICIÓN más cara que tienes, con el mismo
@@ -256,10 +249,11 @@ Future<AchievementSnapshot> gatherSnapshot({
       });
     }
 
+    // collectionValue (arriba) ya consultó y backfilleó los dueños que
+    // faltaban: las carpetas reusan lo aprendido, sin repetir la consulta
     final owners = collection.hasPrintingData
-        ? await db.oracleByPrintings(collection.printingQty.keys)
+        ? collection.printingOwner
         : const <String, String>{};
-    if (owners.isNotEmpty) collection.backfillPrintingOwners(owners);
     for (final f in folders.folders) {
       final v = await computeFolderValue(
         folderCardIds: f.cardIds,
