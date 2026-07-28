@@ -13,6 +13,7 @@
 </p>
 
 <p align="center">
+  <b><a href="#-manaforge-en-4-minutos">Vídeo</a></b> ·
   <b><a href="#-forge-el-generador-de-mazos">Forge</a></b> ·
   <b><a href="#-qué-hace-hoy">Funciones</a></b> ·
   <b><a href="#-descárgala-y-ábrela">Descargar</a></b> ·
@@ -25,6 +26,18 @@
 > **¿Qué mazos puedo montar con lo que YA tengo?** Esa es la pregunta que ninguna app de Magic responde bien — y la única razón de existir de ManaForge. Las demás te ayudan a *catalogar* tu caja de cartas; esta te la convierte en mazos listos para barajar.
 
 Todos hemos pasado por esto: una caja llena de cartas de sobres, mazos de inicio y cajones heredados… y ninguna idea de qué construir con ellas. ManaForge está hecha por jugadores, para jugadores: **gratis, sin anuncios, sin premium, sin cuentas, y con todo el código abierto.**
+
+<p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
+
+## 🎬 ManaForge en 4 minutos
+
+<p align="center">
+  <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Tutorial.mp4">
+    <img src="docs/assets/tutorial-poster.jpg" width="720" alt="Tutorial en vídeo de ManaForge: el escáner reconociendo una carta en vivo">
+  </a>
+</p>
+
+<p align="center"><i>Clic para ver el tutorial (4 min, a velocidad ×2): escanear cartas con la webcam, importar tu CSV, el álbum y Forge.</i></p>
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 
