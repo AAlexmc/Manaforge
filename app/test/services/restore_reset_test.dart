@@ -10,9 +10,9 @@ library;
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/price_history.dart';
-import 'package:manaforge_app/services/recents_store.dart';
-import 'package:manaforge_app/services/restore_reset.dart';
+import 'package:manaforge_app/data/services/price_history.dart';
+import 'package:manaforge_app/data/repositories/recents_store.dart';
+import 'package:manaforge_app/data/services/restore_reset.dart';
 import 'package:path/path.dart' as p;
 
 Directory _tmpDir() {

@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:path/path.dart' as p;
 
 OwnedCard _carta(String id) =>

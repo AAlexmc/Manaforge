@@ -5,7 +5,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/widgets/db_download.dart';
+import 'package:manaforge_app/ui/core/widgets/db_download.dart';
 
 void main() {
   test('reporta cada paso del progreso', () async {

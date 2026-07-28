@@ -10,7 +10,7 @@
 /// Lógica pura (sin cámara, sin UI) para poder testearla en CI.
 library;
 
-import 'hash_index.dart';
+import 'package:manaforge_app/scanner/hash_index.dart';
 
 /// Cuánta confianza tiene el escáner en el top-1.
 enum ScanConfidence {

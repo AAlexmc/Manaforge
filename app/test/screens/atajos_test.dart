@@ -9,7 +9,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/widgets/app_shortcuts.dart';
+import 'package:manaforge_app/ui/core/widgets/app_shortcuts.dart';
 
 /// Dispara el atajo cuya tecla es [tecla].
 void _dispara(

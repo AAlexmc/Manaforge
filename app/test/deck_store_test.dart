@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
-import 'package:manaforge_app/services/deck_store.dart';
+import 'package:manaforge_app/data/repositories/deck_store.dart';
 
 void main() {
   test('SavedDeck: ida y vuelta a JSON y reconstrucción del GeneratedDeck',

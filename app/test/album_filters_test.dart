@@ -2,8 +2,8 @@
 // búsqueda, "con cartas mías") y ordenaciones, separada de la UI.
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:manaforge_app/screens/album_filters.dart';
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/ui/collection/album_filters.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 
 const sets = [
   SetInfo(

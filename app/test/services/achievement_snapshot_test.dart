@@ -3,10 +3,10 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/achievement_snapshot.dart';
-import 'package:manaforge_app/services/achievement_store.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/domain/achievement_snapshot.dart';
+import 'package:manaforge_app/data/repositories/achievement_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 
 OwnedCard _card(
   String name, {

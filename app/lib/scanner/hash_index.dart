@@ -7,8 +7,8 @@ library;
 
 import 'dart:typed_data';
 
-import 'dhash.dart';
-import 'digital_sets.dart';
+import 'package:manaforge_app/scanner/dhash.dart';
+import 'package:manaforge_app/scanner/digital_sets.dart';
 
 /// Una impresión de la base de huellas (una fila de art_hashes).
 class HashEntry {

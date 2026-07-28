@@ -3,7 +3,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations_es.dart';
-import 'package:manaforge_app/services/achievements.dart';
+import 'package:manaforge_app/domain/achievements.dart';
 
 AchievementSnapshot _snap({
   int totalCopies = 0,

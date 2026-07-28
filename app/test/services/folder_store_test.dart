@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 
 void main() {
   test('CardFolder: ida y vuelta a JSON', () {

@@ -9,7 +9,7 @@ library;
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/window_prefs.dart';
+import 'package:manaforge_app/data/repositories/window_prefs.dart';
 
 void main() {
   late Directory dir;

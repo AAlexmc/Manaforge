@@ -4,7 +4,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/debouncer.dart';
+import 'package:manaforge_app/utils/debouncer.dart';
 
 void main() {
   test('varias llamadas seguidas: solo UNA ejecución, con el último valor',

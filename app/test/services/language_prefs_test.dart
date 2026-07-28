@@ -10,7 +10,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/language_prefs.dart';
+import 'package:manaforge_app/data/repositories/language_prefs.dart';
 
 void main() {
   late Directory dir;

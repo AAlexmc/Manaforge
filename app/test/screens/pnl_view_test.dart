@@ -7,9 +7,9 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/markets.dart';
-import 'package:manaforge_app/services/pnl.dart';
-import 'package:manaforge_app/widgets/pnl_view.dart';
+import 'package:manaforge_app/data/services/markets.dart';
+import 'package:manaforge_app/domain/pnl.dart';
+import 'package:manaforge_app/ui/market/widgets/pnl_view.dart';
 
 Future<void> _pump(WidgetTester tester, PnL pnl) => tester.pumpWidget(
       MaterialApp(

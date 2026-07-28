@@ -3,7 +3,7 @@
 // la alerta se rearma.
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:manaforge_app/services/wishlist_store.dart';
+import 'package:manaforge_app/data/repositories/wishlist_store.dart';
 
 WishItem _item(String oracle, String name, double target) =>
     WishItem(oracleId: oracle, name: name, colors: '', targetPrice: target);

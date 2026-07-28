@@ -10,11 +10,11 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/scanner/tray_commit.dart';
-import 'package:manaforge_app/screens/scan_screen.dart';
-import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
-import 'package:manaforge_app/services/scanner_database.dart';
+import 'package:manaforge_app/ui/scan/scan_screen.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
+import 'package:manaforge_app/data/services/scanner_database.dart';
 
 /// isReady() de verdad hace IO: en la zona FakeAsync ese future no se resuelve
 /// nunca y la puerta se queda en el spinner. Este doble contesta al instante.

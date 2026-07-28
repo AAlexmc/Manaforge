@@ -5,7 +5,7 @@ library;
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/serial_task.dart';
+import 'package:manaforge_app/utils/serial_task.dart';
 
 void main() {
   test(

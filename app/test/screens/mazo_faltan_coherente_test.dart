@@ -8,7 +8,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
-import 'package:manaforge_app/services/deck_shortfall.dart';
+import 'package:manaforge_app/domain/deck_shortfall.dart';
 
 fe.Card _carta(String nombre, int qty) => fe.Card(
       name: nombre,

@@ -10,15 +10,15 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/logros_screen.dart';
-import 'package:manaforge_app/services/achievement_store.dart';
-import 'package:manaforge_app/services/achievements.dart';
-import 'package:manaforge_app/services/achievements_controller.dart';
-import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/deck_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
-import 'package:manaforge_app/services/wishlist_store.dart';
+import 'package:manaforge_app/ui/achievements/logros_screen.dart';
+import 'package:manaforge_app/data/repositories/achievement_store.dart';
+import 'package:manaforge_app/domain/achievements.dart';
+import 'package:manaforge_app/domain/achievements_controller.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/deck_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
+import 'package:manaforge_app/data/repositories/wishlist_store.dart';
 
 AchievementsController _controller(CollectionStore collection) =>
     AchievementsController(

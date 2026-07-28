@@ -8,11 +8,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/screens.dart';
-import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/factory_reset.dart';
-import 'package:manaforge_app/services/home_layout_prefs.dart';
-import 'package:manaforge_app/services/language_prefs.dart';
+import 'package:manaforge_app/ui/settings/ajustes_screen.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/services/factory_reset.dart';
+import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
+import 'package:manaforge_app/data/repositories/language_prefs.dart';
 
 import '../helpers/app_l10n.dart';
 

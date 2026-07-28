@@ -4,7 +4,7 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/scanner/burst_controller.dart';
 import 'package:manaforge_app/scanner/scan_gate.dart';
-import 'package:manaforge_app/services/scanner_database.dart';
+import 'package:manaforge_app/data/services/scanner_database.dart';
 
 ScanMatch _match(String oracle, int distance) => ScanMatch(
     HashEntry(

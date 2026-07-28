@@ -4,11 +4,11 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/live_scan_screen.dart';
-import 'package:manaforge_app/screens/scan_screen.dart';
-import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/scanner_database.dart';
+import 'package:manaforge_app/ui/scan/live_scan_screen.dart';
+import 'package:manaforge_app/ui/scan/scan_screen.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/services/scanner_database.dart';
 
 /// isReady() de verdad hace IO (path_provider + File.exists): en la zona
 /// FakeAsync de flutter test ese future JAMÁS se resuelve y la puerta se

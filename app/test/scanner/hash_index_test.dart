@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/scanner/dhash.dart';
-import 'package:manaforge_app/services/scanner_database.dart';
+import 'package:manaforge_app/data/services/scanner_database.dart';
 
 HashEntry _entry(String id, String oracle, String name,
         {String set = 'tst', String num = '1'}) =>

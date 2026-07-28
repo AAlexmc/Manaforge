@@ -6,7 +6,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/ui/core/widgets/common.dart';
 
 List<ZoomCard> _tres() => const [
       ZoomCard(name: 'Sol Ring'),

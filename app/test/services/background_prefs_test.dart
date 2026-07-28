@@ -11,8 +11,8 @@ import 'dart:io';
 import 'dart:ui' show Color;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/background_prefs.dart';
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/data/repositories/background_prefs.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 import 'package:path/path.dart' as p;
 
 /// Un PNG de 1×1 de verdad (cabecera incluida), por si algún día se decodifica.

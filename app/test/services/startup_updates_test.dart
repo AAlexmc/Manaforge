@@ -2,7 +2,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/startup_updates.dart';
+import 'package:manaforge_app/data/services/startup_updates.dart';
 
 void main() {
   final hoy = DateTime(2026, 7, 21, 13, 40);

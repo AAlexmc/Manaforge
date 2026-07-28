@@ -7,8 +7,8 @@
 /// tacada.
 library;
 
-import '../services/card_database.dart';
-import 'hash_index.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/scanner/hash_index.dart';
 
 /// Rellena [hitCache] con lo que falte de [matches], en un único viaje a la
 /// base. Si la consulta falla entera (sin DB de cartas), los candidatos se

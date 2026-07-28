@@ -11,10 +11,10 @@ library;
 
 import 'dart:async';
 
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/folder_store.dart';
-import 'scan_tray.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
+import 'package:manaforge_app/scanner/scan_tray.dart';
 
 /// Qué ha entrado, para el mensaje y para los logros.
 class TrayCommitResult {

@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/backup.dart';
-import 'package:manaforge_app/services/factory_reset.dart';
+import 'package:manaforge_app/data/services/backup.dart';
+import 'package:manaforge_app/data/services/factory_reset.dart';
 import 'package:path/path.dart' as p;
 
 Future<Directory> _dataDir(Map<String, String> files) async {

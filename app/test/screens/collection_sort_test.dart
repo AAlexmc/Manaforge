@@ -4,8 +4,8 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations_es.dart';
-import 'package:manaforge_app/screens/coleccion_screen.dart';
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/ui/collection/coleccion_screen.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 
 OwnedCard _card(String name,
         {int? addedAt, int qty = 1, int cmc = 1, String colors = 'G'}) =>

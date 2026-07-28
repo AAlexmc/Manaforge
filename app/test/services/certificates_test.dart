@@ -4,8 +4,8 @@ library;
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/certificate_store.dart';
-import 'package:manaforge_app/services/certificates.dart';
+import 'package:manaforge_app/data/repositories/certificate_store.dart';
+import 'package:manaforge_app/domain/certificates.dart';
 
 void main() {
   const owned = {'aer': 194, 'kld': 50, 'fdn': 291};

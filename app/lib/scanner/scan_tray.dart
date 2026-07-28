@@ -10,9 +10,9 @@ library;
 
 import 'dart:typed_data';
 
-import 'burst_controller.dart';
-import 'hash_index.dart';
-import 'scan_gate.dart';
+import 'package:manaforge_app/scanner/burst_controller.dart';
+import 'package:manaforge_app/scanner/hash_index.dart';
+import 'package:manaforge_app/scanner/scan_gate.dart';
 
 /// Una línea de la bandeja: una impresión con su cantidad y sus candidatos
 /// (por si hay que corregir cuál es).

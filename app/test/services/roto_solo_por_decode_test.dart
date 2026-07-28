@@ -10,8 +10,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/achievement_store.dart';
-import 'package:manaforge_app/services/certificate_store.dart';
+import 'package:manaforge_app/data/repositories/achievement_store.dart';
+import 'package:manaforge_app/data/repositories/certificate_store.dart';
 
 /// Simula "algo revienta DESPUÉS de decodificar bien" sin depender de que
 /// `ChangeNotifier.notifyListeners()` atrape la excepción de un listener
