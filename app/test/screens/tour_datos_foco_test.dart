@@ -16,7 +16,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/screens.dart';
+import 'package:manaforge_app/ui/settings/ajustes_screen.dart';
 import 'package:manaforge_app/services/background_prefs.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/language_prefs.dart';
