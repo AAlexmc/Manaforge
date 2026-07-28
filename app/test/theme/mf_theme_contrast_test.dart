@@ -65,4 +65,21 @@ void main() {
     expect(iconTarjeta == iconBarra, isFalse,
         reason: 'fondos distintos → colores de icono distintos');
   });
+
+  test('el SnackBar se lee entero en los dos temas: contenido, acción '
+      '(DESHACER) y X de cierre contrastan con su fondo', () {
+    for (final brightness in Brightness.values) {
+      final st = mfTheme(brightness).snackBarTheme;
+      final fondo = st.backgroundColor!;
+      expect(esLegible(st.contentTextStyle!.color!, fondo), isTrue,
+          reason: 'contenido en $brightness');
+      expect(esLegible(st.actionTextColor!, fondo), isTrue,
+          reason: 'acción en $brightness (antes salía casi del color '
+              'del fondo)');
+      expect(esLegible(st.closeIconColor!, fondo), isTrue,
+          reason: 'X de cierre en $brightness');
+      expect(st.showCloseIcon, isTrue,
+          reason: 'sin la X, un aviso con acción parece no irse nunca');
+    }
+  });
 }

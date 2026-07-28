@@ -1219,6 +1219,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fgReforge => 'Reforger';
 
   @override
+  String get fgBackToOptions => 'Volver a elegir cómo forjar';
+
+  @override
   String mkAlertOne(String carta, String precio, String objetivo) {
     return '🔔 $carta est à $precio (ton objectif : $objetivo) !';
   }

@@ -1211,6 +1211,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fgReforge => 'Forge again';
 
   @override
+  String get fgBackToOptions => 'Back to forge options';
+
+  @override
   String mkAlertOne(String carta, String precio, String objetivo) {
     return '🔔 $carta is at $precio (your target: $objetivo)!';
   }

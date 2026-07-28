@@ -479,6 +479,7 @@
   "fgSeeDeck": "See the full deck",
 
   "fgReforge": "Forge again",
+  "fgBackToOptions": "Back to forge options",
 
   "mkAlertOne": "🔔 {carta} is at {precio} (your target: {objetivo})!",
   "@mkAlertOne": {

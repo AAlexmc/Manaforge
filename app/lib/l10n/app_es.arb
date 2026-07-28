@@ -483,6 +483,7 @@
   "fgSeeDeck": "Ver mazo completo",
 
   "fgReforge": "Reforjar",
+  "fgBackToOptions": "Volver a elegir cómo forjar",
 
   "mkAlertOne": "🔔 ¡{carta} está a {precio} (tu objetivo: {objetivo})!",
   "@mkAlertOne": {
