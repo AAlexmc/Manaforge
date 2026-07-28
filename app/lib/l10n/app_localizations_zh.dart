@@ -1151,6 +1151,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fgReforge => '重铸';
 
   @override
+  String get fgBackToOptions => 'Volver a elegir cómo forjar';
+
+  @override
   String mkAlertOne(String carta, String precio, String objetivo) {
     return '🔔 $carta 现在 $precio（你的目标价：$objetivo）！';
   }

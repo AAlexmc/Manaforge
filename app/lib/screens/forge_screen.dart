@@ -764,6 +764,13 @@ class _ForgeScreenState extends State<ForgeScreen> {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
           child: Row(
             children: [
+              // vuelta al selector SIN perder lo elegido (expansiones,
+              // Estilo, presupuesto…): solo se descartan las propuestas
+              IconButton(
+                onPressed: () => setState(() => _proposals = null),
+                icon: const Icon(Icons.arrow_back),
+                tooltip: t.fgBackToOptions,
+              ),
               Expanded(
                 child: Text(t.fgDecksReady(proposals.length),
                     style: Theme.of(context).textTheme.headlineSmall),

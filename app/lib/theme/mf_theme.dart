@@ -143,5 +143,17 @@ ThemeData mfTheme(Brightness brightness) {
       backgroundColor: MFColors.manaRed,
       foregroundColor: Colors.white,
     ),
+    // Aspecto "inverso" clásico (barra clara en tema oscuro y al revés) pero
+    // con TODOS los colores explícitos: los derivados de M3 dejaban la
+    // acción (DESHACER) casi del color del fondo. El acento mantiene el
+    // matiz de marca y toneLegible solo mueve la claridad hasta contraste AA.
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      showCloseIcon: true,
+      backgroundColor: scheme.onSurface,
+      contentTextStyle: TextStyle(color: scheme.surface),
+      closeIconColor: scheme.surface,
+      actionTextColor: toneLegible(scheme.onSurface, MFColors.manaRed),
+    ),
   );
 }

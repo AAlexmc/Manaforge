@@ -2076,6 +2076,12 @@ abstract class AppLocalizations {
   /// **'Reforjar'**
   String get fgReforge;
 
+  /// No description provided for @fgBackToOptions.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a elegir cómo forjar'**
+  String get fgBackToOptions;
+
   /// No description provided for @mkAlertOne.
   ///
   /// In es, this message translates to:

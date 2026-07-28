@@ -40,15 +40,17 @@ class _MazosScreenState extends State<MazosScreen> {
   }
 
   /// Borrar un mazo no es reversible una vez guardado el fichero, así que en
-  /// vez de un diálogo se borra ya y se ofrece deshacer 6 s: menos fricción,
-  /// misma red de seguridad. Deshacer lo vuelve a meter en su sitio.
+  /// vez de un diálogo se borra ya y se ofrece deshacer 4 s: menos fricción,
+  /// misma red de seguridad. Deshacer lo vuelve a meter en su sitio. (Eran
+  /// 6 s, pero el aviso parecía no irse nunca; con la X del tema ahora
+  /// también se puede cerrar a mano.)
   void _borrarConDeshacer(BuildContext context, SavedDeck d, int index) {
     widget.decks.remove(d.id);
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
         content: Text(tr(context).dkDeleted(d.name)),
-        duration: const Duration(seconds: 6),
+        duration: const Duration(seconds: 4),
         action: SnackBarAction(
           label: tr(context).dkUndo,
           onPressed: () => widget.decks.restore(d, index),

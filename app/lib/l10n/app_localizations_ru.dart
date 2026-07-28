@@ -1230,6 +1230,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fgReforge => 'Перековать';
 
   @override
+  String get fgBackToOptions => 'Volver a elegir cómo forjar';
+
+  @override
   String mkAlertOne(String carta, String precio, String objetivo) {
     return '🔔 $carta стоит $precio (твоя цель: $objetivo)!';
   }

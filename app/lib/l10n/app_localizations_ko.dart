@@ -1170,6 +1170,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fgReforge => '다시 벼리기';
 
   @override
+  String get fgBackToOptions => 'Volver a elegir cómo forjar';
+
+  @override
   String mkAlertOne(String carta, String precio, String objetivo) {
     return '🔔 $carta이(가) $precio예요 (목표가: $objetivo)!';
   }
