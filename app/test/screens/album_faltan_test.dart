@@ -9,6 +9,8 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/ui/collection/album_screen.dart';
 import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/services/markets.dart';
+import 'package:manaforge_app/l10n/app_localizations_es.dart';
 
 AlbumCard _c(String number, {double? price, String name = 'Carta'}) =>
     AlbumCard(
@@ -109,6 +111,46 @@ void main() {
       final conEdiciones =
           missingReport(conTierra, qtyOf: (_) => 0, onlyBase: true);
       expect(conEdiciones.missing, 2);
+    });
+  });
+
+  group('la línea-resumen según el mercado', () {
+    final es = AppLocalizationsEs();
+    final set = [
+      _c('1', price: 0.10),
+      _c('2', price: 2.50),
+      _c('3', price: null), // sin precio conocido
+    ];
+    MissingReport faltanTodas() =>
+        missingReport(set, qtyOf: (_) => 0, onlyBase: true);
+
+    test('con Cardmarket: el total y cuántas van sin precio', () {
+      final s = missingSummary(faltanTodas(), Market.cardmarket, es);
+
+      expect(s, contains('Te faltan 3'));
+      expect(s, contains('2.60 €'));
+      expect(s, contains('(1 sin precio)'));
+    });
+
+    test('con Card Kingdom nada de "\$0.00" mudo: se dice que no publica',
+        () {
+      // Card Kingdom y Mana Pool no publican precio por edición
+      // (todayColumn == null): sumar NULLs daría un cero mentiroso
+      final s = missingSummary(faltanTodas(), Market.cardkingdom, es);
+
+      expect(s, contains('Te faltan 3'));
+      expect(s, contains('Card Kingdom'));
+      expect(s, isNot(contains('0.00')));
+      expect(s, isNot(contains('sin precio)')));
+    });
+
+    test('completo es completo, publique precios el mercado o no', () {
+      final s = missingSummary(
+          missingReport(set, qtyOf: (_) => 1, onlyBase: true),
+          Market.cardkingdom,
+          es);
+
+      expect(s, es.albYouHaveItAll);
     });
   });
 }

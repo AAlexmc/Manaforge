@@ -286,6 +286,7 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "albWithoutPrice": " ({n} without a price)",
+  "albMarketNoToday": "{market} doesn't publish per-printing prices — switch markets to see them",
   "@albWithoutPrice": {
     "placeholders": { "n": { "type": "int" } }
   },

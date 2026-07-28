@@ -745,6 +745,11 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String albMarketNoToday(String market) {
+    return '$market no publica precios por edición — cambia de mercado para verlos';
+  }
+
+  @override
   String albVisibleOf(int visibles, int total) {
     return '$visibles de $total';
   }
@@ -2225,7 +2230,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String cdPaid(
-      String total, String divisa, int qty, String copias, String unidad) {
+    String total,
+    String divisa,
+    int qty,
+    String copias,
+    String unidad,
+  ) {
     return 'Você pagou $total$divisa por $qty $copias ($unidad cada uma)';
   }
 
@@ -2670,7 +2680,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String bkErrHalfDonePrevious(
-      String escritos, String total, String ruta, String error) {
+    String escritos,
+    String total,
+    String ruta,
+    String error,
+  ) {
     return 'A restauração ficou pela metade ($escritos de $total arquivos). Para voltar atrás, restaure $ruta. Detalhe: $error';
   }
 
@@ -3973,8 +3987,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get fxArchetypeControl => 'control';
 
   @override
-  String fxWhyItWorks(String coste, String tierras, String arquetipo,
-      int criaturas, int interaccion, String tema) {
+  String fxWhyItWorks(
+    String coste,
+    String tierras,
+    String arquetipo,
+    int criaturas,
+    int interaccion,
+    String tema,
+  ) {
     return 'Custo médio $coste: pela regra de Karsten (24 terrenos com custo 3.0, ±1 a cada ±0.5), este deck leva $tierras terrenos — dentro da faixa de um deck $arquetipo. Tem $criaturas criaturas para segurar a mesa e $interaccion cartas de interação para o que o adversário trouxer. O tema ($tema) concentra as suas sinergias: quanto mais peças do tema você vir, mais forte fica cada uma.';
   }
 

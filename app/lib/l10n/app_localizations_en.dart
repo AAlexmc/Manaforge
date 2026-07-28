@@ -743,6 +743,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String albMarketNoToday(String market) {
+    return '$market doesn\'t publish per-printing prices — switch markets to see them';
+  }
+
+  @override
   String albVisibleOf(int visibles, int total) {
     return '$visibles of $total';
   }
@@ -2219,7 +2224,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String cdPaid(
-      String total, String divisa, int qty, String copias, String unidad) {
+    String total,
+    String divisa,
+    int qty,
+    String copias,
+    String unidad,
+  ) {
     return 'You paid $total$divisa for $qty $copias ($unidad each)';
   }
 
@@ -2662,7 +2672,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String bkErrHalfDonePrevious(
-      String escritos, String total, String ruta, String error) {
+    String escritos,
+    String total,
+    String ruta,
+    String error,
+  ) {
     return 'The restore stopped halfway ($escritos of $total files). To go back, restore $ruta. Details: $error';
   }
 
@@ -3961,8 +3975,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fxArchetypeControl => 'control';
 
   @override
-  String fxWhyItWorks(String coste, String tierras, String arquetipo,
-      int criaturas, int interaccion, String tema) {
+  String fxWhyItWorks(
+    String coste,
+    String tierras,
+    String arquetipo,
+    int criaturas,
+    int interaccion,
+    String tema,
+  ) {
     return 'Average cost $coste: by Karsten\'s rule (24 lands at cost 3.0, ±1 for every ±0.5), this deck runs $tierras lands — within the range of a $arquetipo deck. There are $criaturas creatures to hold the board and $interaccion interaction cards for whatever they bring. The theme ($tema) focuses your synergies: the more theme pieces you see, the stronger each one gets.';
   }
 
