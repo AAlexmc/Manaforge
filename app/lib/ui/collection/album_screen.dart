@@ -11,8 +11,8 @@ import 'package:manaforge_app/services/markets.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/app_shortcuts.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/screens/album_filters.dart';
-import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/ui/collection/album_filters.dart';
+import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
 
 /// Álbum por expansiones, estilo TCG Pocket: cada set es una página con
 /// TODAS sus cartas en rejilla; las que no tienes se ven apagadas y las

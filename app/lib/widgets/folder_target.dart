@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/folder_store.dart';
-import 'package:manaforge_app/widgets/folder_tile.dart';
+import 'package:manaforge_app/ui/collection/widgets/folder_tile.dart';
 
 /// Lo elegido en la hoja: la carpeta (o ninguna). `null` como resultado de la
 /// hoja significa "he cerrado sin elegir", que NO es lo mismo que "ninguna".

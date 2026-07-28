@@ -19,18 +19,18 @@ import 'package:manaforge_app/ui/core/widgets/db_download.dart';
 import 'package:manaforge_app/ui/settings/widgets/language_settings.dart';
 import 'package:manaforge_app/ui/core/widgets/update_notice.dart';
 import 'package:manaforge_app/ui/settings/backup_screen.dart';
-import 'package:manaforge_app/screens/editar_inicio_screen.dart';
+import 'package:manaforge_app/ui/home/editar_inicio_screen.dart';
 import 'package:manaforge_app/ui/settings/factory_reset_card.dart';
 
-export 'package:manaforge_app/screens/album_screen.dart';
+export 'package:manaforge_app/ui/collection/album_screen.dart';
 export 'package:manaforge_app/ui/settings/backup_screen.dart';
-export 'package:manaforge_app/screens/all_cards_screen.dart';
-export 'package:manaforge_app/screens/coleccion_screen.dart';
-export 'package:manaforge_app/screens/collection_filters.dart';
-export 'package:manaforge_app/screens/folder_detail_screen.dart';
-export 'package:manaforge_app/screens/folder_pick_screen.dart';
-export 'package:manaforge_app/screens/home_screen.dart';
-export 'package:manaforge_app/screens/card_detail_screen.dart';
+export 'package:manaforge_app/ui/collection/all_cards_screen.dart';
+export 'package:manaforge_app/ui/collection/coleccion_screen.dart';
+export 'package:manaforge_app/ui/collection/collection_filters.dart';
+export 'package:manaforge_app/ui/collection/folder_detail_screen.dart';
+export 'package:manaforge_app/ui/collection/folder_pick_screen.dart';
+export 'package:manaforge_app/ui/home/home_screen.dart';
+export 'package:manaforge_app/ui/collection/card_detail_screen.dart';
 export 'package:manaforge_app/screens/mazos_screen.dart';
 export 'package:manaforge_app/screens/mercado_screen.dart';
 export 'package:manaforge_app/screens/set_market_screen.dart';
@@ -41,7 +41,7 @@ export 'package:manaforge_app/screens/forge_screen.dart';
 export 'package:manaforge_app/screens/import_csv_screen.dart';
 export 'package:manaforge_app/screens/live_scan_screen.dart';
 export 'package:manaforge_app/screens/scan_screen.dart';
-export 'package:manaforge_app/screens/startup_screen.dart';
+export 'package:manaforge_app/ui/home/startup_screen.dart';
 
 class AjustesScreen extends StatefulWidget {
   final CardDatabase db;

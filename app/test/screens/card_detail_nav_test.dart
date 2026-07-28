@@ -9,7 +9,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
 import 'package:manaforge_app/services/card_database.dart';
 
 Future<void> _abrir(WidgetTester tester,

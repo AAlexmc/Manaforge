@@ -10,8 +10,8 @@ import 'package:manaforge_app/services/market_prefs.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:manaforge_app/services/collection_cascade.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/screens/card_detail_screen.dart';
-import 'package:manaforge_app/screens/collection_filters.dart';
+import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
+import 'package:manaforge_app/ui/collection/collection_filters.dart';
 
 /// La lista completa de la colección: buscar, añadir, filtrar, ordenar y
 /// cambiar cantidades. Antes era lo primero que veías al entrar en Colección;

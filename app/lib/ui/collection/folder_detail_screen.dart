@@ -10,10 +10,10 @@ import 'package:manaforge_app/services/folder_value.dart';
 import 'package:manaforge_app/services/market_prefs.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/widgets/folder_tile.dart';
-import 'package:manaforge_app/screens/card_detail_screen.dart';
-import 'package:manaforge_app/screens/collection_filters.dart';
-import 'package:manaforge_app/screens/folder_pick_screen.dart';
+import 'package:manaforge_app/ui/collection/widgets/folder_tile.dart';
+import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
+import 'package:manaforge_app/ui/collection/collection_filters.dart';
+import 'package:manaforge_app/ui/collection/folder_pick_screen.dart';
 
 /// Lo que se edita de una carpeta: nombre, color e icono.
 typedef FolderLook = ({String name, int colorValue, String icon});

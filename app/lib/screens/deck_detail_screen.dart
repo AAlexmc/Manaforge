@@ -12,7 +12,7 @@ import 'package:manaforge_app/services/deck_shortfall.dart';
 import 'package:manaforge_app/services/deck_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
-import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
 
 /// Detalle de un mazo generado: plan de juego, curva (editable: arrastra las
 /// barras y reforja el mazo a tu curva), "¿por qué funciona?", lista agrupada

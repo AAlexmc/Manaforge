@@ -13,16 +13,16 @@ import 'package:manaforge_app/services/market_prefs.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:manaforge_app/ui/core/widgets/app_shortcuts.dart';
 import 'package:manaforge_app/ui/core/widgets/db_download.dart';
-import 'package:manaforge_app/widgets/folder_tile.dart';
-import 'package:manaforge_app/screens/album_screen.dart';
-import 'package:manaforge_app/screens/all_cards_screen.dart';
-import 'package:manaforge_app/screens/folder_detail_screen.dart';
-import 'package:manaforge_app/screens/folder_pick_screen.dart';
+import 'package:manaforge_app/ui/collection/widgets/folder_tile.dart';
+import 'package:manaforge_app/ui/collection/album_screen.dart';
+import 'package:manaforge_app/ui/collection/all_cards_screen.dart';
+import 'package:manaforge_app/ui/collection/folder_detail_screen.dart';
+import 'package:manaforge_app/ui/collection/folder_pick_screen.dart';
 import 'package:manaforge_app/screens/import_csv_screen.dart';
 
 // El orden y los filtros viven en collection_filters.dart; se re-exportan
 // porque media app (y sus tests) los importaban desde aquí.
-export 'package:manaforge_app/screens/collection_filters.dart'
+export 'package:manaforge_app/ui/collection/collection_filters.dart'
     show CollectionSort, sortCollection, CollectionFilters, addedLabel;
 
 /// Colección: portada con tus CARPETAS y su valor. La lista completa de

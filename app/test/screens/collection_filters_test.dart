@@ -3,7 +3,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/collection_filters.dart';
+import 'package:manaforge_app/ui/collection/collection_filters.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 
 OwnedCard _card(

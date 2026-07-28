@@ -3,10 +3,10 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/folder_pick_screen.dart';
+import 'package:manaforge_app/ui/collection/folder_pick_screen.dart';
 import 'package:manaforge_app/services/collection_store.dart';
 import 'package:manaforge_app/services/folder_store.dart';
-import 'package:manaforge_app/widgets/folder_tile.dart';
+import 'package:manaforge_app/ui/collection/widgets/folder_tile.dart';
 
 OwnedCard _card(String name, {String colors = 'G', String type = 'Creature'}) =>
     OwnedCard(

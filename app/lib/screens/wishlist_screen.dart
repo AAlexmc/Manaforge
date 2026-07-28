@@ -8,7 +8,7 @@ import 'package:manaforge_app/services/wishlist_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/ui/core/widgets/price_chart.dart';
-import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/ui/collection/card_detail_screen.dart';
 
 /// Pantalla dedicada de la wishlist: las cartas que quieres comprar con su
 /// precio objetivo. Cuando el precio actual cae al objetivo, la carta se
