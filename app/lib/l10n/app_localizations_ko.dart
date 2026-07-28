@@ -717,6 +717,11 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String albNoPerPrinting(String market) {
+    return '$market no publica precios por edición — elige otro en la pestaña Mercado';
+  }
+
+  @override
   String albVisibleOf(int visibles, int total) {
     return '$total 중 $visibles';
   }
@@ -2157,7 +2162,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String cdPaid(
-      String total, String divisa, int qty, String copias, String unidad) {
+    String total,
+    String divisa,
+    int qty,
+    String copias,
+    String unidad,
+  ) {
     return '$qty $copias에 $total$divisa 지불 (장당 $unidad)';
   }
 
@@ -2592,7 +2602,11 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String bkErrHalfDonePrevious(
-      String escritos, String total, String ruta, String error) {
+    String escritos,
+    String total,
+    String ruta,
+    String error,
+  ) {
     return '복원이 도중에 멈췄어요 (파일 $total개 중 $escritos개). 되돌리려면 $ruta을(를) 복원하세요. 자세히: $error';
   }
 
@@ -3846,8 +3860,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fxArchetypeControl => 'control';
 
   @override
-  String fxWhyItWorks(String coste, String tierras, String arquetipo,
-      int criaturas, int interaccion, String tema) {
+  String fxWhyItWorks(
+    String coste,
+    String tierras,
+    String arquetipo,
+    int criaturas,
+    int interaccion,
+    String tema,
+  ) {
     return '평균 비용 $coste: Karsten 규칙(비용 3.0에 대지 24장, ±0.5마다 ±1장)에 따라 이 덱은 대지 $tierras장을 써요 — $arquetipo 덱의 범위 안이죠. 판을 유지할 생물 $criaturas마리와, 상대가 뭘 들고 오든 대응할 상호작용 카드 $interaccion장이 있어요. 테마($tema)가 시너지를 한데 모아요: 테마 조각을 많이 볼수록 하나하나가 더 세져요.';
   }
 

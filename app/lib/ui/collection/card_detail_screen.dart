@@ -491,7 +491,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
                                 ?.copyWith(letterSpacing: 1)),
                         const Spacer(),
                         Text(
-                            _market.todayColumn == null
+                            !_market.hasTodayPrice
                                 ? tr(context).cdNoPerPrinting(_market.label)
                                 : tr(context).cdPricesNormalFoil(
                                     _market.label, _market.currency),

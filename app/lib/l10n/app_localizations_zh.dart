@@ -699,6 +699,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String albNoPerPrinting(String market) {
+    return '$market no publica precios por edición — elige otro en la pestaña Mercado';
+  }
+
+  @override
   String albVisibleOf(int visibles, int total) {
     return '$total 张中的 $visibles 张';
   }
@@ -2130,7 +2135,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String cdPaid(
-      String total, String divisa, int qty, String copias, String unidad) {
+    String total,
+    String divisa,
+    int qty,
+    String copias,
+    String unidad,
+  ) {
     return '你为 $qty $copias 付了 $total$divisa（每张 $unidad）';
   }
 
@@ -2558,7 +2568,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String bkErrHalfDonePrevious(
-      String escritos, String total, String ruta, String error) {
+    String escritos,
+    String total,
+    String ruta,
+    String error,
+  ) {
     return '恢复只进行了一半（$total 个文件里写了 $escritos 个）。要退回去，请恢复 $ruta。详情：$error';
   }
 
@@ -3807,8 +3821,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fxArchetypeControl => 'control';
 
   @override
-  String fxWhyItWorks(String coste, String tierras, String arquetipo,
-      int criaturas, int interaccion, String tema) {
+  String fxWhyItWorks(
+    String coste,
+    String tierras,
+    String arquetipo,
+    int criaturas,
+    int interaccion,
+    String tema,
+  ) {
     return '平均费用 $coste：按 Karsten 法则（费用 3.0 时 24 张地，每 ±0.5 增减 ±1 张），这副牌组带 $tierras 张地——正落在一副 $arquetipo 牌组的区间里。有 $criaturas 个生物守住战场，还有 $interaccion 张互动牌应对对手打出的东西。主题（$tema）把你的协同聚拢在一起：主题的部件见得越多，每一件就越强。';
   }
 

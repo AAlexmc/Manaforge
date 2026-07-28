@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
 
 import 'package:manaforge_app/data/services/card_database.dart';
@@ -442,9 +443,6 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
     widget.market?.addListener(_recargar);
   }
 
-  String _precioTotal(MissingReport r) => formatMoney(
-      r.total, widget.market?.market ?? Market.cardmarket);
-
   /// Abre la ficha completa sabiendo qué cartas hay al lado: desde ahí se
   /// pasa a la siguiente sin volver al álbum.
   void _abrirFicha(List<AlbumCard> visibles, int index) {
@@ -588,14 +586,10 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                         children: [
                           Expanded(
                             child: Text(
-                                faltan.missing == 0
-                                    ? t.albYouHaveItAll
-                                    : t.albMissingCount(faltan.missing) +
-                                        _precioTotal(faltan) +
-                                        (faltan.withoutPrice > 0
-                                            ? t.albWithoutPrice(
-                                                faltan.withoutPrice)
-                                            : ''),
+                                missingSummary(
+                                    faltan,
+                                    widget.market?.market ?? Market.cardmarket,
+                                    t),
                                 style: TextStyle(
                                     fontSize: 12.5,
                                     fontWeight: FontWeight.bold,
@@ -737,6 +731,19 @@ MissingReport missingReport(List<AlbumCard> cards,
   }
   return MissingReport(
       missing: missing, total: total, withoutPrice: withoutPrice);
+}
+
+/// La línea-resumen de los huecos. Con un mercado que no publica precio por
+/// edición (Card Kingdom, Mana Pool) no hay nada que sumar: un "$0.00
+/// (n sin precio)" sería un cero mentiroso, así que se dice claro y se
+/// invita a cambiar de mercado.
+String missingSummary(MissingReport r, Market market, AppLocalizations t) {
+  if (r.missing == 0) return t.albYouHaveItAll;
+  final head = t.albMissingCount(r.missing);
+  if (!market.hasTodayPrice) return head + t.albNoPerPrinting(market.label);
+  return head +
+      formatMoney(r.total, market) +
+      (r.withoutPrice > 0 ? t.albWithoutPrice(r.withoutPrice) : '');
 }
 
 /// Las cartas del álbum que hay que enseñar: por nombre (el impreso también,

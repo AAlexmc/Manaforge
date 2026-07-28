@@ -714,6 +714,11 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String albNoPerPrinting(String market) {
+    return '$market no publica precios por edición — elige otro en la pestaña Mercado';
+  }
+
+  @override
   String albVisibleOf(int visibles, int total) {
     return '$total 中 $visibles';
   }
@@ -805,11 +810,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String fdCopies(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n 枚',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n 枚');
     return '$_temp0';
   }
 
@@ -1650,11 +1651,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String scTrayCount(int n, int copias) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n 枚',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n 枚');
     return '$_temp0 · 合計 $copias 枚';
   }
 
@@ -2145,17 +2142,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String cdPaid(
-      String total, String divisa, int qty, String copias, String unidad) {
+    String total,
+    String divisa,
+    int qty,
+    String copias,
+    String unidad,
+  ) {
     return '$qty $copias に $total$divisa 支払いました（1枚あたり $unidad）';
   }
 
   @override
   String cdCopyWord(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '枚',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '枚');
     return '$_temp0';
   }
 
@@ -2303,11 +2301,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String pcRange(String min, String max, int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n 日',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n 日');
     return '最小 $min € · 最大 $max € · $_temp0';
   }
 
@@ -2459,11 +2453,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String bkSumCards(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n 枚',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n 枚');
     return '$_temp0';
   }
 
@@ -2573,7 +2563,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String bkErrHalfDonePrevious(
-      String escritos, String total, String ruta, String error) {
+    String escritos,
+    String total,
+    String ruta,
+    String error,
+  ) {
     return '復元が途中で止まりました（$total 個中 $escritos 個のファイル）。元に戻すには $ruta を復元してください。詳細：$error';
   }
 
@@ -2707,11 +2701,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String ftCards(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n 枚',
-    );
+    String _temp0 = intl.Intl.pluralLogic(n, locale: localeName, other: '$n 枚');
     return '$_temp0';
   }
 
@@ -3828,8 +3818,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fxArchetypeControl => 'control';
 
   @override
-  String fxWhyItWorks(String coste, String tierras, String arquetipo,
-      int criaturas, int interaccion, String tema) {
+  String fxWhyItWorks(
+    String coste,
+    String tierras,
+    String arquetipo,
+    int criaturas,
+    int interaccion,
+    String tema,
+  ) {
     return '平均コスト $coste：カーステンの法則（コスト3.0で土地24枚、±0.5ごとに±1）によれば、このデッキは土地 $tierras 枚—$arquetipo デッキの範囲内です。盤面を支えるクリーチャーが $criaturas 体、相手の動きに対処する干渉カードが $interaccion 枚。テーマ（$tema）があなたのシナジーを集約します：テーマのパーツを見るほど、その1枚1枚が強くなります。';
   }
 

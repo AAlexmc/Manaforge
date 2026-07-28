@@ -71,7 +71,7 @@ import 'app_localizations_zh.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -94,11 +94,11 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -111,7 +111,7 @@ abstract class AppLocalizations {
     Locale('ko'),
     Locale('pt'),
     Locale('ru'),
-    Locale('zh')
+    Locale('zh'),
   ];
 
   /// No description provided for @tabHome.
@@ -1349,6 +1349,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **' ({n} sin precio)'**
   String albWithoutPrice(int n);
+
+  /// No description provided for @albNoPerPrinting.
+  ///
+  /// In es, this message translates to:
+  /// **'{market} no publica precios por edición — elige otro en la pestaña Mercado'**
+  String albNoPerPrinting(String market);
 
   /// No description provided for @albVisibleOf.
   ///
@@ -3653,7 +3659,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Pagaste {total}{divisa} por {qty} {copias} ({unidad} cada una)'**
   String cdPaid(
-      String total, String divisa, int qty, String copias, String unidad);
+    String total,
+    String divisa,
+    int qty,
+    String copias,
+    String unidad,
+  );
 
   /// No description provided for @cdCopyWord.
   ///
@@ -4254,7 +4265,11 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'El restaurar se ha quedado a medias ({escritos} de {total} ficheros). Para volver atrás, restaura {ruta}. Detalle: {error}'**
   String bkErrHalfDonePrevious(
-      String escritos, String total, String ruta, String error);
+    String escritos,
+    String total,
+    String ruta,
+    String error,
+  );
 
   /// No description provided for @siImportTooBig.
   ///
@@ -6504,8 +6519,14 @@ abstract class AppLocalizations {
   ///
   /// In es, this message translates to:
   /// **'Coste medio {coste}: por la regla de Karsten (24 tierras a coste 3.0, ±1 por cada ±0.5), este mazo lleva {tierras} tierras — dentro del rango de un mazo {arquetipo}. Hay {criaturas} criaturas para mantener la mesa y {interaccion} cartas de interacción para lo que traiga el rival. El tema ({tema}) concentra tus sinergias: cuantas más piezas del tema veas, más fuerte es cada una.'**
-  String fxWhyItWorks(String coste, String tierras, String arquetipo,
-      int criaturas, int interaccion, String tema);
+  String fxWhyItWorks(
+    String coste,
+    String tierras,
+    String arquetipo,
+    int criaturas,
+    int interaccion,
+    String tema,
+  );
 
   /// No description provided for @fxNoLandsRange.
   ///
@@ -6567,17 +6588,17 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
-        'de',
-        'en',
-        'es',
-        'fr',
-        'it',
-        'ja',
-        'ko',
-        'pt',
-        'ru',
-        'zh'
-      ].contains(locale.languageCode);
+    'de',
+    'en',
+    'es',
+    'fr',
+    'it',
+    'ja',
+    'ko',
+    'pt',
+    'ru',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -6609,8 +6630,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

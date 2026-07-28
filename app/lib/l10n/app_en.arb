@@ -289,6 +289,10 @@
   "@albWithoutPrice": {
     "placeholders": { "n": { "type": "int" } }
   },
+  "albNoPerPrinting": "{market} doesn't publish per-printing prices — pick another in the Market tab",
+  "@albNoPerPrinting": {
+    "placeholders": { "market": { "type": "String" } }
+  },
   "albVisibleOf": "{visibles} of {total}",
   "@albVisibleOf": {
     "placeholders": { "visibles": { "type": "int" }, "total": { "type": "int" } }

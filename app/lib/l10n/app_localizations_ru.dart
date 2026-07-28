@@ -749,6 +749,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String albNoPerPrinting(String market) {
+    return '$market no publica precios por edición — elige otro en la pestaña Mercado';
+  }
+
+  @override
   String albVisibleOf(int visibles, int total) {
     return '$visibles из $total';
   }
@@ -2250,7 +2255,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String cdPaid(
-      String total, String divisa, int qty, String copias, String unidad) {
+    String total,
+    String divisa,
+    int qty,
+    String copias,
+    String unidad,
+  ) {
     return 'Ты заплатил $total$divisa за $qty $copias (по $unidad за штуку)';
   }
 
@@ -2708,7 +2718,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String bkErrHalfDonePrevious(
-      String escritos, String total, String ruta, String error) {
+    String escritos,
+    String total,
+    String ruta,
+    String error,
+  ) {
     return 'Восстановление остановилось на полпути ($escritos из $total файлов). Чтобы вернуться назад, восстанови $ruta. Подробности: $error';
   }
 
@@ -4007,8 +4021,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fxArchetypeControl => 'control';
 
   @override
-  String fxWhyItWorks(String coste, String tierras, String arquetipo,
-      int criaturas, int interaccion, String tema) {
+  String fxWhyItWorks(
+    String coste,
+    String tierras,
+    String arquetipo,
+    int criaturas,
+    int interaccion,
+    String tema,
+  ) {
     return 'Средняя стоимость $coste: по правилу Карстена (24 земли при стоимости 3.0, ±1 на каждые ±0.5) в этой колоде $tierras земель — в пределах диапазона для колоды $arquetipo. Есть $criaturas существ, чтобы держать стол, и $interaccion карт взаимодействия на всё, что принесёт соперник. Тема ($tema) фокусирует твои синергии: чем больше частей темы ты видишь, тем сильнее каждая.';
   }
 
