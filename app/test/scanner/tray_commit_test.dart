@@ -143,4 +143,27 @@ void main() {
     final fechas = collection.cards.map((c) => c.addedAt).toSet();
     expect(fechas.length, 1);
   });
+
+  test('toda la bandeja en lote: un solo aviso, no uno por línea', () async {
+    final collection = CollectionStore();
+    final tray = _trayWith([
+      _match('sol-ring', 'Sol Ring'),
+      _match('mox-pearl', 'Mox Pearl', number: '264'),
+      _match('mox-sapphire', 'Mox Sapphire', number: '265'),
+    ]);
+    var avisos = 0;
+    collection.addListener(() => avisos++);
+
+    final result =
+        commitTray(tray: tray, collection: collection, hitCache: const {});
+
+    // los add() ya han corrido (sin await propio): el resultado y la
+    // colección están completos ya mismo, solo el aviso se demora
+    expect(result.copies, 3);
+    expect(collection.distinctCards, 3,
+        reason: 'las 3 cartas ya están en la colección aunque no haya '
+            'avisado todavía');
+    await Future<void>.delayed(Duration.zero); // deja correr el microtask
+    expect(avisos, 1, reason: 'un lote, un aviso — no uno por carta');
+  });
 }

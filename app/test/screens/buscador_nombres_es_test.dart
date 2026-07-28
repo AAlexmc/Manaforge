@@ -63,7 +63,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     await tester.enterText(find.byType(TextField), 'ornitoptero');
-    await tester.pump(const Duration(milliseconds: 50));
+    // el buscador tiene debounce: hay que dejar pasar la pausa antes de que
+    // dispare la consulta
+    await tester.pump(const Duration(milliseconds: 350));
 
     expect(find.text('Ornitóptero'), findsWidgets);
     expect(find.text('Ornithopter'), findsNothing);
@@ -81,7 +83,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     await tester.enterText(find.byType(TextField), 'Ornithopter');
-    await tester.pump(const Duration(milliseconds: 50));
+    // el buscador tiene debounce: hay que dejar pasar la pausa antes de que
+    // dispare la consulta
+    await tester.pump(const Duration(milliseconds: 350));
 
     expect(find.text('Ornithopter'), findsWidgets);
     expect(find.text('Ornitóptero'), findsNothing);

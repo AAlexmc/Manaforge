@@ -9,6 +9,8 @@
 /// colección; la carpeta solo sabe si una carta está o no está.
 library;
 
+import 'dart:async';
+
 import '../services/card_database.dart';
 import '../services/collection_store.dart';
 import '../services/folder_store.dart';
@@ -60,39 +62,47 @@ TrayCommitResult commitTray({
   final cuando = at ?? DateTime.now(); // toda la bandeja entra "a la vez"
   var copies = 0;
   final oracleIds = <String>{};
-  for (final line in tray.lines) {
-    // sin reconocer = no se sabe qué carta es: no se añade nada. Meter el
-    // top-1 sería inventarse una carta que el usuario no ha confirmado
-    if (line.unrecognized) continue;
-    final entry = line.chosen.entry;
-    final hit = hitCache[entry.scryfallId];
-    collection.add(
-      hit != null
-          ? OwnedCard(
-              oracleId: hit.oracleId,
-              name: hit.name,
-              printedName: hit.printedName,
-              imageSmall: hit.imageSmall,
-              imageNormal: hit.imageNormal,
-              colors: hit.colors,
-              typeLine: hit.typeLine,
-              cmc: hit.cmc,
-              power: hit.power,
-              toughness: hit.toughness,
-              qty: line.qty,
-            )
-          : OwnedCard(
-              oracleId: entry.oracleId,
-              name: entry.name,
-              colors: '',
-              qty: line.qty),
-      qty: line.qty,
-      printingKey: entry.printingKey,
-      at: cuando,
-    );
-    copies += line.qty;
-    oracleIds.add(hit?.oracleId ?? entry.oracleId);
-  }
+  // toda la bandeja en UN lote: sin esto, cada línea avisaba a todas las
+  // pantallas vivas (Inicio, Mercado…) y cada una recalculaba su valoración
+  // contra la base — por línea escaneada. No hace falta await: el cuerpo no
+  // tiene ningún await propio, así que corre entero (y ya) antes de que
+  // vuelva el control aquí; solo el aviso final queda para el próximo
+  // microtask, como con la importación de CSV.
+  unawaited(collection.importBatch(() async {
+    for (final line in tray.lines) {
+      // sin reconocer = no se sabe qué carta es: no se añade nada. Meter el
+      // top-1 sería inventarse una carta que el usuario no ha confirmado
+      if (line.unrecognized) continue;
+      final entry = line.chosen.entry;
+      final hit = hitCache[entry.scryfallId];
+      collection.add(
+        hit != null
+            ? OwnedCard(
+                oracleId: hit.oracleId,
+                name: hit.name,
+                printedName: hit.printedName,
+                imageSmall: hit.imageSmall,
+                imageNormal: hit.imageNormal,
+                colors: hit.colors,
+                typeLine: hit.typeLine,
+                cmc: hit.cmc,
+                power: hit.power,
+                toughness: hit.toughness,
+                qty: line.qty,
+              )
+            : OwnedCard(
+                oracleId: entry.oracleId,
+                name: entry.name,
+                colors: '',
+                qty: line.qty),
+        qty: line.qty,
+        printingKey: entry.printingKey,
+        at: cuando,
+      );
+      copies += line.qty;
+      oracleIds.add(hit?.oracleId ?? entry.oracleId);
+    }
+  }));
   tagScanned(folders, folderId, oracleIds);
   return TrayCommitResult(
     copies: copies,

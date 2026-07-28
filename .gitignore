@@ -4,3 +4,6 @@ __pycache__/
 .build/
 .DS_Store
 xcuserdata/
+
+# metadatos de sesiones de agentes (worktrees, cachés) — nunca al repo
+.claude/

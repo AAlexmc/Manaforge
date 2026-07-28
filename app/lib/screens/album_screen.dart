@@ -491,16 +491,16 @@ class _AlbumSetScreenState extends State<AlbumSetScreen> {
                   if (c.isBasicLand) return 0;
                   return qtyByOracle[c.oracleId] ?? 0;
                 }
+                final baseSize = baseSetSize(cards);
                 var ownedHere = 0;
                 var deLasQueCuentan = 0;
                 for (final c in cards) {
-                  if (_soloBase && !isBaseNumber(c, baseSetSize(cards))) {
+                  if (_soloBase && !isBaseNumber(c, baseSize)) {
                     continue;
                   }
                   deLasQueCuentan++;
                   if (qtyOf(c) > 0) ownedHere++;
                 }
-                final baseSize = baseSetSize(cards);
                 final delSet = _soloBase
                     ? [for (final c in cards) if (isBaseNumber(c, baseSize)) c]
                     : cards;
