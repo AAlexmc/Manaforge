@@ -7,7 +7,7 @@
 /// tacada.
 library;
 
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/scanner/hash_index.dart';
 
 /// Rellena [hitCache] con lo que falte de [matches], en un único viaje a la

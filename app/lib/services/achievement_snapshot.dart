@@ -7,7 +7,7 @@ library;
 
 import 'package:manaforge_app/data/repositories/achievement_store.dart';
 import 'package:manaforge_app/services/achievements.dart';
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/services/collection_sets.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/services/collection_value.dart';

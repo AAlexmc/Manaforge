@@ -9,11 +9,11 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
-import 'package:manaforge_app/services/download_check.dart';
+import 'package:manaforge_app/data/services/download_check.dart';
 import 'package:manaforge_app/services/safe_input.dart';
 
 import 'package:manaforge_app/scanner/hash_index.dart';
-import 'package:manaforge_app/services/database_download_error.dart';
+import 'package:manaforge_app/data/services/database_download_error.dart';
 
 // El núcleo de matching (HashEntry, ScanMatch, HashIndex) vive en
 // hash_index.dart (sin Flutter). Se re-exporta para que quien importe esta

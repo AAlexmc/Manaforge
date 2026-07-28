@@ -5,7 +5,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/ui/decks/mazos_screen.dart';
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/data/repositories/deck_store.dart';
 

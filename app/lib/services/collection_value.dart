@@ -8,7 +8,7 @@
 /// el resultado se marca como aproximado.
 library;
 
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 
 class CollectionValuation {

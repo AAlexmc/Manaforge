@@ -24,8 +24,8 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'package:manaforge_app/services/backup.dart' show kAppVersion;
-import 'package:manaforge_app/services/json_store_io.dart';
+import 'package:manaforge_app/data/services/backup.dart' show kAppVersion;
+import 'package:manaforge_app/data/services/json_store_io.dart';
 import 'package:manaforge_app/services/safe_input.dart';
 
 /// De dónde se pregunta. Fijo a propósito: no se acepta ninguna otra.

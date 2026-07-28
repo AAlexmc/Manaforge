@@ -8,10 +8,10 @@
 /// puede ser de la semana pasada.
 library;
 
-import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/markets.dart';
-import 'package:manaforge_app/services/price_history.dart';
-import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/services/markets.dart';
+import 'package:manaforge_app/data/services/price_history.dart';
+import 'package:manaforge_app/data/services/price_series_database.dart';
 
 class MarketPrice {
   final double value;

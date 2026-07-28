@@ -8,7 +8,7 @@ library;
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/backup.dart';
+import 'package:manaforge_app/data/services/backup.dart';
 
 void main() {
   test('kAppVersion coincide con la de pubspec.yaml', () {

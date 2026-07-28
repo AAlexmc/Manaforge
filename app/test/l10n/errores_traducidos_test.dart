@@ -8,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/app_localizations_en.dart';
 import 'package:manaforge_app/l10n/app_localizations_es.dart';
-import 'package:manaforge_app/services/backup.dart';
-import 'package:manaforge_app/services/linux_camera.dart';
+import 'package:manaforge_app/data/services/backup.dart';
+import 'package:manaforge_app/data/services/linux_camera.dart';
 import 'package:manaforge_app/services/safe_input.dart';
 
 /// Argumentos de mentira, tantos como el código que más pide.

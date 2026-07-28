@@ -10,7 +10,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
-import 'package:manaforge_app/services/backup.dart';
+import 'package:manaforge_app/data/services/backup.dart';
 
 /// Qué pasó en un reset: la copia guardada y qué se borró (o no se pudo).
 class FactoryResetReport {

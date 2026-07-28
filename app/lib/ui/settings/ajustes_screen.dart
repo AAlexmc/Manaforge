@@ -4,11 +4,11 @@ import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:manaforge_app/services/database_download_error.dart';
-import 'package:manaforge_app/services/app_update.dart';
+import 'package:manaforge_app/data/services/database_download_error.dart';
+import 'package:manaforge_app/data/services/app_update.dart';
 import 'package:manaforge_app/data/repositories/background_prefs.dart';
-import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/factory_reset.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/services/factory_reset.dart';
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
 import 'package:manaforge_app/data/repositories/language_prefs.dart';

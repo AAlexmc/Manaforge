@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:manaforge_app/services/database_download_error.dart';
+import 'package:manaforge_app/data/services/database_download_error.dart';
 import 'package:manaforge_app/l10n/t.dart';
 
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/services/collection_value.dart';
 import 'package:manaforge_app/services/collection_value_series.dart';
 import 'package:manaforge_app/services/debouncer.dart';
 import 'package:manaforge_app/data/repositories/market_prefs.dart';
-import 'package:manaforge_app/services/market_prices.dart';
-import 'package:manaforge_app/services/markets.dart';
+import 'package:manaforge_app/data/services/market_prices.dart';
+import 'package:manaforge_app/data/services/markets.dart';
 import 'package:manaforge_app/services/pnl.dart';
-import 'package:manaforge_app/services/price_history.dart';
-import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/data/services/price_history.dart';
+import 'package:manaforge_app/data/services/price_series_database.dart';
 import 'package:manaforge_app/services/serial_task.dart';
 import 'package:manaforge_app/data/repositories/value_history.dart';
 import 'package:manaforge_app/data/repositories/wishlist_store.dart';

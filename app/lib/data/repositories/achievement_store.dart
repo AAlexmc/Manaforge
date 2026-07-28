@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'package:manaforge_app/services/json_store_io.dart';
+import 'package:manaforge_app/data/services/json_store_io.dart';
 
 /// Contadores que NO se pueden deducir mirando la colección: pasan una vez y
 /// hay que apuntarlos cuando pasan.

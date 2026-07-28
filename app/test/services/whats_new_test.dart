@@ -7,7 +7,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations_es.dart';
-import 'package:manaforge_app/services/backup.dart' show kAppVersion;
+import 'package:manaforge_app/data/services/backup.dart' show kAppVersion;
 import 'package:manaforge_app/ui/core/whats_new.dart';
 
 void main() {

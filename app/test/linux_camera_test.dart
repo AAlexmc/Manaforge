@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:manaforge_app/services/linux_camera.dart';
+import 'package:manaforge_app/data/services/linux_camera.dart';
 
 Uint8List _jpeg(List<int> payload) =>
     Uint8List.fromList([0xFF, 0xD8, ...payload, 0xFF, 0xD9]);

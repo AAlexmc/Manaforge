@@ -8,7 +8,7 @@ library;
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/download_check.dart';
+import 'package:manaforge_app/data/services/download_check.dart';
 import 'package:manaforge_app/services/safe_input.dart';
 
 const _asset =

@@ -13,7 +13,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:manaforge_app/services/app_update.dart';
+import 'package:manaforge_app/data/services/app_update.dart';
 
 String _releases(List<Map<String, dynamic>> items) => jsonEncode(items);
 

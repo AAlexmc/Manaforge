@@ -6,7 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'package:manaforge_app/services/certificates.dart';
-import 'package:manaforge_app/services/json_store_io.dart';
+import 'package:manaforge_app/data/services/json_store_io.dart';
 
 /// Cuándo conseguiste cada certificado y a nombre de quién sale.
 ///

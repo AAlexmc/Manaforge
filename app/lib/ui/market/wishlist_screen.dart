@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
 
-import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/price_history.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
+import 'package:manaforge_app/data/services/price_history.dart';
 import 'package:manaforge_app/data/repositories/wishlist_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';

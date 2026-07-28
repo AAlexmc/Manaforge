@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
 
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
-import 'package:manaforge_app/services/price_series_database.dart';
-import 'package:manaforge_app/services/scanner_database.dart';
-import 'package:manaforge_app/services/startup_updates.dart';
+import 'package:manaforge_app/data/services/price_series_database.dart';
+import 'package:manaforge_app/data/services/scanner_database.dart';
+import 'package:manaforge_app/data/services/startup_updates.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 
 /// Las tres bases que ManaForge se descarga, en el orden en que hacen

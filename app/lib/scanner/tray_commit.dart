@@ -11,7 +11,7 @@ library;
 
 import 'dart:async';
 
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/data/repositories/folder_store.dart';
 import 'package:manaforge_app/scanner/scan_tray.dart';

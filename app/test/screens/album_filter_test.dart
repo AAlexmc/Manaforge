@@ -4,7 +4,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/ui/collection/album_screen.dart';
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 
 AlbumCard _card(String name,
         {String number = '1', String? printed, String colors = 'W'}) =>

@@ -4,7 +4,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/price_history.dart';
+import 'package:manaforge_app/data/services/price_history.dart';
 import 'package:manaforge_app/ui/core/widgets/price_chart.dart';
 
 Widget _wrap(Widget child) =>

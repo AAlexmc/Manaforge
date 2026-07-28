@@ -15,7 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/ui/home/home_screen.dart';
 import 'package:manaforge_app/data/repositories/achievement_store.dart';
 import 'package:manaforge_app/services/achievements_controller.dart';
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/certificate_store.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/data/repositories/deck_store.dart';

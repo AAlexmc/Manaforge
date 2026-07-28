@@ -6,7 +6,7 @@ import 'package:manaforge_app/l10n/t.dart';
 import 'package:flutter/services.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/services/card_names.dart';
 import 'package:manaforge_app/services/deck_shortfall.dart';
 import 'package:manaforge_app/data/repositories/deck_store.dart';

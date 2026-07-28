@@ -7,7 +7,7 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 import 'package:manaforge_app/ui/forge/forge_texts.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/services/collection_sets.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/services/deck_shortfall.dart';

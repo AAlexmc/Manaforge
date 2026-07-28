@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/ui/home/startup_screen.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
-import 'package:manaforge_app/services/startup_updates.dart';
+import 'package:manaforge_app/data/services/startup_updates.dart';
 
 /// Fuente de mentira: apunta si se le ha pedido la descarga.
 class _FakeSource {

@@ -11,10 +11,10 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
-import 'package:manaforge_app/services/markets.dart';
-import 'package:manaforge_app/services/download_check.dart';
+import 'package:manaforge_app/data/services/markets.dart';
+import 'package:manaforge_app/data/services/download_check.dart';
 import 'package:manaforge_app/services/safe_input.dart';
-import 'package:manaforge_app/services/database_download_error.dart';
+import 'package:manaforge_app/data/services/database_download_error.dart';
 
 /// Resultado de búsqueda: una carta (nivel Oracle) con su impresión visible.
 class CardHit {

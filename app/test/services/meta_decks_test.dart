@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:manaforge_app/services/meta_decks.dart';
+import 'package:manaforge_app/data/services/meta_decks.dart';
 
 http.Client Function() _clienteQueDevuelve(String body, {int status = 200}) =>
     () => MockClient((_) async => http.Response(body, status));

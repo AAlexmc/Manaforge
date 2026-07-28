@@ -11,7 +11,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/json_store_io.dart';
+import 'package:manaforge_app/data/services/json_store_io.dart';
 import 'package:manaforge_app/data/repositories/value_history.dart';
 
 void main() {

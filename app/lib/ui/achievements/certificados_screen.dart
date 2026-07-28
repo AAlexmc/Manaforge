@@ -9,10 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'package:manaforge_app/services/database_download_error.dart';
+import 'package:manaforge_app/data/services/database_download_error.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/certificate_store.dart';
 import 'package:manaforge_app/services/certificates.dart';
 import 'package:manaforge_app/services/collection_sets.dart';

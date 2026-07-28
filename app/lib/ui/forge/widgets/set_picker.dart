@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
 
-import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/data/services/card_database.dart';
 
 /// Abre la hoja y devuelve la selección nueva. `null` = cerrada sin tocar
 /// nada, que NO es lo mismo que "ninguna expansión".

@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/data/repositories/market_prefs.dart';
-import 'package:manaforge_app/services/markets.dart';
+import 'package:manaforge_app/data/services/markets.dart';
 
 void main() {
   test('cada mercado dice su divisa y de dónde sale su precio de hoy', () {
