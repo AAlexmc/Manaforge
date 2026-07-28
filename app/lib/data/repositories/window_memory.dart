@@ -15,7 +15,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:manaforge_app/services/window_prefs.dart';
+import 'package:manaforge_app/data/repositories/window_prefs.dart';
 
 /// Cuánto se espera antes de apuntar el cambio. Arrastrar una ventana suelta
 /// decenas de avisos por segundo; apuntar el último y no los cuarenta de en

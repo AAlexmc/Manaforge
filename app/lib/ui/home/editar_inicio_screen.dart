@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
 
-import 'package:manaforge_app/services/home_layout_prefs.dart';
+import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
 
 /// Nombre e icono de cada sección, para pintarla en el editor. Las claves son
 /// las de `kHomeSections`.

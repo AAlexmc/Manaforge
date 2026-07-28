@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:manaforge_app/services/achievement_snapshot.dart';
-import 'package:manaforge_app/services/achievement_store.dart';
+import 'package:manaforge_app/data/repositories/achievement_store.dart';
 import 'package:manaforge_app/services/achievements.dart';
 import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/deck_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
-import 'package:manaforge_app/services/wishlist_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/deck_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
+import 'package:manaforge_app/data/repositories/wishlist_store.dart';
 
 /// El estado vivo de los logros: quién los evalúa, los guarda y avisa.
 ///

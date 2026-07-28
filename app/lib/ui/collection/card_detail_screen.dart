@@ -5,13 +5,13 @@ import 'package:flutter/services.dart';
 
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/card_names.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/market_prefs.dart';
 import 'package:manaforge_app/services/market_prices.dart';
 import 'package:manaforge_app/services/markets.dart';
 import 'package:manaforge_app/services/price_history.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
-import 'package:manaforge_app/services/recents_store.dart';
+import 'package:manaforge_app/data/repositories/recents_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/ui/core/widgets/market_picker.dart';

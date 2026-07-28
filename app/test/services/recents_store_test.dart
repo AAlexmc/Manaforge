@@ -3,7 +3,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/recents_store.dart';
+import 'package:manaforge_app/data/repositories/recents_store.dart';
 
 void main() {
   group('RecentCard.fromJson filtra la imagen', () {

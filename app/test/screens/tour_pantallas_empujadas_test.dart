@@ -10,8 +10,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/main.dart';
-import 'package:manaforge_app/services/background_prefs.dart';
-import 'package:manaforge_app/services/language_prefs.dart';
+import 'package:manaforge_app/data/repositories/background_prefs.dart';
+import 'package:manaforge_app/data/repositories/language_prefs.dart';
 
 /// Arranca la app de verdad y deja la pantalla de Inicio delante.
 Future<void> _arrancar(WidgetTester tester) async {

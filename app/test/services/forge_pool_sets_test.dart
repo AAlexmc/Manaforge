@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 

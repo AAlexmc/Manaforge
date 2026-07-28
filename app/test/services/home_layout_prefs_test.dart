@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/home_layout_prefs.dart';
+import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
 import 'package:path/path.dart' as p;
 
 void main() {

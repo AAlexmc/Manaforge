@@ -7,10 +7,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/achievement_store.dart';
-import 'package:manaforge_app/services/certificate_store.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/data/repositories/achievement_store.dart';
+import 'package:manaforge_app/data/repositories/certificate_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 import 'package:manaforge_app/services/json_store_io.dart';
 
 void main() {

@@ -3,7 +3,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/achievement_store.dart';
+import 'package:manaforge_app/data/repositories/achievement_store.dart';
 
 DateTime _d(int y, int m, int d) => DateTime(y, m, d, 12);
 

@@ -9,7 +9,7 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/card_names.dart';
 import 'package:manaforge_app/services/deck_shortfall.dart';
-import 'package:manaforge_app/services/deck_store.dart';
+import 'package:manaforge_app/data/repositories/deck_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/ui/collection/card_detail_screen.dart';

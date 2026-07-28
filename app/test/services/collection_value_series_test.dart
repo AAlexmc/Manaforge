@@ -4,7 +4,7 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/collection_value_series.dart';
 import 'package:manaforge_app/services/price_history.dart';
-import 'package:manaforge_app/services/value_history.dart';
+import 'package:manaforge_app/data/repositories/value_history.dart';
 
 void main() {
   test('suma el precio de cada día por las copias que tienes', () {

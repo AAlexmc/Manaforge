@@ -4,7 +4,7 @@ library;
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/certificate_store.dart';
+import 'package:manaforge_app/data/repositories/certificate_store.dart';
 import 'package:manaforge_app/services/certificates.dart';
 
 void main() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 
 /// Icono de carpeta a partir de la clave guardada en el JSON. Se resuelve
 /// aquí (y no con `IconData(codePoint)`) porque los iconos por código se

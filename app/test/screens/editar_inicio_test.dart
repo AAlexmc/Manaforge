@@ -13,7 +13,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/ui/home/editar_inicio_screen.dart';
-import 'package:manaforge_app/services/home_layout_prefs.dart';
+import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
 
 import '../helpers/app_l10n.dart';
 

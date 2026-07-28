@@ -3,7 +3,7 @@
 // cuando hay datos de printing; a nivel carta si no los hay).
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/services/collection_value.dart';
 
 OwnedCard _card(String oracle, String name, int qty) => OwnedCard(

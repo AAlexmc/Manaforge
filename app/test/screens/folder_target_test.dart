@@ -4,7 +4,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 import 'package:manaforge_app/ui/scan/widgets/folder_target.dart';
 
 /// Abre la hoja como la abre la pantalla de verdad: con un toque. Devuelve un

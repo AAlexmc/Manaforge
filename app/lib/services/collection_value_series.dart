@@ -14,7 +14,7 @@
 library;
 
 import 'package:manaforge_app/services/price_history.dart';
-import 'package:manaforge_app/services/value_history.dart';
+import 'package:manaforge_app/data/repositories/value_history.dart';
 
 /// Construye la curva. [qtyByOracle] son las copias que tienes de cada carta y
 /// [seriesByOracle] su histórico de precios.

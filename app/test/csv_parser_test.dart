@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 
 void main() {
   test('parsea el CSV real de ManaBox (comas, comillas y Scryfall ID)', () {

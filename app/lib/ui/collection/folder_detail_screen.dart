@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:manaforge_app/l10n/t.dart';
 
 import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/services/collection_value.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 import 'package:manaforge_app/services/folder_value.dart';
-import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/data/repositories/market_prefs.dart';
 import 'package:manaforge_app/services/price_series_database.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/ui/collection/widgets/folder_tile.dart';

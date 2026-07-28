@@ -6,7 +6,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/services/pnl.dart';
 
 Future<Map<String, double>> Function(Iterable<String>) _prices(

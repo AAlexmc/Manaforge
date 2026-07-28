@@ -4,7 +4,7 @@ library;
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/data/repositories/market_prefs.dart';
 import 'package:manaforge_app/services/markets.dart';
 
 void main() {

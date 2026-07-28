@@ -14,8 +14,8 @@
 /// una tarde montar; si de verdad lo quieres fuera, se quita a mano.
 library;
 
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 
 void forgetCard({
   required CollectionStore collection,

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/services/achievements.dart';
 import 'package:manaforge_app/services/achievements_controller.dart';
 import 'package:manaforge_app/services/app_update.dart';
-import 'package:manaforge_app/services/certificate_store.dart';
+import 'package:manaforge_app/data/repositories/certificate_store.dart';
 import 'package:manaforge_app/services/collection_value.dart';
-import 'package:manaforge_app/services/deck_store.dart';
-import 'package:manaforge_app/services/home_layout_prefs.dart';
+import 'package:manaforge_app/data/repositories/deck_store.dart';
+import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
 import 'package:manaforge_app/services/meta_decks.dart';
-import 'package:manaforge_app/services/recents_store.dart';
+import 'package:manaforge_app/data/repositories/recents_store.dart';
 import 'package:manaforge_app/services/serial_task.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';

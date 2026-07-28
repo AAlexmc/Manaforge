@@ -11,8 +11,8 @@ import 'package:manaforge_app/scanner/burst_controller.dart';
 import 'package:manaforge_app/scanner/scan_gate.dart';
 import 'package:manaforge_app/scanner/scan_tray.dart';
 import 'package:manaforge_app/scanner/tray_commit.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
 
 ScanMatch _match(String oracleId, String name,
         {String set = 'blb', String number = '72'}) =>

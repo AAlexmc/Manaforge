@@ -14,7 +14,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/services/background_prefs.dart';
+import 'package:manaforge_app/data/repositories/background_prefs.dart';
 import 'package:manaforge_app/services/safe_input.dart';
 import 'package:manaforge_app/ui/core/themes/contrast.dart';
 

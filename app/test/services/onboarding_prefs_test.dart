@@ -4,7 +4,7 @@ library;
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/onboarding_prefs.dart';
+import 'package:manaforge_app/data/repositories/onboarding_prefs.dart';
 
 void main() {
   test('recién instalado, el tour no se ha visto', () async {

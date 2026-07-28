@@ -13,15 +13,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/ui/home/home_screen.dart';
-import 'package:manaforge_app/services/achievement_store.dart';
+import 'package:manaforge_app/data/repositories/achievement_store.dart';
 import 'package:manaforge_app/services/achievements_controller.dart';
 import 'package:manaforge_app/services/card_database.dart';
-import 'package:manaforge_app/services/certificate_store.dart';
-import 'package:manaforge_app/services/collection_store.dart';
-import 'package:manaforge_app/services/deck_store.dart';
-import 'package:manaforge_app/services/folder_store.dart';
-import 'package:manaforge_app/services/home_layout_prefs.dart';
-import 'package:manaforge_app/services/wishlist_store.dart';
+import 'package:manaforge_app/data/repositories/certificate_store.dart';
+import 'package:manaforge_app/data/repositories/collection_store.dart';
+import 'package:manaforge_app/data/repositories/deck_store.dart';
+import 'package:manaforge_app/data/repositories/folder_store.dart';
+import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
+import 'package:manaforge_app/data/repositories/wishlist_store.dart';
 
 /// Base que no existe: alguien que aún no la ha descargado, sin depender de
 /// plugins (en test no hay path_provider).

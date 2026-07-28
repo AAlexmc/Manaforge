@@ -6,12 +6,12 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:manaforge_app/services/database_download_error.dart';
 import 'package:manaforge_app/services/app_update.dart';
-import 'package:manaforge_app/services/background_prefs.dart';
+import 'package:manaforge_app/data/repositories/background_prefs.dart';
 import 'package:manaforge_app/services/card_database.dart';
 import 'package:manaforge_app/services/factory_reset.dart';
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/services/home_layout_prefs.dart';
-import 'package:manaforge_app/services/language_prefs.dart';
+import 'package:manaforge_app/data/repositories/home_layout_prefs.dart';
+import 'package:manaforge_app/data/repositories/language_prefs.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/app_shortcuts.dart';
 import 'package:manaforge_app/ui/settings/widgets/background_settings.dart';

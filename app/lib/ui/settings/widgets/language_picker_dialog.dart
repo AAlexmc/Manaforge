@@ -10,7 +10,7 @@ library;
 import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
-import 'package:manaforge_app/services/language_prefs.dart';
+import 'package:manaforge_app/data/repositories/language_prefs.dart';
 
 /// Pregunta el idioma si no se ha preguntado nunca.
 Future<void> maybeAskLanguage(

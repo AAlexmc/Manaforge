@@ -12,7 +12,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/services/json_store_io.dart';
-import 'package:manaforge_app/services/value_history.dart';
+import 'package:manaforge_app/data/repositories/value_history.dart';
 
 void main() {
   late Directory dir;
