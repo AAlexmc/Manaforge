@@ -33,11 +33,17 @@ Todos hemos pasado por esto: una caja llena de cartas de sobres, mazos de inicio
 
 <p align="center">
   <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Tutorial.mp4">
-    <img src="docs/assets/tutorial-poster.jpg" width="720" alt="Tutorial en vídeo de ManaForge: el escáner reconociendo una carta en vivo">
+    <img src="docs/assets/tutorial-poster.jpg" width="820" alt="Inicio de ManaForge: colección valorada, logros, el meta de torneos y las expansiones nuevas">
   </a>
 </p>
 
-<p align="center"><i>Clic para ver el tutorial (4 min, a velocidad ×2): escanear cartas con la webcam, importar tu CSV, el álbum y Forge.</i></p>
+<p align="center"><i>Clic en la imagen para el tutorial completo (4 min, ×2): escanear con la webcam, importar tu CSV, el álbum y Forge.</i></p>
+
+<p align="center">
+  <img src="docs/assets/tutorial-teaser.gif" width="720" alt="El escáner en vivo reconociendo una carta con la webcam">
+</p>
+
+<p align="center"><i>El escáner en directo: enseña la carta a la webcam y ManaForge la reconoce por el arte, con su edición exacta.</i></p>
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 
