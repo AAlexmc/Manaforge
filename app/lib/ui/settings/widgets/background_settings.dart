@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
 import 'package:manaforge_app/data/repositories/background_prefs.dart';
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 import 'package:manaforge_app/ui/core/themes/contrast.dart';
 
 class BackgroundSettingsCard extends StatefulWidget {

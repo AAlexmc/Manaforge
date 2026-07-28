@@ -2,7 +2,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/services/collection_value_series.dart';
+import 'package:manaforge_app/domain/collection_value_series.dart';
 import 'package:manaforge_app/data/services/price_history.dart';
 import 'package:manaforge_app/data/repositories/value_history.dart';
 

@@ -19,7 +19,7 @@ import 'package:manaforge_app/ui/market/mercado_screen.dart';
 import 'package:manaforge_app/ui/scan/live_scan_screen.dart';
 import 'package:manaforge_app/data/repositories/achievement_store.dart';
 import 'package:manaforge_app/data/services/app_update.dart';
-import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/domain/achievements_controller.dart';
 import 'package:manaforge_app/data/services/backup.dart';
 import 'package:manaforge_app/data/repositories/background_prefs.dart';
 import 'package:manaforge_app/data/services/card_database.dart';

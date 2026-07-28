@@ -11,7 +11,7 @@ import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/t.dart';
 
 import 'package:manaforge_app/data/services/markets.dart';
-import 'package:manaforge_app/services/pnl.dart';
+import 'package:manaforge_app/domain/pnl.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 
 class PnlView extends StatelessWidget {

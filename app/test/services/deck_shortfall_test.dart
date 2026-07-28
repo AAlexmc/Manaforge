@@ -7,7 +7,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
-import 'package:manaforge_app/services/deck_shortfall.dart';
+import 'package:manaforge_app/domain/deck_shortfall.dart';
 
 fe.Deck _deck({Map<String, int>? cards, Map<String, int>? lands}) => fe.Deck(
       name: 'Prueba',

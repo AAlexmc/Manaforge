@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/l10n/app_localizations_en.dart';
 import 'package:manaforge_app/l10n/app_localizations_es.dart';
-import 'package:manaforge_app/services/achievements.dart';
+import 'package:manaforge_app/domain/achievements.dart';
 
 void main() {
   final idiomas = <String, AppLocalizations>{

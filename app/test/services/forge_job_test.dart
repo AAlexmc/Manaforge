@@ -4,7 +4,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
-import 'package:manaforge_app/services/forge_job.dart';
+import 'package:manaforge_app/domain/forge_job.dart';
 
 void main() {
   fe.Card land(String name, {int qty = 24}) => fe.Card(

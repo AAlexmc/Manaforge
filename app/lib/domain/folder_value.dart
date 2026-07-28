@@ -11,7 +11,7 @@ library;
 
 import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
-import 'package:manaforge_app/services/collection_value.dart';
+import 'package:manaforge_app/domain/collection_value.dart';
 import 'package:manaforge_app/data/repositories/folder_store.dart';
 
 Future<CollectionValuation> computeFolderValue({

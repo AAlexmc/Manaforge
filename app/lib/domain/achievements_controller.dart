@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:manaforge_app/services/achievement_snapshot.dart';
+import 'package:manaforge_app/domain/achievement_snapshot.dart';
 import 'package:manaforge_app/data/repositories/achievement_store.dart';
-import 'package:manaforge_app/services/achievements.dart';
+import 'package:manaforge_app/domain/achievements.dart';
 import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/data/repositories/deck_store.dart';

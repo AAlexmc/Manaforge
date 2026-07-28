@@ -5,7 +5,7 @@ import 'package:crypto/crypto.dart';
 
 import 'package:forge_engine/forge_engine.dart' as fe;
 
-import 'package:manaforge_app/services/card_names.dart';
+import 'package:manaforge_app/domain/card_names.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -13,7 +13,7 @@ import 'package:sqlite3/sqlite3.dart';
 
 import 'package:manaforge_app/data/services/markets.dart';
 import 'package:manaforge_app/data/services/download_check.dart';
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 import 'package:manaforge_app/data/services/database_download_error.dart';
 
 /// Resultado de búsqueda: una carta (nivel Oracle) con su impresión visible.

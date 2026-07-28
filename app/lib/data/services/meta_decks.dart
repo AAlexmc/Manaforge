@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 
 /// Mazos del meta para el Modo Test. Los REALES se descargan del repo
 /// (data/meta_decks.json, actualizable sin tocar la app) y se cachean 24 h;

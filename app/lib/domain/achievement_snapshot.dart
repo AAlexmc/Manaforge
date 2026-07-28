@@ -6,16 +6,16 @@
 library;
 
 import 'package:manaforge_app/data/repositories/achievement_store.dart';
-import 'package:manaforge_app/services/achievements.dart';
+import 'package:manaforge_app/domain/achievements.dart';
 import 'package:manaforge_app/data/services/card_database.dart';
-import 'package:manaforge_app/services/collection_sets.dart';
+import 'package:manaforge_app/domain/collection_sets.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
-import 'package:manaforge_app/services/collection_value.dart';
+import 'package:manaforge_app/domain/collection_value.dart';
 import 'package:manaforge_app/data/repositories/deck_store.dart';
 import 'package:manaforge_app/data/repositories/folder_store.dart';
-import 'package:manaforge_app/services/folder_value.dart';
+import 'package:manaforge_app/domain/folder_value.dart';
 
-export 'package:manaforge_app/services/achievements.dart' show AchievementSnapshot;
+export 'package:manaforge_app/domain/achievements.dart' show AchievementSnapshot;
 
 /// Lo que la base de cartas sabe de una carta y la colección no.
 class CardFacts {

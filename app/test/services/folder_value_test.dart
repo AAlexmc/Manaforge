@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
-import 'package:manaforge_app/services/folder_value.dart';
+import 'package:manaforge_app/domain/folder_value.dart';
 
 OwnedCard _card(String id, {int qty = 1}) =>
     OwnedCard(oracleId: id, name: id, colors: '', qty: qty);

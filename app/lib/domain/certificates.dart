@@ -3,7 +3,7 @@
 /// el almacén guarda cuándo lo conseguiste y a nombre de quién.
 library;
 
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 
 /// Id del certificado de bienvenida, el único que enseña la carta con la que
 /// empezaste.

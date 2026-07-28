@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:manaforge_app/l10n/t.dart';
 
 import 'package:manaforge_app/data/services/card_database.dart';
-import 'package:manaforge_app/services/collection_sets.dart';
+import 'package:manaforge_app/domain/collection_sets.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/data/repositories/market_prefs.dart';
 import 'package:manaforge_app/data/services/price_series_database.dart';

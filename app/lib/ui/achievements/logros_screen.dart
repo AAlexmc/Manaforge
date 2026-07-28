@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:manaforge_app/l10n/t.dart';
 
-import 'package:manaforge_app/services/achievements.dart';
-import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/domain/achievements.dart';
+import 'package:manaforge_app/domain/achievements_controller.dart';
 import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/certificate_store.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';

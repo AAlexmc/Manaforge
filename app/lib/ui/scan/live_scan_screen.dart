@@ -15,7 +15,7 @@ import 'package:manaforge_app/scanner/scan_gate.dart';
 import 'package:manaforge_app/scanner/scan_tray.dart';
 import 'package:manaforge_app/scanner/table_memory.dart';
 import 'package:manaforge_app/scanner/tray_commit.dart';
-import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/domain/achievements_controller.dart';
 import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 import 'package:manaforge_app/data/repositories/folder_store.dart';

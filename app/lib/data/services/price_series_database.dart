@@ -12,7 +12,7 @@ import 'package:sqlite3/sqlite3.dart';
 import 'package:manaforge_app/data/services/markets.dart';
 import 'package:manaforge_app/data/services/price_history.dart';
 import 'package:manaforge_app/data/services/download_check.dart';
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 import 'package:manaforge_app/data/services/database_download_error.dart';
 
 /// Histórico REAL de precios de Cardmarket (~90 días por carta), generado

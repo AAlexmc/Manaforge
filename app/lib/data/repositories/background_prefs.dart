@@ -18,7 +18,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'package:manaforge_app/data/services/json_store_io.dart';
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 
 /// Página oficial de fondos de pantalla de Magic.
 const String kOfficialWallpapersUrl =

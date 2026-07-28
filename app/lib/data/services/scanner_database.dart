@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import 'package:manaforge_app/data/services/download_check.dart';
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 
 import 'package:manaforge_app/scanner/hash_index.dart';
 import 'package:manaforge_app/data/services/database_download_error.dart';

@@ -26,7 +26,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:manaforge_app/data/services/backup.dart' show kAppVersion;
 import 'package:manaforge_app/data/services/json_store_io.dart';
-import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/utils/safe_input.dart';
 
 /// De dónde se pregunta. Fijo a propósito: no se acepta ninguna otra.
 final Uri kReleasesApi = Uri.parse(
