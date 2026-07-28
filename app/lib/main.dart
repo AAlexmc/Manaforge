@@ -36,7 +36,7 @@ import 'package:manaforge_app/services/wishlist_store.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/app_background.dart';
 import 'package:manaforge_app/ui/core/widgets/app_shortcuts.dart';
-import 'package:manaforge_app/widgets/language_picker_dialog.dart';
+import 'package:manaforge_app/ui/settings/widgets/language_picker_dialog.dart';
 import 'package:manaforge_app/ui/core/tours/tour_overlay.dart';
 import 'package:manaforge_app/ui/core/widgets/whats_new_dialog.dart';
 

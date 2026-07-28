@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/factory_reset_card.dart';
+import 'package:manaforge_app/ui/settings/factory_reset_card.dart';
 import 'package:manaforge_app/services/backup.dart';
 import 'package:manaforge_app/services/factory_reset.dart';
 

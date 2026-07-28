@@ -23,7 +23,7 @@ import 'package:manaforge_app/screens/import_csv_screen.dart';
 import 'package:manaforge_app/screens/logros_screen.dart';
 import 'package:manaforge_app/screens/mercado_screen.dart';
 import 'package:manaforge_app/screens/set_market_screen.dart';
-import 'package:manaforge_app/screens/test_screen.dart';
+import 'package:manaforge_app/ui/settings/test_screen.dart';
 
 /// Inicio: el vestíbulo de la forja. Valor de tu colección, accesos rápidos
 /// y tiras deslizables — recientes, tus mazos, el meta, expansiones y joyas.

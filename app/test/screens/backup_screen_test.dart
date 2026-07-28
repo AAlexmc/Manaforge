@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:manaforge_app/screens/backup_screen.dart';
+import 'package:manaforge_app/ui/settings/backup_screen.dart';
 import 'package:manaforge_app/services/backup.dart';
 import 'package:path/path.dart' as p;
 

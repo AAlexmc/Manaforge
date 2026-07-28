@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/l10n/app_localizations.dart';
 import 'package:manaforge_app/services/language_prefs.dart';
-import 'package:manaforge_app/widgets/language_picker_dialog.dart';
+import 'package:manaforge_app/ui/settings/widgets/language_picker_dialog.dart';
 
 Widget _app(LanguagePreference prefs) => MaterialApp(
       locale: const Locale('es'),

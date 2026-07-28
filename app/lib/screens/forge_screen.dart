@@ -18,7 +18,7 @@ import 'package:manaforge_app/ui/core/widgets/common.dart';
 import 'package:manaforge_app/widgets/set_picker.dart';
 import 'package:manaforge_app/widgets/style_picker.dart';
 import 'package:manaforge_app/screens/deck_detail_screen.dart';
-import 'package:manaforge_app/screens/test_screen.dart';
+import 'package:manaforge_app/ui/settings/test_screen.dart';
 
 const _minCardsForForge = 30;
 
