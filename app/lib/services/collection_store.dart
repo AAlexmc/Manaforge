@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'safe_input.dart';
+import 'package:manaforge_app/services/safe_input.dart';
 
 /// Máximo que admite DateTime.fromMillisecondsSinceEpoch: un valor mayor
 /// (fichero editado a mano, otra versión) reventaría al pintar la fila.

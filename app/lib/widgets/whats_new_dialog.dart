@@ -7,10 +7,10 @@ library;
 
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
-import '../services/app_update.dart';
-import '../services/whats_new.dart';
-import '../theme/mf_theme.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/services/app_update.dart';
+import 'package:manaforge_app/services/whats_new.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
 
 /// Enseña las novedades si toca, y las da por vistas.
 ///

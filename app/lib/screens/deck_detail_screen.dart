@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../services/forge_texts.dart';
-import '../l10n/app_localizations.dart';
-import '../l10n/t.dart';
+import 'package:manaforge_app/services/forge_texts.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/t.dart';
 import 'package:flutter/services.dart';
 import 'package:forge_engine/forge_engine.dart' as fe;
 
-import '../services/card_database.dart';
-import '../services/card_names.dart';
-import '../services/deck_shortfall.dart';
-import '../services/deck_store.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
-import 'card_detail_screen.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/card_names.dart';
+import 'package:manaforge_app/services/deck_shortfall.dart';
+import 'package:manaforge_app/services/deck_store.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/screens/card_detail_screen.dart';
 
 /// Detalle de un mazo generado: plan de juego, curva (editable: arrastra las
 /// barras y reforja el mazo a tu curva), "¿por qué funciona?", lista agrupada

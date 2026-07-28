@@ -10,7 +10,7 @@ library;
 
 import 'package:path_provider/path_provider.dart';
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// ¿Existe carpeta de datos donde guardar las bases? En tests (y en un
 /// entorno sin el plugin de rutas) no, y ahí no hay nada que descargar.

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/app_localizations.dart';
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/market_prefs.dart';
-import '../services/markets.dart';
-import '../services/price_series_database.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
-import '../widgets/market_picker.dart';
-import 'card_detail_screen.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/markets.dart';
+import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/widgets/market_picker.dart';
+import 'package:manaforge_app/screens/card_detail_screen.dart';
 
 /// Mercado de una expansión: todas sus cartas con precio, con filtros
 /// (nombre, rareza, color, solo las tuyas) y ordenación por precio.

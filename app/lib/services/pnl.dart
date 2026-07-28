@@ -12,7 +12,7 @@
 ///    beneficio inventado.
 library;
 
-import 'collection_store.dart';
+import 'package:manaforge_app/services/collection_store.dart';
 
 /// El resultado: lo pagado, lo que vale hoy, y qué parte de la colección
 /// entra en la cuenta.

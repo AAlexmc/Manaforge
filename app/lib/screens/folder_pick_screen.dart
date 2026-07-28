@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/collection_store.dart';
-import '../widgets/common.dart';
-import 'collection_filters.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/screens/collection_filters.dart';
 
 /// Marcar qué cartas de TU colección entran en una carpeta, con los mismos
 /// filtros y el mismo orden que la lista completa. Devuelve el conjunto de

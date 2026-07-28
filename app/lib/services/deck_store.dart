@@ -6,7 +6,7 @@ import 'package:forge_engine/forge_engine.dart' as fe;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'json_store_io.dart';
+import 'package:manaforge_app/services/json_store_io.dart';
 
 /// Un mazo guardado desde Forge. Se persiste con lo necesario para volver a
 /// abrirlo aunque la colección cambie (las cartas se releen de la DB).

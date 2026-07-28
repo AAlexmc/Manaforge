@@ -16,7 +16,7 @@ import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// Versión del formato de la copia. Una copia con versión MAYOR que esta no se
 /// restaura: la escribió una app más nueva y podría traer campos que aquí se

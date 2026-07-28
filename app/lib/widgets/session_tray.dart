@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/app_localizations.dart';
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../scanner/scan_tray.dart';
-import '../services/card_database.dart';
-import '../theme/mf_theme.dart';
-import 'common.dart';
+import 'package:manaforge_app/scanner/scan_tray.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
 
 /// Bandeja de la sesión de escaneo en vivo: fila horizontal de cartas
 /// reconocidas, agrupando copias iguales en ×N (como ManaBox), con las

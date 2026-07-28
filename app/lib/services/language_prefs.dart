@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'json_store_io.dart';
+import 'package:manaforge_app/services/json_store_io.dart';
 
 /// Un idioma que se puede elegir, con su nombre EN SU PROPIO idioma: quien
 /// busca "日本語" no está leyendo "japonés".

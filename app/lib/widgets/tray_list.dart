@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
-import '../scanner/scan_tray.dart';
-import '../services/card_database.dart';
-import '../theme/mf_theme.dart';
-import 'common.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/scanner/scan_tray.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
 
 /// Lista VERTICAL de la bandeja de escaneo, al estilo de ManaBox: una fila
 /// rica por carta (miniatura, cantidad, nombre, set·número, editar/borrar).

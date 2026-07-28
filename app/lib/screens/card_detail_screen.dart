@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 import 'package:flutter/services.dart';
 
-import '../services/card_database.dart';
-import '../services/card_names.dart';
-import '../services/collection_store.dart';
-import '../services/market_prefs.dart';
-import '../services/market_prices.dart';
-import '../services/markets.dart';
-import '../services/price_history.dart';
-import '../services/price_series_database.dart';
-import '../services/recents_store.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
-import '../widgets/market_picker.dart';
-import '../widgets/price_chart.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/card_names.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/market_prices.dart';
+import 'package:manaforge_app/services/markets.dart';
+import 'package:manaforge_app/services/price_history.dart';
+import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/services/recents_store.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/widgets/market_picker.dart';
+import 'package:manaforge_app/widgets/price_chart.dart';
 
 /// Ficha completa de una carta: imagen, reglas, tus copias, legalidades y
 /// precios por edición (normal y foil). El corazón del Mercado.

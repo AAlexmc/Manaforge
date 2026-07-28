@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 
-import '../services/database_download_error.dart';
-import '../l10n/t.dart';
+import 'package:manaforge_app/services/database_download_error.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/collection_value.dart';
-import '../services/collection_value_series.dart';
-import '../services/debouncer.dart';
-import '../services/market_prefs.dart';
-import '../services/market_prices.dart';
-import '../services/markets.dart';
-import '../services/pnl.dart';
-import '../services/price_history.dart';
-import '../services/price_series_database.dart';
-import '../services/serial_task.dart';
-import '../services/value_history.dart';
-import '../services/wishlist_store.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
-import '../widgets/db_download.dart';
-import '../widgets/pnl_view.dart';
-import '../widgets/market_picker.dart';
-import '../widgets/price_chart.dart';
-import 'card_detail_screen.dart';
-import 'set_market_screen.dart';
-import 'wishlist_screen.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/collection_value.dart';
+import 'package:manaforge_app/services/collection_value_series.dart';
+import 'package:manaforge_app/services/debouncer.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/market_prices.dart';
+import 'package:manaforge_app/services/markets.dart';
+import 'package:manaforge_app/services/pnl.dart';
+import 'package:manaforge_app/services/price_history.dart';
+import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/services/serial_task.dart';
+import 'package:manaforge_app/services/value_history.dart';
+import 'package:manaforge_app/services/wishlist_store.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/widgets/db_download.dart';
+import 'package:manaforge_app/widgets/pnl_view.dart';
+import 'package:manaforge_app/widgets/market_picker.dart';
+import 'package:manaforge_app/widgets/price_chart.dart';
+import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/screens/set_market_screen.dart';
+import 'package:manaforge_app/screens/wishlist_screen.dart';
 
 /// Mercado: el valor de tu colección con evolución local, tus cartas más
 /// valiosas y un buscador de precios de cualquier carta. Precios Cardmarket

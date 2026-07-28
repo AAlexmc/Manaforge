@@ -6,7 +6,7 @@
 /// que ve la persona sale de [databaseDownloadErrorText].
 library;
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// Qué base es la que no ha bajado.
 enum DownloadedDatabase {

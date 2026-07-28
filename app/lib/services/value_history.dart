@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'json_store_io.dart';
+import 'package:manaforge_app/services/json_store_io.dart';
 
 /// Un punto de la evolución del valor de la colección.
 class ValuePoint {

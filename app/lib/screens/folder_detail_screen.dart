@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/collection_value.dart';
-import '../services/folder_store.dart';
-import '../services/folder_value.dart';
-import '../services/market_prefs.dart';
-import '../services/price_series_database.dart';
-import '../widgets/common.dart';
-import '../widgets/folder_tile.dart';
-import 'card_detail_screen.dart';
-import 'collection_filters.dart';
-import 'folder_pick_screen.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/collection_value.dart';
+import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/services/folder_value.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/widgets/folder_tile.dart';
+import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/screens/collection_filters.dart';
+import 'package:manaforge_app/screens/folder_pick_screen.dart';
 
 /// Lo que se edita de una carpeta: nombre, color e icono.
 typedef FolderLook = ({String name, int colorValue, String icon});

@@ -15,8 +15,8 @@
 ///    se añada veinte veces, y escanear 4 copias pasándolas una a una.
 library;
 
-import 'hash_index.dart';
-import 'scan_gate.dart';
+import 'package:manaforge_app/scanner/hash_index.dart';
+import 'package:manaforge_app/scanner/scan_gate.dart';
 
 /// Una carta reconocida en vivo, lista para la cola de confirmación.
 class Recognition {

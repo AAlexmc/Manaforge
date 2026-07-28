@@ -17,7 +17,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
-import 'safe_input.dart';
+import 'package:manaforge_app/services/safe_input.dart';
 
 /// La URL del `SHA256SUMS.txt` que acompaña a [assetUrl] (mismo release).
 ///

@@ -10,7 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// "Quiero buscar en la pestaña N". Cada pantalla mira si el aviso es para
 /// ella (comparando su índice) y hace lo suyo: unas enfocan su buscador,

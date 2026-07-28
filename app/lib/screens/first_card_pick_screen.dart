@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
-import '../services/certificates.dart';
-import '../services/collection_store.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/services/certificates.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
 
 /// Elegir UNA carta de tu colección: la que te metió en Magic, para que salga
 /// en el certificado de bienvenida.

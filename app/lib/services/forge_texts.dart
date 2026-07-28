@@ -9,7 +9,7 @@ library;
 
 import 'package:forge_engine/forge_engine.dart' as fe;
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// Cómo se llama un tema. Un tema que el motor detecte y aquí no esté se
 /// enseña con su clave: es preferible a no decir nada. Las tribus

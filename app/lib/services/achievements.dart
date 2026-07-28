@@ -4,7 +4,7 @@
 /// pueden testear sin base de datos ni ficheros.
 library;
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// Rareza del logro; de ella sale el XP que da.
 enum AchievementTier {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
-import '../theme/mf_theme.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
 
 /// Pantallas que NO son pestaña: se abren encima (Navigator.push). El tour
 /// las abre él mismo y las cierra al pasar de paso.

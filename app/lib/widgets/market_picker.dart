@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/market_prefs.dart';
-import '../services/markets.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/markets.dart';
 
 /// Botones para elegir mercado. Los que no tienen datos en las bases
 /// descargadas salen apagados y dicen por qué: es mejor eso que enseñar un

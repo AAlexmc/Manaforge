@@ -5,28 +5,28 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 import 'package:flutter/services.dart';
 
-import '../scanner/burst_controller.dart';
-import '../scanner/hit_cache.dart';
-import '../scanner/presence_gate.dart';
-import '../scanner/scan_gate.dart';
-import '../scanner/scan_tray.dart';
-import '../scanner/table_memory.dart';
-import '../scanner/tray_commit.dart';
-import '../services/achievements_controller.dart';
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/folder_store.dart';
-import '../services/linux_camera.dart';
-import '../services/scanner_database.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/scanner_db_gate.dart';
-import '../widgets/session_tray.dart';
-import '../widgets/set_lock.dart';
-import 'scan_screen.dart';
-import 'scan_shared.dart';
+import 'package:manaforge_app/scanner/burst_controller.dart';
+import 'package:manaforge_app/scanner/hit_cache.dart';
+import 'package:manaforge_app/scanner/presence_gate.dart';
+import 'package:manaforge_app/scanner/scan_gate.dart';
+import 'package:manaforge_app/scanner/scan_tray.dart';
+import 'package:manaforge_app/scanner/table_memory.dart';
+import 'package:manaforge_app/scanner/tray_commit.dart';
+import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/services/linux_camera.dart';
+import 'package:manaforge_app/services/scanner_database.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/scanner_db_gate.dart';
+import 'package:manaforge_app/widgets/session_tray.dart';
+import 'package:manaforge_app/widgets/set_lock.dart';
+import 'package:manaforge_app/screens/scan_screen.dart';
+import 'package:manaforge_app/screens/scan_shared.dart';
 
 /// Escáner en vivo, fase C: la webcam mira la mesa y ManaForge reconoce las
 /// cartas que le pases por delante — sin tocar nada. Cada reconocimiento

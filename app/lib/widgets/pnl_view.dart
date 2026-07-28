@@ -7,12 +7,12 @@ library;
 
 import 'package:flutter/material.dart';
 
-import '../l10n/app_localizations.dart';
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/markets.dart';
-import '../services/pnl.dart';
-import '../theme/mf_theme.dart';
+import 'package:manaforge_app/services/markets.dart';
+import 'package:manaforge_app/services/pnl.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
 
 class PnlView extends StatelessWidget {
   final PnL pnl;

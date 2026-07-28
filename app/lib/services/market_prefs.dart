@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'markets.dart';
+import 'package:manaforge_app/services/markets.dart';
 
 /// En qué mercado quieres ver los precios. Se recuerda entre arranques
 /// (`market.json`), como pidió Ale: elegir mercado en cada pantalla cada vez

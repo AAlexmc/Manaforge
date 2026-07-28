@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
-import '../theme/mf_theme.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
 
 /// En escritorio, las listas horizontales no se pueden arrastrar con el
 /// ratón por defecto: este comportamiento lo permite (tiras de cartas,

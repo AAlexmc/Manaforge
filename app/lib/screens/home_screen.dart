@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../l10n/t.dart';
-import '../services/achievements.dart';
-import '../services/achievements_controller.dart';
-import '../services/app_update.dart';
-import '../services/certificate_store.dart';
-import '../services/collection_value.dart';
-import '../services/deck_store.dart';
-import '../services/home_layout_prefs.dart';
-import '../services/meta_decks.dart';
-import '../services/recents_store.dart';
-import '../services/serial_task.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
-import '../widgets/update_notice.dart';
-import 'card_detail_screen.dart';
-import 'deck_detail_screen.dart';
-import 'editar_inicio_screen.dart';
-import 'import_csv_screen.dart';
-import 'logros_screen.dart';
-import 'mercado_screen.dart';
-import 'set_market_screen.dart';
-import 'test_screen.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/services/achievements.dart';
+import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/services/app_update.dart';
+import 'package:manaforge_app/services/certificate_store.dart';
+import 'package:manaforge_app/services/collection_value.dart';
+import 'package:manaforge_app/services/deck_store.dart';
+import 'package:manaforge_app/services/home_layout_prefs.dart';
+import 'package:manaforge_app/services/meta_decks.dart';
+import 'package:manaforge_app/services/recents_store.dart';
+import 'package:manaforge_app/services/serial_task.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/widgets/update_notice.dart';
+import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/screens/deck_detail_screen.dart';
+import 'package:manaforge_app/screens/editar_inicio_screen.dart';
+import 'package:manaforge_app/screens/import_csv_screen.dart';
+import 'package:manaforge_app/screens/logros_screen.dart';
+import 'package:manaforge_app/screens/mercado_screen.dart';
+import 'package:manaforge_app/screens/set_market_screen.dart';
+import 'package:manaforge_app/screens/test_screen.dart';
 
 /// Inicio: el vestíbulo de la forja. Valor de tu colección, accesos rápidos
 /// y tiras deslizables — recientes, tus mazos, el meta, expansiones y joyas.

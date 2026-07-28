@@ -9,7 +9,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// Algo de fuera que no se acepta.
 ///

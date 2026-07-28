@@ -11,7 +11,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
-import '../l10n/app_localizations.dart';
+import 'package:manaforge_app/l10n/app_localizations.dart';
 
 /// No hay cámara utilizable (sin dispositivos, sin GStreamer, o el
 /// pipeline no arranca). El mensaje está pensado para enseñarlo tal cual.

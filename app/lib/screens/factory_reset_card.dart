@@ -10,9 +10,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
-import '../services/backup.dart';
-import '../services/factory_reset.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/services/backup.dart';
+import 'package:manaforge_app/services/factory_reset.dart';
 
 /// Solo para tests (como kRestoreConfirmWord): la palabra del primer freno.
 const String kFactoryResetWord = 'ELIMINAR';

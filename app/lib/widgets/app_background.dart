@@ -10,7 +10,7 @@ library;
 
 import 'package:flutter/material.dart';
 
-import '../services/background_prefs.dart';
+import 'package:manaforge_app/services/background_prefs.dart';
 
 class AppBackground extends StatelessWidget {
   final BackgroundPreference prefs;

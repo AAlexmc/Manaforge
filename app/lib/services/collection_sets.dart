@@ -4,8 +4,8 @@
 /// la otra).
 library;
 
-import 'card_database.dart';
-import 'collection_store.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
 
 Future<Map<String, int>> ownedCardsBySet(
     CardDatabase db, CollectionStore collection) async {

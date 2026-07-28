@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
-import '../services/card_database.dart';
-import '../services/card_names.dart';
-import '../services/collection_store.dart';
-import '../services/debouncer.dart';
-import '../services/folder_store.dart';
-import '../services/market_prefs.dart';
-import '../services/price_series_database.dart';
-import '../services/collection_cascade.dart';
-import '../widgets/common.dart';
-import 'card_detail_screen.dart';
-import 'collection_filters.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/card_names.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/debouncer.dart';
+import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/services/collection_cascade.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/screens/card_detail_screen.dart';
+import 'package:manaforge_app/screens/collection_filters.dart';
 
 /// La lista completa de la colección: buscar, añadir, filtrar, ordenar y
 /// cambiar cantidades. Antes era lo primero que veías al entrar en Colección;

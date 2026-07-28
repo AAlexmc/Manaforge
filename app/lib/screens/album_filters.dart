@@ -2,7 +2,7 @@
 /// para poder testearla en CI.
 library;
 
-import '../services/card_database.dart';
+import 'package:manaforge_app/services/card_database.dart';
 
 /// Inicial de un set para el filtro por letra: A-Z en mayúscula, y todo lo
 /// que no empiece por letra (números, símbolos) cae al cajón '#'.

@@ -27,7 +27,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import 'markets.dart';
+import 'package:manaforge_app/services/markets.dart';
 
 /// Un punto de la evolución de precio de UNA carta.
 class PricePoint {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
 /// Chip de "bloqueo de edición" para las pantallas de escaneo: cuando escaneas
 /// una caja o precon entera, fijas el set y el escáner solo busca dentro de él

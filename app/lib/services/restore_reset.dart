@@ -8,8 +8,8 @@
 /// recupera—. Esto los deja como recién nacidos, sin tocar el disco.
 library;
 
-import 'price_history.dart';
-import 'recents_store.dart';
+import 'package:manaforge_app/services/price_history.dart';
+import 'package:manaforge_app/services/recents_store.dart';
 
 void resetSharedStores({RecentsStore? recents, PriceHistoryStore? history}) {
   (recents ?? recentsStore).invalidate();

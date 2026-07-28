@@ -5,27 +5,27 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 import 'package:image/image.dart' as img;
 
-import '../scanner/card_detector.dart';
-import '../scanner/dhash.dart';
-import '../scanner/hit_cache.dart';
-import '../scanner/scan_gate.dart';
-import '../scanner/scan_tray.dart';
-import '../scanner/tray_commit.dart';
-import '../services/achievements_controller.dart';
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/folder_store.dart';
-import '../services/safe_input.dart';
-import '../services/scanner_database.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/common.dart';
-import '../widgets/scanner_db_gate.dart';
-import '../widgets/set_lock.dart';
-import '../widgets/tray_list.dart';
-import 'scan_shared.dart';
+import 'package:manaforge_app/scanner/card_detector.dart';
+import 'package:manaforge_app/scanner/dhash.dart';
+import 'package:manaforge_app/scanner/hit_cache.dart';
+import 'package:manaforge_app/scanner/scan_gate.dart';
+import 'package:manaforge_app/scanner/scan_tray.dart';
+import 'package:manaforge_app/scanner/tray_commit.dart';
+import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/services/scanner_database.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/widgets/scanner_db_gate.dart';
+import 'package:manaforge_app/widgets/set_lock.dart';
+import 'package:manaforge_app/widgets/tray_list.dart';
+import 'package:manaforge_app/screens/scan_shared.dart';
 
 /// Extensiones que se aceptan como foto: el picker de fichero solo enseña
 /// estas, y arrastrar-y-soltar tiene que aplicar el MISMO filtro (si no,

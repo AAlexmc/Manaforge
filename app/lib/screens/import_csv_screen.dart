@@ -4,12 +4,12 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/safe_input.dart';
-import '../theme/mf_theme.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
 
 /// Importador de colección. Tres vías, de más cómoda a menos:
 /// arrastrar el archivo CSV a la ventana, elegirlo con el botón, o pegar su

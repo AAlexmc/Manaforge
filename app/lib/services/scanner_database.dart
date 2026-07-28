@@ -9,16 +9,16 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 
-import 'download_check.dart';
-import 'safe_input.dart';
+import 'package:manaforge_app/services/download_check.dart';
+import 'package:manaforge_app/services/safe_input.dart';
 
-import '../scanner/hash_index.dart';
-import 'database_download_error.dart';
+import 'package:manaforge_app/scanner/hash_index.dart';
+import 'package:manaforge_app/services/database_download_error.dart';
 
 // El núcleo de matching (HashEntry, ScanMatch, HashIndex) vive en
 // hash_index.dart (sin Flutter). Se re-exporta para que quien importe esta
 // base de huellas siga viendo esos tipos sin un import extra.
-export '../scanner/hash_index.dart';
+export 'package:manaforge_app/scanner/hash_index.dart';
 
 /// Base de huellas del escáner (generada por scripts/build_hash_db.py y
 /// publicada como release scanner-db-latest). Descarga con progreso,

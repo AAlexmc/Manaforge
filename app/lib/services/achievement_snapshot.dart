@@ -5,17 +5,17 @@
 /// cartas a por lo que no está en la colección (rareza, año, precios).
 library;
 
-import 'achievement_store.dart';
-import 'achievements.dart';
-import 'card_database.dart';
-import 'collection_sets.dart';
-import 'collection_store.dart';
-import 'collection_value.dart';
-import 'deck_store.dart';
-import 'folder_store.dart';
-import 'folder_value.dart';
+import 'package:manaforge_app/services/achievement_store.dart';
+import 'package:manaforge_app/services/achievements.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_sets.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/collection_value.dart';
+import 'package:manaforge_app/services/deck_store.dart';
+import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/services/folder_value.dart';
 
-export 'achievements.dart' show AchievementSnapshot;
+export 'package:manaforge_app/services/achievements.dart' show AchievementSnapshot;
 
 /// Lo que la base de cartas sabe de una carta y la colección no.
 class CardFacts {

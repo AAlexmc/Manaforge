@@ -13,10 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../l10n/t.dart';
-import '../services/background_prefs.dart';
-import '../services/safe_input.dart';
-import '../theme/contrast.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/services/background_prefs.dart';
+import 'package:manaforge_app/services/safe_input.dart';
+import 'package:manaforge_app/theme/contrast.dart';
 
 class BackgroundSettingsCard extends StatefulWidget {
   final BackgroundPreference prefs;

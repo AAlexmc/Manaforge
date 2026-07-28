@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/card_database.dart';
-import '../services/collection_sets.dart';
-import '../services/collection_store.dart';
-import '../services/market_prefs.dart';
-import '../services/price_series_database.dart';
-import '../services/markets.dart';
-import '../theme/mf_theme.dart';
-import '../widgets/app_shortcuts.dart';
-import '../widgets/common.dart';
-import 'album_filters.dart';
-import 'card_detail_screen.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_sets.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/services/markets.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/widgets/app_shortcuts.dart';
+import 'package:manaforge_app/widgets/common.dart';
+import 'package:manaforge_app/screens/album_filters.dart';
+import 'package:manaforge_app/screens/card_detail_screen.dart';
 
 /// Álbum por expansiones, estilo TCG Pocket: cada set es una página con
 /// TODAS sus cartas en rejilla; las que no tienes se ven apagadas y las

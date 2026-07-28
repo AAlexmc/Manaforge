@@ -8,8 +8,8 @@
 /// `kAppVersion` (hay un test que ata la versión al `pubspec.yaml`).
 library;
 
-import '../l10n/app_localizations.dart';
-import 'backup.dart' show kAppVersion;
+import 'package:manaforge_app/l10n/app_localizations.dart';
+import 'package:manaforge_app/services/backup.dart' show kAppVersion;
 
 /// Novedades de una versión: qué cambia y por qué te importa, no el número de
 /// PR. El texto vive en las traducciones, así que las novedades se leen en el

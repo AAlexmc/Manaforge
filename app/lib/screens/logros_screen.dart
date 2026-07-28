@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../l10n/t.dart';
+import 'package:manaforge_app/l10n/t.dart';
 
-import '../services/achievements.dart';
-import '../services/achievements_controller.dart';
-import '../services/card_database.dart';
-import '../services/certificate_store.dart';
-import '../services/collection_store.dart';
-import '../theme/mf_theme.dart';
-import 'certificados_screen.dart';
+import 'package:manaforge_app/services/achievements.dart';
+import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/certificate_store.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/theme/mf_theme.dart';
+import 'package:manaforge_app/screens/certificados_screen.dart';
 
 /// Color de cada rareza de logro (bronce, plata, oro, mítico).
 Color tierColor(AchievementTier tier) => switch (tier) {

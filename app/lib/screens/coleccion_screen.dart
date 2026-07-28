@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../services/database_download_error.dart';
-import '../l10n/t.dart';
-import '../services/achievements_controller.dart';
-import '../services/card_database.dart';
-import '../services/collection_store.dart';
-import '../services/collection_value.dart';
-import '../services/folder_store.dart';
-import '../services/folder_value.dart';
-import '../services/scanner_database.dart';
-import '../services/market_prefs.dart';
-import '../services/price_series_database.dart';
-import '../widgets/app_shortcuts.dart';
-import '../widgets/db_download.dart';
-import '../widgets/folder_tile.dart';
-import 'album_screen.dart';
-import 'all_cards_screen.dart';
-import 'folder_detail_screen.dart';
-import 'folder_pick_screen.dart';
-import 'import_csv_screen.dart';
+import 'package:manaforge_app/services/database_download_error.dart';
+import 'package:manaforge_app/l10n/t.dart';
+import 'package:manaforge_app/services/achievements_controller.dart';
+import 'package:manaforge_app/services/card_database.dart';
+import 'package:manaforge_app/services/collection_store.dart';
+import 'package:manaforge_app/services/collection_value.dart';
+import 'package:manaforge_app/services/folder_store.dart';
+import 'package:manaforge_app/services/folder_value.dart';
+import 'package:manaforge_app/services/scanner_database.dart';
+import 'package:manaforge_app/services/market_prefs.dart';
+import 'package:manaforge_app/services/price_series_database.dart';
+import 'package:manaforge_app/widgets/app_shortcuts.dart';
+import 'package:manaforge_app/widgets/db_download.dart';
+import 'package:manaforge_app/widgets/folder_tile.dart';
+import 'package:manaforge_app/screens/album_screen.dart';
+import 'package:manaforge_app/screens/all_cards_screen.dart';
+import 'package:manaforge_app/screens/folder_detail_screen.dart';
+import 'package:manaforge_app/screens/folder_pick_screen.dart';
+import 'package:manaforge_app/screens/import_csv_screen.dart';
 
 // El orden y los filtros viven en collection_filters.dart; se re-exportan
 // porque media app (y sus tests) los importaban desde aquí.
-export 'collection_filters.dart'
+export 'package:manaforge_app/screens/collection_filters.dart'
     show CollectionSort, sortCollection, CollectionFilters, addedLabel;
 
 /// Colección: portada con tus CARPETAS y su valor. La lista completa de
