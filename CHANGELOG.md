@@ -10,6 +10,18 @@ binarios (y sumas SHA-256 desde la 0.3.0).
 
 Nada aún.
 
+## [0.3.2] — 2026-07-29
+
+### Cambiado
+- Textos de la importación de CSV claros y neutros en los 10 idiomas
+  (#116); nombres internos del importador a juego (#116, #117).
+- El vídeo del README avisa de que se descarga, con el teaser del escáner
+  reproduciéndose en la propia página (#113–#115).
+
+### Arreglado
+- Pipeline de datos al día con el bulk nuevo de Scryfall (JSONL
+  comprimido): la base de cartas vuelve a publicarse (#117).
+
 ## [0.3.1] — 2026-07-28
 
 ### Cambiado
@@ -68,7 +80,8 @@ Nada aún.
   por expansión, primera versión del generador de mazos (Forge) y pipeline de
   datos con releases mensuales.
 
-[Sin publicar]: https://github.com/AAlexmc/Manaforge/compare/app-v0.3.1...HEAD
+[Sin publicar]: https://github.com/AAlexmc/Manaforge/compare/app-v0.3.2...HEAD
+[0.3.2]: https://github.com/AAlexmc/Manaforge/compare/app-v0.3.1...app-v0.3.2
 [0.3.1]: https://github.com/AAlexmc/Manaforge/compare/app-v0.3.0...app-v0.3.1
 [0.3.0]: https://github.com/AAlexmc/Manaforge/compare/app-v0.2.0...app-v0.3.0
 [0.2.0]: https://github.com/AAlexmc/Manaforge/releases/tag/app-v0.2.0

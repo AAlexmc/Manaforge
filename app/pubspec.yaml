@@ -3,7 +3,7 @@ description: ManaForge — colección visual y generador de mazos de Magia, mult
 publish_to: 'none'
 # El recuento de cambios por versión vive en /CHANGELOG.md (y cada release
 # de GitHub lleva sus notas). Subir aquí la versión = tocar también aquel.
-version: 0.3.1+4
+version: 0.3.2+5
 repository: https://github.com/AAlexmc/Manaforge
 issue_tracker: https://github.com/AAlexmc/Manaforge/issues
 

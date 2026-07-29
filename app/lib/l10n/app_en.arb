@@ -1136,6 +1136,8 @@
 
   "slLockButton": "Lock",
 
+  "wn032Headline": "Clearer wording",
+  "wn032Import": "Importing your collection: the CSV import texts are now clear and neutral across all 10 languages.",
   "wn031Headline": "An album that speaks plainly, a comfier Forge, and everything smoother",
   "wn031Album": "Album: if your market (Card Kingdom, Mana Pool) doesn't publish per-printing prices, it now says so plainly instead of showing a mute $0.00.",
   "wn031Forge": "Forge: after forging you can go back to your selection without losing it, and the deck-deleted notice lasts longer and can be dismissed.",

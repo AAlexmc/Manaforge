@@ -1141,6 +1141,8 @@
 
   "slLockButton": "Bloquear",
 
+  "wn032Headline": "Textos más claros",
+  "wn032Import": "Importar tu colección: los textos de la importación de CSV ahora son claros y neutros en los 10 idiomas.",
   "wn031Headline": "Álbum que habla claro, Forge más cómodo y todo más fluido",
   "wn031Album": "Álbum: si tu mercado (Card Kingdom, Mana Pool) no publica precio por edición, te lo dice claro en vez de enseñar un $0.00 mudo.",
   "wn031Forge": "Forge: al terminar una forja puedes volver a la selección sin perder lo elegido, y el aviso de mazo borrado dura más y se puede cerrar.",

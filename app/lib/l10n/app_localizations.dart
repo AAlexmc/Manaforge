@@ -4032,6 +4032,18 @@ abstract class AppLocalizations {
   /// **'Bloquear'**
   String get slLockButton;
 
+  /// No description provided for @wn032Headline.
+  ///
+  /// In es, this message translates to:
+  /// **'Textos más claros'**
+  String get wn032Headline;
+
+  /// No description provided for @wn032Import.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar tu colección: los textos de la importación de CSV ahora son claros y neutros en los 10 idiomas.'**
+  String get wn032Import;
+
   /// No description provided for @wn031Headline.
   ///
   /// In es, this message translates to:

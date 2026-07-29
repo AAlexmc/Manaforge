@@ -2441,6 +2441,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slLockButton => '잠그기';
 
   @override
+  String get wn032Headline => 'Textos más claros';
+
+  @override
+  String get wn032Import =>
+      'Importar tu colección: los textos de la importación de CSV ahora son claros y neutros en los 10 idiomas.';
+
+  @override
   String get wn031Headline =>
       'Álbum que habla claro, Forge más cómodo y todo más fluido';
 

@@ -2504,6 +2504,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get slLockButton => 'Lock';
 
   @override
+  String get wn032Headline => 'Clearer wording';
+
+  @override
+  String get wn032Import =>
+      'Importing your collection: the CSV import texts are now clear and neutral across all 10 languages.';
+
+  @override
   String get wn031Headline =>
       'An album that speaks plainly, a comfier Forge, and everything smoother';
 
