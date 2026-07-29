@@ -24,28 +24,28 @@ void main() {
       const csv = 'Name,Quantity,Scryfall ID,Purchase price,'
           'Purchase price currency\n'
           'Sol Ring,2,aaa,3.50,EUR\n';
-      final row = parseManaBoxCsv(csv).single;
+      final row = parseCollectionCsv(csv).single;
       expect(row.purchasePrice, 3.50);
       expect(row.currency, 'EUR');
     });
 
     test('un 0 no es un precio: es "no lo sé"', () {
       const csv = 'Name,Quantity,Purchase price\nShock,1,0\n';
-      expect(parseManaBoxCsv(csv).single.purchasePrice, isNull);
+      expect(parseCollectionCsv(csv).single.purchasePrice, isNull);
     });
 
     test('acepta coma decimal y descarta lo que no es número', () {
       const csv = 'Nombre;Cantidad;Precio de compra\n'
           'Rayo;1;2,40\n'
           'Isla;1;gratis\n';
-      final rows = parseManaBoxCsv(csv);
+      final rows = parseCollectionCsv(csv);
       expect(rows[0].purchasePrice, 2.40);
       expect(rows[1].purchasePrice, isNull);
     });
 
     test('sin columna de precio, no se inventa ninguno', () {
       const csv = 'Name,Quantity\nShock,1\n';
-      final row = parseManaBoxCsv(csv).single;
+      final row = parseCollectionCsv(csv).single;
       expect(row.purchasePrice, isNull);
       expect(row.currency, isNull);
     });
@@ -53,7 +53,7 @@ void main() {
     test('"Purchase price currency" no se confunde con "Purchase price"', () {
       const csv = 'Name,Purchase price currency,Purchase price,Quantity\n'
           'Shock,USD,1.25,1\n';
-      final row = parseManaBoxCsv(csv).single;
+      final row = parseCollectionCsv(csv).single;
       expect(row.purchasePrice, 1.25);
       expect(row.currency, 'USD');
     });

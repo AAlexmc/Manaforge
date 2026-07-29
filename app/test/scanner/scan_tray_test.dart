@@ -1,5 +1,5 @@
 /// Tests de la bandeja de la sesión de escaneo en vivo: agrupa copias
-/// iguales en una línea con cantidad (×N), como ManaBox.
+/// iguales en una línea con cantidad (×N).
 library;
 
 import 'package:flutter_test/flutter_test.dart';

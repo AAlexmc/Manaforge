@@ -721,7 +721,7 @@ class _ScanScreenState extends State<ScanScreen> {
       });
 
   Widget _buildResults() {
-    // Un ganador claro y sin desplegar → enseñar UNA carta, como ManaBox.
+    // Un ganador claro y sin desplegar → enseñar UNA carta.
     if (_confidence == ScanConfidence.confident && !_showAll) {
       return _buildHero();
     }

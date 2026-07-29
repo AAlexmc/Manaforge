@@ -203,7 +203,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get welcomeScan => 'カードをスキャン';
 
   @override
-  String get welcomeImport => 'CSV を読み込む（ManaBox）';
+  String get welcomeImport => 'CSV を読み込む';
 
   @override
   String get welcomeTryForge => 'コレクションなしで Forge を試す';
@@ -494,7 +494,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get colAlbumTooltip => 'エキスパンション別アルバム';
 
   @override
-  String get colImportTooltip => 'ManaBoxのCSVをインポート';
+  String get colImportTooltip => 'コレクションのCSVをインポート';
 
   @override
   String colValueLine(int copies, int distinct, String valor) {
@@ -527,7 +527,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get colEmptyBody =>
-      'カメラでカードをスキャンするか、ManaBoxのCSVをインポートしましょう。こことアルバムに並びます。';
+      'カメラでカードをスキャンするか、コレクションのCSVをインポートしましょう。こことアルバムに並びます。';
 
   @override
   String get colImportShort => 'CSVをインポート';
@@ -593,7 +593,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get acNoneMatch => 'この絞り込みに一致するカードはありません。';
 
   @override
-  String get acEmptyHint => '上で最初のカードを検索するか、戻ってManaBoxのCSVをインポートしましょう。';
+  String get acEmptyHint => '上で最初のカードを検索するか、戻ってコレクションのCSVをインポートしましょう。';
 
   @override
   String get onbHowItWorksBody => '各タブの役割とキーボードショートカットのまとめです。迷ったら、ここから始めましょう。';
@@ -1803,7 +1803,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get icExplain =>
-      'ManaBoxのCSVをここにドラッグ（Moxfield、Archidekt、あるいはNameとQuantityの列があるCSVならなんでもOK）するか、ボタンで選ぶか、中身を手で貼り付けてください：';
+      'コレクションのCSVをここにドラッグ（Moxfield、Archidekt、あるいはNameとQuantityの列があるCSVならなんでもOK）するか、ボタンで選ぶか、中身を手で貼り付けてください：';
 
   @override
   String get icPickFile => 'ファイルを選ぶ…';
@@ -1840,7 +1840,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get icNoPurchasePrice =>
-      '\n• CSVに購入価格がありません：損益（P&L）は表示されません（ManaBoxは「Purchase price」列に書き出します）。';
+      '\n• CSVに購入価格がありません：損益（P&L）は表示されません（「Purchase price」列付きで書き出してください）。';
 
   @override
   String icWithPurchasePrice(int n) {
@@ -2094,7 +2094,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ceEmptyNoData =>
-      'エキスパンションを証明するには、あなたのカードの正確な版を知る必要があります：ManaBoxのCSVを再インポートしてください（Scryfall IDが含まれています）。';
+      'エキスパンションを証明するには、あなたのカードの正確な版を知る必要があります：Scryfall ID付きのCSVを再インポートしてください。';
 
   @override
   String get ceNothingSaved => '何も保存されませんでした。';
@@ -2257,7 +2257,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get pnNoPnl =>
-      '購入価格がないと損益（P&L）は出せません。「Purchase price」列付きのManaBox CSVをインポートすると、ここに表示されます。';
+      '購入価格がないと損益（P&L）は出せません。「Purchase price」列付きのCSVをインポートすると、ここに表示されます。';
 
   @override
   String pnOverAll(int n) {
@@ -2436,7 +2436,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get wn030Pnl =>
-      '購入価格と損益（P&L）：ManaBoxのCSVに「Purchase price」があれば、マーケットが支払額・現在の価値・その差を表示します。通貨は混ざりません。';
+      '購入価格と損益（P&L）：CSVに「Purchase price」があれば、マーケットが支払額・現在の価値・その差を表示します。通貨は混ざりません。';
 
   @override
   String get wn030PhotoFolder => '写真からのスキャンでも、ライブスキャンと同じようにフォルダを選べます。';

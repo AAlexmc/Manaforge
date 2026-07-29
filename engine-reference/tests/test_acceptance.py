@@ -1,6 +1,6 @@
 """Tests de aceptación del motor Forge.
 
-Los fixtures son mazos reales generados a partir de una colección ManaBox real
+Los fixtures son mazos reales generados a partir de una colección real
 durante el diseño del producto: si el validador los rechaza, el motor está roto.
 """
 import json

@@ -521,9 +521,9 @@ class CollectionStore extends ChangeNotifier {
   /// re-sellar toda la colección (enterraría lo que acabas de escanear
   /// bajo 300 cartas viejas, y esa información no se recupera).
   ///
-  /// [foil] marca que ESAS copias son foil (lo sabe el CSV de ManaBox).
+  /// [foil] marca que ESAS copias son foil (lo dice el propio CSV).
   /// [paidPerCopy] apunta de paso lo que pagaste por ESTAS copias (lo trae
-  /// el CSV de ManaBox). Va aquí, y no en una llamada aparte, para que meter
+  /// el propio CSV). Va aquí, y no en una llamada aparte, para que meter
   /// una fila del CSV sea UN solo aviso a la interfaz.
   void add(OwnedCard card,
       {int qty = 1,
@@ -693,7 +693,7 @@ class CollectionStore extends ChangeNotifier {
   }
 }
 
-/// Resultado del importador de CSV (ManaBox y compatibles).
+/// Resultado del importador de CSV de colección.
 class ImportResult {
   final int imported;
   final int copies;
@@ -711,7 +711,7 @@ class ImportResult {
       {this.tokensIgnored = 0, this.withPurchasePrice = 0});
 }
 
-/// ¿Es una ficha/emblema? ManaBox los exporta desde sets "... Tokens"
+/// ¿Es una ficha/emblema? Hay apps de colección que los exportan desde sets "... Tokens"
 /// (códigos TXXX) y los emblemas se llaman "... Emblem".
 bool looksLikeToken(String name, String? setName) {
   final set = (setName ?? '').toLowerCase();
@@ -722,8 +722,8 @@ bool looksLikeToken(String name, String? setName) {
       name.toLowerCase() == 'emblem';
 }
 
-/// Una fila del CSV de ManaBox ya interpretada.
-class ManaBoxRow {
+/// Una fila del CSV de colección ya interpretada.
+class CollectionCsvRow {
   final String name;
   final String? scryfallId;
   final int qty;
@@ -731,15 +731,15 @@ class ManaBoxRow {
   final bool foil;
 
   /// Lo que pagaste por UNA copia, si el CSV lo trae. `null` = la columna no
-  /// estaba, o venía vacía, o era 0 (ManaBox escribe 0 cuando no lo sabe, y
+  /// estaba, o venía vacía, o era 0 (hay exportadores que escriben 0 cuando no lo saben, y
   /// tomarlo por "me salió gratis" convertiría cualquier carta en un chollo).
   final double? purchasePrice;
 
-  /// Divisa de [purchasePrice] tal cual la escribe ManaBox. `null` = el CSV
+  /// Divisa de [purchasePrice] tal cual viene en el CSV. `null` = el CSV
   /// no lo dice. NUNCA se convierte a otra moneda.
   final String? currency;
 
-  const ManaBoxRow({
+  const CollectionCsvRow({
     required this.name,
     required this.scryfallId,
     required this.qty,
@@ -750,9 +750,9 @@ class ManaBoxRow {
   });
 }
 
-/// Parsea un CSV de ManaBox: detecta separador y las columnas Name /
+/// Parsea el CSV exportado por una app de colección: detecta separador y las columnas Name /
 /// Quantity / Scryfall ID / Set name / Foil / Purchase price (+ su divisa).
-List<ManaBoxRow> parseManaBoxCsv(String content) {
+List<CollectionCsvRow> parseCollectionCsv(String content) {
   final lines = const LineSplitter().convert(content);
   if (lines.isEmpty) return const [];
   final sep = lines.first.contains(';') ? ';' : ',';
@@ -784,7 +784,7 @@ List<ManaBoxRow> parseManaBoxCsv(String content) {
     }
   }
   if (nameIdx == null) return const [];
-  final rows = <ManaBoxRow>[];
+  final rows = <CollectionCsvRow>[];
   for (final line in lines.skip(1)) {
     if (line.trim().isEmpty) continue;
     final cols = _splitCsvLine(line, sep);
@@ -797,7 +797,7 @@ List<ManaBoxRow> parseManaBoxCsv(String content) {
     final id = idIdx != null && cols.length > idIdx ? cols[idIdx].trim() : null;
     final setName =
         setIdx != null && cols.length > setIdx ? cols[setIdx].trim() : null;
-    // ManaBox escribe normal / foil / etched; las dos últimas brillan
+    // los exportadores escriben normal / foil / etched; las dos últimas brillan
     final finish = foilIdx != null && cols.length > foilIdx
         ? cols[foilIdx].trim().toLowerCase()
         : 'normal';
@@ -808,7 +808,7 @@ List<ManaBoxRow> parseManaBoxCsv(String content) {
     final currency = currencyIdx != null && cols.length > currencyIdx
         ? cols[currencyIdx].trim().toUpperCase()
         : null;
-    rows.add(ManaBoxRow(
+    rows.add(CollectionCsvRow(
       name: name,
       scryfallId: id != null && id.isNotEmpty ? id : null,
       qty: qty,

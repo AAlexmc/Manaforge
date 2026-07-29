@@ -196,7 +196,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get welcomeScan => '扫描我的卡';
 
   @override
-  String get welcomeImport => '导入 CSV（ManaBox）';
+  String get welcomeImport => '导入 CSV';
 
   @override
   String get welcomeTryForge => '没有收藏也试试 Forge';
@@ -480,7 +480,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get colAlbumTooltip => '按系列查看的卡册';
 
   @override
-  String get colImportTooltip => '导入 ManaBox 的 CSV';
+  String get colImportTooltip => '导入收藏 CSV';
 
   @override
   String colValueLine(int copies, int distinct, String valor) {
@@ -512,7 +512,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get colEmptyTitle => '你的收藏就从这里起步';
 
   @override
-  String get colEmptyBody => '用摄像头扫描你的卡牌，或导入 ManaBox 的 CSV。它们会出现在这里和卡册里。';
+  String get colEmptyBody => '用摄像头扫描你的卡牌，或导入你的收藏 CSV。它们会出现在这里和卡册里。';
 
   @override
   String get colImportShort => '导入 CSV';
@@ -579,7 +579,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get acNoneMatch => '没有卡牌符合这些筛选条件。';
 
   @override
-  String get acEmptyHint => '在上方搜索你的第一张卡，或返回导入 ManaBox 的 CSV。';
+  String get acEmptyHint => '在上方搜索你的第一张卡，或返回导入你的收藏 CSV。';
 
   @override
   String get onbHowItWorksBody => '各个标签页的功能一览，以及键盘快捷键。要是迷路了，就从这里开始。';
@@ -1796,7 +1796,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get icExplain =>
-      '把你的 ManaBox CSV 拖到这里（Moxfield、Archidekt，或任何带 Name 和 Quantity 列的 CSV 也行），用按钮选择它，或手动粘贴内容：';
+      '把你的收藏 CSV 拖到这里（Moxfield、Archidekt，或任何带 Name 和 Quantity 列的 CSV 也行），用按钮选择它，或手动粘贴内容：';
 
   @override
   String get icPickFile => '选择文件…';
@@ -1832,7 +1832,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get icNoPurchasePrice =>
-      '\n• CSV 里没有购入价：不会有盈亏（ManaBox 会把它导出在“Purchase price”列）。';
+      '\n• CSV 里没有购入价：不会有盈亏（导出时带上“Purchase price”列）。';
 
   @override
   String icWithPurchasePrice(int n) {
@@ -2086,8 +2086,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ceEmptyWithData => '你还没有集齐任何一个完整系列。当你在卡册里集齐一整个系列时，这里就会出现可下载的证书。';
 
   @override
-  String get ceEmptyNoData =>
-      '要给一个系列发证书，得知道你卡牌的确切版本：重新导入你的 ManaBox CSV（它带有 Scryfall ID）。';
+  String get ceEmptyNoData => '要给一个系列发证书，得知道你卡牌的确切版本：重新导入带有 Scryfall ID 的 CSV。';
 
   @override
   String get ceNothingSaved => '什么都没保存。';
@@ -2255,8 +2254,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get pnNoPnl =>
-      '没有购入价就没有盈亏。导入带“Purchase price”列的 ManaBox CSV，它就会出现在这里。';
+  String get pnNoPnl => '没有购入价就没有盈亏。导入带“Purchase price”列的 CSV，它就会出现在这里。';
 
   @override
   String pnOverAll(int n) {
@@ -2439,7 +2437,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wn030Pnl =>
-      '购入价与盈亏：如果你的 ManaBox CSV 带有“Purchase price”，“市场”会告诉你付了多少、如今值多少，以及差额。货币不会混算。';
+      '购入价与盈亏：如果你的 CSV 带有“Purchase price”，“市场”会告诉你付了多少、如今值多少，以及差额。货币不会混算。';
 
   @override
   String get wn030PhotoFolder => '照片扫描现在也能选文件夹，跟实时扫描一样。';

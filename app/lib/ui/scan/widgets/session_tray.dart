@@ -9,7 +9,7 @@ import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 
 /// Bandeja de la sesión de escaneo en vivo: fila horizontal de cartas
-/// reconocidas, agrupando copias iguales en ×N (como ManaBox), con las
+/// reconocidas, agrupando copias iguales en ×N, con las
 /// dudosas marcadas en ámbar. Widget sin estado propio: la pantalla le pasa
 /// la [ScanTray] y los callbacks. Aislado aquí para poder testear el render
 /// (en escritorio Linux la cámara no tiene plugin, así que la pantalla en

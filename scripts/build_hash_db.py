@@ -4,7 +4,7 @@ Descarga el ARTE de cada impresión (art_crop de Scryfall) y calcula su
 huella perceptual (dHash de 128 bits: 16x8 horizontal + 8x16 vertical).
 El escáner de la app compara la huella de lo que ve la cámara contra esta
 base por distancia de Hamming — el mismo enfoque (hash perceptual del arte)
-que usan los escáneres de la familia Delver/ManaBox.
+que usan los escáneres comerciales de cartas.
 
 Incremental: si recibe una base previa, solo descarga las impresiones
 nuevas. Sé educado con Scryfall: concurrencia baja y pausas.

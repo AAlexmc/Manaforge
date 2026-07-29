@@ -1,6 +1,6 @@
 /// Importar el precio de compra del CSV.
 ///
-/// El CSV de ManaBox trae `Purchase price` y la app lo tiraba: sin ese dato
+/// El CSV de colección trae `Purchase price` y la app lo tiraba: sin ese dato
 /// no hay P&L posible, porque la app no puede saber por sí sola lo que
 /// pagaste. Aquí se comprueba que entra, que se apunta a la edición exacta
 /// cuando se sabe, y que el resumen lo dice.

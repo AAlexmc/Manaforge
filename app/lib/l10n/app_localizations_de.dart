@@ -210,7 +210,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get welcomeScan => 'Meine Karten scannen';
 
   @override
-  String get welcomeImport => 'CSV importieren (ManaBox)';
+  String get welcomeImport => 'CSV importieren';
 
   @override
   String get welcomeTryForge => 'Forge ohne Sammlung ausprobieren';
@@ -519,7 +519,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get colAlbumTooltip => 'Album nach Sets';
 
   @override
-  String get colImportTooltip => 'ManaBox-CSV importieren';
+  String get colImportTooltip => 'Sammlungs-CSV importieren';
 
   @override
   String colValueLine(int copies, int distinct, String valor) {
@@ -552,7 +552,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get colEmptyBody =>
-      'Scanne deine Karten mit der Kamera oder importiere eine ManaBox-CSV. Sie tauchen hier und im Album auf.';
+      'Scanne deine Karten mit der Kamera oder importiere die CSV deiner Sammlung. Sie tauchen hier und im Album auf.';
 
   @override
   String get colImportShort => 'CSV importieren';
@@ -623,7 +623,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get acEmptyHint =>
-      'Such deine erste Karte hier oben, oder geh zurück und importiere deine ManaBox-CSV.';
+      'Such deine erste Karte hier oben, oder geh zurück und importiere die CSV deiner Sammlung.';
 
   @override
   String get onbHowItWorksBody =>
@@ -1894,7 +1894,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get icExplain =>
-      'Zieh deine ManaBox-CSV hierher (Moxfield, Archidekt oder jede CSV mit den Spalten Name und Quantity gehen auch), wähl sie über den Knopf, oder füg ihren Inhalt von Hand ein:';
+      'Zieh die CSV deiner Sammlung hierher (Moxfield, Archidekt oder jede CSV mit den Spalten Name und Quantity), wähl sie über den Knopf, oder füg ihren Inhalt von Hand ein:';
 
   @override
   String get icPickFile => 'Datei wählen…';
@@ -1931,7 +1931,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get icNoPurchasePrice =>
-      '\n• Kein Kaufpreis in der CSV: Damit gibt es kein P&L (ManaBox exportiert ihn in der Spalte \"Purchase price\").';
+      '\n• Kein Kaufpreis in der CSV: Damit gibt es kein P&L (exportiere ihn mit der Spalte \"Purchase price\").';
 
   @override
   String icWithPurchasePrice(int n) {
@@ -2193,7 +2193,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ceEmptyNoData =>
-      'Um ein Set zu zertifizieren, muss ich die genaue Druckversion deiner Karten kennen: importiere deine ManaBox-CSV neu (sie bringt die Scryfall-ID mit).';
+      'Um ein Set zu zertifizieren, muss ich die genaue Druckversion deiner Karten kennen: importiere deine CSV mit der Scryfall-ID neu.';
 
   @override
   String get ceNothingSaved => 'Es wurde nichts gespeichert.';
@@ -2363,7 +2363,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get pnNoPnl =>
-      'Ohne Kaufpreis gibt es kein P&L. Importiere deine ManaBox-CSV mit der Spalte \"Purchase price\", dann taucht es hier auf.';
+      'Ohne Kaufpreis gibt es kein P&L. Importiere eine CSV mit der Spalte \"Purchase price\", dann taucht es hier auf.';
 
   @override
   String pnOverAll(int n) {
@@ -2551,7 +2551,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get wn030Pnl =>
-      'Kaufpreis und P&L: Wenn deine ManaBox-CSV \"Purchase price\" mitbringt, zeigt dir der Markt, was du bezahlt hast, was es heute wert ist und die Differenz. Währungen werden nie vermischt.';
+      'Kaufpreis und P&L: Wenn deine CSV \"Purchase price\" mitbringt, zeigt dir der Markt, was du bezahlt hast, was es heute wert ist und die Differenz. Währungen werden nie vermischt.';
 
   @override
   String get wn030PhotoFolder =>

@@ -59,7 +59,7 @@ class HashIndex {
   /// comerse el top. Para cada carta gana su impresión que mejor casa
   /// (printingKey exacta). Si [lockSet] no es null, SOLO se consideran las
   /// impresiones de ese set (bloqueo de edición para escanear una caja: es el
-  /// truco con el que ManaBox clava el printing exacto de un precon/sobre).
+  /// truco con el que los escáneres comerciales clavan el printing exacto de un precon/sobre).
   List<ScanMatch> topMatches(List<DHashPair> sigs,
       {int k = 3, String? lockSet, Set<String> ownedPrintings = const {}}) {
     if (sigs.isEmpty) return const [];

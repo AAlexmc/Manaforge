@@ -1,9 +1,9 @@
 /// Gate de confianza del escáner: dado el top-k del matching, decide si hay
-/// un ganador CLARO — para enseñar UNA sola carta como ManaBox en Quick Mode
+/// un ganador CLARO — para enseñar UNA sola carta en Quick Mode
 /// en vez de la lista de "¿cuál es?".
 ///
 /// La clave (misma idea que el umbral 4σ de tmikonen y el Quick Mode de
-/// ManaBox): NO basta con que el mejor esté cerca; tiene que ganar por
+/// los escáneres comerciales): NO basta con que el mejor esté cerca; tiene que ganar por
 /// MARGEN al siguiente candidato distinto. Un arte que casa casi igual con
 /// dos cartas no se auto-acepta: eso es justo cuando hay que preguntar.
 ///

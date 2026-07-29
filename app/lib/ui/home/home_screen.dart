@@ -691,7 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           )
                         // primer arranque: TRES caminos, no uno. El CSV de
-                        // ManaBox lo tiene poca gente; escanear es la vía
+                        // un CSV de colección lo tiene poca gente; escanear es la vía
                         // natural, y Forge se puede probar sin tener nada
                         : Column(
                             crossAxisAlignment:

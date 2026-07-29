@@ -79,7 +79,7 @@
 
   "welcomeTitle": "Welcome to the forge. Get your cards in however you like — or try Forge before adding any.",
   "welcomeScan": "Scan my cards",
-  "welcomeImport": "Import CSV (ManaBox)",
+  "welcomeImport": "Import CSV",
   "welcomeTryForge": "Try Forge with no collection",
   "decksEmptyGoForge": "Go to Forge",
 
@@ -189,7 +189,7 @@
   "colDownloadDb": "Download the card database",
   "colScryfall": "Data and images by Scryfall · No accounts, no payments: everything stays on your device.",
   "colAlbumTooltip": "Album by set",
-  "colImportTooltip": "Import a ManaBox CSV",
+  "colImportTooltip": "Import collection CSV",
   "colValueLine": "{copies} cards · {distinct} distinct{valor}",
   "@colValueLine": {
     "placeholders": { "copies": { "type": "int" }, "distinct": { "type": "int" }, "valor": { "type": "String" } }
@@ -204,7 +204,7 @@
   "colNoFolders": "You don't have any folders yet. They group whatever you like: \"Aetherdrift rares\", \"to sell\", \"the box upstairs\"… A card can be in several.",
   "colCreateFirstFolder": "Create your first folder",
   "colEmptyTitle": "Your collection starts here",
-  "colEmptyBody": "Scan your cards with the camera or import a ManaBox CSV. They'll show up here and in the album.",
+  "colEmptyBody": "Scan your cards with the camera or import your collection CSV. They'll show up here and in the album.",
   "colImportShort": "Import CSV",
 
   "acForgetTitle": "You no longer have {carta}?",
@@ -235,7 +235,7 @@
   },
   "acMissingFilterData": " · some older cards have no filter data: re-import your CSV with \"Replace\" on",
   "acNoneMatch": "No card matches these filters.",
-  "acEmptyHint": "Search for your first card above, or go back and import your ManaBox CSV.",
+  "acEmptyHint": "Search your first card above, or go back and import your collection CSV.",
 
   "onbHowItWorksBody": "A summary of what each tab does, plus the keyboard shortcuts. If you get lost, start here.",
   "onbVersionBody": "Which version you're on, what's in it, and whether the app should check once a day for a new one. It never updates itself.",
@@ -797,7 +797,7 @@
   },
   "icNotCsv": "That doesn't look like a CSV — drop a .csv or .txt file.",
   "icTitle": "Import collection",
-  "icExplain": "Drag your ManaBox CSV here (Moxfield, Archidekt or any CSV with Name and Quantity columns also work), pick it with the button, or paste its contents by hand:",
+  "icExplain": "Drag your collection CSV here (Moxfield, Archidekt or any CSV with Name and Quantity columns), pick it with the button, or paste its contents by hand:",
   "icPickFile": "Pick a file…",
   "icImported": "✓ {cartas} cards ({copias} copies) added to your collection.",
   "@icImported": {
@@ -819,7 +819,7 @@
   "@icUnrecognized": {
     "placeholders": { "lista": { "type": "String" }, "mas": { "type": "String" } }
   },
-  "icNoPurchasePrice": "\n• No purchase price in the CSV: there'll be no P&L (ManaBox exports it in the \"Purchase price\" column).",
+  "icNoPurchasePrice": "\n• No purchase price in the CSV: there will be no P&L (export it with a \"Purchase price\" column).",
   "icWithPurchasePrice": "\n• {n} copies with a purchase price: you can now see the P&L in Market.",
   "@icWithPurchasePrice": {
     "placeholders": { "n": { "type": "int" } }
@@ -958,7 +958,7 @@
   "ceCollectorName": "Your collector name",
   "ceInNameOf": "In the name of…",
   "ceEmptyWithData": "You haven't completed a full set yet. When you finish one in the Album, your certificate will show up here to download.",
-  "ceEmptyNoData": "Certifying a set needs the exact printing of your cards: re-import your ManaBox CSV (it carries the Scryfall ID).",
+  "ceEmptyNoData": "Certifying a set requires knowing the exact printing of your cards: re-import your CSV with the Scryfall ID.",
   "ceNothingSaved": "Nothing was saved.",
   "ceSavedTo": "✓ Certificate saved to {ruta}",
   "@ceSavedTo": {
@@ -1051,7 +1051,7 @@
   "@pnPaidVsToday": {
     "placeholders": { "pagado": { "type": "String" }, "hoy": { "type": "String" } }
   },
-  "pnNoPnl": "No purchase price means no P&L. Import your ManaBox CSV with the \"Purchase price\" column and it shows up here.",
+  "pnNoPnl": "No purchase price, no P&L. Import a CSV with a \"Purchase price\" column and it shows up here.",
   "pnOverAll": "over the {n} copies in your collection",
   "@pnOverAll": {
     "placeholders": { "n": { "type": "int" } }
@@ -1143,7 +1143,7 @@
   "wn031Perf": "Smoother: album, imports and searches respond better with large collections.",
   "wn030Headline": "Forge by set, purchase price and version alerts",
   "wn030Forge": "Forge: pick which sets the cards come from. And if you turn on \"include cards I don't own\", it builds the deck from the whole chosen set and tells you how many you're missing and what they cost.",
-  "wn030Pnl": "Purchase price and P&L: if your ManaBox CSV has \"Purchase price\", Market shows what you paid, what it's worth today and the difference. Currencies are never mixed.",
+  "wn030Pnl": "Purchase price and P&L: if your CSV has \"Purchase price\", the Market tells you what you paid, what it's worth today and the difference. Currencies are never mixed.",
   "wn030PhotoFolder": "Scanning from a photo lets you pick a folder too, just like the live scanner.",
   "wn030Album": "Album: what you're missing from each set, and what it would cost.",
   "wn030Background": "Wallpaper: put any image behind it, with an adjustable veil, and choose the card and text colours so everything stays readable on top.",
