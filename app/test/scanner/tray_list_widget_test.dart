@@ -1,4 +1,4 @@
-/// Test de la lista vertical de la bandeja (estilo ManaBox): una fila por
+/// Test de la lista vertical de la bandeja (estilo escáner comercial): una fila por
 /// carta con cantidad, set y controles de editar/borrar/cantidad.
 library;
 

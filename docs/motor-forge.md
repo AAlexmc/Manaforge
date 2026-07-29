@@ -85,6 +85,6 @@ sí deben mantenerse espejo 1:1 con `engine-reference/`.
 
 ## Tests de aceptación
 Los fixtures (`engine-reference/fixtures/`) son mazos reales generados a partir
-de una colección ManaBox real durante el diseño: si el validador los rechaza,
+de una colección real durante el diseño: si el validador los rechaza,
 el motor está roto. El bug de referencia: en el prototipo de diseño la curva
 sumaba 38 con 39 hechizos — por eso existe test_curve_histogram_sums_to_spell_count.

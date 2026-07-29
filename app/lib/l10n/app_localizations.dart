@@ -471,7 +471,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeImport.
   ///
   /// In es, this message translates to:
-  /// **'Importar CSV (ManaBox)'**
+  /// **'Importar CSV'**
   String get welcomeImport;
 
   /// No description provided for @welcomeTryForge.
@@ -999,7 +999,7 @@ abstract class AppLocalizations {
   /// No description provided for @colImportTooltip.
   ///
   /// In es, this message translates to:
-  /// **'Importar CSV de ManaBox'**
+  /// **'Importar CSV de colección'**
   String get colImportTooltip;
 
   /// No description provided for @colValueLine.
@@ -1053,7 +1053,7 @@ abstract class AppLocalizations {
   /// No description provided for @colEmptyBody.
   ///
   /// In es, this message translates to:
-  /// **'Escanea tus cartas con la cámara o importa un CSV de ManaBox. Aparecerán aquí y en el álbum.'**
+  /// **'Escanea tus cartas con la cámara o importa el CSV de tu colección. Aparecerán aquí y en el álbum.'**
   String get colEmptyBody;
 
   /// No description provided for @colImportShort.
@@ -1143,7 +1143,7 @@ abstract class AppLocalizations {
   /// No description provided for @acEmptyHint.
   ///
   /// In es, this message translates to:
-  /// **'Busca tu primera carta arriba, o vuelve atrás e importa tu CSV de ManaBox.'**
+  /// **'Busca tu primera carta arriba, o vuelve atrás e importa el CSV de tu colección.'**
   String get acEmptyHint;
 
   /// No description provided for @onbHowItWorksBody.
@@ -3135,7 +3135,7 @@ abstract class AppLocalizations {
   /// No description provided for @icExplain.
   ///
   /// In es, this message translates to:
-  /// **'Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:'**
+  /// **'Arrastra aquí el CSV de tu colección (Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:'**
   String get icExplain;
 
   /// No description provided for @icPickFile.
@@ -3189,7 +3189,7 @@ abstract class AppLocalizations {
   /// No description provided for @icNoPurchasePrice.
   ///
   /// In es, this message translates to:
-  /// **'\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").'**
+  /// **'\n• Sin precio de compra en el CSV: no habrá P&L (expórtalo con la columna \"Purchase price\").'**
   String get icNoPurchasePrice;
 
   /// No description provided for @icWithPurchasePrice.
@@ -3579,7 +3579,7 @@ abstract class AppLocalizations {
   /// No description provided for @ceEmptyNoData.
   ///
   /// In es, this message translates to:
-  /// **'Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV de ManaBox (trae el Scryfall ID).'**
+  /// **'Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV con el Scryfall ID.'**
   String get ceEmptyNoData;
 
   /// No description provided for @ceNothingSaved.
@@ -3813,7 +3813,7 @@ abstract class AppLocalizations {
   /// No description provided for @pnNoPnl.
   ///
   /// In es, this message translates to:
-  /// **'Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.'**
+  /// **'Sin precio de compra no hay P&L. Importa un CSV con la columna \"Purchase price\" y aparece aquí.'**
   String get pnNoPnl;
 
   /// No description provided for @pnOverAll.
@@ -4077,7 +4077,7 @@ abstract class AppLocalizations {
   /// No description provided for @wn030Pnl.
   ///
   /// In es, this message translates to:
-  /// **'Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.'**
+  /// **'Precio de compra y P&L: si tu CSV trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.'**
   String get wn030Pnl;
 
   /// No description provided for @wn030PhotoFolder.

@@ -2,7 +2,7 @@
 ///
 /// Es la pantalla que decide si alguien se queda. Antes solo ofrecía
 /// "Importar CSV", que es justo lo que casi nadie tiene a mano: el CSV sale
-/// de ManaBox, otra app. Escanear es la vía natural, y Forge se puede probar
+/// de otra app. Escanear es la vía natural, y Forge se puede probar
 /// sin tener nada.
 library;
 
@@ -59,7 +59,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
 
     expect(find.text('Escanear mis cartas'), findsOneWidget);
-    expect(find.text('Importar CSV (ManaBox)'), findsOneWidget);
+    expect(find.text('Importar CSV'), findsOneWidget);
     expect(find.text('Probar Forge sin colección'), findsOneWidget);
 
     await tester.tap(find.text('Escanear mis cartas'));

@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:manaforge_app/data/repositories/collection_store.dart';
 
 void main() {
-  test('parsea el CSV real de ManaBox (comas, comillas y Scryfall ID)', () {
+  test('parsea un CSV real exportado (comas, comillas, Scryfall ID y columnas ajenas)', () {
     const csv =
         'Binder Name,Binder Type,Name,Set code,Set name,Collector number,Foil,'
         'Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price\n'
@@ -10,7 +10,7 @@ void main() {
         'uncommon,2,101405,fe3e7dd2-b66d-4218-9fde-f84bec26b7bf,0.11\n'
         'Agua,binder,Counterspell,BRB,Battle Royale,15,normal,common,1,'
         '34045,9a765377-bc8c-480a-9903-bd942c20fc47,2.69\n';
-    final rows = parseManaBoxCsv(csv);
+    final rows = parseCollectionCsv(csv);
     expect(rows.length, 2);
     expect(rows[0].name, 'Ruby, Daring Tracker'); // comillas respetadas
     expect(rows[0].scryfallId, 'fe3e7dd2-b66d-4218-9fde-f84bec26b7bf');
@@ -31,21 +31,21 @@ void main() {
 
   test('acepta cabeceras en español y separador punto y coma', () {
     const csv = 'Nombre;Cantidad\nElfos de Llanowar;3\n';
-    final rows = parseManaBoxCsv(csv);
+    final rows = parseCollectionCsv(csv);
     expect(rows.single.name, 'Elfos de Llanowar');
     expect(rows.single.qty, 3);
   });
 
   test('CSV sin columna de nombre devuelve vacío en vez de fallar', () {
-    expect(parseManaBoxCsv('foo,bar\n1,2\n'), isEmpty);
+    expect(parseCollectionCsv('foo,bar\n1,2\n'), isEmpty);
   });
 
-  test('lee la columna Foil del CSV de ManaBox', () {
+  test('lee la columna Foil del CSV', () {
     const csv = 'Name,Foil,Quantity,Scryfall ID\n'
         'Shock,normal,2,aaa\n'
         'Lightning Bolt,foil,1,bbb\n'
         'Sol Ring,etched,1,ccc\n';
-    final rows = parseManaBoxCsv(csv);
+    final rows = parseCollectionCsv(csv);
     expect(rows[0].foil, isFalse);
     expect(rows[1].foil, isTrue);
     expect(rows[2].foil, isTrue); // etched también brilla

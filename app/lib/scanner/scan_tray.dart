@@ -1,5 +1,5 @@
 /// Bandeja de la sesión de escaneo en vivo: acumula lo reconocido agrupando
-/// las copias IGUALES en una sola línea con cantidad (×N), igual que ManaBox.
+/// las copias IGUALES en una sola línea con cantidad (×N).
 /// Lógica pura (sin UI) para testearla en CI.
 ///
 /// La agrupación es por IMPRESIÓN exacta (set + número de coleccionista): dos

@@ -13,7 +13,7 @@ import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 
 /// Importador de colección. Tres vías, de más cómoda a menos:
 /// arrastrar el archivo CSV a la ventana, elegirlo con el botón, o pegar su
-/// contenido a mano. Acepta ManaBox, Moxfield, Archidekt o cualquier CSV con
+/// contenido a mano. Acepta Moxfield, Archidekt o cualquier CSV con
 /// columnas Name/Quantity. Resuelve por Scryfall ID cuando existe y por
 /// nombre si no; informa de las no reconocidas — nunca inventa.
 class ImportCsvScreen extends StatefulWidget {
@@ -112,7 +112,7 @@ class _ImportCsvScreenState extends State<ImportCsvScreen> {
       _working = true;
       _result = null;
     });
-    final rows = parseManaBoxCsv(_ctrl.text);
+    final rows = parseCollectionCsv(_ctrl.text);
     if (mounted) {
       setState(() {
         _done = 0;

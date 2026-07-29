@@ -79,7 +79,7 @@
 
   "welcomeTitle": "Bienvenido a la forja. Mete tus cartas como quieras — o prueba Forge antes de meter ninguna.",
   "welcomeScan": "Escanear mis cartas",
-  "welcomeImport": "Importar CSV (ManaBox)",
+  "welcomeImport": "Importar CSV",
   "welcomeTryForge": "Probar Forge sin colección",
   "decksEmptyGoForge": "Ir a Forge",
 
@@ -193,7 +193,7 @@
   "colDownloadDb": "Descargar base de datos de cartas",
   "colScryfall": "Datos e imágenes por Scryfall · Sin cuentas, sin pagos: todo queda en tu dispositivo.",
   "colAlbumTooltip": "Álbum por expansiones",
-  "colImportTooltip": "Importar CSV de ManaBox",
+  "colImportTooltip": "Importar CSV de colección",
   "colValueLine": "{copies} cartas · {distinct} distintas{valor}",
   "@colValueLine": {
     "placeholders": { "copies": { "type": "int" }, "distinct": { "type": "int" }, "valor": { "type": "String" } }
@@ -208,7 +208,7 @@
   "colNoFolders": "Aún no tienes carpetas. Sirven para agrupar lo que quieras: \"rares de Aetherdrift\", \"para vender\", \"la caja de arriba\"… Una carta puede estar en varias.",
   "colCreateFirstFolder": "Crear la primera carpeta",
   "colEmptyTitle": "Aquí empieza tu colección",
-  "colEmptyBody": "Escanea tus cartas con la cámara o importa un CSV de ManaBox. Aparecerán aquí y en el álbum.",
+  "colEmptyBody": "Escanea tus cartas con la cámara o importa el CSV de tu colección. Aparecerán aquí y en el álbum.",
   "colImportShort": "Importar CSV",
 
   "acForgetTitle": "¿Ya no tienes {carta}?",
@@ -239,7 +239,7 @@
   },
   "acMissingFilterData": " · algunas cartas antiguas no tienen datos de filtro: reimporta tu CSV con \"Sustituir\" activado",
   "acNoneMatch": "Ninguna carta pasa estos filtros.",
-  "acEmptyHint": "Busca tu primera carta arriba, o vuelve atrás e importa tu CSV de ManaBox.",
+  "acEmptyHint": "Busca tu primera carta arriba, o vuelve atrás e importa el CSV de tu colección.",
 
   "onbHowItWorksBody": "El resumen de qué hace cada pestaña y los atajos de teclado. Si te pierdes, empieza por aquí.",
   "onbVersionBody": "Qué versión tienes, qué trae, y si quieres que la app mire una vez al día si hay una nueva. No se actualiza sola.",
@@ -802,7 +802,7 @@
   },
   "icNotCsv": "Eso no parece un CSV — suelta un archivo .csv o .txt.",
   "icTitle": "Importar colección",
-  "icExplain": "Arrastra aquí tu CSV de ManaBox (también vale Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:",
+  "icExplain": "Arrastra aquí el CSV de tu colección (Moxfield, Archidekt o cualquier CSV con columnas Name y Quantity), elígelo con el botón, o pega su contenido a mano:",
   "icPickFile": "Elegir archivo…",
   "icImported": "✓ {cartas} cartas ({copias} copias) añadidas a tu colección.",
   "@icImported": {
@@ -824,7 +824,7 @@
   "@icUnrecognized": {
     "placeholders": { "lista": { "type": "String" }, "mas": { "type": "String" } }
   },
-  "icNoPurchasePrice": "\n• Sin precio de compra en el CSV: no habrá P&L (ManaBox lo exporta en la columna \"Purchase price\").",
+  "icNoPurchasePrice": "\n• Sin precio de compra en el CSV: no habrá P&L (expórtalo con la columna \"Purchase price\").",
   "icWithPurchasePrice": "\n• {n} copias con precio de compra: ya puedes ver el P&L en Mercado.",
   "@icWithPurchasePrice": {
     "placeholders": { "n": { "type": "int" } }
@@ -963,7 +963,7 @@
   "ceCollectorName": "Tu nombre de coleccionista",
   "ceInNameOf": "A nombre de…",
   "ceEmptyWithData": "Todavía no tienes ninguna expansión completa. Cuando completes una entera en el Álbum, aquí saldrá tu certificado para descargar.",
-  "ceEmptyNoData": "Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV de ManaBox (trae el Scryfall ID).",
+  "ceEmptyNoData": "Para certificar una expansión hace falta saber la edición exacta de tus cartas: reimporta tu CSV con el Scryfall ID.",
   "ceNothingSaved": "No se guardó nada.",
   "ceSavedTo": "✓ Certificado guardado en {ruta}",
   "@ceSavedTo": {
@@ -1056,7 +1056,7 @@
   "@pnPaidVsToday": {
     "placeholders": { "pagado": { "type": "String" }, "hoy": { "type": "String" } }
   },
-  "pnNoPnl": "Sin precio de compra no hay P&L. Importa tu CSV de ManaBox con la columna \"Purchase price\" y aparece aquí.",
+  "pnNoPnl": "Sin precio de compra no hay P&L. Importa un CSV con la columna \"Purchase price\" y aparece aquí.",
   "pnOverAll": "sobre las {n} copias de tu colección",
   "@pnOverAll": {
     "placeholders": { "n": { "type": "int" } }
@@ -1148,7 +1148,7 @@
   "wn031Perf": "Más fluido: álbum, importaciones y búsquedas responden mejor con colecciones grandes.",
   "wn030Headline": "Forge por expansiones, precio de compra y avisos de versión",
   "wn030Forge": "Forge: elige de qué expansiones salen las cartas. Y si activas \"incluir cartas que no tengo\", te monta el mazo con toda la colección elegida y te dice cuántas te faltan y cuánto cuestan.",
-  "wn030Pnl": "Precio de compra y P&L: si tu CSV de ManaBox trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.",
+  "wn030Pnl": "Precio de compra y P&L: si tu CSV trae \"Purchase price\", el Mercado te dice lo que pagaste, lo que vale hoy y la diferencia. Las divisas no se mezclan.",
   "wn030PhotoFolder": "Escanear por foto también deja elegir carpeta, como el escáner en vivo.",
   "wn030Album": "Álbum: lo que te falta de cada expansión, con lo que costaría.",
   "wn030Background": "Fondo de pantalla: pon detrás la imagen que quieras, con velo regulable, y elige el color de las tarjetas y de la letra para que encima se siga leyendo.",

@@ -203,7 +203,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get welcomeScan => '내 카드 스캔';
 
   @override
-  String get welcomeImport => 'CSV 가져오기(ManaBox)';
+  String get welcomeImport => 'CSV 가져오기';
 
   @override
   String get welcomeTryForge => '컬렉션 없이 Forge 써보기';
@@ -495,7 +495,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get colAlbumTooltip => '세트별 앨범';
 
   @override
-  String get colImportTooltip => 'ManaBox CSV 가져오기';
+  String get colImportTooltip => '컬렉션 CSV 가져오기';
 
   @override
   String colValueLine(int copies, int distinct, String valor) {
@@ -527,7 +527,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get colEmptyTitle => '여기서 컬렉션이 시작돼요';
 
   @override
-  String get colEmptyBody => '카메라로 카드를 스캔하거나 ManaBox CSV를 가져오세요. 여기와 앨범에 나타나요.';
+  String get colEmptyBody => '카메라로 카드를 스캔하거나 컬렉션 CSV를 가져오세요. 여기와 앨범에 나타나요.';
 
   @override
   String get colImportShort => 'CSV 가져오기';
@@ -595,7 +595,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get acNoneMatch => '이 필터를 통과하는 카드가 없어요.';
 
   @override
-  String get acEmptyHint => '위에서 첫 카드를 검색하거나, 뒤로 가서 ManaBox CSV를 가져오세요.';
+  String get acEmptyHint => '위에서 첫 카드를 검색하거나, 뒤로 가서 컬렉션 CSV를 가져오세요.';
 
   @override
   String get onbHowItWorksBody => '각 탭이 뭘 하는지와 단축키 요약. 길을 잃으면 여기서 시작하세요.';
@@ -1821,7 +1821,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get icExplain =>
-      'ManaBox CSV를 여기로 드래그하거나(Moxfield, Archidekt, 또는 Name과 Quantity 열이 있는 아무 CSV도 돼요), 버튼으로 고르거나, 내용을 직접 붙여넣으세요:';
+      '컬렉션 CSV를 여기로 드래그하거나(Moxfield, Archidekt, 또는 Name과 Quantity 열이 있는 아무 CSV도 돼요), 버튼으로 고르거나, 내용을 직접 붙여넣으세요:';
 
   @override
   String get icPickFile => '파일 고르기…';
@@ -1858,7 +1858,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get icNoPurchasePrice =>
-      '\n• CSV에 구매가가 없어요: P&L은 안 나와요 (ManaBox는 “Purchase price” 열로 내보내요).';
+      '\n• CSV에 구매가가 없어요: P&L은 안 나와요 (“Purchase price” 열을 포함해 내보내세요).';
 
   @override
   String icWithPurchasePrice(int n) {
@@ -2114,7 +2114,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ceEmptyNoData =>
-      '세트를 인증하려면 카드의 정확한 에디션을 알아야 해요: ManaBox CSV를 다시 가져오세요 (Scryfall ID가 들어 있어요).';
+      '세트를 인증하려면 카드의 정확한 에디션을 알아야 해요: Scryfall ID가 들어 있는 CSV를 다시 가져오세요.';
 
   @override
   String get ceNothingSaved => '아무것도 저장되지 않았어요.';
@@ -2283,7 +2283,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pnNoPnl =>
-      '구매가가 없으면 P&L도 없어요. “Purchase price” 열이 있는 ManaBox CSV를 가져오면 여기 나와요.';
+      '구매가가 없으면 P&L도 없어요. “Purchase price” 열이 있는 CSV를 가져오면 여기 나와요.';
 
   @override
   String pnOverAll(int n) {
@@ -2469,7 +2469,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get wn030Pnl =>
-      '구매가와 P&L: ManaBox CSV에 “Purchase price”가 있으면, 마켓이 지불액, 현재 가치, 차액을 알려줘요. 통화는 섞이지 않아요.';
+      '구매가와 P&L: CSV에 “Purchase price”가 있으면, 마켓이 지불액, 현재 가치, 차액을 알려줘요. 통화는 섞이지 않아요.';
 
   @override
   String get wn030PhotoFolder => '사진 스캔도 실시간 스캐너처럼 폴더를 고를 수 있어요.';

@@ -6,7 +6,7 @@ import 'package:manaforge_app/data/services/card_database.dart';
 import 'package:manaforge_app/ui/core/themes/mf_theme.dart';
 import 'package:manaforge_app/ui/core/widgets/common.dart';
 
-/// Lista VERTICAL de la bandeja de escaneo, al estilo de ManaBox: una fila
+/// Lista VERTICAL de la bandeja de escaneo, al estilo de los escáneres comerciales: una fila
 /// rica por carta (miniatura, cantidad, nombre, set·número, editar/borrar).
 /// La usan el escaneo por lotes de fotos y la revisión de la sesión. Widget
 /// sin estado: la pantalla le pasa la [ScanTray] y los callbacks.

@@ -320,7 +320,7 @@ class CardDatabase {
         toughness: int.tryParse((r['toughness'] as String?) ?? ''),
       );
 
-  /// Resuelve un Scryfall ID (importador de ManaBox) a su carta Oracle.
+  /// Resuelve un Scryfall ID (importador de CSV) a su carta Oracle.
   Future<CardHit?> byScryfallId(String scryfallId) async {
     final db = await _open();
     // mismo SELECT condicional que search(): la DB v4 no tiene name_es

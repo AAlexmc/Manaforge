@@ -124,7 +124,7 @@ class _LiveScanScreenState extends State<LiveScanScreen> {
   /// encuadre, superficie lisa) decían lo mismo.
   String? _noCardHint;
 
-  /// Quick Mode (como ManaBox): ON = las cartas claras entran solas en la
+  /// Quick Mode (como los escáneres comerciales): ON = las cartas claras entran solas en la
   /// bandeja; las dudosas entran marcadas para revisar. OFF ("Con cuidado")
   /// = las claras entran solas, pero las dudosas se paran y te preguntan.
   bool _quickMode = true;
