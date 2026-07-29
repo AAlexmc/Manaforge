@@ -26,6 +26,10 @@ class VersionNews {
   });
 }
 
+String _headline032(AppLocalizations t) => t.wn032Headline;
+
+List<String> _bullets032(AppLocalizations t) => [t.wn032Import];
+
 String _headline031(AppLocalizations t) => t.wn031Headline;
 
 List<String> _bullets031(AppLocalizations t) => [
@@ -53,6 +57,11 @@ List<String> _bullets030(AppLocalizations t) => [
 
 /// De la más nueva a la más vieja.
 const List<VersionNews> kWhatsNew = [
+  VersionNews(
+    version: '0.3.2',
+    headline: _headline032,
+    bullets: _bullets032,
+  ),
   VersionNews(
     version: '0.3.1',
     headline: _headline031,
