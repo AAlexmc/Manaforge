@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <b><a href="#-manaforge-en-2-minutos">Vídeo</a></b> ·
+  <b><a href="#-manaforge-en-1-minuto">Vídeo</a></b> ·
   <b><a href="#-forge-el-generador-de-mazos">Forge</a></b> ·
   <b><a href="#-qué-hace-hoy">Funciones</a></b> ·
   <b><a href="#-descárgala-y-ábrela">Descargar</a></b> ·
@@ -29,16 +29,16 @@ Todos hemos pasado por esto: una caja llena de cartas de sobres, mazos de inicio
 
 <p align="center"><img src="docs/assets/divider.svg" width="620" alt=""></p>
 
-## 🎬 ManaForge en 2 minutos
+## 🎬 ManaForge en 1 minuto
 
 <p align="center">
-  <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Fast.mp4">
+  <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.2/Manaforge_Fast.mp4">
     <img src="docs/assets/tutorial-poster.jpg" width="820" alt="Inicio de ManaForge: colección valorada, logros, el meta de torneos y las expansiones nuevas">
   </a>
 </p>
 
-<p align="center"><i>Clic en la imagen y <b>se descarga</b> el repaso rápido (2 min) de una colección ya en marcha — escáner, álbum, Forge, Test Mode y Mercado.<br>
-También para descargar: <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Tutorial.mp4">🎓 tutorial desde cero (4 min, ×2)</a> · <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.1/ManaForge_Completo_x2.mp4">recorrido completo</a>.</i></p>
+<p align="center"><i>Clic en la imagen y <b>se descarga</b> el repaso rápido (1 min) de una colección ya en marcha.<br>
+También para descargar: <a href="https://github.com/AAlexmc/Manaforge/releases/download/app-v0.3.2/Manaforge_Full_Tour.mp4">🎓 el tour completo (4 min)</a> — escáner, álbum, Forge, Test Mode y Mercado.</i></p>
 
 <p align="center">
   <img src="docs/assets/tutorial-teaser.gif" width="720" alt="El escáner en vivo reconociendo una carta con la webcam">
