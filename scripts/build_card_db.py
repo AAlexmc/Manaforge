@@ -70,13 +70,10 @@ CREATE INDEX idx_printings_set_num ON printings(set_code, collector_number);
 
 
 def iter_bulk(path: Path):
-    """Itera las cartas del bulk. Streaming si ijson está instalado."""
-    try:
-        import ijson  # type: ignore
-        with open(path, "rb") as f:
-            yield from ijson.items(f, "item")
-    except ImportError:
-        yield from json.loads(path.read_text())
+    """Itera las cartas del bulk (array JSON clásico o JSONL de Scryfall)."""
+    from bulk_stream import iter_bulk_objects
+    with open(path, "rb") as f:
+        yield from iter_bulk_objects(f)
 
 
 def _images(card: dict) -> tuple[str | None, str | None, str | None]:

@@ -24,7 +24,7 @@ jobs:
             https://api.scryfall.com/bulk-data/default-cards -o bulkmeta.json \
             || { echo "Fallo consultando bulk-data:"; cat bulkmeta.json || true; exit 1; }
           head -c 400 bulkmeta.json; echo
-          URI=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['download_uri'])")
+          URI=$(python3 -c "import json;d=json.load(open('bulkmeta.json'));print(d.get('jsonl_download_uri') or d['download_uri'])")
           DATE=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['updated_at'][:10])")
           echo "BULK_DATE=$DATE" >> "$GITHUB_ENV"
           # "--" separa opciones de la URL: una URI que empezara por "-" no se
@@ -51,7 +51,7 @@ jobs:
             -H "Accept: application/json" \
             https://api.scryfall.com/bulk-data/all-cards -o allmeta.json \
             || { echo "Fallo consultando bulk-data:"; cat allmeta.json || true; exit 1; }
-          URI=$(python3 -c "import json;print(json.load(open('allmeta.json'))['download_uri'])")
+          URI=$(python3 -c "import json;d=json.load(open('allmeta.json'));print(d.get('jsonl_download_uri') or d['download_uri'])")
           # --min: suelo de cordura (medido real ~29k) — un bulk vacío o con
           # la forma cambiada aborta en vez de publicar una v5 sin nombres
           curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" -H "Accept: */*" -- "$URI" \

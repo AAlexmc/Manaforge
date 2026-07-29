@@ -86,12 +86,9 @@ def hamming(a: int, b: int) -> int:
 
 
 def iter_bulk(path: Path):
+    from bulk_stream import iter_bulk_objects
     with open(path, "rb") as f:
-        try:
-            import ijson
-            yield from ijson.items(f, "item")
-        except ImportError:  # pragma: no cover
-            yield from json.load(open(path, encoding="utf8"))
+        yield from iter_bulk_objects(f)
 
 
 def wanted_printings(bulk_path: Path):

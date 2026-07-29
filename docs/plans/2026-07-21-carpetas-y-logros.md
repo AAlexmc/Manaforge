@@ -64,7 +64,7 @@ Ale dejó cuatro preguntas abiertas. Respuestas elegidas y por qué:
 - `app/lib/services/card_database.dart` — `oracleByPrintings()` (para el valor por carpeta) y
   `rarityByOracles()` / `yearsByOracles()` (para logros).
 - `app/lib/services/collection_store.dart` — cuenta de foils importados (`foils`), contador de escaneos.
-- `app/lib/screens/import_csv_screen.dart` + `parseManaBoxCsv` — leer la columna `Foil`.
+- `app/lib/screens/import_csv_screen.dart` + `parseCollectionCsv` — leer la columna `Foil`.
 - `app/lib/main.dart` — instanciar `FolderStore` y `AchievementStore`, pasarlos abajo.
 - `app/lib/screens/home_screen.dart` — tarjeta de nivel + acceso a Logros.
 
@@ -231,7 +231,7 @@ int totalXp(List<AchievementState> states);
 ### Catálogo (mínimo 70 logros)
 
 Escalones repetidos por tramos, que es lo que engancha en Pokémon TCG Pocket,
-Hearthstone y ManaBox:
+Hearthstone y los escáneres de cartas:
 
 - **Colección** (8): 1 / 10 / 50 / 100 / 500 / 1.000 / 5.000 / 10.000 copias.
 - **Distintas** (5): 25 / 100 / 500 / 1.000 / 2.500 cartas distintas.

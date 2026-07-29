@@ -92,7 +92,7 @@ forks.
 
 ### De la hoja de ruta
 
-1. **Precio de compra y P&L**: el CSV de ManaBox trae `Purchase price` y se
+1. **Precio de compra y P&L**: el CSV de colección trae `Purchase price` y se
    está tirando. Es lo único grande que queda de la lista original.
 2. **Carpeta también en el escaneo por FOTO** (`ScanScreen`): es otra bandeja
    distinta; barato.

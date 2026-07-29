@@ -71,7 +71,7 @@ Pedido por Ale. Hoy la bandeja solo tiene "Añadir N a la colección".
    carpeta" solo desetiqueta; "ya no tengo esta carta" saca de todas las
    carpetas, vacía el hueco del álbum, y los mazos **conservan** la carta
    marcada "ya no la tienes" con aviso "te faltan N cartas".
-4. **Precio de compra y P&L** (el CSV de ManaBox trae `Purchase price` y se
+4. **Precio de compra y P&L** (el CSV de colección trae `Purchase price` y se
    está tirando).
 
 Aparcado hasta nuevo aviso: **app de Android**. Decidido que NO: conversión de
