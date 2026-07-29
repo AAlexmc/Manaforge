@@ -5,7 +5,7 @@ void main() {
   test('parsea un CSV real exportado (comas, comillas, Scryfall ID y columnas ajenas)', () {
     const csv =
         'Binder Name,Binder Type,Name,Set code,Set name,Collector number,Foil,'
-        'Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price\n'
+        'Rarity,Quantity,Export ID,Scryfall ID,Purchase price\n'
         'Fuego,binder,"Ruby, Daring Tracker",FDN,Foundations,245,normal,'
         'uncommon,2,101405,fe3e7dd2-b66d-4218-9fde-f84bec26b7bf,0.11\n'
         'Agua,binder,Counterspell,BRB,Battle Royale,15,normal,common,1,'

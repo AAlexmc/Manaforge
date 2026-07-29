@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           curl -sf -H "User-Agent: ManaForge-CI/1.0" -H "Accept: application/json" \
             https://api.scryfall.com/bulk-data/default-cards -o bulkmeta.json
-          URI=$(python3 -c "import json;print(json.load(open('bulkmeta.json'))['download_uri'])")
+          URI=$(python3 -c "import json;d=json.load(open('bulkmeta.json'));print(d.get('jsonl_download_uri') or d['download_uri'])")
           # "--" separa opciones de la URL: una URI que empezara por "-" no se
           # puede interpretar como opción de curl
           curl -sfL --retry 3 --compressed -H "User-Agent: ManaForge-CI/1.0" -o bulk.json -- "$URI"

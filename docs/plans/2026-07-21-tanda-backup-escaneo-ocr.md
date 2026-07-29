@@ -8,7 +8,7 @@ Cuatro bloques, en este orden, **un PR por bloque**:
 |---|---|---|
 | A | Copia de seguridad y restaurar | Hoy la colección vive en 12 JSON sin red. Un formateo y adiós |
 | B | Escaneo: no duplicar + velocidad | Bug real: una carta quieta se cuenta muchas veces |
-| C | OCR del número de coleccionista | Resuelve la edición exacta. Ventaja técnica sobre ManaBox |
+| C | OCR del número de coleccionista | Resuelve la edición exacta. Ventaja técnica sobre los escáneres comerciales |
 | D | "Lo que me falta" con precio | Objetivo claro para completar sets; encaja con certificados |
 
 **Fuera de alcance de esta tanda** (apuntado, no se hace): app Android (aparcada
@@ -198,7 +198,7 @@ Nada de OCR abierto. El matching de arte ya devuelve el top-k de impresiones, y
 de cada candidato se conoce su código de set y su número de coleccionista. Así
 que el problema no es *leer* un texto desconocido, sino **decidir cuál de N
 textos conocidos** encaja con esos píxeles. Es un problema mucho más fácil y
-mucho más robusto, y resuelve exactamente lo que ManaBox admite que no hace:
+mucho más robusto, y resuelve exactamente lo que los escáneres comerciales admiten que no hacen:
 variantes, promos y ediciones distintas con el mismo arte.
 
 Cómo: recortar la franja inferior izquierda (el detector ya devuelve el

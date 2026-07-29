@@ -24,15 +24,9 @@ from pathlib import Path
 
 
 def _iter_cards(source):
-    """Itera objetos carta del bulk. Streaming si ijson está instalado."""
-    # el try acota SOLO el import: un ImportError diferido a mitad de stream
-    # no debe caer a json.load sobre un source medio consumido
-    try:
-        import ijson  # type: ignore
-    except ImportError:
-        yield from json.load(source)
-        return
-    yield from ijson.items(source, "item")
+    """Itera objetos carta del bulk (array JSON clásico o JSONL)."""
+    from bulk_stream import iter_bulk_objects
+    yield from iter_bulk_objects(source)
 
 
 def _fold(text: str) -> str:
